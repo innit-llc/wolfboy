@@ -1,0 +1,669 @@
+id: recipients-006
+pack: recipients
+short_name: Analytics, avatar or monitoring company that may get data
+problem_line:
+  text: Personal data sent to an external service
+  template: "{data} sent to {recipient}"
+fix_line: "Unless you publish and host this service, record it as a recipient: what it receives and
+  the company you contract with."
+title: Analytics, avatar-image, audit-log, session-replay or error-monitoring vendor named in the
+  tree, or a digest taken over an email address with no vendor on the line
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - the record of processing activities "shall
+      contain all of the following information", including "the categories of recipients to whom the
+      personal data have been or will be disclosed including recipients in third countries or
+      international organisations"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(2) - \"Each processor and, where applicable, the
+      processor's representative shall maintain a record of all categories of processing activities
+      carried out on behalf of a controller, containing: (a) the name and contact details of the
+      processor or processors and of each controller on behalf of which the processor is acting,
+      and, where applicable, of the controller's or the processor's representative, and the data
+      protection officer; (b) the categories of processing carried out on behalf of each controller;
+      (c) where applicable, transfers of personal data to a third country or an international
+      organisation, including the identification of that third country or international organisation
+      and, in the case of transfers referred to in the second subparagraph of Article 49(1), the
+      documentation of suitable safeguards; (d) where possible, a general description of the
+      technical and organisational security measures referred to in Article 32(1).\" Reference only,
+      and cited for one purpose: there is no categories-of-recipients field in a processor's record,
+      so where the scanned product is a processor the recipient category belongs in the
+      customer-controller's Art. 30(1)(d) record instead"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: 'GDPR (Regulation (EU) 2016/679), Art. 4(9) - "recipient" means "a natural or legal person,
+      public authority, agency or another body, to which the personal data are disclosed, whether a
+      third party or not". Reference only: a definition establishes no duty of its own. Note
+      "natural or legal person" - one vendor in these lists is operated by a named individual rather
+      than by a company, and the definition covers that expressly'
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1) - \"personal data\" means \"any information
+      relating to an identified or identifiable natural person ('data subject'); an identifiable
+      natural person is one who can be identified, directly or indirectly, in particular by
+      reference to an identifier such as a name, an identification number, location data, an online
+      identifier or to one or more factors specific to the physical, physiological, genetic, mental,
+      economic, cultural or social identity of that natural person\". Reference only: a definition
+      establishes no duty of its own"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose "The
+      categories of third parties to whom the business discloses personal information." The
+      obligation is owed on a verifiable consumer request under Sec. 1798.110(b), and Sec.
+      1798.130(a)(5)(B) requires the same categories in the privacy policy
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-08-25
+    jurisdiction: US
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.3
+detector:
+  engine: builtin-regex
+  shared_vocabulary:
+    - analytics_recipients
+    - avatar_image_recipients
+    - audit_log_recipients
+    - session_replay_recipients
+    - error_monitoring_recipients
+  resolve_import_aliases: true
+  match:
+    - (?:^|[^A-Za-z0-9])(?&analytics_recipients)
+    - (?:^|[^A-Za-z0-9])(?&avatar_image_recipients)
+    - (?:^|[^A-Za-z0-9])(?&audit_log_recipients)
+    - (?:^|[^A-Za-z0-9])(?&session_replay_recipients)
+    - (?:^|[^A-Za-z0-9])(?&error_monitoring_recipients)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:)(?&analytics_recipients)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:)(?&avatar_image_recipients)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:)(?&audit_log_recipients)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:)(?&session_replay_recipients)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:)(?&error_monitoring_recipients)
+    - (?:^|[^A-Za-z0-9])(?:md5|MD5|Md5|sha1|SHA1|Sha1|sha256|SHA256|Sha256)[ \t]*(?:\.|->|::)?[
+      \t]*(?:Sum|sum|New|new|hexdigest|HexString|HashData|Compute|compute|hash|Hash|digest|Digest|hexhash)?[^\n]{0,60}(?:[Ee]mail|EMAIL|[Mm]ail[_\-]?[Aa]ddress|MAIL[_\-]?ADDRESS|e_mail|[Mm]ailbox|MAILBOX)
+    - ^[ \t]*[A-Za-z0-9_.\-]+[ \t]*=[ \t]*\{(?=[^\n]*(?<![A-Za-z0-9_])(?:group|module)[ \t]*=[
+      \t]*["'][A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z0-9_\-]+){1,6}["'])[^\n]*(?<![A-Za-z0-9_])name[
+      \t]*=[
+      \t]*["'][A-Za-z0-9_.\-]{0,40}(?:analytics|analytic|measurement|telemetry|tracking|tracker|crashlytics|session[_\-]?replay|heatmap)[A-Za-z0-9_.\-]{0,40}["']
+    - (?:(?:^|[^A-Za-z0-9])(?:[Cc]larity|CLARITY|[Mm]atomo|MATOMO|[Pp]iwik|PIWIK|[Pp]ost[Hh]og|POSTHOG|[Mm]ixpanel|MIXPANEL|[Aa]mplitude|AMPLITUDE|[Pp]lausible|PLAUSIBLE|[Ss]entry|SENTRY|[Hh]otjar|HOTJAR|[Ff]ull[Ss]tory|FULLSTORY|[Uu]mami|UMAMI|[Ss]martlook|SMARTLOOK|[Ll]og[Rr]ocket|LOGROCKET|[Mm]ouseflow|MOUSEFLOW|[Oo]pen[Rr]eplay|OPENREPLAY|[Dd]atadog|DATADOG|[Rr]ollbar|ROLLBAR|[Bb]ugsnag|BUGSNAG|[Rr]aygun|RAYGUN|[Aa]irbrake|AIRBRAKE|[Hh]oneybadger|HONEYBADGER|[Aa]pp[Ss]ignal|APPSIGNAL|[Gg]ravatar|GRAVATAR|[Dd]ice[Bb]ear|DICEBEAR|[Ww]ork[Oo][Ss]|WORKOS|[Rr]etraced|RETRACED)|(?<=[a-z0-9])(?:Clarity|Matomo|Piwik|PostHog|Posthog|Mixpanel|Amplitude|Plausible|Sentry|Hotjar|FullStory|Fullstory|Umami|Smartlook|LogRocket|Logrocket|Mouseflow|OpenReplay|Openreplay|Datadog|Rollbar|Bugsnag|Raygun|Airbrake|Honeybadger|AppSignal|Appsignal|Gravatar|DiceBear|Dicebear|WorkOs|WorkOS|Retraced))[_\-]?(?:[Tt]ag|TAG|[Ss]ite[_\-]?[Ii][Dd]|SITE[_\-]?ID|[Pp]roject[_\-]?[Ii][Dd]|PROJECT[_\-]?ID|[Aa]pi[_\-]?[Kk]ey|API[_\-]?KEY|[Ww]rite[_\-]?[Kk]ey|WRITE[_\-]?KEY|[Aa]ccess[_\-]?[Tt]oken|ACCESS[_\-]?TOKEN|[Kk]ey|KEY|[Tt]oken|TOKEN|[Dd]sn|DSN|[Ii][Dd]|ID|[Cc]ontainer|CONTAINER|[Mm]easurement|MEASUREMENT|[Dd]omain|DOMAIN|[Hh]ost|HOST|[Uu]rl|URL)(?![A-Za-z0-9_])|(?:^|[^A-Za-z0-9])(?:GA4?|ga4?|GTM|gtm|UA)[_\-]?(?:MEASUREMENT[_\-]?ID|[Mm]easurement[_\-]?[Ii][Dd]|TRACKING[_\-]?ID|[Tt]racking[_\-]?[Ii][Dd]|CONTAINER[_\-]?ID|[Cc]ontainer[_\-]?[Ii][Dd]|PROPERTY[_\-]?ID|[Pp]roperty[_\-]?[Ii][Dd])(?![A-Za-z0-9_])|(?:^|[^A-Za-z0-9])(?:SEGMENT|[Ss]egment)[_\-]?(?:WRITE[_\-]?KEY|[Ww]rite[_\-]?[Kk]ey)(?![A-Za-z0-9_])
+context_questions:
+  - "WAS AN ANCHOR MATCHED AT ALL? Ask this before the shape question, because since 2026-09-04 one
+    clause of this rule fires with no vendor spelling on the line: a digest algorithm (`md5`,
+    `sha1`, `sha256`) within sixty characters of an email word, which is how the avatar group's key
+    is computed. If that is what you are holding, no anchor was met, none of the nine shapes below
+    applies, and the question to answer is question 8 - does the derived key leave this product, and
+    to whom. A tree that computes the same digest for a locally drawn identicon discloses nothing.
+    Then, for a line that DID carry an anchor: what SHAPE is it? Name it before treating it as a
+    disclosure. The same anchor reaches a tree in at least nine shapes and only three of them put
+    data in a vendor's hands: (a) a dependency declaration or an import that the product's own code
+    uses; (b) a request to the vendor's API, or a script, tag, pixel or IMAGE loaded from the
+    vendor's host on the product's own request path - for this class the image case is as important
+    as the script case, because an avatar is an ordinary <img> element and nobody experiences it as
+    an integration; (c) a vendor's own installation snippet written into a page template; (d) a
+    VENDORED SDK or a generated third-party client that no first-party code calls (a third party's
+    code - first-party code that nothing calls is not this shape) - note that a lockfile entry is
+    NOT one of the shapes you can meet, because the walker drops every lockfile by name before any
+    rule runs; (e) a documentation link, a comparison table, a migration guide, a changelog entry or
+    a commented-out example in an environment or configuration template, and a guide about migrating
+    AWAY from a vendor matches exactly like a guide about adopting one; (f) a
+    Content-Security-Policy allow-list entry, a cookie-declaration table or a privacy-policy page
+    naming the host without loading it - the entry transmits nothing to the vendor on its own, and
+    it is WEAKER evidence than a script tag and is not NO evidence, because someone expected the
+    host to be reachable, so look for the tag, pixel or image that would do the loading before
+    closing the candidate on the entry; (g) test, fixture, seed or demo data, or a marketing page's
+    placeholder avatars; (h) THE ANCHOR IS NOT THE VENDOR AT ALL. (i) A SUPPORTING LINE of a
+    first-party integration with this vendor - a setup-screen entry, a kind list, a renderer or
+    formatter for the vendor's message format, a branch or setting that selects the vendor, a vendor
+    key served to the client. It names the recipient though it sends nothing itself: answer
+    is_the_construct, name in `why` the send to this vendor in the tree (file and line), the one
+    this line serves where the tree shows which, and list in `data` what that send carries. A
+    first-party line of this kind that nothing in the tree is found to read is still this shape and
+    still is_the_construct: say in `why` that no reader was found, because a search that finds none
+    does not show that the line never runs, and whether it runs is for the person running the scan.
+    The same holds where no send to this vendor is found in the tree: the send can happen outside it
+    - in another service the setting selects, or in an SDK loaded at run time with the key - so the
+    line is still this shape and still is_the_construct; say in `why` that no send was found in the
+    tree, and list in `data` what the line itself shows is sent, which may be nothing. Whether a
+    line is documentation or demo data ((e), (g)) is decided by what the line itself is - a README
+    or guide, a sample or example file, a comment, a test fixture or seed - and never by the absence
+    of a send elsewhere in the tree. Quote the line and say which of the nine it is."
+  - "WHICH ANCHOR DID YOU ACTUALLY MEET, and is it one of the known collisions? Every anchor in
+    these three lists is KEPT on purpose, so you will meet them, and the worst of them are named
+    below in the order to test them, worst first. THIS BUNDLE CARRIES THE SPELLINGS AND THIS RULE'S
+    OWN PROSE AND NOTHING ELSE - no per-vendor file travels with it, and no file in the scanner's
+    own repository is available to you, so what is not written out here is not available to be read.
+    NO CORPUS MEASUREMENT EXISTS FOR THIS RULE: three bundles were built in parallel and a single
+    combined sweep was deferred, so unlike its sibling rules this one can give you no location
+    counts and no sampled genuine-rates, and any ordering below is reasoning rather than
+    measurement. THE THREE SHAPES TO TEST FIRST. (1) SELF-REFERENCE. `posthog` and `plausible` are
+    both names of real repositories that ARE those vendors. Whether the tree you are scanning is a
+    vendor's own product, or a fork of it, is a fact about the product: take it from the person's
+    answer (`product_identity.vendor_software` in the profile, and `own_name` in your payload),
+    never from the tree's vocabulary, which reads the same in the vendor's tree and in a product
+    that sends data to it. Where the tree is the vendor's own software, a place whose code only
+    names the product (a class, a namespace, a translation, a document, a configuration key) is not
+    a disclosure to a recipient; a place whose code sends, loads or calls something from a service
+    the publisher runs (its API, a plugin marketplace, downloads, a shop, its hosted service) is
+    one, because the publisher is an outside recipient for anyone other than the publisher running
+    its own hosted service; the same code serves every operator, so the place is the construct
+    either way. Where the person has not answered, judge each place by what its code does and do not
+    set a place aside because the tree looks like the vendor's. Ask this before anything else. (2)
+    ORDINARY ENGLISH. `retraced` is the past tense of 'retrace' and will appear in prose, comments
+    and variable names; it is kept because it is also a real npm package name, and prose closes the
+    candidate in one reading. Five further ordinary words were REFUSED as anchors rather than kept -
+    `segment`, `amplitude`, `clarity`, `plausible` and `sentry` - so you will not meet those as bare
+    words at all. (3) THE WRONG PRODUCT FROM THE RIGHT VENDOR. `posthog` matches every package in
+    PostHog's npm namespace, build tooling and icon sets included; `@workos-inc/` covers single
+    sign-on, directory synchronisation and authentication as well as audit logs, and single sign-on
+    is by far the larger surface, so most hits on that vendor will not be audit logging at all. The
+    bare npm scopes `@vercel/` and `@posthog/` were anchors of these lists until 2026-09-16 and are
+    not any more, so a Vercel package that is not analytics no longer reaches you at all. A hit is
+    then evidence of SOME relationship with that vendor and not of this rule's subject; say which
+    product the line actually names, and if the answer is only 'the platform', say that."
+  - "Is the destination actually the vendor, or a self-hosted instance the operator runs? This is
+    the single most likely reason a candidate on this rule is not a finding, and no anchor can
+    answer it. Ten of the vendors this rule matches offer an edition the operator runs itself (named
+    below, under `own_instance`), and an instance the operator runs discloses nothing to any third
+    party. BUT AN ADDRESS ON THE OPERATOR'S OWN DOMAIN IS NOT EVIDENCE OF SELF-HOSTING (corrected
+    2026-10-06; this question used to close it), because several of these vendors document exactly
+    that configuration as a REVERSE PROXY that passes everything on to their own service: PostHog's
+    `api_host` set to the operator's subdomain with `ui_host` naming `us.posthog.com` or
+    `eu.posthog.com`, Plausible's script and event endpoint served from the operator's own domain,
+    Sentry's `tunnel` option, Mixpanel's `api_host` pointed at a proxy, and Datadog RUM's `proxy`
+    option, each read on the vendor's own documentation page on 2026-10-06. The package name, the
+    import, the SDK call and the host are identical for the vendor's proxy and for the operator's
+    own instance, and the host is very often an environment variable this scanner cannot resolve.
+    Read the configuration and say which host the deployment actually points at and where you read
+    it. (a) A HOST THE VENDOR OWNS - `eu.i.posthog.com`, a DSN on `ingest.sentry.io` - makes the
+    vendor the recipient. (b) AN ADDRESS ON THE OPERATOR'S OWN DOMAIN, A RELATIVE PATH, OR A VALUE
+    YOU CANNOT RESOLVE turns on a fact about the product, which the code may corroborate and never
+    decides: the person running the scan is asked it as `features.own_domain_endpoints`, and the
+    answer is in the ScanProfile your brief carries. `forward_to_vendor`: the vendor is the
+    recipient - name it. `own_instance`: there is no named recipient to record ONLY FOR A VENDOR
+    THAT OFFERS AN EDITION THE OPERATOR RUNS ITSELF, and only where nothing in the code contradicts
+    the answer; say what you read. Ten vendors of this rule offer one, each read on its own page on
+    2026-10-06: PostHog (posthog.com/docs/self-host), Plausible Community Edition
+    (plausible.io/self-hosted-web-analytics), Matomo On-Premise (matomo.org/matomo-on-premise),
+    Sentry self-hosted (develop.sentry.dev/self-hosted), OpenReplay
+    (docs.openreplay.com/en/deployment), LogRocket Self-Hosted
+    (logrocket.com/products/saas-self-hosted), BugSnag On-premise (docs.bugsnag.com/on-premise),
+    Retraced (github.com/retracedhq/retraced), DiceBear's HTTP API
+    (dicebear.com/guides/host-the-http-api-yourself) and wsrv.nl (github.com/weserv/images). For
+    every other vendor this rule matches, the SDK itself contradicts `own_instance`: with no edition
+    to run, an own-domain or relative address in its configuration can only be a proxy that passes
+    the data on - Datadog RUM's `proxy` option and Mixpanel's `api_host` are the documented cases,
+    and Datadog's own page says the RUM data still has to be forwarded to Datadog from the proxy -
+    so the place stays kept, with the answer and the vendor's SDK line both named. A vendor host in
+    the same configuration - a `ui_host` naming the vendor, a `tunnel` beside a DSN on the vendor's
+    host - contradicts it too, and then the place stays kept with the answer and the contradicting
+    line both named. `mixed`, or no answer at all: the place stays kept (`is_the_construct`), and
+    `why` names the host, the line it is set on, any vendor host beside it that corroborates a
+    proxy, and the open question - whether that address passes the data on to the vendor - so that
+    the person can settle it. Never close a place on an own-domain, relative or unresolved host
+    alone."
+  - "WHO IS THE RECIPIENT - the party's own identity, not the brand on the package. This is the
+    first of the four facts the record needs and it is the one most often written down wrongly. GET
+    THE OWNING COMPANY RIGHT: Hotjar is Contentsquare, and Segment is Twilio, so a record naming
+    'Hotjar Ltd' or 'Segment, Inc.' may name a company that no longer contracts with anybody. One
+    vendor in these lists is operated by a NAMED INDIVIDUAL rather than a company, which Art. 4(9)
+    covers expressly and which means there may be no data processing agreement, no subprocessor list
+    and no security documentation to read at all - that is a fact about the recipient, not a reason
+    to leave it out. And one vendor may not be a third-party recipient at all: an audit-log service
+    designed for self-hosting discloses nothing to anyone when the operator runs it themselves. Name
+    the party as it identifies itself in its own contracting document, and say which document that
+    was."
+  - "WHAT DOES THE VENDOR RECEIVE ON THE PATH THIS CODE USES - the second of the four facts - and do
+    not answer it from the vendor's name. BREAK THE DISCLOSURE OUT PER NAMED INTEGRATION PATH RATHER
+    THAN PER VENDOR, because the paths differ materially and the record owes the one actually used,
+    and read the field list off the vendor's own API reference for the call this code makes -
+    nothing but the spellings and this rule's own prose travels with this bundle: a page-view
+    beacon, an identify or track call, a session recording, a heatmap, a server-side event, an
+    avatar image request and an audit-log event are seven different disclosures. THE FLOOR IS THE
+    PART MOST OFTEN MISSED. Every one of these vendors, on every path, necessarily learns the
+    caller's IP address, the user agent, the destination host and path, and - for anything loaded in
+    a browser - the page URL and the referrer, whatever the payload is. An operator who strips every
+    property from every event still discloses that much. THE PAGE URL IS THE FIELD TO READ FIRST for
+    the analytics group: a URL carrying an order number, a document title, a password-reset token or
+    an email address is disclosed in full by a default page-view beacon with no custom event written
+    at all. FOR THE AVATAR GROUP THE KEY IS THE PAYLOAD: a Gravatar request is keyed by a hash of
+    the person's email address, which is an identifier and not an anonymisation - it is stable, it
+    is the same value for that person on every site that computes it, and its whole purpose is to
+    look a specific person up - so the product discloses its users' email addresses in identifier
+    form on every page view. A UI Avatars request carries the person's NAME in plaintext in the
+    query string; a DiceBear request carries whatever the application chose as the seed, which may
+    be a random identifier or may be an email address; an image proxy receives the entire source URL
+    it was asked to fetch, including any signature in it. AND IF THIS IS A SESSION RECORDING OR A
+    HEATMAP, SAY SO SEPARATELY, because the class generalisation - high volume, low materiality per
+    event - is wrong for replay: one recording of an authenticated session can contain everything
+    the person saw on the screen. What the research established first-hand, from the vendor's own
+    documentation: Microsoft Clarity states that content in input boxes is masked in ALL modes and
+    cannot be customised, that its default mode masks numbers and email addresses, that its least
+    strict mode masks NO OTHER CONTENT so rendered page text does travel, and that it does not mask
+    content inside style sheets. What the research could NOT establish: the default form-input
+    behaviour for Hotjar, Fullstory, PostHog session replay or Amplitude session replay. Each of
+    those four is recorded as UNCONFIRMED and you may not assume either answer - read the
+    deployment's own masking configuration, and note that all four offer an UN-mask direction that
+    lets a developer deliberately re-enable capture of a field. Quote the call, name the path, and
+    list the fields it populates."
+  - "WHERE IS THE RECIPIENT ESTABLISHED - the third of the four facts, and a PLACE rather than a
+    conclusion. This rule reaches no conclusion about any transfer; the record needs the place, and
+    what is done with it belongs elsewhere. This is an operator fact and is never inferred from
+    source code: it is read from the order form, the data processing agreement or the vendor
+    dashboard. AND THE VENDOR HAS NO SINGLE ANSWER FOR YOU TO COPY: a vendor of this kind names
+    several entities and picks between them by a property of the CUSTOMER - where the customer
+    contracts, which of the vendor's products was bought, which hosting region was chosen - so the
+    entity is a fact about THIS OPERATOR'S CONTRACT rather than an attribute of the vendor. THESE
+    VENDORS HAVE NO ESTABLISHED JURISDICTION, AND YOU ARE TOLD SO HERE BECAUSE NOTHING ELSE IN THIS
+    BUNDLE CAN TELL YOU: Hotjar (Contentsquare), Microsoft Clarity, the wsrv.nl image proxy, UI
+    Avatars and Retraced. YOU MAY NOT FILL IN A JURISDICTION FOR ANY OF THEM, and the research's
+    reason differs for each, which is worth carrying into the record rather than flattening. For
+    HOTJAR, three documents were attempted and none named an entity; Contentsquare is widely
+    understood to be a French company and that understanding is NOT a fact you may write down. For
+    MICROSOFT CLARITY, the only Microsoft entities available were carried across from a Volume
+    Licensing addendum covering a different, paid product, and Clarity is offered free and outside
+    Volume Licensing. For WSRV.NL, the site returned HTTP 403 and the only entity-level facts
+    obtained are two maintainer names from a repository that states no country and no organisation -
+    THE .nl TOP-LEVEL DOMAIN IS NOT EVIDENCE OF ESTABLISHMENT and you may not fill in the
+    Netherlands. For UI AVATARS, the site WAS read successfully and simply names nobody, which is
+    the cleanest kind of unanswered field there is - not a fetch that failed but a document that was
+    read and contains no answer - so return needs_human rather than reasoning from the domain. For
+    RETRACED, ask first whether there is a third party at all: it is an open-source audit-log
+    service designed to be deployed into the operator's own cluster, and where the operator runs it
+    themselves nobody receives anything and there is no recipient row to write. Do not substitute
+    the vendor's headquarters, a country inferred from its domain suffix, the country in its billing
+    address, or a plausible guess from the group's other entities. Return needs_human for that field
+    instead. FOR THE REST, WHAT THE VENDORS' OWN DOCUMENTS NAMED, all read on 2026-08-25, is a DATED
+    LIST OF CANDIDATES that decides nothing, and it is given here rather than pointed at because no
+    vendor file ships with this bundle. PostHog names POSTHOG INC. together with HIBERLY LTD in the
+    United Kingdom and POSTHOG GMBH in Germany, as a group, without saying which of them contracts
+    with a given customer - and its European hosting option places DATA in Germany, which is a
+    different fact from which entity contracts. Google Analytics and Tag Manager: the UNITED STATES
+    version of the Analytics terms names GOOGLE LLC and no entity in the European Economic Area, a
+    region-specific version for that area exists and was NOT read, and GOOGLE IRELAND LIMITED is
+    named only in Google's separate CONSUMER privacy policy, which is a different document about a
+    different product. Segment names TWILIO IRELAND LIMITED, Dublin, for customers in the European
+    Economic Area, the United Kingdom and Switzerland and TWILIO INC., a Delaware corporation, for
+    most others - and the document read is Twilio's general terms, which name no separate entity for
+    Segment specifically. Gravatar names AUTOMATTIC INC., San Francisco, and AUT O'MATTIC A8C
+    IRELAND LTD., Dublin, without allocating services between them. Mixpanel names MIXPANEL, INC.
+    with a San Francisco address given for NOTICES rather than as a registered office and no state
+    of incorporation. Fullstory names FULLSTORY, INC., a Delaware corporation. Amplitude names
+    AMPLITUDE, INC. with San Francisco offices and no state of incorporation. Plausible names
+    PLAUSIBLE INSIGHTS OU, Tartu, Estonia, and states separately that its servers are in
+    Falkenstein, Germany, which is again hosting rather than establishment. Vercel names VERCEL INC.
+    and WorkOS names WORKOS, INC., and for BOTH of those the document states no country, no state of
+    incorporation and no registered address at all, so the only thing supporting a place is the
+    entity suffix - record them at that strength and no higher. DiceBear names FLORIAN KORNER, an
+    individual in Lubeck, Germany: a natural person and not a company, so there is no contracting
+    entity to look up at all. NOTHING RE-READS ANY OF THOSE DOCUMENTS, so this is an incomplete list
+    of candidates and never a closed one - an entity may have been renamed, acquired or added since,
+    and two vendors in these lists have already been through exactly that. IF THE OPERATOR CANNOT
+    PRODUCE THE CONTRACT, RETURN needs_human FOR THIS FIELD rather than choosing the candidate that
+    looks likeliest. TWO CAUTIONS THE RESEARCH RECORDS. A group headquarters is a poor guide in both
+    directions, and one vendor in these lists names DIFFERENT contracting entities in different
+    products' own documents, so an establishment read from one product's terms is not evidence about
+    another's. AND CARRY THE PROVENANCE WITH THE PLACE. NOT ONE of the establishments behind these
+    three lists was recorded as read from raw document text. Many of the vendor documents behind
+    them were read through a SUMMARISING FETCH - a tool that returns a summary of a page rather than
+    the page itself - and the rest carry no record of how they were read at all. So an establishment
+    offered for this rule's vendors is the research's READING of a document rather than a document
+    quoted verbatim, and the record should say so rather than presenting it as a verbatim reading."
+  - "Is the vendor a PROCESSOR here or an INDEPENDENT CONTROLLER for this data - the fourth of the
+    four facts - and which of those is the scanned product itself? Several vendors in these lists
+    position themselves as processors for customer data while acting as controllers for their own
+    account and product data, and the answer decides how the entry is written. THE FORK MATTERS MOST
+    FOR THE AUDIT-LOG GROUP, where the ordinary shape is that the scanned product is its customers'
+    processor and the audit-log service is engaged on their behalf. A Customer Data Platform is a
+    special case worth naming: it is a RECIPIENT and also a ROUTER, whose purpose is to forward what
+    it receives to further destinations chosen in its own workspace configuration, which is not in
+    the source tree at all - so the record owes the vendor AND every destination it fans out to, and
+    the second list is invisible to any code scanner. Read the contract the product actually signed
+    and the subprocessor list it actually publishes, not the vendor's marketing page. If the
+    product's own position in the chain is not established, say so rather than choosing one.
+    FINALLY, THE GAP THIS RULE EXISTS TO FIND: is this vendor already IN the record of processing
+    activities, the privacy policy and the published subprocessor list? A vendor present in the code
+    and absent from all three is the finding; present in all three is not a finding at all; present
+    in some but not all is a finding about the documents that omit it. For this class the privacy
+    policy and the cookie declaration are usually where the gap is, because an avatar host and an
+    analytics tag arrive as one line of template code that nobody experiences as engaging a third
+    party. Say which of the three documents you read and which named the vendor."
+  - "ASK THE PERSON RUNNING THE SCAN, and read the call site before you ask: \"This code derives a
+    stable key from a user's email address. Is that key sent to anybody, and to whom?\" THIS
+    QUESTION IS FOR THE ONE CLAUSE OF THIS RULE THAT MATCHES NO VENDOR SPELLING - a digest algorithm
+    within sixty characters of an email word - and it is the whole of what that clause hands over.
+    WHAT THE LINE ESTABLISHES: that a value derived from a person's email address exists in this
+    product, and that the derivation is a DIGEST rather than an encryption, so it is one-way and it
+    is also STABLE - the same address produces the same key on every site that computes it the same
+    way, which is what makes such a key an identifier rather than an anonymisation. WHAT IT DOES NOT
+    ESTABLISH, and all three have to be settled by reading: (a) WHERE THE KEY GOES. Follow the field
+    the digest is assigned to. If it is spliced into a third-party image URL, that third party
+    receives an identifier for this person on every page view and belongs in field (d); if it is
+    used to draw a picture locally, or as an internal lookup key, nobody outside receives it and
+    there is no recipient row at all. (b) WHICH ALGORITHM AND WHICH INPUT. Read what is actually
+    digested: the same call four lines away may hash a timestamp for an account with no email set,
+    which carries no person in it. Say which input you read. (c) WHETHER THE PRODUCT DISCLOSES THE
+    ADDRESS ITSELF ANYWHERE. Some avatar and picture services take the raw address in a query string
+    rather than a digest, and that is a different and larger disclosure than this clause reads.
+    Where the key does reach a third party, the record row is written from the vendor questions
+    above - who they are, what they receive on that path, where they are established, and in what
+    capacity - and where it does not, close the row and say what the key is used for instead."
+evidence_template: "{file}:{line} matched this rule in one of two ways, and the first thing to
+  settle is WHICH, because they establish different things and only one of them names a party. SINCE
+  2026-09-04 ONE CLAUSE OF THIS RULE MATCHES NO VENDOR SPELLING AT ALL: a digest algorithm - `md5`,
+  `sha1` or `sha256` - within sixty characters of an email word on the same line, which is how the
+  avatar group's key is computed and which this rule previously reached only where a vendor word
+  happened to sit beside it. What that clause establishes is that this product derives a STABLE key
+  from a person's email address, and nothing else: not that the key is sent anywhere, not that any
+  avatar vendor is involved, and not which one. A tree that computes the same digest to draw a local
+  identicon discloses nothing to anybody, and a digest taken over a timestamp for an account with no
+  email set carries no person in it at all. Follow the field the digest is assigned to before
+  treating it as a disclosure, and answer context question 8 first; if the key does reach a third
+  party, the rest of this template then applies to that party. EVERYTHING BELOW IS ABOUT THE OTHER
+  TEN CLAUSES, WHICH READ A VENDOR SPELLING. On those, {file}:{line} carries a string from one of
+  the five vendor lists this rule matches on: 174 spellings owned by 10 web and product analytics
+  vendors, 37 owned by 4 avatar and image hosting, generation and proxying services, and 20 owned by
+  2 audit-log and compliance-logging services. THIS RULE FILLS ONE FIELD OF ONE RECORD - the
+  categories of recipients a processing record owes - and it asks four things about the recipient
+  and nothing else: who it is, what it receives on the integration path actually used, where it is
+  established, and whether it is a processor or an independent controller for this data. Transfer
+  mechanisms and the operator's own obligations are not this rule's subject and are not asked here.
+  What each vendor receives on each path, and where it is established, is read from the vendor's own
+  API reference and its own contracting documents - the context questions say which, and this bundle
+  carries the spellings and this rule's own prose only - no per-vendor file travels with it and no
+  file in the scanner's own repository is available to you. NO CORPUS MEASUREMENT EXISTS FOR THIS
+  RULE AND THAT IS DELIBERATE RATHER THAN AN OVERSIGHT: three rule bundles were built in parallel on
+  2026-08-25 and a single combined sweep was deferred, so unlike this family's earlier rules this
+  one can give you no location counts, no per-anchor volumes and no sampled genuine-rates. Nothing
+  below is a measurement; it is what the vendor research established about the spellings themselves.
+  MANY of the spellings are self-identifying - a scoped npm package, a Maven or NuGet coordinate, a
+  Go module path, an API hostname, a vendor's own installation-snippet variable - but TWELVE ARE
+  SINGLE-WORD BARE TOKENS and you must decide which kind you are holding before reading any further.
+  THE THREE SHAPES TO TEST FIRST. (1) SELF-REFERENCE: `posthog` and `plausible` are both names of
+  real repositories that ARE those vendors, so a tree that is the vendor, or a fork of one, matches
+  its own anchors everywhere and none of it is a disclosure. (2) ORDINARY ENGLISH: `retraced` is the
+  past tense of 'retrace'; it is kept because it is also a real package name, and prose closes the
+  candidate in one reading. Five further ordinary words - `segment`, `amplitude`, `clarity`,
+  `plausible` and `sentry` - were REFUSED as anchors rather than kept, two of them on a corpus
+  survey's own recorded decision, so you will not meet them as bare words. (3) THE WRONG PRODUCT
+  FROM THE RIGHT VENDOR: `posthog` matches every package in PostHog's npm namespace, build tooling
+  and icon sets included; `@workos-inc/` covers single sign-on and directory synchronisation as well
+  as audit logs, and single sign-on is the larger surface, so most hits on that vendor will not be
+  audit logging. The bare npm scopes `@vercel/` and `@posthog/` were anchors until 2026-09-16 and
+  are not any more. So what this detector established is ONLY that a listed string occurs at this
+  location. It does NOT establish that the string names the vendor at all, that any personal data
+  was disclosed, that the integration is live, that the destination is the vendor's own host rather
+  than a self-hosted instance the operator runs, that the line is first-party code rather than a
+  vendored SDK or a documentation link, or which integration path is in use. Note that a transitive
+  lockfile entry is not among the shapes you can meet FOR MOST LOCKFILES, and the exception matters.
+  The walker drops fourteen names and only those fourteen: `package-lock.json`, `pnpm-lock.yaml`,
+  `yarn.lock`, `npm-shrinkwrap.json`, `bun.lockb`, `composer.lock`, `Gemfile.lock`, `poetry.lock`,
+  `pdm.lock`, `Cargo.lock`, `go.sum`, `packages.lock.json`, `Podfile.lock` and `flake.lock`, and
+  `node_modules` and `vendor` with them, before any rule runs. `bun.lock` - Bun's CURRENT,
+  text-format lockfile - is NOT on that list and IS read, because only the older binary `bun.lockb`
+  is named there (corrected 2026-09-17; the sentence used to say \"and their siblings by name\",
+  which is not what the walker does). So a `bun.lock` dependency line can reach you, and it is a
+  transitive dependency record rather than a line this product wrote. WHAT MAKES THIS CLASS
+  DIFFERENT FROM THE FAMILY'S OTHER RULES is that the disclosure is a BY-PRODUCT OF ORDINARY USE
+  rather than of a deliberate transfer: the vendor learns the caller's IP address, the user agent,
+  the destination path and - in a browser - the page URL and referrer on every request, whatever the
+  payload is, and no configuration sends less. For the avatar group the key IS the payload: a
+  Gravatar request is keyed by a hash of the person's email address, which is an identifier and not
+  an anonymisation, and a UI Avatars request carries the person's name in plaintext in the query
+  string. These vendors have NO established jurisdiction in the research behind these lists: Hotjar
+  (Contentsquare), Microsoft Clarity, the wsrv.nl image proxy, UI Avatars and Retraced. The context
+  questions give the separate reason for each, and you may not supply a jurisdiction for any of
+  them. Nine of the ten analytics vendors are also matched by a separate rule about prior consent
+  for tag placement; that is a different duty about the same code and neither finding disposes of
+  the other. Whether the vendor is already in the operator's record of processing activities,
+  privacy policy and subprocessor list is not decided by the detector and cannot be: see the context
+  questions. TWO VENDOR CLASSES WERE ADDED ON 2026-09-02 AND THEY ARE NAMED HERE RATHER THAN FOLDED
+  INTO THE COUNTS ABOVE. session-replay vendors: 5 vendors and 43 spellings owned by LogRocket,
+  Mouseflow, OpenReplay, Datadog Real User Monitoring and Smartlook, whose product receives a
+  reconstruction of the rendered page. Error, crash and application monitoring: 7 vendors and 95
+  spellings owned by Sentry, Rollbar, BugSnag under SmartBear, Honeybadger, AppSignal, Raygun and
+  Airbrake, whose product receives a report of what failed together with the breadcrumb trail and
+  request context leading up to it - which is the field an operator is least likely to have
+  enumerated, because a stack trace and a breadcrumb carry whatever the application was holding at
+  the moment it broke. FOUR THINGS TO TEST FIRST ON THE NEW CLASSES. (1) TWO OF THE NEW BARE TOKENS
+  ARE ORDINARY ENGLISH COMPOUNDS AND WILL REACH UNRELATED CODE: `raygun` appears in games, graphics
+  and fixtures, and `airbrake` names a real mechanical component; `honeybadger` and `appsignal` are
+  milder cases of the same. The bare word `sentry` was REFUSED as an anchor for exactly this reason,
+  so you will not meet it. (2) SELF-HOSTING. Sentry, OpenReplay, LogRocket and BugSnag each offer an
+  edition the operator runs itself (context question 3 names every such vendor and its page) and a
+  self-hosted deployment discloses to nobody outside the operator; the package name and the call are
+  identical either way and the difference is in a data source name or an ingest URL that is very
+  often an environment variable. An ingest address on the operator's own domain is not that
+  difference by itself: it may equally be Sentry's documented `tunnel`, which passes every event on
+  to Sentry, and context question 3 says how that is settled. (3) THE WRONG PRODUCT FROM THE RIGHT
+  VENDOR, again: `com.datadoghq` covers logging and application performance monitoring as well as
+  session replay, and `@sentry/` covers profiling and tracing as well as error reporting. The bare
+  npm scope `@datadog/` was named here alongside `com.datadoghq` until 2026-09-16, when the owner
+  withdrew the nine umbrella scopes across the bundle; it is not an anchor of this list now, so a
+  Datadog npm package that is not one of `@datadog/browser-rum`, `@datadog/browser-rum-slim`,
+  `@datadog/browser-logs` or `@datadog/mobile-react-native` no longer reaches you at all. (4) ONE
+  VENDOR OF THE TWELVE IS ESTABLISHED IN THE EUROPEAN ECONOMIC AREA ON THE DOCUMENTS READ -
+  AppSignal B.V., with a Dutch Chamber of Commerce number - and two have NO established jurisdiction
+  at all: OpenReplay, whose own two documents name two different entities and no country, and
+  Smartlook, whose legal pages no longer resolve because the product is in end of sale after being
+  taken into Cisco. You may not supply a jurisdiction for either of those two. RESEARCH DEPTH FOR
+  THE TWO NEW LISTS, STATED SO YOU DO NOT OVERREAD THEM: one legal document was fetched and read per
+  vendor and it establishes the entity; what each vendor receives on each path is reasoned from the
+  SDK surface this repository already names and is a hypothesis for you to confirm, narrow or
+  reject, not a first-hand reading of the vendor's own documentation TWO CLAUSES WERE ADDED
+  2026-09-09 AND NEITHER OF THEM READS THE VENDOR LISTS, so read this paragraph before treating a
+  match from either as a named recipient. THE FIRST IS THE SPLIT DEPENDENCY COORDINATE. A Gradle
+  version catalogue writes a Maven coordinate as an inline table - a `group` key and a `name` key
+  inside one pair of braces on one physical line - and never writes the colon that joins them, so
+  the vendor's own coordinate is spelled nowhere in the tree as one string and no anchor of the five
+  lists can reach it. The clause matches that inline-table shape where the `group` value is a
+  reverse-DNS namespace and the `name` value carries an analytics, measurement, telemetry, tracking,
+  crash-reporting or session-replay word. WHAT IT ESTABLISHES is that a dependency coordinate in
+  split form names an artifact of that kind, and NOT which vendor owns it: read the vendor off the
+  `group` value, which is on the same line, and say what you read. It establishes nothing about
+  whether the dependency is used - a catalogue entry may be declared and never referenced by any
+  module - so look for the alias accessor, `libs.<something>`, in the build files before treating it
+  as an integration. THE SECOND IS THE VENDOR'S CONFIGURATION-KEY SPELLING, and it is a path placed
+  BESIDE the refusal recorded above rather than a reversal of it. `segment`, `amplitude`, `clarity`,
+  `plausible` and `sentry` remain REFUSED as bare anchors and you will still not meet them as bare
+  words; what the new clause matches is the vendor word COMPOUNDED with a configuration-key word and
+  nothing else - `P_MS_CLARITY_TAG`, `clarityTag`, `MATOMO_SITE_ID`, `GA_MEASUREMENT_ID`,
+  `SEGMENT_WRITE_KEY` - joined by an underscore, a hyphen or a camelCase boundary. Two vendor words
+  are deliberately left out of that branch even in compound form, because their compounds are
+  ordinary code: `segment`, which appears only in its real key `SEGMENT_WRITE_KEY` because
+  `segmentId` is a route, video or audio segment in most trees, and `heap`, which is memory
+  bookkeeping. WHAT A CONFIGURATION-KEY MATCH ESTABLISHES is that this product carries a setting
+  named for that vendor. It does NOT establish that the setting has a value in any deployment, that
+  the integration is switched on, or that anything was ever sent: an unset key sends nothing, and
+  where the key is served back out of the product's own API - which is what the anchor this clause
+  was written from does - what travels is the operator's own configuration rather than any person's
+  data. Answer context question 1 and context question 3 first on a match from either of these two
+  clauses."
+remediation_template: >
+  Read the matched line first and decide what it is, because this rule matches a spelling a vendor
+
+  owns and that spelling reaches a tree in nine shapes of which three put data in the vendor's
+
+  hands. A dependency declaration or import that first-party code calls; a request to the vendor's
+
+  API or a script, tag, pixel or image loaded from the vendor's host on the product's own request
+
+  path; and a vendor's own installation snippet in a page template are the three. A vendored SDK
+
+  nothing calls, a documentation or migration-guide link, a Content-Security-Policy or
+
+  cookie-declaration entry that names a host without loading it, test or demo data, and a string
+
+  that is not the vendor at all are the other five. A supporting line of a first-party integration
+
+  whose send exists in the tree - a setup-screen entry, a kind list, a renderer for the vendor's
+
+  message format, a setting that selects the vendor - is the ninth: it sends nothing itself, and it
+
+  names the recipient of the send it serves. The policy or cookie-declaration entry transmits
+
+  nothing to the vendor by itself, and it is not nothing as evidence either: someone wrote that host
+
+  down because they expected it to be reached, so look for the tag, pixel or image that does the
+
+  loading before closing the candidate on the entry.
+
+  Then settle two things the code alone does not answer, in this order, because either one can close
+
+  the candidate outright. First, IS THE TREE THE VENDOR? Two of these vendors publish their own
+
+  source under their own name, and a product naming itself is not a disclosure to a recipient.
+
+  Second, IS THE DESTINATION THE VENDOR'S OWN HOST, or a self-hosted instance the operator runs?
+
+  Ten of these vendors offer an edition the operator runs itself - PostHog, Plausible, Matomo,
+
+  Sentry, OpenReplay, LogRocket, BugSnag, Retraced, DiceBear and wsrv.nl - and for those the package
+
+  name, the import and the call are identical either way; the difference is a configuration value,
+
+  very often an environment variable.
+
+  An address on the operator's own domain is not evidence of self-hosting: PostHog, Plausible,
+  Sentry,
+
+  Mixpanel and Datadog each document such an address as a reverse proxy that passes the data on to
+  them.
+
+  Only where the person running the scan says it is their own instance, the vendor is one of those
+
+  ten, and nothing in the configuration contradicts that, is there no named recipient to record
+  here;
+
+  for any other vendor an address on the operator's own domain is a proxy to that vendor.
+
+  If it survives both, write the entry, and write four things into it. WHO the recipient is, named
+  as
+
+  it identifies itself in its own contracting document rather than by the brand on the package - two
+
+  of these vendors trade under a name that is not their owner's. WHAT it receives on the integration
+
+  path actually used, read off the vendor's own API reference for the call this code makes: a
+
+  page-view beacon, an identify call, a session recording, a heatmap, a server-side event, an avatar
+
+  image request and an audit-log event are seven materially different disclosures that one row
+
+  should not flatten, and the request properties belong in the row beside the payload - the caller's
+
+  IP address, the user agent, the page URL and the referrer travel on every request whatever the
+
+  payload is, and the page URL routinely carries an order number, a document title or a token. For
+
+  an avatar host record what the request key IS: a hash of a person's email address is an identifier
+
+  and not an anonymisation, and a name in a query string is the name itself. WHICH ENTITY the
+  operator
+
+  actually contracts with and WHERE that entity is, as a place, read from the order form or the data
+
+  processing agreement rather than the vendor's homepage - and THE VENDOR HAS NO SINGLE ANSWER TO
+
+  COPY, because a vendor of this kind names several entities and picks between them by a property of
+
+  the CUSTOMER, so the entity is a fact about THIS OPERATOR'S CONTRACT. Context question 6 lists the
+
+  candidates each vendor's own documents named and the date each was read; that is an incomplete
+  list
+
+  of candidates and never the answer, because nothing re-reads those documents. Where the operator
+
+  cannot produce the contract, return needs_human for that field rather than choosing the candidate
+
+  that looks likeliest. And WHETHER it is a processor or an independent controller for this data.
+
+  For the vendors the context questions name as having no established jurisdiction - Hotjar
+
+  (Contentsquare), Microsoft Clarity, the wsrv.nl image proxy, UI Avatars and Retraced - leave that
+
+  field unanswered and say why. Do not substitute a headquarters, a billing country or a country
+
+  inferred from a domain suffix.
+
+  Which record the entry goes in depends on whether the scanned product is a controller or a
+
+  processor for this data, and there is no field to write it into until that is answered. Where the
+
+  product is a controller, the entry is a category of recipient in field (d) of its own Art. 30(1)
+
+  record. Where the product is a processor, its own record is the Art. 30(2) record, which has no
+
+  categories-of-recipients field - its (d) is the security-measures field, so the words FIELD (D)
+
+  name something else entirely there, and the recipient category belongs in the
+  customer-controller's
+
+  record instead. If the product's own position in the chain is not established, say so and stop
+
+  rather than choosing one.
+
+  In either case add the vendor to the privacy policy, the cookie declaration and the published
+
+  subprocessor list as well as to the record, because for this class those are the documents that
+
+  most often lack it - an analytics tag and an avatar host arrive as one line of template code and
+
+  nobody experiences either as engaging a third party.
+
+  If the vendor is already named in the record, in the privacy policy and in the subprocessor list,
+
+  and the four facts above are recorded, dismiss the candidate and say
+
+  which of the three documents you read. Check as well whether the same vendor already appears in
+
+  this output under a separate rule about prior consent for tag placement; the emitter does not
+
+  de-duplicate across rules, and two duties about one vendor is not one finding reported twice.
+
+  Do not delete the analytics tag, the avatar image or the audit log in order to close the finding.
+
+  The obligation is to record the recipient, not to have no recipients - and for an audit log the
+
+  obligation to keep it may come from somewhere else entirely.
+data_categories:
+  - user.behavior
+  - user.contact.email
+  - user.content
+  - user.device
+  - user.device.ip_address
+  - user.name
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: enumeration
+  item: vendor per named integration path
+  item_source: token

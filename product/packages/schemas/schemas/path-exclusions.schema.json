@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/path-exclusions.schema.json",
+  "title": "Shared path-exclusion file",
+  "description": "One file of rules/path-exclusions/. A shared exclusion set is a list of path patterns SEVERAL rules must agree on, authored once and imported by each of them through detector.shared_path_exclusions. It exists because 98 of the 169 detector.path_without clauses shipped on 2026-08-27 were a clause some other rule also spelled byte for byte — one regex, \\.(?:test|spec|stories|cy)\\.[cm]?[jt]sx? It is a SEPARATE mechanism from rules/vocabulary/ and not an extension of it: a shared word list holds literal text that is escaped on the way into a pattern, a path exclusion IS a regular expression and is compiled raw, and one format serving both would be a file whose entries are escaped by one consumer and not by the other. A file is not a bundle asset: tools/build-bundle.mjs merges the sets a rule imports into that rule's detector.path_without before the bundle is written, so a shipped bundle carries no imports and the scanner never needs this directory.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "sets"
+  ],
+  "properties": {
+    "sets": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "The exclusion sets this file declares, keyed by the name rules import them under. The name lives here and nowhere else — it is not repeated in the filename and is not aliasable on import, so two rules cannot disagree about what a set is called. Two files declaring one name is a hard error naming both files: which of them a rule got would otherwise depend on directory order.",
+      "propertyNames": {
+        "pattern": "^[a-z_][a-z0-9_]*$"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "question"
+        ],
+        "properties": {
+          "question": {
+            "type": "string",
+            "minLength": 1,
+            "description": "One sentence, in the interrogative or close to it: what a rule that names this set is declining to look at. It is what an author of the NEXT rule reads to decide whether this set is the one they mean, and what tells a reviewer whether a pattern belongs here or in a different set. A set whose question cannot be written in one sentence is two sets."
+          },
+          "includes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z_][a-z0-9_]*$"
+            },
+            "minItems": 1,
+            "uniqueItems": true,
+            "description": "Other sets this one is composed of, resolved in declared order and BEFORE this set's own patterns. It exists so that a rule can say \"apply the standard test-surface exclusion\" in one line while the parts of that standard stay separately nameable: twelve rules want all three of the standard clauses, and eu-cra-001, eu-cra-002 and eu-special-categories-001 want the test-filename clause and must NOT have the fixture-directory clause, because a real person's data in a fixture is exposure whether or not the file ships. A cycle, a set including itself, and a name nothing declares are all hard errors."
+          },
+          "patterns": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "pattern",
+                "excludes"
+              ],
+              "properties": {
+                "pattern": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Regular-expression source, tested with RegExp.test against the file path relative to the scan root, with / separators and no leading ./ — exactly what a detector.path_without clause is, because that is what it becomes. Never a glob. An empty source is refused rather than compiled: it matches every path, which would silently take the whole surface away from every rule that named the set."
+                },
+                "excludes": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "What this one pattern takes out of the scan, in the words a reader of a scan report would need to judge whether the exclusion was right. This is the field that makes the set auditable: before this directory existed, 169 clauses sat in 32 rule files and 71 of them carried no comment of their own at all."
+                },
+                "note": {
+                  "type": "string",
+                  "description": "Optional: what a reader would otherwise get wrong about this pattern — a boundary it deliberately does not cross, a spelling it deliberately does not carry."
+                }
+              }
+            },
+            "description": "The clauses this set contributes, in file order. Optional only for a set built entirely out of `includes`; a set that resolves to no clause at all is a hard error, because a rule naming it would read the whole tree while its declaration says otherwise."
+          },
+          "near_misses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "rules",
+                "pattern",
+                "differs_by"
+              ],
+              "properties": {
+                "rules": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1,
+                  "description": "The rule ids that spell this near-miss variant."
+                },
+                "pattern": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The variant spelling, verbatim, as those rules carry it."
+                },
+                "differs_by": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Exactly what the variant matches that this set does not, or the other way round."
+                }
+              }
+            },
+            "description": "Spellings of THIS set's question that some rule carries and that could not join the set, because adopting the set would change which files that rule reads, and such a change is not an author's to make. Nothing reads this field: it exists so that a divergence that was invisible while the copies sat in 32 separate files is visible and countable in one, and so that the next author is told the variant exists before they add a fifteenth spelling. Recorded 2026-08-27 with the mechanism itself."
+          }
+        }
+      }
+    }
+  }
+}

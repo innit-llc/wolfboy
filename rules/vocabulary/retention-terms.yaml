@@ -1,0 +1,236 @@
+lists:
+  retention_sentinels:
+    kind: term
+    purpose: The values and member names a product uses to say that something is never removed — for the
+      rules that ask whether a retention or expiry setting ships with an unbounded default, and for
+      the rules that ask whether a deletion sweep can select the shipped default at all.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - term: Never
+        anchors:
+          - never
+        position_bound: true
+        note: "The plainest spelling and the most common one. A product declares it as an enumeration
+          member, `ExpireNever ExpiryKind = \"never\"`, and pre-selects that member as a form's
+          default, or shows it as the label of its own default, `case Lifetime.NoExpiry: return
+          'Never';`. `never` is also an ordinary English word and a JavaScript type name (`never` in
+          TypeScript), which is why the entry is position-bound: it is admitted only inside a
+          declared value or a member name."
+      - term: No expiry, written as a named member
+        anchors:
+          - no_expiry
+          - expiry_never
+          - never_expires
+          - no_expiration
+          - expires_never
+        position_bound: true
+        note: The form that produced this class. A product does not write `retention = never`; it declares a
+          member of an enumeration and selects it as a default, and the line carries no retention
+          word at all — which is why eight of `eu-retention-001`'s ten inline clauses, every one of
+          them requiring a retention term on the SAME line, could not see it. For example, an
+          enumeration `LongLived, ShortLived, NoExpiry` whose last member is the shipped default
+          through `useState(Lifetime.NoExpiry)`. Separator tolerance is what makes one anchor reach
+          `NoExpiry`, `no_expiry` and `noExpiry` alike.
+      - term: Forever
+        anchors:
+          - forever
+        position_bound: true
+        note: The English spelling of the same member, carried by `eu-retention-001`'s own inline
+          alternations (`[Ff]orever|FOREVER`) in five places today. It is a common word of code
+          outside retention as well — `run_forever()` in an event loop, a cache-header helper —
+          which is exactly the collision the position bound exists for.
+      - term: Unlimited
+        anchors:
+          - unlimited
+        position_bound: true
+        note: A quota word as often as a retention word — `unlimited-projects` as a pricing-plan feature id
+          is not a retention default. Carried because `eu-retention-001` already carries it inline,
+          so the shared list must not be narrower than what it sits beside there. No other importing
+          rule carries it, so for the other four this entry adds reach rather than preserving it.
+      - term: Indefinite
+        anchors:
+          - indefinite
+        position_bound: true
+        note: 'The word a settings description uses where the value is a sentinel: the option reads "keep
+          indefinitely" and the value is `0`. Carried inline by `eu-retention-001` today
+          (`[Ii]ndefinite|INDEFINITE`).'
+      - term: Permanent
+        anchors:
+          - permanent
+        position_bound: true
+        note: "For example, a description `'Expected lifetime: permanent'` for a feature-flag type whose
+          lifetime column is `null`. The word is in the description and the sentinel is in the
+          column, in the same product and in two different files, which is why the description alone
+          establishes nothing and the entry is position-bound."
+      - term: No limit
+        anchors:
+          - no_limit
+          - nolimit
+        position_bound: true
+        note: The separated and squashed spellings only. The two-word English phrase `no limit` is NOT
+          reachable from either anchor, because a separator run may never cross whitespace;
+          `eu-retention-001`'s own inline alternations carry `[Nn]o[ _-]?limit` and keep that reach,
+          and the other four importing rules never had it. Stated here rather than left for a reader
+          to discover.
+      - term: Null as the unbounded value
+        anchors:
+          - "null"
+          - nil
+          - none
+        position_bound: true
+        note: "The sentinel that is not a word at all: a column with no value, which every SQL comparison is
+          false for, so a sweep written as an inequality can never select the row — for example a
+          seed row `INSERT INTO item_types(id, name, lifetime_days) VALUES('permanent', 'Permanent',
+          null);`. `null`, `nil` and `None` are three languages' spellings of one value and each is
+          an ordinary token of its language everywhere else — the position bound is doing the whole
+          of the work here. The YAML spelling `~` is deliberately NOT an anchor: it is one
+          character, it is a home-directory shorthand and a destructor sigil elsewhere, and
+          `eu-retention-001`'s block-form clause already carries it inline where a YAML block is the
+          construct."
+      - term: Minus one
+        anchors:
+          - "-1"
+        position_bound: true
+        note: The numeric sentinel that means "no bound" in an interface where a positive number means days.
+          The leading `-` is not a separator run between two alphanumerics, so separator tolerance
+          leaves this anchor exactly two characters and it can never decay to `1`. Carried inline by
+          `eu-retention-001` clauses [1] and [2] today, which is where its existing reach stays.
+      - term: Zero
+        anchors:
+          - "0"
+        position_bound: true
+        note: The loudest anchor in this file and the one a reader should check the clause for first. A zero
+          means unbounded in some interfaces and IMMEDIATELY in others, and nothing in this list
+          distinguishes them — `eu-retention-001`'s evidence template says so in its own words and
+          asks the adjudicator to read the consumer. It is carried so that a clause splicing this
+          list is not silently narrower than the inline alternation beside it.
+      - term: The empty value
+        anchors:
+          - '""'
+          - "''"
+        position_bound: true
+        note: "The sentinel that is not a value at all: a shipped default such as `cleanup_params = \"\";`,
+          which means no cleanup is configured, while a deployer's own value would arrive through a
+          separate setting. An empty string is also the default of every unset option in every
+          configuration system, which is the whole of why this entry is position-bound: it may be
+          spliced only where a clause has already established that the identifier on the left is a
+          retention, expiry or cleanup setting and that the empty value ENDS the statement. Two
+          anchors rather than one because the double- and single-quoted forms are different bytes
+          and neither is reachable from the other by case or separator tolerance."
+      - term: False as the unbounded value
+        anchors:
+          - "false"
+        position_bound: true
+        note: "The boolean spelling of \"no expiry\", which is what a framework's own expiry argument takes
+          when the caller wants the token to live forever: a shipped default such as
+          `JWT_REFRESH_TOKEN_EXPIRES = False`, or the same value passed at a call site,
+          `expires_delta=False,` under a comment saying the link does not expire. `false` is an
+          ordinary literal of every language, so the position bound is doing the whole of the work:
+          it is admitted only in the value position of a retention- or expiry-named binding. Case
+          tolerance is what makes one anchor reach Python's `False`, JSON's `false` and Go's
+          `FALSE`."
+      - term: The largest representable value
+        anchors:
+          - infinity
+          - math.inf
+          - max_value
+        position_bound: true
+        note: "The sentinel a typed language reaches for when the field is a number and the meaning is
+          \"never\": a floating-point infinity, or the type's own maximum. `Infinity`, `math.inf`,
+          `Long.MAX_VALUE` and `Integer.MAX_VALUE` are the four spellings, and case and separator
+          tolerance reach all of them from these three anchors — `max_value` reaches `MAX_VALUE`,
+          `MaxValue` and `maxValue`. NOT read from a retention construct in the twenty-eight pinned
+          trees; it is the sibling spelling of the far-future date below and of `Duration.zero`
+          above, and it is labelled as such rather than presented as evidenced reach. `math.inf`
+          carries its dot because the bare `inf` is a prefix of `info`, `infer` and
+          `infrastructure`; the dotted form is the whole of the Python spelling and the separator
+          run may never grow past the one character written."
+      - term: The far-future date literal
+        anchors:
+          - "9999"
+          - "10000"
+          - "294276"
+        position_bound: true
+        note: A year so far ahead that the product itself calls it forever, such as `embargo.forever.year =
+          10000`. A product may use such a date as a THRESHOLD that decides whether an item reads as
+          embargoed or as restricted — then the anchor is a classification boundary and NOT a
+          retention period, and a finding drawn from it must not be worded as one. A shipped access
+          period written as a word, `grant.link.period = FOREVER`, is reached by the never-WORD
+          entries above rather than by this one. `9999` is the year every database vendor documents
+          as its maximum and `294276` is PostgreSQL's own `timestamptz` ceiling. Four digits and
+          five are ordinary numbers — a port, a size, a timeout in milliseconds — which is why this
+          entry may only be spliced where a clause has already bound the value to a retention-named
+          key.
+  retention_time_columns:
+    kind: term
+    purpose: The names a product gives the column or field a retention sweep compares against — for the
+      rules that ask whether a deletion keyed to a time column exists, and whether its predicate can
+      reach the rows the product actually ships.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - term: Expire, as a bare column name
+        anchors:
+          - expire
+        position_bound: true
+        note: "The bare word, which is the spelling that produced this entry: a bounded age-based deletion
+          such as `conn.execute(f\"DELETE FROM {table} WHERE expire < ?\", (cutoff,))`, whose column
+          is the bare word and whose table name is an f-string interpolation. `eu-retention-003`'s
+          inline `time_column_words` list carries the compound forms (`expire_at`, `expires_at`) and
+          not this one, which is half of why such a line was reached by nothing."
+      - term: Expires-at timestamp column
+        anchors:
+          - expires_at
+          - expiry
+        position_bound: true
+        note: 'The compound forms, carried so the shared list is not narrower than the inline lists beside
+          it: a sweep such as `Where("expires_at > 0 AND expires_at <= ?", now)`, and a schema
+          column such as `expiresAt: timestamp("expires_at")` — a nullable column with no default,
+          which is the sentinel form in a schema.'
+      - term: Given, as the moment a record was supplied
+        anchors:
+          - given
+        position_bound: true
+        note: A past participle of an ordinary verb and a word of every English sentence, and also the
+          column a real deletion may be keyed to, as in `DELETE FROM feedback WHERE kind = 'survey'
+          AND given < NOW() - INTERVAL '3 months';`. It is admitted only inside a `WHERE` predicate
+          of a deletion; spliced anywhere else it would report prose.
+      - term: Activity timestamp columns
+        anchors:
+          - active_at
+          - seen_at
+          - last_seen
+        position_bound: true
+        note: "The columns a product sweeps on when the thing being expired is a session, a device or a
+          token: `db.Where(\"active_at < ?\", cutoff)`, `.andWhere('seen_at', '<', cutoff)` and
+          `.whereRaw(\"last_seen >= NOW() - INTERVAL '24 hours'\")`. None of these three is in
+          `safeguard-reach-002`'s inline `expiry_column` list, which is why a sweep that cannot
+          reach its own shipped default can be invisible to it."
+      - term: Row-lifecycle timestamp columns
+        anchors:
+          - created_at
+          - deleted_at
+          - m_time
+        position_bound: true
+        note: "The columns a deletion falls back to where there is no expiry column at all: an inactive-user
+          removal keyed on `seen_at` and `created_at` together, or a row stamped `m_time INTEGER
+          DEFAULT (strftime('%s', 'now'))`. `deleted_at` needs a sentence of its own:
+          `safeguard-reach-002` deliberately keeps it OUT of its inline `expiry_column` list, on the
+          stated ground that a soft-delete timestamp is not an expiry, and that decision is
+          untouched — the inline list is unchanged and its clauses still cannot see the word. It
+          enters this rule only through the two ADDED clauses, which require the column to sit
+          inside a QUERY predicate with a bound cutoff — `deleted_at < cutoff` is a purge of rows
+          already soft-deleted, and that is the construct the rule is looking for. The removal call
+          is NOT required on the same line (`safeguard-reach-002`'s evidence template says so of its
+          clause 9), so such a candidate shows the SELECTION of a sweep and leaves the removal to a
+          reader of the file."
+      - term: Lifetime in days, as a column
+        anchors:
+          - lifetime_days
+        position_bound: true
+        note: "The period written as a column of a type table rather than as a setting, such as
+          `lifetime_days: { type: 'int' }` with seed rows that ship `null` for some of the types.
+          The pair — this column name and the `null` value — is what a sweep has to see together."

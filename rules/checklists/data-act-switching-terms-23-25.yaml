@@ -1,0 +1,612 @@
+checklist_id: data-act-switching-terms-23-25
+title: Data Act Articles 23 and 25 - switching obstacles and mandatory contract terms
+law: Regulation (EU) 2023/2854 (Data Act)
+source_url: http://publications.europa.eu/resource/celex/32023R2854
+checked_at: 2026-07-28
+scope_note: "This checklist records whether the written contract contains the terms Article 25(2)
+  requires, and whether anything in it imposes an obstacle to switching of the kind Article 23
+  forbids. **It does not record whether the contract describes the switching process** — an earlier
+  version of this note said it did, and no item asks that; Article 23's first sentence, which
+  requires the provider to take the measures provided for in Articles 25, 26, 27, 29 and 30, is
+  quoted nowhere here. It does not decide whether switching actually works, whether assistance is in
+  fact reasonable, or whether an obstacle exists in practice that the contract does not mention -
+  all three are about conduct. **It does not walk the whole of Article 25.** Of the nine terms in
+  Article 25(2) it asks about seven - (a), (b), (d), (e), (g), (h) and (i) - and does not ask about
+  **(c)** (the clause specifying when the contract is treated as terminated) or **(f)** (the
+  specification of internal data exempted from export where a trade secret would be breached). It
+  also does not ask about **Article 25(3)** (the clauses letting the customer notify which of
+  switch, port on-premises or erase it has chosen) or **Article 25(5)** (the clause giving the
+  customer a right to extend the transitional period once), both of which say \"shall include
+  clauses\", nor about **Article 25(4)** (the notification and justification a provider owes where
+  the 30-day period is technically unfeasible), which is a conduct duty rather than a contract term.
+  Article 25 has five paragraphs and this list walks part of two of them. **It does not walk the
+  whole of Article 23 either.** The obstacles list in Article 23's second sentence has five points,
+  and `art-23-obstacles-removed` asks about **(a)** (terminating the contract after the notice
+  period and the completed switching process), **(b)** (concluding new contracts with a different
+  provider of the same service type) and **(c)** (porting the customer's exportable data and digital
+  assets, including after a free-tier offering). It does not ask about **(d)** (achieving functional
+  equivalence in a different provider's ICT environment, in accordance with Article 24) or **(e)**
+  (unbundling, where technically feasible, the Article 30(1) services from the provider's other
+  services). Point (e) is the one of the two a contract shows on its face - bundling terms are
+  contract terms - and the word \"unbundling\" appears in no item here, so a bundling obstacle
+  Article 23 forbids passes this checklist unremarked. Both points are quoted in full on the gate
+  from 2026-09-01, so a reader can see what is left out; quoting them does not add an item, and no
+  item asks either. A contract that answers every item below has therefore not been shown to satisfy
+  Article 25; it has been shown to contain seven of its terms. **Which document these items are
+  about, which this file did not say until 2026-09-01.** Every item below asks about **the written
+  contract for the data processing service** - the terms of service, master service agreement or
+  customer agreement a customer enters into, together with the schedules that contract incorporates.
+  A privacy policy, a security whitepaper, a commercial-disclosure page, an internal design memo and
+  a product specification are not documents of that kind and answer none of these items. Where the
+  documents found include no contract of that kind, every item below is `unresolved` and the
+  reasoning says that no contract was found; none of them is `absent`, because `absent` means this
+  contract does not say it and there is no contract. The distinction has to be written down because
+  discovery hands over every document it found and labels none of them: a real tree returns between
+  a dozen and several dozen, of which the contract is one or none, and ten items marked `absent` on
+  the strength of a document that is not a contract is the worst output this product can produce.
+  There is no structured field for a document class today, so this is stated here in prose and the
+  items are read against it. **Article 25(2)'s opening words are a saving for Directive (EU)
+  2019/770**, so the consumer digital-content remedies of that Directive stand alongside the terms
+  below rather than being displaced by them. The saving narrows none of the seven terms this list
+  walks and changes no item's answer here; it is recorded so that a reader can see the
+  cross-reference was read rather than missed. **The Regulation applies from 12 September 2025**
+  under Article 50, whose transitional provisions reach only Article 3(1), Chapter III and Chapter
+  IV - none of which touches Chapter VI - so every term below is owed today and no finding here is
+  to be worded as preparation. The date appeared nowhere in this file until 2026-09-01."
+applicability:
+  question: "Is the project a data processing service - a digital service provided to a customer,
+    giving that customer ubiquitous and on-demand network access to a shared pool of configurable,
+    scalable and elastic computing resources, of a centralised, distributed or highly distributed
+    nature, that can be rapidly provisioned and released with minimal management effort or service
+    provider interaction - and is this provider the source provider, the one a customer would be
+    switching away from? **Neither is settled by anything in a repository.** Both are asked of the
+    person running the scan, or read from the provider's own service description and the contract
+    this checklist walks, and neither may be inferred from what the source tree imports, exports,
+    names or implements. So, in the words the person running the scan can answer: what do your
+    customers provision and release for themselves, what do you allocate to them flexibly as their
+    demand rises and falls, and whom would they be leaving when they switch away? And one more,
+    because it switches this whole checklist off: is what you supply a non-production version, is it
+    supplied for testing and evaluation purposes, and is it supplied for a limited period of time -
+    three separate facts, every one of which Article 31(2) needs?"
+  quote: ‘data processing service’ means a digital service that is provided to a customer and that
+    enables ubiquitous and on-demand network access to a shared pool of configurable, scalable and
+    elastic computing resources of a centralised, distributed or highly distributed nature that can
+    be rapidly provisioned and released with minimal management effort or service provider
+    interaction;
+  cite: Data Act Art. 2(8)
+  url: http://publications.europa.eu/resource/celex/32023R2854
+  checked_at: 2026-07-28
+  ask_the_user: true
+  supporting_quotes:
+    - quote: "In particular, providers of data processing services shall not impose and shall remove
+        pre-commercial, commercial, technical, contractual and organisational obstacles, which
+        inhibit customers from: (a) terminating, after the maximum notice period and the successful
+        completion of the switching process, in accordance with Article 25, the contract of the data
+        processing service; (b) concluding new contracts with a different provider of data
+        processing services covering the same service type; (c) porting the customer's exportable
+        data and digital assets, to a different provider of data processing services or to an
+        on-premises ICT infrastructure, including after having benefited from a free-tier offering;
+        (d) in accordance with Article 24, achieving functional equivalence in the use of the new
+        data processing service in the ICT environment of a different provider of data processing
+        services covering the same service type; (e) unbundling, where technically feasible, data
+        processing services referred to in Article 30(1) from other data processing services
+        provided by the provider of data processing services."
+      cite: Data Act Art. 23
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-09-01
+      why: "**This quotation carries the chapeau and all five points, and it stopped at point (c) until
+        2026-09-01.** `scope_note` above says which of the five this file walks - (a), (b) and (c) -
+        and which it leaves. The two it leaves were described there in the author's words and their
+        text was nowhere in the file, while `when_unresolved` instructed the agent, where the
+        bespoke branch is established, to say which point a reported obstacle falls under before
+        reporting it: a five-point taxonomy to sort into, with three of its points held and two of
+        them missing. Point (d) is the one point Article 31(1) disapplies, so the missing text was
+        load-bearing exactly where the instruction bites. The repair proposed on 2026-07-29 had two
+        halves - extend this quotation to point (e), and change the Article 31(1) reasoning - and
+        only the second was applied, on 2026-08-08, which left the instruction added that day
+        depending on material the same round did not add. **The obstacles duty itself, and the
+        free-tier clause this gate argued from without quoting it.** Until 2026-07-29 the gate
+        asserted in prose that \"a free tier is not a reason either - Article 23(c) names porting
+        'including after having benefited from a free-tier offering'\", while the only Article 23
+        text anywhere in the file was the fragment embedded inside the Article 31(1) quote. The gate
+        holds itself to a stricter standard elsewhere - it corrects an earlier draft for quoting a
+        duty and leaving its own test as unchecked prose - and this proposition now meets it. Note
+        what point (c) actually settles: a free tier does not put a customer's data outside the
+        porting duty, which is a different statement from \"a free service is a data processing
+        service\". The Article 2(8) limb still has to be met on its own."
+    - quote: As commonly understood by providers and users and in line with broadly used standards, data
+        processing services fall into one or more of the following three data processing service
+        delivery models, namely Infrastructure as a Service (IaaS), Platform as a service (PaaS) and
+        Software as a Service (SaaS).
+      cite: Data Act Recital 81
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-28
+      why: "**What this recital does and does not settle.** It says every data processing service falls
+        into one or more of three delivery models, so Software as a Service is not excluded as a
+        category - a hosted application is not outside Article 2(8) merely because it is sold as a
+        subscription. It does **not** say the converse. \"All data processing services are IaaS,
+        PaaS or SaaS\" is not \"all SaaS is a data processing service\", and Article 2(8)'s own test
+        - a shared pool of configurable, scalable and elastic computing resources - still has to be
+        met. This file asserted the converse between 2026-07-28 and 2026-07-29, which was an
+        over-correction of the opposite error, and the coverage map's position (an open scope call)
+        was the defensible one all along."
+    - quote: The capability of the customer of the data processing service to unilaterally self-provision
+        computing capabilities, such as server time or network storage, without any human
+        interaction by the provider of data processing services could be described as requiring
+        minimal management effort and as entailing minimal interaction between provider and
+        customer.
+      cite: Data Act Recital 80
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-29
+      why: The Regulation's own gloss on the last clause of Article 2(8), and it points the other way from
+        the reading this file carried on 2026-07-28. The definition says "with minimal management
+        effort **or** service provider interaction"; the recital describes the paradigm as the
+        customer self-provisioning **without any human interaction by the provider**, and calls that
+        requiring minimal management effort **and** entailing minimal interaction. So a service the
+        provider provisions and administers on the customer's behalf is not comfortably inside on
+        the strength of the disjunction alone. Quoted because the argument turns on two conjunctions
+        and a reader is entitled to check them.
+    - quote: The term ‘scalable’ refers to computing resources that are flexibly allocated by the provider
+        of data processing services, irrespective of the geographical location of the resources, in
+        order to handle fluctuations in demand.
+      cite: Data Act Recital 80
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-09-01
+      why: "**The same recital on a different element of Article 2(8), and it runs the other way from the
+        sentence above it.** \"Scalable\" is defined from the **provider's** side: resources the
+        provider allocates flexibly, wherever they sit, to handle fluctuations in demand. The
+        recital's self-provisioning sentence is also framed permissively - it says such a capability
+        \"could be described as\" requiring minimal management effort - so self-provisioning is a
+        sufficient case and not a necessary one, and Article 2(8) itself reads \"minimal management
+        effort **or** service provider interaction\". Quoted 2026-09-01 because this file quoted one
+        sentence of the recital and reasoned from it in the gate's own question: a
+        provider-administered hosted application whose customers provision nothing themselves was
+        pushed toward \"not a data processing service\", the gate resolved against applicability,
+        and ten items went unwalked - the invisible direction, where a skipped check prints the same
+        as a passed one."
+    - quote: ‘exportable data’, for the purpose of Articles 23 to 31 and Article 35, means the input and
+        output data, including metadata, directly or indirectly generated, or cogenerated, by the
+        customer’s use of the data processing service, excluding any assets or data protected by
+        intellectual property rights, or constituting a trade secret, of providers of data
+        processing services or third parties;
+      cite: Data Act Art. 2(38)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-09-01
+      why: "**The defined term Article 25(2)(e) sets as its floor, and it was named nowhere in this file
+        until 2026-09-01.** Point (e) asks for an exhaustive specification of the categories that
+        can be ported, \"including, at a minimum, all exportable data\", and this definition is what
+        that minimum is: input and output data including metadata, generated or cogenerated by the
+        customer's use of the service, with intellectual property and trade secrets carved out. Two
+        things follow for the items. A contract listing categories that stop short of that floor is
+        not exhaustive however precise its list is. And the carve-out is why Article 25(2)(f) exists
+        - the specification of internal data exempted from export where a trade secret would be
+        breached - which the `scope_note` declares this list does not ask about."
+    - quote: The responsibilities of providers of data processing services laid down in Articles 23, 25,
+        29, 30 and 34 shall apply only to the services, contracts or commercial practices provided
+        by the source provider of data processing services.
+      cite: Data Act Art. 24
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-28
+      why: The second half of the gate. Article 25 binds the provider a customer switches **away from**; a
+        destination provider - the one a customer switches **to** - is a data processing service and
+        still owes none of the terms below. **The two roles are told apart by whom the customer is
+        leaving and by what the contract says, never by which way data moves in the code.** One tree
+        commonly holds both directions, an import path is at most corroboration of a role somebody
+        has stated, and this sentence is a description of the two roles rather than a search
+        instruction.
+    - quote: The obligations laid down in this Chapter shall not apply to data processing services
+        provided as a non-production version for testing and evaluation purposes and for a limited
+        period of time.
+      cite: Data Act Art. 31(2)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-28
+      why: '**This limb switches the whole checklist off**, because "this Chapter" is Chapter VI, Articles
+        23 to 31, and Article 25 is inside it. All three conditions are cumulative: a non-production
+        version, for testing and evaluation, for a limited period of time.'
+    - quote: The obligations laid down in Article 23, point (d), Article 29 and Article 30(1) and (3)
+        shall not apply to data processing services of which the majority of main features has been
+        custom-built to accommodate the specific needs of an individual customer or where all
+        components have been developed for the purposes of an individual customer, and where those
+        data processing services are not offered at broad commercial scale via the service catalogue
+        of the provider of data processing services.
+      cite: Data Act Art. 31(1)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-28
+      why: 'The other limb, and it does **not** switch this checklist off: Article 25 is not in its list.
+        Quoted so the difference between the two limbs is readable rather than asserted. Note its
+        own conditions, and note the shape: [the majority of main features custom-built for one
+        customer **OR** all components developed for one customer] **AND** not offered at broad
+        commercial scale via the service catalogue. Three sites in this repository rendered it as a
+        plain "custom-built and not offered at broad commercial scale" until 2026-07-29, which loses
+        the second branch entirely.'
+    - quote: Prior to the conclusion of a contract on the provision of the data processing services
+        referred to in this Article, the provider of data processing services shall inform the
+        prospective customer of the obligations of this Chapter that do not apply.
+      cite: Data Act Art. 31(3)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-09-01
+      why: '**The duty that rides on Article 31 whichever of its two limbs is established**, quoted here
+        from 2026-09-01 because this file asserted it in prose and attached it to one branch only.
+        "This Article" is Article 31, and both of its paragraphs describe services: so a provider
+        relying on paragraph (1) owes the prospective customer a statement that Article 23, point
+        (d), Article 29 and Article 30(1) and (3) do not apply, exactly as a provider relying on
+        paragraph (2) owes a statement about the whole of Chapter VI. Note the tension the
+        Regulation does not resolve, which the sibling checklist `data-act-jurisdiction-28` states
+        and this file asserted flatly: Article 31(3) is itself an obligation laid down in Chapter
+        VI, and Article 31(2) disapplies the obligations laid down in this Chapter. The drafter
+        plainly intended it to survive - it speaks of the services referred to in this Article - but
+        that is a reading rather than a settled point, and a finding should say so.'
+    - quote: The requirements laid down in Article 23, Article 24, Article 25(2), points (a)(ii), (a)(iv),
+        (e) and (f) and Article 30(2) to (5) shall also apply mutatis mutandis to providers of data
+        processing services to facilitate interoperability for the purposes of in-parallel use of
+        data processing services.
+      cite: Data Act Art. 34(1)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-09-01
+      why: '**The one qualification on "walk no item", quoted so that the qualification is checkable.**
+        Article 34 sits in Chapter VIII, outside the Chapter that Article 31(2) disapplies, and it
+        re-imposes Article 23, Article 24, four points of Article 25(2) - among them point (e),
+        which `art-25-2-e-exportable-data-specified` walks - and Article 30(2) to (5), for the
+        purposes of in-parallel use. Whether that reaches a service supplied as a time-limited
+        non-production version is arguable, and its subject matter is different: in-parallel use,
+        not switching. So this is recorded rather than acted on, and `when_unresolved` says where to
+        record it. Added 2026-09-01, after the `does-not-apply` instruction was found stated more
+        broadly than Article 31(2) supports.'
+    - quote: providers of data processing services, irrespective of their place of establishment,
+        providing such services to customers in the Union;
+      cite: Data Act Art. 1(3)(f)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-29
+      why: "Why the territorial question is not asked: the Regulation reaches a provider wherever it is
+        established, and only in respect of customers in the Union — and **running the EU pack is
+        treated as the statement that the project is offered into the Union**, so the gate treats
+        this limb as settled by the premise and asks about it in no variant. Quoted so a reader can
+        see what the premise is standing in for. What the premise does not settle — is this a data
+        processing service, is this the source provider, is Article 31 in play — the gate still
+        asks."
+  when_unresolved: "Three questions, and each has its own answer when nobody has settled it. **Is it a
+    data processing service?** Infrastructure and platform offerings are plainly inside. Software as
+    a Service is **not excluded as a category** - Recital 81 names it as one of the three delivery
+    models - but that does not make every SaaS product a data processing service, and this file
+    asserted that it did until 2026-07-29. Apply Article 2(8)'s own test: is the customer getting a
+    shared pool of configurable, **scalable** and **elastic** computing resources? A hosted
+    application where customers get accounts, storage and compute they provision for themselves is
+    inside. An ordinary business application with fixed functionality, where nothing is provisioned
+    or released according to demand, is the genuinely arguable case, and Recital 80 - quoted above -
+    describes the paradigm as the customer self-provisioning without any human interaction by the
+    provider. **Read that sentence beside the same recital's gloss on \"scalable\", which is quoted
+    above too and runs the other way**: resources the **provider** allocates flexibly, wherever they
+    sit, to handle fluctuations in demand. So ask how computing resources are allocated and
+    released, and by whom - not only whether the customer does it itself - and note that the
+    self-provisioning sentence is framed as one description that \"could be described as\" meeting
+    the test, which makes it a sufficient case rather than a necessary one, while Article 2(8)
+    itself reads \"minimal management effort **or** service provider interaction\". A service the
+    provider administers and scales on the customer's behalf is not outside Article 2(8) on the
+    strength of the self-provisioning sentence alone. Where it is arguable, record `unresolved` and
+    name which limb of 2(8) you could not settle; do not resolve it by default in either direction.
+    **The three examples that follow are examples and not a closed test**: a one-off service
+    performed for the customer, in which nothing is provisioned and nothing is released, is outside
+    for the same reason and is none of the three, so apply Article 2(8)'s elements and say which of
+    them fails rather than looking for a match in the list. What is plainly outside is a service
+    that is not a pool of computing resources at all - a content site, a shop, a newsletter. **Ask
+    the person running the scan whether their customers provision and release computing resources
+    for themselves**, and read the provider's own service description beside the answer. **Is this
+    the source provider?** Article 24 confines these duties to the provider being switched away
+    from, and which side of a switch this provider sits on is a fact about its customers and its
+    contracts rather than about its code: **ask the person running the scan, or read it from the
+    contract this checklist walks.** An importer that pulls data from a competitor and an exporter
+    that writes data out can sit in the same tree, so neither settles the role, and a tree holding
+    neither has said nothing about it. **Is Article 31(2) in play?** Ask the person running the scan
+    whether what is being shipped is a non-production version supplied for testing and evaluation
+    for a limited period - and if all three are true, record the gate `does-not-apply` and walk no
+    item, because the whole of Chapter VI is disapplied. **That third question has a document route
+    as well, and this field sent it to asking alone until 2026-09-01.** The general rule further
+    down - that the provider's own service description and the contract this checklist walks are the
+    second place an answer can be read from - governs this question as it governs the other two, and
+    a real contract answers it more often than not: terms saying that the free tier is the same
+    production service under the same clauses, or that what is granted carries no expiry, have
+    answered two of the three conditions between them. Ask where the documents do not answer, and
+    not before. **One qualification on \"walk no item\", and it is stated rather than acted on.**
+    Article 34(1), quoted above, re-imposes Article 23, Article 24, four points of Article 25(2) -
+    (a)(ii), (a)(iv), (e) and (f) - and Article 30(2) to (5) mutatis mutandis for the purposes of
+    in-parallel use, and Article 34 sits in Chapter VIII, which is not the Chapter Article 31(2)
+    disapplies. Two items here - `art-23-obstacles-removed` and
+    `art-25-2-e-exportable-data-specified` - are drawn from provisions that paragraph re-imposes
+    outside Chapter VI. Whether it reaches a service supplied under Article 31(2) is arguable and
+    the subject matter differs, so do not walk the items on that ground; say in the gate's reasoning
+    that Article 34(1) re-imposes two of them for in-parallel use and that this record does not
+    decide whether it bites here. Article 31(1) is not a reason to stop: Article 25 is not in its
+    list. **It is not a reason to stop and it is not nothing, either** - the list is \"Article 23,
+    point (d), Article 29 and Article 30(1) and (3)\", so **Article 23, point (d)** is in it. Point
+    (d) is functional equivalence in accordance with Article 24, and the Article 23 item this
+    checklist walks, `art-23-obstacles-removed`, quotes the chapeau and asks about lock-in, exit
+    penalties and porting restrictions, which are points (a), (b) and (c). So Article 31(1) takes
+    nothing away from any question this file asks today; record it where a bespoke build is
+    established, and re-derive it if an Article 23 item about functional equivalence is ever added.
+    **One edge of that is not clean and is stated rather than smoothed over**:
+    `art-23-obstacles-removed` quotes the Article 23 chapeau, which introduces all five points, and
+    its `finding_when` is `present` with an open-ended question - so an agent that finds a
+    functional-equivalence obstacle has a quoted chapeau covering it and would report under point
+    (d), which is the one point Article 31(1) disapplies for a bespoke service. Where the bespoke
+    branch is established, say which point a reported obstacle falls under before reporting it, and
+    all five points are now quoted above so that there is a full taxonomy to sort into. **How the
+    bespoke branch is established, which this field named no route to until 2026-09-01.** \"Record
+    it where a bespoke build is established\" named no way of establishing it: no question, no
+    addressee, no document route. Ask the person running the scan whether the majority of the
+    service's main features were custom-built to accommodate one customer's specific needs, or all
+    of its components developed for one customer, and whether the service is offered at broad
+    commercial scale through the service catalogue - and read the answer beside the contract and the
+    price list, which state it directly more often than not: a published tariff with named plans,
+    registration that completes without a per-customer build, and a clause forbidding one customer's
+    contract from covering another are each a statement that the service is sold from a catalogue.
+    This limb never closes this checklist, so a wrong answer costs a mis-scoped Article 23 report
+    rather than a skipped instrument - but a consequence with no route to its condition is an
+    instruction nobody can follow. **A free tier is not a reason either** - Article 23(c) names
+    porting \"including after having benefited from a free-tier offering\". Chapter VI carries no
+    exemption for micro or small enterprises. **Do not ask about customers in the Union**: running
+    the EU pack is treated as the statement that the project is offered into the Union (the pack's
+    standing premise), and Article 1(3)(f) is quoted above so a reader can see what that premise
+    stands in for. **What a source tree may do on this gate, and what it may never do.** An export
+    routine, a data-portability endpoint, an object storage client, a migration command, a preview
+    feature flag: any of them may corroborate or contradict what the person running the scan says
+    the service is, which side of a switch it sits on and whether what is shipped is a time-limited
+    non-production version, and **none of them may decide any of the three**. **A tree carrying none
+    of them is silent, and silence is not an answer here** - record `unresolved`, never
+    `does-not-apply`. **And none of those five has a census fact kind of its own, so the run will
+    not hand you one.** An export routine surfaces, if at all, as a dependency whose file happens to
+    sit on an export route; a data-portability endpoint, a migration command and a preview feature
+    flag surface as nothing at all. So their absence from the census is not evidence about the
+    service either, and this list is an invitation to read rather than a promise that the pipeline
+    has looked. Recorded 2026-09-01. A declared document stands in a different relation, and it is
+    the one the question above names: the provider's own service description and the contract this
+    checklist walks are the second place an answer can be read from, so a contract that says whom
+    the customer would be leaving, or a service description that says what the customer provisions
+    and releases, answers the question it speaks to. A document that does not state the thing asked
+    about has not answered it: a set of terms that says nothing about switching is not a statement
+    that this provider is not the source provider. Where a question is unanswered, record
+    `unresolved` and name which of the three it was. **One duty rides on Article 31 whichever of its
+    two limbs is established, and this field prompted it on one branch only until 2026-09-01**:
+    Article 31(3), quoted above, requires the provider, before concluding the contract, to inform
+    the prospective customer of the obligations of this Chapter that do not apply - and \"this
+    Article\" is Article 31, both of whose paragraphs describe services. So the duty arises on the
+    Article 31(1) branch, where this checklist keeps running and the obligations that do not apply
+    are Article 23, point (d), Article 29 and Article 30(1) and (3), exactly as it arises on the
+    Article 31(2) branch, where this checklist stops. On either branch, look for the pre-contract
+    statement and say whether it is there. The tension is stated with the quote above rather than
+    here: Article 31(3) sits inside the Chapter that Article 31(2) disapplies, and its survival is a
+    reading rather than a settled point. **What becomes of the ten items on each branch, which this
+    field did not say until 2026-09-01.** Where the gate is `does-not-apply`, walk no item and emit
+    the ten carrying the gate's own reasoning, subject to the Article 34(1) qualification above.
+    Where the gate is `unresolved` - which is where an ordinary business application lands by this
+    field's own words, and so the commonest real input this checklist meets - walk every item below
+    and record each of them `unresolved` too, conditional on the gate, naming the question that was
+    not settled. The other two outputs are both wrong: marking the ten items `absent` under a gate
+    nobody has settled reports ten shortfalls against a provider who may owe none of them, and
+    emitting no item at all makes a check that was skipped print exactly like a check that passed."
+items:
+  - id: art-25-1-written-contract
+    article: 25(1)
+    quote: The rights of the customer and the obligations of the provider of data processing services in
+      relation to switching between providers of such services or, where applicable, to an
+      on-premises ICT infrastructure shall be clearly set out in a written contract. The provider of
+      data processing services shall make that contract available to the customer prior to signing
+      the contract in a way that allows the customer to store and reproduce the contract.
+    cite: Data Act Art. 25(1)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-09-01
+    question: Is there a written contract setting out switching rights and the provider's own
+      obligations on switching, to a different provider or, where applicable, to an on-premises ICT
+      infrastructure, available before signing in a form the customer can store and reproduce?
+    applicability_note: "**The paragraph's first sentence is the duty and it was quoted nowhere in this
+      file until 2026-09-01**, while this note called it the more important half. It requires the
+      customer's **rights** and the provider's **obligations** to be clearly set out in a written
+      contract, and it names two destinations - a different provider, or on-premises ICT
+      infrastructure. Both halves are now in the question: a contract that states what the customer
+      may do and says nothing about what the provider must do is short of the paragraph, and so is
+      one that contemplates a move to another provider and never a move on-premises. A terms page a
+      customer can read, copy and print satisfies the storable-and-reproducible part on its face; a
+      click-through the customer cannot retrieve afterwards does not. **Three things are asked here
+      and this note ranked them without scoring them.** Where the document sets out switching rights
+      and the provider's obligations, and is available before signing, and is storable, the item is
+      `present`. Where it sets them out but one of the other two fails, it is `partial`, naming
+      which. Where it never mentions switching at all, the item is `absent` however available and
+      however storable it is: availability is not the substance of this term, and a contract that is
+      perfectly reproducible and silent on switching has not set out what the paragraph requires to
+      be set out."
+  - id: art-25-2-a-transition-30-days
+    article: 25(2)(a)
+    quote: without undue delay and in any event not after the mandatory maximum transitional period of
+      30 calendar days,
+    cite: Data Act Art. 25(2)(a)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Does the contract give the customer a right to switch or port within a transitional period
+      of no more than 30 calendar days, during which the service contract remains applicable?
+    applicability_note: 'Thirty **calendar** days, and a contract naming business days states a longer
+      period than the Article allows. Where a period is stated, quote it; where none is, the item is
+      absent rather than partial, because the length is the substance of the term. **Thirty days is
+      not an absolute ceiling, and a contract may lawfully say so.** Article 25(4) lets a provider
+      that has notified the customer within 14 working days, and justified technical unfeasibility,
+      indicate an alternative transitional period of up to **seven months**; Article 25(5) gives the
+      customer a right to extend the period once. A contract stating a longer period with that
+      machinery around it is a different finding from one that simply names 90 days, and the
+      reasoning must say which it is. **Neither paragraph licenses a longer standard period in the
+      contract**, which is how an earlier version of this note read them. Article 25(4) is a
+      **per-request** mechanism: it bites only where the 30-day period "is technically unfeasible",
+      and it requires the provider to notify the customer within 14 working days of the switching
+      request and to justify the unfeasibility. Article 25(5) is a **customer** right to extend
+      once, so it cannot support a period the provider set. A contract that simply names 90 days as
+      its standard transitional period is a finding; one that names 30 days and describes the 25(4)
+      machinery around it is not. **The two periods are sequential, not alternatives**: the notice
+      period in point (d), up to two months, runs first, and the transitional period is "initiated
+      after" it - so a contract stating both is stating a maximum of roughly three months end to
+      end, not thirty days. **And the period is one "during which the service contract remains
+      applicable"**, which is part of what point (a) requires and was asked by no item until
+      2026-09-01. A contract that names thirty days and terminates the service on the first of them
+      has stated the number and not the term: say so where the two are stated separately, and quote
+      both.'
+  - id: art-25-2-a-assistance-and-continuity
+    article: 25(2)(a)
+    quote: (i) provide reasonable assistance to the customer and third parties authorised by the
+      customer in the switching process; (ii) act with due care to maintain business continuity, and
+      continue the provision of the functions or services under the contract; (iii) provide clear
+      information concerning known risks to continuity in the provision of the functions or services
+      on the part of the source provider of data processing services; (iv) ensure that a high level
+      of security is maintained throughout the switching process, in particular the security of the
+      data during their transfer and the continued security of the data during the retrieval period
+      specified in point (g), in accordance with applicable Union or national law;
+    cite: Data Act Art. 25(2)(a)(i) to (iv)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-09-01
+    question: Does the contract commit the provider to give reasonable assistance in the switching
+      process, to keep the service running with due care for business continuity, to give clear
+      information about known risks to that continuity, and to maintain a high level of security
+      throughout?
+    applicability_note: "Article 25(2)(a) lists four duties during the transition - assistance, business
+      continuity, information about known risks to continuity, and security of the data throughout -
+      and the question asked about two of them until 2026-09-01 while this note named all four. All
+      four are now in the question and in the quote above, which carried point (i) alone until the
+      same date. A contract naming one of the four is partial: say which are present and which are
+      not."
+  - id: art-25-2-b-exit-strategy
+    article: 25(2)(b)
+    quote: an obligation of the provider of data processing services to support the customer’s exit
+      strategy relevant to the contracted services, including by providing all relevant information;
+    cite: Data Act Art. 25(2)(b)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Does the contract oblige the provider to support the customer's exit, including by giving
+      them the information they need?
+  - id: art-25-2-d-notice-two-months
+    article: 25(2)(d)
+    quote: a maximum notice period for initiation of the switching process, which shall not exceed two
+      months;
+    cite: Data Act Art. 25(2)(d)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Does the contract state a maximum notice period for starting the switch, and is it no more
+      than two months?
+    applicability_note: "Two distinct failures: no period stated, and a period longer than two months.
+      Both are worth distinguishing in the reasoning, because the second is a term the provider has
+      written down and can change, and the first is a term nobody wrote."
+  - id: art-25-2-e-exportable-data-specified
+    article: 25(2)(e)
+    quote: an exhaustive specification of all categories of data and digital assets that can be ported
+      during the switching process, including, at a minimum, all exportable data;
+    cite: Data Act Art. 25(2)(e)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Does the contract specify exhaustively which categories of data and digital assets can be
+      ported during the switching process, including, at a minimum, all exportable data?
+    applicability_note: "\"Exhaustive\" is the operative word. A contract promising \"your data\"
+      without saying which categories is worth recording as partial with the wording quoted; the
+      paragraph asks for a specification a customer could check an export against. **The point also
+      sets a floor, and the question dropped it until 2026-09-01**: the specification has to cover,
+      at a minimum, all **exportable data**, which is a defined term - Article 2(38), quoted on the
+      gate - meaning the input and output data, including metadata, generated or cogenerated by the
+      customer's use of the service, with intellectual property and trade secrets carved out. So a
+      list that is precise and stops short of that floor is not exhaustive: check the categories
+      named against the definition and say which part of the floor is unaccounted for. A stated
+      exclusion is not automatically a shortfall - the definition carves out trade secrets itself,
+      and Article 25(2)(f), which this list does not ask about, is where a trade-secret exclusion is
+      specified - so quote the exclusion and say which of the two it looks like rather than counting
+      it against the contract."
+  - id: art-25-2-g-retrieval-30-days
+    article: 25(2)(g)
+    quote: a minimum period for data retrieval of at least 30 calendar days, starting after the
+      termination of the transitional period that was agreed between the customer and the provider
+      of data processing services
+    cite: Data Act Art. 25(2)(g)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Does the contract give the customer at least 30 calendar days to retrieve their data after
+      the transitional period ends?
+    census_categories:
+      - retention
+    applicability_note: This is the term most often absent from ordinary terms of service, which
+      typically describe deletion on termination and say nothing about a retrieval window. A stated
+      deletion timetable is a candidate that usually turns out to answer the opposite question, and
+      saying so belongs in the reasoning. **Where the census carries deletion paths, read them
+      beside the window rather than instead of it.** A scheduled deletion whose timing contradicts a
+      stated retrieval window is a disagreement between the contract and the code and is worth
+      reporting as one, naming both; a tree with no such path says nothing about what the contract
+      promises. The category was declared here on 2026-09-01, after a walk found the deletion facts
+      reaching no item at all.
+  - id: art-25-2-h-full-erasure
+    article: 25(2)(h)
+    quote: a clause guaranteeing full erasure of all exportable data and digital assets generated
+      directly by the customer, or relating to the customer directly, after the expiry of the
+      retrieval period referred to in point (g)
+    cite: Data Act Art. 25(2)(h)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Does the contract guarantee full erasure of all exportable data and digital assets
+      generated directly by the customer, or relating to the customer directly, after the retrieval
+      period expires, or after a later agreed period, once the switching process has been completed
+      successfully?
+    census_categories:
+      - retention
+    applicability_note: "A **guarantee of erasure**, which is the opposite direction from the retention
+      promises most terms of service make, and one of the two most document-visible terms in Article
+      25(2). A clause saying data \"may be deleted\" or \"will be deleted in accordance with our
+      retention policy\" is partial: quote it and say that the paragraph asks for a guarantee. Two
+      qualifiers the item must not drop. The paragraph allows an **alternative agreed period** later
+      than the retrieval period, so a longer stated window is not by itself a failure. And the
+      guarantee is conditioned on the switching process **having been completed successfully** — a
+      contract that promises erasure without that condition is promising more than the point
+      requires, which is not a finding against it. **A third qualifier, which the question dropped
+      until 2026-09-01**: point (h) reaches exportable data and digital assets \"generated directly
+      by the customer, or relating to the customer directly\", not everything the provider holds. A
+      contract that guarantees erasure of the customer's own material and says nothing about, say,
+      aggregate operational records has answered the point; asking for more produces a candidate a
+      reader has to dismiss. **Where the census carries deletion paths, read them beside the
+      guarantee.** A scheduled deletion path is corroboration for a promise of erasure and a
+      contradiction of one where the retention it implements outlives what the contract promises;
+      report the disagreement and name both sides, and never read a deletion path as the guarantee
+      itself, which is a contract term. A tree with no such path says nothing either way. The
+      category was declared here on 2026-09-01."
+  - id: art-25-2-i-switching-charges-clause
+    article: 25(2)(i)
+    quote: switching charges, that may be imposed by providers of data processing services in accordance
+      with Article 29.
+    cite: Data Act Art. 25(2)(i)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Does the contract contain a clause covering switching charges, whether it states a charge
+      or states that none is imposed?
+    applicability_note: 'This asks a **contract-drafting** question, not a pricing one: Article 25(2)
+      requires the contract to address switching charges. Whether a contract that imposes none must
+      still say so is **arguable, and the arguability goes in the words rather than into the status
+      word**: the point lists "switching charges, that may be imposed ... in accordance with Article
+      29", and a provider imposing none has nothing to set out. An earlier version of this note
+      asserted the stricter reading as settled, and from 2026-08-08 until 2026-09-01 it asked for an
+      output the status vocabulary cannot express - there is no `arguable`, and `unresolved` means
+      something different, that the agent could not settle the question. **So: where the contract
+      contains no switching-charge clause and imposes no such charge, record `absent` and say in the
+      reasoning that the shortfall rests on the stricter reading of point (i), that the looser
+      reading leaves nothing for the contract to set out, and that this list does not choose between
+      them.** That is the shape `art-23-obstacles-removed` already uses for its own arguable
+      clauses: a status the vocabulary has, with the argument quoted beside it. Note also the date:
+      from **12 January 2027** Article 29(1) forbids any switching charge, so what point (i) can
+      lawfully contain changes on that day, and a finding should say which side of it the run is
+      being read from. What Article 29 permits a stated charge to be is a different question, asked
+      by the separate checklist `data-act-switching-charges-29` - do not answer it here. This item
+      exists because it fell in the gap between the two lists and was checked by neither, which was
+      found on 2026-07-28.'
+  - id: art-23-obstacles-removed
+    article: "23"
+    quote: "In particular, providers of data processing services shall not impose and shall remove
+      pre-commercial, commercial, technical, contractual and organisational obstacles, which inhibit
+      customers from:"
+    cite: Data Act Art. 23
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Does anything in the contract impose an obstacle to switching - a lock-in period, a
+      penalty for leaving, a restriction on porting data to a competitor?
+    finding_when: present
+    applicability_note: '**`finding_when: present`** - the only item in this list where the answer "yes,
+      it is there" is the problem. Report it in words rather than in a status: "a lock-in clause was
+      found" and "no lock-in clause was found" both read clearly, where "present" alone can be read
+      either way. Quote the clause. Whether it is an obstacle within the meaning of Article 23 is a
+      judgement, and the honest record for an arguable clause is that it was found and what it
+      says.'

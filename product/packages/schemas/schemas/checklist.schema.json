@@ -1,0 +1,364 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/checklist.schema.json",
+  "title": "Checklist (what a notice is required to contain)",
+  "description": "One instrument's disclosure requirements, in the same shape as a rule's legal_basis: the statutory words, where they come from, and the question to ask of the document. It ships inside the rule bundle so that it is version-pinned and integrity-checked like the rules, and so a reconciliation run can name which edition of the law it walked. Nothing here says anything about a particular product: the items are questions, and the answers live in a DeclarationsReport.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "checklist_id",
+    "title",
+    "law",
+    "source_url",
+    "checked_at",
+    "scope_note",
+    "items"
+  ],
+  "properties": {
+    "checklist_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable identifier for this checklist. It is recorded in both ReconcileInput and DeclarationsReport, so a stored result can be read against the checklist it was actually produced from rather than against whichever one ships today. Never reuse it for a revised list of items."
+    },
+    "title": {
+      "type": "string",
+      "description": "Name a reader would use for this checklist, e.g. \"GDPR Art. 13 - information to be provided where data is collected from the data subject\"."
+    },
+    "law": {
+      "type": "string",
+      "description": "The instrument the items are drawn from (e.g. \"GDPR\"). Named separately from the title so that items from two laws are never silently merged into one list, and so a result can be filtered by the law it answers to."
+    },
+    "source_url": {
+      "type": "string",
+      "description": "Link to the authoritative text the quotes were taken from, preferably a permanent one such as EUR-Lex. Present so a reader can check a quotation against the law instead of trusting this file."
+    },
+    "checked_at": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the checklist as a whole was last verified against source_url. Law moves, so a stale date is the signal to re-review before anything produced from this list is relied on."
+    },
+    "scope_note": {
+      "type": "string",
+      "description": "What this checklist does NOT cover. Mandatory for the same reason every report opens with a scope declaration: a partial list of a law's requirements, presented without its limits, reads as the whole law, and a document that passes every item here has not been shown to be complete."
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "description": "The requirements, in the instrument's own order. At least one is mandatory: a checklist that asks nothing produces a report with no results, which is indistinguishable from a document that was never examined.",
+      "items": {
+        "$ref": "#/$defs/checklistItem"
+      }
+    },
+    "applicability": {
+      "$ref": "#/$defs/applicability",
+      "description": "Whether this instrument reaches the scanned project at all, asked once for the whole checklist. Absent only where the checklist names a shared gate in `applicability_ref` instead. Present because most of these laws bind a named kind of provider - an intermediary service, a data processing service, a manufacturer of a product with digital elements - and walking fourteen items at a project the law does not reach produces fourteen wrong answers rather than one."
+    },
+    "applicability_ref": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "The `gate_id` of a shared gate in rules/gates/, used in place of an inline `applicability` where more than one checklist asks the same scope question. tools/build-bundle.mjs resolves it BEFORE validation and splices the gate in as a full `applicability` object, so this field never reaches dist/bundle/checklists.json and nothing downstream of the build knows it existed. A name that resolves to a gate for a DIFFERENT INSTRUMENT also fails the build: the build compares this checklist's `law` and `source_url` against the gate's, because one line and one word would otherwise be enough to put one instrument's scope test in front of another instrument's items."
+    }
+  },
+  "oneOf": [
+    {
+      "title": "Inline gate",
+      "required": [
+        "applicability"
+      ]
+    },
+    {
+      "title": "Shared gate, named by id",
+      "required": [
+        "applicability_ref"
+      ]
+    }
+  ],
+  "$comment": "The `oneOf` above is the either/or: EXACTLY ONE of `applicability` and `applicability_ref`. Both present matches two branches and fails; neither present matches none and fails. Neither outcome may be permitted. A checklist carrying both would let the two disagree about what the instrument's scope is, with the build silently preferring one - the drifting-copy defect in miniature. A checklist carrying neither is the one this schema used to allow, and it is worse than it looks: an absent gate is not an absent question, it is fourteen items walked at every project the law does not reach. Every checklist in this repository has always carried a gate, so making it mandatory took nothing away. Ajv's own message for a `oneOf` failure names the keyword and not the cause, so tools/build-bundle.mjs checks the BOTH-PRESENT case itself first and reports it in words. The NEITHER-PRESENT case is left to Ajv, which runs `allErrors: true` here and so expands both branches - `must have required property 'applicability'`, `must have required property 'applicability_ref'`, `must match exactly one schema in oneOf` - which names both alternatives and needs no second message. An earlier version of this sentence said the build checked `the same two conditions`, and it never checked the second; corrected 2026-08-04. The `oneOf` stays here as the structural guarantee either way, because a check that lives only in one tool is a check that a second tool does not make.",
+
+  "$defs": {
+    "applicability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "question",
+        "quote",
+        "cite",
+        "checked_at",
+        "when_unresolved"
+      ],
+      "description": "The scope gate. Same shape as an item - the statute's own words and a question - because whether a law applies is decided by reading the law, not by a heuristic.",
+      "properties": {
+        "question": {
+          "type": "string",
+          "description": "What to ask about the project before walking any item. Phrased as a question, and answerable from the code facts, the documents, or the user - never from an assumption about who runs this scan."
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The scope provision in the instrument's own words, quoted from the source. The gate is a legal test, so the agent reads the test rather than this file's summary of it."
+        },
+        "cite": {
+          "type": "string",
+          "description": "Citation of the scope provision in its official form."
+        },
+        "url": {
+          "type": "string",
+          "description": "Link to the authoritative text of the scope provision, where more specific than the checklist's source_url."
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date",
+          "description": "Date this quote was last verified against its source."
+        },
+        "census_categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/censusCategory"
+          },
+          "description": "Census categories whose code facts bear on the gate. Empty where nothing in the code can answer it."
+        },
+        "supporting_quotes": {
+          "type": "array",
+          "description": "Further provisions the gate turns on, each quoted verbatim. Present because an applicability test is rarely one sentence: the DSA gate needs the Scope article, the definition of the service it scopes, and the definition that definition refers to - in another instrument. Splitting them into one required `quote` and a list here keeps the primary test identifiable while making every other provision the gate relies on quotable to the user, and machine-checked like the first.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "quote",
+              "cite",
+              "checked_at"
+            ],
+            "properties": {
+              "quote": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The provision in its own words."
+              },
+              "cite": {
+                "type": "string",
+                "description": "Citation in its official form."
+              },
+              "url": {
+                "type": "string",
+                "description": "Authoritative text this quote was taken from. Where it names a different instrument from the checklist's source_url, verification fetches that instrument instead - a gate may depend on a definition that lives in another act."
+              },
+              "checked_at": {
+                "type": "string",
+                "format": "date",
+                "description": "Date this quote was last verified against its source."
+              },
+              "why": {
+                "type": "string",
+                "description": "What this provision contributes to the gate, so a reader can see why it is here rather than having to reconstruct the argument."
+              },
+              "quote_anchor": {
+                "type": "string",
+                "description": "A passage from the same source that occurs EXACTLY ONCE and opens the provision the quote is cited to, with the quote appearing inside the window that follows it. It exists because a repeated quote is verbatim and unattributable at the same time: GDPR Articles 13 and 14 carry nine identical sentences, one of them 280 characters long, so quote length was never the test - occurrence count is. The natural anchor is the paragraph's chapeau. This is a bound and not a proof: it shows the quote sits inside the passage the anchor opens, not that no other provision begins in between."
+              }
+            }
+          }
+        },
+        "ask_the_user": {
+          "type": "boolean",
+          "description": "True where the gate turns on a fact that neither the code nor the published documents can show - where the provider is established, how many staff it has. The adjudicating agent runs inside the user's own session, so it asks them. It asks only when the answer would change the outcome: a term that already names an EU representative settles the item without anyone being asked where they are established."
+        },
+        "when_unresolved": {
+          "type": "string",
+          "description": "What to record when the gate cannot be settled. Mandatory, and it must never resolve to a guess in either direction: assuming the law applies invents obligations for a provider outside its scope, and assuming it does not silently skips the check for a provider inside it - and a skipped check is indistinguishable from a passed one. The honest outcome is a recorded 'unresolved' naming what was missing."
+        },
+        "quote_anchor": {
+          "type": "string",
+          "description": "A passage from the same source that occurs EXACTLY ONCE and opens the provision the quote is cited to, with the quote appearing inside the window that follows it. It exists because a repeated quote is verbatim and unattributable at the same time: GDPR Articles 13 and 14 carry nine identical sentences, one of them 280 characters long, so quote length was never the test - occurrence count is. The natural anchor is the paragraph's chapeau. This is a bound and not a proof: it shows the quote sits inside the passage the anchor opens, not that no other provision begins in between."
+        },
+        "limbs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "question",
+              "decided_by",
+              "quote_ref"
+            ],
+            "description": "One requirement the scope provision imposes, asked on its own. A gate has as many limbs as the provision has conditions; splitting them is what stopped a limb from being forgotten silently, which happened twice on 2026-07-29 - GDPR's Article 13-versus-14 routing and the Data Act's Article 31.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+$",
+                "description": "Stable identifier for this limb, unique within the gate. Named after what it tests, not its position, so reordering does not rename it."
+              },
+              "question": {
+                "type": "string",
+                "description": "The limb as one question. One requirement, not several: an answer that cannot say which of three conditions failed is the defect this field exists to prevent."
+              },
+              "decided_by": {
+                "enum": [
+                  "code",
+                  "documents",
+                  "premise",
+                  "ask",
+                  "either"
+                ],
+                "description": "How this limb is settled. `code` - readable from the repository. `documents` - readable from what the project publishes. `premise` - carried by the pack's standing premise (running the EU pack is the statement that the project is offered into the Union); never asked. `ask` - a fact about the business that no repository contains. `either` - a fact about the product that the person answers or their declared documents state, whichever answers first; the facts its `code_evidence` names are shown beside it as what the code suggests, and they may corroborate or contradict the answer and never decide it, as the CLI's `codeMaySettle` holds (until 2026-11-10 this read 'code or documents, whichever answers first', and the code decided it). `code` is the one value whose limb a census fact may settle: a fact about the code itself. Twice on 2026-07-29 a gate declared a limb unavailable in the tree when the tree answered it, so this field is checked against what a real run actually used."
+              },
+              "quote_ref": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "description": "Citations of the provisions this limb rests on, matching a `cite` on the gate's `quote` or on one of its `supporting_quotes`. A limb with no quote behind it is prose asserting a legal test, which is the thing this checklist format exists to replace."
+              },
+              "evidence_categories": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/censusCategory"
+                },
+                "description": "Census categories that bear on this limb specifically. Checked against what the collectors emit, so a gate cannot claim evidence the census does not carry - or deny evidence it does."
+              },
+              "closes_gate_when": {
+                "enum": [
+                  "true",
+                  "false",
+                  "never"
+                ],
+                "description": "Which answer ends the gate. `true` - answering yes puts the project outside (an exemption limb: the EAA microenterprise test, the Data Act Article 31(2) exemption, DSA Article 13's establishment limb). `false` - answering no puts it outside (an ordinary scope limb). `never` - the limb informs the reading without deciding it. Present because a gate whose chapeau says 'all three must be true' while one limb closes the gate when true is inverted, and that was live on 2026-07-29."
+              },
+              "note": {
+                "type": "string",
+                "description": "What to look for, what not to infer, and what a wrong answer costs. Prose, deliberately: this is the part no schema can carry."
+              },
+              "code_evidence": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Census fact kinds that bear on this limb, at the resolution the question needs. `evidence_categories` is too coarse to decide anything on its own: `marked_not_published` and `publishable_package` are both `distribution`, and they point in opposite directions. Naming kinds is what lets a scan state which limbs the code bears on and which it does not, without any of it being a judgement about the law. The facts settle a limb only where its `decided_by` is `code`; on every other limb they are shown as what the code suggests. A limb with no `code_evidence` is one the code does not settle, and it is reported unresolved rather than assumed either way.",
+                "properties": {
+                  "supports": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Kinds whose presence is evidence that this limb is met."
+                  },
+                  "opposes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Kinds whose presence is evidence that it is not. Recorded separately and never netted off against `supports`: a scan reports both, because a limb with evidence on both sides is a question for a reader, not an average."
+                  },
+                  "neutral": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Kinds in the limb's evidence categories that say nothing either way about this limb's question: never printed as what the code suggests and never a contradiction of the person's answer (a package marked as not published is no evidence that nothing is supplied, and none that something is)."
+                  }
+                }
+              },
+              "declared_by": {
+                "type": "string",
+                "pattern": "^[a-z_]+(\\.[a-z_]+)*$",
+                "description": "Dotted path into the ScanProfile whose value settles this limb — the answer the person running the scan already gave, e.g. `features.payments.present`. Added 2026-07-29 on the owner's observation that a question about the business is cheaper to ask than to infer: the profile is confirmed with the user before the first scan and several of its fields answer a limb outright. **What a declaration does to a verdict is stated in one place and is deliberately not restated here: `product/packages/cli/src/scope.ts` § THE DECLARATION PATH.** Read it there. This description carried a copy of the rule and went stale twice, on 2026-07-30 and again on 2026-08-03, both times in the same three files at once — this one, `reconcile-input.schema.json` and `schemas/src/index.ts` — because the behaviour changed and the copies did not."
+              },
+              "declared_answers": {
+                "type": "array",
+                "items": { "type": "boolean" },
+                "minItems": 1,
+                "uniqueItems": true,
+                "description": "Which values of the `declared_by` field answer THIS limb's question. Required wherever `declared_by` is present, so a profile field cannot be wired to a limb without saying, for each of its answers, whether that answer settles the limb. A field is often narrower than the limb it is wired to, and then only one of its answers carries over: a yes to `features.payments.present` (the product takes payments) answers the CRA's commercial-activity limb yes, and a no answers nothing, because Article 3(22) reaches a supply made free of charge (checker L, 2026-11-11, defect D1). A value not listed is read as no answer to the limb. What a declaration then does to the verdict is stated in `product/packages/cli/src/scope.ts` and nowhere else."
+              }
+            },
+            "dependentRequired": { "declared_by": ["declared_answers"] }
+          },
+          "description": "The gate's requirements, one entry each. Optional for now so the nine existing checklists convert one at a time; a gate without it falls back to `question` plus `when_unresolved` as prose, which is what every gate was before 2026-07-29."
+        }
+      },
+      "$comment": "Structured 2026-07-29. The gate used to be prose: a `question` of several sentences and a `when_unresolved` of several thousand characters carrying the whole decision procedure. Every defect found on that date lived there, and four of them were one fact written in two places that then disagreed - the scope_note against the gate, the ask_the_user flag against its own instructions, the declared census categories against the collectors that actually emit. `limbs` makes the procedure data: one entry per requirement the scope provision imposes, each naming how it is settled and which quote settles it. What can then be machine-checked is what used to be asserted in prose - that every limb has a quote behind it, that a declared census category is one a collector emits, that ask_the_user agrees with whether any limb is actually asked. It does nothing for misreading the law; that is what the D4 passes are for."
+    },
+    "censusCategory": {
+      "enum": [
+        "recipients",
+        "transfers",
+        "retention",
+        "collection",
+        "distribution",
+        "commercial",
+        "provenance",
+        "purpose"
+      ],
+      "description": "The axis shared between the law and the code census. A checklist item names the categories whose code facts bear on it, so the law decides which facts are looked at rather than the census offering up everything it happened to find."
+    },
+    "checklistItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "article",
+        "quote",
+        "cite",
+        "checked_at",
+        "question"
+      ],
+      "description": "One thing a privacy notice is required to contain, expressed as a question to ask of the document rather than as a test the document passes or fails.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable identifier for the item, referenced by ChecklistResult.item_id. It must never be reused for a different requirement, or a stored report starts answering a question that was never asked of it."
+        },
+        "article": {
+          "type": "string",
+          "description": "Article or sub-paragraph the requirement sits in (e.g. \"Art. 13(1)(e)\"), so two items from the same article stay distinguishable."
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The requirement in the instrument's own words, quoted from the source at url. Quoted rather than paraphrased so that the adjudicating agent reads the law itself and not this file's summary of it."
+        },
+        "cite": {
+          "type": "string",
+          "description": "Citation in its official form, as it would appear in a document referring to the law."
+        },
+        "url": {
+          "type": "string",
+          "description": "Link to the authoritative text of this particular article, where it is more specific than the checklist's source_url."
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date",
+          "description": "Date this item's quote was last verified against its source. Kept per item as well as per checklist, because one article can be amended while the rest of the list stands."
+        },
+        "question": {
+          "type": "string",
+          "description": "What to ask of the document. Phrased as a question about the document's content, never as a conclusion about legality: the checklist decides what to look for, and a human decides what the answer means."
+        },
+        "census_categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/censusCategory"
+          },
+          "description": "Census categories whose code facts bear on this item. Absent or empty where the item can be answered from the document alone, which is the difference between an item that needs the code and one that does not."
+        },
+        "applicability_note": {
+          "type": "string",
+          "description": "Present where whether the item applies is itself in question, rather than how it is answered - for instance a requirement that only bites when the data came from a third party. Without it, a \"not-applicable\" result and an \"absent\" one look like the same judgement."
+        },
+        "finding_when": {
+          "enum": [
+            "absent",
+            "present"
+          ],
+          "default": "absent",
+          "description": "Which answer to this item's question is the problem. Almost every item asks whether required information is in the document, so the finding is that it is `absent` - the default. A few ask the opposite: Data Act Art. 23 asks whether the contract imposes an obstacle to switching, and Art. 29(1) whether it imposes a switching charge, and there the finding is that the thing is `present`. Declared as a field rather than left to prose because prose got it wrong: two fixture records stated opposite conventions for the same situation and one of them contradicted itself inside a single sentence. A report that says \"switching charge: present\" about the provider that charges nothing is worse than no report."
+        },
+        "quote_anchor": {
+          "type": "string",
+          "description": "A passage from the same source that occurs EXACTLY ONCE and opens the provision the quote is cited to, with the quote appearing inside the window that follows it. It exists because a repeated quote is verbatim and unattributable at the same time: GDPR Articles 13 and 14 carry nine identical sentences, one of them 280 characters long, so quote length was never the test - occurrence count is. The natural anchor is the paragraph's chapeau. This is a bound and not a proof: it shows the quote sits inside the passage the anchor opens, not that no other provision begins in between."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,235 @@
+id: eu-dsr-010
+pack: eu-dsr
+short_name: Personal data copied into a search index, dump or export
+problem_line:
+  text: "Copy of personal data: erasure or expiry for it not found"
+  template: "Copy of {data}: erasure or expiry for it not found"
+fix_line: Make deletion reach the copy and keep deleted rows out of rebuilds, give the copy a
+  lifetime, and list who holds it.
+title: Personal data copied into a search index, a derived search table, an embedding store, a dump
+  or an export archive, or handed out as an attachment or a browser download
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 17(1) - 'The data subject shall have the right to
+      obtain from the controller the erasure of personal data concerning him or her without undue
+      delay and the controller shall have the obligation to erase personal data without undue delay
+      where one of the following grounds applies'. The obligation is to erase the personal data, not
+      the primary row: a copy in a search index or an export archive is within it, and a deletion
+      path that reaches only the source table has not discharged it"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 19 - 'The controller shall communicate any rectification
+      or erasure of personal data or restriction of processing carried out in accordance with
+      Article 16, Article 17(1) and Article 18 to each recipient to whom the personal data have been
+      disclosed, unless this proves impossible or involves disproportionate effort. The controller
+      shall inform the data subject about those recipients if the data subject requests it.' Cited
+      because a hosted search service or an export handed to a user or to a third party is a
+      recipient, and the duty runs to each of them
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(e) - personal data shall be 'kept in a form which
+      permits identification of data subjects for no longer than is necessary for the purposes for
+      which the personal data are processed'. A derived copy has its own lifetime, which is usually
+      governed by nothing at all: an index is rebuilt rather than expired, and a dump directory
+      grows"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.35
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  join_bracketed_constructs: true
+  shared_vocabulary:
+    - export_disposition_carriers
+    - export_download_triggers
+    - export_document_writers
+  match:
+    - (?:^|[^A-Za-z0-9_])(?:Chewy|chewy|Searchkick|searchkick|MeiliSearch|Meilisearch|meilisearch|Typesense|typesense|SphinxQL|sphinxql|OpenSearchClient|ElasticsearchClient|Elasticsearch|elasticsearch|OpenSearch|opensearch|SolrClient|solr|Algolia|algolia|algoliasearch|RediSearch|pg_search)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:addDocuments|add_documents|indexDocuments|index_documents|updateDocuments|update_documents|deleteDocuments|delete_documents|bulkIndex|bulk_index|reindex|reindex_all|rebuild_index|rebuildIndex|update_index|updateIndex|refresh_index|index_record|index_document|indexDocument|IndexDocument|update_search_index)\s*\(
+    - (?:^|[^A-Za-z0-9_])(?:(?:[Ss]earch|[Ii]ndex|[Ee]lastic|[Oo]pen[Ss]earch|[Mm]eili|[Tt]ypesense|[Ss]olr|[Ss]phinx|[Aa]lgolia|[Cc]hewy)[A-Za-z0-9_]*|[Ee]s(?:(?:[Cc]lient|[Ss]ervice|[Cc]onnection|[Cc]onn|[Nn]ode|[Rr]epository|[Rr]epo|[Ii]ndex|[Ss]earch|[Bb]ulk|[Ww]riter|_client|_service|_index)[A-Za-z0-9_]*)?)\s*\.\s*(?:index|add|update|save|import|store)[!?]?\s*\(
+    - "[A-Za-z0-9_]*(?:Index|index|Search|search)\\s*\\.\\s*(?:index|add|update|save|import|store|r\
+      eindex|delete)[!?]?\\s*\\("
+    - (?:^|[^A-Za-z0-9_])(?:index_scope|define_type|search_data|search_import|searchable_text|search_document|as_indexed_json|should_index|searchkick_index|update_index_on)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:sql_query_pre|sql_query_post|sql_query_range|sql_query_killlist|sql_attr_[a-z_]+|sql_field_[a-z_]+|rt_field|rt_attr_[a-z_]+)(?![A-Za-z0-9_])|^[
+      \t]*sql_query[ \t]*=[
+      \t]*(?:\\|[Ss][Ee][Ll][Ee][Cc][Tt]|[Ww][Ii][Tt][Hh]|[Cc][Aa][Ll][Ll])(?![A-Za-z0-9_])
+    - ^[ \t]*(?:source|index)[ \t]+(?!(?:do|end)[ \t]*\r?$)[A-Za-z0-9_]+[ \t]*(?::[
+      \t]*[A-Za-z0-9_]+[ \t]*)?\r?$
+    - (?:^|[^A-Za-z0-9_])(?:sphinx_update_delta|sphinx_rotate|sphinx_restart|sphinx_indexer|update_delta_index|rotate_index)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])indexer(?![A-Za-z0-9_])[^\n]{0,100}?--(?:rotate|all|merge|config)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:SearchIndexer|search_indexer|[a-z][a-z0-9]*_search_data|search_index|SearchIndex|searchIndex|search_vector|searchVector|tsvector)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:mysqldump|mariadb-dump|pg_dump|pg_dumpall|mongodump|pg_basebackup|innobackupex|xtrabackup)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:ExportUserArchive|export_user_archive|user_archive|UserArchive|userArchive|DataExport|data_export|dataExport|PortabilityArchive|portability_archive|export_archive|ExportArchive|generate_export|export_dump|full_export|BackupService)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:smart_search|smartSearch|SmartSearch|vector_search|vectorSearch|VectorStore|vector_store|pgvector|qdrant|Qdrant|pinecone|Pinecone|weaviate|Weaviate|chromadb|ChromaDB|faiss|Faiss|FAISS|embedding_index|embeddingIndex|clip_embedding|clipEmbedding)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:Maatwebsite|PhpSpreadsheet|FromCollection|WithMapping|WithHeadings|WithColumnFormatting|xlsxwriter|openpyxl|ExcelJS|exceljs|fast-csv|csv-stringify|csv-writer|json2csv|createObjectCsvWriter|createArrayCsvWriter|CsvHelper|CsvWriter|ClosedXML|ExcelPackage|EPPlus|XSSFWorkbook|SXSSFWorkbook|HSSFWorkbook|CSVPrinter|CSVFormat|excelize|Axlsx|caxlsx|to_csv|to_excel|toCsv|json_to_sheet|sheet_to_csv|write_csv|writeCsv|writeXlsx)(?![A-Za-z0-9_])|(?:^|[^A-Za-z0-9_])(?:Excel[
+      \t]*::[ \t]*(?:download|store|queue|raw)|CSV[ \t]*\.[ \t]*(?:generate|generate_line|open)|csv[
+      \t]*\.[ \t]*(?:writer|DictWriter|NewWriter)|XLSX[ \t]*\.[
+      \t]*(?:writeFile|write|utils)|Workbook[
+      \t]*\()|(?:^|[^A-Za-z0-9_])[Ii]mplements(?![A-Za-z0-9_])[^\n]{0,240}?[^A-Za-z0-9_]FromQuery(?![A-Za-z0-9_])|\\FromQuery(?![A-Za-z0-9_])|^[
+      \t]*FromQuery[ \t]*,?[ \t]*\r?$
+    - (?:^|[^A-Za-z0-9_])(?:getExportable|setExportable|isExportable|exportable_columns|exportableColumns|export_columns|exportColumns|exportable_fields|exportableFields|export_fields|exportFields|csv_headers|csvHeaders|export_headings|exportHeadings|as_csv_row|to_csv_row|toCsvRow|export_row|exportRow)(?![A-Za-z0-9_])|[A-Za-z0-9_]*(?:ExportBatch|export_batch|exportBatch)(?:Item|Job|_item|_job)?s?(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:[Cc][Rr][Ee][Aa][Tt][Ee]|[Rr][Ee][Ff][Rr][Ee][Ss][Hh])[ \t]+(?:[Oo][Rr][
+      \t]+[Rr][Ee][Pp][Ll][Aa][Cc][Ee][ \t]+)?[Mm][Aa][Tt][Ee][Rr][Ii][Aa][Ll][Ii][Zz][Ee][Dd][
+      \t]+[Vv][Ii][Ee][Ww](?![A-Za-z0-9_])|(?:^|[^A-Za-z0-9_])[Ee][Nn][Gg][Ii][Nn][Ee][ \t]*=[
+      \t]*[A-Za-z0-9_]*(?:MergeTree|mergetree|MERGETREE)(?![A-Za-z0-9_])|(?:^|[^A-Za-z0-9_])(?:[Aa][Dd][Dd]|[Mm][Aa][Tt][Ee][Rr][Ii][Aa][Ll][Ii][Zz][Ee]|[Dd][Rr][Oo][Pp])[
+      \t]+[Pp][Rr][Oo][Jj][Ee][Cc][Tt][Ii][Oo][Nn](?![A-Za-z0-9_])|(?:^|[^A-Za-z0-9_])(?:create_materialized_view|createMaterializedView|refresh_materialized_view|timescaledb\.continuous)(?![A-Za-z0-9_])|(?:^|[^A-Za-z0-9_])materialized[
+      \t]*:[ \t]*true(?![A-Za-z0-9_])
+    - ^(?=[^\n]*(?:^|[^A-Za-z0-9_])(?&export_disposition_carriers)(?![A-Za-z0-9_]))[^\n]*[Aa][Tt][Tt][Aa][Cc][Hh][Mm][Ee][Nn][Tt](?![A-Za-z0-9])
+    - (?:^|[^A-Za-z0-9_])(?&export_download_triggers)(?![A-Za-z0-9_])|[A-Za-z0-9_$]{1,32}[ \t]*\.[
+      \t]*download[ \t]*=(?!=)|(?:^|[^A-Za-z0-9_])[Ss]et[Aa]ttribute[ \t]*\([
+      \t]*["'`]download["'`]|(?:^|[^A-Za-z0-9_])(?:a|link|anchor|downloadLink|tempLink|downloadEl)[
+      \t]*\.[ \t]*click[ \t]*\([ \t]*\)
+    - (?:^|[^A-Za-z0-9_])(?&export_document_writers)(?![A-Za-z0-9_])
+    - ^[ \t]*[Pp][Rr][Oo][Jj][Ee][Cc][Tt][Ii][Oo][Nn][ \t]+[A-Za-z_][A-Za-z0-9_]*[ \t]*\(
+  match_without:
+    - ^\s*(?:\*|//|/\*|<!--|<%#)
+context_questions:
+  - "MANDATORY, AND THE DETECTOR DID NOT CHECK IT: WHAT FIELDS ARE ACTUALLY COPIED? Find the index
+    definition, the export component list, the dump command's table list or the `sql_query` that
+    populates the store, and QUOTE THE FIELDS. Do not infer them from the model name. Three answers
+    are common and they are different findings: the copy holds the personal attributes themselves (a
+    display name, an e-mail address, a résumé's full text); it holds only identifiers and the values
+    are fetched from the primary store at read time; or it holds a derived representation - an
+    embedding, a tsvector, a stemmed token stream - from which the original may or may not be
+    recoverable. Where the copy is derived, say whether anybody has assessed what can be
+    reconstructed from it."
+  - "IS THIS A SECOND COPY AT ALL, OR A VIEW OVER THE FIRST? A database view, a generated column and
+    a foreign-data wrapper are not second copies: deleting the row removes them. A materialised
+    view, a search table maintained by triggers, an external index and a file on disk ARE. Say which
+    you have and quote the thing that makes it durable - the table definition, the index mapping,
+    the file path. If it is a view, dismiss the candidate here and say so."
+  - "DOES THE ERASURE PATH REACH IT? This is the question the rule exists to raise. Find the
+    deletion routine for the record type concerned and follow it to the end. Report which of these
+    is true: the deletion explicitly removes the index document, the search-table row or the
+    archive; a callback or observer does so indirectly, in which case name it and say whether it
+    runs for bulk and administrative deletions as well as for the user-facing one; a periodic
+    rebuild would eventually drop it, which is NOT an erasure without undue delay and should be
+    recorded as the gap it is; or nothing reaches it at all. For a dump or an export archive, the
+    honest answer is usually the last one - say so plainly rather than assuming a retention job
+    exists."
+  - WHO ELSE HOLDS THE COPY, AND HAS ART. 19 BEEN CONSIDERED? A hosted search service, an object
+    store holding export archives, and a backup destination are each recipients to whom personal
+    data has been disclosed. Art. 19 requires the controller to communicate an erasure to each
+    recipient unless that proves impossible or involves disproportionate effort, and to name those
+    recipients to the data subject on request. Say who the recipients are here, whether the
+    deployment can enumerate them, and whether anything communicates an erasure to them.
+  - "WHAT GOVERNS THE COPY'S LIFETIME? Derived stores are usually rebuilt rather than expired, and
+    export archives are usually written and forgotten. Find and quote whatever sets the lifetime: an
+    index retention policy, a cron job that prunes old dumps, an expiry on the archive's
+    object-storage key, or nothing. Where the answer is nothing, that is an Art. 5(1)(e) finding in
+    its own right and it should be reported even where the erasure path in question 3 turns out to
+    be clean."
+  - "IS THE STORE THIS DECLARES ACTUALLY DEPLOYED HERE? ADDED 2026-09-02 after independent
+    verification found this question promised in a slice note and asked nowhere the adjudicating
+    agent could see it (finding H-M3). It applies to the DDL and configuration shapes above rather
+    than to an application-code write. A schema file, a migration and a lifecycle configuration all
+    ship with the repository whether or not the deployment in front of you runs the backend they
+    describe: a columnar analytics store behind an optional connection URL, a search cluster behind
+    a feature flag, a warehouse behind a credential that may be unset. DO NOT INFER THE ANSWER FROM
+    THE SOURCE - it is a fact about this deployment and the person running the scan is the one who
+    knows it. Say which of three is true: the backend is deployed and these objects exist; it is not
+    deployed and the file describes an option nobody has taken, in which case say so and close the
+    location on that ground; or nobody can say, which is itself the finding, because a second copy
+    of personal data that nobody can confirm the absence of is not governed. Where the same
+    repository also carries the DEFAULT store, name that separately - the default path being clean
+    says nothing about the optional one."
+  - "IF THE MATCH IS A REBUILD OR A BULK JOB, SAY SO, AND SAY WHAT IT READS. A reindex job that
+    re-reads the primary store is the mechanism by which a deleted document comes back: if the
+    primary row is still present - soft-deleted, tombstoned, or merely not yet purged - the rebuild
+    will restore the copy that the deletion removed. Read what the job's scope selects and say
+    whether soft-deleted or anonymised records are excluded from it."
+evidence_template: "{file}:{line} matched a place where this product keeps or creates a SECOND COPY
+  of records outside its primary store: a search engine or client, an index write, an index
+  definition naming the copied fields, a Sphinx configuration block, a derived search table, a
+  database dump tool, an export or archive builder, or an embedding store. THAT IS THE WHOLE OF WHAT
+  IS ESTABLISHED - that a second copy exists or is being written. NINE SHAPES REACH THIS RULE AND
+  THEY ARE NOT EQUALLY INFORMATIVE. The most useful is an INDEX OR EXPORT DEFINITION, because it
+  names the fields copied and is where a reader answers what the copy holds. An engine named in an
+  import or a gem line is evidence about the product rather than about one write. A REBUILD OR
+  REINDEX JOB deserves separate attention: it re-reads the primary store, so it is the mechanism by
+  which a document a deletion removed comes back. A DUMP TOOL or an EXPORT BUILDER is the least
+  governed copy of all - written by a job, landing on a disk or in a bucket, and usually unknown to
+  every application deletion path. AN EMBEDDING STORE is a derived copy that cannot be inspected by
+  eye. WHAT THIS DETECTOR DOES NOT ESTABLISH: that the copy holds personal data (context question 1
+  - and note that this rule deliberately declares NO corroboration gate, because the gate the design
+  proposed was tested against the rule's own Sphinx anchor and would have deleted it); that it is
+  durable rather than a view (question 2); whether any erasure path reaches it (question 3, the
+  question the finding exists to raise); who else holds it (question 4); or what governs its
+  lifetime (question 5). ADDED 2026-09-02: THREE FURTHER SHAPES REACH THIS RULE, TAKING THE COUNT
+  FROM NINE TO TWELVE, and the sentence above saying NINE is left standing so a reader can see that
+  the count moved and when. A SPREADSHEET OR DELIMITED-FILE EXPORT WRITER - a Maatwebsite Excel,
+  PhpSpreadsheet, openpyxl, exceljs, caxlsx, Apache POI or CsvHelper call - is an export builder
+  written as a library call rather than as a named archive class, and it produces the same durable
+  file the archive clause already reaches. AN EXPORT COLUMN OR ROW MAPPING is the more useful of the
+  two, for the same reason an index definition is: it names the fields copied, so it is where
+  context question 1 is answered; the export-batch record beside it is a second copy that outlives
+  the export run that made it. A DERIVED-STORE DDL OBJECT - a materialised view, a *MergeTree table
+  definition or a table projection - is a second copy declared in schema rather than in application
+  code, and the distinction context question 2 turns on is written into the clause itself: a
+  MATERIALISED view is reached and a plain view is not. A DERIVED-STORE DDL OBJECT MAY ALSO BELONG
+  TO AN OPTIONAL BACKEND THAT A GIVEN DEPLOYMENT DOES NOT RUN - the schema file ships either way -
+  so whether these objects exist in this deployment is a fact to be asked rather than read off the
+  file, which is what context question 6 asks. ADDED 2026-09-04: THREE FURTHER SHAPES REACH THIS
+  RULE, TAKING THE COUNT FROM TWELVE TO FIFTEEN, and every earlier count sentence above is left
+  standing so a reader can see when each one moved. These three name AN ACT AND NOT A LIBRARY, which
+  is the difference between them and every clause before them: fourteen of the sixteen earlier
+  clauses enumerate vendor and library names, and on 2026-09-03 six repositories each built a
+  personal-data export out of something none of those names reached. AN ATTACHMENT DISPOSITION - a
+  `Content-Disposition` header, or a framework's `send_data`, `send_file` or `as_attachment`
+  shorthand, on a line that also carries the word `attachment` - is the server handing a built file
+  to whoever asked for it. The disposition type is load-bearing and is the reason the clause
+  requires that word: the same header carries `inline` for a file the browser renders in place and
+  `form-data` for a multipart upload part, and neither is a hand-out. A BROWSER DOWNLOAD TRIGGER -
+  an object URL, a `download` attribute set on an anchor element, a file-saver call, a native
+  save-file dialog - is the same act performed in the page, and it is how a client-side export
+  leaves no server-side trace at all. AN ARCHIVE, COMPRESSED-STREAM OR RENDERED-DOCUMENT WRITER -
+  `gzip.NewWriter`, `ZipOutputStream`, `zipfile.ZipFile`, `SimpleDocTemplate`, `Packer.toBlob`, an
+  iCalendar builder, a YAML dump of a whole store - is the thing that BUILT the file, and it is the
+  shape to open first of the three, because the lines around it usually name what went into it. NONE
+  OF THE THREE ESTABLISHES THAT THE FILE HOLDS PERSONAL DATA, and an invoice template, a logo and a
+  firmware image reach all three; that is context question 1 and it is not weakened by the number of
+  shapes that now reach this rule. ADDED 2026-09-09: THE ATTACHMENT AND DOWNLOAD SHAPES ARE NOW READ
+  IN A JOINED VIEW AS WELL AS ON ONE PHYSICAL LINE, AND NO NEW SHAPE WAS ADDED WITH THEM. Where a
+  header call is written over several lines - the header constant on one line and the `attachment;
+  filename=...` literal on the next - the two halves are read together, so the line reported is the
+  line the CALL OPENS ON and the words the finding rests on may sit below it: read the whole call
+  before quoting it. Where that is what happened the finding carries the span it was folded from in
+  locations[].joined_from - the bracket-balanced construct the cited line opens on - so read those
+  lines together rather than the opening line alone. THE HEADER ESTABLISHES THAT A FILE IS BEING
+  HANDED OUT AND NOT WHAT IS INSIDE IT - open the path the handler serves before treating the
+  location as personal data at all, which is context question 1, and a build artefact, a toolchain
+  archive and a firmware image all reach this shape."
+remediation_template: |
+  Start by naming what is copied, from the definition rather than from the model name (context
+  question 1), and confirm the copy is durable rather than a view (question 2). A view closes the
+  finding.
+  Then follow the erasure path to the end and write down which of four things is true: the deletion
+  removes the copy explicitly; a callback removes it, in which case check that bulk and
+  administrative deletions go through the same callback; only a periodic rebuild would drop it,
+  which is not erasure without undue delay; or nothing reaches it. The third and fourth are the
+  findings, and the fourth is the ordinary answer for dumps and export archives.
+  Check the rebuild in both directions. A reindex that re-reads the primary store will restore a
+  document a deletion removed if the source row is still there in any form, so soft-deleted,
+  tombstoned and anonymised records need to be excluded from the job's scope explicitly.
+  Enumerate the recipients and address Art. 19. A hosted search service, the bucket holding export
+  archives and the backup destination are recipients; the duty is to communicate the erasure to each
+  unless that is impossible or disproportionate, and to be able to name them to the data subject on
+  request. Where the deployment cannot enumerate them, record that as the gap.
+  Give the copy a lifetime. Index retention, a prune job for dumps, and an expiry on export-archive
+  objects are the three that are usually missing; an export the subject themselves requested is
+  still personal data sitting in object storage after the request was satisfied.
+  Where the copy is an embedding or another derived representation, record that it is one, and
+  record whether anyone has assessed what can be reconstructed from it. Do not treat "it is only a
+  vector" as an answer without that assessment.
+data_categories:
+  - user.account
+  - user.content
+  - user.contact
+fingerprint_spec: directory

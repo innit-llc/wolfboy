@@ -1,0 +1,373 @@
+id: recipients-001
+pack: recipients
+short_name: Payment company that may receive data
+problem_line:
+  text: Personal data sent to a payment service
+  template: "{data} sent to {recipient}"
+fix_line: "Unless you publish and host this payment service, record it as a recipient: what it
+  receives and who you contract with."
+title: Payment vendor named in the tree - candidate recipient for Art. 30(1)(d) of the processing record
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - the record of processing activities "shall
+      contain all of the following information", including "the categories of recipients to whom the
+      personal data have been or will be disclosed including recipients in third countries or
+      international organisations". The duty is on the controller and, where applicable, its
+      representative, and Art. 30(4) makes the record available to the supervisory authority on
+      request
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-24
+    jurisdiction: EU
+  - cite: 'GDPR (Regulation (EU) 2016/679), Art. 4(9) - "recipient" means "a natural or legal person,
+      public authority, agency or another body, to which the personal data are disclosed, whether a
+      third party or not". A processor is therefore a recipient for the purposes of Art. 30(1)(d),
+      and so is a payment vendor that is itself an independent controller. Reference only: a
+      definition establishes no duty of its own'
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-24
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: 'GDPR (Regulation (EU) 2016/679), Art. 30(5) - "The obligations referred to in paragraphs 1
+      and 2 shall not apply to an enterprise or an organisation employing fewer than 250 persons
+      unless the processing it carries out is likely to result in a risk to the rights and freedoms
+      of data subjects, the processing is not occasional, or the processing includes special
+      categories of data as referred to in Article 9(1) or personal data relating to criminal
+      convictions and offences referred to in Article 10." Reference only: this provision removes a
+      duty rather than creating one, and the facts it turns on are operator facts'
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-24
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 44 - \"Any transfer of personal data which are
+      undergoing processing or are intended for processing after transfer to a third country or to
+      an international organisation shall take place only if, subject to the other provisions of
+      this Regulation, the conditions laid down in this Chapter are complied with by the controller
+      and processor, including for onward transfers of personal data from the third country or an
+      international organisation to another third country or to another international
+      organisation.\" Reference only: field (d) of the record is owed whether or not a transfer is
+      involved, and this rule tests the record, not the transfer. The record's separate transfer
+      field is Art. 30(1)(e) in a controller's Art. 30(1) record and Art. 30(2)(c) in a processor's
+      Art. 30(2) record"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-24
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose "The
+      categories of third parties to whom the business discloses personal information." The
+      obligation is owed on a verifiable consumer request under Sec. 1798.110(b), and Sec.
+      1798.130(a)(5)(B) requires the same categories in the privacy policy
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-08-24
+    jurisdiction: US
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.35
+detector:
+  engine: builtin-regex
+  shared_vocabulary:
+    - payment_recipients
+    - payment_recipients_cased
+  resolve_import_aliases: true
+  match:
+    - (?:^|[^A-Za-z0-9])(?&payment_recipients)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:import|from)\s+|^[ \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=)))(?&payment_recipients)
+    - (?:^|[^A-Za-z0-9])(?&payment_recipients_cased)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:import|from)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=)))(?&payment_recipients_cased)
+  volume_exempt:
+    - clause: match[2]
+      reason: "Read 2026-09-22 (unit C2), all 2,042 matched lines over the gate's eleven-tree slice, not a
+        sample: 37 distinct matched strings, every one a boundary character plus `stripe`, `Stripe`
+        or `STRIPE`, inside 215 distinct identifiers. 2,025 lines name Stripe the payment vendor
+        (`stripe_price_id`, `stripeAPIService`, `STRIPE_SECRET_KEY`,
+        `members_stripe_customers_subscriptions`); the remaining 17 are the English word -
+        `table-striped` in three trees' CSS and table components, `striped` in a random-word list,
+        and a web-analytics application's `PromEx.StripedPeep` module. The 17 English-word lines are
+        shape (g) of context question 1."
+context_questions:
+  - "What SHAPE is the matched line? Name it before treating it as an integration. The same anchor
+    reaches a tree in at least six shapes and only two of them are a disclosure: (a) a dependency
+    declaration or an import that the product's own code uses; (b) a request to the vendor's API or
+    a script loaded from the vendor's host; (c) a TRANSITIVE dependency in a lockfile that no
+    first-party code calls; (d) a documentation link, a comparison table or a changelog entry; (e) a
+    Content-Security-Policy or allow-list entry naming the host without loading it - the entry
+    itself discloses nothing, and it is weak evidence rather than no evidence that a load exists
+    somewhere in the tree, since somebody expected the host to be reachable, so look for that load
+    before closing the candidate on the entry alone; (f) test, fixture, seed or demo data; (g) THE
+    ANCHOR IS NOT THE VENDOR AT ALL - the matched string is an ordinary English word or an unrelated
+    identifier that happens to be spelled the way a registry coordinate is. Three anchors in this
+    list carry this risk and two of them carry it almost always: `square` and `Square` reach a tree
+    overwhelmingly as Font Awesome and Lucide icon names (`message-square`, `SquarePen`,
+    `square-poll-horizontal`), as `aspect-square` and `crop_aspect_ratio_square`, as a `town-square`
+    channel name, as `least_squares`, as the phrase \"square brackets\", as `Square44x44Logo.png`,
+    as \"Square Kilometer\" and \"Square Yards\", as \"Square Peg Capital\", and as `Squarespace`;
+    `stripe` reaches it as `table-striped` and `stripes-thickness`. Shape (g) is the MOST COMMON
+    shape for `square` and `Square` on real code, so check it FIRST for those two, and dismiss the
+    candidate on it without further work. Quote the line and say which of the seven it is."
+  - "Is this anchor the vendor's PAYMENT product, or its general-purpose open source? Two spellings
+    in this rule's list are kept knowing they over-match, and both are the same trap. `com.squareup`
+    is Square's Maven group and is also the home of OkHttp, Retrofit, Moshi, Picasso and Wire - a
+    very large share of all Java and Android projects depend on it with no Square integration
+    whatever, and the narrower `com.squareup.sdk` beside it is the spelling that indicates the
+    payment SDK. `@braintree/` covers eleven Braintree-authored front-end utilities, of which
+    `@braintree/sanitize-url` ships inside mermaid and arrives transitively in projects that have
+    never heard of Braintree. A match on either is not evidence that the vendor received anything.
+    THE LARGER TRAP IS NOT THOSE TWO, and it was named on 2026-08-24 after an independent verifier
+    read the corpus line by line: `square` and `Square` are Square's real coordinates on npm and
+    NuGet respectively, and they are also ordinary English words. Of 70 sampled corpus lines
+    carrying `square`, NONE named the vendor; of 60 carrying `Square`, ONE did. They match roughly
+    15,400 and 2,400 lines of the pinned corpus against 158 for `com.squareup` and 9 for
+    `@braintree/`, so they are the anchors you will meet, by two orders of magnitude. `stripe`
+    behaves the opposite way and is a working anchor - 60 of 70 sampled lines named the vendor, and
+    the other ten were all `table-striped` - so do not treat the three bare tokens alike. For
+    `square` and `Square`, ask shape (g) of question 1 before anything else."
+  - "Which integration PATH is used, and therefore what actually leaves the machine? What the vendor
+    receives on each named path is read from the VENDOR'S OWN SDK TYPE DEFINITIONS, and those are
+    the thing to read: nothing in this bundle carries the per-vendor field lists, and no file in the
+    scanner's own repository is available to you. The paths differ materially. A Stripe Checkout
+    Session returns customer_details with email, name, address, phone and tax IDs; a raw
+    PaymentIntent with no billing_details set sends far less. Adyen's ordinary /payments request
+    schema carries socialSecurityNumber, dateOfBirth, shopperIP and deviceFingerprint as first-class
+    optional fields. Klarna's session request carries date_of_birth and
+    national_identification_number. Do not flatten the paths into one row: quote the call and name
+    the fields it populates."
+  - Is the vendor a PROCESSOR here, or an independent controller? This changes the record, the
+    contract and the wording of the recipient category, and the vendors in this list are not alike.
+    PayPal's user agreement states that merchant and PayPal are each an independent controller and
+    expressly not joint controllers. Klarna states that it is the controller of the consumer's data
+    and runs its own credit assessment. Mollie states that it is a controller for everything except
+    its Invoicing product, where it is solely a processor - so the answer flips inside one vendor.
+    Paddle and Polar are merchants of record, which makes the disclosure controller-to-controller.
+    Polar's own privacy policy says both that it is the controller and, three paragraphs later, that
+    it is designated a processor for the same data. Read the contract the product actually signed,
+    not the vendor's marketing page.
+  - "WHICH LEGAL ENTITY does this deployment contract with? THE VENDOR DOES NOT HAVE ONE ANSWER TO
+    THIS, and that is the first thing to understand about the field. A payment vendor of this size
+    names SEVERAL contracting entities and picks between them by a property of the CUSTOMER - the
+    merchant's own country, the region their account was opened in, which of the vendor's products
+    they bought. So there is no fact of the form 'this vendor is established in X' for the record to
+    copy: there is a list of candidates the vendor publishes, and one contract that says which of
+    them this operator signed. It is an operator fact and is never inferred from source code - it is
+    read from the order form, the data processing agreement, the invoice or the vendor dashboard.
+    WHAT THE VENDORS' OWN DOCUMENTS NAMED, on the dates given, and NONE of it decides which one
+    applies here. Stripe's contracting-entity table (read 2026-08-24) names STRIPE PAYMENTS EUROPE,
+    LIMITED for merchants contracting from the European Economic Area and again for Gibraltar,
+    Switzerland and the United Kingdom, with STRIPE TECHNOLOGY EUROPE, LIMITED and STRIPE PAYMENTS
+    UK LTD as additional parties, and a United States row naming STRIPE, LLC and STRIPE PAYMENTS
+    COMPANY; Stripe's privacy statement (read 2026-08-25) separately names STRIPE, INC. as complying
+    with the EU-U.S. Data Privacy Framework. PayPal's Irish-region user agreement (read 2026-08-24)
+    names PAYPAL (EUROPE) S.A R.L. ET CIE, S.C.A. in Luxembourg, and its privacy statement names
+    PAYPAL, INC. Braintree contracts through that same Luxembourg entity, so a record listing
+    Braintree and PayPal as two recipients lists one legal entity twice. Square's Irish-region terms
+    (read 2026-08-24) name SQUAREUP INTERNATIONAL LIMITED in Dublin, with BLOCK, INC. and SQUAREUP
+    PTE. LTD. appearing only in a copyright line. Adyen names ADYEN N.V. in Amsterdam, Klarna names
+    KLARNA BANK AB (PUBL) in Stockholm with KLARNA FINANCIAL SERVICES UK LIMITED for the United
+    Kingdom, and Mollie names MOLLIE B.V. in Amsterdam. Paddle names FOUR controllers in one list -
+    PADDLE.COM MARKET LIMITED (London), PADDLE.COM INC. (New York), PADDLE PAYMENTS LIMITED (Dublin)
+    and PADDLE.COM CANADA LTD (Toronto) - without saying which contracts for a given merchant. Lemon
+    Squeezy names SOLD THROUGH LINK, LLC, whose own terms give it two different states in two
+    passages. Polar names POLAR SOFTWARE INC. EVERY DATE ABOVE IS THE DAY THAT DOCUMENT WAS READ AND
+    NOTHING RE-READS IT: a vendor may have been renamed, acquired or added an entity since, so treat
+    this as an incomplete list of candidates rather than a closed one, and never as the answer. If
+    the operator cannot produce the contract, return needs_human for this field rather than choosing
+    the candidate that looks likeliest."
+  - "Does the Art. 30 record duty apply to this organisation at all? Art. 30(5) switches it off for
+    an enterprise or organisation employing fewer than 250 persons UNLESS any one of three things is
+    true: the processing is likely to result in a risk to the rights and freedoms of data subjects,
+    the processing is not occasional, or it includes special categories of data under Art. 9(1) or
+    criminal-conviction data under Art. 10. Taking payments from customers on a continuing basis is
+    not occasional, so the exemption very often does not survive - but headcount and regularity are
+    facts the operator supplies, not facts in the tree. If the operator has not supplied them, say
+    so."
+  - Is a Chapter V transfer engaged on this leg, and is that a SEPARATE finding from this one? Field
+    (d) of the record is owed whether or not a transfer is involved; the transfer is a separate
+    field, and WHICH field depends on which record the product keeps - Art. 30(1)(e) if it is a
+    controller, Art. 30(2)(c) if it is a processor. Of the ten vendors this rule knows, seven
+    contract through an EEA entity on the ordinary path, two (Lemon Squeezy, Polar) had no EEA
+    entity that the research could find, and one (Paddle) cannot be settled from its own privacy
+    notice. Where a transfer IS engaged, name the mechanism the product relies on - and note that an
+    intra-EEA contracting leg does not dispose of an onward transfer inside the vendor's own group,
+    which is a different question again.
+  - Is this vendor already IN the record of processing activities, the privacy policy and the
+    subprocessor list? That is the gap this rule exists to find, and it is answered by reading the
+    operator's own declared documents against the code - not by reading more code. A vendor that is
+    present in the code and absent from all three is the finding; a vendor present in all three is
+    not a finding at all; a vendor present in some but not all is a finding about the documents that
+    omit it.
+evidence_template: "{file}:{line} carries one of the 258 spellings a payment vendor owns that this
+  rule matches on. What that vendor receives on each named integration path, and where it is
+  established, is read from the vendor's own SDK type definitions and its own contracting documents
+  - the context questions say which, and this bundle carries the spellings only. MOST of those
+  spellings are self-identifying - an SDK package name, a scoped npm package, a Maven or NuGet
+  coordinate, an API hostname - but THREE ARE BARE TOKENS THAT ARE ALSO ORDINARY ENGLISH WORDS, and
+  you must check which kind you are holding before reading any further. They are `square`, `Square`
+  and `stripe`. `square` and `Square` are Square's own coordinates on npm and NuGet and are ALSO the
+  English word: measured over 94 real repositories on 2026-08-24 they matched about 15,400 and 2,400
+  lines, and of 70 and 60 lines read by hand 0 and 1 respectively named the vendor - the rest were
+  icon names (`message-square`, `SquarePen`), `aspect-square`, `town-square`, `least_squares`,
+  \"square brackets\", `Square44x44Logo.png`, \"Square Kilometer\", \"Square Peg Capital\" and
+  `Squarespace`. `stripe` is the opposite and is a working anchor, though it also matches
+  `table-striped`. Two further anchors (`com.squareup`, `@braintree/`) are genuinely vendor-owned
+  but match the vendor's general-purpose open-source libraries - OkHttp, Retrofit, Moshi, Wire,
+  `@braintree/sanitize-url` inside mermaid - far more often than its payment product. So what this
+  detector established is ONLY that a listed string occurs at this location. It does NOT establish
+  that the string names the vendor at all, that any personal data was disclosed, that the
+  integration is live, that the line is first-party code rather than a transitive lockfile entry or
+  a documentation link, or which integration path is in use. Read the matched line, decide first
+  whether it names the vendor, and then name its shape, before this becomes a recipient row. Whether
+  the vendor is already in the operator's record of processing activities, privacy policy and
+  subprocessor list is not decided by the detector and cannot be: see the context questions"
+remediation_template: >
+  Read the matched line first and decide what it is, because this rule matches a spelling the vendor
+
+  owns and that spelling reaches a tree in six shapes of which two are a disclosure. A dependency
+
+  declaration or import that first-party code calls, and a request to the vendor's API or a script
+
+  served from the vendor's host, are the two. A transitive lockfile entry nothing calls, a
+
+  documentation link, a Content-Security-Policy allow-list entry and test or seed data are the other
+
+  four, and none of them puts personal data in the vendor's hands by itself. The allow-list entry is
+
+  the one of those four worth a second look before the candidate is closed on it: the entry itself
+
+  hands the vendor nothing, and somebody still wrote that host into the policy because they expected
+
+  the browser to reach it, so it is weak evidence - not absent evidence - that a load exists
+
+  somewhere in the tree. Look for that load, and say where you looked.
+
+  If it is one of the two, settle FIRST whether the scanned product is a CONTROLLER or a PROCESSOR
+
+  for this data, because that decides which record the entry belongs in. Where the product is a
+
+  controller, add the vendor to field (d) of its own Art. 30(1) record as a category of recipient.
+
+  Where the product is a processor, its own record is the Art. 30(2) record, which has NO
+
+  categories-of-recipients field - its (d) is the security-measures field - so the RECIPIENT
+  CATEGORY
+
+  belongs in the customer-controller's record. That does not leave the product's own record silent
+
+  about this vendor: where the disclosure is a transfer to a third country, Art. 30(2)(c) requires
+
+  the processor to record the transfer in its own Art. 30(2) record, "including the identification
+
+  of that third country or international organisation". The safeguards limb of the same provision is
+
+  conditional, and asking for it on every transfer overstates the duty: Art. 30(2)(c) requires the
+
+  documentation of suitable safeguards only "in the case of transfers referred to in the second
+
+  subparagraph of Article 49(1)", which is the compelling-legitimate-interests derogation. A
+  transfer
+
+  resting on an adequacy decision or on standard contractual clauses engages the identification limb
+
+  and not that one. Beside that entry, what the
+
+  product owes on its own account is Art. 28(2)'s authorisation and change-notification and
+
+  Art. 28(4)'s flow-down. If the product's own position in the chain is not established, say so and
+
+  stop rather than choosing one.
+
+  Write the row from the integration path that is actually used rather than from the vendor's name,
+
+  reading the fields off the vendor's own SDK type definitions for the call the code makes: a Stripe
+
+  Checkout Session and a bare PaymentIntent are materially different disclosures, and the row should
+
+  not flatten them.
+
+  Then answer the three things the record needs and the code cannot supply: which legal entity the
+
+  product contracts with; whether that entity
+
+  is a processor or an independent controller for this data; and whether a Chapter V transfer is
+
+  engaged on this leg. On the first of the three, THE VENDOR HAS NO SINGLE ANSWER TO COPY. These
+
+  vendors name several contracting entities each and pick between them by a property of the CUSTOMER
+
+  - the merchant's country, the region the account was opened in, the product bought - so the entity
+
+  is a fact about THIS OPERATOR'S CONTRACT and not an attribute of the vendor. Read it from the
+
+  order form, the data processing agreement or the invoice the operator actually signed. Context
+
+  question 5 lists the candidates each vendor's own documents named and the date each document was
+
+  read; it is an incomplete list of candidates and never the answer, because nothing re-reads those
+
+  documents. If the operator cannot produce the contract, return needs_human for that field rather
+
+  than choosing the candidate that looks likeliest. That last one does NOT reduce to where the
+  EXPORTER is established, and
+
+  reading it that way loses real transfers. Establishment in the Union is one route into the
+
+  Regulation, not the test. Art. 3(1) reaches processing "in the context of the activities of an
+
+  establishment of a controller or a processor in the Union". Art. 3(2) separately reaches
+
+  "a controller or processor not established in the Union" where the processing relates to "the
+
+  offering of goods or services" to data subjects in the Union, or to "the monitoring of their
+
+  behaviour" there. Art. 3(3) reaches a controller not established in the Union in a place where
+
+  Member State law applies by virtue of public international law. So a product with no EU
+
+  establishment whatever can still be inside the Regulation, and its disclosure to a vendor in a
+
+  third country inside Chapter V: Art. 44 conditions the Chapter on the transfer, not on where the
+
+  exporter sits. Where no limb of Art. 3 is met, the Regulation does not reach this processing and
+
+  the Art. 30 record does not arise either. Which of those holds, and where the receiving entity
+
+  sits, are both operator facts this detector does not have, so ask them rather than answering from
+
+  the product's own address. What the
+
+  vendor documents establish is about the VENDOR and about the day they were read, never about this
+
+  deployment: on the dates in context question 5, seven of these ten named an entity in the European
+
+  Economic Area among their candidates for the ordinary path, even though the group headquarters is
+
+  in the United States. Report which candidate the operator's own contract names, or that they could
+
+  not produce it, and leave whether a transfer is engaged to the operator's answer.
+
+  If the vendor is already named in the record, in the privacy policy and in the subprocessor list,
+
+  and the three answers above are recorded, dismiss the candidate and
+
+  say which of the three documents you read.
+
+  Do not remove the dependency in order to close the finding. The obligation is to record the
+
+  recipient, not to have no recipients.
+data_categories:
+  - user.name
+  - user.contact
+  - user.contact.address
+  - user.date_of_birth
+  - user.device.ip_address
+  - user.financial
+  - user.government_id
+  - user.payment
+fingerprint_spec: project
+reading_class:
+  class: enumeration
+  item: vendor
+  item_source: token

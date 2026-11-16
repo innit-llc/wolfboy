@@ -1,0 +1,62 @@
+id: eu-consent-009
+pack: eu-consent
+short_name: Tracking cookie set by the product's own code
+problem_line:
+  text: Tracking cookie written with no consent check found
+fix_line: Check the recorded consent before writing the cookie, or use the consent API of the SDK
+  that owns it.
+title: Tracking cookie written directly from application code
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC) (prior consent
+      for storing or accessing information on terminal equipment; non-essential cookies are subject
+      to it)
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) (replaces Art. 5(3) of Directive 2002/58/EC: the 2002
+      wording offered only a right to refuse, the replacement wording requires prior consent) and
+      Art. 4 (Member State transposition deadline 25 May 2011)"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-07-22
+    jurisdiction: EU
+effective_date: 2011-05-25
+severity: high
+rule_confidence: 0.8
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  match:
+    - document\.cookie\s*=\s*["'`](_ga|_gid|_fbp|_gcl|_pk_)
+    - "[\"'`](?:_ga|_gid|_fbp|_gcl|_pk_)[A-Za-z0-9_-]*\\s*="
+context_questions:
+  - Does the matched line write a cookie at all, or does it only name one - with the write in a
+    helper it calls, on an earlier line, or nowhere? Where there is a write, does it sit inside a
+    consent check? Quote the call path.
+  - Is the cookie strictly necessary to deliver the service the user asked for? ePrivacy Art. 5(3)
+    exempts strictly necessary storage.
+evidence_template: "{file}:{line} matched one of this rule's two shapes. The first is a
+  document.cookie assignment whose value opens with a name this rule associates with an analytics or
+  advertising tracker, and it establishes the write. The second is weaker and is the one to check
+  first: a quoted literal that opens with a tracker cookie name and carries the `=` inside the
+  quotes - a serialized cookie or query-string literal such as `'_ga=' + clientId` - on a line that
+  need carry neither document nor cookie. It is there so that a project helper keeping the cookie
+  name at the call site stays visible, the receiver having been left behind on a line that names no
+  tracker - and the same pattern reaches the continuation half of an assignment split across lines
+  and prose that quotes such a literal, since this rule carries no comment exclusion. A mapping or
+  configuration entry keyed by the tracker name is a different shape and is not reached, because
+  there the `=` or the colon sits outside the quoted token. Read the matched line, say which of the
+  two shapes it is, and say whether a value under a tracker-named key is written to terminal
+  equipment here at all. Whether a consent decision was recorded before this line runs is not read
+  by the detector: see the context questions"
+remediation_template: |
+  This is a candidate for review against ePrivacy Directive 2002/58/EC Art. 5(3) as nationally
+  transposed, not a determination about this code. The changes below apply where the review
+  confirms it.
+  Check the consent state before writing.
+  For tracking purposes, delegate to the consent API of the SDK that owns the cookie.
+data_categories:
+  - user.unique_id
+fingerprint_spec: default

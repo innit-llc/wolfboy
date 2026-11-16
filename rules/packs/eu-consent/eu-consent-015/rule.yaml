@@ -1,0 +1,138 @@
+id: eu-consent-015
+pack: eu-consent
+short_name: Ad network script may load before consent
+problem_line:
+  text: Ad network script loads with no consent gate found
+fix_line: Append each vendor's ad script only from the TCF v2.3 consent callback, once that vendor's
+  consent is recorded.
+title: Ad network host referenced (Criteo / Taboola / Outbrain / GPT) - per-vendor TCF consent needs
+  review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC) (prior consent
+      for storing or accessing information on terminal equipment, applied to advertising trackers)
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: GDPR Art. 7 (conditions for consent, applied to advertising trackers)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) (replaces Art. 5(3) of Directive 2002/58/EC: the 2002
+      wording offered only a right to refuse, the replacement wording requires prior consent) and
+      Art. 4 (Member State transposition deadline 25 May 2011)"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "IAB Europe Transparency & Consent Framework — industry self-regulatory framework for ads
+      served in the EEA, not legislation: TCF v2.3 supersedes v2.2 and makes the Disclosed Vendors
+      section a mandatory part of the TC String; participants had until 2026-02-28 to adopt TCF v2.3
+      in their implementations"
+    url: https://iabeurope.eu/transparency-consent-framework/
+    checked_at: 2026-07-22
+  - cite: "IAB Europe, All You Need to Know About the Transition to TCF v2.3 — framework documentation,
+      not legislation: the transition period closed on 2026-02-28, and from 2026-03-01 any TC String
+      created without the disclosedVendors segment is deemed invalid (strings created before that
+      date stay valid until refreshed)"
+    url: https://iabeurope.eu/all-you-need-to-know-about-the-transition-to-tcf-v2-3/
+    checked_at: 2026-07-22
+effective_date: 2011-05-25
+severity: high
+rule_confidence: 0.8
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  vocabulary:
+    ad_network_hosts:
+      - static.criteo.net
+      - cdn.taboola.com
+      - widgets.outbrain.com
+      - securepubads.g.doubleclick.net
+  vocabulary_matching:
+    ad_network_hosts:
+      case_insensitive: true
+  match:
+    - static\.criteo\.net
+    - cdn\.taboola\.com
+    - widgets\.outbrain\.com
+    - securepubads\.g\.doubleclick\.net
+    - (?&ad_network_hosts)
+context_questions:
+  - "Does this tag's load path actually wait for a consent signal, or does it fire on page load? The
+    question is not whether '__tcfapi' appears in this project: a repository can ship a CMP and
+    still load this vendor unconditionally. Trace the matched line back to whatever gates it and
+    quote the path. Shapes that do gate it: a TCF callback ('__tcfapi' with 'addEventListener', 2,
+    cb) that inspects tcData.eventStatus and the vendor consents for this vendor's own IAB vendor
+    id, and only then creates and appends the script element; a CMP-gated loader; a
+    consent-conditional branch around the prebid or tag-manager call. Shapes that do not: a static
+    script tag in the markup, a widget bootstrapped on DOMContentLoaded, or a CMP that gates one
+    vendor while this one loads beside it -- the commonest real shape, and the one this rule's
+    removed guard used to hide."
+  - This rule matches four independent vendors, so answer for the matched line rather than for the
+    project. If a TCF integration exists, is this vendor inside it -- registered in the CMP's vendor
+    list, checked against tcData.vendor.consents, and loaded from the callback -- or does it sit
+    outside the gate? Name the vendor and quote the code that decides its load.
+  - Are these ads served to users in the EEA or the UK?
+evidence_template: "{file}:{line} names one of this rule's four ad network hosts -
+  static.criteo.net, cdn.taboola.com, widgets.outbrain.com or securepubads.g.doubleclick.net. The
+  detector matched the bare host string and did not establish that a tag is loaded here: the same
+  string sits in a Content-Security-Policy directive, an allow-list, documentation and a consent
+  platform's own vendor list. Read the matched line, and where it is a load, check whether this
+  vendor's load path waits for a TCF consent signal or fires on page load. This scan asserts nothing
+  either way: the phrase 'with no TCF consent signalling' used to stand here on the strength of a
+  project-scoped suppression on __tcfapi, which deleted the candidates for all four vendors whenever
+  any one of them was gated, and it was removed on 2026-07-27"
+remediation_template: >
+  Read the matched line first. This rule matches four bare host strings - static.criteo.net,
+
+  cdn.taboola.com, widgets.outbrain.com and securepubads.g.doubleclick.net - with no path and no
+
+  surrounding syntax required, so the string reaches a file in more shapes than one and only some
+
+  of them load a tag. Shapes that do load, and this list is not exhaustive: a script element or a
+
+  framework Script component whose src is the host, a tag inserted by a header-bidding or
+
+  ad-server adapter configuration, a widget bootstrap. Shapes that load nothing, also not
+
+  exhaustive: a Content-Security-Policy directive or another allow-list entry, which declares the
+
+  host permitted somewhere; a consent platform's own vendor list; documentation, a changelog or a
+
+  comment. Name the shape you actually see rather than picking from these lists. Where the matched
+
+  line is not a load, find the actual load and apply the rest of this to that line; where no load
+
+  exists, this candidate closes with no change.
+
+  Integrate a CMP that implements TCF v2.3 and load ad tags dynamically once the CMP records
+  consent.
+
+  TC Strings created on or after 2026-03-01 must carry the mandatory disclosedVendors segment
+  introduced in v2.3, so a CMP still emitting v2.2 strings needs upgrading.
+
+  Concretely, the change is in the load path rather than in the presence of a CMP. Register a TCF
+
+  listener ('__tcfapi' with 'addEventListener', 2, callback), read tcData.eventStatus and the
+
+  vendor consents for each vendor's IAB vendor id, and create and append each vendor's script
+
+  element from inside that callback, so that a document with no consent decision contains none of
+
+  them. Do this per vendor: gating the Google Publisher Tag while Criteo, Taboola or Outbrain load
+
+  beside it leaves three trackers unconsented, and it is the shape most often mistaken for
+
+  compliance.
+
+  A CMP that is present but not consulted by this tag is the failure mode this rule is looking for:
+
+  finding '__tcfapi' elsewhere in the repository does not answer the question, and this detector
+
+  deliberately no longer treats it as an answer.
+data_categories:
+  - user.behavior
+  - user.unique_id
+fingerprint_spec: default

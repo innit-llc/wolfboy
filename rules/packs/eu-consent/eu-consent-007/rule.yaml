@@ -1,0 +1,75 @@
+id: eu-consent-007
+pack: eu-consent
+short_name: YouTube embed on the domain that sets cookies
+problem_line:
+  text: YouTube video embedded from the cookie-setting domain
+fix_line: Embed from youtube-nocookie.com or set the player's host option to it, or load the player
+  only after consent.
+title: YouTube embed on the standard domain rather than youtube-nocookie.com
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC) (prior consent
+      for storing or accessing information on terminal equipment; cookies set by an embedded iframe)
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) (replaces Art. 5(3) of Directive 2002/58/EC: the 2002
+      wording offered only a right to refuse, the replacement wording requires prior consent) and
+      Art. 4 (Member State transposition deadline 25 May 2011)"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-07-22
+    jurisdiction: EU
+effective_date: 2011-05-25
+severity: high
+rule_confidence: 0.7
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  match:
+    - (https?:)?//(www\.|m\.)?youtube\.com/embed/
+    - "[\"'`](www\\.|m\\.)?youtube\\.com/embed/"
+    - (https?:)?//(www\.)?youtube\.com/(iframe_api|player_api)
+  match_without:
+    - ^\s*(//|\{?/\*|\*(?![\w$])|<!--)
+    - RegExp\(\s*["'`][^"'`]*(www\.|m\.)?youtube\.com/embed/
+    - (includes|startsWith|endsWith|indexOf|lastIndexOf|split)\(\s*["'`]((https?:)?//)?(www\.|m\.)?youtube\.com/embed/
+context_questions:
+  - Is the matched line an embed this product renders at all, rather than a documentation example or
+    a constant that a privacy switch may never select? Where it is, is the embed loaded only after
+    consent has been recorded (for example through a click-to-activate facade)? Quote the
+    implementation.
+  - Can the host be swapped for youtube-nocookie.com?
+  - "If the line is the IFrame Player API (iframe_api / player_api) rather than an /embed/ URL, find
+    the YT.Player options: the API script is served from youtube.com either way, so it is the
+    player's `host` option that decides. `host: 'https://www.youtube-nocookie.com'` means the player
+    itself is on the privacy-enhanced domain and this candidate should be dismissed; no host option
+    at all means it defaults to youtube.com."
+evidence_template: "{file}:{line} carries one of this rule's three strings: a youtube.com/embed/ URL
+  written with a scheme or protocol-relative, the same host and path at the start of a string
+  literal, or the IFrame Player API script URL (iframe_api, player_api). Any of them can set cookies
+  before playback starts where an embed really is built here. The string is the whole of what the
+  detector matched, and a string is not always an embed that runs: the same text sits inside a
+  fenced code block or an inline example in a README that documents how to build an iframe, and in a
+  base-URL constant declared beside a youtube-nocookie.com constant that a privacy setting chooses
+  between - both observed in the pinned corpus on 2026-08-25. Whole-line comments are dropped by the
+  detector, and so are lines where the URL is the argument of a RegExp constructor or of includes,
+  startsWith, endsWith, indexOf or split; nothing else is. Read the matched line, and where it
+  declares a constant, read what selects it before reading the finding as a live standard-domain
+  embed"
+remediation_template: |
+  Which change applies depends on which of the two shapes the matched line is, and they are not
+  interchangeable.
+  An /embed/ URL: the host in the src is what decides, so the change is to
+  https://www.youtube-nocookie.com/embed/ - the same video id, the privacy-enhanced domain.
+  The IFrame Player API (iframe_api or player_api): there is no src to change. The API script is
+  served from youtube.com either way, and it is the player's own host option that decides where the
+  player itself is loaded from, so the change is host: 'https://www.youtube-nocookie.com' in the
+  YT.Player options. A player with no host option defaults to youtube.com; a player that already
+  carries that option is on the privacy-enhanced domain and this candidate closes there.
+  For a stronger guarantee on either shape, use a facade: render a thumbnail and insert the iframe,
+  or construct the player, only on a click.
+data_categories:
+  - user.behavior
+fingerprint_spec: file

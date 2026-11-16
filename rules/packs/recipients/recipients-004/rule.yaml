@@ -1,0 +1,483 @@
+id: recipients-004
+pack: recipients
+short_name: Sign-in company that may receive data
+problem_line:
+  text: Personal data sent to a sign-in or access service
+  template: "{data} sent to {recipient}"
+fix_line: "Unless you publish and host this identity service, record it as a recipient: its company,
+  data, where established, role."
+title: Identity or access vendor named in the tree - candidate recipient for the record of
+  processing activities
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - the controller's record of processing
+      activities "shall contain all of the following information", including "the categories of
+      recipients to whom the personal data have been or will be disclosed including recipients in
+      third countries or international organisations"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+  - cite: California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose "The
+      categories of third parties to whom the business discloses personal information." The
+      obligation is owed on a verifiable consumer request under Sec. 1798.110(b), and Sec.
+      1798.130(a)(5)(B) requires the same categories in the privacy policy
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-08-25
+    jurisdiction: US
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(7), 4(8) and 4(9). \"controller\" means \"the natural
+      or legal person, public authority, agency or other body which, alone or jointly with others,
+      determines the purposes and means of the processing of personal data\"; \"processor\" means
+      \"a natural or legal person, public authority, agency or other body which processes personal
+      data on behalf of the controller\"; and \"recipient\" means \"a natural or legal person,
+      public authority, agency or another body, to which the personal data are disclosed, whether a
+      third party or not\". Reference only. They are cited because they settle two of this rule's
+      four facts: the words \"whether a third party or not\" put an identity provider, a CAPTCHA
+      vendor and a second-factor vendor in the record whatever their role, and the words \"alone or
+      jointly with others\" are why the role itself is a genuine question for this class rather than
+      a formality"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(2) - \"Each processor and, where applicable, the
+      processor's representative shall maintain a record of all categories of processing activities
+      carried out on behalf of a controller\". Reference only, and cited for what that record does
+      NOT contain: its four items are the names and contact details of the parties, the categories
+      of processing, third-country transfers, and a description of security measures. None of them
+      is categories of recipients, so where the scanned product is a processor the recipient
+      category belongs in the customer-controller's own Art. 30(1) record"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.15
+detector:
+  engine: builtin-regex
+  shared_vocabulary:
+    - consumer_oauth_recipients
+    - enterprise_sso_recipients
+    - captcha_recipients
+    - breach_check_recipients
+    - mfa_recipients
+  resolve_import_aliases: true
+  match:
+    - (?:^|[^A-Za-z0-9])(?&consumer_oauth_recipients)
+    - (?:^|[^A-Za-z0-9])(?&enterprise_sso_recipients)
+    - (?:^|[^A-Za-z0-9])(?&captcha_recipients)
+    - (?:^|[^A-Za-z0-9])(?&breach_check_recipients)
+    - (?:^|[^A-Za-z0-9])(?&mfa_recipients)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:)(?&consumer_oauth_recipients)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:)(?&enterprise_sso_recipients)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:)(?&captcha_recipients)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:)(?&breach_check_recipients)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:)(?&mfa_recipients)
+context_questions:
+  - "What SHAPE is the matched line? Name it before treating it as a disclosure. The same anchor
+    reaches a tree in at least seven shapes and only three of them put data in the vendor's hands:
+    (a) a dependency declaration or an import that the product's own code uses; (b) a request the
+    product's own server makes to the vendor's API - a token exchange, a CAPTCHA verification POST,
+    a breach-check query, a second-factor validation call; (c) A THIRD-PARTY SCRIPT OR ENDPOINT THE
+    END USER'S OWN BROWSER IS SENT TO - a sign-in redirect, a CAPTCHA widget script, a social SDK
+    loaded from the vendor's host. Shape (c) is the one most easily missed and it is a disclosure
+    even when no form is ever submitted, because the browser reaches the vendor directly and carries
+    the visitor's IP address and any cookies it already holds for that vendor's domain. The four
+    shapes that are NOT disclosures: (d) a vendored SDK or generated client that no first-party code
+    calls; (e) a documentation link, a comparison table, a migration guide or a changelog entry -
+    and note that a guide about migrating AWAY from a vendor matches exactly like a guide about
+    adopting one; (f) a Content-Security-Policy or allow-list entry naming the host without loading
+    it, WHICH IS THE SINGLE MOST IMPORTANT SHAPE FOR THIS RULE - the 2026-08-25 class survey found
+    that every corpus hit for Cisco Duo was a Content-Security-Policy default and never the outbound
+    call; (g) test, fixture, seed or demo data, or the anchor is not the vendor at all. Quote the
+    line and say which of the seven it is."
+  - "WHICH ANCHOR DID YOU ACTUALLY MEET, and is it one of the known collisions? Every anchor named
+    here is KEPT in the vocabulary on purpose, so you will meet them. NO CORPUS MEASUREMENT EXISTS
+    FOR THIS RULE - unlike its sibling rules, no sweep was run before it shipped, so the ordering
+    below is a REASONED EXPECTATION and not a count, and you should treat any figure you are tempted
+    to infer from it as absent rather than small. TEST THESE THREE FIRST, because they are expected
+    to carry most of what this rule raises and to name an authentication vendor almost never.
+    `apple` - the first word of the `-apple-system` font stack in nearly every CSS reset, the
+    `apple-touch-icon` and `apple-mobile-web-app-capable` meta tags in nearly every HTML head,
+    User-Agent strings, App Store links, and the fruit. It is kept because it is the only anchor
+    that reaches a Sign in with Apple integration written as a bare configuration key. `turnstile` -
+    an ordinary English noun for a gate, and a common name for a rate limiter or an admission check
+    in class and variable names. `duo` - a word in English, Italian and Spanish, the product name
+    Duolingo, and any identifier beginning with those three letters, because there is no trailing
+    guard. THEN THE COINED BRAND NAMES, which almost always do name the company and often do not
+    name a disclosure: `discord` (a community-invite link in a README, a build-notification
+    webhook), `okta`, `auth0`, `onelogin`, `recaptcha`, `hcaptcha`, `yubico`, `yubikey`, `authy`,
+    `haveibeenpwned`, `hibp`, `msal`, and the third-party gem `pwned`, which is also internet slang.
+    THREE SPECIFIC TRAPS. First, `onelogin` is carried by SAML toolkits OneLogin itself wrote and
+    gave away - the Python namespace is `onelogin.saml2`, the PHP package is `onelogin/php-saml` -
+    and a product using either of those against Okta, Entra ID or Keycloak carries the token and
+    discloses nothing whatever to OneLogin. Second, `api.github.com`, `graph.microsoft.com`,
+    `graph.facebook.com`, `googleapis`, `google-auth` and `octokit` are the whole platform rather
+    than the sign-in product, so a hit is evidence of SOME relationship with that vendor and not of
+    an authentication event; require a sign-in-specific spelling before concluding one. `googleapis`
+    is also the second label of every Google API host, so it matches inside the sign-in endpoints
+    and inside every other Google service alike, and THE TEST IS THE PATH, NOT THE HOST ALONE. A
+    sign-in path or an OAuth scope on any Google host is this rule's construct: the hosts
+    `oauth2.googleapis.com` and `openidconnect.googleapis.com`; on the general host
+    `www.googleapis.com`, the sign-in paths under `www.googleapis.com/oauth2/` - the
+    user-information endpoint `/oauth2/v2/userinfo` and the token endpoint `/oauth2/v4/token`, a
+    base address ending in `/oauth2/v2` or `/oauth2/v4` that the code joins to one of them included;
+    and the OAuth scope identifiers under `www.googleapis.com/auth/`, such as
+    `https://www.googleapis.com/auth/userinfo.email`, which name what the person is asked to grant
+    at Google's sign-in. Google's other sign-in endpoints are this construct too, though their paths
+    carry no `oauth2` and some name an API of their own: the OAuth2 API's user-information method
+    `www.googleapis.com/userinfo/v2/me` (any path under `www.googleapis.com/userinfo/`); and
+    Google's identity platform (Firebase Authentication and Identity Platform), to which the
+    person's e-mail address and password, or their tokens, are sent - every method under
+    `identitytoolkit.googleapis.com/v1/accounts:` (`accounts:signInWithPassword`, `accounts:signUp`,
+    `accounts:lookup` and the rest), the token endpoint `securetoken.googleapis.com/v1/token`, and
+    the older paths under `www.googleapis.com/identitytoolkit/v3/relyingparty/` (`verifyPassword`
+    among them). The Identity Toolkit and Secure Token APIs are Google's sign-in product, not
+    another Google service. Only a Google host or path that names another Google service -
+    `fonts.googleapis.com` (Google Fonts), `maps.googleapis.com`, `storage.googleapis.com`, or a
+    `www.googleapis.com` path under another API such as `/drive/` or `/calendar/` - is not this
+    rule's construct: answer `not_the_construct` and say which service it is. Where the host is
+    `www.googleapis.com` and the path is built from a value you cannot resolve, the host does not
+    settle it: say so, and do not close the place on the host. A Google Fonts host is a request the
+    visitor's browser makes to Google on page render, which is eu-consent-006's question and which
+    that rule raises at the same line. Third, `AuthenticationServices` is Apple's framework for
+    passkeys, WebAuthn and any OAuth provider's web session as well as for Sign in with Apple, so it
+    is evidence that authentication happens on an Apple platform and not that Apple receives
+    anything. THE ONES MOST LIKELY TO BE GENUINE are the hostnames and the product-specific
+    coordinates: `accounts.google.com`, `login.microsoftonline.com`, `appleid.apple.com`,
+    `api.pwnedpasswords.com`, `challenges.cloudflare.com`, `@okta/okta-auth-js`,
+    `com.microsoft.azure:msal4j`, `duo_client`, `@hcaptcha/react-hcaptcha`,
+    `ASAuthorizationAppleIDProvider`."
+  - "FACT 1 OF 4 - WHO IS THE RECIPIENT? Name the party, not the product. The record needs the party
+    a person could write to, and for this class the trading name and the contracting entity
+    routinely differ: one CAPTCHA vendor in these lists trades under a name that is not its
+    corporate name at all, one single-sign-on platform is a wholly owned subsidiary of another
+    vendor in the same list, and one second-factor vendor is a business unit of a much larger
+    company. THIS BUNDLE CARRIES THE SPELLINGS AND THIS RULE'S OWN PROSE AND NOTHING ELSE - no
+    per-vendor file travels with it, and no file in the scanner's own repository is available to you
+    - SO THE PARTIES ARE NAMED HERE, as the research read them out of each party's own documents.
+    hCaptcha is INTUITION MACHINES, INC., a Delaware corporation. Auth0 is AUTH0, LLC, wholly owned
+    by Okta, Inc., which is separately in the same list. Duo Security is CISCO SYSTEMS, INC.
+    Turnstile is CLOUDFLARE, INC. Have I Been Pwned, including Pwned Passwords, is SUPERLATIVE
+    ENTERPRISES PTY LTD. Authy and Twilio Verify are TWILIO INC. with TWILIO IRELAND LIMITED. Google
+    Sign-In and reCAPTCHA are both GOOGLE LLC. Sign in with Apple is APPLE INC. with APPLE
+    DISTRIBUTION INTERNATIONAL LIMITED. Microsoft Entra ID is MICROSOFT CORPORATION with MICROSOFT
+    IRELAND OPERATIONS LIMITED. GitHub OAuth is GITHUB, INC. with GITHUB B.V. Facebook Login is META
+    PLATFORMS, INC. with META PLATFORMS IRELAND LIMITED. Discord OAuth2 is DISCORD INC. with DISCORD
+    NETHERLANDS BV. Okta is OKTA, INC. OneLogin is ONELOGIN, INC., in the One Identity / Quest
+    Software group since 2021. Yubico and the YubiCloud validation service are YUBICO AB. EVERY NAME
+    IN THAT LIST WAS READ ON 2026-08-25 AND NOTHING RE-READS IT, so treat it as a dated list of
+    candidates rather than a closed one: this class renames and acquires constantly, and one of the
+    pairs above exists only because a vendor was bought by another vendor in the same list. WHERE
+    TWO ENTITIES ARE NAMED, WHICH ONE APPLIES TO A GIVEN DEPLOYMENT IS AN OPERATOR FACT read from
+    the contract and never from the code, and several of these vendors pick between their entities
+    by a property of the CUSTOMER or of the END USER rather than by anything about themselves. Where
+    the code names a vendor you cannot reconcile with the contract the operator actually signed, say
+    so rather than choosing."
+  - "FACT 2 OF 4 - WHAT DOES THE VENDOR RECEIVE ON THE PATH THIS CODE USES? Do not answer it from
+    the vendor's name, because within this one rule the answer ranges from a person's telephone
+    number to five characters of a hash. The authority is THE VENDOR'S OWN API REFERENCE for the
+    call this code makes, and it is the thing to read: nothing in this bundle carries the per-vendor
+    field lists, and no file in the scanner's own repository is available to you. Four worked
+    contrasts, to show how far apart the paths are rather than to save you the reading. AN OAUTH OR
+    SAML SIGN-IN discloses to the identity provider the end user's IP address and user-agent, the
+    application's client identifier, the requested scopes, the time of the sign-in - which the
+    vendor records against that person's account - and, because the person types their password on
+    the vendor's own page, their credentials and any second factor; what comes back to the operator
+    is a different disclosure in the opposite direction and is a different row. A CAPTCHA WIDGET
+    discloses the visitor's IP address, user-agent, referring page and any cookies the browser
+    already holds for the vendor's domain, ON EVERY PAGE LOAD, before any form is submitted and
+    about people who never sign in at all; the server-side verification POST then optionally sends
+    the end user's IP address a second time, in a parameter the operator chose to populate. A
+    PWNED-PASSWORDS RANGE QUERY discloses the first five characters of a hash and nothing else - not
+    the password, not the full hash, not the username, not the email address - and the service is
+    not told which of the roughly eight hundred returned suffixes the caller matched, because the
+    comparison happens on the caller's machine; the caller's IP address and the timing are
+    disclosed, and the same vendor's OTHER endpoint, a breached-account search by full email
+    address, discloses the address in the URL path, which the vendor's own documentation says in
+    terms. A SECOND-FACTOR VALIDATION CALL discloses the username or an enrolment identifier and the
+    end user's IP address, and for one vendor in this list the ENROLMENT step discloses the person's
+    telephone number and email address, while for another the modern WebAuthn path discloses nothing
+    to the vendor at all because no request ever leaves the operator's own server. Quote the call,
+    name the path, and list the fields it populates."
+  - "FACT 3 OF 4 - WHERE IS THE RECIPIENT ESTABLISHED? A PLACE, and nothing more: this question
+    decides nothing about any transfer, and a transfer question is not answered here. It is an
+    operator fact and is never inferred from source code - it is read from the order form, the DPA
+    or the vendor dashboard. ONELOGIN AND CISCO DUO HAVE NO ESTABLISHED JURISDICTION, and they are
+    named here because nothing else in this bundle can name them: every legal document the research
+    pass tried to fetch for either returned an empty body, a refusal or a missing page. YOU MAY NOT
+    FILL EITHER ONE IN. Do not substitute the vendor's headquarters, the country in its billing
+    address, the parent company after an acquisition, or a plausible guess from the group's other
+    entities. Return needs_human for that field instead. FOR THE REST, THE VENDOR DOES NOT HAVE ONE
+    ANSWER FOR YOU TO COPY. Several of these vendors name more than one entity and pick between them
+    by a property of the CUSTOMER or of the END USER - where the developer contracts, where the
+    individual resides, which of the vendor's products was bought. So what follows is A DATED LIST
+    OF CANDIDATES the vendors' own documents named, given here rather than pointed at because no
+    vendor file ships with this bundle, AND IT DECIDES NOTHING: which candidate applies to this
+    deployment is read from the operator's order form, data processing agreement or invoice. Google
+    LLC - United States, California. Okta, Inc. and Auth0, LLC - United States, California, with
+    OKTA UK LIMITED and OKTA JAPAN K.K. named as further addresses and no Okta entity in the
+    European Economic Area named at all. Intuition Machines, Inc. (hCaptcha) - United States, a
+    Delaware corporation. Cloudflare, Inc. (Turnstile) - United States, named as the sole
+    contracting party in Cloudflare's own Data Processing Addendum, which names no separate EEA
+    entity. Superlative Enterprises Pty Ltd (Have I Been Pwned) - Australia, Queensland. Yubico AB -
+    Sweden, Stockholm, and the notice itself makes the group company providing a given service the
+    controller for it, so a deployment may face a group entity this list does not name at all.
+    Discord names DISCORD NETHERLANDS BV as controller for people in the European Economic Area and
+    DISCORD INC. for everyone else, splitting by where the INDIVIDUAL resides rather than by where
+    the developer contracts. Twilio (Authy, Twilio Verify) names TWILIO IRELAND LIMITED, Dublin, as
+    its EEA headquarters and TWILIO INC., San Francisco, as its worldwide one. GitHub names GITHUB
+    B.V., Amsterdam, and GITHUB, INC., San Francisco, both as data controller without saying which
+    contracts with a given developer. Meta names META PLATFORMS IRELAND LIMITED for the EEA and META
+    PLATFORMS, INC. outside it. Apple names APPLE INC., Cupertino, as the Developer Program
+    contracting entity and APPLE DISTRIBUTION INTERNATIONAL LIMITED for the EEA, UK and Switzerland.
+    Microsoft names MICROSOFT IRELAND OPERATIONS LIMITED and MICROSOFT CORPORATION together. EVERY
+    ONE OF THOSE DOCUMENTS WAS READ ON 2026-08-25 AND NOTHING RE-READS IT, so this is an incomplete
+    list of candidates and never a closed one: an entity may have been renamed, acquired or added
+    since. A GROUP HEADQUARTERS IS A POOR GUIDE IN BOTH DIRECTIONS, and four of these candidates
+    carry a caveat the record should carry with them: GOOGLE'S is read from the Google API
+    contracting-party document rather than from reCAPTCHA's own terms, so treat it as unconfirmed
+    FOR RECAPTCHA SPECIFICALLY; and MICROSOFT'S, APPLE'S and CLOUDFLARE'S were carried across from
+    an earlier vendor research pass for a different product of the same vendor, without re-fetching,
+    with the caveats that pass recorded. IF THE OPERATOR CANNOT PRODUCE THE CONTRACT, RETURN
+    needs_human FOR THIS FIELD rather than choosing the candidate that looks likeliest."
+  - "FACT 4 OF 4 - IS THE VENDOR A PROCESSOR HERE OR AN INDEPENDENT CONTROLLER? This is the question
+    that makes this a different rule from the storage one, and for this class it is genuinely open
+    rather than a formality. For a consumer identity provider the ordinary answer is INDEPENDENT
+    CONTROLLER for the account it authenticates: the person's account with that vendor exists
+    whether the scanned product does or not, the vendor decides what to keep about it, and the
+    scanned product instructs it about none of that. For an enterprise single-sign-on platform the
+    ordinary answer is the customer organisation's PROCESSOR for the directory, with the scanned
+    product a relying party - and one of these vendors states both halves in its own privacy policy,
+    saying it is the controller of the data described there and a processor for the data its
+    customers submit through its identity cloud. For a CAPTCHA vendor one of the three states the
+    fork explicitly in its own words, saying it is the controller of the visitor's personal
+    information EXCEPT where it processes on behalf of its integrators, in which case it is the
+    processor and the integrator is the controller. A third answer exists where the operator embeds
+    the vendor's script in its own page and both have an interest in what it collects; whether that
+    arrangement arises is a legal conclusion about facts this detector does not have, so name it as
+    open rather than deciding it. Read the contract the product actually signed and the vendor's own
+    current documents, not a marketing page, and if the answer is not established say so rather than
+    choosing one."
+  - "IS THERE AN ONWARD RECIPIENT BEHIND THIS ONE? For this class there frequently is, and it is a
+    separate row rather than a detail of this one. Three examples that are established rather than
+    speculative: the breach-check service's own API documentation names a content-delivery provider
+    as a party able to view inbound requests to it, so a query reaches that provider as well; a
+    second factor delivered by SMS is handed by the vendor to telephone carriers and aggregators,
+    and that vendor's own privacy notice describes those carriers as independent controllers for the
+    metadata they process; and a consumer identity provider that also runs an advertising business
+    receives the visitor's request through its own infrastructure. Name the onward recipient if
+    there is one, say where you read that there is, and do not merge it into the row for the vendor
+    the code names."
+  - WHOSE RECORD DOES THIS ENTRY GO IN - is the scanned product a controller or a processor for this
+    data? This is the one question about the OPERATOR that this rule asks, and it is here because
+    without it there is no field to write the answer into. Where the product is a controller, the
+    vendor is a category of recipient in its own record. Where the product is a processor - handling
+    a customer's data on that customer's instructions - its own record has no
+    categories-of-recipients field at all, and the recipient category belongs in the
+    customer-controller's record instead; saying nothing is better than writing it into a field that
+    means something else. If the product's own position is not established, say so and stop rather
+    than choosing one.
+  - "IS THIS VENDOR ALREADY IN THE RECORD OF PROCESSING ACTIVITIES, THE PRIVACY POLICY AND THE
+    PUBLISHED SUBPROCESSOR LIST? That is the gap this rule exists to find, and it is answered by
+    reading the operator's own declared documents against the code - not by reading more code. A
+    vendor present in the code and absent from all three is the finding; a vendor present in all
+    three is not a finding at all; a vendor present in some but not all is a finding about the
+    documents that omit it. For this class the PRIVACY POLICY is the document that most often has
+    the gap, and the reason is worth knowing: a sign-in button and a CAPTCHA widget are usually
+    described to the user as a feature rather than as a disclosure, and the vendor behind them is
+    named nowhere. Say which of the three documents you read and which named the vendor."
+evidence_template: "{file}:{line} carries a string from one of the five vendor lists this rule
+  matches on: consumer OAuth and social-login providers, enterprise single-sign-on platforms,
+  CAPTCHA and bot-protection vendors, credential breach-check services, and second-factor vendors -
+  sixteen vendors in all. What each vendor receives on each integration path, and where it is
+  established, is read from the vendor's own API reference and its own contracting documents; this
+  bundle carries the spellings only. MANY of those spellings are self-identifying - a scoped package
+  name, a Maven or NuGet coordinate, an API hostname, a protocol field name the vendor's own
+  documentation defines - but SEVERAL ARE BARE BRAND TOKENS THAT ARE ALSO ORDINARY WORDS, and you
+  must decide which kind you are holding before reading any further. THERE IS NO CORPUS MEASUREMENT
+  BEHIND THIS RULE. Its sibling rules were measured over 98 real repositories before they shipped
+  and this one was not, deliberately: three rules of this family were built in parallel and a single
+  combined measurement is deferred until after all three land. So the warnings below are reasoned
+  expectations, not counts, and nothing here should be read as a number. THREE ANCHORS ARE EXPECTED
+  TO CARRY MOST OF WHAT THIS RULE RAISES AND TO NAME AN AUTHENTICATION VENDOR ALMOST NEVER: `apple`,
+  which is the first word of the `-apple-system` font stack in nearly every CSS reset and the
+  `apple-touch-icon` of nearly every HTML head; `turnstile`, an ordinary English noun and a common
+  name for a rate limiter; and `duo`, a word in three languages. All three are kept on purpose,
+  because each is the only anchor that reaches its vendor's integration where that integration is
+  written as a bare configuration key with no package and no hostname - which the 2026-08-25 class
+  survey established is how the two-factor vendors are actually spelled in real code. The coined
+  brand names - `discord`, `okta`, `auth0`, `onelogin`, `recaptcha`, `hcaptcha`, `yubico`, `authy`,
+  `hibp`, `msal` - almost always name the company and often do not name a disclosure: a README link,
+  a comparison table and a Content-Security-Policy entry all carry them. TWO FURTHER FAMILIES ARE
+  GENUINELY VENDOR-OWNED AND STILL DO NOT NAME THIS RULE'S SUBJECT: `api.github.com`,
+  `graph.microsoft.com`, `graph.facebook.com`, `googleapis`, `google-auth` and `octokit` cover every
+  service those platforms sell rather than sign-in; and `onelogin` is carried by SAML toolkits
+  OneLogin wrote and gave away, which federate with any identity provider and disclose nothing to
+  OneLogin. So what this detector established is ONLY that a listed string occurs at this location.
+  It does NOT establish that the string names the vendor at all, that any personal data was
+  disclosed, that the integration is live, that the line is first-party code rather than a vendored
+  SDK, or which integration path is in use. Note that a transitive lockfile entry is not among the
+  shapes you can meet FOR MOST LOCKFILES, and the exception matters. The walker drops fourteen names
+  and only those fourteen: `package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`,
+  `npm-shrinkwrap.json`, `bun.lockb`, `composer.lock`, `Gemfile.lock`, `poetry.lock`, `pdm.lock`,
+  `Cargo.lock`, `go.sum`, `packages.lock.json`, `Podfile.lock` and `flake.lock`, and `node_modules`
+  and `vendor` with them, before any rule runs. `bun.lock` - Bun's CURRENT, text-format lockfile -
+  is NOT on that list and IS read, because only the older binary `bun.lockb` is named there
+  (corrected 2026-09-17; the sentence used to say \"and their siblings by name\", which is not what
+  the walker does). So a `bun.lock` dependency line can reach you, and it is a transitive dependency
+  record rather than a line this product wrote. WHAT SEPARATES THIS RULE FROM THE STORAGE ONE is
+  that here the vendor frequently decides for itself what to keep: an identity provider is very
+  often an INDEPENDENT CONTROLLER of the account it authenticates, and a CAPTCHA vendor receives
+  data about visitors who never sign in and never submit anything. Two of the sixteen vendors -
+  OneLogin and Cisco Duo - have NO established jurisdiction in the research behind these lists. They
+  are named here rather than pointed at, because no vendor file ships with this bundle, and you may
+  not supply a jurisdiction for either of them. Whether the vendor is already in the operator's
+  record of processing activities, privacy policy and subprocessor list is not decided by the
+  detector and cannot be: see the context questions"
+remediation_template: >
+  Read the matched line first and decide what it is, because this rule matches a spelling the vendor
+
+  owns and that spelling reaches a tree in seven shapes of which three put data in the vendor's
+
+  hands. A dependency declaration or import that first-party code calls; a request the product's own
+
+  server makes to the vendor's API; and a third-party script or redirect the END USER'S BROWSER is
+
+  sent to are the three. A vendored SDK nothing calls, a documentation or migration-guide link, a
+
+  Content-Security-Policy allow-list entry, and test or seed data are the other four - and the
+
+  allow-list entry is the one to test for first here, because for one whole class of these vendors
+  it
+
+  was the only shape the corpus contained. Several anchors are ordinary words - `apple`,
+  `turnstile`,
+
+  `duo` - and for those the last shape is the likeliest one.
+
+  If it is one of the three, RECORD FOUR FACTS ABOUT THE RECIPIENT and stop there. Who the party is,
+
+  by the name it identifies itself by rather than by the product name in the code. What it receives
+
+  on the integration path this code actually uses, read off the vendor's own API reference for the
+
+  call the code makes - within this one rule the paths differ by orders of magnitude, from an
+
+  enrolment call that discloses a person's telephone number and email address to a range query that
+
+  discloses five characters of a hash and is designed so the service cannot tell what was searched
+
+  for. WHICH LEGAL ENTITY the operator actually contracts with, and WHERE that entity is - a place,
+
+  and nothing more. THE VENDOR HAS NO SINGLE ANSWER TO COPY HERE. Several of
+
+  these vendors name more than one entity and pick between them by a property of the CUSTOMER or of
+
+  the END USER, so the entity is a fact about THIS OPERATOR'S CONTRACT and not an attribute of the
+
+  vendor: read it from the order form, the data processing agreement or the invoice they actually
+
+  signed. Context question 5 lists the candidates each vendor's own documents named and the date
+  each
+
+  was read; that is an incomplete list of candidates and never the answer, because nothing re-reads
+
+  those documents. Where the operator cannot produce the contract, return needs_human for that field
+
+  rather than choosing the candidate that looks likeliest. And whether it is a processor here or an
+
+  independent controller, which for a consumer identity provider is very often the latter.
+
+  Then put those four facts in the right place, which depends on what the scanned product itself is.
+
+  Where the product is a CONTROLLER, the vendor is a category of recipient in its own record of
+
+  processing activities - GDPR Art. 30(1)(d), and the same categories in the privacy policy under
+
+  Cal. Civ. Code Sec. 1798.130(a)(5)(B) for a business the CCPA reaches. Where the product is a
+
+  PROCESSOR, its own record has no categories-of-recipients field at all and the recipient category
+
+  belongs in the customer-controller's record instead; do not write it into the processor's own
+
+  record under the same field letter, which there means something else.
+
+  Add the vendor to the PRIVACY POLICY as well as to the record. For this class that is the document
+
+  that most often lacks it, because a sign-in button and a CAPTCHA widget are described to the user
+
+  as features rather than as disclosures, and the vendor behind them is named nowhere.
+
+  Record any ONWARD recipient as its own row rather than folding it into this one - the
+
+  content-delivery provider in front of a breach-check API and the telephone carriers behind an SMS
+
+  second factor are examples this bundle's research established.
+
+  For the two vendors named above as having no established jurisdiction - OneLogin and Cisco Duo -
+  leave that field unanswered and say why; do not substitute a headquarters, a billing country or a
+  parent company.
+
+  If the vendor is already named in the record, in the privacy policy and in the subprocessor list,
+
+  and the four facts are recorded, dismiss the candidate and say which
+
+  of the three documents you read.
+
+  WHAT THIS FINDING DOES NOT DECIDE, so that nobody treats it as decided: whether a transfer
+
+  mechanism is needed for this leg, what any contract with the vendor must contain, and whether the
+
+  record duty applies to this organisation at all. Those are questions about what the operator owes
+
+  rather than about who received the data, they turn on facts this detector does not have, and they
+
+  belong to the rows that ask them.
+
+  Do not remove the sign-in button, the CAPTCHA or the breach check in order to close the finding.
+
+  The obligation is to record the recipient, not to have no recipients - and for the breach check in
+
+  particular, removing it would trade a five-character hash prefix for users keeping known-breached
+
+  passwords.
+data_categories:
+  - user.account
+  - user.authorization.credentials
+  - user.behavior
+  - user.contact.email
+  - user.contact.phone_number
+  - user.device
+  - user.device.cookie_id
+  - user.device.ip_address
+  - user.name
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: enumeration
+  item: vendor
+  item_source: token

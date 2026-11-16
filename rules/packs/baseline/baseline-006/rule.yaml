@@ -1,0 +1,243 @@
+id: baseline-006
+pack: baseline
+short_name: A secret carried in a URL
+problem_line:
+  text: Secret carried in a URL query string
+  template: "{data} carried in a URL query string"
+fix_line: Move the secret from the query to a header or POST body, or make a code a link must carry
+  single-use; revoke any sent.
+title: "Secret- or token-named URL query parameter: built for sending, or read from the query on receipt"
+jurisdiction:
+  - EU
+  - US
+  - JP
+legal_basis:
+  - cite: GDPR Art. 32 (security of processing; URLs persist in server logs, browser history and Referer
+      headers, so a query string is an unsuitable transport for a secret)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-21
+    jurisdiction: EU
+  - cite: "Japan APPI (Act on the Protection of Personal Information, Act No. 57 of 2003), Art. 23
+      (security control measures — a business handling personal information must take necessary and
+      appropriate measures for the security control of the personal data it handles). PPC Guidelines
+      (General Rules) Q&A 10-21 places prevention of leakage in the use of information systems under
+      this duty. General basis: the Act names no transport for a credential, and it reaches this
+      finding where the value in the query string is a user's own credential or where the logs the
+      URL lands in hold personal data"
+    url: https://laws.e-gov.go.jp/law/415AC0000000057
+    checked_at: 2026-07-22
+    jurisdiction: JP
+  - cite: California Civil Code Sec. 1798.81.5(b) — a business that owns, licenses or maintains personal
+      information about a California resident shall implement and maintain reasonable security
+      procedures and practices appropriate to the nature of the information. Sec. 1798.81.5(d)(1)(B)
+      counts a username or email address together with a password permitting access to an online
+      account as personal information, which is the sending-side case this rule looks for. State
+      scope only, and a reasonableness standard rather than a named control. It does not reach the
+      service tokens (revalidate, webhook and function secrets) that the receiving-side patterns
+      pick up — those are not personal information under Sec. 1798.81.5(d)
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=1798.81.5&lawCode=CIV
+    checked_at: 2026-07-22
+    jurisdiction: US
+  - cite: "United States, FTC Act Sec. 5 (15 U.S.C. Sec. 45(a)(1) and (n)) — unfair acts or practices in
+      or affecting commerce, the authority behind the Federal Trade Commission's data-security line
+      (failure to employ reasonable security causing or likely to cause substantial injury to
+      consumers, not reasonably avoidable and not outweighed by countervailing benefits). General
+      basis: no federal statute names a transport for a secret, and this covers the service-token
+      side, where the injury runs through what the token unlocks"
+    url: https://www.govinfo.gov/content/pkg/USCODE-2023-title15/html/USCODE-2023-title15-chap2-subchapI-sec45.htm
+    checked_at: 2026-07-22
+    jurisdiction: US
+severity: high
+rule_confidence: 0.8
+detector:
+  engine: builtin-regex
+  resolve_local_values: true
+  vocabulary:
+    credential_param_words:
+      - password
+      - passwd
+      - pwd
+      - secret
+      - token
+      - api_key
+      - apikey
+      - apiKey
+      - apiSecret
+      - access_key
+      - accessKey
+      - accesskey
+      - access_token
+      - accessToken
+      - refresh_token
+      - refreshToken
+      - id_token
+      - idToken
+      - auth_token
+      - authToken
+      - authtoken
+      - private_key
+      - privateKey
+      - client_secret
+      - clientSecret
+      - signature
+      - sig
+      - key
+      - credential
+      - credentials
+      - passcode
+      - jwt
+      - session_id
+      - sessionId
+      - sessionid
+      - sid
+    credential_param_words_exact:
+      - auth
+      - authorization
+    single_use_credential_words:
+      - activation_code
+      - activation_token
+      - verification_code
+      - verification_token
+      - confirmation_code
+      - confirmation_token
+      - reset_code
+      - reset_token
+      - invite_code
+      - invitation_code
+      - recovery_code
+      - backup_code
+      - one_time_code
+      - one_time_token
+      - single_use_token
+    capitalised_param_words:
+      - password
+      - passwd
+      - secret
+      - token
+      - api_key
+      - apikey
+      - access_key
+      - access_token
+      - refresh_token
+      - id_token
+      - auth_token
+      - private_key
+      - client_secret
+      - signature
+      - credential
+      - credentials
+      - passcode
+      - jwt
+      - session_id
+  vocabulary_matching:
+    single_use_credential_words:
+      case_insensitive: true
+      separator_insensitive: true
+    capitalised_param_words:
+      case_insensitive: true
+  match:
+    - "[?&](?:[\"'`]\\s*[.+]\\s*[\"'`])?(?:[A-Za-z0-9_.-]*[_.-])?(?:password|passwd|pwd|secret|toke\
+      n|api_key|apikey|apiKey|apiSecret|access_key|accessKey|accesskey|access_token|accessToken|ref\
+      resh_token|refreshToken|id_token|idToken|auth_token|authToken|authtoken|private_key|privateKe\
+      y|client_secret|clientSecret|signature|sig|key|credential|credentials|passcode|jwt|session_id\
+      |sessionId|sessionid|sid|otp|auth|authorization)=[^&\"'`\\s]{0,60}[\"'`$\\{]"
+    - (?:\$_(?:GET|REQUEST)\s*\[\s*["'](?:(?:password|passwd|pwd|secret|token|api_key|apikey|apiKey|apiSecret|access_key|accessKey|accesskey|access_token|accessToken|refresh_token|refreshToken|id_token|idToken|auth_token|authToken|authtoken|private_key|privateKey|client_secret|clientSecret|signature|sig|key|credential|credentials|passcode|jwt|session_id|sessionId|sessionid|sid)(?:[_-][A-Za-z0-9_-]*)?|auth|authorization)["']\s*\]|filter_input\s*\(\s*INPUT_GET\s*,\s*["'](?:(?:password|passwd|pwd|secret|token|api_key|apikey|apiKey|apiSecret|access_key|accessKey|accesskey|access_token|accessToken|refresh_token|refreshToken|id_token|idToken|auth_token|authToken|authtoken|private_key|privateKey|client_secret|clientSecret|signature|sig|key|credential|credentials|passcode|jwt|session_id|sessionId|sessionid|sid)(?:[_-][A-Za-z0-9_-]*)?|auth|authorization)["'])
+    - \.(?:args|GET|query_params|queryparams)\s*(?:\.\s*(?:to_dict|dict|copy)\s*\([^)]*\)\s*)?(?:\.\s*get(?:list)?\s*\(\s*|\[\s*)["'](?:(?:password|passwd|pwd|secret|token|api_key|apikey|apiKey|apiSecret|access_key|accessKey|accesskey|access_token|accessToken|refresh_token|refreshToken|id_token|idToken|auth_token|authToken|authtoken|private_key|privateKey|client_secret|clientSecret|signature|sig|key|credential|credentials|passcode|jwt|session_id|sessionId|sessionid|sid)(?:[_-][A-Za-z0-9_-]*)?|auth|authorization)["']
+    - (?:\bparams|\bquery_parameters)\s*(?:\[\s*|\.\s*(?:fetch|dig|require)\s*\(\s*)(?::|["'])(?:(?:password|passwd|pwd|secret|token|api_key|apikey|apiKey|apiSecret|access_key|accessKey|accesskey|access_token|accessToken|refresh_token|refreshToken|id_token|idToken|auth_token|authToken|authtoken|private_key|privateKey|client_secret|clientSecret|signature|sig|key|credential|credentials|passcode|jwt|session_id|sessionId|sessionid|sid)(?:[_-][A-Za-z0-9_-]*)?|auth|authorization)["']?\s*[\])]
+    - \.(?:Query\(\)\.Get|Query|DefaultQuery|QueryParam|FormValue|PostFormValue|GetQuery)\s*\(\s*["`](?:(?:password|passwd|pwd|secret|token|api_key|apikey|apiKey|apiSecret|access_key|accessKey|accesskey|access_token|accessToken|refresh_token|refreshToken|id_token|idToken|auth_token|authToken|authtoken|private_key|privateKey|client_secret|clientSecret|signature|sig|key|credential|credentials|passcode|jwt|session_id|sessionId|sessionid|sid)(?:[_-][A-Za-z0-9_-]*)?|auth|authorization)["`]
+    - (?:\.get(?:Parameter|ParameterValues|QueryParam)\s*\(\s*|\.getParameterMap\s*\(\s*\)\s*\.\s*get\s*\(\s*|\.getQueryParams\s*\(\s*\)\s*\.\s*(?:getFirst|get)\s*\(\s*|@(?:RequestParam|QueryParam)\s*\(\s*(?:[A-Za-z]+\s*=\s*)?)"(?:(?:password|passwd|pwd|secret|token|api_key|apikey|apiKey|apiSecret|access_key|accessKey|accesskey|access_token|accessToken|refresh_token|refreshToken|id_token|idToken|auth_token|authToken|authtoken|private_key|privateKey|client_secret|clientSecret|signature|sig|key|credential|credentials|passcode|jwt|session_id|sessionId|sessionid|sid)(?:[_-][A-Za-z0-9_-]*)?|auth|authorization)"
+    - \.(?:Query|QueryString)\s*(?:\[\s*"(?:(?:password|passwd|pwd|secret|token|api_key|apikey|apiKey|apiSecret|access_key|accessKey|accesskey|access_token|accessToken|refresh_token|refreshToken|id_token|idToken|auth_token|authToken|authtoken|private_key|privateKey|client_secret|clientSecret|signature|sig|key|credential|credentials|passcode|jwt|session_id|sessionId|sessionid|sid)(?:[_-][A-Za-z0-9_-]*)?|auth|authorization)"\s*\]|\.\s*Get\s*\(\s*"(?:(?:password|passwd|pwd|secret|token|api_key|apikey|apiKey|apiSecret|access_key|accessKey|accesskey|access_token|accessToken|refresh_token|refreshToken|id_token|idToken|auth_token|authToken|authtoken|private_key|privateKey|client_secret|clientSecret|signature|sig|key|credential|credentials|passcode|jwt|session_id|sessionId|sessionid|sid)(?:[_-][A-Za-z0-9_-]*)?|auth|authorization)"\s*\))
+    - (?:searchParams|queryParams|query_params|new\s+URLSearchParams\s*\([^()]*\))\s*\.\s*(?:get|getAll|has)\s*\(\s*["'`](?:(?:password|passwd|pwd|secret|token|api_key|apikey|apiKey|apiSecret|access_key|accessKey|accesskey|access_token|accessToken|refresh_token|refreshToken|id_token|idToken|auth_token|authToken|authtoken|private_key|privateKey|client_secret|clientSecret|signature|sig|key|credential|credentials|passcode|jwt|session_id|sessionId|sessionid|sid)(?:[_-][A-Za-z0-9_-]*)?|auth|authorization)["'`]
+    - \.query\s*(?:\.\s*(?:(?:password|passwd|pwd|secret|token|api_key|apikey|apiKey|apiSecret|access_key|accessKey|accesskey|access_token|accessToken|refresh_token|refreshToken|id_token|idToken|auth_token|authToken|authtoken|private_key|privateKey|client_secret|clientSecret|signature|sig|key|credential|credentials|passcode|jwt|session_id|sessionId|sessionid|sid)(?:[_-][A-Za-z0-9_-]*)?|auth|authorization)\b|\[\s*["'`](?:(?:password|passwd|pwd|secret|token|api_key|apikey|apiKey|apiSecret|access_key|accessKey|accesskey|access_token|accessToken|refresh_token|refreshToken|id_token|idToken|auth_token|authToken|authtoken|private_key|privateKey|client_secret|clientSecret|signature|sig|key|credential|credentials|passcode|jwt|session_id|sessionId|sessionid|sid)(?:[_-][A-Za-z0-9_-]*)?|auth|authorization)["'`]\s*\])
+    - \{[^}]*\b(?:(?:password|passwd|pwd|secret|token|api_key|apikey|apiKey|apiSecret|access_key|accessKey|accesskey|access_token|accessToken|refresh_token|refreshToken|id_token|idToken|auth_token|authToken|authtoken|private_key|privateKey|client_secret|clientSecret|signature|sig|key|credential|credentials|passcode|jwt|session_id|sessionId|sessionid|sid)(?:[_-][A-Za-z0-9_-]*)?|auth|authorization)\b[^}]*\}\s*=\s*[A-Za-z0-9_.$\[\]"']*\.query\b
+    - \.query\s*\}\s*\)\s*\.\s*(?:(?:password|passwd|pwd|secret|token|api_key|apikey|apiKey|apiSecret|access_key|accessKey|accesskey|access_token|accessToken|refresh_token|refreshToken|id_token|idToken|auth_token|authToken|authtoken|private_key|privateKey|client_secret|clientSecret|signature|sig|key|credential|credentials|passcode|jwt|session_id|sessionId|sessionid|sid)(?:[_-][A-Za-z0-9_-]*)?|auth|authorization)\b
+    - "[?&](?:[\"'`]\\s*[.+]\\s*[\"'`])?(?:[A-Za-z0-9_.-]*[_.-])?(?:(?&credential_param_words)|otp|\
+      (?&single_use_credential_words)|(?&credential_param_words_exact))=[^&\"'`\\s]{0,60}[\"'`$\\{]"
+    - (?:\b(?:addParameters?|queryParam|addQueryParam(?:eter)?|setQueryParam(?:eter)?|queryParameter|setParameter)|searchParams\s*\.\s*(?:set|append)|\.\s*param)\s*\(\s*(?:[^,]{0,120},\s*)?[\"'`](?:[A-Za-z0-9_.-]*[_.-])?(?:(?:(?&credential_param_words)|(?&single_use_credential_words))(?:[_-][A-Za-z0-9_-]*)?|(?&credential_param_words_exact))[\"'`]\s*,
+    - (?:\$_(?:GET|REQUEST)\s*\[\s*["'](?:[A-Za-z0-9_.-]*[_.-])?(?:(?:(?&credential_param_words)|(?&single_use_credential_words))(?:[_-][A-Za-z0-9_-]*)?|(?&credential_param_words_exact))["']\s*\]|filter_input\s*\(\s*INPUT_GET\s*,\s*["'](?:[A-Za-z0-9_.-]*[_.-])?(?:(?:(?&credential_param_words)|(?&single_use_credential_words))(?:[_-][A-Za-z0-9_-]*)?|(?&credential_param_words_exact))["'])
+    - \.(?:args|GET|query_params|queryparams)\s*(?:\.\s*(?:to_dict|dict|copy)\s*\([^)]*\)\s*)?(?:\.\s*get(?:list)?\s*\(\s*|\[\s*)["'](?:[A-Za-z0-9_.-]*[_.-])?(?:(?:(?&credential_param_words)|(?&single_use_credential_words))(?:[_-][A-Za-z0-9_-]*)?|(?&credential_param_words_exact))["']
+    - (?:\bparams|\bquery_parameters)\s*(?:\[\s*|\.\s*(?:fetch|dig|require)\s*\(\s*)(?::|["'])(?:[A-Za-z0-9_.-]*[_.-])?(?:(?:(?&credential_param_words)|(?&single_use_credential_words))(?:[_-][A-Za-z0-9_-]*)?|(?&credential_param_words_exact))["']?\s*[\])]
+    - \.(?:Query\(\)\.Get|Query|DefaultQuery|QueryParam|FormValue|PostFormValue|GetQuery)\s*\(\s*["`](?:[A-Za-z0-9_.-]*[_.-])?(?:(?:(?&credential_param_words)|(?&single_use_credential_words))(?:[_-][A-Za-z0-9_-]*)?|(?&credential_param_words_exact))["`]
+    - (?:\.get(?:Parameter|ParameterValues|QueryParam)\s*\(\s*|\.getParameterMap\s*\(\s*\)\s*\.\s*get\s*\(\s*|\.getQueryParams\s*\(\s*\)\s*\.\s*(?:getFirst|get)\s*\(\s*|@(?:RequestParam|QueryParam)\s*\(\s*(?:[A-Za-z]+\s*=\s*)?)"(?:[A-Za-z0-9_.-]*[_.-])?(?:(?:(?&credential_param_words)|(?&single_use_credential_words))(?:[_-][A-Za-z0-9_-]*)?|(?&credential_param_words_exact))"
+    - \.(?:Query|QueryString)\s*(?:\[\s*"(?:[A-Za-z0-9_.-]*[_.-])?(?:(?:(?&credential_param_words)|(?&single_use_credential_words))(?:[_-][A-Za-z0-9_-]*)?|(?&credential_param_words_exact))"\s*\]|\.\s*Get\s*\(\s*"(?:[A-Za-z0-9_.-]*[_.-])?(?:(?:(?&credential_param_words)|(?&single_use_credential_words))(?:[_-][A-Za-z0-9_-]*)?|(?&credential_param_words_exact))"\s*\))
+    - (?:searchParams|queryParams|query_params|new\s+URLSearchParams\s*\([^()]*\))\s*\.\s*(?:get|getAll|has)\s*\(\s*["'`](?:[A-Za-z0-9_.-]*[_.-])?(?:(?:(?&credential_param_words)|(?&single_use_credential_words))(?:[_-][A-Za-z0-9_-]*)?|(?&credential_param_words_exact))["'`]
+    - \.query\s*(?:\.\s*(?:[A-Za-z0-9_.-]*[_.-])?(?:(?:(?&credential_param_words)|(?&single_use_credential_words))(?:[_-][A-Za-z0-9_-]*)?|(?&credential_param_words_exact))\b|\[\s*["'`](?:[A-Za-z0-9_.-]*[_.-])?(?:(?:(?&credential_param_words)|(?&single_use_credential_words))(?:[_-][A-Za-z0-9_-]*)?|(?&credential_param_words_exact))["'`]\s*\])
+    - \{[^}]*\b(?:[A-Za-z0-9_.-]*[_.-])?(?:(?:(?&credential_param_words)|(?&single_use_credential_words))(?:[_-][A-Za-z0-9_-]*)?|(?&credential_param_words_exact))\b[^}]*\}\s*=\s*[A-Za-z0-9_.$\[\]"']*\.query\b
+    - \.query\s*\}\s*\)\s*\.\s*(?:[A-Za-z0-9_.-]*[_.-])?(?:(?:(?&credential_param_words)|(?&single_use_credential_words))(?:[_-][A-Za-z0-9_-]*)?|(?&credential_param_words_exact))\b
+    - \.(?:Query\(\)\.Get|Query|DefaultQuery|QueryParam|FormValue|PostFormValue|GetQuery)\s*\(\s*["`](?:[A-Za-z0-9_.-]*[_.-])?(?:(?&capitalised_param_words)(?:[_-][A-Za-z0-9_-]*)?)["`]
+    - \.(?:Query|QueryString)\s*(?:\[\s*"(?:[A-Za-z0-9_.-]*[_.-])?(?:(?&capitalised_param_words)(?:[_-][A-Za-z0-9_-]*)?)"\s*\]|\.\s*Get\s*\(\s*"(?:[A-Za-z0-9_.-]*[_.-])?(?:(?&capitalised_param_words)(?:[_-][A-Za-z0-9_-]*)?)"\s*\))
+  match_without:
+    - otpauth(-migration)?://
+    - ^\s*(//|/\*|\*\s|<!--)
+  path_without:
+    - "[Oo]tp[Uu]ri|[Oo]tpauth|[Tt]otp|TOTP"
+context_questions:
+  - Is the value actually a secret, or a public token / part of a signed URL whose presence in the
+    URL is by design?
+  - Does this parameter actually arrive in the query string? Rails' `params`, and any framework hash
+    that merges query, body and path, cannot answer that on its own — find the route and the HTTP
+    verb, or the form or client that calls it, and quote them. A value that only ever arrives in a
+    POST body is out of scope for this rule.
+  - Does the serving stack record full request URLs (application logs, access logs, reverse proxy,
+    CDN, APM)?
+  - "Where the line calls a name/value helper (`addParameters`, `queryParam`, `searchParams.set`,
+    `param`, `setParameter`, `addParameter`) instead of writing `name=value` into a string: open
+    that call site and say what the helper builds - a URL query string, a form body, or a request
+    header. Some of these names are not URL-exclusive: `setParameter` is also JPA's and Hibernate's
+    named-bind method, so a database bind reaches you through the same clause. This detector reads
+    one line and cannot tell them apart, and only the first is what this rule reports."
+  - "Where the credential word sits at the end or in the middle of the parameter name
+    (`oauth_token`, `oauth_accessor_secret`, `x-api-key`): is the whole identifier a credential, or
+    a name that merely ends in one of these words, such as `primary_key`, `sort_key` or `cache_key`?
+    And where the parameter is a single-use code (`activationCode`, `verificationCode`, `resetCode`,
+    `inviteCode`): how long does it stay valid after it is issued, is it invalidated on first use,
+    and who else can reach the URL that carries it?"
+evidence_template: "{file}:{line} names a URL query parameter drawn from a secret and token
+  vocabulary - built for sending, read from the query on receipt, or MERELY NAMED, where no request
+  is built here and none is parsed here. The third limb is not hypothetical and it is the one to
+  rule out first: the sending-side clause matches a query-parameter substring anywhere on a line and
+  requires nothing to construct, send or receive that URL, and the only comment suppression this
+  detector carries drops lines that BEGIN with a comment marker, so a string inside a data file and
+  a line of prose both reach you unfiltered. Two shapes of it sit in the corpus - a user-interface
+  translation string inside a localisation catalogue, explaining to that product's own users what
+  the query-parameter authentication method means, and a documentation bullet listing the ways to
+  authenticate. Both talk about a query parameter carrying a credential without building or reading
+  one, and where that is what you are holding there is no data flow at this location to report.
+  Whether the value is a secret, or a public token or signature whose presence in the URL is by
+  design, is context question 1. SINCE 2026-09-09 THREE FURTHER SHAPES REACH YOU AND EACH CARRIES
+  ITS OWN LIMIT. First, a parameter ASSEMBLED BY A NAME/VALUE HELPER - `OAuth.addParameters(url,
+  \"oauth_token\", t)`, `UriComponentsBuilder.queryParam(...)`, `searchParams.set(...)`,
+  `.param(...)` - rather than written as literal `name=value` text: one line does not say whether
+  the helper builds a URL query string, a form body, a request header or a database bind
+  (`setParameter` is also JPA's named-bind method), so open the helper call site before reading the
+  finding as a URL. Second, the credential word may sit ANYWHERE IN THE IDENTIFIER rather than at
+  its start (`oauth_accessor_secret`, `x-api-key`), which also admits a name that merely ends in one
+  of these words - `primary_key`, `sort_key`, `cache_key` - so read the whole identifier, not the
+  word. A camelCase infix such as `oauthToken` is NOT reached. Third, a SINGLE-USE CODE
+  (`activationCode`, `verificationCode`, `confirmationToken`, `resetCode`, `inviteCode`) is a
+  credential for one operation whose exposure window is the life of the URL that carries it; whether
+  that URL was logged, referred, forwarded or shared, and whether the code is invalidated on first
+  use, are deployment facts this finding does not answer"
+remediation_template: |
+  This is a candidate for review against GDPR Art. 32 (security of processing), not a determination
+  about this code. The changes below apply where the review confirms it.
+  Sending side (this line builds a URL carrying a secret in the query): move the value into
+  the POST body or an Authorization header.
+  Receiving side (an endpoint here accepts a secret from the query): stop accepting it from
+  the query, take it only from an Authorization header (or a signed header), and migrate the
+  callers' webhook and integration settings to the header form.
+  A single-use code in a link (a reset, activation, invitation or sign-in link sent by e-mail or
+  message, context question 5): the code has to travel in the URL the person opens, so neither
+  move above applies. Narrow what that URL can expose instead: make the code expire soon after it
+  is issued and stop accepting it after its first use; on the page the link opens, take the code
+  into a form or a session and redirect to an address without it, and send a Referrer-Policy of
+  no-referrer there so the code does not travel on to other sites in a Referer header; and keep
+  the parameter out of the access, proxy and application logs (context question 3).
+  In each case, any secret that has already travelled in a URL is sitting in logs, browser
+  history and Referer headers, so revoke it.
+data_categories:
+  - user.authorization.credentials
+  - system.credentials
+fingerprint_spec: project
+reading_class:
+  class: per-location

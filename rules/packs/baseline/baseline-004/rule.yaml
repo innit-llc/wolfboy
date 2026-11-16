@@ -1,0 +1,212 @@
+id: baseline-004
+pack: baseline
+short_name: Other websites may be allowed to call the server (CORS)
+problem_line:
+  text: Other websites allowed to read this server's responses
+fix_line: List the origins that need access instead of the wildcard, allow-all switch or default, or
+  state that the API is public.
+title: CORS wildcard, allow-all switch, reflected origin, a constructor called with no origins, a
+  computed origin, or the header set to any value - the admitted origin set needs review
+jurisdiction:
+  - EU
+  - US
+  - JP
+legal_basis:
+  - cite: GDPR Art. 32 (security of processing)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "EU Cyber Resilience Act (Regulation (EU) 2024/2847), Annex I, Part I, point (2)(j) (essential
+      cybersecurity requirement to limit attack surfaces, including external interfaces) and point
+      (2)(d) (protection from unauthorised access by appropriate control mechanisms). Per Art. 71(2)
+      the Regulation applies from 11 December 2027. Scope check: the CRA reaches products with
+      digital elements made available on the EU market (Art. 2(1), Art. 3(1)) and hosted software
+      only as a remote data processing solution within Art. 3(2). Recital 12 places websites that do
+      not support the functionality of such a product, and cloud services (SaaS, PaaS, IaaS)
+      designed and developed outside a manufacturer's responsibility, outside this Regulation and
+      inside Directive (EU) 2022/2555 instead. For a plain hosted web application this entry
+      therefore does not reach the scanned artefact and GDPR Art. 32 is the operative EU basis; it
+      applies where the repository ships a distributed product or the backend of one"
+    url: https://eur-lex.europa.eu/eli/reg/2024/2847/oj
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "Japan APPI (Act on the Protection of Personal Information, Act No. 57 of 2003), Art. 23
+      (security control measures — necessary and appropriate measures for the security control of
+      personal data). The PPC Guidelines (General Rules), Annex on the security control measures to
+      be taken, place access control and prevention of unauthorised external access under this duty.
+      General basis: no Japanese instrument addresses cross-origin response headers, and Art. 23
+      reaches this finding only where the endpoint opened to every origin returns personal data"
+    url: https://laws.e-gov.go.jp/law/415AC0000000057
+    checked_at: 2026-07-22
+    jurisdiction: JP
+  - cite: "United States, FTC Act Sec. 5 (15 U.S.C. Sec. 45(a)(1) and (n)) — unfair acts or practices in
+      or affecting commerce, the authority behind the Federal Trade Commission's data-security line
+      (failure to employ reasonable security causing or likely to cause substantial injury to
+      consumers, not reasonably avoidable and not outweighed by countervailing benefits). General
+      basis: no federal statute addresses CORS configuration, and a deliberately public API is a
+      legitimate design, so the theory reaches this finding only where the wildcard exposes an
+      authenticated or personal-data endpoint"
+    url: https://www.govinfo.gov/content/pkg/USCODE-2023-title15/html/USCODE-2023-title15-chap2-subchapI-sec45.htm
+    checked_at: 2026-07-22
+    jurisdiction: US
+severity: high
+rule_confidence: 0.7
+detector:
+  engine: builtin-regex
+  match:
+    - "[Aa][Cc][Cc][Ee][Ss][Ss][-_][Cc][Oo][Nn][Tt][Rr][Oo][Ll][-_][Aa][Ll][Ll][Oo][Ww][-_][Oo][Rr]\
+      [Ii][Gg][Ii][Nn][\"'`]?\\s*\\]?\\s*[,:]\\s*[\"'`]\\*"
+    - (^|[^A-Za-z0-9.])origin\s*:\s*["']\*["']
+    - "[Aa][Cc][Cc][Ee][Ss][Ss][-_][Cc][Oo][Nn][Tt][Rr][Oo][Ll][-_][Aa][Ll][Ll][Oo][Ww][-_][Oo][Rr]\
+      [Ii][Gg][Ii][Nn][\"'`]?\\s*\\]?\\s*=\\s*[\"'`]\\*"
+    - "[Aa][Cc][Cc][Ee][Ss][Ss][-_][Cc][Oo][Nn][Tt][Rr][Oo][Ll][-_][Aa][Ll][Ll][Oo][Ww][-_][Oo][Rr]\
+      [Ii][Gg][Ii][Nn][\"'`]?\\s*(?:\\.\\s*[\"'`])?\\s*:"
+    - (?:(^|[^A-Za-z0-9.])[Oo]rigins?|[Aa][Ll][Ll][Oo][Ww](?:[Ee][Dd])?[-_]?[Oo]rigins?)["'`]?\s*(?:=>|[:=])\s*(?:\[\]string)?\s*[\[({]?\s*["'`]\*["'`]
+    - ^\s*origins\b.*(?:["']\*["']|%[qQ][({\[]\*[)}\]])
+    - CORS_(?:ALLOW_ALL_ORIGINS|ORIGIN_ALLOW_ALL)\s*(?:=>|[:=])(?!\s*(?:[Ff]alse|FALSE|0|[Nn]one|nil|NULL|null)\b)\s*\S
+    - (?<![A-Za-z0-9_])CORS\s*\(\s*[A-Za-z_][A-Za-z0-9_.]*\s*\)
+    - (?:(?<![A-Za-z0-9_.])[Cc][Oo][Rr][Ss]|(?<![A-Za-z0-9_])(?:[Ee]nable|[Uu]se|[Ss]etup|[Ww]ith|[Aa]dd|[Nn]ew)[-_]?[Cc][Oo][Rr][Ss][A-Za-z]*)\s*\(\s*\)
+    - (?<![A-Za-z0-9_])[Cc][Oo][Rr][Ss][A-Za-z]*\s*(?:\.|::)\s*(?:[Aa]llow[Aa]ll|[Dd]efault|[Pp]ermissive|very_permissive)\s*\(\s*\)
+    - "[Aa][Cc][Cc][Ee][Ss][Ss][-_][Cc][Oo][Nn][Tt][Rr][Oo][Ll][-_][Aa][Ll][Ll][Oo][Ww][-_][Oo][Rr]\
+      [Ii][Gg][Ii][Nn][\"'`]?\\s*\\]?\\s*[,:=][^;]*(?:\\|\\||\\?\\?|\\?[^?:]*:)\\s*[\"'`]\\*[\"'`]"
+    - "[Aa][Cc][Cc][Ee][Ss][Ss][-_][Cc][Oo][Nn][Tt][Rr][Oo][Ll][-_][Aa][Ll][Ll][Oo][Ww][-_][Oo][Rr]\
+      [Ii][Gg][Ii][Nn][\"'`]?\\s*\\]?\\s*[,:=][^;]*(?:(?<![A-Za-z0-9_])(?:req|request|ctx|c|r|httpR\
+      equest)\\s*(?:\\.|->)\\s*(?:[A-Za-z_][A-Za-z0-9_]*\\s*(?:\\.|->)\\s*)*(?:[Gg]et[A-Za-z]*\\s*\
+      \\(\\s*)?[\"'`]?[Oo][Rr][Ii][Gg][Ii][Nn]|HTTP_ORIGIN)"
+    - ^(?!.*(?<![A-Za-z0-9.])(?:[Aa]llow(?:ed)?[-_]?)?[Oo]rigins?["'`]?\s*\]?\s*(?:=>|[:=]))(?:.*(?<![A-Za-z0-9_.])[Cc][Oo][Rr][Ss]\s*\(\s*\{|.*(?<![A-Za-z0-9_])[Cc][Oo][Rr][Ss][A-Za-z]*\s*(?:\.|::)\s*[Nn]ew\s*\()
+    - ^(?!.*(?<![A-Za-z0-9.])(?:[Aa]llow(?:ed)?[-_]?)?[Oo]rigins?\s*=)\s*@\s*[Cc]ross[Oo]rigin(?![A-Za-z0-9_])
+    - ^(?!.*(?<![A-Za-z0-9.])(?:[Aa]llow(?:ed)?[-_]?)?[Oo]rigins?["'`]?\s*\]?\s*(?:=>|[:=]))(?:.*(?<![A-Za-z0-9_])[Cc][Oo][Rr][Ss][A-Za-z]*\s*\(\s*(?:[A-Za-z_][A-Za-z0-9_.]*\s*)?\{)
+    - (?<![A-Za-z0-9_])[A-Za-z0-9_$]+[Oo]rigins?(?![A-Za-z0-9_])["'`]?\s*\]?\s*(?:=>|(?<![=!<>])[:=](?!=)|\|\||\?\?)\s*(?:\[\]string)?\s*[\[({]?\s*["'`]\*["'`]
+    - (?:(^|[^A-Za-z0-9._])[Oo]rigins?|[Aa][Ll][Ll][Oo][Ww](?:[Ee][Dd])?[-_]?[Oo]rigins?[A-Za-z]*)["'`]?\s*:\s*(?!["'`\[{])(?:new\s+|async\s+|function\s*)?(?:[A-Za-z_$][A-Za-z0-9_$.]*\s*)?\(
+    - "[Oo][Rr][Ii][Gg][Ii][Nn][Ss]?[A-Za-z0-9_]{0,8}(?:[Rr][Ee][Gg][Ee][Xx]|[Pp][Aa][Tt][Tt][Ee][R\
+      r][Nn])[A-Za-z]{0,3}[\"'`]?\\s*(?:=>|[:=]|\\()\\s*(?:[A-Za-z_][A-Za-z0-9_.]*\\s*\\(\\s*)?[\\[\
+      ({]?\\s*[rRbBuUfF]{0,2}[\"'`]\\^?\\.?[*+]\\$?[\"'`]|[Oo][Rr][Ii][Gg][Ii][Nn][Ss]?[A-Za-z0-9_]\
+      {0,6}[Ff][Uu][Nn][Cc][A-Za-z]{0,6}[^;]*(?<![A-Za-z0-9_])return\\s+[Tt]rue(?![A-Za-z0-9_])|(^|\
+      [^A-Za-z0-9.])[Oo][Rr][Ii][Gg][Ii][Nn][Ss]?[\"'`]?\\s*(?:=>|[:=])\\s*[Tt]rue(?![A-Za-z0-9_])"
+    - (?<![A-Za-z0-9])[Cc][Oo][Rr][Ss][A-Za-z0-9_.-]{0,32}[Oo][Rr][Ii][Gg][Ii][Nn][Ss]?["'`]?\s*(?:=>|[:=])\s*(?:[\[({]?\s*["'`]\*["'`]|\*\s*(?:[#;]|$))|[Aa][Cc][Cc][Ee][Ss][Ss][-_][Cc][Oo][Nn][Tt][Rr][Oo][Ll][-_][Aa][Ll][Ll][Oo][Ww][-_][Oo][Rr][Ii][Gg][Ii][Nn]["'`]?[
+      \t]*(?:=>|[:=])?[ \t]*(?:["'`]\*["'`]|\*)[ \t]*(?:[;#)]|$)
+    - ^(?=.*["'`][^"'`]*%[0-9$]*[sd][^"'`]*:\s*\*)(?=.*[Aa][Cc][Cc][Ee][Ss][Ss][-_][Cc][Oo][Nn][Tt][Rr][Oo][Ll][-_][Aa][Ll][Ll][Oo][Ww][-_][Oo][Rr][Ii][Gg][Ii][Nn])
+  match_without:
+    - ^\s*(?://|\*\s|#)
+    - ^\s*/\*(?:(?!\*/).)*(?:\*/\s*)?$
+  path_without:
+    - (^|/)\.?[Ww]ell[-_]?[Kk]nown/|(^|/)[Ww]ell[-_]?[Kk]nown\.[A-Za-z]+$|(^|/)[^/]*[Ww]ell[-_]?[Kk]nown[^/]*([Ss]ervice|[Cc]ontroller|[Rr]oute[rs]?|[Mm]odule|[Hh]andler)
+    - (^|[/_.-])[Ww]eb[Ff]inger|(^|[/_.-])host-meta([/_.-]|$)
+    - (^|[/_.-])[Nn]ode[Ii]nfo([/_.-]|[Ss]erver|$)
+    - (^|/)[^/]*[Aa]ctivity[-_]?[Pp]ub[^/]*$
+    - (^|/)[^/]*[Oo]pen[-_]?[Gg]raph[^/]*$|(^|[/_.-])og[-_]?image|(^|/)og/
+    - (^|/)[^/]*[Oo][Ee]mbed[^/]*$
+  resolve_import_aliases: true
+  resolve_local_values: true
+context_questions:
+  - Does this endpoint sit behind authentication or return personal data? A wholly public, static
+    API is a different case from an authenticated one — say which this is and quote the handler.
+  - Is the wildcard paired with credentialed requests (Access-Control-Allow-Credentials, cookies,
+    Authorization headers)? Browsers reject that combination, but hand-rolled servers and proxies
+    still emit it.
+evidence_template: "{file}:{line} is one of the four shapes this rule screens: an origin wildcard, a
+  framework switch that allows every origin, a constructor called with no origin argument, or an
+  Access-Control-Allow-Origin header named or set to any value at all. The third establishes only
+  that the argument is absent - a framework may read the allow-list from a separate setting, so read
+  the surrounding configuration before concluding which origins are admitted. The fourth asks for
+  the header name followed by a colon and nothing more, so one and the same clause produces a
+  wildcard, a single restricted origin, an origin echoed back after an allow-list membership check,
+  and documentation prose defining what the header is; the line has to be read before any origin is
+  attributed to it. Which origins are admitted is the question this rule exists to raise, and on
+  that fourth shape the detector has not answered it. ADDED 2026-09-02, and the four shapes above
+  are unchanged: the count of four in the first sentence predates this addition, so read it as four
+  plus these two. FIFTH SHAPE - a CORS middleware factory or constructor called with an EMPTY
+  argument list, or one named for what it admits (`cors()`, `app.enableCors()`, `cors.AllowAll()`,
+  `cors.Default()`, `Cors::permissive()`). This is the third limb of this rule's own title, and like
+  the third shape it establishes only that no origin argument was given AT THIS CALL SITE: several
+  frameworks read an allow-list from their own configuration, so read the surrounding configuration
+  before concluding which origins are admitted. SIXTH SHAPE - an Access-Control-Allow-Origin whose
+  value is an EXPRESSION rather than a literal, and there are two of these that must not be
+  confused. A wildcard reached as a fallback (`req.headers.origin || \"*\"`) admits every origin on
+  the runs where the fallback is taken, and which runs those are is a question about the requests
+  this endpoint receives. A reflected origin (`req.headers.origin`, `r.Header.Get(\"Origin\")`,
+  `$_SERVER['HTTP_ORIGIN']`) echoes back whichever origin asked, unless the handler tested that
+  origin against an allow-list on a line this detector did not read - so find the check, or record
+  that there is none. Neither new shape asserts which origins are admitted. On the sixth shape, look
+  for an Access-Control-Allow-Credentials set true in the same handler: a credentialed response
+  beside a reflected or wildcard origin is what makes the admitted set worth reading closely, and
+  this detector did not look for it - the pairing is what this rule's second context question asks
+  you to settle. ADDED 2026-09-02 with them, and the count of four still predates these: a CORS
+  constructor given OPTIONS THAT NAME NO ORIGIN (`cors.New(cors.Options{})`, `cors({ credentials:
+  true })`) and Spring's `@CrossOrigin` naming none, both of which are the same limb as the fifth
+  shape - no origin was given HERE - and neither of which says what the framework's own
+  configuration supplies. TWO MORE SHAPES WERE ADDED 2026-09-04, and the count of four in the first
+  sentence still predates every addition. SEVENTH SHAPE - an origin allow-list whose wildcard is a
+  DEFAULT rather than a setting: an identifier ending in origin or origins, followed on the same
+  line by a fallback or default operator and a quoted asterisk (`options.frontendApiOrigins ||
+  ['*']`). The wildcard is on the line and is genuine, and what the detector has not established is
+  whether the deployment being scanned runs with it: a default is what ships when the operator
+  configures nothing, and most products of this shape expose an environment variable or an admin
+  setting that replaces it. Find the setting, say whether it is populated in the deployment under
+  review, and record it as unanswered where that cannot be established from the repository. A
+  comparison is not this shape and does not reach it - `origin === \"*\"` is a test that the
+  allow-list CONTAINS the wildcard, which is a different fact, and no clause of this rule reports
+  it. EIGHTH SHAPE - a COMPUTED ORIGIN: the origin option's value is a function call, an arrow
+  function or a named function rather than a list, so the line carries no origin at all (`origin:
+  resolveOrigin(frontendApiOrigins)`). The detector has established only that the admitted set is
+  decided somewhere else; read the resolver before attributing any origin to this endpoint, because
+  it may return a closed allow-list, a reflected origin or a wildcard, and those are three different
+  findings. On this shape the second context question matters as much as on the sixth: a
+  credentialed response beside a resolver that can return a wildcard is what makes the resolver
+  worth reading line by line. TWO MORE SHAPES WERE ADDED 2026-09-08, and the count of four in the
+  first sentence still predates every addition. NINTH SHAPE - A WILDCARD SPELLED AS A REGEX OR A
+  PATTERN rather than as a literal `*` header value. Three spellings share it: an origin setter
+  whose own name says regex or pattern, given a whole-input wildcard (`.addOriginWithRegex(\".*\")`,
+  `allowedOriginPatterns(\"*\")`, `allow_origin_regex=\".*\"`); an origin-named function option that
+  returns true on the same line (`AllowOriginFunc: func(origin string) bool { return true }`); and
+  the switch that echoes back whichever origin asked (`origin: true`). On the first, the asterisk is
+  a QUANTIFIER and not a value, so read the pattern before attributing an origin set to it - a
+  pattern naming a host admits that host, and this shape does not report one. On the second, the
+  detector has read the return that stood ON THIS LINE and nothing else, so open the function before
+  concluding what it admits. The third is the reflected-origin limb by another name and everything
+  the sixth shape says about it applies unchanged. TENTH SHAPE - THE WILDCARD AS A CONFIGURATION
+  VALUE, on a key whose own name carries both a CORS token and an origins word
+  (`GRAMPSWEB_CORS_ORIGINS: \"*\"`, `iiif.cors.allowed-origins = *`). Two things follow, and neither
+  is settled here. First, the value reaches the call site THROUGH CONFIGURATION and not through
+  code, so find where the key is read and say whether the deployment under review overrides it: a
+  value in a devcontainer file, an example environment file or a shipped `.cfg` default is what an
+  operator gets before configuring anything, which is not the same as what they run. Second, a
+  configuration file may have NO STRING-QUOTING CONVENTION AT ALL, so an unquoted asterisk is a
+  complete value rather than a fragment - and what bounds this shape is that the asterisk stands
+  alone as the whole value, because `allowed-origins = *.example.edu` is a wildcard subdomain and
+  therefore a restricted set, which this rule does not report. On this shape the credentials pairing
+  that the second context question asks about is a SEPARATE KEY IN THE SAME FILE rather than a call
+  in the same handler - `allow-credentials`, `supports_credentials` and their spellings - so read
+  that key beside the wildcard and record which value it holds, because the detector did not. THE
+  TENTH SHAPE ALSO REACHES THE HEADER NAME USED AS A KEY OR AS A DIRECTIVE ARGUMENT, where the
+  separator is nothing but whitespace and the asterisk may be unquoted - the web-server and proxy
+  idiom (`add_header Access-Control-Allow-Origin *;`, `Header always set Access-Control-Allow-Origin
+  \"*\"`, `Access-Control-Allow-Origin = *`). ONE THING DECIDES HOW MUCH SUCH A LINE IS WORTH AND
+  THE DETECTOR CANNOT DECIDE IT: whether the line is a configuration the product runs or a line of
+  the product's own DEPLOYMENT DOCUMENTATION. A documentation line shows the wildcard as ONE WAY to
+  configure the deployment, and whether the product recommends it, discourages it, or merely
+  mentions it beside a narrower alternative is on the surrounding lines, which the reader must open
+  - this detector reads neither those lines nor the deployment. Say which of the two the matched
+  file is, quote the surrounding lines that settle it, and where it is documentation, record what
+  those lines actually say and the fact that the deployment state is unknown from the code, rather
+  than attributing either a configuration or an intention to anybody"
+remediation_template: |
+  This is a candidate for review against GDPR Art. 32 (security of processing), not a determination
+  about this code. The changes below apply where the review confirms it.
+  The change depends on which shape the matched line is, because two of them carry no wildcard
+  character at all.
+  A header or an origin option set to "*": replace the wildcard with an explicit list of allowed
+  origins.
+  A framework switch that means the same thing without saying it - CORS_ALLOW_ALL_ORIGINS or
+  CORS_ORIGIN_ALLOW_ALL set true in a Django settings module: set it false and populate the
+  corresponding allow-list setting, because there is no wildcard string here to replace.
+  A constructor called with no origin argument - CORS(app) in Flask-CORS, and the equivalents whose
+  default is to allow every origin: pass the origins argument explicitly, unless an origin list is
+  supplied through the framework's configuration elsewhere - Flask-CORS also reads one from the
+  application configuration, under a CORS_ORIGINS key and the other CORS_-prefixed option keys, so
+  look there before changing the call. Where no list is supplied anywhere, the default is the
+  defect and it is invisible on the line.
+  Where a fully public API is the intent, state that intent in a comment beside the header or the
+  setting so the next reader does not have to infer it.
+data_categories: []
+fingerprint_spec: file

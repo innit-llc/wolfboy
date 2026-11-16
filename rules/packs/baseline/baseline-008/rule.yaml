@@ -1,0 +1,183 @@
+id: baseline-008
+pack: baseline
+short_name: Mail connection in plain text, or with encryption optional
+problem_line:
+  text: Mail carried with no required encryption found
+  template: "{data} in mail with no required encryption found"
+fix_line: Make TLS mandatory on the mail connection (implicit TLS, or STARTTLS that must succeed)
+  and make it the default mode.
+title: "Mail transport without TLS or with STARTTLS left optional: an SMTP, IMAP or POP client or
+  mailer setting that sends in the clear, or upgrades only if the server offers it"
+jurisdiction:
+  - EU
+  - US
+  - JP
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 32(1) - 'the controller and the processor shall
+      implement appropriate technical and organisational measures to ensure a level of security
+      appropriate to the risk, including inter alia as appropriate: (a) the pseudonymisation and
+      encryption of personal data; (b) the ability to ensure the ongoing confidentiality, integrity,
+      availability and resilience of processing systems and services;'. Art. 32(2) - 'In assessing
+      the appropriate level of security account shall be taken in particular of the risks that are
+      presented by processing, in particular from accidental or unlawful destruction, loss,
+      alteration, unauthorised disclosure of, or access to personal data transmitted, stored or
+      otherwise processed.' A message body, a recipient address, a password-reset link or a login
+      code is personal data transmitted; whether the measure is appropriate to the risk is a
+      judgement on the whole deployment, which this candidate opens and does not close"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-10-07
+    jurisdiction: EU
+  - cite: "EU Cyber Resilience Act (Regulation (EU) 2024/2847), Annex I, Part I, point (2)(e) - 'protect
+      the confidentiality of stored, transmitted or otherwise processed data, personal or other,
+      such as by encrypting relevant data at rest or in transit by state of the art mechanisms, and
+      by using other technical means'; and point (2)(b), the hook for a plaintext DEFAULT as
+      distinct from an option - 'be made available on the market with a secure by default
+      configuration, unless otherwise agreed between manufacturer and business user in relation to a
+      tailor-made product with digital elements, including the possibility to reset the product to
+      its original state;'. Both points sit under the opening words of point (2), 'On the basis of
+      the cybersecurity risk assessment referred to in Article 13(2) and where applicable, products
+      with digital elements shall:', so they bind as the manufacturer's cybersecurity risk
+      assessment makes them applicable, and point (2)(b) gives way where manufacturer and business
+      user have agreed otherwise for a tailor-made product. Per Art. 71(2) the Regulation applies
+      from 11 December 2027. Scope check: the CRA reaches products with digital elements made
+      available on the EU market (Art. 2(1), Art. 3(1)) and hosted software only as a remote data
+      processing solution within Art. 3(2). Recital 12 places websites that do not support the
+      functionality of such a product, and cloud services (SaaS, PaaS, IaaS) designed and developed
+      outside a manufacturer's responsibility, outside this Regulation and inside Directive (EU)
+      2022/2555 instead. For a plain hosted web application this entry therefore does not reach the
+      scanned artefact and GDPR Art. 32 is the operative EU basis; it applies where the repository
+      ships a distributed product or the backend of one"
+    url: https://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-10-07
+    jurisdiction: EU
+  - cite: Japan APPI (Act on the Protection of Personal Information, Act No. 57 of 2003), Art. 23
+      (security control measures - a business handling personal information must take necessary and
+      appropriate measures for the security control of the personal data it handles). Bites only
+      where personal data is what travels over the connection
+    url: https://laws.e-gov.go.jp/law/415AC0000000057
+    checked_at: 2026-10-07
+    jurisdiction: JP
+  - cite: Japan, Personal Information Protection Commission, Guidelines on the APPI (General Rules) Q&A
+      10-21, on methods for preventing leakage in the use of information systems under the Art. 23
+      security control measures. The Commission's own answer gives encryption of personal data on
+      networks that may be intercepted, naming SSL/TLS and S/MIME, as such a method. Guidance, not
+      statute
+    url: https://www.ppc.go.jp/all_faq_index/faq1-q10-21/
+    checked_at: 2026-10-07
+    jurisdiction: JP
+  - cite: United States, FTC Act Sec. 5 (15 U.S.C. Sec. 45(a)(1) and (n)) - unfair or deceptive acts or
+      practices in or affecting commerce. Transport security sits inside the Federal Trade
+      Commission's data-security line, which reaches a failure to employ reasonable security that
+      causes or is likely to cause substantial injury to consumers, not reasonably avoidable and not
+      outweighed by countervailing benefits. The Commission's business guidance Start with Security
+      names strong cryptography for confidential material during transmission; that guidance is not
+      statute
+    url: https://www.govinfo.gov/content/pkg/USCODE-2023-title15/html/USCODE-2023-title15-chap2-subchapI-sec45.htm
+    checked_at: 2026-10-07
+    jurisdiction: US
+severity: medium
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  join_bracketed_constructs: true
+  match:
+    - \{(?=(?:[^{}]|\{[^{}]*\})*?(?<![\w$.-])["']?secure["']?\s*:\s*false(?![\w$]))(?!(?:[^{}]|\{[^{}]*\})*?(?<![\w$])["']?requireTLS["']?\s*:\s*true(?![\w$]))(?:(?<=createTransport\s*\(\s*\{)|(?<=[Ss]mtp\w*\s*\(\s*\{)|(?=(?:[^{}]|\{[^{}]*\})*?(?:[Ss][Mm][Tt][Pp]|(?<![A-Za-z])[Mm][Aa][Ii][Ll]|(?<=[a-z])Mail|(?<=[A-Z_])MAIL|[Ii][Mm][Aa][Pp]|(?<![\w$])auth\s*:\s*\{[^{}]*(?<![\w$])(?:user|pass)(?![\w$]))))
+    - (?:createTransport|[Ss]mtpTransport)\s*\(\s*\{(?=(?:[^{}]|\{[^{}]*\})*?(?<![\w$.-])["']?host["']?\s*[:,}])(?!(?:[^{}]|\{[^{}]*\})*?(?<![\w$.-])["']?secure["']?\s*:\s*true(?![\w$]))(?!(?:[^{}]|\{[^{}]*\})*?(?<![\w$])["']?requireTLS["']?\s*:\s*true(?![\w$]))
+    - (?<![\w$])["']?ignoreTLS["']?\s*:\s*true(?![\w$])
+    - ^(?=.*(?:[Ss][Mm][Tt][Pp]|(?<![A-Za-z])[Mm][Aa][Ii][Ll]|(?<=[a-z])Mail|(?<=[A-Z_])MAIL|[Ii][Mm][Aa][Pp]|[Pp][Oo][Pp]3|enable_starttls|enable_start_tls|enableStartTls|enableStarttls))(?=.*(?<![\w$.-])["':]?[\w$.-]*?(?:starttls|start_tls|startTLS|startTls|StartTls|StartTLS|STARTTLS|START_TLS|Starttls)(?:_auto|Auto|_AUTO)?["']?\]?\s*(?:=>|[:=])\s*["':]?(?:false|False|FALSE|never|no|off|0)["']?(?![\w$-]))
+    - openssl_verify_mode["']?\s*(?:=>|[:=])\s*(?:["':]?(?:none|NONE)["']?|OpenSSL::SSL::VERIFY_NONE)(?![\w$])
+    - (?<![\w$])["']?SMTPAutoTLS["']?\s*(?:=>|=)\s*(?:false|FALSE|False)(?![\w$])
+    - (?<![\w$])["']?SMTPSecure["']?\s*(?:=>|=)\s*(?:''|""|false|FALSE|null|NULL)(?![\w$])
+    - (?:setAutoTls\s*\(\s*false|[?&]auto_tls=(?:false|0))(?![\w$])
+    - mail\.smtps?\.starttls\.(?:enable|required)["']?\s*[,=:]\s*["']?(?:Boolean\.)?(?:false|FALSE|False)(?![\w$])
+    - SecureSocketOptions\s*\.\s*(?:None|StartTlsWhenAvailable)(?![\w$])
+    - (?<![\w$])EnableSsl\s*=\s*(?:false|False)(?![\w$])
+    - (?<![\w$])builder_dangerous\s*\(
+    - (?<![\w$])Tls::(?:None|Opportunistic)(?![\w$])
+    - (?<![\w$])smtp\.(?:Dial|SendMail|NewClient)\s*\(
+    - (?<![\w$])mail\.(?:NoTLS|TLSOpportunistic)(?![\w$])
+    - (?<![\w$])smtplib\.SMTP\s*\(
+    - (?<![\w$])tls:\s*:(?:never|if_available)(?![\w$])
+    - (?<![A-Za-z0-9$])(?:[A-Za-z0-9_.-]*?[_.-])?(?:SMTP|MAILER|MAIL|EMAIL|IMAP|smtp|mailer|mail|email|imap|Smtp|Mailer|Mail|Email|Imap)[A-Za-z0-9_.-]*?(?:SECURE|SECURITY|STARTTLS|START_TLS|TLS|SSL|ENCRYPTION|secure|security|starttls|start_tls|tls|ssl|encryption|Secure|Security|StartTls|Tls|TLS|Ssl|SSL|Encryption)["']?\s*(?:=>|[:=])\s*["']?(?:false|False|FALSE|0|no|No|NO|off|Off|OFF|none|None|NONE|null|NULL|nil|never|disabled?|plain)["']?\s*(?:$|[,;#})\]])
+    - (?:(?:[Ss]mtp|SMTP|[Ii]map|IMAP|[Pp]op3|POP3|[Mm]ail|MAIL)\w*\s*\.\s*|^(?=.*?(?:SmtpClient|ImapClient|Pop3Client|MailKit)).*?\.\s*)Connect(?:Async)?\s*\((?:\s*(?:[^(),]|\([^()]*\))+,\s*(?:[^(),]|\([^()]*\))+,\s*false\s*[,)]|(?:[^()]|\([^()]*\))*?(?<![\w$])useSsl\s*:\s*false(?![\w$]))
+    - \(\s*["'](?:[A-Z0-9_.-]*?[_.-])?(?:SMTP|MAILER|MAIL|EMAIL|IMAP)[A-Z0-9_.-]*?(?:SECURE|SECURITY|STARTTLS|START_TLS|TLS|SSL|ENCRYPTION)["']\s*,\s*(?:default\s*=\s*)?(?:["'](?:false|False|FALSE|0|no|No|NO|off|Off|OFF|none|None|NONE|null|NULL|nil|never|disabled?|plain)?["']|false|False|FALSE|0|null|NULL|None|nil)\s*\)
+context_questions:
+  - "Which transport mode does the deployment under review actually run with? Mail security is
+    usually an operator setting: the code offers a mode (a security setting, an environment key, a
+    port-dependent default) and the deployment picks one. Where the matched line is a default or one
+    mode among several, find where the mode is chosen - a configuration file, an environment
+    variable, an administration screen - quote it with its file and line, and say which value
+    applies. Where that cannot be established from the repository, record it as unanswered rather
+    than assuming either value. Where the finding carries locations[].joined_from, read the whole
+    span it names first: the cited line is only where the transport object opens."
+  - Is STARTTLS made mandatory anywhere the line does not show - a requireTLS setting, a later
+    starttls() call whose failure stops the send, a TLS-wrapped socket handed to the client, or
+    implicit TLS on port 465 set elsewhere? Quote it. A starttls() call that is attempted and whose
+    failure is ignored, or a send that continues when the server does not offer STARTTLS, leaves the
+    upgrade optional.
+  - "Which relay does this transport reach: a mail vendor, the organisation's own mail server on
+    another machine, or a mail transfer agent on the same host? Whether the hop leaves the machine
+    is a fact about the deployment: ask it or find it in the deployment configuration, and do not
+    decide it from a host name such as localhost or mail in a default value."
+  - "What personal data cross this connection? Establish it from the code you can read: every
+    message sent through this transport carries at least its recipient's address, so find the code
+    that sends through it (the mailer's call sites, the mail classes or templates it renders) and
+    name what else those messages carry - a name in the greeting, a sign-in, reset or invitation
+    link that opens a person's account, a notification quoting what someone wrote. Record it as
+    `data` at this place in the six data words (the recipient's address is `email`, a name `name`, a
+    link that opens one person's account `other_personal`, quoted content `user_content`), and quote
+    in `beyond` the one line it rests on, such as the send call that sets the recipient. Where no
+    send through this transport is in the code you can read, record only what the window shows and
+    say in `why` what you could not see. Record `data` as established whatever relay question 3
+    finds: a relay on the same host, a loopback address, a development value or a default goes in
+    `why` with the line it rests on and never empties `data`. A transport used only by continuous
+    integration or tests carries test data, not the product's users': say so in `why` and record
+    `data` as `[]`. Decide it by what the file does, never by its name, its folder or a host name: a
+    CI job's service container or test step, a compose file only test scripts start, or a test setup
+    - each of which runs tests against a mail server or store thrown away after them - is that. A
+    workflow or file that deploys or configures a running environment (a review app, staging or
+    production) is deployment configuration, wherever it sits, and its transport carries the
+    product's mail; so is the product's own runtime configuration, and a default in it is the
+    product's. The SMTP AUTH credentials of the account cross it too: name them in `why`."
+evidence_template: "{file}:{line} matched one of the mail-transport shapes this rule reads: an
+  options object for a Node nodemailer transport that holds `secure: false` with no `requireTLS:
+  true`, or that names a host and never sets `secure: true` or `requireTLS: true` (nodemailer's
+  default is no implicit TLS and STARTTLS only if offered, except on port 465, where an unset
+  `secure` defaults to implicit TLS), handed to createTransport or to smtpTransport; `ignoreTLS:
+  true`; STARTTLS switched off on a line or in a construct that names mail; ActionMailer's
+  `openssl_verify_mode: 'none'`; PHPMailer's `SMTPAutoTLS = false` or an empty `SMTPSecure`; Symfony
+  Mailer's automatic STARTTLS off; JavaMail's `mail.smtp.starttls.enable` or `required` set false;
+  MailKit's `SecureSocketOptions.None` or `StartTlsWhenAvailable`, or its boolean `Connect(host,
+  port, false)` / `useSsl: false`, which is `StartTlsWhenAvailable`; `EnableSsl = false`; lettre's
+  `builder_dangerous` or `Tls::None` or `Tls::Opportunistic`; Go's `smtp.Dial`, `smtp.NewClient` or
+  `smtp.SendMail`, or go-mail's `NoTLS` or `TLSOpportunistic`; Python's `smtplib.SMTP(`; Swoosh,
+  Bamboo or gen_smtp `tls: :never` or `:if_available`; or a mail configuration key ending in a
+  transport-security word set off, or read with an off default (`env('MAIL_ENCRYPTION', null)`).
+  That is text in a file. The detector did not establish which mode the deployment selects, that no
+  line it did not read makes STARTTLS mandatory (a requireTLS setting elsewhere, a starttls() call
+  whose failure stops the send, a TLS socket handed to the client), that the relay is on another
+  machine, or that the line is deployed code rather than a test account, documentation or a sample
+  environment file. Where the finding carries locations[].joined_from, {line} is the line the
+  transport object opens on and the setting may sit several lines below it: read the whole span. A
+  STARTTLS key in an LDAP or chat-server setting can also arrive here when the same line names mail;
+  baseline-009 reads that connection. Context questions 1 and 2 settle the mode and the upgrade;
+  question 3 settles where the hop goes."
+remediation_template: >
+  This is a candidate for review against GDPR Art. 32 (security of processing), not a determination
+
+  about this code. The changes below apply where the review confirms it.
+
+  Make TLS mandatory on the mail transport: implicit TLS on port 465 (`secure: true`, SMTP_SSL,
+
+  SslOnConnect), or STARTTLS that fails the send when it cannot be negotiated (`requireTLS: true`,
+
+  `enable_starttls: :always`, `mail.smtp.starttls.required=true`, `SecureSocketOptions.StartTls`,
+
+  `Tls::Required`, `tls: :always`). Where the code offers a plaintext mode for operators, make the
+
+  secure mode the default and name the plaintext mode as unsafe in the configuration it is chosen
+  in.
+data_categories: []
+fingerprint_spec: file

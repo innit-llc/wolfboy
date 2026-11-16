@@ -1,0 +1,323 @@
+id: ai-inference-004
+pack: ai-inference
+short_name: Local AI model infers new details from a person's content
+problem_line:
+  text: AI model derives new personal details from content
+fix_line: Tell people a model runs over their content and why, keep only derived values you need,
+  and show any before publishing.
+title: A model runs locally over the person's own content and derives a new attribute from it
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1) - 'personal data' means 'any information relating
+      to an identified or identifiable natural person'. This is the operative provision for the
+      construct: an attribute a model derives about a person - the language they write in, the text
+      of a card they hold up to a camera - is itself information relating to that person, and is
+      therefore personal data in its own right the moment it exists, whether or not it was ever sent
+      anywhere"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(2) - 'processing' means 'any operation or set of
+      operations which is performed on personal data or on sets of personal data, whether or not by
+      automated means'. The definition is what closes the gap this construct opens in a reader's
+      intuition: running a model over the person's own draft, on the person's own device, with
+      nothing leaving it, is processing, and the Regulation nowhere makes locality a reason it is
+      not"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(a) - personal data shall be 'processed lawfully,
+      fairly and in a transparent manner in relation to the data subject'. Transparency is the limb
+      that bites hardest on this construct: an on-device derivation is invisible by construction,
+      there is no network request for anyone to observe, and the person commonly learns of it only
+      from the suggestion it produces"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(b) - personal data shall be 'collected for
+      specified, explicit and legitimate purposes and not further processed in a manner that is
+      incompatible with those purposes'. A derivation made for one purpose - suggesting a language
+      tag on a draft - becomes a second question the moment the derived value is stored on the
+      record or acted on, which is what context_questions[2] asks
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(c) - personal data shall be 'adequate, relevant and
+      limited to what is necessary in relation to the purposes for which they are processed'. A text
+      recogniser pointed at a card or a receipt reads everything in frame, not only the field the
+      feature wants, and what it does with the rest is a minimisation question rather than a
+      security one
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(1) - 'Processing of personal data revealing racial or
+      ethnic origin, political opinions, religious or philosophical beliefs, or trade union
+      membership, and the processing of genetic data, biometric data for the purpose of uniquely
+      identifying a natural person, data concerning health or data concerning a natural person's sex
+      life or sexual orientation shall be prohibited.' Reference only, and it reaches a subset of
+      matches rather than the rule's condition: where the content the model is run over is itself
+      special-category, the derived attribute can be too, and an on-device face or voice model used
+      to recognise a particular person is squarely inside the biometric limb"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "AI Act (Regulation (EU) 2024/1689), Art. 50(3) - 'Deployers of an emotion recognition system
+      or a biometric categorisation system shall inform the natural persons exposed thereto of the
+      operation of the system'. Reference only, and it is cited with its scope stated rather than as
+      a general duty for on-device models: the transparency obligations of Art. 50 attach to named
+      system kinds, and a bundled language identifier, a text recogniser or a translation model is
+      none of them. THE ONE LIMB THAT COULD BE ARGUED FOR A TRANSLATOR IS Art. 50(2), and it is
+      named here rather than left out, because this detector deliberately reaches translation: that
+      paragraph binds 'Providers of AI systems, including general-purpose AI systems, generating
+      synthetic audio, image, video or text content', and a translation model does generate text.
+      Two things keep a bundled translator outside it. The paragraph carries its own carve-out - the
+      obligation does not apply where the systems 'perform an assistive function for standard
+      editing or do not substantially alter the input data provided by the deployer or the semantics
+      thereof' - and translation preserves semantics by design. And the duty is the PROVIDER's,
+      whereas a product bundling somebody else's model is a deployer. This entry therefore bites
+      only where the local model is an emotion-recognition or a biometric-categorisation system,
+      which this detector cannot establish and which context_questions[3] asks"
+    url: https://publications.europa.eu/resource/celex/32024R1689
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    inference_task_names:
+      - feature-extraction
+      - text-classification
+      - token-classification
+      - question-answering
+      - zero-shot-classification
+      - sentiment-analysis
+      - summarization
+      - translation
+      - text2text-generation
+      - text-generation
+      - automatic-speech-recognition
+      - image-classification
+      - image-to-text
+      - object-detection
+      - embeddings
+  match:
+    - \bNL(?:LanguageRecognizer|Tagger|Model|Embedding)\b|\blanguageHypotheses\s*\(|\bdominantLanguage\b
+    - \bDataScannerViewController\b|\bVN(?:RecognizeText|CoreML|DetectFaceRectangles|DetectFaceLandmarks|GenerateImageFeaturePrint|ClassifyImage)Request\b|\bVNImageRequestHandler\b|\brecognizedDataTypes\b
+    - \bMLModel\b|\bMLPredictionOptions\b|\bMLModelConfiguration\b
+    - \bSFSpeechRecognizer\b|\bSFSpeechAudioBufferRecognitionRequest\b|\brequiresOnDeviceRecognition\b
+    - com\.google\.mlkit|\bLanguageIdentification\b|\bidentifyPossibleLanguages\s*\(|\bTranslatorOptions\b|\bTranslation\s*\.\s*getClient\s*\(|\bTextRecognition\b|\bRemoteModelManager\b|\bdownloadModelIfNeeded\s*\(
+    - \bTextClassificationManager\b|\bTextClassifier\b|\bTextLanguage\s*\.\s*Request\b
+    - \bTessBaseAPI\b|\btesseract\b|\bsetImage\s*\([^\n]{0,40}\bbitmap\b
+    - "@xenova/transformers|@huggingface/transformers|onnxruntime-web|onnxruntime-node|@tensorflow/\
+      tfjs|\\btransformers\\.js\\b"
+    - \bLanguageDetector\b|\bTranslator\s*\(|\bwindow\s*\.\s*ai\b|\bself\s*\.\s*ai\b|\bai\s*\.\s*(?:languageDetector|translator|summarizer|writer|rewriter)\b
+    - \bpipeline\s*\(\s*["'](?&inference_task_names)
+    - \bpipeline\s*\(
+    - \bsentence_transformers\b|\bSentenceTransformer\s*\(|\bwhisper\s*\.\s*load_model\s*\(|\bAutoModel(?:ForSequenceClassification|ForTokenClassification|ForCausalLM)?\s*\.\s*from_pretrained\s*\(|\bAutoTokenizer\s*\.\s*from_pretrained\s*\(
+    - \bLanguageDetectorBuilder\b|\bdetect_language(?:_of)?\s*\(|\bTextBlob\s*\(|\bspacy\s*\.\s*load\s*\(|\bnltk\s*\.\s*[a-z_]+\s*\(|(?:^|[^\w.])(?:import|from|require)\s+(?:lingua|langdetect|langid|pycld[23]|cld[23]|fasttext|polyglot|textblob|spacy|nltk)(?![\w-])|(?:require|from)\s*\(?\s*["'](?:lingua|langdetect|langid|cld[23]|fasttext|polyglot|textblob)["']|(?<![\w.])(?:lingua|langdetect|langid|pycld[23]|cld[23]|fasttext|polyglot)\s*\.\s*[A-Za-z_]
+    - \b(?:webkit)?SpeechRecognition\b|\b(?:webkit)?SpeechGrammarList\b|\bSpeechRecognition(?:Event|Result|Alternative|ErrorEvent)\b
+    - \bresults\s*\[[^\]\n]{0,24}\]\s*\[[^\]\n]{0,24}\]\s*\.\s*transcript\b
+    - (?:^|[^A-Za-z0-9_])(?:cv2?[ \t]*(?:\.|::)[
+      \t]*)?readNet(?:FromCaffe|FromTensorflow|FromTorch|FromDarknet|FromONNX|FromModelOptimizer|FromTFLite)?[
+      \t]*\(|(?:^|[^A-Za-z0-9_])blobFromImages?[
+      \t]*\(|\bHOGDescriptor\b|\bCascadeClassifier\b|\bcv2?[ \t]*(?:\.|::)[
+      \t]*dnn\b|(?:^|[^A-Za-z0-9_])dnn[ \t]*::[ \t]*[A-Za-z_]
+    - (?<![A-Za-z0-9_.])(?:(?:[A-Za-z][A-Za-z0-9]{0,20}_)?(?:[Nn]et|[Nn]etwork|[Dd]nn|DNN|[Mm]odel|[Cc]lassifier|[Dd]etector|[Hh]og|HOG|[Cc]ascade)[A-Za-z0-9_]{0,20}|[a-z][A-Za-z0-9]{0,20}(?:Net|Network|Dnn|Model|Classifier|Detector|Hog|Cascade)[A-Za-z0-9]{0,20})[
+      \t]*(?:\.|->)[
+      \t]*(?:setInput|forward|detectMultiScale|detect|setSVMDetector|setPreferableBackend|setPreferableTarget|forwardAndRetrieve)[
+      \t]*\(
+    - (?<![A-Za-z0-9_])(?:cv2?[ \t]*(?:\.|::)[ \t]*)?dnn[ \t]*(?:\.|::)[
+      \t]*(?:readNet(?:FromCaffe|FromTensorflow|FromTorch|FromDarknet|FromONNX|FromModelOptimizer|FromTFLite)?|blobFromImages?(?:WithParams)?|Net|Model|ClassificationModel|DetectionModel|SegmentationModel|KeypointsModel|TextDetectionModel(?:_EAST|_DB)?|TextRecognitionModel)\b|(?<![A-Za-z0-9_])cv2?[
+      \t]*\.[
+      \t]*dnn_(?:Net|Model|ClassificationModel|DetectionModel|SegmentationModel|KeypointsModel|TextDetectionModel(?:_EAST|_DB)?|TextRecognitionModel)\b|(?:^|[^A-Za-z0-9_])(?:cv2?[
+      \t]*(?:\.|::)[
+      \t]*)?readNet(?:FromCaffe|FromTensorflow|FromTorch|FromDarknet|FromONNX|FromModelOptimizer|FromTFLite)?[
+      \t]*\(|(?:^|[^A-Za-z0-9_])blobFromImages?(?:WithParams)?[
+      \t]*\(|\b(?:HOGDescriptor|CascadeClassifier)(?:_[A-Za-z][A-Za-z0-9]*)?\b
+context_questions:
+  - "WHAT IS THE MODEL RUN OVER, AND WHOSE CONTENT IS IT? Read backwards from the call to the value
+    it receives. There are three materially different answers: the person's own draft or photograph,
+    which they chose to put in front of the feature; another person's content that this person is
+    reading, which is where a translation model sits and where the data subject is not the user; and
+    a document held up to a camera, where everything in frame is read and not only the field the
+    feature wants. A FOURTH ANSWER WAS ADDED 2026-09-09, because all three above describe content
+    somebody CHOSE to put in front of the feature and a fixed camera does not: where the model runs
+    frame by frame on a live feed from a camera the operator installed, the people it classifies
+    handed it nothing and may not know it is there. Say whether the input is a continuous feed
+    rather than a file or a capture the person started; say who is in the frame - the operator, the
+    people they live or work with, staff, customers, or passers-by outside the property; and say who
+    chose where the camera points and how far it sees. Those are deployment facts no scan of source
+    code can read, and they decide whose data this is and who is owed the notice; where the answer
+    is not established, say so rather than assuming the subject is the product's own user."
+  - WHAT NEW ATTRIBUTE COMES OUT, AND WHERE DOES IT GO? Name the derived value and then follow it. A
+    language code that only fills a suggestion chip and is discarded when the view closes is a
+    different finding from the same code written onto the published record, and the distinction is
+    not visible at the inference call. Say which this is, and quote the line where the value is
+    stored or sent if it is.
+  - IS THE DERIVED VALUE ACTED ON? A derived attribute that changes what the person is shown, what
+    is published on their behalf, or how their content is routed is doing work, and the purpose
+    limitation question in Art. 5(1)(b) is about that work rather than about the derivation. Where
+    the value only annotates, say so.
+  - "IS THIS AN EMOTION-RECOGNITION OR BIOMETRIC-CATEGORISATION SYSTEM? Ask it explicitly, because
+    it is the only thing that brings the AI Act transparency entry cited above into play, and
+    because the answer is not in the API name: the same Vision or ML Kit entry point serves a
+    receipt reader and a face classifier. A language identifier, a text recogniser and a translator
+    are none of these, and the finding should not imply otherwise."
+  - DOES THE MODEL STAY LOCAL FOR THE WHOLE OPERATION? Two of these frameworks download a model over
+    the network before running it, and one platform speech API falls back to a server unless a
+    property is set. Check whether anything about the person's content leaves the machine on the
+    fallback path, and check what the model download itself reveals - a request for a specific
+    language pair is a small disclosure about the person, made to whoever serves the model.
+  - "IF THE MATCH IS THE BROWSER'S WEB SPEECH RECOGNITION, WHERE DOES THE AUDIO GO? Do not answer
+    this from the source, because the source cannot answer it: SpeechRecognition and
+    webkitSpeechRecognition are an interface the page calls, and which engine serves it is the user
+    agent's choice. Some implementations run a model on the device and others send the captured
+    audio to the browser vendor's own service, so the same line means two different things in two
+    browsers. Say which user agents the product supports, name the implementation each of them uses,
+    and state the answer for each; where you cannot establish it, say that it is unresolved rather
+    than choosing. WHAT IS NOT IN DOUBT ON THIS BRANCH, and what the finding rests on, is that a
+    transcript of the person's speech is derived and handed to the application - read where that
+    transcript goes, which is context question 2."
+  - "IF THE LINE NAMES OPENCV'S DNN NAMESPACE BUT NO MODEL ENTRY POINT, DOES ANY MODEL RUN HERE? A
+    line that loads or builds a model - a readNet loader, a blobFromImage tensor builder, the Net
+    class or a model class of the dnn module, HOGDescriptor or CascadeClassifier - fires clause
+    (10c) beside (10a); a line that fired (10a) without (10c) only names the namespace, and the
+    namespace also serves box arithmetic over a model's existing output, such as overlap suppression
+    in its plain, rotated, batched and soft forms. Read outward from such a line to where the boxes
+    or scores it handles come from, and give one of three answers: nothing in reach loads or runs a
+    model, and the line is not this rule's construct; the same file also loads or runs the model,
+    and the line is part of that model run's processing, answered with it rather than as a construct
+    of its own; or the model runs in another file or another runtime, and you name that file and
+    line and answer the questions above there."
+  - "ARE PEOPLE TOLD THAT A MODEL RUNS OVER THEIR CONTENT, AND FOR WHAT PURPOSE? That is a fact
+    about the product's notice and the organisation that runs it: the person running the scan is
+    asked it as the model notice question, ScanProfile.operator.model_purpose_stated, and the code
+    never decides it. Write a finding as waiting on operator.model_purpose_stated, whether or not it
+    has been answered, only where telling people is what remains open - the derivation is
+    established, the people whose content is read are people the notice reaches, and nothing below
+    is unresolved - and let the program apply the answer. A notice counts only where it reaches the
+    people whose content is read (GDPR Art. 12(1) has the information provided to them, and Art.
+    13(1)(c) has it state the purposes): a privacy notice or a notice in the product does; developer
+    or operator documentation - a README, a docs page, an API reference - does not. So wait on
+    operator.model_purpose_stated only for a notice of that kind; where the only statement of the
+    purpose the repository shows is such documentation, quote it and write the finding as waiting on
+    the fact in words - whether a notice that reaches those people states this purpose - rather than
+    on the question, whose answer may rest on that documentation. The answer does not settle the
+    rest, so answer these yourself instead of waiting: a lawful basis for the derivation; whether
+    keeping or acting on the derived value fits the stated purpose (context_questions[1] and [2]); a
+    derived value that falls within Art. 9(1); people the notice does not reach, such as the author
+    of content another person is reading or whoever is in a camera's frame (context_questions[0]);
+    and, where context_questions[3] finds an emotion-recognition or biometric-categorisation system,
+    the manner, the time and the form AI Act Art. 50(5) sets for the information Art. 50(3)
+    requires: it is given 'in a clear and distinguishable manner at the latest at the time of the
+    first interaction or exposure', and 'The information shall conform to the applicable
+    accessibility requirements.' A Yes resting on a privacy notice shows none of these, so for such
+    a system the answer does not decide telling people: do not wait on operator.model_purpose_stated
+    for it, and check the manner, the time and the accessibility yourself. Write duty_met only with
+    the line that shows people told in the product, clearly and apart from other text, at or before
+    their first interaction with or exposure to the system, in a form that meets the applicable
+    accessibility requirements; where the code shows no such notice, or does not show that it meets
+    those requirements, write the finding as waiting on that fact in words. Quote what the code
+    shows - a consent or onboarding screen, a settings toggle, a help text - as corroboration or
+    contradiction only, and where it contradicts the person's answer, say so in the reasoning."
+evidence_template: "{file}:{line} matched an in-process or on-device model API - one of nine clause
+  groups covering the Apple natural-language, Vision, VisionKit and speech frameworks, Core ML,
+  Google ML Kit and the Android platform text classifier, Tesseract, the browser and Node model
+  runtimes including the ones the browser now ships itself, and the Python in-process model loaders.
+  WHAT CLAUSE GROUPS 1 TO 8 ESTABLISH is that a model runs inside this process, over content this
+  process holds - and for those eight, THE THING THEY SPECIFICALLY DO NOT ESTABLISH, which is the
+  reason this rule exists separately from its two siblings in this pack, is a RECIPIENT: nothing on
+  those branches leaves the machine, so there is no destination to add to a record of processing
+  activities, and a finding written as though there were would be wrong about the construct. CLAUSE
+  GROUP 9 IS THE ONE EXCEPTION AND IT IS SCOPED HERE RATHER THAN LEFT TO CONTRADICT THE SENTENCE
+  ABOVE: on the browser Web Speech branch the locality is NOT established, and the paragraph at the
+  end of this template says so in full. The duty at issue is instead that a derived attribute is new
+  personal data about the person and deriving it is processing, which needs a purpose and a basis
+  wherever it happens. It does not establish what the model was run over - the person's own draft,
+  another person's content that this person is reading, or a document held up to a camera - which is
+  context_questions[0]. It does not establish what comes out or whether the derived value is
+  retained or acted on, which is the whole of the exposure and is context_questions[1] and [2]. TWO
+  OF THE BRANCHES ARE LOOSE ON PURPOSE and are named here so a reader can weigh a match: a bare call
+  to a function named pipeline, which stream libraries and build tools also use, and the short Core
+  ML type name. A confirming branch naming the model task strings sits beside the first of them, and
+  the looser branch is kept rather than removed because removing it would make a task name held in a
+  variable unreachable. ONE CLAUSE GROUP ESTABLISHES LESS THAN THE OTHER EIGHT AND THE DIFFERENCE IS
+  STATED RATHER THAN LEFT TO BE ASSUMED. Where the match is the browser's Web Speech recognition -
+  SpeechRecognition or webkitSpeechRecognition, its grammar and result types, or the double-indexed
+  transcript member that reads its output - what is established is the DERIVATION: a model turns the
+  person's dictated speech into a text attribute, and on the anchor this branch was written from
+  that text is inserted straight into the document being edited. WHAT IS NOT ESTABLISHED IS THE
+  LOCALITY, which this rule's title otherwise asserts. Web Speech is an interface rather than an
+  implementation: which engine serves it is the user agent's choice, some implementations run a
+  model on the device and others send the captured audio to the browser vendor's own service, and no
+  line of the scanned source decides which. Treat the destination of the audio as unresolved from
+  source, ask context_questions[5], and do not write a finding on this branch as though the audio
+  were known to stay on the machine. A TENTH CLAUSE GROUP WAS ADDED 2026-09-04 for the
+  general-purpose in-process language libraries, and one half of it establishes LESS than the
+  sentence about groups 1 to 8. Where the match is an IMPORT of the library - `from lingua import
+  ...`, `import langdetect`, a require of the same names - what is established is that the library
+  is in THIS MODULE's call graph, and NOT that a model runs on the matched line; read outward to the
+  call site before writing the finding. Where the match is `LanguageDetectorBuilder`, a
+  `detect_language` call, `TextBlob(`, `spacy.load(` or an `nltk` call, the ordinary reading of this
+  template applies. A manifest or lock file is deliberately not reached at all, and the reason is
+  the same one: a manifest is in no call graph. A NATIVE COMPUTER-VISION CLAUSE GROUP WAS ADDED
+  2026-09-09 and is numbered (10) in the detector. It reaches OpenCV in C and C++ - `readNet` and
+  its per-framework spellings, `blobFromImage`, `HOGDescriptor`, `CascadeClassifier`, the `dnn`
+  namespace, and a `setInput`, `forward`, `detectMultiScale`, `detect` or `setSVMDetector` call on a
+  receiver named for a network, model, classifier or detector. WHAT IT ESTABLISHES is the ordinary
+  reading of this template: a model is loaded from a file and run inside this process, and a class
+  label, a detection or a probability vector comes out of it. WHAT IT DOES NOT ESTABLISH - and this
+  is the reason a fourth shape was added to context_questions[0] on the same day - is WHOSE CONTENT
+  THE MODEL IS RUN OVER. The three shapes that question carried before all describe content a person
+  chose to put in front of the feature; a network run frame by frame over a camera feed classifies
+  whoever is in the field of view, and those people handed it nothing and may not know the camera is
+  there. Where the camera points, who is in the frame, and who installed it are deployment facts,
+  they are asked of the person running the scan, and they are never inferred from the source. Do not
+  write a finding on this branch as though the subject were the product's own user. Two of the entry
+  points in this group, `HOGDescriptor` and `CascadeClassifier`, are people- and face-shaped by
+  construction, so context_questions[3] - whether this is an emotion-recognition or
+  biometric-categorisation system - is worth asking early on a match from them rather than late. And
+  note what the group deliberately leaves out: a bare `forward(` or `detect(` with no network-named
+  receiver is not matched, because those are ordinary words in graph, layer and middleware
+  libraries, so a network held in a differently named variable is reached at its `readNet` or
+  `blobFromImage` line rather than at the call that runs it. A CONFIRMING CLAUSE, (10c), WAS ADDED
+  2026-11-02 beside (10a): it names OpenCV's model entry points in their Python and C++ spellings -
+  the `readNet` loaders, the `blobFromImage` tensor builders, the `Net` class and the model classes
+  of the dnn module, `HOGDescriptor` and `CascadeClassifier` - so where a line fired (10a) without
+  (10c), only the bare dnn namespace matched and the line alone does not establish a model run: box
+  arithmetic over a model's existing output, such as overlap suppression, is not a model run and,
+  where nothing in reach loads or runs a model, is `not_the_construct`; where the same file also
+  loads or runs the model, that processing belongs to the model run and is answered with it; and
+  where the model runs in another file or runtime, it is answered there, with that file and line
+  named. Those are the three answers of context_questions[6]."
+remediation_template: |
+  Start from the derived value rather than from the model. What comes out is new personal data about
+  the person, and the question is what it is for, how long it is kept, and whether anything acts on
+  it. A value that fills a suggestion and is dropped when the view closes needs a much shorter
+  answer than one written onto a published record.
+  Say it in the interface where the person can see it. On-device derivation is invisible by
+  construction and there is no network request for anyone to observe, so the transparency limb of
+  Art. 5(1)(a) has to be met by telling them: a line in the privacy statement naming the local
+  models, and, where the derived value is published, a visible indication before it is.
+  Where a recogniser reads a whole frame to obtain one field - a card, a receipt, an identity
+  document - hold only the field. The rest of the frame is data the feature never asked for, and
+  keeping it in a buffer or a log is the minimisation defect rather than the recognition itself.
+  Check the fallback path. Where the framework downloads a model, or falls back to a server when an
+  on-device property is not set, the local guarantee is conditional; write down which condition, and
+  set the property that keeps it local where one exists.
+  Where the content the model reads is another person's rather than the user's - a translation of
+  somebody else's post is the common case - record that the data subject is not the person using
+  the feature, because the basis and the notice for that processing are owed to somebody who is not
+  in front of the screen.
+data_categories:
+  - user.content
+  - user.behavior
+  - user.device
+fingerprint_spec: file

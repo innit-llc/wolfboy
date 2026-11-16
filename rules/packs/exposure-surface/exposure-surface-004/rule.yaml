@@ -1,0 +1,343 @@
+id: exposure-surface-004
+pack: exposure-surface
+short_name: Records served with no sign-in found, unlike nearby routes
+problem_line:
+  text: "Personal records: no sign-in found, unlike sibling routes"
+  template: "{data}: no sign-in found, unlike sibling routes"
+fix_line: Require a credential or make appearing on this route opt-in; where it must stay open,
+  return only the fields needed.
+title: Public route serving records with no credential in its declaration, of the kind that appears
+  beside sibling routes whose credential is a secret path segment or a handler argument
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 25(2) - 'The controller shall implement appropriate
+      technical and organisational measures for ensuring that, by default, only personal data which
+      are necessary for each specific purpose of the processing are processed', and 'That obligation
+      applies to the amount of personal data collected, the extent of their processing, the period
+      of their storage and their accessibility'. The last sentence of the paragraph is the one this
+      construct is about: \"In particular, such measures shall ensure that by default personal data
+      are not made accessible without the individual's intervention to an indefinite number of
+      natural persons\". Where such a route is in fact reachable, and the records appear on it
+      without the individual's intervention, it is the accessibility default this sentence speaks
+      to. The detector establishes neither limb: a middleware, a proxy or a gateway can require a
+      credential the route table does not show, and whether a person had to act for their records to
+      appear is a fact about the product's defaults. Context questions 3 and 5 ask them"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-04
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 25(1) - the controller shall, 'both at the time of the
+      determination of the means for processing and at the time of the processing itself, implement
+      appropriate technical and organisational measures, such as pseudonymisation, which are
+      designed to implement data-protection principles, such as data minimisation, in an effective
+      manner and to integrate the necessary safeguards into the processing in order to meet the
+      requirements of this Regulation and protect the rights of data subjects'. Cited beside
+      paragraph 2 because a route table is a design-time artefact: the sibling routes in the same
+      file show that the safeguard was available and was written for the other members of the set"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-04
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1) - 'personal data' means 'any information relating
+      to an identified or identifiable natural person'. Reference only: a definition establishes no
+      duty, and it is cited here to mark the fact this detector deliberately does not decide.
+      Whether the records a route serves are personal data of a natural person is a question for the
+      person running the scan and for the documents they have declared; the detector reports the
+      shape of the route and nothing about what travels over it"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-04
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(2) - 'processing' means any operation or set of
+      operations which is performed on personal data or on sets of personal data, whether or not by
+      automated means, 'such as collection, recording, organisation, structuring, storage,
+      adaptation or alteration, retrieval, consultation, use, disclosure by transmission,
+      dissemination or otherwise making available, alignment or combination, restriction, erasure or
+      destruction'. Reference only, and cited for one phrase in the enumeration: serving records
+      over an open route is 'otherwise making available', which is why a route's default visibility
+      is a processing question at all and not merely a deployment preference"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-04
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.35
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    route_registration:
+      - path
+      - re_path
+      - url
+      - route
+      - get
+      - head
+      - resource
+      - resources
+      - handle
+      - handlefunc
+      - handlepath
+      - mapget
+      - maproute
+      - add_url_rule
+      - add_route
+      - add_api_route
+      - register_rest_route
+      - getmapping
+      - requestmapping
+      - controller
+    records_surface:
+      - feed
+      - feeds
+      - rss
+      - atom
+      - opml
+      - ical
+      - icalendar
+      - ics
+      - webcal
+      - vcard
+      - vcf
+      - export
+      - exports
+      - download
+      - downloads
+      - share
+      - shared
+      - sharing
+      - timeline
+      - outbox
+      - syndication
+    public_marker:
+      - public
+      - publicly
+      - anonymous
+      - anon
+      - unauthenticated
+      - unauthed
+      - guest
+      - world_readable
+    credential_segment:
+      - key
+      - token
+      - secret
+      - signature
+      - hmac
+      - nonce
+      - passcode
+      - password
+      - feed_key
+      - feed_token
+      - share_key
+      - share_token
+      - access_key
+      - access_token
+      - api_key
+      - auth_key
+      - auth_token
+      - secret_key
+      - private_token
+      - subscription_key
+      - calendar_key
+    handler_resolver:
+      - get_object
+      - get_queryset
+      - get_query_set
+      - get_object_or_404
+      - get_context_data
+      - dispatch
+      - load_resource
+      - find_resource
+      - resolve_object
+    person_selector:
+      - user
+      - username
+      - user_name
+      - user_id
+      - owner
+      - author
+      - account
+      - member
+      - handle
+      - screen_name
+      - login
+      - nickname
+      - profile
+    no_auth_declaration:
+      - allow_any
+      - allow_anonymous
+      - anonymous_allowed
+      - permit_all
+      - login_not_required
+      - no_authentication
+      - skip_authentication
+      - skip_auth
+      - auth_optional
+      - optional_auth
+  vocabulary_matching:
+    route_registration:
+      case_insensitive: true
+      separator_insensitive: true
+    records_surface:
+      case_insensitive: true
+      separator_insensitive: true
+    public_marker:
+      case_insensitive: true
+      separator_insensitive: true
+    credential_segment:
+      case_insensitive: true
+      separator_insensitive: true
+    handler_resolver:
+      case_insensitive: true
+      separator_insensitive: true
+    person_selector:
+      case_insensitive: true
+      separator_insensitive: true
+    no_auth_declaration:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?:^|[^A-Za-z0-9_.])(?:[A-Za-z_][A-Za-z0-9_]*\s*\.\s*)?(?&route_registration)(?:\s*\(\s*|\s*(?:=>|[:=])\s*|\s+)["'`](?:/(?:[A-Za-z0-9_.\-]+/)*|(?:[A-Za-z0-9_.\-]+/)+)(?:(?&records_surface)|(?&public_marker))(?:\.[A-Za-z0-9]{1,6})?/?["'`]
+    - (?:^|[^A-Za-z0-9_.])["'`](?:/(?:[A-Za-z0-9_.\-]+/)*|(?:[A-Za-z0-9_.\-]+/)+)(?:(?&records_surface)|(?&public_marker))(?:\.[A-Za-z0-9]{1,6})?/?["'`]\s*(?:,|=>)\s*[A-Za-z_@\[{]
+    - (?:^|[^A-Za-z0-9_])(?:super\s*\([^)\n]*\)\s*\.\s*|super\s*\.\s*|parent\s*::\s*|base\s*\.\s*|self\s*\.\s*|this\s*\.\s*)?(?&handler_resolver)\s*\(\s*(?:[^\n)]{0,160}[^A-Za-z0-9_])?(?:None|nil|null|NULL|undefined)\s*[,)]
+    - (?:^|[^A-Za-z0-9_])(?:[A-Za-z0-9]+[_.\-])*(?&credential_segment)\s*(?::\s*[A-Za-z_][A-Za-z0-9_.\[\]]*\s*(?:\|\s*(?:None|null|undefined)\b|\?)|\?\s*:|=\s*(?:None|nil|null|undefined|NULL)\b)
+    - (?:^|[^A-Za-z0-9_])if\s+(?:[A-Za-z0-9]+[_.\-])*(?&credential_segment)\b[^\n]{0,60}else\s+(?:None|null|nil|undefined)\b|(?:^|[^A-Za-z0-9_])(?:[A-Za-z0-9]+[_.\-])*(?&credential_segment)\s*\?[^\n:]{0,100}:\s*(?:null|undefined|nil|None)\b
+    - (?:^|[^A-Za-z0-9_])(?:[A-Za-z_][A-Za-z0-9_]*\s*\.\s*)*(?:GET|POST|[Qq]uery(?:[Pp]arams|_params|[Ss]tring)?|[Pp]arams|[Aa]rgs|[Ss]earch[Pp]arams|[Ff]orm)\s*(?:\.\s*[A-Za-z_][A-Za-z0-9_]*\s*\(\s*|\[\s*)["'`](?&person_selector)["'`]
+    - (?:^|[^A-Za-z0-9_])(?:[A-Za-z_][A-Za-z0-9_]*\s*\.\s*)*(?:GET|[Qq]uery(?:[Pp]arams|_params)?|[Pp]arams|[Aa]rgs|[Ss]earch[Pp]arams)\s*\.\s*(?&person_selector)\b
+    - (?:^|[^A-Za-z0-9_])(?:filter|find|find_by|findBy|findOne|findUnique|findFirst|where|get_object_or_404)\s*\(\s*\{?\s*(?:[A-Za-z_][A-Za-z0-9_]*\s*,\s*)?(?&person_selector)(?:__[a-z]+)?\s*(?:=>|[=:])
+    - (?:^|[^A-Za-z0-9_])(?&public_marker)[_.\-]?(?&records_surface)|(?:^|[^A-Za-z0-9_])(?&records_surface)[_.\-]?(?&public_marker)
+    - (?:^|[^A-Za-z0-9_])(?&no_auth_declaration)[^\n]{0,120}(?:(?&records_surface)|(?&public_marker))|(?:^|[^A-Za-z0-9_])(?:(?&records_surface)|(?&public_marker))[^\n]{0,120}(?&no_auth_declaration)
+    - (?:^|[^A-Za-z0-9_])(?&route_registration)(?:\s*\(\s*|\s*(?:=>|[:=])\s*|\s+)["'`]/?(?:[A-Za-z0-9_.\-]+/)*(?:\{[^/{}"'`\n]{0,40}(?&person_selector)[^/{}"'`\n]{0,40}\}|:(?&person_selector)(?![A-Za-z0-9_])|<[^/<>"'`\n]{0,40}(?&person_selector)[^/<>"'`\n]{0,40}>)/?["'`]|(?:^|[^A-Za-z0-9_])Path\s*\(\s*(?&person_selector)[A-Za-z0-9_]*\s*\)\s*:\s*Path\s*<|@\s*Path(?:Variable|Param)\b[^\n]{0,60}(?&person_selector)
+context_questions:
+  - DO THIS ROUTE'S SIBLINGS REQUIRE A CREDENTIAL THAT IT DOES NOT? This is the question the whole
+    rule turns on and it is the one the detector cannot answer, because the engine matches one line
+    at a time and the comparison is between lines. Open the routing table the match sits in and read
+    the routes registered over the same records. Where the others carry a key, a token or a signed
+    segment in the path and this one carries nothing, the construct is present. Where every route in
+    the set is open, this is an ordinary public surface and the question becomes what it serves.
+    Where the match is not in a routing table at all, say which of the rule's other shapes fired
+    before going further.
+  - WHOSE RECORDS DOES THE ROUTE SERVE, AND ARE THEY PERSONAL DATA? Ask the operator; do not read it
+    off the code. The detector establishes the shape of the route and nothing about what travels
+    over it. A public route over a demonstration collection and a public route over every account's
+    saved items are the same lines here. Where the answer is that the records relate to identified
+    or identifiable people, the finding stands; where they do not, it closes.
+  - IS A CREDENTIAL REQUIRED SOMEWHERE THE ROUTE TABLE DOES NOT SHOW? A middleware, a decorator on
+    the view, a reverse proxy, an API gateway or a deployment-time rule can require authentication
+    that the registration line says nothing about. Read the middleware chain the route is mounted
+    under and ask the operator what sits in front of the application in the deployment they ship. A
+    route that is open in the code and closed by the proxy is a different fact from a route that is
+    open, and the record should say which.
+  - CAN THE ROUTE BE POINTED AT ONE NAMED PERSON? Look for a request parameter that narrows the
+    result to a specific account - a username, an owner, a handle - and check whether supplying it
+    requires anything. Where an unauthenticated caller can name a person and receive that person's
+    records, the surface is not merely open but addressable, and that is a different fact worth
+    recording separately.
+  - IS THIS VISIBILITY THE SHIPPED DEFAULT, OR SOMETHING A PERSON CHOSE? Art. 25(2) is about what
+    happens when nobody does anything. Find the flag or field that decides whether a person's
+    records appear on this route, and read what it is set to for a newly created account and for a
+    newly created record. Where the person must act to make their records appear, this is a
+    facility. Where they must act to make them stop appearing, it is a default, and that is the case
+    the provision speaks to.
+  - WHERE IS THE MATCH IN THE REQUEST'S LIFE? A query-string read, an optional parameter and a null
+    passed to a base class all match here, and none of them is a route. Read upwards to the handler
+    and the registration before treating any of them as this construct; where the surrounding route
+    requires a credential, the optional parameter is a fallback for an internal caller and not an
+    open surface.
+  - IF THE MATCH IS A NO-AUTHENTICATION DECLARATION, WHAT DOES THE VIEW SERVE? Clause 8 fires on a
+    framework's own way of saying a route needs no credential, next to a word naming a records
+    surface. That combination is often a documentation page, a health check or a public asset route,
+    and none of those is this construct. Read the view body.
+  - "IF THE MATCH IS A PERSON-NAMED PATH PARAMETER, WHERE WOULD THIS FRAMEWORK PUT THE CREDENTIAL?
+    ADDED 2026-09-09 with clause 9. A route's credential requirement is not always a segment in the
+    path. In several frameworks it is an ARGUMENT IN THE HANDLER'S SIGNATURE - an extractor type in
+    Rust axum, a security annotation on a JVM controller method, a dependency in FastAPI, a guard in
+    NestJS - and the route declaration then looks identical whether or not a credential is required.
+    Open the handler this route names and read its signature, then read the signatures of the
+    sibling handlers over the same records, and report which arguments each one takes. Three answers
+    are different findings: this handler takes an authentication argument and the siblings do too,
+    so the set is uniform and there is no construct here; this handler takes none and the siblings
+    do, which is the comparison context question 1 asks for, made in the signatures instead of in
+    the paths; or the framework requires the credential somewhere neither the route nor the handler
+    shows, which is context question 3. THE DETECTOR DID NOT CHECK ANY OF THIS AND CANNOT: the
+    absence of an argument from a signature is not a thing a line-scoped pattern can see, and this
+    rule asks it rather than asserting it."
+evidence_template: "{file}:{line} matched a construct associated with a PUBLIC ROUTE THAT CARRIES NO
+  CREDENTIAL IN ITS OWN DECLARATION, of the kind that appears beside sibling routes over the same
+  records that do require a secret path segment. Four shapes reach this rule and they are not
+  equally strong. (i) A route registered with a path that names a syndication, export, calendar or
+  sharing surface and contains no parameter placeholder of any kind. (ii) A credential made optional
+  or supplied as a null - a parameter named for a secret and typed optional, a token lookup
+  performed only when a token was supplied, a null given where a base handler expects the key. (iii)
+  The result narrowed to one named person, and separately a person named in the query string; this
+  is the loosest group. The narrowing half reaches ordinary per-account scoping - a query filtered
+  by the account it belongs to - which every multi-user product writes and which says nothing about
+  any route, so read which of the two halves matched before treating it as evidence of anything.
+  (iv) An identifier that names itself the open variant of a records surface, or a framework
+  declaration that a route needs no authentication beside such a word. WHAT THIS DETECTOR DOES NOT
+  ESTABLISH, AND CANNOT. It does not establish that the sibling routes are gated: that is a
+  comparison between lines and this engine matches one line at a time, so context question 1 asks a
+  reader to make it. It does not establish that the records served are personal data of a natural
+  person - that is a fact about the product, which is asked of the person running the scan and of
+  their declared documents, and is never inferred from the words in the source. It does not
+  establish that no credential is required, because a middleware, a decorator, a reverse proxy or a
+  gateway can require one without appearing on the matched line. It does not establish that the
+  route is reachable from outside the operator's network, nor that any record was ever served over
+  it, nor that the visibility is a default rather than something a person chose - context question 5
+  is what separates those two, and Art. 25(2) speaks only to the first. ADDED 2026-09-09: A FIFTH
+  SHAPE REACHES THIS RULE, AND THE SENTENCE ABOVE SAYING FOUR IS LEFT STANDING SO A READER CAN SEE
+  THAT THE COUNT MOVED AND WHEN. (v) A ROUTE WHOSE PATH NAMES ONE PERSON IN A PARAMETER PLACEHOLDER
+  - `/user/{username}`, `/users/:user_id`, `/<username>/feed` - or the handler-side binding of the
+  same parameter. This is shape (iii) in a third position rather than a new claim: (iii) reads a
+  person named in the query string and the person resolved from that name, and this reads the person
+  named in the path. It is bounded by nothing except the person word, so a profile page, a public
+  user directory and an avatar route all reach it, and everything said above about (iii) being the
+  loosest group applies to it unchanged. A ROUTE'S CREDENTIAL REQUIREMENT MAY BE EXPRESSED BY AN
+  ARGUMENT IN THE HANDLER'S SIGNATURE RATHER THAN BY A SEGMENT IN THE PATH - an extractor type, a
+  security annotation, an injected guard - and where that is how the framework works, the route
+  declaration looks the same whether or not a credential is required. THIS DETECTOR DID NOT READ ANY
+  SIGNATURE AND CANNOT: the absence of an argument is not visible to a line-scoped pattern, so
+  whether this route is genuinely uncredentialed is asked in context questions 1, 3 and 8 and is
+  established by none of them here. ADDED 2026-09-10: TWO WAYS SHAPE (v) REACHES A LINE THAT NAMES
+  NO PERSON IN THE ROUTE, DISCLOSED HERE AS COST BECAUSE A READER WOULD OTHERWISE TAKE THE MATCH FOR
+  THE CONSTRUCT. FIRST, THE PERSON WORD MAY BE A SUBSTRING OF A LONGER IDENTIFIER: this rule folds
+  separators and case and sets no word boundary, so `author` matches inside `authorizationId`,
+  `member` inside `membershipId` and `handle` inside `listhandles`, and a route parameter named for
+  an authorization record, a membership record or a resolver service is reported as though it named
+  a person. SECOND, THE HANDLER-SIDE READING SPANS A SHORT WINDOW AFTER THE PATH ANNOTATION, so a
+  person word belonging to a NEIGHBOURING ARGUMENT is enough - a `Principal user` sitting beside a
+  `slug` path variable - and the path parameter itself names nobody. IN BOTH CASES THE THING TO READ
+  IS THE PARAMETER THE ROUTE IS ADDRESSED BY: open the line, read that parameter's own name, and
+  treat the location as this shape only where the name is the person. Measured over the pinned
+  corpus trees when shape (v) was added, 27 of 77 newly reached lines were of these two kinds - 23
+  the substring case and 4 the window case - and one more was reached through a documentation string
+  beside the parameter. All of that is reported as product cost and none of it is narrowed away,
+  because removing a spelling is the only operation that can create a miss."
+remediation_template: |
+  Settle the comparison first (context question 1). Open the routing table and list every route
+  registered over these records beside the matched one, with the credential each requires. Where the
+  matched route is the only one with nothing in its path, that list is the finding; where every
+  route in the set is open, this is an ordinary public surface and the question is what it serves.
+  Ask the operator what the route returns and for whom, and record the answer rather than inferring
+  it from the code. Nothing in the scanner can see whether the records relate to identifiable
+  people.
+  Read the middleware, decorators and deployment configuration in front of the route before treating
+  it as open. Where a proxy supplies the credential the route table does not, write that down, and
+  check that it holds in every deployment the product ships rather than only in the operator's own.
+  Find the field that decides whether a person's records appear on the open route, and read its
+  value for a newly created account and a newly created record. Where a person must act to be
+  removed rather than to be included, the change with the most effect is to reverse that default;
+  where the surface must stay open, the change is to narrow what it returns to the fields the
+  purpose needs.
+  Where the open route can be pointed at a named individual by a request parameter, treat that as a
+  separate item: an open surface that is also addressable lets a caller ask for one person by name
+  without holding anything.
+data_categories:
+  - user.account
+  - user.content
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: per-location

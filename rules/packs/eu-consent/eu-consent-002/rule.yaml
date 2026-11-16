@@ -1,0 +1,99 @@
+id: eu-consent-002
+pack: eu-consent
+short_name: Meta Pixel may run before consent
+problem_line:
+  text: Meta Pixel runs with no consent gate found
+fix_line: Revoke consent first and grant on a recorded decision, or load the pixel after consent;
+  drop or gate noscript pixels.
+title: Meta Pixel init call, or a pixel URL that may be an allow-list entry - consent revoke/grant
+  gate needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC): storing
+      information, or gaining access to information already stored, in a user's terminal equipment
+      \"is only allowed on condition that the subscriber or user concerned has given his or her
+      consent, having been provided with clear and comprehensive information\""
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-28
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) (replaces Art. 5(3) of Directive 2002/58/EC: the 2002
+      wording offered only a right to refuse, the replacement wording requires prior consent) and
+      Art. 4 (Member State transposition deadline 25 May 2011)"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: GDPR Art. 4(11) and Art. 7 (definition of consent; conditions for valid consent)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: EDPB Guidelines 2/2023 on the technical scope of Art. 5(3) of the ePrivacy Directive, Version
+      2.0 (adopted 7 October 2024), section 3 use case 'URL and pixel tracking' — tracking pixels
+      are within the scope of Art. 5(3)
+    url: https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-22023-technical-scope-art-53-eprivacy-directive_en
+    checked_at: 2026-07-22
+    jurisdiction: EU
+effective_date: 2011-05-25
+severity: high
+rule_confidence: 0.85
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  match:
+    - fbq\(\s*["'`]init["'`]
+    - connect\.facebook\.net/[^"'\s]*fbevents\.js
+    - facebook\.com/tr[?/]
+    - \b(?:const|let|var)\s+[\w$]+\s*=\s*(?:window\s*\.\s*)?fbq\s*(?![\w$(.])
+    - \bfbq\s*\(\s*\.\.\.
+    - \bfbq\s*\.\s*(?:apply|call)\s*\(
+  join_bracketed_constructs: true
+context_questions:
+  - Is the fbq('init') call guarded by a check on consent state? Quote the call path.
+  - "Before the pixel runs, is the consent state set to revoke — and is it switched to grant only
+    after a recorded consent decision? fbq('consent','revoke') is evidence, and since 2026-07-27 the
+    detector no longer searches for it, so finding one is a real contribution rather than a repeat
+    of the search that produced this candidate. It is not sufficient on its own. Quote both calls,
+    then answer: does the revoke run on this page's load path and before the line in the evidence,
+    and is the grant conditioned on a recorded decision rather than called unconditionally a moment
+    later? Note also what revoke does and does not do: it withholds event sending and cookie use,
+    but the base code still fetches fbevents.js from Meta. Say which of the two the gate you found
+    actually prevents."
+  - "Which half of the Meta base code is this line — the fbevents.js loader, the fbq('init') call,
+    or the <noscript> <img> pixel? A server-rendered layout often splits them across partials, so
+    answer for the whole page: if a consent gate exists, does it cover this line as well? A
+    <noscript> pixel in particular is unreachable by any JavaScript-side gate and fires whenever
+    scripting is off."
+  - Is this app served to users in the EU?
+evidence_template: "{file}:{line} carries one of the three shapes this detector matches. The first
+  is the fbq('init') call, which does initialise the pixel. The other two are bare URL substrings:
+  the loader host and path connect.facebook.net/.../fbevents.js, and the endpoint facebook.com/tr
+  used by the <noscript> <img> pixel. A URL substring is not by itself a load - the same string sits
+  in a Content-Security-Policy directive or another allow-list entry, which declares the host
+  permitted somewhere and loads nothing, and in a consent platform's vendor list, in documentation
+  and in a commented-out snippet, which this rule has no match_without to remove. Read the matched
+  line and name its shape before treating it as a load. Since 2026-09-14 the match may also come
+  from a CONSTRUCT rather than from that line alone: this rule reads the bracket-balanced construct
+  a line opens on as one folded text as well, so an fbq call whose arguments are written one per
+  line - what a formatter produces once the pixel id is an interpolation - is matched as a whole,
+  and where that is what happened the finding carries the span it was folded from in
+  locations[].joined_from. Read those lines together, not the opening line alone. Whether a consent
+  revoke/grant gate exists, and whether it covers this load path, is not decided by the detector
+  either: see the context questions"
+remediation_template: >
+  Call fbq('consent', 'revoke') on page load before the pixel runs, then fbq('consent', 'grant')
+  once the CMP records consent.
+
+  Alternatively, load the pixel script itself dynamically once the CMP records consent.
+
+  A <noscript> <img> pixel cannot be gated in JavaScript at all: render that element server-side
+  only once consent has been recorded, or drop it.
+
+  If a revoke/grant pair already exists, check the two things it is routinely wrong about rather
+  than treating its presence as the answer: the revoke has to run on the same load path as this line
+  and before it, and the grant has to be conditioned on a recorded decision. Neither covers the
+  noscript pixel.
+data_categories:
+  - user.behavior
+  - user.unique_id
+fingerprint_spec: default

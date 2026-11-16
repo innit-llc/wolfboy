@@ -1,0 +1,383 @@
+id: recipients-013
+pack: recipients
+short_name: Usage-report address, call, ID header or default-on setting
+problem_line:
+  text: Usage reports sent to an address set in the product
+fix_line: Record and disclose who runs the address and what is sent, and consider an off default and
+  no lasting ID.
+title: Telemetry from server or desktop code to a first-party or operator-configured endpoint -
+  installation identifiers and an on-by-default setting; recipient and basis need review
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - the controller's record of processing
+      activities "shall contain all of the following information", including "the categories of
+      recipients to whom the personal data have been or will be disclosed including recipients in
+      third countries or international organisations". A first-party telemetry channel sent from the
+      product's own server or desktop binary has a recipient by construction - the operator of the
+      address the payload is posted to - and the address is ordinarily a constant compiled into the
+      product rather than anything the deployment chose
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-10
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 13(1)(e) - where personal data are collected from the
+      data subject, the controller shall, at the time when personal data are obtained, provide the
+      data subject with "the recipients or categories of recipients of the personal data, if any".
+      Cited for the desktop case, where the person operating the product is the data subject and the
+      identifier travels from that person's own machine as they use it
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-10
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 14(1)(e) - where personal data have not been obtained
+      from the data subject, the controller shall provide the data subject with \"the recipients or
+      categories of recipients of the personal data, if any\". Cited beside Art. 13(1)(e) because a
+      server-side ping is usually not a collection from the data subject at all: the deployment's
+      own process assembles and sends it, and the person whose record identifier or user name rides
+      along took no step towards the vendor"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-10
+    jurisdiction: EU
+  - cite: 'GDPR (Regulation (EU) 2016/679), Art. 5(1)(c) - personal data shall be "adequate, relevant
+      and limited to what is necessary in relation to the purposes for which they are processed".
+      Cited for the identifier rather than for the channel: a telemetry payload that answers how
+      many installations exist needs a counter, and one that carries an identifier which survives a
+      restart answers a different and larger question about one installation over time'
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-10
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 6(1) - "Processing shall be lawful only if and to the
+      extent that at least one of the following applies". Cited AS THE QUESTION and not as an
+      answer. Which ground carries a disclosure to the vendor is a deployment fact this detector
+      does not read, and an operator who left an on-by-default setting alone has not thereby chosen
+      one; nothing in this rule's output may read as though the question had been settled
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-10
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(9) - \"recipient\" means \"a natural or legal person,
+      public authority, agency or another body, to which the personal data are disclosed, whether a
+      third party or not\". Reference only: a definition establishes no duty of its own. It is cited
+      because the destination this rule matches is not always the vendor - an operator-configured
+      collector is frequently the deployment's own host, in which case there is no disclosure to
+      anybody outside the controller - and the definition rather than intuition is what decides
+      that"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-10
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose \"The
+      categories of third parties to whom the business discloses personal information.\" The
+      obligation is owed on a verifiable consumer request under Sec. 1798.110(b), and Sec.
+      1798.110(c)(4), disclosed pursuant to Sec. 1798.130(a)(5)(B), requires the same categories in
+      the privacy policy. PINPOINT CORRECTED 2026-09-01 (D11, independent adversarial verification):
+      the earlier wording routed the privacy-policy limb through Sec. 1798.130(a)(5)(B) alone, which
+      read on its own enumerates categories of personal INFORMATION rather than categories of third
+      parties. NOT MACHINE-VERIFIED AND SAID SO: this rule's quote-verification receipt marks this
+      span unverifiable, because Californian law is outside the fetch path of the tool that checks
+      quotations against official texts; the correction is from knowledge of the statute rather than
+      from a fetched text, and it should be confirmed against the code or by a lawyer before it is
+      treated as settled"
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-09-10
+    jurisdiction: US
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: medium
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  vocabulary:
+    telemetry_channel_words:
+      - telemetry
+      - analytics
+      - usage_data
+      - usage_stats
+      - usage_statistics
+      - usage_report
+      - usage_ping
+      - usage_metrics
+      - usage_tracking
+      - anonymous_usage
+      - statistic
+      - statistics
+      - phone_home
+      - call_home
+    outbound_send_verbs:
+      - post
+      - put
+      - patch
+      - send
+      - send_async
+      - send_request
+      - execute
+      - request
+      - fetch
+      - get
+      - new_call
+      - open_connection
+      - get_url_connection
+      - get_connection
+      - urlopen
+      - do_request
+    header_setting_verbs:
+      - set
+      - add
+      - put
+      - with
+      - header
+      - insert
+      - append
+    outbound_identity_header_tails:
+      - user
+      - username
+      - user_name
+      - operator
+      - login
+      - account
+      - actor
+    user_agent_names:
+      - user_agent
+    installation_identifier_words:
+      - deployment_id
+      - deployment_uuid
+      - installation_id
+      - installation_uuid
+      - install_id
+      - instance_id
+      - instance_uuid
+      - machine_id
+      - machine_uuid
+      - server_id
+      - server_uuid
+      - client_uuid
+      - node_uuid
+      - anonymous_id
+      - device_id
+      - device_uuid
+      - hardware_id
+      - uid
+    telemetry_suppressing_verbs:
+      - disable
+      - disabled
+      - suppress
+      - opt_out
+      - no
+    telemetry_enabling_verbs:
+      - enable
+      - enabled
+      - send
+      - collect
+      - report
+      - allow
+      - opt_in
+      - track
+      - share
+    falsey_literals:
+      - "false"
+      - no
+      - off
+      - none
+      - nil
+      - "0"
+    truthy_literals:
+      - "true"
+      - yes
+      - on
+      - "1"
+  vocabulary_matching:
+    telemetry_channel_words:
+      case_insensitive: true
+      separator_insensitive: true
+    outbound_send_verbs:
+      case_insensitive: true
+      separator_insensitive: true
+    header_setting_verbs:
+      case_insensitive: true
+    outbound_identity_header_tails:
+      case_insensitive: true
+      separator_insensitive: true
+    user_agent_names:
+      case_insensitive: true
+      separator_insensitive: true
+    installation_identifier_words:
+      case_insensitive: true
+      separator_insensitive: true
+    telemetry_suppressing_verbs:
+      case_insensitive: true
+      separator_insensitive: true
+    telemetry_enabling_verbs:
+      case_insensitive: true
+      separator_insensitive: true
+    falsey_literals:
+      case_insensitive: true
+    truthy_literals:
+      case_insensitive: true
+  match:
+    - (?<![A-Za-z0-9_$])(?&outbound_send_verbs)[ \t]*\([ \t]*(?:&[
+      \t]*)?(?:[A-Za-z_$][A-Za-z0-9_$]*(?:[ \t]*\([ \t]*\))?[ \t]*(?:\.|::|->)[
+      \t]*){0,3}[A-Za-z0-9_$]{0,40}(?&telemetry_channel_words)[A-Za-z0-9_$]{0,40}
+    - (?<![A-Za-z0-9_$])(?&outbound_send_verbs)[ \t]*\([
+      \t]*["'`]https?://[^\n"'`]{0,120}(?&telemetry_channel_words)
+    - (?<![A-Za-z0-9_$])[A-Za-z0-9_$.\-]{0,40}(?&telemetry_channel_words)[A-Za-z0-9_$.\-]{0,40}[^\n]{0,40}["'`]https?://
+    - (?<![A-Za-z0-9_$])(?&header_setting_verbs)[A-Za-z0-9_$]{0,24}[
+      \t]*\([^\n]{0,80}["'][A-Za-z][A-Za-z0-9]{0,30}[-_](?&outbound_identity_header_tails)["']
+    - (?<![A-Za-z0-9_$])(?&user_agent_names)[^\n]{0,80}(?<![A-Za-z0-9_$])(?&installation_identifier_words)(?![A-Za-z0-9_$])
+    - (?<![A-Za-z0-9_$])(?&telemetry_suppressing_verbs)[-_.]{0,1}[A-Za-z0-9_$]{0,20}(?&telemetry_channel_words)[A-Za-z0-9_$]{0,30}[^\n]{0,30}?(?:=>|[:=])[
+      \t]*["']?(?&falsey_literals)(?![A-Za-z0-9_$])
+    - (?<![A-Za-z0-9_$])(?&telemetry_enabling_verbs)[-_.]{0,1}[A-Za-z0-9_$]{0,20}(?&telemetry_channel_words)[A-Za-z0-9_$]{0,30}[^\n]{0,30}?(?:=>|[:=])[
+      \t]*["']?(?&truthy_literals)(?![A-Za-z0-9_$])
+context_questions:
+  - "MANDATORY, AND IT IS THE QUESTION THE WHOLE FINDING EXISTS TO RAISE: WHO OPERATES THE ADDRESS
+    THIS IS SENT TO? Follow the matched destination back to where it is built and say which of three
+    it is. (a) AN ADDRESS COMPILED INTO THE PRODUCT - a constant holding a literal host the
+    deployment did not choose - in which case the vendor is the recipient and belongs in the record
+    by name, and no self-hosted operator can have chosen it. (b) AN ADDRESS THE OPERATOR CONFIGURED,
+    which is a deployment fact and has to be asked of the operator rather than read out of the code
+    - it is asked of the person running the scan as `features.own_domain_endpoints` (added
+    2026-10-06), and the answer is in the ScanProfile your brief carries: `forward_to_vendor` names
+    a vendor as the recipient, `own_instance` lets you record none where nothing in the code
+    contradicts it, and `mixed` or no answer leaves the place kept with the address and the question
+    named; where the operator pointed it at their own collector there may be no disclosure outside
+    the controller at all, and an empty recipient row that is correct is a better answer than a
+    guessed one. (c) AN ADDRESS THAT IS EMPTY OR UNSET BY DEFAULT, so that nothing is sent until
+    somebody sets it - say so, and say what the shipped value is. Quote the line the address is
+    built on. If you cannot settle it, return needs_human rather than assuming (b)."
+  - "CAN THE OPERATOR TURN IT OFF, AND WHAT IS THE SHIPPED DEFAULT? These are two questions and the
+    second is the one that matters. Find the setting that governs this channel - it is usually named
+    for the channel, and clause 5 matches only the polarity that leaves collection ON. Then read the
+    default AS SHIPPED, not as documented: the value in the code, not the value in the README. TWO
+    SHAPES DEFEAT THE DETECTOR HERE AND YOU HAVE TO READ THEM YOURSELF. First, a name and its
+    default on adjacent lines inside one bracketed attribute or annotation - a command-line argument
+    declaration is the common case - which this rule does not join and therefore never matched.
+    Second, a default computed at run time rather than written as a literal. Say which shape you
+    found. Then say whether more than one channel exists: a product frequently has a usage channel
+    and a version-check channel governed by different settings, and turning one off leaves the other
+    sending."
+  - DOES ANYTHING IN THE PAYLOAD SURVIVE A RESTART? This is the Art. 5(1)(c) question and it
+    separates a counter from a longitudinal record of one installation. Find where each identifier
+    in the body is created and say whether it is generated per process, per request, or generated
+    once and written to disk or to a database and read back afterwards. Quote the line it is
+    persisted on. A value generated once and persisted lets the recipient join every report this
+    installation has ever sent; a value generated at start-up does not. Say the same for any
+    identifier that rides in a header rather than in the body - an agent string is part of the
+    payload for this purpose.
+  - WHOSE DATA IS IN THE BODY, IF ANYBODY'S? Enumerate every field and resolve each to what it
+    holds. Three answers occur and they are different findings. (a) DEPLOYMENT-LEVEL VALUES ONLY -
+    an install identifier, a version, an operating system, counts - in which case say so plainly;
+    the disclosure that still occurs is the deployment's own network address, which the receiving
+    server sees on every request whether or not the body names it. (b) A RECORD IDENTIFIER - the
+    primary key of a study, a document, an order - which identifies a person indirectly wherever the
+    recipient can also reach the record. (c) A PERSON'S OWN NAME OR ACCOUNT, which the desktop case
+    reaches through a header carrying the workstation user. Say which, field by field, and do not
+    treat (a) as established merely because the field names look technical.
+  - IS THE SENDER RUNNING ON A PERSON'S OWN DEVICE? A server in a data centre and a desktop
+    application on somebody's laptop are the same construct in code and different questions in law.
+    Where it is a desktop or mobile product, a persistent installation identifier is ordinarily
+    WRITTEN TO and READ BACK FROM that person's own equipment, and the storage limb of the ePrivacy
+    rules attaches to that act. NO CLAUSE OF THIS RULE LOOKED FOR THAT WRITE - the clauses reach the
+    transmission, the endpoint, the header, the agent string and the setting - so if the answer here
+    is yes, the storage question is open and unexamined rather than answered. Say which it is, and
+    quote the code that persists the identifier if you find it.
+evidence_template: "{file}:{line} MATCHED A CONSTRUCT IN WHICH THIS PRODUCT'S OWN NON-BROWSER CODE
+  REPORTS SOMETHING ABOUT ITSELF TO A NAMED ADDRESS. What was established depends on which clause
+  matched, and no clause establishes the whole construct on its own. A SEND TO A TELEMETRY-NAMED
+  DESTINATION establishes that an outbound call is made and that the destination is named for a
+  usage, analytics, statistics or telemetry channel - it does NOT establish who operates that
+  address, and an operator-configured collector is frequently the deployment's own host. A
+  TELEMETRY-NAMED IDENTIFIER BOUND TO A URL LITERAL establishes that the address is compiled into
+  the product rather than chosen by the deployment, which is the strongest single thing a pattern
+  can say about the recipient question - it does not establish that anything is ever sent to it. AN
+  IDENTITY-SHAPED HEADER NAME ON A HEADER-SETTING CALL establishes that a header carrying a person
+  rather than a machine is put on outbound requests; it does not establish that a telemetry send
+  exists in this repository at all, and it may equally belong to an audit or an authentication path.
+  A USER-AGENT ASSEMBLY BESIDE AN INSTALLATION-IDENTIFIER NAME establishes that the agent string of
+  some outbound request carries an install-scoped value; whether that value survives a restart is
+  context question 3 and the code on this line does not say. A TELEMETRY SETTING BOUND TO A LITERAL
+  DEFAULT establishes the polarity of the DEFAULT AS SHIPPED and nothing about the deployment, which
+  may have set it either way. WHAT IS NOT ESTABLISHED. FIRST, WHO THE RECIPIENT IS - that is context
+  question 1 and the point of the finding. SECOND, WHETHER ANY PERSON'S DATA TRAVELS: the ordinary
+  payload is deployment-level, and the two anchors that are not are a record identifier and the
+  operator's own user name. THIRD, WHETHER THE SEND HAPPENS - the clauses match different lines,
+  usually in different files, and this rule does not join them. FOURTH, WHETHER A LAWFUL BASIS
+  APPLIES: the detector does not look, and an operator who left a default alone has not thereby
+  chosen one. TWO LIMITS OF THE DETECTOR ITSELF, DISCLOSED BECAUSE THEY ARE NOT VISIBLE FROM A
+  FINDING. (i) The setting clause reads ONE LINE, so a setting whose name and default sit on
+  adjacent lines inside a single bracketed attribute is not reached and its absence from the
+  findings means nothing. (ii) No clause looks for a write to the device the sender runs on, so
+  where the sender is a desktop product the storage question is unexamined rather than answered."
+remediation_template: >
+  This is a candidate for review against GDPR Art. 30(1)(d), Art. 13(1)(e) and Art. 14(1)(e), not a
+
+  determination about this code. First-party telemetry is a legitimate and common design in
+
+  self-hosted software, and the usual outcome of this finding is a written answer plus a default
+
+  change rather than removing the channel.
+
+
+  START WITH THE RECIPIENT QUESTION, because everything else follows from it. Where the address is a
+
+  constant compiled into the product, the vendor receives the payload from every install that has
+  not
+
+  turned the channel off, and no self-hosted operator chose that. It belongs in field (d) of the
+
+  record by name, and it belongs in what the operator's own notice tells people. Where the address
+  is
+
+  one the operator configured, say so - the honest record row may be that there is no disclosure
+
+  outside the controller at all.
+
+
+  THEN WRITE DOWN WHAT TRAVELS, field by field, in the notice and in the record. Include what rides
+
+  in the headers: an agent string that embeds an install identifier is part of the payload, and a
+
+  header carrying the workstation user's name is a person's data whatever the body holds.
+
+
+  THE CHANGES THAT ARE ORDINARILY AVAILABLE, in the order they are usually worth making:
+
+
+  1. DECIDE WHETHER THE IDENTIFIER HAS TO PERSIST. A count of installations needs no value that
+     survives a restart. Where longitudinal measurement is genuinely needed, say so and say for how
+     long the recipient keeps it; where it is not, a per-process value answers the same question and
+     removes the largest single item in this payload.
+  2. SHIP THE SETTING OFF, OR ASK. An operator who never read the source has not agreed to anything
+     by leaving a default alone. Where the channel stays on by default, say so at the top of the
+     install documentation rather than in a configuration reference, and make the switch findable.
+  3. TAKE THE PERSON OUT OF THE HEADERS. A workstation user name on every outbound request is rarely
+     needed by the receiving service and is the item most likely to be a surprise to the operator.
+  4. COUNT THE CHANNELS. A version check is a request to the vendor like any other; where its agent
+     string carries the same identifier the usage channel does, turning usage collection off does not
+     stop the vendor seeing the install, and a notice that says it does is wrong about a fact this
+     finding can settle.
+  5. WHERE THE SENDER RUNS ON A PERSON'S OWN DEVICE, treat the identifier's storage as its own
+     question rather than as part of this one. This finding did not look at it.
+data_categories:
+  - user.unique_id
+  - user.behavior
+  - user.device
+  - user.name
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 1
+      class: per-location
+    - question: 2
+      class: enumeration
+      item: channel and its shipped default
+      item_source: reading
+    - question: 3
+      class: enumeration
+      item: identifier in the message body
+      item_source: reading
+    - question: 4
+      class: enumeration
+      item: field of the message body
+      item_source: reading

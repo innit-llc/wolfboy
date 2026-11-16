@@ -1,0 +1,501 @@
+checklist_id: cra-reporting-readiness-14
+title: CRA Article 14 - reporting readiness for actively exploited vulnerabilities and severe incidents
+law: Regulation (EU) 2024/2847 (Cyber Resilience Act)
+source_url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+checked_at: 2026-09-07
+scope_note: "**Scope declaration.** This checklist asks one kind of question and no other: **do the
+  manufacturer's own declared documents describe a procedure able to do what Article 14 requires,
+  before there is anything to report?** The documents it is answered from are the ones a project
+  actually publishes - a security policy such as a SECURITY.md, an incident-response or
+  vulnerability-handling policy, a runbook, product documentation, a status page, a support page.
+  **Every item is answered by reading those documents.** No item is answered from source code, and
+  no item carries a census category, because nothing in a repository shows whether a reporting
+  procedure exists. **What this checklist can never say, and the single likeliest way to misuse
+  it.** It cannot say whether any notification was ever submitted, whether a deadline was met, or
+  whether the manufacturer has ever become aware of an actively exploited vulnerability or a severe
+  incident. Those are events, and no scan sees events. **A finding produced here is a statement
+  about a document, phrased as a readiness question** - \"the documents do not state who the
+  notification goes to\" - and never a statement that a notification was or was not made, and never
+  a conclusion about whether the law has been met. A document that answers every item here has not
+  been shown to have discharged anything: Article 14 is discharged by notifying, not by writing that
+  one would. **The dates, stated so that they read the same before and after they fall.** Article 14
+  applies from 11 September 2026; the rest of the Regulation applies from 11 December 2027, and
+  Chapter IV (Articles 35 to 51) from 11 June 2026. That split is Article 71(2), and it is why this
+  checklist is worded differently from the other Cyber Resilience Act checklists in this bundle:
+  those cover duties that apply from 11 December 2027 and their findings are worded as preparation,
+  while Article 14 is a duty with its own earlier date. **A finding here is still a readiness
+  question about a document rather than a shortfall**, for the reason in the paragraph above, but it
+  must not be softened into a duty that has not started. Article 69(3) is the other half of the
+  timing and it works the other way: by way of derogation from Article 69(2), Article 14 reaches
+  products with digital elements that were placed on the market **before** 11 December 2027, so a
+  procedure that covers only products released after that date does not cover what Article 14 asks
+  of it. **Who the duty is addressed to is the shared scope gate's question, and this checklist does
+  not re-litigate it.** Article 14 addresses \"a manufacturer\". Whether the party is a manufacturer
+  under Article 3(13), or is deemed one under Article 21 or Article 22, or is instead a plain
+  importer or distributor, or is an open-source software steward reached only to the extent of
+  Article 24(3), is decided on the gate's limbs and the quotes beneath them. Read the answer there,
+  not here. **Article 15 - voluntary reporting - is deliberately not an item, and is recorded here
+  so that a reader does not mistake one route for the other.** Article 15 lets manufacturers and any
+  other natural or legal person notify, on a voluntary basis and to a CSIRT designated as
+  coordinator or to ENISA, any vulnerability contained in a product with digital elements, cyber
+  threats that could affect a product's risk profile, any incident having an impact on the security
+  of the product, and near misses that could have resulted in such an incident. Its subject matter
+  is therefore wider than Article 14's and is not limited to what falls short of the mandatory
+  thresholds; what makes it a different thing is that it is a route rather than a duty, and taking
+  it is not discharging Article 14. Two things about it are **context and not law**, both read on
+  2026-09-06 and both dated because they move: the European Commission's Cyber Resilience Act
+  reporting page (https://digital-strategy.ec.europa.eu/en/policies/cra-reporting, page last updated
+  31 July 2026) states that the single reporting platform \"will be operational by 11 September
+  2026\" and that functional and security testing are under way; ENISA's single reporting platform
+  pages state that the platform is \"scheduled to be\" operational from that date, that **only
+  mandatory notifications can be submitted at launch**, and that functionality for voluntary
+  notifications is to come in a future phase. So on the day Article 14 starts to apply, the Article
+  15 route named in this paragraph is not available through that platform. Neither page is a source
+  of law, neither is quoted in any item, and neither settles anything about a document. **Do not
+  restate either as a present-tense fact about today**: say what the page said and when it was read.
+  **Article 64(10) - the administrative-fine shield for microenterprises and small enterprises - and
+  why no item quotes it.** Article 64(10) derogates from the administrative fines in the preceding
+  paragraphs of Article 64 so that they do not apply to (a) manufacturers that qualify as
+  microenterprises or small enterprises, with regard to any failure to meet the deadline referred to
+  in Article 14(2), point (a), or Article 14(4), point (a) - the two 24-hour early warnings, and
+  those two alone - or to (b) any infringement of the Regulation by open-source software stewards.
+  **The chapeau of that paragraph was corrected**: as published in the Official Journal it derogates
+  from \"paragraphs 3 to 9\", and a corrigendum of 2 July 2025 (OJ L, 2025/90555, 2.7.2025) replaced
+  that with \"paragraphs 2 to 9\". The correction is load-bearing, because the fines for an
+  infringement of Article 14 sit in Article 64(2): without it the shield does not reach them. This
+  checklist's `source_url` is the Official Journal text as published, which still carries the
+  superseded words, so **no item quotes Article 64(10)** - a quote here is verified against that
+  document, and quoting a corrected provision from a source that does not carry the correction would
+  put words in the law's mouth. The corrected text is in the consolidated version at
+  https://publications.europa.eu/resource/celex/02024R2847-20241120, where the paragraph carries the
+  corrigendum marker; that document also records the other two corrigenda to this Regulation, and
+  neither of those touches any provision quoted in this file (checked 2026-09-07, quote by quote,
+  against both documents). **What the shield is, and what it is not.** It is a limit on
+  administrative fines under Article 64 and nothing else. It does not remove the duty in Article
+  14(2), point (a), or Article 14(4), point (a); it does not reach the 72-hour notifications, the
+  final reports, or the duty to inform users under Article 14(8); and Member States set their own
+  penalties under Article 64(1), which this checklist has not read. **No item, note or finding may
+  be worded as advice that a small manufacturer can skip or defer the early warning.** Whether the
+  party is a microenterprise or a small enterprise is a fact about the business, so it is asked of
+  the person running the scan or read from a declared document, and it is never inferred from source
+  vocabulary - the same rule that keeps every other item here document-answered. **What this
+  checklist does NOT cover.** It does not cover Article 15 beyond the note above, or Article 16
+  beyond the words Article 14(7) uses to name the platform and its end-points - the dissemination
+  procedure, the withholding grounds and the delegated act made under Article 14(9) are duties of
+  CSIRTs and of the Commission, not of a manufacturer. **It does not cover Article 14(6)**, which
+  lets the CSIRT designated as coordinator that initially received a notification request the
+  manufacturer to provide an intermediate report on relevant status updates about the vulnerability
+  or incident: it is manufacturer-facing, but it bites only after a notification has been made and
+  only where that CSIRT asks, so there is no readiness question a document can answer before either
+  has happened - a procedure cannot be checked against a request nobody has sent. It does not cover
+  Article 17 (other provisions related to reporting) or Article 24 (open-source software stewards),
+  neither of which any checklist in this bundle covers today, and it does not cover the
+  vulnerability handling requirements of Annex I Part II, one point of which - the software bill of
+  materials - is covered by `cra-sbom-annex-i-ii-1`. It does not cover national penalty regimes, the
+  designation of any Member State's CSIRT, or the registration procedure for the reporting platform.
+  It states no format for a notification: Article 14(10) lets the Commission specify the format and
+  procedures by implementing act, and whether such an act has been adopted was **not** established
+  when this checklist was written on 2026-09-07 and stands as an open question - until it is
+  answered, no item, note or finding here may require a named format. The one format phrase that is
+  in the Regulation itself is in Article 14(8), quoted at the item for it."
+applicability_ref: cra-scope
+items:
+  - id: art-3-42-actively-exploited-vulnerability
+    article: 3, point (42)
+    quote: "'actively exploited vulnerability' means a vulnerability for which there is reliable
+      evidence that a malicious actor has exploited it in a system without permission of the system
+      owner;"
+    cite: CRA Art. 3(42)
+    url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+    checked_at: 2026-09-07
+    question: Do the documents describe what triggers a notification in terms that match this definition
+      - reliable evidence that a malicious actor has exploited the vulnerability in a system without
+      permission of the system owner - rather than treating every reported vulnerability, or only a
+      vulnerability the manufacturer has already fixed, as the trigger?
+    applicability_note: "**Article 14 applies from 11 September 2026** (Article 71(2)) and reaches
+      products placed on the market before 11 December 2027 (Article 69(3)), so this item is asked
+      of a document whichever side of that date it is read on. **This item is the threshold, and it
+      is the one that decides whether a procedure reports everything or nothing.** Two failures are
+      equally real and a reading must name which one it sees. A document whose trigger is \"any
+      vulnerability reported to us\" describes a procedure that would notify far beyond Article
+      14(1), which is a burden on the manufacturer and on the CSIRT rather than a shortfall against
+      the Regulation. A document whose trigger is narrower than the definition - exploitation the
+      manufacturer has itself confirmed, or exploitation of a released version only, or a fixed
+      severity score - describes a procedure that can miss what Article 14(1) covers. **The
+      definition turns on evidence of exploitation, not on severity and not on disclosure.** A
+      vulnerability with no evidence of exploitation is outside the mandatory route of Article 14
+      however severe it is; the voluntary route of Article 15 is where it could go, and `scope_note`
+      says what is and is not known about that route's availability. **Severity is a threshold in
+      this Regulation only on the incident side, in Article 14(5).** It appears on the vulnerability
+      side as report content, in Article 14(2), point (c)(i), which
+      `art-14-2-c-vulnerability-final-report-14-days` quotes - content of a report that is due, not
+      a test of whether one is due. So a document that grades vulnerabilities by severity has said
+      something this checklist can read at that item, and nothing about whether a notification is
+      owed. **Silence is `absent`, and a trigger stated in other words is not.** Where the documents
+      describe a vulnerability-reporting procedure and never say what makes one notifiable, that is
+      `absent`. Where they state a trigger in their own vocabulary - \"known exploitation in the
+      wild\", \"evidence of active exploitation against our users\" - read it against the definition
+      and record what it does and does not reach, rather than requiring the Regulation's words."
+  - id: art-14-2-a-vulnerability-early-warning-24-hours
+    article: 14(1) and 14(2), point (a)
+    quote: "A manufacturer shall notify any actively exploited vulnerability contained in the product
+      with digital elements that it becomes aware of simultaneously to the CSIRT designated as
+      coordinator, in accordance with paragraph 7 of this Article, and to ENISA. The manufacturer
+      shall notify that actively exploited vulnerability via the single reporting platform
+      established pursuant to Article 16. 2. For the purposes of the notification referred to in
+      paragraph 1, the manufacturer shall submit: (a) an early warning notification of an actively
+      exploited vulnerability, without undue delay and in any event within 24 hours of the
+      manufacturer becoming aware of it, indicating, where applicable, the Member States on the
+      territory of which the manufacturer is aware that their product with digital elements has been
+      made available;"
+    cite: CRA Art. 14(1) and Art. 14(2), point (a)
+    url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+    checked_at: 2026-09-07
+    question: Do the documents describe a written step that produces an early warning notification
+      within 24 hours of the manufacturer becoming aware of an actively exploited vulnerability, and
+      do they say who is responsible for it and what it carries - including, where applicable, the
+      Member States in which the product has been made available?
+    applicability_note: "**Article 14 applies from 11 September 2026** (Article 71(2)) and reaches
+      products placed on the market before 11 December 2027 (Article 69(3)). **The quote above opens
+      with Article 14(1), the duty itself**, then Article 14(2)'s chapeau, then point (a). Article
+      14(1) is what names the trigger, the two addressees - the CSIRT designated as coordinator and
+      ENISA - and the single reporting platform; point (a) is the 24-hour step this item asks about.
+      Where the notification is sent is `art-14-7-addressees-and-single-reporting-platform`. **The
+      clock starts at awareness, and a document that leaves awareness undefined leaves the clock
+      undefined.** The words are \"within 24 hours of the manufacturer becoming aware of it\",
+      preceded by \"without undue delay\", so 24 hours is a ceiling and not an allowance. A
+      procedure that starts its clock at triage, at a maintainer's next working day, or at the
+      publication of an advisory has moved the starting point the Regulation fixes. Whether the
+      documents define the moment of awareness at all is part of what this item asks. **Twenty-four
+      hours is a wall-clock period, and the readiness question that follows is who is reachable.** A
+      procedure that names one person, with no cover for absence, is a procedure a reader can see
+      will not hold across a weekend; that observation belongs in the reasoning, as a description of
+      what the document says, and never as a conclusion about the law. **The Member State list is
+      qualified by \"where applicable\" and is not a completeness test.** Read whether the documents
+      show the manufacturer could produce it, not whether they contain one. **The Article 64(10)
+      shield is not a reason to answer this item any differently.** That paragraph limits
+      administrative fines for a microenterprise or small enterprise that misses this deadline; it
+      does not remove the step, and a document that presents the early warning as optional is
+      describing something narrower than Article 14(2), point (a). `scope_note` sets out the shield,
+      its corrigendum, and why no item quotes it."
+  - id: art-14-2-b-vulnerability-notification-72-hours
+    article: 14(2), points (a) and (b)
+    quote: "For the purposes of the notification referred to in paragraph 1, the manufacturer shall
+      submit: (a) an early warning notification of an actively exploited vulnerability, without
+      undue delay and in any event within 24 hours of the manufacturer becoming aware of it,
+      indicating, where applicable, the Member States on the territory of which the manufacturer is
+      aware that their product with digital elements has been made available; (b) unless the
+      relevant information has already been provided, a vulnerability notification, without undue
+      delay and in any event within 72 hours of the manufacturer becoming aware of the actively
+      exploited vulnerability, which shall provide general information, as available, about the
+      product with digital elements concerned, the general nature of the exploit and of the
+      vulnerability concerned as well as any corrective or mitigating measures taken, and corrective
+      or mitigating measures that users can take, and which shall also indicate, where applicable,
+      how sensitive the manufacturer considers the notified information to be;"
+    cite: CRA Art. 14(2), points (a) and (b)
+    url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+    checked_at: 2026-09-07
+    question: Do the documents describe a second, fuller notification within 72 hours of the
+      manufacturer becoming aware of the actively exploited vulnerability, and do they show the
+      manufacturer could assemble what that notification is to provide - the product concerned, the
+      general nature of the exploit and of the vulnerability, corrective or mitigating measures
+      taken and measures users can take, and how sensitive the manufacturer considers the
+      information to be?
+    applicability_note: "**Article 14 applies from 11 September 2026** (Article 71(2)) and reaches
+      products placed on the market before 11 December 2027 (Article 69(3)). **The quote above opens
+      with Article 14(2)'s chapeau and runs through point (a) to reach this point (b).** The chapeau
+      is what carries the addressee and the obligation verb - \"the manufacturer shall submit\" -
+      which point (b) on its own does not, and Article 14(2) is drafted so that the chapeau cannot
+      be quoted next to point (b) without the text in between. Point (b) is the part this item asks
+      about; point (a) is `art-14-2-a-vulnerability-early-warning-24-hours`. **Both clocks run from
+      the same moment**, the manufacturer becoming aware, so the 72 hours is not counted from the
+      early warning. A document that describes the second notification as due \"48 hours after the
+      first\" has described a different deadline, and that is a difference worth recording even
+      though it can coincide. **\"Unless the relevant information has already been provided\" is a
+      real qualifier**, so a procedure whose early warning already carried this content has not
+      skipped a step. **The content list is qualified twice over** - \"as available\" for the
+      general information and \"where applicable\" for the sensitivity indication - so this item is
+      not a test that a document enumerates six fields. What it asks is whether the documents show
+      the manufacturer could assemble that information at all: whether someone is named to write it,
+      whether the product and version are identifiable, and whether the mitigation advice to users
+      has a route out. **The sensitivity indication has a consequence that a reader should know
+      about but must not turn into a further item.** Under Article 16(2) the CSIRT that first
+      receives a notification may delay disseminating it in light of the sensitivity the
+      manufacturer indicated. That is a CSIRT's decision under a provision this checklist does not
+      cover; it is recorded here only so that the sensitivity field is not read as decoration.
+      **Article 16(2) cross-refers that sensitivity to \"Article 14(2), point (a)\", and point (a)
+      carries no sensitivity element.** The only sensitivity indication in Article 14(2) is in point
+      (b), which this item quotes. The reading that Article 16(2) means point (b) is the one that
+      makes the cross-reference work, and it is a reading rather than a settled point: the Official
+      Journal text says point (a) and no corrigendum has changed it as at this item's `checked_at`
+      date. It is disclosed here rather than smoothed over, because this file spends a paragraph of
+      `scope_note` on what an uncorrected cross-reference in Article 64(10) cost."
+  - id: art-14-2-c-vulnerability-final-report-14-days
+    article: 14(2)
+    quote: "For the purposes of the notification referred to in paragraph 1, the manufacturer shall
+      submit: (a) an early warning notification of an actively exploited vulnerability, without
+      undue delay and in any event within 24 hours of the manufacturer becoming aware of it,
+      indicating, where applicable, the Member States on the territory of which the manufacturer is
+      aware that their product with digital elements has been made available; (b) unless the
+      relevant information has already been provided, a vulnerability notification, without undue
+      delay and in any event within 72 hours of the manufacturer becoming aware of the actively
+      exploited vulnerability, which shall provide general information, as available, about the
+      product with digital elements concerned, the general nature of the exploit and of the
+      vulnerability concerned as well as any corrective or mitigating measures taken, and corrective
+      or mitigating measures that users can take, and which shall also indicate, where applicable,
+      how sensitive the manufacturer considers the notified information to be; (c) unless the
+      relevant information has already been provided, a final report, no later than 14 days after a
+      corrective or mitigating measure is available, including at least the following: (i) a
+      description of the vulnerability, including its severity and impact; (ii) where available,
+      information concerning any malicious actor that has exploited or that is exploiting the
+      vulnerability; (iii) details about the security update or other corrective measures that have
+      been made available to remedy the vulnerability."
+    cite: CRA Art. 14(2)
+    url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+    checked_at: 2026-09-07
+    question: Do the documents describe a final report for an actively exploited vulnerability, due no
+      later than 14 days after a corrective or mitigating measure is available, and do they cover
+      what it is to contain - a description of the vulnerability with its severity and impact, what
+      is known about any malicious actor exploiting it, and details of the security update or other
+      corrective measures made available?
+    applicability_note: '**Article 14 applies from 11 September 2026** (Article 71(2)) and reaches
+      products placed on the market before 11 December 2027 (Article 69(3)). **The quote above is
+      the whole of Article 14(2)**, because the chapeau that carries the addressee and the
+      obligation verb stands before points (a) and (b) and cannot be quoted next to point (c)
+      without them. Point (c) is the part this item asks about. **The 14 days run from a different
+      event than the other two deadlines, and this is the clock most often misread.** It starts when
+      a corrective or mitigating measure is available - not when the manufacturer became aware, not
+      when the vulnerability was disclosed, and not when a release was published. A mitigating
+      measure counts, so a documented workaround can start the clock before any patch exists. **The
+      three sub-points are a floor, expressly**: "including at least the following". A procedure
+      that produces more is not answering less. **Sub-point (ii) is qualified "where available"**,
+      so the absence of anything known about a malicious actor is not a gap in the report. **This
+      item is about a procedure, not about a past report.** Where the documents describe how a
+      vulnerability is written up and published but say nothing about a report to the authorities
+      named in Article 14(7), record what they do describe and what is missing from it; a published
+      advisory is not the final report this point names, though the same material can feed both.'
+  - id: art-14-4-severe-incident-track
+    article: 14(3) and 14(4)
+    quote: "A manufacturer shall notify any severe incident having an impact on the security of the
+      product with digital elements that it becomes aware of simultaneously to the CSIRT designated
+      as coordinator, in accordance with paragraph 7 of this Article, and to ENISA. The manufacturer
+      shall notify that incident via the single reporting platform established pursuant to Article
+      16. 4. For the purposes of the notification referred to in paragraph 3, the manufacturer shall
+      submit: (a) an early warning notification of a severe incident having an impact on the
+      security of the product with digital elements, without undue delay and in any event within 24
+      hours of the manufacturer becoming aware of it, including at least whether the incident is
+      suspected of being caused by unlawful or malicious acts, which shall also indicate, where
+      applicable, the Member States on the territory of which the manufacturer is aware that their
+      product with digital elements has been made available; (b) unless the relevant information has
+      already been provided, an incident notification, without undue delay and in any event within
+      72 hours of the manufacturer becoming aware of the incident, which shall provide general
+      information, where available, about the nature of the incident, an initial assessment of the
+      incident, as well as any corrective or mitigating measures taken, and corrective or mitigating
+      measures that users can take, and which shall also indicate, where applicable, how sensitive
+      the manufacturer considers the notified information to be; (c) unless the relevant information
+      has already been provided, a final report, within one month after the submission of the
+      incident notification under point (b), including at least the following: (i) a detailed
+      description of the incident, including its severity and impact; (ii) the type of threat or
+      root cause that is likely to have triggered the incident; (iii) applied and ongoing mitigation
+      measures."
+    cite: CRA Art. 14(3) and Art. 14(4)
+    url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+    checked_at: 2026-09-07
+    question: Do the documents describe a severe-incident track as well as a vulnerability track - an
+      early warning within 24 hours of the manufacturer becoming aware of the incident, an incident
+      notification within 72 hours, and a final report within one month of that notification - or do
+      they describe only the handling of vulnerabilities?
+    applicability_note: "**Article 14 applies from 11 September 2026** (Article 71(2)) and reaches
+      products placed on the market before 11 December 2027 (Article 69(3)). **The quote above opens
+      with Article 14(3), the duty itself**, and runs through the whole of Article 14(4). Article
+      14(3) is what names the trigger, the two addressees - the CSIRT designated as coordinator and
+      ENISA - and the single reporting platform for the incident track; Article 14(4) is the three
+      deadlines this item asks about. **The commonest gap this item finds is a whole missing
+      track.** A great many projects publish a vulnerability-disclosure policy and nothing about
+      incidents. Article 14 has two duties with two triggers: paragraph 1 for an actively exploited
+      vulnerability, paragraph 3 for a severe incident having an impact on the security of the
+      product. A document that covers only the first has answered half of Article 14, and saying
+      which half is the point of this item. **The three deadlines do not run the way the
+      vulnerability track's do**, and the third is the one to check: the final report is due within
+      one month **after the submission of the incident notification under point (b)**, not after a
+      measure becomes available. The 24-hour and 72-hour clocks both run from the manufacturer
+      becoming aware of the incident. **Point (a) carries one content element the vulnerability
+      early warning does not**: whether the incident is suspected of being caused by unlawful or
+      malicious acts. A procedure that has no way to form that view within 24 hours is worth
+      recording as such. **What \"severe\" means is the next item's question**, and the two are
+      answered separately: this one asks whether the track exists, that one asks whether the
+      documents state the threshold that puts an incident on it. **The Article 64(10) shield reaches
+      the 24-hour early warning in point (a) and nothing else in this paragraph.** See `scope_note`;
+      it is not a reason to record the step as optional."
+  - id: art-14-5-when-an-incident-is-severe
+    article: 14(5)
+    quote: "For the purposes of paragraph 3, an incident having an impact on the security of the product
+      with digital elements shall be considered to be severe where: (a) it negatively affects or is
+      capable of negatively affecting the ability of a product with digital elements to protect the
+      availability, authenticity, integrity or confidentiality of sensitive or important data or
+      functions; or (b) it has led or is capable of leading to the introduction or execution of
+      malicious code in a product with digital elements or in the network and information systems of
+      a user of the product with digital elements."
+    cite: CRA Art. 14(5)
+    url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+    checked_at: 2026-09-07
+    question: Where the documents describe an incident-reporting procedure, do they state which
+      incidents go on the Article 14(3) track in terms that reach this two-limb test - an effect, or
+      a capability of effect, on availability, authenticity, integrity or confidentiality of
+      sensitive or important data or functions, or the introduction or execution of malicious code
+      in the product or in a user's own network and information systems?
+    applicability_note: "**Article 14 applies from 11 September 2026** (Article 71(2)) and reaches
+      products placed on the market before 11 December 2027 (Article 69(3)). **The severity test is
+      here, in Article 14(5), and not in the definitions article.** Article 3 defines \"incident\"
+      and \"incident having an impact on the security of the product with digital elements\"; what
+      makes such an incident **severe** is stated only in this paragraph. A reading that goes
+      looking for a definition of \"severe incident\" in Article 3 will not find one, and this note
+      exists so that its absence is not read as the Regulation leaving the term open. **Both limbs
+      are drafted with a capability arm** - \"is capable of negatively affecting\", \"is capable of
+      leading to\" - so an incident that caused no harm can still be on the track. A document whose
+      threshold is stated purely in realised harm (\"incidents that resulted in a breach of customer
+      data\") describes something narrower than the paragraph, and that is what to record. **The two
+      limbs are joined by \"or\"**, so meeting either is enough, and a document that treats the
+      malicious-code limb as an aggravating factor rather than a trigger has read them as
+      cumulative. **This item and the one before it must not both be answered out of the same gap.**
+      Where the documents describe no incident-reporting procedure at all, the missing track is the
+      previous item's finding, and there is no threshold here to read: record this item
+      `unresolved`, naming what was missing, so that one gap is counted once. Where an incident
+      procedure **is** described and states no threshold, or a threshold narrower than this
+      paragraph, that is `absent`, and the reasoning names which limb the document does not reach.
+      **Nothing a document fails to say takes this item off the product.** A verdict that the
+      requirement does not reach this product at all would have to rest on a fact the person running
+      the scan affirmatively stated, and this item carries no such condition."
+  - id: art-14-7-addressees-and-single-reporting-platform
+    article: 14(7), first subparagraph
+    quote: The notifications referred to in paragraphs 1 and 3 of this Article shall be submitted via
+      the single reporting platform referred to in Article 16 using one of the electronic
+      notification end-points referred to in Article 16(1). The notification shall be submitted
+      using the electronic notification end-point of the CSIRT designated as coordinator of the
+      Member State where the manufacturers have their main establishment in the Union and shall be
+      simultaneously accessible to ENISA.
+    cite: CRA Art. 14(7), first subparagraph
+    url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+    checked_at: 2026-09-07
+    question: Do the documents name where a notification actually goes - the CSIRT designated as
+      coordinator of the Member State of the manufacturer's main establishment in the Union, with
+      the notification simultaneously accessible to ENISA, submitted through the single reporting
+      platform - rather than naming only an internal mailbox, a security contact address, or a
+      national cyber agency in general?
+    applicability_note: "**Article 14 applies from 11 September 2026** (Article 71(2)) and reaches
+      products placed on the market before 11 December 2027 (Article 69(3)). **This is the item most
+      likely to be `absent` in a document that otherwise looks complete.** A
+      vulnerability-disclosure policy names how a reporter reaches the manufacturer. Article 14 asks
+      the opposite direction: where the manufacturer sends a notification. The two are different
+      addresses and a document may state one and not the other. **One submission reaches both
+      addressees.** The paragraph is not two filings: the notification goes to the coordinator
+      CSIRT's end-point and is simultaneously accessible to ENISA. A document describing a separate
+      report to ENISA is not wrong about the addressees, but a document that names ENISA alone has
+      not named the CSIRT. **The platform's operational status is context and is not this item's
+      question.** As stated in `scope_note` and dated there, the European Commission's reporting
+      page and ENISA's pages described the single reporting platform as due to be operational on 11
+      September 2026 and described only mandatory notifications as accepted at launch, both read on
+      2026-09-06. This item asks what the documents say, not whether the platform answered today; do
+      not record an answer here on the strength of either page, and do not restate either page as a
+      present-tense fact. **Article 14(7) has more subparagraphs than the one quoted**, including
+      the ordered fallback for a manufacturer with no main establishment in the Union. The next item
+      carries that."
+  - id: art-14-7-main-establishment-in-the-union
+    article: 14(7), second subparagraph
+    quote: For the purposes of this Regulation, a manufacturer shall be considered to have its main
+      establishment in the Union in the Member State where the decisions related to the
+      cybersecurity of its products with digital elements are predominantly taken. If such a Member
+      State cannot be determined, the main establishment shall be considered to be in the Member
+      State where the manufacturer concerned has the establishment with the highest number of
+      employees in the Union.
+    cite: CRA Art. 14(7), second subparagraph
+    url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+    checked_at: 2026-09-07
+    question: Do the documents identify which Member State is the manufacturer's main establishment in
+      the Union - the one where decisions on the cybersecurity of its products are predominantly
+      taken - or, where there is no main establishment in the Union, which CSIRT the Article 14(7)
+      fallback order points to?
+    applicability_note: "**Article 14 applies from 11 September 2026** (Article 71(2)) and reaches
+      products placed on the market before 11 December 2027 (Article 69(3)). **This is a fact about
+      the business, and it is asked of the person running the scan or read from a declared document
+      - never inferred from source vocabulary.** A country name in a licence header, a top-level
+      domain, a timezone in a configuration file and a maintainer's location in a commit are all
+      consistent with any answer. Where the documents do not say, the honest result is `unresolved`
+      naming what was missing, and the question is put to the person running the scan; guessing it
+      either way picks a CSIRT for them. **The test is where cybersecurity decisions are
+      predominantly taken**, which is neither the place of incorporation nor the largest office by
+      default. The employee-count rule in the second sentence is a fallback that applies only where
+      the first test cannot be settled, and reading it as the primary test is the likeliest
+      misreading of this subparagraph. **A manufacturer with no main establishment in the Union is
+      not outside the paragraph.** The third subparagraph of Article 14(7), which this item does not
+      quote, sets an ordered fallback: the Member State of the authorised representative acting for
+      the highest number of the manufacturer's products, then of the importer placing the highest
+      number on the market, then of the distributor making the highest number available, then where
+      the highest number of users are located. A document that says \"we are not established in the
+      Union\" has therefore not answered this item; what it needs to name is the resulting CSIRT,
+      and the Regulation lets a manufacturer that reported under the last of those limbs keep
+      reporting to the same CSIRT afterwards."
+  - id: art-14-8-informing-users
+    article: 14(8), first sentence
+    quote: After becoming aware of an actively exploited vulnerability or a severe incident having an
+      impact on the security of the product with digital elements, the manufacturer shall inform the
+      impacted users of the product with digital elements, and where appropriate all users, of that
+      vulnerability or incident and, where necessary, of any risk mitigation and corrective measures
+      that the users can deploy to mitigate the impact of that vulnerability or incident, where
+      appropriate in a structured, machine-readable format that is easily automatically processable.
+    cite: CRA Art. 14(8)
+    url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+    checked_at: 2026-09-07
+    question: Do the documents describe how impacted users, and where appropriate all users, are told
+      about an actively exploited vulnerability or a severe incident and about the mitigation and
+      corrective measures they can deploy - and do they name a channel the manufacturer can actually
+      reach users through?
+    applicability_note: "**Article 14 applies from 11 September 2026** (Article 71(2)) and reaches
+      products placed on the market before 11 December 2027 (Article 69(3)). **The quote above is
+      the first sentence of Article 14(8) and not the whole paragraph.** The second sentence lets
+      the notified CSIRTs designated as coordinators provide the information to users themselves
+      where the manufacturer fails to do so in a timely manner and where that is considered
+      proportionate and necessary. That is a CSIRT's power, not a manufacturer's duty, so it is not
+      asked of any document. **This duty is owed to users and is separate from the notifications to
+      the authorities.** It is the one item on this checklist a project may already be answering
+      without knowing it: a security advisory feed, a release-notes channel, a status page or a
+      mailing list can all be what this paragraph describes. Record what the documents name. **No
+      deadline is stated in the paragraph**, only \"after becoming aware\", so an answer must not
+      import the 24-hour or 72-hour clocks into it. What can be read is whether the channel exists
+      and whether the documents say who decides to use it. **\"Impacted users, and where appropriate
+      all users\" is a scope the documents can be read against**: a channel that reaches only paying
+      customers, or only subscribers to a list, is narrower than the paragraph where the product
+      also has users the manufacturer does not know. That is a description of reach and not a
+      determination about the law. **The machine-readable clause is qualified**: \"where appropriate
+      in a structured, machine-readable format that is easily automatically processable\". So a
+      plain-language advisory is not a shortfall by itself, and this item may never be turned into a
+      requirement for a named machine-readable format - the Regulation names none."
+  - id: art-69-3-products-already-on-the-market
+    article: 69(3)
+    quote: By way of derogation from paragraph 2 of this Article, the obligations laid down in Article
+      14 shall apply to all products with digital elements that fall within the scope of this
+      Regulation that have been placed on the market before 11 December 2027.
+    cite: CRA Art. 69(3)
+    url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+    checked_at: 2026-09-07
+    question: Do the documents put products that are already released, including versions the
+      manufacturer no longer actively develops, inside the reporting procedure - or is the procedure
+      written as applying only to products or releases from some future date?
+    applicability_note: "**Article 14 applies from 11 September 2026** (Article 71(2)), and this
+      paragraph is why that date reaches backwards. Article 69(2) is the ordinary transitional rule:
+      a product placed on the market before 11 December 2027 is subject to the Regulation only if it
+      is substantially modified from that date. Article 69(3) takes Article 14 out of that rule, so
+      the reporting duties reach every in-scope product already on the market, substantial
+      modification or not. **This item is the one that catches a procedure scoped to the wrong
+      population.** A document that says the procedure applies \"to products released under the new
+      process\", \"from our next major version\", or \"to supported releases\" is describing a
+      narrower population than Article 14 reaches. What \"supported\" means is the manufacturer's
+      own support-period declaration under a different provision, and it does not limit this
+      paragraph. **What this item does not ask.** It does not ask whether the Regulation reaches any
+      particular product - that is the shared scope gate's question, and Article 69(3) is expressly
+      limited to products \"that fall within the scope of this Regulation\". A product outside
+      Article 2 is not brought in by this paragraph. **A document that never states which products
+      the procedure covers is answered `absent`, and the reason is that there is something to
+      read.** The procedure's own scope statement is the thing being looked for, so its absence is
+      itself the finding: a reader of that document cannot tell whether last year's release is
+      inside the procedure or outside it."

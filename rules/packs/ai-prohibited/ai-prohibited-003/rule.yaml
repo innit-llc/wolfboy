@@ -1,0 +1,282 @@
+id: ai-prohibited-003
+pack: ai-prohibited
+short_name: Race or belief labels that may come from biometric data
+problem_line:
+  text: Sensitive traits deduced from a person's biometric data
+fix_line: Remove race, political, religious, union, sex-life and orientation labels from per-person
+  output and stored values.
+title: Protected-characteristic label named, screened against AI Act Art. 5(1)(g) - biometric input
+  needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 5(1)(g) - addressed to providers (Art. 3(3)) AND
+      deployers (Art. 3(4)) alike, unlike the Art. 50 transparency duties which split the two: the
+      provision prohibits 'the placing on the market, the putting into service for this specific
+      purpose, or the use of biometric categorisation systems that categorise individually natural
+      persons based on their biometric data to deduce or infer their race, political opinions, trade
+      union membership, religious or philosophical beliefs, sex life or sexual orientation; this
+      prohibition does not cover any labelling or filtering of lawfully acquired biometric datasets,
+      such as images, based on biometric data or categorizing of biometric data in the area of law
+      enforcement'. Quoted from the Official Journal text (CELEX 32024R1689), retrieved 2026-07-27
+      from the Publications Office cellar; earlier drafts of this rule reproduced the Guidelines'
+      rendering, which prints 'sex-life' and 'categorising'. The list of six characteristics is
+      closed: age, gender, skin, eye or hair colour are not on it. Art. 5 sits in Chapter II, which
+      has applied since 2025-02-02 (Art. 113, second subparagraph, point (a))."
+    url: https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-5
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "Commission Guidelines on prohibited artificial intelligence practices established by
+      Regulation (EU) 2024/1689 (AI Act), C(2025) 5052 final, 29.7.2025 - para. 273 (five cumulative
+      conditions: a placing on the market, putting into service for this specific purpose or use; a
+      biometric categorisation system; individual categorisation of persons; based on their
+      biometric data; to deduce or infer one of the six listed characteristics); para. 274 ('the
+      prohibition, therefore, applies to both providers and deployers of AI systems, each within
+      their respective responsibilities'); para. 277 (Art. 3(40) definition, and its cumulative
+      'ancillary to another commercial service AND strictly necessary for objective technical
+      reasons' exclusion); para. 280 (AR try-on filters and social-network face filters given as
+      permitted ancillary features; inferring assumed political orientation or assumed sexual
+      orientation from uploaded photos given as prohibited); para. 282 (persons must be categorised
+      'individually'; where a whole group is categorised without looking at the individual the
+      prohibition does not apply); para. 283 (the six characteristics are exhaustive - a system
+      categorising persons by skin or eye colour, or analysing DNA of crime victims for origin,
+      'would not be prohibited'); paras 284-286 (both carve-outs: labelling or filtering of lawfully
+      acquired biometric datasets, including de-biasing of training data and medical sorting by skin
+      or eye colour, and labelling or filtering in the area of law enforcement); para. 251
+      (biometric data covers facial images, gait, keystrokes, voice; emotion or attribute inference
+      from written text is not based on biometric data)."
+    url: https://ai-act-service-desk.ec.europa.eu/sites/default/files/2025-08/guidelines_on_prohibited_artificial_intelligence_practices_established_by_regulation_eu_20241689_ai_act_english_ied3r5nwo50xggpcfmwckm3nuc_112367-1.PDF
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: EU AI Act (Regulation (EU) 2024/1689), Art. 3(4), Art. 2(10) and Art. 2(12) - Art. 3(4)
+      defines a deployer as a person or body 'using an AI system under its authority except where
+      the AI system is used in the course of a personal non-professional activity', and Art. 2(10)
+      provides that 'this Regulation does not apply to obligations of deployers who are natural
+      persons using AI systems in the course of a purely personal non-professional activity'. Per
+      Commission Guidelines C(2025) 5052 final paras 34-35, that exclusion removes only the
+      deployer-side obligations; the provider placing the system on the market stays in scope, and
+      any regular economic benefit or professional, business, trade, occupational or freelance use
+      defeats it. Art. 2(12) provides that the Regulation 'does not apply to AI systems released
+      under free and open-source licences, unless they are placed on the market or put into service
+      as high-risk AI systems or as an AI system that falls under Article 5 or 50' - Art. 5 is
+      carved back in expressly (Guidelines para. 36), so an open-source licence is no answer to this
+      rule.
+    url: https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-2
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 99(3): 'Non-compliance with the prohibition of
+      the AI practices referred to in Article 5 shall be subject to administrative fines of up to
+      EUR 35 000 000 or, if the offender is an undertaking, up to 7 % of its total worldwide annual
+      turnover for the preceding financial year, whichever is higher.' Art. 99(6) inverts that
+      comparison for this product's audience: 'In the case of SMEs, including start-ups, each fine
+      referred to in this Article shall be up to the percentages or amount referred to in paragraphs
+      3, 4 and 5, whichever thereof is lower.' Chapter XII, which contains Art. 99, has applied
+      since 2025-08-02 (Art. 113, second subparagraph, point (b))."
+    url: https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-99
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2025-02-02
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  resolve_local_values: true
+  match:
+    - (?:[Pp]redict|PREDICT|[Ii]nfer|INFER|[Dd]educ|DEDUC|[Cc]lassif|CLASSIF|[Ee]stimat|ESTIMAT|[Rr]ecogni|RECOGNI|[Aa]naly[sz]|ANALY[SZ]|[Cc]ategori[sz]|CATEGORI[SZ]|[Dd]etect|DETECT|[Gg]uess|[Ii]dentif|IDENTIF|[Ll]abel|LABEL|[Tt]ag|[Ss]cor|SCOR|[Dd]eriv|[Ee]xtract|[Aa]ssess|[Aa]nnotat)[A-Za-z]{0,10}[_\-]?(?:(?<![A-Za-z0-9])(?:race|races|RACE)|Race|[Rr]acial|RACIAL|[Ee]thnic|ETHNIC|[Aa]ncestr|ANCESTR|[Rr]eligio|RELIGIO|[Ff]aith(?!ful)|FAITH|[Cc]reed|CREED|[Dd]enomination|DENOMINATION|[Ww]orldview|WORLDVIEW|[Pp]hilosophic|PHILOSOPHIC|[Ss]ectarian|[Ww]orship|WORSHIP|(?<![A-Za-z0-9])belief|Belief|BELIEF|[Pp]olitic|POLITIC|[Ii]deolog|IDEOLOG|[Pp]artisan|PARTISAN|[Tt]rade[_\-
+      ]?[Uu]nion|TRADE[_\- ]?UNION|[Ll]abou?r[_\- ]?[Uu]nion|[Uu]nion[_\-
+      ]?(?:[Mm]embership|[Mm]ember|[Aa]ffiliat|[Ss]tatus|[Dd]ues|[Rr]ep\b|[Ii]nvolvement)|UNION[_\-
+      ]?(?:MEMBERSHIP|MEMBER|AFFILIAT|STATUS)|[Uu]nionis|[Uu]nioniz|UNIONIS|UNIONIZ|[Ss]yndicalis|[Ss]exual[_\-
+      ]?[Oo]rientation|SEXUAL[_\-
+      ]?ORIENTATION|[Ss]exuality|SEXUALITY|[Hh]omosexual|[Hh]eterosexual|[Bb]isexual|LGBTQ?|[Qq]ueer|[Ss]ex[_\-
+      ]?[Ll]ife|SEX[_\- ]?LIFE)
+    - (?:(?<![A-Za-z0-9])(?:race|races|RACE)|Race|[Rr]acial|RACIAL|[Ee]thnic|ETHNIC|[Aa]ncestr|ANCESTR|[Rr]eligio|RELIGIO|[Ff]aith(?!ful)|FAITH|[Cc]reed|CREED|[Dd]enomination|DENOMINATION|[Ww]orldview|WORLDVIEW|[Pp]hilosophic|PHILOSOPHIC|[Ss]ectarian|[Ww]orship|WORSHIP|(?<![A-Za-z0-9])belief|Belief|BELIEF|[Pp]olitic|POLITIC|[Ii]deolog|IDEOLOG|[Pp]artisan|PARTISAN|[Tt]rade[_\-
+      ]?[Uu]nion|TRADE[_\- ]?UNION|[Ll]abou?r[_\- ]?[Uu]nion|[Uu]nion[_\-
+      ]?(?:[Mm]embership|[Mm]ember|[Aa]ffiliat|[Ss]tatus|[Dd]ues|[Rr]ep\b|[Ii]nvolvement)|UNION[_\-
+      ]?(?:MEMBERSHIP|MEMBER|AFFILIAT|STATUS)|[Uu]nionis|[Uu]nioniz|UNIONIS|UNIONIZ|[Ss]yndicalis|[Ss]exual[_\-
+      ]?[Oo]rientation|SEXUAL[_\-
+      ]?ORIENTATION|[Ss]exuality|SEXUALITY|[Hh]omosexual|[Hh]eterosexual|[Bb]isexual|LGBTQ?|[Qq]ueer|[Ss]ex[_\-
+      ]?[Ll]ife|SEX[_\-
+      ]?LIFE)[A-Za-z]{0,12}[_\-]?(?:[Pp]redict|[Ii]nfer|[Cc]lassif|[Ee]stimat|[Rr]ecogni|[Aa]naly[sz]|[Cc]ategori[sz]|[Dd]etect|[Mm]odel|MODEL|[Ll]abel|LABEL|[Cc]lasses|CLASSES|[Ll]ogits|LOGITS|[Ss]oftmax|[Nn]et\b|[Hh]ead\b|[Ss]core|SCORE|[Pp]robabilit|[Cc]onfidence|[Ii]nference|[Aa]ttribute|[Tt]ag|[Bb]ucket|[Bb]reakdown|[Dd]istribution|[Ss]tatistic|[Ss]egment|[Cc]hart|[Tt]able|[Oo]utput)
+    - (?:actions|ACTIONS|[Aa]ttributes|ATTRIBUTES|[Ff]eatures|[Tt]asks|[Ll]abels|[Cc]lasses|[Cc]ategories|[Oo]utputs|[Dd]emographics|returnFaceAttributes|[Ff]ace[_\s]?[Aa]ttributes|[Aa]naly[sz]e|[Ff]ields|[Ii]nclude|options)\s*(?:=>|[:=])\s*[\[\(][^\]\)]{0,160}["'](?:race|Race|RACE|races|ethnicity|Ethnicity|ETHNICITY|ethnic_origin|ancestry|religion|Religion|RELIGION|religious_belief|belief|beliefs|faith|creed|worldview|philosophical[_
+      ]?belief|political[_
+      ]?(?:opinion|affiliation|orientation|leaning|view)|politics|ideology|partisanship|sexual[_
+      ]?orientation|sexuality|LGBTQ?|sex[_ ]?life|trade[_ ]?union|union[_
+      ]?(?:membership|affiliation))["']
+    - "[Ff]air[_\\-]?[Ff]ace|FAIRFACE|UTK[_\\-]?[Ff]ace|[Uu]tkface|UTKFACE"
+    - ^(?![^\n]*\b(?:do not|does not|don't|doesn't|never|will not|won't|cannot|can't|no longer|shall
+      not|must not|Do not|Does not|Don't|Doesn't|Never|Will not|Won't|Cannot|Can't|No longer|Shall
+      not|Must not|DO
+      NOT|NEVER)\b)[^\n]*?(?:[Dd]etermine|[Ii]dentify|[Gg]uess|[Cc]lassify|[Ii]nfer|[Pp]redict|[Ee]stimate|[Aa]ssess|[Tt]ell
+      me|[Ww]hat (?:is|are)|[Ww]hich|[Dd]escribe|[Ss]tate the|[Rr]eturn the|[Oo]utput
+      the)[^\n]{0,90}(?:[Ee]thnicity|ETHNICITY|[Rr]acial|(?<![A-Za-z0-9])race(?![A-Za-z])|[Rr]eligion|RELIGION|[Rr]eligious|[Pp]hilosophical
+      belief|[Ff]aith(?!ful)|[Cc]reed|[Ww]orldview|[Pp]olitical
+      (?:affiliation|opinion|orientation|leaning|view)|[Pp]olitics|[Ii]deology|[Ss]exual
+      orientation|[Ss]exuality|LGBTQ?|[Tt]rade union|[Uu]nion membership|[Ss]ex life)
+    - (?:demographics|Demographics|DEMOGRAPHICS|[Dd]emographic|attributes|[Aa]ttributes|ATTRIBUTES|faceAttributes|face_attributes|FaceAttributes|[Dd]etections?|DETECTION|[Ss]ubject|[Pp]erson|[Ff]aces?|[Pp]redictions?|[Aa]nalysis|[Rr]esults?|[Oo]utput|[Pp]rofile|row|Row|record|Record)\s*(?::\s*\{\s*|\??\s*(?:\.|\[\s*["']))\s*(?:race|Race|RACE|races|ethnicity|Ethnicity|ETHNICITY|ethnic_origin|ethnicGroup|religion|Religion|RELIGION|religiousBelief|religious_belief|belief|beliefs|faith|creed|worldview|politics|Politics|political_opinion|politicalOpinion|political_affiliation|politicalAffiliation|ideology|sexual_orientation|sexualOrientation|sexuality|sex_life|sexLife|trade_union|tradeUnion|union_membership|unionMembership)(?![A-Za-z])
+    - "[Dd]ominant[_\\-]?(?:race|Race|RACE|ethnicity|Ethnicity|ETHNICITY)|dominant_race|DOMINANT_RA\
+      CE|[Dd]ominant[_\\-]?\\{"
+    - (?:type|interface|enum|class|struct)\s+[A-Za-z]{0,16}(?:Race(?![a-z]*(?:track|way|course|[Cc]ondition))|Racial|Ethnic|Ancestr|Religio|Politic|Ideolog|Partisan|Sexual|Belief|Faith|Worldview)|(?<![A-Za-z0-9])(?:race|ethnicity|ethnic_origin|religion|religious_belief|politics|political_opinion|ideology|sexual_orientation|sexuality|sex_life|trade_union|union_membership|belief|beliefs|faith|worldview)\s*\??\s*:\s*[A-Z][A-Za-z]
+    - "[\"'](?:CAUCASIAN|[Cc]aucasian|EAST[_ -]?ASIAN|[Ee]ast[_ -]?[Aa]sian|SOUTH[_
+      -]?ASIAN|[Ss]outh[_ -]?[Aa]sian|SOUTHEAST[_ -]?ASIAN|[Ss]outheast[_ -]?[Aa]sian|MIDDLE[_
+      -]?EASTERN|[Mm]iddle[_
+      -]?[Ee]astern|LATINO|[Ll]atino|LATINX|[Ll]atinx|HISPANIC|[Hh]ispanic|AFRO[_
+      -]?(?:DESCENDANT|CARIBBEAN)|[Aa]fro[_
+      -]?(?:descendant|caribbean)|INDIGENOUS|[Ii]ndigenous|NATIVE[_ -]?AMERICAN|[Nn]ative[_
+      -]?[Aa]merican|PACIFIC[_ -]?ISLANDER|[Pp]acific[_ -]?[Ii]slander|ETHNIC[_
+      -]?ORIGIN|[Ee]thnic[_ -]?origin)[\"']"
+    - :\s*[A-Za-z]{0,16}(?:Race(?![a-z]*(?:track|way|course|[Cc]ondition))|Racial|Ethnic|Ancestr|Religio|Politic|Ideolog|Partisan|Sexual|Belief|Faith|Worldview|Creed|Denomination|TradeUnion|Union[Mm]embership)[A-Za-z]*\b
+    - (?:[Rr]acial|RACIAL|[Ee]thnic|ETHNIC|[Aa]ncestr|ANCESTR|[Rr]eligio|RELIGIO|[Pp]olitic|POLITIC|[Ii]deolog|IDEOLOG|[Pp]artisan|PARTISAN|[Ww]orldview|WORLDVIEW|[Pp]hilosophic|PHILOSOPHIC|[Ss]exual|SEXUAL|[Uu]nion|UNION|[Ff]aith|FAITH|[Cc]reed|CREED)[A-Za-z]{0,12}[_\-
+      ][A-Za-z]{1,12}[_\-
+      ](?:[Cc]lasses|CLASSES|[Ll]abels|LABELS|[Bb]uckets|BUCKETS|[Cc]ategories|CATEGORIES|[Mm]odel|MODEL|[Hh]ead|HEAD|[Cc]lassifier|CLASSIFIER|[Ss]cores?|SCORES?|[Pp]redictions?|PREDICTIONS?|[Ll]ogits|LOGITS|[Ii]nference|INFERENCE)
+    - (?:actions|ACTIONS|[Aa]ttributes|ATTRIBUTES|[Ff]eatures|[Tt]asks|[Ll]abels|[Cc]lasses|[Cc]ategories|[Oo]utputs|[Dd]emographics|[Tt]raits|returnFaceAttributes|[Ff]ace[_\s]?[Aa]ttributes|[Aa]naly[sz]e|[Ff]ields|[Ii]nclude|options)\s*(?:=>|[:=])[^\n]{0,160}["'](?:race|Race|RACE|races|ethnicity|Ethnicity|ETHNICITY|ethnic_origin|ancestry|religion|Religion|RELIGION|religious_belief|belief|beliefs|faith|creed|worldview|philosophical[_
+      ]?belief|political[_
+      ]?(?:opinion|affiliation|orientation|leaning|view)|politics|ideology|partisanship|sexual[_
+      ]?orientation|sexuality|LGBTQ?|sex[_ ]?life|trade[_ ]?union|union[_
+      ]?(?:membership|affiliation))["']
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--)
+    - "[Rr]ace[_\\s\\-]?[Cc]ondition|RACE_CONDITION|[Dd]ata[_\\s\\-]?race"
+    - "[Rr]ace(?:track|way|course|[Tt]rack|[Ww]ay|[Cc]ourse)|[Rr]ace[_\\-]?(?:[Dd]ay|[Tt]ime|[Bb]ib\
+      |[Nn]umber|[Dd]istance|[Ss]tart|[Ff]inish|[Ww]inner|[Pp]ace|[Ss]plit|[Ee]vent|[Ss]eries|[Dd]a\
+      te)|[Mm]arathon|[Tt]riathlon|[Rr]acecar|[Rr]acing|[Hh]orse|NASCAR|[Ff]ormula ?1|[Gg]rand
+      ?[Pp]rix|[Ll]eaderboard|[Pp]odium|[Aa]rms[_\\s\\-]?race|[Rr]at[_\\s\\-]?race"
+    - CharField|TextField|VarChar|varchar|@Column|Column\(|@Field|z\.(?:enum|string|nativeEnum|optional)|models\.[A-Za-z]*Field\b|models\.(?:ForeignKey|OneToOneField|ManyToManyField)\b|db\.Column|sa\.Column|[Ss]elf[_\-]?[Dd]eclared|self_reported|[Ss]elf[_\-]?[Ii]dentified|[Uu]ser[_\-]?(?:[Pp]rovided|[Ss]upplied|[Ee]ntered|[Ss]elected)
+    - <select|<option|<input|<label|htmlFor=|placeholder=|[Ff]orm[Cc]ontrol|[Ff]orm[Ff]ield
+    - (?:[Ll]abels|[Cc]lasses|[Cc]ategories)["']?\s*(?:=>|[:=])\s*["'`]
+    - "[Bb]elief[_\\s\\-]?(?:[Pp]ropagation|[Ss]tate|[Ss]pace|[Uu]pdate|[Nn]etwork|[Bb]ase|[Mm]ap)|\
+      [Bb]ayesian"
+context_questions:
+  - "Is the input genuinely biometric data as defined in AI Act Art. 3(34) - personal data resulting
+    from specific technical processing of a physical, physiological or behavioural characteristic,
+    such as a facial image, a face template or descriptor, gait, keystroke dynamics or voice
+    characteristics - or is it an ordinary image, text or tabular feature that only resembles it?
+    Quote the line where the feature vector is built and say what it is derived from. Commission
+    Guidelines C(2025) 5052 final para. 251 places inference from written text outside this concept,
+    and para. 277 places categorisation by clothes or accessories and by social-media activity
+    outside it too. This question is the one the detector no longer pre-answers, so answer it
+    explicitly. Look for any of: face-api.js or @vladmandic/face-api; @mediapipe/face_detection,
+    face_mesh or tasks-vision, FaceLandmarker, FaceDetector, BlazeFace; AWS Rekognition
+    (DetectFaces, IndexFaces, SearchFacesByImage); Azure AI Face (@azure-rest/ai-vision-face,
+    FaceClient, returnFaceAttributes, /face/v1.0/detect, PersonGroupPerson); Google Cloud Vision
+    FACE_DETECTION or faceAnnotations; DeepFace, InsightFace, face_recognition, FaceNet, ArcFace,
+    RetinaFace, MTCNN, dlib, SCRFD, YuNet, OpenCV cascade classifiers; MorphCast or Affectiva; an
+    in-house face descriptor, embedding, template, crop or alignment step; voice biometrics (speaker
+    embedding, verification, identification or diarisation, voiceprints, resemblyzer, pyannote,
+    SpeechBrain, ECAPA-TDNN); gait or keystroke dynamics. AND, because Art. 5(1)(g) binds deployers
+    too and a deployer names none of the above: a plain HTTP call to a hosted face or voice analysis
+    service, where the biometric processing happens on the other side of the wire and only the
+    payload is visible here. In that case the evidence is the request (an image, a frame, a crop, an
+    audio buffer of a person) and the response (a per-person attribute set). Say which of these you
+    found, quote it, and if you found none, say that the biometric limb is unproven and stop."
+  - "Is the label actually one of the six characteristics Art. 5(1)(g) lists - race, political
+    opinions, trade union membership, religious or philosophical beliefs, sex life, sexual
+    orientation? The list is closed. Age and gender estimation from a face is NOT on it, and
+    Guidelines para. 283 records that categorising persons by skin or eye colour, or analysing DNA
+    of crime victims for origin, falls outside the prohibition. Quote the label set, enum, output
+    field or instruction text and map each value to the statutory list; where nothing maps, record
+    that and stop - the remaining questions do not arise, though Art. 50(3) and, in workplace or
+    education settings, Art. 5(1)(f) may still be worth checking. A model or dataset name is NOT an
+    answer to this question: FairFace, UTKFace and names like them are purpose-blind. FairFace is a
+    face-attribute model family whose published label set is race, gender and age, but it is also
+    used as a general backbone chosen for accuracy on under-represented faces in a pipeline whose
+    only outputs are gender, age and expression (verified in a real codebase), and it is
+    redistributed on Hugging Face in age-only variants such as dima806/fairface_age_image_detection
+    (verified in a second one). The detector raises these deliberately and does not try to tell them
+    apart. Read what the code actually does with the model output - the fields it stores, renders or
+    branches on - and decide from that, not from the model id."
+  - Does the pipeline attach a category to an individual natural person, or does it only produce
+    aggregate counts with no per-person label? Art. 5(1)(g) requires that persons be categorised
+    'individually', and Guidelines para. 282 records that where a whole group is categorised without
+    looking at the individual the prohibition does not apply. Quote the code that writes the label
+    onto a person, a session, an account or a single-subject image, or the code that shows the
+    output is aggregate only.
+  - "Is the protected-category value deduced from the biometric input, or supplied by the person
+    themselves? A self-declared profile field, a survey answer, an onboarding selection or an
+    imported CRM attribute is not a biometric inference and is outside this rule, however sensitive
+    it is. Trace the write path back to its source and quote it: if the value arrives from a form, a
+    request body or a third-party record rather than from a model run on the face or voice input,
+    record that and stop."
+  - "Carve-out 1, read narrowly: is this the labelling or filtering of a biometric dataset acquired
+    in line with Union or national law - for example labelling a training set so that demographic
+    groups are equally represented, or de-biasing work of the kind Guidelines paras 284-285
+    describe? The carve-out covers labelling and filtering of the dataset; it does not cover
+    deducing a protected characteristic about a person in production. Quote the dataset's provenance
+    and identify who consumes the labels - a training or evaluation job, or a live user-facing
+    decision."
+  - "Carve-out 2, read narrowly: is the categorisation of biometric data carried out in the area of
+    law enforcement, in the sense of Guidelines para. 286 (a competent authority's work such as
+    victim or suspect identification in a lawfully held dataset)? Identify the deploying entity from
+    the repository, not from aspiration: a commercial product that markets itself to police forces
+    is not itself a law enforcement authority, and this carve-out does not reach ordinary security,
+    fraud or moderation features."
+  - "Does the Art. 3(40) ancillary-feature exclusion apply? It removes a feature from the definition
+    of a biometric categorisation system only where BOTH conditions hold cumulatively: the feature
+    is ancillary to another commercial service AND strictly necessary for objective technical
+    reasons. Guidelines para. 280 treats an online-marketplace try-on filter and a social-network
+    face filter as ancillary, but treats inferring assumed political orientation or assumed sexual
+    orientation from uploaded photos to target advertising as failing the strict-necessity limb.
+    Quote the feature's relationship to the principal service."
+  - "Which acts happen in this repository - placing the system on the market, putting it into
+    service for this purpose, or using it? Art. 5 binds providers (Art. 3(3)) and deployers (Art.
+    3(4)) alike, each within their own responsibilities (Guidelines para. 274), so unlike the Art.
+    50 rules there is no role that escapes the provision; the answer determines which act to
+    describe, not whether the provision reaches this party. Note also Art. 2(12): releasing the
+    system under a free and open-source licence does not take it outside Art. 5 (Guidelines para.
+    36). Quote the entry point, the published artifact or the deployment path."
+  - "Does the Art. 3(4) and Art. 2(10) personal non-professional use exclusion apply on the deployer
+    side - is this a hobby repository run by a natural person with no regular economic benefit and
+    no professional, business, trade, occupational or freelance use? Guidelines paras 34-35 read the
+    exclusion narrowly and confine it to deployer obligations: the provider that places the system
+    on the market stays in scope regardless. Quote the evidence of how the project is distributed or
+    monetised, and where the evidence points to hobby use, say so plainly rather than reporting a
+    deployer-side candidate."
+evidence_template: "{file}:{line} matched a spelling from this rule's protected-characteristic
+  vocabulary, in one of six positions - a classifier label, a model id, a requested attribute, a
+  per-person result field, a payload type or a model instruction. What the detector established is
+  that a listed spelling occurs at this location, and these spellings are ordinary English words
+  whose unrelated senses the position test does not separate. Four homonym classes have been read on
+  real matched lines: a vendor, product or protocol name built on the word, where a GPS-tracker
+  maker's class ThinkRaceProtocol or class RaceDynamicsProtocol reads as a declared payload type;
+  the concurrency sense, on a line that does not carry the bigram race condition this rule
+  suppresses; the motorsport sense, a sentence about a race car; and documentation prose - a
+  glossary defining personal data by example, an editorial or newsletter sentence - where the word
+  is the writer's example rather than a label this code assigns to anyone. Read the matched line
+  first and say which of the six positions the characteristic is in, or that no characteristic is
+  being assigned on this line at all. Where one is, check whether the value is deduced from
+  biometric input or supplied by the person"
+remediation_template: |
+  This is a candidate for review against the AI Act Art. 5(1)(g) prohibition on biometric
+  categorisation, not a determination about this code. Art. 5 binds providers and deployers alike,
+  and it has applied since 2025-02-02, with the Art. 99(3) tier attached (up to EUR 35 000 000 or
+  7% of worldwide annual turnover, whichever is higher) since 2025-08-02. For an SME or start-up
+  Art. 99(6) reverses that comparison to whichever is lower.
+  Establish two facts first, because most hits fail on one of them:
+  1. Is the input biometric data within Art. 3(34) - a facial image, face template or descriptor,
+     gait, keystroke dynamics or voice characteristics - rather than an ordinary feature?
+  2. Is the protected characteristic being deduced from that input, rather than declared by the
+     person? A user-supplied religion or orientation field is outside this provision entirely,
+     however sensitive it is; where the value comes from a form, move on.
+  If both hold, the engineering question is whether the label set can be narrowed. Art. 5(1)(g)
+  lists six characteristics and no others: age and gender estimation from a face, and sorting by
+  skin, eye or hair colour, sit outside it. Dropping the race, religion, political, trade-union,
+  sex life and sexual-orientation classes from the label set, the model head, the requested
+  attribute list or the model instruction, and deleting any stored per-person values already
+  derived from them, removes this rule's subject matter. Where the label set exists for dataset
+  de-biasing or for labelling or filtering a lawfully acquired dataset, keep that work inside the
+  training or evaluation path and out of live per-person decisions, and record the dataset's
+  provenance next to the code so the distinction is legible to a reviewer.
+  Where the pipeline instead produces emotion or affect output with no protected-category label,
+  the applicable obligations are Art. 50(3) deployer notice and, in workplace or education
+  settings, Art. 5(1)(f) - different provisions with their own rules, not this one.
+data_categories:
+  - user.biometric
+  - user.demographic.race_ethnicity
+  - user.demographic.religious_belief
+  - user.demographic.political_opinion
+  - user.demographic.sexual_orientation
+  - user.demographic.trade_union_membership
+fingerprint_spec: file

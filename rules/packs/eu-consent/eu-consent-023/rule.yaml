@@ -1,0 +1,223 @@
+id: eu-consent-023
+pack: eu-consent
+short_name: Third-party script added from a configured address
+problem_line:
+  text: "Configured script: consent gate or notice slot not found"
+fix_line: Give deployers a consent gate, a notice slot or a banner hook, or say in settings that
+  consent is theirs.
+title: Third-party script injected into a public page from a configured URL - prior consent needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC) - 'Member
+      States shall ensure that the storing of information, or the gaining of access to information
+      already stored, in the terminal equipment of a subscriber or user is only allowed on condition
+      that the subscriber or user concerned has given his or her consent, having been provided with
+      clear and comprehensive information, in accordance with Directive 95/46/EC, inter alia, about
+      the purposes of the processing.' THE VERY NEXT SENTENCE OF THE SAME PARAGRAPH CARRIES THE
+      CARVE-OUT AND IS QUOTED HERE RATHER THAN LEFT ONE SENTENCE AWAY (D13, 2026-09-01, independent
+      adversarial verification): 'This shall not prevent any technical storage or access for the
+      sole purpose of carrying out the transmission of a communication over an electronic
+      communications network, or as strictly necessary in order for the provider of an information
+      society service explicitly requested by the subscriber or user to provide the service.'
+      Whether a configured script sits inside that carve-out is the first thing a reader of this
+      finding must decide, and context question 6 asks it. This is the operative provision: the
+      injected script runs in the visitor's browser and an analytics script that sets or reads an
+      identifier is storing or accessing information in terminal equipment"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) (replaces Art. 5(3) of Directive 2002/58/EC: the 2002
+      wording offered only a right to refuse, the replacement wording requires prior consent) and
+      Art. 4 (Member State transposition deadline 25 May 2011)"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 6(1)(a) - processing is lawful to the extent that 'the
+      data subject has given consent to the processing of his or her personal data for one or more
+      specific purposes'. Cited for the processing that follows the storage or access - what the
+      analytics vendor then does with the identifier - which is a GDPR question distinct from the
+      ePrivacy one about the terminal equipment
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 13(1) - 'Where personal data relating to a data subject
+      are collected from the data subject, the controller shall, at the time when personal data are
+      obtained, provide the data subject with all of the following information', including the
+      identity of the controller and the purposes of the processing. Cited because a visitor to a
+      public page is being told, at that moment, who is receiving what - and the party that knows
+      which vendor is configured is the deployer, not the product's author
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 14(1) - 'Where personal data have not been obtained from
+      the data subject, the controller shall provide the data subject with the following
+      information', including the identity of the controller and the purposes of the processing.
+      Reference only, and ADDED 2026-09-01 (D14, independent adversarial verification) because the
+      Art. 26(1) quotation below refers to the duties under 'Articles 13 and 14' and only Art. 13
+      was carried, leaving a reader following the quoted text on a dangling reference. Art. 14 is
+      the live one for the vendor's own onward use, where the data reached the vendor without the
+      visitor having given it to them directly
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 26(1) - 'Where two or more controllers jointly
+      determine the purposes and means of processing, they shall be joint controllers. They shall in
+      a transparent manner determine their respective responsibilities for compliance with the
+      obligations under this Regulation, in particular as regards the exercising of the rights of
+      the data subject and their respective duties to provide the information referred to in
+      Articles 13 and 14, by means of an arrangement between them unless, and in so far as, the
+      respective responsibilities of the controllers are determined by Union or Member State law to
+      which the controllers are subject.' REFERENCE ONLY. THE DESIGN'S VERIFY FLAG ON THIS ENTRY IS
+      RESOLVED, 2026-09-01, BY INDEPENDENT ADVERSARIAL VERIFICATION, IN FAVOUR OF KEEPING THE
+      CITATION EXACTLY AS IT STANDS. The question put was whether Art. 26 belongs in this list at
+      all, or whether Arts. 13/14, Art. 28 or ePrivacy Art. 5(3) is the honest cite. It belongs, on
+      case-law grounds: a website operator that embeds a third-party script causing the visitor's
+      browser to transmit data to that third party is the fact pattern of Fashion ID (CJEU C-40/17),
+      decided on Art. 2(d) of Directive 95/46 and read into Art. 26 GDPR, with Wirtschaftsakademie
+      (C-210/16) beside it - which is why the question arises here and why an article a court has
+      applied to this exact shape is in the basket a reader must consider. Art. 5(3) leads and is
+      not displaced; Art. 26 answers the different question of who owes the Art. 13 and Art. 14 duty
+      once the script has run. Art. 28 is deliberately absent, because treating the vendor as a
+      processor is one of the three characterisations this rule declines to make and putting Art. 28
+      in this list would be making it. WHAT STILL NEEDS A LAWYER IS THE CHARACTERISATION AND NOT THE
+      CITE. Whether the deployer of a status page and the analytics vendor are joint controllers,
+      independent controllers, or controller and processor is a determination about their actual
+      arrangement, and neither this detector nor this rule's author settles it. The quotation is
+      exact; the characterisation is not made"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(7) - 'controller' means 'the natural or legal person,
+      public authority, agency or other body which, alone or jointly with others, determines the
+      purposes and means of the processing of personal data'. Reference only: a definition
+      establishes no duty. It is cited because the operator who typed the URL into the settings form
+      is the party determining the means here, and identifying that party correctly is the first
+      step of every question this finding raises"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2011-05-25
+severity: high
+rule_confidence: 0.4
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    injected_script_config_fields:
+      - analytics_script_url
+      - analyticsScriptUrl
+      - analytics_type
+      - analyticsType
+      - analytics_id
+      - analyticsId
+      - google_analytics_tag_id
+      - googleAnalyticsTagId
+      - tracking_script_url
+      - trackingScriptUrl
+      - custom_script_url
+      - customScriptUrl
+      - custom_head_html
+      - customHeadHtml
+      - custom_head_code
+      - custom_head_script
+      - custom_head_tags
+      - custom_head_snippet
+      - head_html
+      - headHtml
+      - injected_script
+      - injectedScript
+    injected_head_fragment_fields:
+      - custom_head
+  vocabulary_matching:
+    injected_script_config_fields:
+      case_insensitive: true
+      separator_insensitive: true
+    injected_head_fragment_fields:
+      case_insensitive: true
+      separator_insensitive: true
+  shared_vocabulary:
+    - dom_script_sinks
+  match:
+    - <script[^\n>]{0,120}\bsrc\s*=\s*(?:["'`][^"'`\n]{0,80})?(?:\$\{|<%=|<\?=|\{\{|\{!!|\{[A-Za-z_$])
+    - (?:^|[^A-Za-z0-9_])(?&injected_script_config_fields)
+    - (?:^|[^A-Za-z0-9_])(?:get|build|render|make|is|valid|inject)?[A-Za-z0-9_]{0,24}(?:[Aa]nalytics|[Tt]racking|[Tt]elemetry)[A-Za-z0-9_]{0,12}(?:Script|Snippet|Tag|Config|_script|_snippet|_tag|_config)\b
+    - (?:^|[^A-Za-z0-9_])(?&injected_head_fragment_fields)(?![A-Za-z0-9])
+    - (?:dangerouslySetInnerHTML|v-html|innerHTML\s*=|\{!!|\.append\s*\(|\.html\s*\(|\braw\s*\(|\bhtml_safe\b)[^\n]{0,60}(?:[Aa]nalytics|[Tt]racking|[Ss]cript|[Ss]nippet|[Hh]ead[Hh]tml|head_html)
+    - \.[ \t]*(?&dom_script_sinks)[
+      \t]*\([^\n]{0,60}(?:[Aa]nalytics|[Tt]racking|[Ss]cript|[Ss]nippet|[Hh]ead[Hh]tml|head_html)
+context_questions:
+  - WHOSE PAGE IS THIS, AND WHO ARE THE PEOPLE ON IT? Answer this before anything else, because it
+    changes who owes what. The construct this rule looks for is a product that renders a script on a
+    page ITS DEPLOYER publishes, seen by that deployer's visitors - people with no account and no
+    relationship with the product's author. Quote the route and its authentication, and say plainly
+    whether the page is public. Where the page is behind a login and the audience is the product's
+    own users, this is closer to `eu-consent-014`'s territory and should be recorded there instead.
+  - "WHICH VENDOR IS CONFIGURED? The detector cannot answer this and does not try: the URL is a row
+    in the deployment's database, so no amount of further code reading recovers it. Ask the operator
+    which script URL and which analytics type are set, and record the answer. Where the deployment
+    is a hosted service with many tenants, the answer is per tenant and there may be no single one -
+    say so rather than picking one."
+  - IS THE SCRIPT PLACED BEFORE ANY CONSENT DECISION? Read the render path and quote it. ePrivacy
+    Art. 5(3) is about prior consent, so the question is whether anything at all stands between the
+    page loading and the script executing - a banner, a stored preference, a server-side check on a
+    consent cookie. Where nothing does, say so; where something does, quote it, because a consent
+    gate that the detector cannot see is the commonest reason a candidate here closes.
+  - "WHAT DOES THE PRODUCT DO TO THE VALUE BEFORE RENDERING IT, AND WHAT IS THE INJECTION SURFACE?
+    Quote the escaping. This matters for two different questions at once: whether the field is a
+    script URL only or a free-text head fragment, and whether a malicious or careless value can do
+    more than load analytics. Say which of the two this field is, because a free-text head field is
+    a much larger surface than a URL field and the remediation differs."
+  - "IS THIS SCRIPT INSIDE ePRIVACY ART. 5(3)'s STRICTLY-NECESSARY CARVE-OUT? Ask this before asking
+    anything about consent, because it decides whether consent is owed at all rather than whether it
+    was obtained. The provision exempts technical storage or access for the sole purpose of carrying
+    out the transmission of a communication, and access that is strictly necessary for the provider
+    to supply a service the subscriber or user explicitly requested. Quote what the script actually
+    does and say whether the service the visitor asked for could be provided without it. An
+    analytics script rarely can claim the exemption - but say why, in either direction, rather than
+    assuming it either way. This question is distinct from the one about a consent gate: a gate
+    answers how consent is collected, and this answers whether it is required."
+  - "WHERE IS THIS DISCLOSED TO THE VISITOR? The product's own privacy notice is the wrong document:
+    the controller for this page is the deployer. Say whether the product gives the deployer
+    anywhere to disclose the vendor - a notice slot, a banner, a template hook - or whether a
+    deployer who wants to comply has to modify the product. That gap is engineering work the
+    product's author can do, and it is the most useful thing this finding can produce."
+evidence_template: "{file}:{line} matched a construct for rendering a third-party script into a page
+  from a configured value: a script element whose source is an expression rather than a literal, a
+  configuration field that holds a script URL or vendor type, a function that builds an analytics or
+  tracking snippet, or an unescaped-render sink with such a value named on the same line. It
+  establishes NO VENDOR, and no clause of this rule names or looks for one: the URL is a row in the
+  deployment's database, so the recipient is unknowable from the repository by construction. It does
+  not establish that the page is public or that the subjects are visitors rather than users, which
+  is context question 1 and decides who owes the duty. It does not establish that the script is
+  placed before a consent decision - a gate elsewhere in the render path is invisible to this match,
+  and is context question 3. And it does not establish whether the field holds a URL or a free-text
+  head fragment, which changes the size of the surface and is context question 4."
+remediation_template: |
+  Address this to the DEPLOYER, not only to the product's own privacy notice. The party that chose
+  the vendor is whoever typed the URL into the settings form, and they are the controller for the
+  visitors of the page they publish. A product-level notice does not discharge their duty and was
+  never about their visitors.
+  Give the deployer somewhere to comply. This is the engineering change with the most value in it:
+  a consent gate the deployer can turn on, a notice slot on the public page, or a template hook
+  where a banner can go. Without one, a deployer who wants prior consent has to fork the product.
+  Do not render the script before a consent decision where one is required. Where the product
+  offers a gate, make the configured script load after it; where it does not, say in the settings
+  screen that the operator is responsible for obtaining consent, and where.
+  Distinguish a script-URL field from a free-text head field. A URL field can be validated against
+  a scheme and a shape; a free-text head field is arbitrary markup in the deployer's page and
+  belongs behind a stricter permission.
+  Reconcile the configured vendor against the deployer's own privacy notice. That is a
+  declaration-reconciliation task rather than a code one, and it is the only place the recipient
+  can actually be named.
+data_categories:
+  - user.device.cookie_id
+  - user.device.ip_address
+  - user.behavior
+fingerprint_spec: project
+reading_class:
+  class: existence

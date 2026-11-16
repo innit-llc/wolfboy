@@ -1,0 +1,188 @@
+id: identity-issuance-002
+pack: identity-issuance
+short_name: User records written into another organisation's directory
+problem_line:
+  text: User records written into a directory in another domain
+  template: "{data} written to {recipient}"
+fix_line: Send only the fields the receiving system needs, and record who runs it and on what terms
+  as a recipient.
+title: User records created or updated in a directory or application belonging to another domain
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - Art. 30(1) requires each controller to
+      maintain a record of processing activities and states that 'That record shall contain all of
+      the following information', including 'the categories of recipients to whom the personal data
+      have been or will be disclosed including recipients in third countries or international
+      organisations'. A directory or application that receives a provisioned user record is such a
+      recipient, and unlike an issued token the record it receives has no expiry
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(c) - personal data shall be 'adequate, relevant and
+      limited to what is necessary in relation to the purposes for which they are processed'. A
+      provisioning payload is written once and read many times, so the question is which attributes
+      the receiving system needs to hold at all, as against which the mapping in fact sends it
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 28(3) - 'Processing by a processor shall be governed by
+      a contract or other legal act under Union or Member State law, that is binding on the
+      processor with regard to the controller and that sets out the subject-matter and duration of
+      the processing, the nature and purpose of the processing, the type of personal data and
+      categories of data subjects and the obligations and rights of the controller.' Which of the
+      two parties is the controller of a provisioned record is the question this raises, and it is
+      not answerable from the code: where the receiving domain acts on the sending organisation's
+      instructions it is a processor and this contract is required, and where it decides its own
+      purposes it is not"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(7) - 'controller' means 'the natural or legal person,
+      public authority, agency or other body which, alone or jointly with others, determines the
+      purposes and means of the processing of personal data'. Reference only: a definition
+      establishes no duty of its own, and it is cited because a provisioned record has two candidate
+      controllers and the code names neither"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 44 - 'Any transfer of personal data which are
+      undergoing processing or are intended for processing after transfer to a third country or to
+      an international organisation shall take place only if, subject to the other provisions of
+      this Regulation, the conditions laid down in this Chapter are complied with by the controller
+      and processor, including for onward transfers of personal data from the third country or an
+      international organisation to another third country or to another international organisation.'
+      Reference only: the receiving domain is named in configuration this detector does not read, so
+      where the record lands is unknown here"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose "The
+      categories of third parties to whom the business discloses personal information." A directory
+      in another domain that receives provisioned user records is such a category, and Sec.
+      1798.130(a)(5)(B) requires it in the privacy policy as well
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-09-01
+    jurisdiction: US
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.35
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  match:
+    - urn:ietf:params:scim\b
+    - (?:^|[^A-Za-z0-9_])(?:[Ss]cim|SCIM)(?:User|Email|PhoneNumber|Address|Name|Photo|Role|Entitlement|Ims|Resource|Schema|Config|Handler|Provider|Group|Client|Sync)\w*\b
+    - /[Ss]cim/v[0-9]
+    - (?:^|[^A-Za-z0-9_])(?:SCIM-V2|SCIM_V2|scim-v2|scim_v2)\b|(?:^|[^A-Za-z0-9_])[Ss]cim(?:Middleware|Context|Router|Prefix|Server|Service|Endpoint)\w*\b|\bHandlerPrefix\b[^\n]{0,60}(?:[Ss]cim|SCIM)|(?:[Ss]cim|SCIM)[^\n]{0,60}\bHandlerPrefix\b|\.\s*(?:Handle|HandleFunc|PathPrefix|Route|route|mount|Mount)\s*\([^\n]{0,100}/(?:ServiceProviderConfig|ResourceTypes|Bulk|Schemas)\b
+    - \.\s*(?:add_s|modify_s|modify_ext_s|rename_s|modrdn_s|delete_s|add_ext_s)\s*\(|(?:^|[^A-Za-z0-9_])(?:addModlist|modifyModlist)\s*\(|\bldap\.initialize\s*\(
+    - (?:^|[^A-Za-z0-9_])(?:LdapTemplate|InitialDirContext|DirContext|ModificationItem|BasicAttributes|LdapName)\b|Net::LDAP[^\n]{0,60}\.\s*(?:add|modify|replace_attribute|add_attribute|delete_attribute|rename)\b
+    - (?:^|[^A-Za-z0-9_])(?:[Pp]rovision|[Dd]eprovision|[Rr]eprovision|[Uu]nprovision)_?(?:[Uu]ser|[Aa]ccount|[Ii]dentity|[Mm]ember)\w*\s*\(|(?:^|[^A-Za-z0-9_])(?:sync|Sync|push|Push|export|Export|mirror|Mirror)_?(?:[Uu]ser|[Aa]ccount|[Ii]dentity|[Mm]ember)s?_?(?:[Tt]o)_?(?:[Pp]rovider|[Dd]irectory|[Dd]omain|[Ll]dap|LDAP|[Ss]cim|SCIM|[Ii]dp|IdP)\w*\s*\(
+    - (?:^|[^A-Za-z0-9_])(?:batchCreateContacts|batchUpdateContacts|BatchCreateContactsRequest|ContactToCreate|createContact|create_contact|updateContact|update_contact|insertContact)\w*|(?:^|[^A-Za-z0-9_])(?:[Cc]ontacts|[Pp]eople|[Uu]sers|[Mm]embers|[Dd]irectory)\s*(?:\(\s*\))?\s*(?:\.|->)\s*(?:insert|create|batchCreate|batchCreateContacts|add|patch)\s*\(|(?:^|[^A-Za-z0-9_])(?:[Mm]ap|[Tt]o|[Cc]onvert|[Bb]uild|[Ss]erialize)[A-Za-z]{0,20}(?:Person|Contact|User|Member|Employee)_?[Tt]o_?(?:Google|Microsoft|Graph|Vendor|Provider|Remote|Directory|Scim|SCIM|Ldap|LDAP|External|Partner)\w*|(?:^|[^A-Za-z0-9_])[Tt]o(?:Google|Microsoft|Graph|Vendor|Provider|Remote|Directory|Scim|SCIM|Ldap|LDAP|External|Partner)(?:Person|Contact|User|Member|Employee)\w*|(?:\.|->)\s*api\s*\(\s*["'`]/(?:users|groups|members|contacts)\b[^\n]{0,80}\)\s*(?:\.|->)\s*(?:post|patch|put|POST|PATCH|PUT)\s*\(
+context_questions:
+  - IS THIS PRODUCT THE SOURCE OR THE TARGET OF THE PROVISIONING? A SCIM route declared by this
+    application means it RECEIVES user records that somebody else pushes; a SCIM client call means
+    it SENDS them. The two are different rows in a record of processing activities - in the first
+    the sending organisation decides what arrives and this product holds it, in the second this
+    product decides what leaves. Read whether the matched line registers a handler or makes a
+    request before writing anything down.
+  - WHICH ATTRIBUTES DOES THE MAPPING ACTUALLY SEND? Open the mapping and list the fields, rather
+    than inferring them from the resource type. A SCIM user resource can carry user name, formatted
+    and structured name, display name, nickname, profile URL, title, preferred language, locale,
+    time zone, active flag, several e-mail addresses, several telephone numbers, instant-messaging
+    handles, postal addresses, photographs, entitlements and roles - and a given deployment may map
+    three of those or all of them. An LDAP modification list is the same question in another
+    notation.
+  - WHO OPERATES THE RECEIVING DIRECTORY, AND UNDER WHAT ARRANGEMENT? A provisioned record persists
+    in a system this code does not control. Ask whether the receiving domain belongs to the same
+    organisation, to a customer, or to a separate vendor; where it acts only on the sending
+    organisation's instructions the Art. 28(3) contract is the right ask, and where it decides its
+    own purposes it is not. The code names neither party, so this is a question for the operator.
+  - "DOES ERASURE PROPAGATE? A person deleted in this product does not thereby disappear from a
+    directory this product wrote them into. Look for the de-provisioning path and say whether it
+    exists, whether it runs on deletion or only on a schedule, and what it does with the remote
+    record - deactivates it, empties its attributes, or removes it. Where there is no such path,
+    that is the finding: the erasure route this product reports as present does not reach the copy
+    it created elsewhere."
+  - WHERE IS THE RECEIVING SYSTEM ESTABLISHED? The target host is configuration rather than code, so
+    no fixed answer is written anywhere this detector can read. Ask the operator for the configured
+    endpoint and its operator, and treat the transfer question as open until they answer it.
+  - "IF THE MATCH IS A TYPE NAME, AN IMPORT OR A FIELD DECLARATION, IS ANYTHING ACTUALLY PROVISIONED
+    ON THIS PATH? Several shapes reach this rule that are capability rather than disclosure: a
+    directory-library class named in an import, a SCIM struct declared but never populated, a route
+    registered behind a feature flag nobody turns on. Say which the matched line is; an import means
+    the product speaks the protocol and no more."
+evidence_template: "{file}:{line} matched a construct through which this product CREATES OR UPDATES
+  A USER RECORD IN ANOTHER DOMAIN - over SCIM, over LDAP, or through a connector the project wrote
+  itself. THAT IS THE WHOLE OF WHAT IS ESTABLISHED. Seven shapes reach this rule and they are not
+  equally strong. (i) The SCIM schema namespace, the most unambiguous shape here. (ii) A SCIM
+  resource type or operation by name, which reaches struct declarations and serialisation tags as
+  well as calls. (iii) A SCIM route, which is also the fork between sending and receiving. (iv) An
+  LDAP write call - the operation is what separates this from reading a directory to authenticate.
+  (v) Java or ruby directory machinery by name, WHICH IS CAPABILITY EVIDENCE AND NOT DISCLOSURE
+  EVIDENCE: an import says the product speaks the protocol, not that a record was written. (vi) A
+  provisioning or de-provisioning entry point named in the project's own vocabulary. (vii) A WRITE
+  AGAINST A VENDOR'S OWN PEOPLE COLLECTION, or the mapping function that converts this product's
+  person record into that vendor's shape - the third mechanism this rule names, reached through the
+  vendor's method name rather than through the project's vocabulary. THE MAPPING HALF IS THE WEAKER
+  OF THE TWO: it establishes that a conversion into somebody else's shape exists, not that a record
+  was written on this path, in the same way shape (v) is capability rather than disclosure. THIS
+  SHAPE IS ALSO A LOOSER FIT THAN SCIM OR LDAP - the records provisioned may be stored contacts
+  rather than application users, and the receiving account may be one person's rather than an
+  enterprise directory - and everything the rule turns on still holds: the record has no expiry, and
+  whether a de-provisioning path exists here is question 4's own subject. WHAT THIS DETECTOR DOES
+  NOT ESTABLISH: whether this product is the source or the target of the provisioning (context
+  question 1); which attributes the mapping sends (question 2); who operates the receiving directory
+  or on whose instructions (question 3); whether erasure here reaches the record created there
+  (question 4); or where the receiving system is established, which is configuration this detector
+  never reads (question 5). A PROVISIONED RECORD HAS NO EXPIRY, which is the fact that separates
+  this rule from the token-issuance rule beside it: an assertion becomes stale on its own, and a
+  directory entry does not."
+remediation_template: |
+  Establish first whether this product is sending or receiving (context question 1); the two are
+  different rows in the record of processing activities and the remediation differs.
+  Open the attribute mapping and write down the fields actually sent, then check each against what
+  the receiving system needs to hold. A mapping that sends a postal address and a telephone number
+  to a system that authenticates on an e-mail address is the ordinary finding here.
+  Ask the operator who runs the receiving directory and on whose instructions. Where it processes
+  only on the sending organisation's instructions, an Art. 28(3) contract is the right instrument;
+  where it decides its own purposes it is a separate controller and the disclosure needs its own
+  ground and its own notice.
+  Trace the de-provisioning path and report whether one exists at all. Where a person can be erased
+  here while their provisioned record survives there, say so plainly - the erasure route this
+  product reports as present does not reach the copy it created, and the remedy is a
+  de-provisioning call on the deletion path rather than only on a schedule.
+  Record the configured endpoint and its operator's place of establishment; nothing in the source
+  tree names either.
+  Where the matched line is an import, a type declaration or an unpopulated struct, record the
+  capability and close the finding there.
+data_categories:
+  - user.account
+  - user.unique_id
+  - user.name
+  - user.contact.email
+  - user.contact.phone_number
+  - user.contact.address
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 1
+      class: per-location
+    - question: 2
+      class: enumeration
+      item: connector
+      item_source: reading
+    - question: 3
+      class: enumeration
+      item: connector
+      item_source: reading
+    - question: 4
+      class: existence
+    - question: 6
+      class: per-location

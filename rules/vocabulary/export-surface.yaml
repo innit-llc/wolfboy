@@ -1,0 +1,165 @@
+lists:
+  export_disposition_carriers:
+    kind: term
+    purpose: The response-header names and framework shorthands through which a server hands a built
+      file to the caller as a download, for the rules that ask where a copy of a person's records
+      leaves the primary store.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - term: The Content-Disposition response header
+        anchors:
+          - Content-Disposition
+        position_bound: true
+        note: "The usual shapes: `response['Content-Disposition'] = 'attachment; filename=plan.pdf'`,
+          `response.setHeader(\"Content-Disposition\", \"attachment; filename=\" + fileName)` and
+          `w.Header().Set(\"Content-Disposition\", \"attachment;filename=\"+name)`. POSITION-BOUND,
+          AND THE POSITION IS THE DISPOSITION TYPE. The header itself says nothing about a download:
+          the same header carries `inline` for a file the browser renders in place and `form-data`
+          for a multipart upload part. Every clause that splices this list therefore requires the
+          word `attachment` on the same line, and the importing rules ship a negative fixture
+          asserting that an `inline` disposition stays silent."
+      - term: Framework shorthand for a file-download response
+        anchors:
+          - as_attachment
+          - send_data
+          - send_file
+          - disposition
+        position_bound: true
+        note: "The same header written by a framework rather than by hand: Flask's `send_file(...,
+          as_attachment=True)`, and Rails' `send_data archive, disposition: \"attachment\"` and
+          `send_file image, disposition: \"attachment\"`. `disposition` and `send_file` are ordinary
+          enough words that they are useless on their own — `send_file` reaches build scripts and
+          `disposition` reaches prose — which is why every entry in this list is position-bound to
+          the `attachment` token beside it. `as_attachment` is spelled with the token inside it and
+          still matches, because the clause looks for the token anywhere on the line rather than for
+          a separate word."
+  export_download_triggers:
+    kind: term
+    purpose: The browser and npm APIs a page uses to put a built file on the viewer's own disk, for the
+      rules that ask where a copy of a person's records leaves the primary store.
+    entries:
+      - term: Object-URL download trigger
+        anchors:
+          - createObjectURL
+          - revokeObjectURL
+        note: "The idiom is one construct in three or four lines: build a `Blob`, mint an object URL for it,
+          hang it on an anchor element carrying a `download` attribute, click the anchor, revoke the
+          URL — `const url = URL.createObjectURL(blob);` … `URL.revokeObjectURL(url);`, often inside
+          one download helper that every export builder of the product calls. The two anchors are
+          kept separate from the `download`-attribute and `click` limbs, which need punctuation
+          around them and are therefore written inline in each importing rule beside the splice, the
+          way this directory's README says a spelling that needs a boundary guard is written."
+      - term: FileSaver-family save helper
+        anchors:
+          - saveAs
+          - FileSaver
+          - file-saver
+          - downloadjs
+        note: "The dependency that wraps the object-URL idiom, named in an import or a manifest as well as
+          at the call: `FileSaver.saveAs(blob, fileName);`, or a `file-saver` or `downloadjs`
+          manifest line. `saveAs` is a substring of longer identifiers — `saveAssistantMessage` is
+          one — so the clause that splices this list carries a trailing word guard. That is a guard,
+          not a narrowing: it refuses a match that landed inside a longer word, which is a
+          target-correctness repair rather than a filter on likely false positives."
+      - term: Native and legacy browser save-file API
+        anchors:
+          - showSaveFilePicker
+          - msSaveOrOpenBlob
+        note: "The two paths a page takes when it does not build an anchor element: the File System Access
+          API's save dialog, `const handle = await window.showSaveFilePicker(options);`, and the
+          Internet Explorer and legacy Edge shim that products still carry,
+          `navigator.msSaveOrOpenBlob(blob, name)`. `msSaveBlob`, the older sibling of the second,
+          is left out until a first-party use of it is read."
+  export_document_writers:
+    kind: term
+    purpose: The archive, compressed-stream and rendered-document writers that build a file out of a
+      collection of records, for the rules that ask where a copy of a person's records leaves the
+      primary store.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - term: Go compressed-stream and archive writer
+        anchors:
+          - gzip.NewWriter
+          - zip.NewWriter
+        note: The usual shapes are Go's `gzip.NewWriter(w)` streaming one user's data export to the
+          response, `gzip.NewWriter(file)` in a backup job, and `zip.NewWriter(&buf)`.
+          `tar.NewWriter` is the third member of the family and is left out until a first-party use
+          of it is read.
+      - term: Python archive and compressed-file writer
+        anchors:
+          - zipfile.ZipFile
+          - tarfile.open
+          - shutil.make_archive
+          - gzip.open
+        note: "The usual shapes are Python's `zipfile.ZipFile(path, 'w')`, `tarfile.open(name)`,
+          `shutil.make_archive(base, 'zip', root)` and `gzip.open(path, 'wb')`. Each of them may
+          read an archive rather than write one, and the anchor cannot tell the two apart: which it
+          is belongs to the adjudicating agent, and both importing rules ask it."
+      - term: Node archive writer
+        anchors:
+          - archiver.create
+          - JSZip
+          - adm-zip
+        note: "The usual shapes are `archiver(\"zip\")`, `import JSZip from 'jszip';` and a manifest line
+          naming `adm-zip`. A dependency line is admitted deliberately: `eu-dsr-010`'s first clause
+          already treats a named engine in a manifest as evidence that the product KEEPS a second
+          copy, and the same reasoning carries here."
+      - term: JVM archive stream writer
+        anchors:
+          - ZipOutputStream
+          - GZIPOutputStream
+        note: The usual shape is `new ZipOutputStream(response.getOutputStream())` in a controller that
+          streams an export, or a `GZIPOutputStream` in a content processor.
+          `TarArchiveOutputStream`, the Commons Compress sibling, is left out until a first-party
+          use of it is read.
+      - term: Rendered PDF document builder
+        anchors:
+          - SimpleDocTemplate
+          - reportlab
+          - pdfkit
+          - jsPDF
+          - pdfmake
+          - PdfWriter
+          - PDFDocument
+          - FPDF
+        note: A rendered document is an export the spreadsheet clause of `eu-dsr-010` cannot see, and it is
+          how a product builds a member's plan or report as a PDF. The usual shapes are ReportLab's
+          `SimpleDocTemplate(` and `from reportlab.lib import colors`, `import PDFDocument from
+          'pdfkit';`, a `jsPDF` configuration, a `pdfmake` manifest line, iText's `PdfWriter` and
+          PHP's `new FPDF()`. `FPDF` and `PDFDocument` are short enough to sit inside longer
+          identifiers — `bfpdf`, `PDFDocumentProxy` — so every clause that splices this list carries
+          word guards on both sides. `wkhtmltopdf`, `TCPDF` and `Dompdf` are real spellings of the
+          same act; they are left out until a first-party use of them is read, which is a deferral
+          and not a refusal.
+      - term: Word-processing document builder
+        anchors:
+          - Packer.toBlob
+        note: "The `docx` package's browser-side document writer, which is how a client-side export builds a
+          Word file: `Packer.toBlob(document)` in the export code. The bare word `Packer` is NOT an
+          anchor: case-folded it reaches bundler and packaging identifiers everywhere, and what
+          identifies the act is the writer call, not the class. `Packer.toBuffer`, the server-side
+          sibling, is left out until a first-party use of it is read: a spelling joins this list
+          only from a line of first-party source."
+      - term: Calendar document builder
+        anchors:
+          - icalendar
+          - ical-generator
+          - vobject
+        note: A calendar file is a document built out of a record collection and handed to the person, and
+          it carries whatever the events carry. The usual shapes are `from icalendar import
+          Calendar, Event`, an `ical-generator` manifest line and `import vobject`.
+      - term: Whole-store serialisation into a document
+        anchors:
+          - yaml.dump
+          - yaml.safe_dump
+        note: "A configuration or state store rendered whole into a document, which is an export whether or
+          not anything calls it one: a debug view returning `yamlDump(this.$store.state.config)`, a
+          download-configuration page, or `yaml.safe_dump(data, sort_keys=False)` in an export
+          service. The separator tolerance this list declares is what makes one anchor reach
+          `yaml.dump`, `yaml_dump` and `yamlDump`. JSON's serialisers are deliberately NOT here:
+          `json.dumps` and `JSON.stringify` serialise one object as often as a whole store, and an
+          anchor that reaches every line of a codebase is a word rather than a construct."

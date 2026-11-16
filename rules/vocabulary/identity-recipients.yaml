@@ -1,0 +1,1291 @@
+lists:
+  consumer_oauth_recipients:
+    kind: recipient
+    purpose: Consumer identity providers a product redirects an end user to in order to sign them in -
+      the party that authenticates the person, learns that they signed in to this application and
+      when, and returns an assertion about who they are. For the rules that ask who received the
+      authentication event and whether that party is a processor or an independent controller for
+      it. A match is evidence that the vendor's code, endpoint or protocol field name is named in
+      the tree; it is not, on its own, evidence that anything was disclosed to that vendor, which is
+      what the importing rule's context questions are for.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: Google LLC (Google Sign-In and OAuth, or another Google API)
+        anchors:
+          - google-auth-library
+          - googleapis
+          - "@googleapis/oauth2"
+          - google-auth
+          - google-auth-oauthlib
+          - google-auth-httplib2
+          - google-api-python-client
+          - googleauth
+          - google-apis-oauth2_v2
+          - google/apiclient
+          - google/auth
+          - Google.Apis.Auth
+          - Google.Apis.Auth.AspNetCore3
+          - com.google.auth
+          - com.google.api-client
+          - com.google.auth:google-auth-library-oauth2-http
+          - com.google.api-client:google-api-client
+          - com.google.android.gms:play-services-auth
+          - com.google.android.libraries.identity.googleid
+          - google.golang.org/api/idtoken
+          - golang.org/x/oauth2/google
+          - cloud.google.com/go/auth
+          - accounts.google.com
+          - oauth2.googleapis.com
+          - openidconnect.googleapis.com
+          - www.googleapis.com/oauth2
+          - google.oauth2
+          - google.auth
+          - com.google.api.client.googleapis.auth.oauth2
+          - com.google.android.gms.auth
+          - Google.Apis.Auth.OAuth2
+          - GoogleSignIn
+          - "@react-oauth/google"
+          - passport-google-oauth20
+          - passport-google-oauth2
+          - next-auth/providers/google
+          - "@auth/core/providers/google"
+          - omniauth-google-oauth2
+          - league/oauth2-google
+          - google-cloud-auth
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — OAuth 2.0 / OpenID Connect
+          authorization-code flow - the browser redirect to accounts.google.com: The end user's
+          browser reaches Google directly, so Google receives the end user's IP address, user-agent
+          and any Google session cookies the browser already holds; the developer's OAuth client_id,
+          which identifies the scanned product's Google Cloud project; the requested scopes; the
+          redirect_uri; the state parameter, whatever the application put in it; and the fact and
+          time of this person signing in to this application. The person authenticates with their
+          Google credentials on Google's own page, so Google also receives whatever it collects at
+          sign-in, including any second factor. [source: The construct itself and Google's published
+          OAuth 2.0 endpoints. NOT re-read from Google's identity documentation in this pass; the
+          field list is the flow's own parameters.]  ||  PATH 2 — Token exchange and userinfo - the
+          server-side POST to oauth2.googleapis.com/token and the ID token or
+          openidconnect.googleapis.com userinfo call: Sent to Google: the client_id, the
+          client_secret, the authorization code or refresh token, and the calling server's IP
+          address. RETURNED BY GOOGLE TO THE OPERATOR, which is a disclosure in the opposite
+          direction and belongs in a different row of the record: the subject identifier sub, and
+          depending on scope the email address, email_verified, given and family name, profile
+          picture URL, locale and hosted-domain hd. [source: The OpenID Connect standard claims
+          Google's endpoints return. NOT re-read from Google's documentation in this pass.]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (California) -
+          Google LLC, 1600 Amphitheatre Parkway, Mountain View, California 94043, named as the
+          contracting party for API use. No EEA Google entity is named in that document, and the
+          Google Cloud EMEA Limited finding carried across from the storage research is
+          corroborating rather than primary; see the second citation. || CANDIDATE CONTRACTING
+          ENTITIES, as the vendor's own documents named them on the day each document was read:
+          Google LLC — United States (California; 1600 Amphitheatre Parkway, Mountain View,
+          California 94043) — named as 'Google' for use of Google's APIs, UNLESS additional terms
+          applicable to a given API set it out otherwise, which that document says in terms [read
+          from https://developers.google.com/terms on 2026-08-25]; Google Cloud EMEA Limited —
+          Ireland, as the research pass recorded it; the quoted passage names the entity without
+          stating its country — named as 'Google' in a third-party authorised reseller's copy of the
+          Google Cloud Platform agreement. Carried across from the storage research without
+          re-fetching, corroborating rather than primary, and about Google Cloud Platform rather
+          than about OAuth [read from https://sada.com/agreements/gcp/gcp-uki-v1.pdf on 2026-08-25].
+          || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN
+          CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data
+          processing agreement or the invoice that operator actually signed; where none of those can
+          be read, the answer for this field is needs_human. Do not choose a candidate because it is
+          the largest, the nearest, the one with the most familiar name or the only one left. Every
+          date above is the day that document was read and nothing in this repository re-reads it,
+          so this list ages into an INCOMPLETE list and never into a false statement — a candidate
+          may have been renamed, acquired or added since."
+        jurisdiction_source: "https://developers.google.com/terms (retrieved 2026-08-25) names, for \"the
+          entity a developer contracts with for use of Google's APIs, which is how a Google OAuth
+          client is obtained and used\": \"Under the Terms, \"Google\" means Google LLC, with
+          offices at 1600 Amphitheatre Parkway, Mountain View, California 94043, United States,
+          unless set forth otherwise in additional terms applicable for a given API.\" [read: raw]
+          || https://sada.com/agreements/gcp/gcp-uki-v1.pdf (retrieved 2026-08-25) names, for \"an
+          EEA Google entity, carried across from the first recipients bundle and NOT re-fetched\":
+          \"This Agreement establishes the terms under which SADA, as an authorized reseller of
+          Google Cloud EMEA Limited (\"Google\"), will provide Customer with access to the Google
+          Cloud Platform services set forth in the Ordering Document.\" [read: carried across
+          unchanged from an internal record, where it was read raw. That research marked it WEAKER
+          EVIDENCE because the host is a reseller's rather than Google's, and gave Google Cloud
+          Storage the fixed tag JURISDICTION NOT ESTABLISHED for that reason. It is reproduced here
+          for the same weight and no more: it establishes an EEA Google entity for Google Cloud
+          Platform contracting, not for Google Sign-In.]"
+      - vendor: Microsoft Corporation (Microsoft Entra ID, formerly Azure Active Directory, and Microsoft
+          account sign-in)
+        anchors:
+          - "@azure/msal-browser"
+          - "@azure/msal-node"
+          - "@azure/msal-react"
+          - "@azure/msal-angular"
+          - "@azure/msal-common"
+          - "@azure/identity"
+          - "@microsoft/microsoft-graph-client"
+          - msal
+          - passport-azure-ad
+          - msal-extensions
+          - azure-identity
+          - microsoft-kiota-authentication-azure
+          - microsoft/microsoft-graph
+          - microsoft/kiota-authentication-phpleague
+          - Microsoft.Identity.Client
+          - Microsoft.Identity.Web
+          - Microsoft.AspNetCore.Authentication.MicrosoftAccount
+          - Microsoft.Graph
+          - com.microsoft.aad
+          - com.microsoft.identity.client
+          - com.microsoft.azure:msal4j
+          - com.azure:azure-identity
+          - com.microsoft.aad.msal4j
+          - github.com/AzureAD/microsoft-authentication-library-for-go
+          - github.com/microsoftgraph/msgraph-sdk-go
+          - azure_identity
+          - login.microsoftonline.com
+          - login.windows.net
+          - login.live.com
+          - graph.microsoft.com
+          - login.microsoftonline.us
+          - azure.identity
+          - next-auth/providers/azure-ad
+          - next-auth/providers/microsoft-entra-id
+          - passport-microsoft
+          - "@auth/core/providers/microsoft-entra-id"
+          - omniauth-microsoft_graph
+          - omniauth-azure-activedirectory-v2
+          - thenetworg/oauth2-azure
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — OAuth 2.0 / OpenID Connect
+          authorization-code flow against login.microsoftonline.com, whether for a work or school
+          tenant or a personal Microsoft account: The end user's browser reaches Microsoft directly,
+          so Microsoft receives the end user's IP address, user-agent and existing Entra session
+          cookies; the application's client_id and tenant id; the requested scopes; the
+          redirect_uri; and the fact and time of the sign-in, which Entra records as a sign-in log
+          entry with the device and location it inferred. The person authenticates with their
+          Microsoft or organisational credentials on Microsoft's own page, together with any
+          conditional-access or multi-factor challenge Microsoft imposes. [source: The construct
+          itself and Microsoft's published identity-platform endpoints. NOT re-read from Microsoft's
+          documentation in this pass.]  ||  PATH 2 — Token exchange and Microsoft Graph profile
+          read: Sent to Microsoft: client_id, client_secret or client assertion, the authorization
+          code or refresh token, and the calling server's IP address. RETURNED BY MICROSOFT TO THE
+          OPERATOR, a disclosure in the opposite direction: the object id oid and tenant id tid, the
+          user principal name, display name, given and family name, and the email address; a Graph
+          /me call returns more, including job title, department, office location and manager,
+          depending on the scopes granted. [source: The OpenID Connect claims Entra ID issues and
+          the Microsoft Graph user resource. NOT re-read from Microsoft's documentation in this
+          pass.]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Ireland (Microsoft Ireland
+          Operations Limited) and United States (Microsoft Corporation) - CARRIED ACROSS from the
+          first recipients bundle without re-fetching, per the bundle brief. The two entities are
+          named together in Microsoft's own Data Protection Addendum in the course of defining its
+          standard contractual clauses term. || CANDIDATE CONTRACTING ENTITIES, as the vendor's own
+          documents named them on the day each document was read: Microsoft Ireland Operations
+          Limited — Ireland, as the research pass recorded it; the quoted definition names the
+          entity without stating its country — named as the processor established in the European
+          Economic Area, inside the definition of Microsoft's standard contractual clauses. Carried
+          across from the first recipients bundle without re-fetching [read from
+          https://www.shl.com/assets/documents/microsoft-azure-sccs.pdf on 2026-08-25]; Microsoft
+          Corporation — United States, as the research pass recorded it; the quoted definition names
+          the entity without stating its country — named as the other party to those same clauses,
+          that is, the processor established in a third country [read from
+          https://www.shl.com/assets/documents/microsoft-azure-sccs.pdf on 2026-08-25]. || WHICH
+          CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT
+          AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement
+          or the invoice that operator actually signed; where none of those can be read, the answer
+          for this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "https://www.shl.com/assets/documents/microsoft-azure-sccs.pdf (retrieved
+          2026-08-25) names, for \"Microsoft Ireland Operations Limited (EEA) and Microsoft
+          Corporation (US), named together in the SCC definition\": \"\"2021 Standard Contractual
+          Clauses\" means the standard data protection clauses (processor-to-processor module)
+          between Microsoft Ireland Operations Limited and Microsoft Corporation for the transfer of
+          personal data from processors in the EEA to processors established in third countries
+          which do not ensure an adequate level of data protection, as described in Article 46 of
+          the GDPR and approved by the European Commission in decision 2021/914/EC, dated 4 June
+          2021.\" [read: carried across unchanged from an internal record, where it was read raw
+          from a PDF. That research recorded two caveats which are carried with it and not softened:
+          the host is www.shl.com, a third party's copy of Microsoft's own standard addendum rather
+          than microsoft.com, and the document is dated 15 September 2022 and may not be the current
+          version. The entity NAMES are what is carried; the defined-term wording is dated.]"
+      - vendor: GitHub, Inc. and GitHub B.V. (GitHub OAuth apps and GitHub Apps)
+        anchors:
+          - "@octokit/oauth-app"
+          - "@octokit/auth-oauth-app"
+          - "@octokit/auth-oauth-user"
+          - "@octokit/auth-oauth-device"
+          - "@octokit/oauth-methods"
+          - "@octokit/auth-app"
+          - "@octokit/rest"
+          - octokit
+          - Octokit
+          - github.com/login/oauth/authorize
+          - github.com/login/oauth/access_token
+          - github.com/login/oauth
+          - api.github.com/user
+          - api.github.com
+          - Octokit.GitHubClient
+          - passport-github2
+          - passport-github
+          - next-auth/providers/github
+          - "@auth/core/providers/github"
+          - PyGithub
+          - githubkit
+          - omniauth-github
+          - league/oauth2-github
+          - org.kohsuke:github-api
+          - github.com/google/go-github
+          - octocrab
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — OAuth authorization-code flow
+          - the browser redirect to github.com/login/oauth/authorize and the server POST to
+          github.com/login/oauth/access_token: The end user's browser reaches GitHub directly, so
+          GitHub receives the end user's IP address, user-agent and any existing GitHub session; the
+          OAuth app's client_id; the requested scope; the redirect_uri; the state; and the fact and
+          time that this GitHub account authorised this application, which GitHub records in the
+          account's own authorised-applications list. The token exchange sends client_id,
+          client_secret, the code and the calling server's IP address. RETURNED TO THE OPERATOR, in
+          the opposite direction: the account login, numeric id, display name, avatar URL, and - on
+          a separate api.github.com/user/emails call with the right scope - the account's email
+          addresses and their verification state. [source: The construct itself and GitHub's
+          published OAuth endpoints. NOT re-read from GitHub's developer documentation in this
+          pass.]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Netherlands (GitHub B.V.,
+          Prins Bernhardplein 200, Amsterdam) and United States (GitHub, Inc., 88 Colin P. Kelly Jr.
+          St., San Francisco, California). GitHub's own privacy statement names both as the data
+          controller and does not say which of the two contracts with a given developer, so WHICH
+          ENTITY applies to a given deployment is an operator fact. || CANDIDATE CONTRACTING
+          ENTITIES, as the vendor's own documents named them on the day each document was read:
+          GitHub, Inc. — United States (88 Colin P. Kelly Jr. St., San Francisco, CA 94107) — named
+          as one of two entities that process as the Data Controller; the statement does not say
+          which of the two contracts with a given developer [read from
+          https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement
+          on 2026-08-25]; GitHub B.V. — Netherlands (Prins Bernhardplein 200, Amsterdam 1097JB) —
+          named as the other of the two Data Controller entities, with the same silence about which
+          one applies [read from
+          https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement
+          on 2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT
+          OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order
+          form, the data processing agreement or the invoice that operator actually signed; where
+          none of those can be read, the answer for this field is needs_human. Do not choose a
+          candidate because it is the largest, the nearest, the one with the most familiar name or
+          the only one left. Every date above is the day that document was read and nothing in this
+          repository re-reads it, so this list ages into an INCOMPLETE list and never into a false
+          statement — a candidate may have been renamed, acquired or added since."
+        jurisdiction_source: "https://docs.github.com/en/site-policy/privacy-policies/github-general-privac\
+          y-statement (retrieved 2026-08-25) names, for \"the two entities GitHub names as data
+          controller\": \"It applies to the Personal Data that GitHub, Inc. or GitHub B.V.,
+          processes as the “Data Controller” when you interact with websites, applications, and
+          services that display this Statement (collectively, “Services”).\" [read: raw] ||
+          https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement
+          (retrieved 2026-08-25) names, for \"the addresses of the two entities\": \"GitHub B.V.
+          Prins Bernhardplein 200, Amsterdam 1097JB The Netherlands GitHub, Inc. 88 Colin P. Kelly
+          Jr. St. San Francisco, CA 94107 United States\" [read: raw. The two addresses are separate
+          lines in the document's Contact Us block and are joined here with single spaces; no word
+          is changed, added or removed.]"
+      - vendor: Meta Platforms, Inc. and Meta Platforms Ireland Limited (Facebook Login)
+        anchors:
+          - facebook/graph-sdk
+          - com.facebook.android
+          - com.facebook.android:facebook-login
+          - com.facebook.android:facebook-android-sdk
+          - com.facebook.android:facebook-core
+          - graph.facebook.com
+          - connect.facebook.net
+          - www.facebook.com/dialog/oauth
+          - FB.login
+          - FBSDKLoginKit
+          - FBSDKCoreKit
+          - FacebookLogin
+          - com.facebook.login
+          - passport-facebook
+          - next-auth/providers/facebook
+          - react-facebook-login
+          - react-native-fbsdk-next
+          - "@auth/core/providers/facebook"
+          - facebook-sdk
+          - omniauth-facebook
+          - koala
+          - league/oauth2-facebook
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — Facebook Login - the browser
+          redirect to www.facebook.com/dialog/oauth, or the JavaScript SDK loaded from
+          connect.facebook.net calling FB.login: The end user's browser reaches Meta directly, so
+          Meta receives the end user's IP address, user-agent and existing Facebook cookies - which
+          identify the person to Meta whether or not they complete the sign-in - together with the
+          application's app id, the requested permissions, the redirect_uri and the referring page.
+          Meta records the app authorisation against the person's Facebook account. Loading the
+          JavaScript SDK from connect.facebook.net is itself a request to Meta from the end user's
+          browser on every page that loads it, before any sign-in happens. [source: The construct
+          itself and Meta's published Login endpoints. NOT re-read from Meta's developer
+          documentation in this pass.]  ||  PATH 2 — Graph API token exchange and profile read
+          against graph.facebook.com: Sent to Meta: the app id, the app secret or an
+          appsecret_proof, the code or access token, the requested field list, and the calling
+          server's IP address. RETURNED TO THE OPERATOR, in the opposite direction: the app-scoped
+          user id, name, and - where the permission was granted - the email address, profile picture
+          and whatever other fields the application asked for. [source: The construct itself. NOT
+          re-read from Meta's documentation in this pass.]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Ireland (Meta Platforms
+          Ireland Limited) for personal data Meta controls in the EEA, and United States (Meta
+          Platforms, Inc., 1 Meta Way, Menlo Park, California) for UK data and as the
+          developer-facing entity outside the EEA. || CANDIDATE CONTRACTING ENTITIES, as the
+          vendor's own documents named them on the day each document was read: Meta Platforms
+          Ireland Limited — Ireland, as the research pass recorded it; the quoted clause names the
+          entity without stating its country — named as the data exporter under the standard
+          contractual clauses in Meta's own Platform Terms, for data Meta controls in the European
+          Economic Area [read from https://developers.facebook.com/terms/?locale=en_US on
+          2026-08-25]; Meta Platforms, Inc. — United States (1 Meta Way, Menlo Park, California), as
+          the research pass recorded it — named as the data exporter for transfers of Meta United
+          Kingdom data, and as the developer-facing entity outside the European Economic Area [read
+          from https://developers.facebook.com/terms/?locale=en_US on 2026-08-25]. || WHICH
+          CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT
+          AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement
+          or the invoice that operator actually signed; where none of those can be read, the answer
+          for this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "https://developers.facebook.com/terms/?locale=en_US (retrieved 2026-08-25)
+          names, for \"the EEA entity, named as data exporter in Meta's own Platform Terms\": \"For
+          the purposes of Annex I(A) to the Clauses, Meta Platforms Ireland Limited is the \"data
+          exporter\" and you are the \"data importer\" as defined in the Clauses.\" [read: raw. The
+          same URL without the locale parameter served a Japanese rendering of the same document to
+          this workspace; the English rendering was fetched explicitly and is what is quoted.] ||
+          https://developers.facebook.com/terms/?locale=en_US (retrieved 2026-08-25) names, for
+          \"the non-EEA entity\": \"For transfers of Meta UK Data, Meta Platforms, Inc. is the
+          \"data exporter\" and you are the \"data importer\" as defined in the Approved Addendum.\"
+          [read: raw]"
+      - vendor: Apple Inc. and Apple Distribution International Limited (Sign in with Apple)
+        anchors:
+          - appleid.apple.com
+          - appleid.apple.com/auth/authorize
+          - appleid.apple.com/auth/token
+          - appleid.apple.com/auth/keys
+          - appleid.cdn-apple.com
+          - AppleID.auth
+          - ASAuthorizationAppleIDProvider
+          - ASAuthorizationAppleIDCredential
+          - ASAuthorizationController
+          - SignInWithAppleButton
+          - AuthenticationServices
+          - apple-signin-auth
+          - passport-apple
+          - next-auth/providers/apple
+          - "@invertase/react-native-apple-authentication"
+          - "@auth/core/providers/apple"
+          - omniauth-apple
+          - patrickbussmann/oauth2-apple
+          - apple
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — Sign in with Apple
+          authorization request to appleid.apple.com/auth/authorize, and the token exchange at
+          appleid.apple.com/auth/token: The end user's browser or device reaches Apple directly, so
+          Apple receives the end user's IP address, the device and its user-agent, and their Apple
+          Account session; the application's client_id, which is the Services ID or bundle
+          identifier; the requested scope, which for this provider is at most name and email; the
+          redirect_uri; the state and nonce; and the fact and time of the sign-in, which Apple
+          records in the account's own list of apps using Sign in with Apple. The token exchange
+          sends the client_id and a signed client secret JWT, the authorization code, and the
+          calling server's IP address. [source: The construct itself and Apple's published Sign in
+          with Apple REST endpoints. NOT re-read from Apple's developer documentation in this
+          pass.]  ||  PATH 2 — What comes back, which is a disclosure in the opposite direction and
+          materially smaller than the other consumer providers: RETURNED BY APPLE TO THE OPERATOR:
+          an identity token carrying the stable subject identifier sub, the audience, the issue and
+          expiry times, and - only on the FIRST authorisation - the email address and the name the
+          person chose to share. Where the person selected Hide My Email, the address returned is an
+          Apple relay address in the privaterelay.appleid.com domain rather than their own, so what
+          the operator holds is a pseudonym that Apple can resolve and the operator cannot. [source:
+          The construct itself. NOT re-read from Apple's documentation in this pass; the Hide My
+          Email relay-domain detail in particular should be re-confirmed by whoever relies on it.]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (California) -
+          Apple Inc., One Apple Park Way, Cupertino - as the Developer Program contracting entity;
+          Ireland - Apple Distribution International Ltd./Limited - for the EEA, UK and Switzerland
+          relationship and as the GDPR controller for individuals in those regions. CARRIED ACROSS
+          from the first recipients bundle without re-fetching, per the bundle brief. || CANDIDATE
+          CONTRACTING ENTITIES, as the vendor's own documents named them on the day each document
+          was read: Apple Inc. — United States (a California corporation with its principal place of
+          business at One Apple Park Way, Cupertino, California 95014) — named as 'Apple' in the
+          Developer Program Licence Agreement, which is the agreement a developer enters into to use
+          the sign-in service at all. Carried across from the first recipients bundle without
+          re-fetching [read from
+          https://developer.apple.com/support/downloads/terms/apple-developer-program/Apple-Develop\
+          er-Program-License-Agreement-English.pdf on 2026-08-25]; Apple Distribution International
+          Limited — Ireland — named in Apple's privacy policy as the controller of personal data
+          relating to individuals in the European Economic Area, the United Kingdom and Switzerland.
+          That is a statement about individuals rather than about the developer's own contract [read
+          from https://www.apple.com/legal/privacy/en-ww/ on 2026-08-25]. || WHICH CANDIDATE APPLIES
+          TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF
+          THE VENDOR. It is read from the order form, the data processing agreement or the invoice
+          that operator actually signed; where none of those can be read, the answer for this field
+          is needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "https://developer.apple.com/support/downloads/terms/apple-developer-program/A\
+          pple-Developer-Program-License-Agreement-English.pdf (retrieved 2026-08-25) names, for
+          \"the primary Developer Program contracting entity\": \"\"Apple\" means Apple Inc., a
+          California corporation with its principal place of business at One Apple Park Way,
+          Cupertino, California 95014, U.S.A.\" [read: carried across from an internal record, where
+          it was read RAW from the downloaded PDF. The push research's full quotation continues into
+          the Apple Push Notification service definitions, which are not relevant here and are not
+          reproduced; the sentence above is quoted from its opening and is unaltered.] ||
+          https://www.apple.com/legal/privacy/en-ww/ (retrieved 2026-08-25) names, for \"the EEA
+          controller for individuals\": \"Personal data relating to individuals in the European
+          Economic Area, the United Kingdom, and Switzerland is controlled by Apple Distribution
+          International Limited in Ireland.\" [read: carried across from an internal record, which
+          read it via a summarising fetch rather than raw, and which recorded that the page is
+          Apple's general whole-of-Apple privacy statement rather than a Sign in with Apple
+          document. Both caveats are carried.]"
+      - vendor: Discord Inc. and Discord Netherlands BV (Discord OAuth2)
+        anchors:
+          - discord.com/api/oauth2/authorize
+          - discord.com/api/oauth2/token
+          - discord.com/api/oauth2
+          - discord.com/api/users/@me
+          - discord.js
+          - "@discordjs/rest"
+          - passport-discord
+          - next-auth/providers/discord
+          - "@auth/core/providers/discord"
+          - discord-oauth2
+          - discord.py
+          - omniauth-discord
+          - wohali/oauth2-discord-new
+          - github.com/bwmarrin/discordgo
+          - discord
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — OAuth2 authorization-code flow
+          against discord.com/api/oauth2/authorize and /token: The end user's browser reaches
+          Discord directly, so Discord receives the end user's IP address, user-agent and existing
+          Discord session; the application's client_id; the requested scope, commonly identify,
+          email and guilds; the redirect_uri; the state; and the fact and time that this Discord
+          account authorised this application. The token exchange sends client_id, client_secret,
+          the code and the calling server's IP address. RETURNED TO THE OPERATOR, in the opposite
+          direction: the account id, username, global name, discriminator, avatar hash, and with the
+          email scope the email address and its verification state; with the guilds scope, the list
+          of servers the person belongs to, which is a fact about their affiliations rather than a
+          bare identifier. [source: The construct itself and Discord's published OAuth2 endpoints.
+          NOT re-read from Discord's developer documentation in this pass.]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Netherlands (Discord
+          Netherlands BV) as data controller for people in the European Economic Area, and United
+          States (Discord Inc.) for everyone else. || CANDIDATE CONTRACTING ENTITIES, as the
+          vendor's own documents named them on the day each document was read: Discord Netherlands
+          BV — Netherlands, as the research pass recorded it; the quoted clause names the entity
+          without stating its address — named as data controller for individuals who RESIDE in the
+          European Economic Area. The split is by where the individual resides rather than by where
+          the developer contracts [read from https://discord.com/privacy on 2026-08-25]; Discord
+          Inc. — United States, as the research pass recorded it; the quoted clause names the entity
+          without stating its address — named as data controller for everyone else, on the same
+          end-user split [read from https://discord.com/privacy on 2026-08-25]. || WHICH CANDIDATE
+          APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN
+          ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement or
+          the invoice that operator actually signed; where none of those can be read, the answer for
+          this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: 'https://discord.com/privacy (retrieved 2026-08-25) names, for "the two
+          controlling entities and which applies where": "If you reside in the European Economic
+          Area (“EEA”), Discord Netherlands BV is the “data controller” of your personal information
+          collected through the services (as defined in our Terms of Service ). For everyone else,
+          Discord Inc. is the data controller." [read: raw. The space before the closing parenthesis
+          after "Terms of Service" is an artefact of a hyperlink in the source HTML and is
+          reproduced as the tag-stripped text produced it.]'
+  enterprise_sso_recipients:
+    kind: recipient
+    purpose: "Named enterprise identity-provider and customer-identity platforms - the party that holds
+      the workforce or customer directory, authenticates against it, and returns a SAML assertion or
+      an OIDC token. For the rules that ask who received the authentication event and who holds the
+      directory behind it. It deliberately holds NO generic SAML or OIDC marker: openid-client,
+      samlify and passport-saml name no recipient at all. A match is evidence that the vendor's
+      code, endpoint or protocol field name is named in the tree; it is not, on its own, evidence
+      that anything was disclosed to that vendor, which is what the importing rule's context
+      questions are for."
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: Okta, Inc. (Okta Workforce Identity and Okta Customer Identity)
+        anchors:
+          - "@okta/okta-auth-js"
+          - "@okta/okta-react"
+          - "@okta/okta-vue"
+          - "@okta/okta-angular"
+          - "@okta/okta-signin-widget"
+          - "@okta/okta-sdk-nodejs"
+          - "@okta/jwt-verifier"
+          - "@okta/"
+          - okta
+          - okta-jwt-verifier
+          - okta/jwt-verifier
+          - okta/sdk
+          - Okta.Sdk
+          - Okta.AspNetCore
+          - Okta.Auth.Sdk
+          - com.okta.sdk
+          - com.okta.spring
+          - com.okta.jwt
+          - com.okta.spring:okta-spring-boot-starter
+          - com.okta.sdk:okta-sdk-api
+          - com.okta.jwt:okta-jwt-verifier
+          - github.com/okta/okta-sdk-golang
+          - github.com/okta/okta-jwt-verifier-golang
+          - okta.com
+          - .okta.com
+          - .oktapreview.com
+          - .okta-emea.com
+          - oktacdn.com
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — SAML 2.0 web single sign-on -
+          the browser redirect to the Okta org's SSO endpoint and the signed assertion POSTed back
+          to the product's assertion consumer service: Okta receives the service-provider entity id
+          and the RelayState from the AuthnRequest, the end user's IP address and user-agent, the
+          credentials the person types on Okta's own page, and any multi-factor challenge Okta
+          imposes; and it records the authentication event with the device, location and application
+          in its own system log. RETURNED TO THE OPERATOR in the signed assertion, in the opposite
+          direction: the NameID, which is ordinarily the person's email address or user principal
+          name, plus whatever attribute statements the Okta administrator mapped - given name,
+          family name, groups, department, employee number. [source: The SAML 2.0 web browser SSO
+          profile and Okta's own configuration surface. NOT re-read from Okta's documentation in
+          this pass.]  ||  PATH 2 — OpenID Connect authorization-code flow against an Okta org and
+          its /oauth2/v1/token and /oauth2/v1/userinfo endpoints: Sent to Okta: the client_id and
+          client_secret, the authorization code, the requested scopes, the redirect_uri, the calling
+          server's IP address and, for the browser leg, the end user's IP address and session.
+          Returned: the sub, and per scope the email, name, groups and any custom profile claims the
+          administrator exposed. [source: The construct itself. NOT re-read from Okta's
+          documentation in this pass.]  ||  PATH 3 — Directory and lifecycle - the Okta management
+          API, and SCIM provisioning where the product exposes a SCIM endpoint: Where the product
+          calls the Okta management API it SENDS user records to Okta: userName, email address,
+          given and family name, phone number, and profile attributes. Where the product exposes a
+          SCIM endpoint instead, Okta PUSHES those same records to the product, which is a
+          disclosure in the opposite direction. In either arrangement Okta holds the directory,
+          which is the point of the product. [source: The construct itself. NOT re-read from Okta's
+          documentation in this pass.]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (California) -
+          Okta, Inc., 100 First Street, Floor 6, San Francisco, CA 94105. Okta's own privacy policy
+          names Okta UK Limited and Okta Japan K.K. as further addresses and names NO
+          EEA-established Okta entity; whether one exists was not established in this pass. ||
+          CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the day each
+          document was read: Okta, Inc. — United States (California; 100 First Street, Floor 6, San
+          Francisco, CA 94105) — named as 'Okta' TOGETHER WITH 'the applicable Okta affiliate(s)
+          involved in the processing activity', which the policy does not enumerate and points at a
+          contact page for [read from https://www.okta.com/legal/privacy-policy/ on 2026-08-25];
+          Auth0, LLC — United States (California; the same address is given for Okta, Inc. including
+          its subsidiary Auth0 LLC) — named as wholly owned by Okta and covered by the same policy,
+          so an Auth0 relationship and an Okta relationship may reach the same contracting address
+          [read from https://www.okta.com/legal/privacy-policy/ on 2026-08-25]; Okta UK Limited — no
+          country was recorded for this entity in this pass — recorded by the research pass as a
+          further address named in Okta's own privacy policy [NOT CONFIRMED FROM A DOCUMENT IN THIS
+          PASS: the research pass recorded this entity in its jurisdiction text without quoting the
+          passage that names it, and no Okta entity established in the European Economic Area was
+          found at all]; Okta Japan K.K. — no country was recorded for this entity in this pass —
+          recorded by the research pass as a further address named in Okta's own privacy policy [NOT
+          CONFIRMED FROM A DOCUMENT IN THIS PASS: the research pass recorded this entity in its
+          jurisdiction text without quoting the passage that names it]. || WHICH CANDIDATE APPLIES
+          TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF
+          THE VENDOR. It is read from the order form, the data processing agreement or the invoice
+          that operator actually signed; where none of those can be read, the answer for this field
+          is needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "https://www.okta.com/legal/privacy-policy/ (retrieved 2026-08-25) names, for
+          \"the entity behind the Okta name, and that Auth0 is inside it\": \"In this Privacy
+          Policy, \"Okta,\" \"we,\" \"our,\" and \"us\" each mean Okta, Inc. and the applicable Okta
+          affiliate(s) involved in the processing activity. The addresses of our offices, where
+          Okta, Inc. and our affiliates are located, can be found at https://www.okta.com/contact .
+          Auth0, LLC is wholly owned by Okta. Any references to Customer Identity Cloud are
+          inclusive of Auth0 by Okta .\" [read: raw. The trailing spaces before the full stops are
+          artefacts of superscript footnote markers stripped out of the source HTML; no word is
+          changed.] || https://www.okta.com/legal/privacy-policy/ (retrieved 2026-08-25) names, for
+          \"the postal address of the contracting entity\": \"Okta, Inc. (including its subsidiary,
+          Auth0 LLC), ATTN: Okta Data Protection Officer (Okta Privacy Team), 100 First Street,
+          Floor 6, San Francisco, CA 94105, USA\" [read: raw] ||
+          https://www.okta.com/legal/privacy-policy/ (retrieved 2026-08-25) names, for \"Okta's own
+          statement of its role, which is the question this bundle's rule asks\": \"Okta is the
+          controller of your Personal Data, as described in this Privacy Policy, unless otherwise
+          stated. Please note that this Privacy Policy does not apply to the extent that we process
+          Personal Data in the role of a processor (or a comparable role such as a \"service
+          provider\" in certain jurisdictions) on behalf of our customers\" [read: raw. The source
+          text renders the word \"Personal\" split across a stripped superscript as \"Per sonal\";
+          it is joined here and nothing else is altered.]"
+      - vendor: Auth0, LLC, an Okta, Inc. company (Auth0 / Okta Customer Identity Cloud)
+        anchors:
+          - auth0
+          - auth0-js
+          - "@auth0/auth0-react"
+          - "@auth0/auth0-spa-js"
+          - "@auth0/nextjs-auth0"
+          - "@auth0/auth0-angular"
+          - "@auth0/auth0-vue"
+          - express-openid-connect
+          - "@auth0/"
+          - auth0-python
+          - omniauth-auth0
+          - auth0/auth0-php
+          - auth0/login
+          - Auth0.AuthenticationApi
+          - Auth0.ManagementApi
+          - Auth0.AspNetCore.Authentication
+          - com.auth0
+          - com.auth0:auth0
+          - com.auth0:jwks-rsa
+          - com.auth0:mvc-auth-commons
+          - com.auth0:auth0-spring-security-api
+          - github.com/auth0/go-auth0
+          - github.com/auth0/go-jwt-middleware
+          - auth0.com
+          - .auth0.com
+          - cdn.auth0.com
+          - next-auth/providers/auth0
+          - passport-auth0
+          - "@auth/core/providers/auth0"
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — Universal Login - the browser
+          redirect to the tenant's own auth0.com domain or custom domain, and the token exchange
+          that follows: The end user's browser reaches Auth0 directly, so Auth0 receives the end
+          user's IP address, user-agent and any existing Auth0 session; the client_id, the requested
+          scopes and audience, the redirect_uri, the state and nonce; the credentials the person
+          types on Auth0's own page; and the fact, time, device and location of the sign-in, which
+          Auth0 records in its tenant logs and uses for its anomaly-detection features. The token
+          exchange sends client_id, client_secret and the code from the operator's server. [source:
+          The construct itself. NOT re-read from Auth0's documentation in this pass.]  ||  PATH 2 —
+          The Auth0 user store and Management API, which is the material difference between Auth0
+          and a pure federation broker: In the ordinary Auth0 deployment AUTH0 HOLDS THE USER
+          DATABASE. What the product sends is therefore not only an authentication request but the
+          accounts themselves: email address, verified state, password - hashed, and in a bulk
+          import possibly with the original hash - name, nickname, picture, phone number, and
+          arbitrary user_metadata and app_metadata the application defines. Auth0 also holds the
+          login history and the devices and IP addresses associated with each account. [source: The
+          construct itself and the Management API user resource. NOT re-read from Auth0's
+          documentation in this pass.]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (California) -
+          Auth0, LLC, wholly owned by Okta, Inc., whose privacy policy gives the address as 100
+          First Street, Floor 6, San Francisco, CA 94105 for Okta, Inc. including its subsidiary
+          Auth0 LLC. Auth0's own privacy page redirects to Okta's, which is itself the evidence that
+          the two are one relationship. || CANDIDATE CONTRACTING ENTITIES, as the vendor's own
+          documents named them on the day each document was read: Auth0, LLC — United States
+          (California; the policy gives 100 First Street, Floor 6, San Francisco, CA 94105 for Okta,
+          Inc. including its subsidiary Auth0 LLC) — named as wholly owned by Okta; Auth0's own
+          privacy page redirects to Okta's, which is itself the evidence that the two are one
+          relationship [read from https://www.okta.com/legal/privacy-policy/ on 2026-08-25]; Auth0
+          International LLC — United States; the passage describes the list as Okta's United States
+          entities and United States subsidiaries — named in the list of group entities adhering to
+          the EU-U.S. Data Privacy Framework principles [read from
+          https://www.okta.com/legal/privacy-policy/ on 2026-08-25]; Okta International LLC — United
+          States; the passage describes the list as Okta's United States entities and United States
+          subsidiaries — named in the same list of group entities adhering to those principles [read
+          from https://www.okta.com/legal/privacy-policy/ on 2026-08-25]. || WHICH CANDIDATE APPLIES
+          TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF
+          THE VENDOR. It is read from the order form, the data processing agreement or the invoice
+          that operator actually signed; where none of those can be read, the answer for this field
+          is needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: 'https://www.okta.com/legal/privacy-policy/ (retrieved 2026-08-25) names, for
+          "that Auth0 is Okta and that the two share one privacy policy and one contracting
+          address": "Auth0, LLC is wholly owned by Okta. Any references to Customer Identity Cloud
+          are inclusive of Auth0 by Okta ." [read: raw. https://auth0.com/privacy was requested and
+          redirected to this page, which is how the identification was made; the redirect target is
+          recorded in the fetch log.] || https://www.okta.com/legal/privacy-policy/ (retrieved
+          2026-08-25) names, for "the US entities inside the group that are certified under the
+          EU-U.S. Data Privacy Framework, which names the Auth0 entities": "The Okta U.S. entities
+          and U.S. subsidiaries that are adhering to the DPF Principles are : Spera Cybersecurity,
+          Inc . Auth0 International LLC . Auth0, LLC . Okta International LLC ." [read: raw. The
+          list is an ordered list in the source HTML; the items are joined here with single spaces
+          and the stray spaces before the full stops are stripped superscript markers. No name is
+          changed. This is recorded as an entity list, NOT as a conclusion that any transfer is
+          lawful.]'
+      - vendor: OneLogin, Inc. (OneLogin, part of the One Identity / Quest Software group since 2021)
+        anchors:
+          - onelogin
+          - onelogin.com
+          - .onelogin.com
+          - onelogin.saml2
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — SAML 2.0 web single sign-on
+          against a OneLogin subdomain, and the OneLogin OIDC endpoints: OneLogin receives the
+          service-provider entity id and RelayState, the end user's IP address and user-agent, the
+          credentials the person types on OneLogin's own page and any multi-factor challenge it
+          imposes, and it records the authentication event. RETURNED TO THE OPERATOR in the signed
+          assertion: the NameID, ordinarily the email address, and the attribute statements the
+          administrator mapped - name, groups, department, roles. [source: The SAML 2.0 web browser
+          SSO profile. NOT re-read from OneLogin's documentation in this pass.]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: JURISDICTION NOT
+          ESTABLISHED. Two OneLogin legal pages and the One Identity privacy page each returned HTTP
+          202 with a zero-byte body to an anonymous request from this workspace, and a summarising
+          fetch of the same URL returned empty content, so no OneLogin document was read at all in
+          this pass. Do not substitute a headquarters, a group parent or a plausible entity.
+          [JURISDICTION NOT ESTABLISHED in the research pass; treat as unconfirmed — see note. Do
+          not substitute a headquarters, a billing country or a group parent.] || NO CANDIDATE
+          CONTRACTING ENTITY WAS ESTABLISHED in the research pass. This is not a short list; it is
+          an empty one. Do not populate it from a headquarters, a billing country, a domain suffix,
+          a group parent or anything else outside a document the operator holds. || WHICH CANDIDATE
+          APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN
+          ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement or
+          the invoice that operator actually signed; where none of those can be read, the answer for
+          this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "https://www.onelogin.com/legal/privacy-policy (retrieved 2026-08-25) — nothing
+          is claimed; this entry records the failed retrieval so a later reader does not spend it
+          twice: NOTHING WAS READ; this entry records the failed retrieval so it is not spent twice.
+          [read: unretrievable - HTTP 202 with a zero-byte body over curl, and empty content through
+          a summarising fetch tool. https://www.onelogin.com/legal/privacy and
+          https://www.oneidentity.com/legal/privacy.aspx returned the same. The only
+          OneLogin-published artefact successfully read in this pass is the PyPI metadata for the
+          onelogin package, whose repository is github.com/onelogin/onelogin-python-sdk; that
+          establishes who owns the ANCHOR and says nothing about where any entity is established.]"
+  captcha_recipients:
+    kind: recipient
+    purpose: Bot-protection and CAPTCHA vendors a product embeds in a page and then calls to verify a
+      token - the party that receives the end user's IP address and browser and behavioural signals
+      in order to score the request, without ever authenticating the person. For the rules that ask
+      who received the visitor's data on the way in. A match is evidence that the vendor's code,
+      endpoint or protocol field name is named in the tree; it is not, on its own, evidence that
+      anything was disclosed to that vendor, which is what the importing rule's context questions
+      are for.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: Google LLC (reCAPTCHA and reCAPTCHA Enterprise)
+        anchors:
+          - "@google-cloud/recaptcha-enterprise"
+          - google-cloud-recaptcha-enterprise
+          - google-cloud-recaptcha_enterprise
+          - google/recaptcha
+          - Google.Cloud.RecaptchaEnterprise.V1
+          - com.google.android.recaptcha
+          - com.google.cloud:google-cloud-recaptchaenterprise
+          - com.google.android.recaptcha:recaptcha
+          - cloud.google.com/go/recaptchaenterprise
+          - www.google.com/recaptcha
+          - google.com/recaptcha
+          - recaptcha.net
+          - www.recaptcha.net
+          - www.gstatic.com/recaptcha
+          - g-recaptcha-response
+          - g-recaptcha
+          - grecaptcha
+          - react-google-recaptcha
+          - react-google-recaptcha-v3
+          - ng-recaptcha
+          - express-recaptcha
+          - vue-recaptcha
+          - django-recaptcha
+          - flask-recaptcha
+          - recaptcha
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — The widget - the script loaded
+          into the end user's browser from www.google.com/recaptcha/api.js or
+          www.gstatic.com/recaptcha, before the user does anything: Because the script runs in the
+          end user's browser and is served by Google, Google receives on every page load that
+          includes it: the end user's IP address, user-agent, the referring page URL and therefore
+          the site and path being visited, and any Google cookies the browser already holds - which
+          for a signed-in Google user identifies the person. The widget then observes interaction
+          signals in the page in order to score the request. This happens whether or not a form is
+          ever submitted. [source: The construct itself. NOT re-read from Google's reCAPTCHA
+          documentation in this pass, and the exact signal list Google collects is NOT established
+          here - only that the request reaches Google with the fields above, which follows from it
+          being a third-party script.]  ||  PATH 2 — The server-side verification POST to
+          www.google.com/recaptcha/api/siteverify: Sent by the operator's server: the site secret,
+          the response token the widget produced, and OPTIONALLY the remoteip parameter - which is
+          the end user's IP address, disclosed by the operator's own server as a deliberate act.
+          Google returns success, the hostname it saw, the challenge timestamp, and for v3 a score
+          and an action name. [source: The documented siteverify request parameters. NOT re-read
+          from Google's documentation in this pass; whoever relies on the remoteip parameter name
+          should re-confirm it.]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (California) -
+          Google LLC, 1600 Amphitheatre Parkway, Mountain View, California 94043, as the entity a
+          developer contracts with for API use. TREAT AS UNCONFIRMED FOR THIS PRODUCT SPECIFICALLY:
+          the reCAPTCHA terms of service were not separately fetched, and reCAPTCHA Enterprise is
+          sold under the Google Cloud agreement, whose EEA entity the storage research could not
+          establish first-hand. || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents
+          named them on the day each document was read: Google LLC — United States (California; 1600
+          Amphitheatre Parkway, Mountain View, California 94043) — named as 'Google' for use of
+          Google's APIs generally. The terms of service for this product specifically were not
+          fetched in this pass, and the enterprise version of it is sold under the Google Cloud
+          agreement, whose entity in the European Economic Area was not established first-hand [read
+          from https://developers.google.com/terms on 2026-08-25]. || WHICH CANDIDATE APPLIES TO A
+          GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE
+          VENDOR. It is read from the order form, the data processing agreement or the invoice that
+          operator actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "https://developers.google.com/terms (retrieved 2026-08-25) names, for \"the
+          entity a developer contracts with for use of Google's APIs\": \"Under the Terms,
+          \"Google\" means Google LLC, with offices at 1600 Amphitheatre Parkway, Mountain View,
+          California 94043, United States, unless set forth otherwise in additional terms applicable
+          for a given API.\" [read: raw. The document's own words \"unless set forth otherwise in
+          additional terms applicable for a given API\" are the reason the field above says
+          UNCONFIRMED for reCAPTCHA specifically: reCAPTCHA has its own terms, which were not
+          fetched.]"
+      - vendor: Intuition Machines, Inc. (hCaptcha)
+        anchors:
+          - "@hcaptcha/react-hcaptcha"
+          - "@hcaptcha/vue-hcaptcha"
+          - "@hcaptcha/types"
+          - "@hcaptcha/loader"
+          - "@hcaptcha/"
+          - hcaptcha.com
+          - api.hcaptcha.com
+          - js.hcaptcha.com
+          - newassets.hcaptcha.com
+          - assets.hcaptcha.com
+          - h-captcha-response
+          - h-captcha
+          - django-hcaptcha
+          - hcaptcha
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — The widget - the script loaded
+          into the end user's browser from js.hcaptcha.com and the assets fetched from
+          newassets.hcaptcha.com: As with any third-party script, Intuition Machines receives the
+          end user's IP address, user-agent and the referring page URL on every load, together with
+          the site key that identifies the operator, and observes interaction signals in the page in
+          order to score the request. [source: The construct itself. NOT re-read from hCaptcha's
+          documentation in this pass.]  ||  PATH 2 — The server-side verification POST to
+          api.hcaptcha.com/siteverify: Sent by the operator's server: the site secret, the response
+          token, the sitekey, and OPTIONALLY remoteip - the end user's IP address, disclosed
+          deliberately by the operator's server. The response carries success, the hostname and the
+          challenge timestamp. [source: The documented siteverify parameters. NOT re-read from
+          hCaptcha's documentation in this pass.]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States - Intuition
+          Machines, Inc., a Delaware corporation, with the address it gives for privacy
+          correspondence at 1065 SW 8th St #704, Miami, Florida 33130. || CANDIDATE CONTRACTING
+          ENTITIES, as the vendor's own documents named them on the day each document was read:
+          Intuition Machines, Inc. — United States (a Delaware corporation, number 6393793; the
+          address given for privacy correspondence is 1065 SW 8th St #704, Miami, Florida 33130) —
+          named as the entity whose service this is; the same policy makes it the controller EXCEPT
+          where it processes on behalf of its integrators, in which case the integrator is the
+          controller [read from https://www.hcaptcha.com/privacy on 2026-08-25]. || WHICH CANDIDATE
+          APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN
+          ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement or
+          the invoice that operator actually signed; where none of those can be read, the answer for
+          this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "https://www.hcaptcha.com/privacy (retrieved 2026-08-25) names, for \"the
+          operating entity and its state of incorporation\": \"hCaptcha is a service of Intuition
+          Machines, Inc. (\"IMI\"), a Delaware US Corporation (#6393793).\" [read: raw] ||
+          https://www.hcaptcha.com/privacy (retrieved 2026-08-25) names, for \"the vendor's own
+          statement of when it is a controller and when a processor, which is the fork this bundle's
+          rule turns on\": \"Note that IMI is the controller of your personal information, except
+          where we process personal information on behalf of our Integrators in connection with the
+          provision of our Service, in which case we are the processor/service provider of personal
+          information, and those Integrators are the controllers/businesses of the personal
+          information.\" [read: raw]"
+      - vendor: Cloudflare, Inc. (Turnstile)
+        anchors:
+          - challenges.cloudflare.com
+          - challenges.cloudflare.com/turnstile/v0/api.js
+          - challenges.cloudflare.com/turnstile/v0/siteverify
+          - cf-turnstile-response
+          - cf-turnstile
+          - turnstile.render
+          - "@marsidev/react-turnstile"
+          - react-turnstile
+          - svelte-turnstile
+          - turnstile
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — The widget - the script loaded
+          into the end user's browser from challenges.cloudflare.com/turnstile/v0/api.js: Cloudflare
+          receives the end user's IP address, user-agent and the referring page URL on every load,
+          together with the site key that identifies the operator, and whatever browser and
+          behavioural signals the challenge collects in order to decide whether to issue a token.
+          [source: The construct itself. NOT re-read from Cloudflare's Turnstile documentation in
+          this pass, and Cloudflare's own public claims about what Turnstile does and does not
+          collect are deliberately NOT reproduced here, because they were not read first-hand in
+          this pass.]  ||  PATH 2 — The server-side verification POST to
+          challenges.cloudflare.com/turnstile/v0/siteverify: Sent by the operator's server: the site
+          secret, the response token, OPTIONALLY remoteip - the end user's IP address - and
+          optionally an idempotency_key. The response carries success, the hostname, the challenge
+          timestamp and an action. [source: The documented siteverify parameters. NOT re-read from
+          Cloudflare's documentation in this pass.]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States - Cloudflare,
+          Inc., named as the sole contracting party in Cloudflare's own Data Processing Addendum; no
+          separate EEA Cloudflare entity is named in that document. CARRIED ACROSS from the first
+          recipients bundle without re-fetching, per the bundle brief. || CANDIDATE CONTRACTING
+          ENTITIES, as the vendor's own documents named them on the day each document was read:
+          Cloudflare, Inc. — United States, as the research pass recorded it — named as the sole
+          contracting party in Cloudflare's own Data Processing Addendum; no separate entity
+          established in the European Economic Area is named in that document. Carried across from
+          the first recipients bundle without re-fetching [read from
+          https://www.cloudflare.com/resources/images/slt3lc6tev37/1M1j5uuFDuLTYiZJJDPBag/0350a7dfd\
+          6cd923d2e7485831ff4bc75/Customer_DPA_v.3_1_Oct_2020.docx.pdf on 2026-08-25]. || WHICH
+          CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT
+          AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement
+          or the invoice that operator actually signed; where none of those can be read, the answer
+          for this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "https://www.cloudflare.com/resources/images/slt3lc6tev37/1M1j5uuFDuLTYiZJJDPB\
+          ag/0350a7dfd6cd923d2e7485831ff4bc75/Customer_DPA_v.3_1_Oct_2020.docx.pdf (retrieved
+          2026-08-25) names, for \"the contracting entity\": \"Cloudflare, Inc. (\"Cloudflare\") and
+          the counterparty agreeing to these terms (\"Customer\") have entered into an Enterprise
+          Subscription Agreement, Self-Serve Subscription Agreement or other written or electronic
+          agreement for the Services provided by Cloudflare (the \"Main Agreement\").\" [read:
+          carried across unchanged from an internal record, where it was read raw from the PDF. That
+          research recorded that the document is version 3.0 dated 1 October 2020 and that
+          Cloudflare's DPA has almost certainly been revised since; the caveat is carried.]"
+  breach_check_recipients:
+    kind: recipient
+    purpose: Services a product queries to find out whether a credential or an account identifier has
+      appeared in a known data breach. The whole legal interest of this class is HOW MUCH the
+      service learns, which differs by an order of magnitude between the two paths the same vendor
+      offers, so the entry states both. A match is evidence that the vendor's code, endpoint or
+      protocol field name is named in the tree; it is not, on its own, evidence that anything was
+      disclosed to that vendor, which is what the importing rule's context questions are for.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: Superlative Enterprises Pty Ltd (Have I Been Pwned, including Pwned Passwords)
+        anchors:
+          - api.pwnedpasswords.com
+          - pwnedpasswords.com
+          - haveibeenpwned.com
+          - api.haveibeenpwned.com
+          - hibp-api-key
+          - hibp
+          - pwnedpasswords
+          - pwned
+          - haveibeenpwned
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — Pwned Passwords range query -
+          GET https://api.pwnedpasswords.com/range/{first 5 characters of the SHA-1 or NTLM hash of
+          the password}: WHAT THE SERVICE RECEIVES: the first five characters of the hash, the
+          caller's IP address, the User-Agent and the TLS connection metadata, and the timing of the
+          request. It does NOT receive the password, the full hash, the username, the email address
+          or any account identifier, and it is not told which of the returned suffixes - if any -
+          the caller matched, because the comparison happens on the caller's own machine. There are
+          1,048,576 possible prefixes and every one returns HTTP 200, so the mere fact of a request
+          reveals nothing about whether a match exists. A range search typically returns
+          approximately 800 hash suffixes; the Add-Padding: true request header pads every response
+          to between 800 and 1,000 results so that response size cannot be used to infer which
+          prefix was searched. TWO THINGS DO STILL REACH A HUMAN-RELEVANT LEVEL and must not be
+          glossed over: the five-character prefix narrows the password to one of a bucket, and the
+          caller's IP address ties the request to a machine and often to a session; and where the
+          check is performed incrementally as the user types, the vendor's own documentation says a
+          party able to observe inbound requests can discern the original password. [source:
+          https://haveibeenpwned.com/API/v3, read raw on 2026-08-25, which says the range query
+          \"allows the first 5 characters of either a SHA-1 or an NTLM hash (not case-sensitive) to
+          be passed to the API\"; who operates the service, and where, is quoted in
+          jurisdiction_source.] [This is the path the phrase k-anonymity refers to, and it is the
+          reason this vendor is not comparable to the others in this bundle: on this path the
+          operator discloses almost nothing.]  ||  PATH 2 — Breached-account search by full email
+          address - GET /breachedAccount/{email address} with an hibp-api-key header: WHAT THE
+          SERVICE RECEIVES: the full email address in the URL path, the API key that identifies the
+          subscriber, the caller's IP address, and the timing. The vendor's own documentation says
+          in terms that this path DISCLOSES THE ADDRESS to Have I Been Pwned. A product that checks
+          its users' addresses against breaches on this path is disclosing an account identifier for
+          each of them. [source: https://haveibeenpwned.com/API/v3, read raw on 2026-08-25.] [A
+          third path exists between the two: a breached-account search by SIX-character hash prefix,
+          which the same documentation calls a k-anonymity search and describes as not disclosing
+          the address. Which of the three a given integration uses is decided by the URL it builds,
+          not by the vendor's name, and the detector cannot tell them apart.]  ||  PATH 3 — The
+          onward recipient behind the API, which is a separate party and a separate row of the
+          record: Have I Been Pwned's own API documentation names Cloudflare as a party with access
+          to view inbound requests to the API. So a request on any of the three paths reaches
+          Cloudflare as well as Have I Been Pwned, and Cloudflare's establishment is a separate
+          question from Superlative Enterprises'. [source: https://haveibeenpwned.com/API/v3, read
+          raw on 2026-08-25, which says this \"may provide a 3rd party (namely someone with access
+          to view inbound requests at Cloudflare) with the ability to observe the API requests\".]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Australia (Queensland) -
+          Superlative Enterprises Pty Ltd, ABN 62 085 442 020. || CANDIDATE CONTRACTING ENTITIES, as
+          the vendor's own documents named them on the day each document was read: Superlative
+          Enterprises Pty Ltd — Australia (a business based in the state of Queensland; ABN 62 085
+          442 020) — named as the owner and operator of the service [read from
+          https://haveibeenpwned.com/Privacy on 2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN
+          OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR.
+          It is read from the order form, the data processing agreement or the invoice that operator
+          actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: 'https://haveibeenpwned.com/Privacy (retrieved 2026-08-25) names, for "the
+          operating entity and where it is based": "HaveIBeenPwned.com (HIBP) is owned and operated
+          by Superlative Enterprises Pty Ltd ABN 62 085 442 020 ("Superlative", "we" or "us"), a
+          business based in the state of Queensland, Australia." [read: raw. The source renders this
+          sentence across five short lines; they are joined here with single spaces and no word is
+          changed.]'
+  mfa_recipients:
+    kind: recipient
+    purpose: Second-factor and multi-factor authentication vendors a product calls to validate a factor
+      the end user presents - the party that receives a phone number, a hardware-key identifier or a
+      push approval, and that ordinarily holds the enrolled-device inventory. For the rules that ask
+      who received the second factor. A match is evidence that the vendor's code, endpoint or
+      protocol field name is named in the tree; it is not, on its own, evidence that anything was
+      disclosed to that vendor, which is what the importing rule's context questions are for.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: Cisco Systems, Inc. (Duo Security)
+        anchors:
+          - "@duosecurity/duo_universal"
+          - "@duosecurity/"
+          - duo_client
+          - duo_universal
+          - duo_api
+          - duo_web
+          - duosecurity/duo_universal_php
+          - duosecurity/duo_api_php
+          - com.duosecurity
+          - com.duosecurity:duo-universal-sdk
+          - com.duosecurity:duo-client
+          - github.com/duosecurity/duo_api_golang
+          - github.com/duosecurity/duo_universal_golang
+          - duosecurity.com
+          - .duosecurity.com
+          - .duofederal.com
+          - duo.com
+          - duosecurity
+          - duo
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — Duo Universal Prompt - an OIDC
+          flow against an operator-configured api-{identifier}.duosecurity.com host, with
+          /oauth/v1/health_check, /oauth/v1/authorize and /oauth/v1/token: Duo receives the
+          integration key that identifies the operator's Duo application, a signed client assertion,
+          the USERNAME of the person being challenged, the end user's IP address and user-agent when
+          the browser is redirected to the prompt, and the outcome and time of the challenge. Duo
+          already holds, from enrolment, the person's registered devices: phone numbers, device
+          platform and model, hardware token serial numbers and push registration identifiers.
+          [source: The endpoint paths were read from a corpus file rather than from Duo's
+          documentation: builds /oauth/v1/health_check, /oauth/v1/authorize and /oauth/v1/token
+          against a configured api_host. Reading that file is reading, not sweeping. The FIELD list
+          is from the construct and was NOT re-read from Duo's documentation in this
+          pass.]  ||  PATH 2 — Duo Auth API - the older direct server call, POST /auth/v2/auth
+          against the same operator-configured host: Duo receives the username, the factor
+          requested, the device identifier, and - where the application sends them - the end user's
+          IP address as ipaddr and free-text context in pushinfo, which is shown to the person on
+          their phone and can carry the application name, the location and what they are approving.
+          [source: The construct itself. NOT re-read from Duo's documentation in this pass; whoever
+          relies on the ipaddr and pushinfo parameter names should re-confirm them.]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: JURISDICTION NOT
+          ESTABLISHED. Cisco's own full privacy page returned HTTP 403 to an anonymous request from
+          this workspace, and two Duo privacy-notice URLs returned HTTP 404. The only entity name
+          obtained is a copyright line, \"© 2026 Cisco Systems, Inc.\", read through a summarising
+          fetch of duo.com/legal - which is a copyright notice and not a statement of who contracts
+          or where they are established. Do not substitute Cisco's headquarters. [JURISDICTION NOT
+          ESTABLISHED in the research pass; treat as unconfirmed — see note. Do not substitute a
+          headquarters, a billing country or a group parent.] || NO CANDIDATE CONTRACTING ENTITY WAS
+          ESTABLISHED in the research pass. This is not a short list; it is an empty one. Do not
+          populate it from a headquarters, a billing country, a domain suffix, a group parent or
+          anything else outside a document the operator holds. || WHICH CANDIDATE APPLIES TO A GIVEN
+          OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR.
+          It is read from the order form, the data processing agreement or the invoice that operator
+          actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "https://duo.com/legal (retrieved 2026-08-25) names, for \"nothing is
+          established; this records what was obtained and what failed\": \"© 2026 Cisco Systems,
+          Inc.\" [read: summarising - a fetch tool that answers a prompt over the page with a small
+          model, which cannot be relied on for a verbatim quote and which here returned only a
+          footer. The same tool reported that the page links to a copyright policy naming Cisco
+          Systems International B.V. without any sentence describing that entity's role.
+          https://www.cisco.com/c/en/us/about/legal/privacy-full.html returned HTTP 403;
+          https://duo.com/legal/privacy-notice and https://duo.com/legal/duo-privacy-data-sheet
+          returned HTTP 404.]"
+      - vendor: Yubico AB (Yubico, and the YubiCloud OTP validation service)
+        anchors:
+          - python-yubico
+          - yubikey-manager
+          - com.yubico
+          - com.yubico:yubico-validation-client2
+          - com.yubico:yubikit-android
+          - yubico
+          - yubico_manager
+          - api.yubico.com
+          - api2.yubico.com
+          - yubico.com
+          - api.yubico.com/wsapi/2.0/verify
+          - yubico-client
+          - github.com/GeertJohan/yubigo
+          - yubikey
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — YubiCloud OTP validation - GET
+          https://api.yubico.com/wsapi/2.0/verify with id, otp, nonce and an HMAC signature: Yubico
+          receives the one-time password the person's YubiKey produced, whose first twelve
+          characters are the KEY'S PUBLIC IDENTIFIER - a stable value that identifies that physical
+          key, and therefore in practice the person holding it, across every site they use it on;
+          the client id that identifies the operator's YubiCloud account; a nonce; and the calling
+          server's IP address and the time. Yubico returns the validation status together with the
+          key's session and use counters, which are a record of how much that key has been used.
+          Yubico does NOT receive the username or the email address unless the operator chooses to
+          send them, and this API has no field for them. [source: The YubiCloud verification
+          protocol and its endpoint. NOT re-read from Yubico's documentation in this pass; the
+          wsapi/2.0/verify path and the twelve-character public-identifier prefix should be
+          re-confirmed by whoever relies on them.]  ||  PATH 2 — WebAuthn and FIDO2 with a YubiKey,
+          which is the path where Yubico receives NOTHING: No request reaches Yubico at all.
+          Registration and authentication happen between the browser, the authenticator and the
+          operator's own server; the attestation certificate identifies the key's model rather than
+          the key, and it is verified locally. A tree that uses a YubiKey only through WebAuthn has
+          Yubico as a hardware supplier and not as a recipient of personal data, and the record
+          should say so rather than list Yubico as a recipient. [source: The WebAuthn architecture.
+          This row exists because the anchors cannot tell the two paths apart and the difference is
+          total.]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Sweden (Stockholm) - Yubico
+          AB, Gävlegatan 22, 113 30 Stockholm. Yubico's own privacy notice adds that the Yubico
+          Group company providing the specific service is the controller for that service, so a
+          given deployment may face a different group entity; which one is an operator fact. ||
+          CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the day each
+          document was read: Yubico AB — Sweden (Gävlegatan 22, 113 30 Stockholm) — named as the
+          data controller OR, in the notice's own words, the specific Yubico Group company providing
+          the services as identified when the personal data is collected. The notice itself makes
+          the entity depend on the service, so a given deployment may face a group company this list
+          does not name [read from https://www.yubico.com/support/terms-conditions/privacy-notice/
+          on 2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT
+          OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order
+          form, the data processing agreement or the invoice that operator actually signed; where
+          none of those can be read, the answer for this field is needs_human. Do not choose a
+          candidate because it is the largest, the nearest, the one with the most familiar name or
+          the only one left. Every date above is the day that document was read and nothing in this
+          repository re-reads it, so this list ages into an INCOMPLETE list and never into a false
+          statement — a candidate may have been renamed, acquired or added since."
+        jurisdiction_source: 'https://www.yubico.com/support/terms-conditions/privacy-notice/ (retrieved
+          2026-08-25) names, for "the entity that adopted the privacy notice and acts as
+          controller": "In accordance with applicable data protection legislation, Yubico AB or the
+          specific Yubico Group company providing services (as identified when your personal data is
+          collected) acts as the data controller." [read: raw] ||
+          https://www.yubico.com/support/terms-conditions/privacy-notice/ (retrieved 2026-08-25)
+          names, for "the registered address given for the controller": "Yubico AB, Gävlegatan 22
+          113 30 Stockholm Sweden" [read: raw. The address is a single line in the source, rendered
+          without commas between its parts; it is reproduced as the document has it.]'
+      - vendor: Twilio Inc. and Twilio Ireland Limited (Authy, and Twilio Verify)
+        anchors:
+          - authy
+          - authy/php
+          - api.authy.com
+          - authy.com
+          - verify.twilio.com
+          - github.com/dcu/go-authy
+        receives: "PER INTEGRATION PATH, and the paths differ materially — read the one the code actually
+          uses rather than answering from the vendor's name. PATH 1 — Authy user registration - POST
+          https://api.authy.com/protected/json/users/new: Twilio receives the end user's EMAIL
+          ADDRESS, MOBILE TELEPHONE NUMBER and country code, together with the operator's API key
+          and the calling server's IP address, and returns an authy_id that the product then stores
+          against its own user. This is the largest single disclosure in the multi-factor class: a
+          phone number and an email address per person, held by the vendor for as long as the
+          enrolment lasts. [source: The Authy API's own request shape. NOT re-read from Twilio's
+          documentation in this pass; the path and the parameter names should be re-confirmed by
+          whoever relies on them.]  ||  PATH 2 — Token verification - GET
+          https://api.authy.com/protected/json/verify/{token}/{authy_id}: Twilio receives the
+          authy_id, the one-time token the person entered, the operator's API key and the calling
+          server's IP address, and it records the attempt and its outcome. [source: The Authy API's
+          own request shape. NOT re-read from Twilio's documentation in this pass.]  ||  PATH 3 —
+          Twilio Verify, the successor product - POST
+          https://verify.twilio.com/v2/Services/{ServiceSid}/Verifications: Twilio receives the
+          recipient address in the To parameter, which is a telephone number for the SMS, voice and
+          WhatsApp channels and an email address for the email channel, plus the channel and the
+          operator's account credentials. For an SMS or voice channel Twilio then hands the number
+          on to carriers and aggregators, which its own privacy notice describes as independent
+          controllers for the metadata they process. [source: The Verify API's own request shape,
+          and https://www.twilio.com/en-us/legal/privacy read raw on 2026-08-25 for the carrier
+          statement, quoted in the notes.]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (San
+          Francisco) - Twilio Inc., 101 Spear Street, 5th Floor, San Francisco CA 94105, given as
+          the worldwide headquarters; and Ireland (Dublin) - Twilio Ireland Limited, 78 Sir John
+          Rogerson's Quay, Dublin 2, D02 R296, given as the EEA headquarters. || CANDIDATE
+          CONTRACTING ENTITIES, as the vendor's own documents named them on the day each document
+          was read: Twilio Inc. — United States (101 Spear Street, 5th Floor, San Francisco CA
+          94105) — named as the Worldwide Headquarters [read from
+          https://www.twilio.com/en-us/legal/privacy on 2026-08-25]; Twilio Ireland Limited —
+          Ireland (78 Sir John Rogerson's Quay, Dublin 2 D02 R296) — named as the EEA Headquarters,
+          and named again as the place an individual in the European Economic Area would lodge a
+          complaint [read from https://www.twilio.com/en-us/legal/privacy on 2026-08-25]. || WHICH
+          CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT
+          AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement
+          or the invoice that operator actually signed; where none of those can be read, the answer
+          for this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "https://www.twilio.com/en-us/legal/privacy (retrieved 2026-08-25) names, for
+          \"the two headquarters entities and their addresses\": \"Worldwide Headquarters Twilio
+          Inc. 101 Spear Street, 5th Floor San Francisco CA 94105 ... EEA Headquarters Twilio
+          Ireland Limited 78 Sir John Rogerson’s Quay, Dublin 2 D02 R296, Ireland\" [read: raw. The
+          two address blocks are separate lines in the document's contact section; they are joined
+          here with single spaces and an explicit ellipsis marks the material between them that is
+          omitted - an icon markup block, not prose.] || https://www.twilio.com/en-us/legal/privacy
+          (retrieved 2026-08-25) names, for \"that the EEA establishment is Ireland, in Twilio's own
+          words\": \"EEA Residents: You have the right to lodge a complaint with the Data Protection
+          Commissioner in Ireland, where our EEA headquarters are located.\" [read: raw] ||
+          https://www.twilio.com/en-us/legal/privacy (retrieved 2026-08-25) names, for \"that the
+          group's global data handling is governed by binding corporate rules, recorded as a
+          place-related fact and NOT as a conclusion about any transfer\": \"We protect the personal
+          data flowing through our platform by centering our privacy program on Binding Corporate
+          Rules (“BCRs”). These BCRs serve as our global code of conduct, mandating how Twilio Inc.
+          and its group companies (“Twilio”, “we”, or “our”) process personal data wherever we
+          operate.\" [read: raw]"

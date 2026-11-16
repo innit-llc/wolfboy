@@ -1,0 +1,149 @@
+id: eu-consent-019
+pack: eu-consent
+short_name: Facebook SDK or plugin may contact Meta on page view
+problem_line:
+  text: Facebook SDK or plugin passes visitor data to Meta
+fix_line: Load the SDK after recorded consent or on a click, or call the Graph API from your server;
+  tell visitors what Meta gets.
+title: Facebook JavaScript SDK or social plugin referenced (whether a visitor's browser requests
+  Meta needs review)
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: Court of Justice of the European Union, judgment of 29 July 2019, Fashion ID GmbH & Co. KG v
+      Verbraucherzentrale NRW eV, C-40/17, EU:C:2019:629, operative part point 2 — 'The operator of
+      a website, such as Fashion ID GmbH & Co. KG, that embeds on that website a social plugin
+      causing the browser of a visitor to that website to request content from the provider of that
+      plugin and, to that end, to transmit to that provider personal data of the visitor can be
+      considered to be a controller, within the meaning of Article 2(d) of Directive 95/46. That
+      liability is, however, limited to the operation or set of operations involving the processing
+      of personal data in respect of which it actually determines the purposes and means, that is to
+      say, the collection and disclosure by transmission of the data at issue.' The plugin in the
+      case was the Facebook 'Like' button provided by Facebook Ireland Ltd
+    url: https://publications.europa.eu/resource/celex/62017CJ0040
+    checked_at: 2026-07-28
+    jurisdiction: EU
+  - cite: "Fashion ID, C-40/17, operative part point 4 — 'Article 2(h) and Article 7(a) of Directive
+      95/46 must be interpreted as meaning that … the consent referred to in those provisions must
+      be obtained by that operator only with regard to the operation or set of operations involving
+      the processing of personal data in respect of which that operator determines the purposes and
+      means. In addition, Article 10 of that directive must be interpreted as meaning that, in such
+      a situation, the duty to inform laid down in that provision is incumbent also on that operator
+      …'. This is what makes the embedding site, and not only Meta, the addressee: the consent and
+      the notice are owed by the operator for the collection and the transmission"
+    url: https://publications.europa.eu/resource/celex/62017CJ0040
+    checked_at: 2026-07-28
+    jurisdiction: EU
+  - cite: "GDPR Art. 94(2) — references to the repealed Directive 95/46/EC 'shall be construed as
+      references to this Regulation'. The provisions Fashion ID interpreted map as follows: Art.
+      2(d) (controller) to Art. 4(7); Art. 2(h) and 7(a) (consent) to Art. 4(11) and Art. 6(1)(a);
+      Art. 7(f) (legitimate interests) to Art. 6(1)(f); Art. 10 (information duty) to Arts. 13 and
+      14. Joint controllership, which Directive 95/46 left implicit, is now express in Art. 26"
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-28
+    jurisdiction: EU
+  - cite: GDPR Art. 6(1) — processing is lawful only if at least one of the listed bases applies. The
+      operative fact this rule points at is the transmission of the visitor's IP address, and any
+      cookie contents the request carries, to a third-party provider when the browser loads the
+      resource
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-28
+    jurisdiction: EU
+  - cite: ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC) — prior consent
+      is required for storing information, or gaining access to information already stored, in a
+      user's terminal equipment. This limb applies where the SDK or the plugin sets or reads a
+      cookie, which is a separate question from the Art. 6(1) transmission above and can be answered
+      differently
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-28
+    jurisdiction: EU
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.7
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  match:
+    - connect\.facebook\.net
+    - \bFB\.init\s*\(
+    - class(Name)?\s*=\s*["'][^"']*\bfb-(like|like-box|share-button|send|save|follow|page|group|comments|post|video|login-button)\b
+    - facebook\.com/plugins/
+  match_without:
+    - \b(default|script|style|img|font|connect|frame|media|object|child|worker|manifest|prefetch)-src\b
+    - ^\s*(//|\{?/\*|\*(?![\w$])|#|<!--)
+  shared_path_exclusions:
+    - email_template_directories
+context_questions:
+  - Does this load run on page view for an ordinary visitor, or only after a deliberate action by a
+    signed-in operator? This is the question that decides the candidate, and the two cases look
+    identical at the matched line. A <script src> in a layout, a document head or a root component
+    runs for everyone who opens the page, which is the Fashion ID situation. A loadScript() call
+    inside a settings screen — connecting a WhatsApp or Facebook business channel, re-authorising an
+    integration — runs only when an administrator clicks, and no visitor datum is transmitted. Trace
+    the matched line back to what triggers it and quote the path.
+  - "If it does run for visitors, is it gated on a recorded consent decision? Quote the gate. A
+    cookie banner that exists somewhere in the project is not a gate: the question is whether THIS
+    load waits for the answer."
+  - Which of the two duties is in issue here, and is it both? Fashion ID point 4 puts the consent
+    and the information duty on the embedding operator for the collection and the transmission. The
+    transmission of the visitor's IP address happens as soon as the browser requests the resource,
+    whatever the SDK then does. Whether a cookie is also set or read on the visitor's terminal
+    equipment — the separate ePrivacy Art. 5(3) limb — depends on what is loaded and on the
+    visitor's existing Facebook session. Do not assert the cookie limb without evidence for it.
+  - Is the site offered to visitors in the European Union?
+  - "IF THE MATCHED LINE IS THE SOCIAL-PLUGIN ENDPOINT PATH facebook.com/plugins/ RATHER THAN A HOST
+    OR AN SDK CALL, WHERE DOES THE BUILT URL GO? This shape - clause 4, added 2026-09-04 - is a URL
+    assembled on the server, and the detector reads the assembly and not the use. Follow the
+    variable the line assigns: where it reaches an iframe src, an img src, a link href rendered into
+    a page, or a template variable a view interpolates, the visitor's browser requests Meta when
+    that page renders and the Fashion ID situation is present in full. Where it is returned to an
+    API consumer, logged, stored, or used only in a server-side fetch, no visitor datum is
+    transmitted by this line and the candidate closes there - say which, and quote the template or
+    component that consumes it. Two further things the line does not say: which plugin it is (the
+    path segment after /plugins/ names it - video.php, like.php, page.php - and a comments or like
+    plugin behaves differently from a video embed), and whether the page it lands on is public or
+    behind an operator login, which is context question 1."
+evidence_template: "{file}:{line} references a Meta SDK or social plugin. Whether this load runs on
+  page view for an ordinary visitor - in which case their IP address reaches Meta - or only on a
+  deliberate action by a signed-in operator, is context question 1. FOUR SHAPES REACH THIS RULE AND
+  THE FOURTH IS WRITTEN ON THE SERVER RATHER THAN IN THE PAGE, so read which one the matched line is
+  before anything else. Three of them are the page's own: the CDN host that serves the SDK and the
+  plugins, an FB.init call, and the fb-* class the SDK turns into a plugin. THE FOURTH IS THE
+  SOCIAL-PLUGIN ENDPOINT PATH facebook.com/plugins/, which is how a server builds a plugin or embed
+  URL and hands it to the page - a Python, Ruby, PHP or Go string concatenated with the target the
+  visitor asked for. What that line establishes is that the URL is BUILT here, and no more: the
+  visitor's browser requests Meta only if the built value reaches a src, href or data- attribute on
+  a page a visitor opens, so trace it to its use before treating it as a load, and where it reaches
+  an iframe source the request is made on page render with no visitor action at all. A navigation
+  link the visitor clicks - facebook.com/sharer/sharer.php - is a different construct and is not
+  matched"
+remediation_template: >
+  Load the SDK only after a recorded consent decision, or replace the plugin with a facade:
+
+  render a static button and inject the SDK only when the visitor clicks it.
+
+  Where the SDK exists only so that an operator can connect a business account, move the load
+
+  behind that action so that it never runs on an ordinary page view.
+
+  Where the integration is server-side, use the Graph API from your own server instead: the
+
+  request then carries your server's IP address and no visitor datum is transmitted.
+
+  Wherever the SDK or plugin still loads in a visitor's browser - after consent, or on a click -
+  tell
+
+  visitors, at the latest when it loads, that their data go from this page to Meta, for what purpose
+
+  and on which ground: Fashion ID point 4 puts the duty to inform on the embedding operator as well
+
+  as the consent, and Art. 94(2) maps that duty to GDPR Arts. 13 and 14. The privacy notice is the
+
+  usual place for it, and a consent prompt or a facade button that names Meta says it at the moment
+
+  it matters.
+data_categories:
+  - user.device
+  - user.behavior
+fingerprint_spec: file

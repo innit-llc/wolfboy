@@ -1,0 +1,413 @@
+id: device-telemetry-001
+pack: device-telemetry
+short_name: Continuous tracking data about people
+problem_line:
+  text: People tracked continuously through device or stream data
+fix_line: Record who is tracked and how they are told, and keep the report interval, retention and
+  attributes to what is needed.
+title: Continuous telemetry about tracked people, ingested over a device or change-stream protocol
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 14(1) - 'Where personal data have not been obtained
+      from the data subject, the controller shall provide the data subject with the following
+      information: (a) the identity and the contact details of the controller and, where applicable,
+      of the controller's representative; (b) the contact details of the data protection officer,
+      where applicable; (c) the purposes of the processing for which the personal data are intended
+      as well as the legal basis for the processing'. This is the operative provision for the
+      construct, and the reason is structural: in an ingestion product the person whose position is
+      recorded is very often not the person who opened the account, so the duty that runs is the one
+      owed to a subject the controller never spoke to"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(c) - personal data shall be 'adequate, relevant
+      and limited to what is necessary in relation to the purposes for which they are processed'. A
+      continuous stream is the hardest case for this principle, because the volume is set by a
+      reporting interval rather than by a purpose: a position every ten seconds and a position every
+      ten minutes serve the same stated purpose and differ by two orders of magnitude in what they
+      reveal. The interval, the retention and the set of attributes decoded are the three places
+      minimisation is decided, and they are ordinarily configuration rather than code"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 6(1)(f) - processing is lawful to the extent that
+      'processing is necessary for the purposes of the legitimate interests pursued by the
+      controller or by a third party, except where such interests are overridden by the interests or
+      fundamental rights and freedoms of the data subject which require protection of personal data,
+      in particular where the data subject is a child.' Carried because this is the basis an
+      ingestion deployment is ordinarily defended on, and because the closing words matter here more
+      than almost anywhere else in this pack: one recorded shape of this construct is a wearable
+      tracker on a child"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(1) - 'Processing of personal data revealing racial or
+      ethnic origin, political opinions, religious or philosophical beliefs, or trade union
+      membership, and the processing of genetic data, biometric data for the purpose of uniquely
+      identifying a natural person, data concerning health or data concerning a natural person's sex
+      life or sexual orientation shall be prohibited.' Reference only, and conditional: it applies
+      where the ingested attributes include health measurements, which some wearable and
+      personal-tracker protocols carry alongside position. Whether this deployment decodes such an
+      attribute is context question 4 and is read out of the decoded attribute set, not asserted by
+      this detector"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 88, quoted across both operative paragraphs because the
+      first enables and the second is the one that binds. Art. 88(1): 'Member States may, by law or
+      by collective agreements, provide for more specific rules to ensure the protection of the
+      rights and freedoms in respect of the processing of employees' personal data in the employment
+      context, in particular for the purposes of the recruitment, the performance of the contract of
+      employment, including discharge of obligations laid down by law or by collective agreements,
+      management, planning and organisation of work, equality and diversity in the workplace, health
+      and safety at work, protection of employer's or customer's property and for the purposes of
+      the exercise and enjoyment, on an individual or collective basis, of rights and benefits
+      related to employment, and for the purpose of the termination of the employment relationship.'
+      Art. 88(2), which names this construct in terms: 'Those rules shall include suitable and
+      specific measures to safeguard the data subject's human dignity, legitimate interests and
+      fundamental rights, with particular regard to the transparency of processing, the transfer of
+      personal data within a group of undertakings, or a group of enterprises engaged in a joint
+      economic activity and monitoring systems at the work place.' HOW TO READ THE PAIR: paragraph 1
+      states no duty of its own - it authorises Member States to legislate, and names 'protection of
+      employer's or customer's property' as one of the purposes such rules may serve, which is the
+      purpose an employer defending fleet or network monitoring would ordinarily rely on. Paragraph
+      2 is the constraint on any such national rule, and 'monitoring systems at the work place' is
+      the exact construct this detector finds. WHAT REMAINS OPEN, and it is not a doubt about these
+      words: which national law binds a given employer, and what that law requires. That is a fact
+      about the deployment and about the Member States it reaches; it is asked as a context question
+      and is outside this repository's quote-verification fetch path"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Data Act (Regulation (EU) 2023/2854), Art. 4(1) - 'Where data cannot be directly accessed by
+      the user from the connected product or related service, data holders shall make readily
+      available data, as well as the relevant metadata necessary to interpret and use those data,
+      accessible to the user without undue delay, of the same quality as is available to the data
+      holder, easily, securely, free of charge, in a comprehensive, structured, commonly used and
+      machine-readable format and, where relevant and technically feasible, continuously and in
+      real-time.' Art. 5(1) extends the same obligation to making the data available to a third
+      party the user nominates: 'Upon request by a user, or by a party acting on behalf of a user,
+      the data holder shall make available readily available data, as well as the relevant metadata
+      necessary to interpret and use those data, to a third party without undue delay'. DATE,
+      verified against Art. 50 itself rather than against a secondary source: 'It shall apply from
+      12 September 2025.' Art. 50 then defers exactly three things, and the two provisions cited
+      here are among none of them: 'The obligation resulting from Article 3(1) shall apply to
+      connected products and the services related to them placed on the market after 12 September
+      2026.', 'Chapter III shall apply in relation to obligations to make data available under Union
+      law or national legislation adopted in accordance with Union law, which enters into force
+      after 12 September 2025.', and 'Chapter IV shall apply to contracts concluded after 12
+      September 2025.' Arts. 4 and 5 are Chapter II. SO THESE TWO DUTIES HAVE BEEN IN APPLICATION
+      SINCE 12 SEPTEMBER 2025 and a finding that reaches them is worded as a present obligation
+      rather than as preparation; the only date still ahead is the Art. 3(1) deferral to 12
+      September 2026, which is a different provision from either of these and must not be imported
+      into a finding on them. WHAT IS NOT ESTABLISHED BY THIS DETECTOR is whether a given deployment
+      is a 'data holder' of a 'connected product' within Arts. 2(5) and 2(13) - a fact about the
+      product, asked as context questions 1 and 5. Carried as reference because an ingestion server
+      is the archetype of a service holding data a connected product generated, and because this
+      duty runs to the USER, who in the ordinary deployment of this construct is a different person
+      from the data subject"
+    url: https://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.4
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    telemetry_protocol_layer:
+      - protocol_decoder
+      - protocol_encoder
+      - base_protocol_decoder
+      - base_protocol_encoder
+      - string_protocol_encoder
+      - frame_decoder
+      - add_protocol_handlers
+      - device_session
+      - tracker_protocol
+      - gps_protocol
+      - telemetry_decoder
+      - telemetry_ingest
+      - position_decoder
+      - decode_position
+      - gprmc
+      - gpgga
+    telemetry_protocol_layer_token:
+      - nmea
+    device_identity:
+      - driver_unique_id
+      - device_imei
+      - tracker_id
+      - device_serial
+      - unit_serial
+      - vehicle_id
+      - asset_tracker
+    device_identity_token:
+      - imei
+      - imsi
+      - iccid
+      - msisdn
+      - simei
+      - imeisv
+    geo_axis_field:
+      - latitude
+      - longitude
+      - lat_deg
+      - lon_deg
+      - lng_deg
+      - coordinates
+      - lat_lng
+      - lat_lon
+      - geo_point
+    geo_latitude:
+      - latitude
+      - lat_deg
+      - lat_e7
+    geo_latitude_token:
+      - lat
+    geo_longitude:
+      - longitude
+      - lon_deg
+      - lng_deg
+      - lon_e7
+    geo_longitude_token:
+      - lon
+      - lng
+      - long
+    geo_tuple_token:
+      - lat_lng
+      - lat_long
+      - lat_lon
+      - lng_lat
+      - long_lat
+      - lon_lat
+    geo_motion_field:
+      - altitude
+      - odometer
+      - geofence
+    geo_motion_field_token:
+      - course
+      - speed
+      - heading
+      - bearing
+      - over_speed
+      - under_speed
+    position_record_noun:
+      - position
+      - tracker
+      - tracking
+      - telemetry
+      - fleet
+      - route_point
+      - breadcrumb
+      - gps_fix
+      - waypoint
+    position_record_noun_token:
+      - trip
+    tracked_thing_noun:
+      - device
+      - vehicle
+      - asset
+      - driver
+    device_pushback:
+      - sos_number
+      - sos_sms
+      - alarm_sos
+      - set_phonebook
+      - phonebook
+      - phone_book
+      - address_book_upload
+      - type_voice_message
+      - type_message
+      - key_phone
+      - set_contacts
+      - push_contact
+    logical_replication:
+      - replication_slot
+      - pg_replication_slots
+      - pg_drop_replication_slot
+      - pg_create_logical_replication_slot
+      - create_logical_replication_slot
+      - logical_decoding
+      - wal2json
+      - pgoutput
+      - wal_level
+      - walsender
+      - replica_identity
+      - replica identity
+      - publication_tables
+      - change_stream
+      - cdc_stream
+      - binlog_stream
+      - debezium
+    command_builder:
+      - format_command
+      - format_text_command
+      - format_binary_command
+      - encode_command
+      - build_command
+      - send_command
+      - make_command
+      - device_command
+    contact_payload:
+      - phone
+      - contact
+      - message
+      - sms
+      - number
+      - msisdn
+      - callee
+  vocabulary_matching:
+    telemetry_protocol_layer:
+      case_insensitive: true
+      separator_insensitive: true
+    device_identity:
+      case_insensitive: true
+      separator_insensitive: true
+    geo_axis_field:
+      case_insensitive: true
+      separator_insensitive: true
+    geo_latitude:
+      case_insensitive: true
+      separator_insensitive: true
+    geo_longitude:
+      case_insensitive: true
+      separator_insensitive: true
+    geo_motion_field:
+      case_insensitive: true
+      separator_insensitive: true
+    position_record_noun:
+      case_insensitive: true
+      separator_insensitive: true
+    tracked_thing_noun:
+      case_insensitive: true
+      separator_insensitive: true
+    device_pushback:
+      case_insensitive: true
+      separator_insensitive: true
+    logical_replication:
+      case_insensitive: true
+      separator_insensitive: true
+    command_builder:
+      case_insensitive: true
+      separator_insensitive: true
+    contact_payload:
+      case_insensitive: true
+      separator_insensitive: true
+    telemetry_protocol_layer_token:
+      case_insensitive: true
+      separator_insensitive: true
+    device_identity_token:
+      case_insensitive: true
+      separator_insensitive: true
+    geo_latitude_token:
+      case_insensitive: true
+      separator_insensitive: true
+    geo_longitude_token:
+      case_insensitive: true
+      separator_insensitive: true
+    geo_tuple_token:
+      case_insensitive: true
+      separator_insensitive: true
+    geo_motion_field_token:
+      case_insensitive: true
+      separator_insensitive: true
+    position_record_noun_token:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?:(?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&telemetry_protocol_layer_token)|(?&telemetry_protocol_layer))
+    - (?:(?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&device_identity_token)(?:s|es)?(?![a-z])|(?&device_identity))
+    - (?:(?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&geo_latitude_token)(?:s|es)?(?![a-z])|(?&geo_latitude))[^\n]{0,80}(?:(?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&geo_longitude_token)(?:s|es)?(?![a-z])|(?&geo_longitude))|(?:(?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&geo_longitude_token)(?:s|es)?(?![a-z])|(?&geo_longitude))[^\n]{0,80}(?:(?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&geo_latitude_token)(?:s|es)?(?![a-z])|(?&geo_latitude))
+    - (?&geo_axis_field)[^\n]{0,80}(?:(?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&geo_motion_field_token)(?:s|es)?(?![a-z])|(?&geo_motion_field))|(?:(?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&geo_motion_field_token)(?:s|es)?(?![a-z])|(?&geo_motion_field))[^\n]{0,80}(?&geo_axis_field)
+    - (?&geo_axis_field)[^\n]{0,60}(?:(?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&position_record_noun_token)(?:s|es)?(?![a-z])|(?&position_record_noun))|(?:(?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&position_record_noun_token)(?:s|es)?(?![a-z])|(?&position_record_noun))[^\n]{0,60}(?&geo_axis_field)|(?&geo_axis_field)[^\n]{0,60}(?&tracked_thing_noun)|(?&tracked_thing_noun)[^\n]{0,60}(?&geo_axis_field)
+    - (?:<[Cc]olumn|[Cc]olumn\s+name|ADD\s+COLUMN|[Aa]dd[_\-]?[Cc]olumn|[Tt]\.(?:decimal|float|double|string)|models\.(?:FloatField|DecimalField)|DOUBLE|FLOAT|DECIMAL|NUMERIC)[^\n]{0,70}(?&geo_axis_field)|(?&geo_axis_field)[^\n]{0,70}(?:<[Cc]olumn|[Cc]olumn\s+name|ADD\s+COLUMN|[Aa]dd[_\-]?[Cc]olumn|[Tt]\.(?:decimal|float|double|string)|models\.(?:FloatField|DecimalField)|DOUBLE|FLOAT|DECIMAL|NUMERIC)
+    - (?:(?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&geo_motion_field_token)(?:s|es)?(?![a-z])|(?&geo_motion_field))[^\n]{0,60}(?:(?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&position_record_noun_token)(?:s|es)?(?![a-z])|(?&position_record_noun))|(?:(?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&position_record_noun_token)(?:s|es)?(?![a-z])|(?&position_record_noun))[^\n]{0,60}(?:(?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&geo_motion_field_token)(?:s|es)?(?![a-z])|(?&geo_motion_field))
+    - (?&device_pushback)
+    - (?&command_builder)[^\n]{0,60}(?&contact_payload)|(?&contact_payload)[^\n]{0,60}(?&command_builder)
+    - (?&logical_replication)
+    - (?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&geo_tuple_token)
+context_questions:
+  - WHO ARE THE TRACKED PEOPLE, AND WHAT IS THEIR RELATIONSHIP TO THE ACCOUNT HOLDER? This is the
+    first question and it is asked of the person running the scan, never read out of the code. A
+    decoder's vocabulary says which protocol it speaks; it says nothing about whether the moving
+    thing is a company van, a rented scooter, a shipping pallet, a lone worker or a child wearing a
+    watch. Where the tracked people are not the account holder, the information duty owed to them is
+    Art. 14's - owed to someone the controller never spoke to - and that is materially harder than
+    the one an account-holder-facing product carries. State which population this deployment tracks;
+    do not treat the code as settling it.
+  - "HOW OFTEN, FOR HOW LONG, AND HOW MANY ATTRIBUTES? Minimisation under Art. 5(1)(c) is decided in
+    three places and none of them is usually in the matched line: the reporting interval, the
+    retention period for stored positions, and the set of attributes actually decoded and kept.
+    Quote all three from configuration or schema. A position every ten seconds and a position every
+    ten minutes serve the same stated purpose and are two orders of magnitude apart in what they
+    reveal about a person's day."
+  - IS ANYTHING PUSHED BACK INTO THE DEVICES, AND WHO CAN READ IT THERE? Where clause 4 or clause 5
+    matched, personal data travels from the platform into the device - the numbers it may call, its
+    contact list, a message displayed on it. Establish who holds the device and who can read what
+    was written to it, because that is a disclosure to a recipient and it is easy to miss while
+    reading an ingestion product as if data only flowed inwards.
+  - DOES THE DECODED ATTRIBUTE SET INCLUDE A HEALTH MEASUREMENT? Some personal and wearable trackers
+    report heart rate, step counts, fall detection or body temperature alongside position. Where
+    they do, Art. 9(1) is engaged and the whole processing needs an Art. 9(2) condition, not only an
+    Art. 6 basis. Read the decoded attribute names rather than assuming from the product's
+    description; this is the single change that most alters what the deployment must have in place.
+  - WHERE CLAUSE 6 MATCHED - WHOSE DATABASE IS BEING REPLICATED, AND WHAT IS IN IT? A
+    logical-replication stream is a continuous copy of every row change. Establish whether the
+    database belongs to the scanned product or to its customer, what the credentials are and where
+    they are held, whether the republished stream is filtered at all, and who can subscribe to it. A
+    service holding this position over a customer's production database is a processor for every
+    person in that database, most of whom have no relationship with it.
+evidence_template: "{file}:{line} matched one of six shapes: a device-protocol decoder or encoder
+  layer, a purpose-built device identity, a position field with a second position field or a
+  tracking noun beside it, a push-back constant that writes a phone number or contact into a device,
+  a generic command builder carrying a contact word, or database change-stream replication
+  vocabulary. This establishes only that THE CODE HAS A CONSTRUCT for ingesting a continuous
+  machine-generated record over a device or replication protocol. It does not establish who the
+  tracked people are - that is a fact about the product, asked of the operator, and it is what
+  decides whether the Art. 14 information duty runs to people the controller never spoke to. It does
+  not establish the reporting interval, the retention period or the decoded attribute set, which is
+  where minimisation is actually decided. And where the match is clause 6, it does not establish
+  whose database the stream is opened against."
+remediation_template: |
+  Establish who the tracked people are before anything else, and write it down. Everything else in
+  this finding changes depending on the answer: an operator tracking their own devices, an employer
+  tracking staff, a parent tracking a child and a platform tracking a customer's customers are four
+  different postures with four different sets of duties.
+  Where the tracked people are not the account holder, the information duty is Art. 14's. Record how
+  those people are informed, and by whom - in many deployments the practical answer is that the
+  account holder informs them, which is an arrangement that has to exist rather than be assumed.
+  Write down the reporting interval, the retention period and the decoded attribute set as three
+  separate numbers. They are where Art. 5(1)(c) is decided and they are ordinarily configuration, so
+  they can be changed without changing the product.
+  Where a health measurement is among the decoded attributes, treat the processing as needing an
+  Art. 9(2) condition and not only an Art. 6 basis, and say which condition is relied on.
+  Where personal data is pushed back into devices, record it as a disclosure with a recipient, and
+  name who holds the device.
+  Where a change-stream replication clause matched, record whose database it is, where the
+  credentials live, whether the stream is filtered before republication, and who may subscribe.
+data_categories:
+  - user.location.precise
+  - user.device
+  - user.unique_id
+  - user.behavior
+  - user.contact.phone_number
+fingerprint_spec: project
+reading_class:
+  class: existence
+  elements:
+    - name: reporting_interval
+      question: 2
+      text: the reporting interval
+    - name: retention_period
+      question: 2
+      text: the retention period for stored positions
+    - name: attribute_set
+      question: 2
+      text: the set of attributes actually decoded and kept

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/reader-reply.schema.json",
+  "title": "Reader reply, reading mode",
+  "description": "What a legal-adjudicator seat in reading mode returns, as it returns it: a JSON array of decisions and nothing else - no verdict word (product/plugin/agents/legal-adjudicator.md, reading mode). Each entry is adjudicator-reply.schema.json's `decision`, keyed by the ids of the units the reader payload hands it; a reader declines nothing. `verdict-capture` checks a reply against this schema, then writes the reader's record to .legal/readers/ from the decisions and the skeleton, attached to the candidate its payload names.",
+  "$comment": "Relay unit `capture`, 2026-09-24. The object form `{finding_id, dispositions}` that `verdict-reading` also accepts is the orchestrator's wrapper and not the seat's reply, so it is not accepted here. The row became `seatReadRow` the same day; before, the assembled row was referred to whole, so the fields only the CLI writes were accepted from the seat.",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "$ref": "https://schemas.invalid/product/adjudicator-reply.schema.json#/$defs/decision"
+  }
+}

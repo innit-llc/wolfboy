@@ -1,0 +1,301 @@
+id: ai-inference-001
+pack: ai-inference
+short_name: Personal data or documents sent to an AI model
+problem_line:
+  text: Personal data or documents sent to an AI model
+  template: "{data} sent to an AI model service"
+fix_line: Record a model vendor as a recipient of personal data, and confirm its processing contract
+  and any transfer basis.
+title: User identity and/or document content forwarded to an AI-inference model endpoint - candidate
+  recipient, Art. 30(1)(d)
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - Art. 30(1) requires each controller to
+      maintain a record of processing activities, and 'That record shall contain all of the
+      following information', including 'the categories of recipients to whom the personal data have
+      been or will be disclosed including recipients in third countries or international
+      organisations'. The field asks for CATEGORIES, which is what makes it answerable for a
+      destination the code does not name: the category is established by what the recipient does
+      with the data, and the identity is supplied by the operator"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(9) - 'recipient' means 'a natural or legal person,
+      public authority, agency or another body, to which the personal data are disclosed, whether a
+      third party or not'. Reference only: a definition establishes no duty of its own"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 28(1) and Art. 28(3) - where processing is carried out
+      on a controller's behalf, 'the controller shall use only processors providing sufficient
+      guarantees to implement appropriate technical and organisational measures in such a manner
+      that processing will meet the requirements of this Regulation and ensure the protection of the
+      rights of the data subject', and under Art. 28(3) processing by a processor 'shall be governed
+      by a contract or other legal act under Union or Member State law' 'that sets out the
+      subject-matter and duration of the processing, the nature and purpose of the processing, the
+      type of personal data and categories of data subjects and the obligations and rights of the
+      controller'. Reference only, cited to show why the operator question below is load-bearing
+      rather than administrative: neither duty can be discharged towards a party nobody has
+      identified"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 44 - 'Any transfer of personal data which are
+      undergoing processing or are intended for processing after transfer to a third country or to
+      an international organisation shall take place only if, subject to the other provisions of
+      this Regulation, the conditions laid down in this Chapter are complied with by the controller
+      and processor, including for onward transfers of personal data from the third country or an
+      international organisation to another third country or to another international organisation.'
+      Reference only: this detector does not establish that a transfer occurs, only that a
+      destination fitting the construct exists; whether the destination sits outside the EEA is an
+      operator fact"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 9(1) - 'Processing of personal data revealing racial or
+      ethnic origin, political opinions, religious or philosophical beliefs, or trade union
+      membership, and the processing of genetic data, biometric data for the purpose of uniquely
+      identifying a natural person, data concerning health or data concerning a natural person's sex
+      life or sexual orientation shall be prohibited.' Reference only, cited because a free-text
+      prompt or document field can carry special-category content that the identity-coupling
+      construct itself does not test for, and because Art. 9(2) lifts the prohibition only on one of
+      ten stated grounds - none of which a detector can establish
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose "The
+      categories of third parties to whom the business discloses personal information." The
+      obligation is owed on a verifiable consumer request under Sec. 1798.110(b), and Sec.
+      1798.130(a)(5)(B) requires the same categories in the privacy policy
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-08-31
+    jurisdiction: US
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.25
+applicability_preconditions:
+  - features.llm.present
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  resolve_import_aliases: true
+  vocabulary:
+    ai_endpoint_marker:
+      - openai
+      - ollama
+      - anthropic
+      - chat.completions
+      - generate_content
+      - generateContent
+      - magic_ai
+      - MagicAI
+      - laravel/ai
+      - admin.magic_ai.content
+      - rerank
+      - reranker
+      - external_knowledge
+      - vector_search
+      - QdrantClient
+      - MilvusClient
+      - pgvector
+      - embedding_function
+      - CreateEmbeddings
+      - CreateChatCompletion
+      - EmbeddingRequest
+      - ChatCompletionRequest
+      - GenerateEmbedding
+      - EmbeddingModel
+    ai_record_marker:
+      - AIConversation
+      - ai_conversation
+      - aiConversation
+      - AIChat
+      - ai_chat
+      - AIMessage
+      - ai_message
+      - ChatCompletionID
+      - chat_completion_id
+      - ai_conversation_record
+  match:
+    - (?:^|[^A-Za-z0-9_])(?:payload|body|data|params|json|req|request|args)\s*\[\s*['"]user['"]\s*\]\s*=\s*\{
+    - "['\"](?:name|id|email|role|user_id|userId|user_name|username)['\"]\\s*(?:=>|[:=])\\s*\\$?(?:\
+      user|current_user|currentUser|authUser|auth_user)\\s*(?:->|\\.|\\[)"
+    - (?:^|[^A-Za-z0-9_])(?:UserID|UserId|userID|user_id|UserEmail|UserName|Username|UserRole)\s*(?:=>|[:=])\s*&?[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)*\s*[,}]
+    - (?:^|[^A-Za-z0-9_])(?:AIConversation|ai_conversation|aiConversation|AIChat|ai_chat|AIMessage|ai_message|chat_completion|ChatCompletion)[A-Za-z0-9_]*[^\n]{0,120}(?:^|[^A-Za-z0-9_])[Uu]ser_?[Ii][Dd]\b
+    - (?:^|[^A-Za-z0-9_])[Uu]ser_?[Ii][Dd]\b[^\n]{0,120}(?:^|[^A-Za-z0-9_])(?:AIConversation|ai_conversation|aiConversation|AIChat|ai_chat|AIMessage|ai_message|chat_completion|ChatCompletion)
+    - (?:^|[^A-Za-z0-9_$])\$?(?:axios|http|fetch|requests|client|session|httpClient|HttpClient)\s*\.?\s*(?:post|Post|POST|request|Request|send|Send)?\s*\([^\n]{0,160}(?:magic_ai|magicAi|MagicAI|chat/completions|/v1/(?:chat|completions|embeddings)|/api/(?:chat|generate|completions?|embeddings?))
+    - (?:^|[^A-Za-z0-9_])(?:prompt|prompts|Prompt|user_prompt|userPrompt|system_prompt|systemPrompt|messages|Messages|Input|input_text|InputText|query_text)\s*(?:=>|[:=])\s*[^\n]
+    - (?:^|[^A-Za-z0-9_])(?:openai|anthropic|ollama|genai|bedrock|azureopenai|mistral|cohere)\.[A-Za-z0-9_]*(?:Request|Completion|Embedding|Embeddings|Message|Chat)[A-Za-z0-9_]*\s*[({]
+    - (?:^|[^A-Za-z0-9_])(?:[Cc]reate|[Gg]enerate|[Ss]tream|[Ii]nvoke)_?(?:[Cc]hat_?[Cc]ompletion|[Cc]ompletion|[Ee]mbedding|[Mm]essage|[Rr]esponse|[Cc]ontent|[Cc]hat)s?\s*\(
+    - (?:^|[^A-Za-z0-9_])(?:external_knowledge[A-Za-z0-9_]*|knowledge_id|knowledge_base|vector_search|reranker?|embedding_function)\b[^\n]{0,200}(?:^|[^A-Za-z0-9_])[Uu]ser_?[Ii][Dd]\b
+    - (?:^|[^A-Za-z0-9_])[Uu]ser_?[Ii][Dd]\b[^\n]{0,200}(?:^|[^A-Za-z0-9_])(?:external_knowledge[A-Za-z0-9_]*|knowledge_id|knowledge_base|vector_search|reranker?|embedding_function)\b
+    - (?:^|[^A-Za-z0-9_])["'`]\s*(?:messages|prompt|prompts|user_prompt|system_prompt|input|inputs|input_text|contents|query_text)\s*["'`]\s*:|(?:^|[^A-Za-z0-9_])(?:bearer_auth|set_bearer_auth|basic_auth|BearerAuth|SetAuthToken|setBearerAuth)\s*\(|(?:^|[^A-Za-z0-9_])(?:AUTHORIZATION|[Aa]uthorization)\s*[,:=][^\n]{0,80}(?:[Bb]earer|[Tt]oken|[Aa]pi[_-]?[Kk]ey)
+    - \.\s*(?:post|Post|POST|put|Put|patch|Patch|request|Request|send|Send)\s*\([^\n]{0,160}(?:magic_ai|magicAi|MagicAI|chat/completions|/v1/(?:chat|completions|embeddings)|/api/(?:chat|generate|completions?|embeddings?))
+  also_in_file:
+    - (?&ai_endpoint_marker)
+    - (?&ai_record_marker)
+    - (?:^|[^A-Za-z0-9_])/?(?:v[0-9]+/)?api/(?:[A-Za-z0-9_.\-]+/){0,2}(?:chat|generate|completion|completions|embedding|embeddings)(?![A-Za-z0-9_])|(?:^|[^A-Za-z0-9_])/v[0-9]+/(?:chat/completions|completions|embeddings)(?![A-Za-z0-9_])
+context_questions:
+  - "ASK THE PERSON RUNNING THE SCAN, do not infer it from the host name: \"Which model endpoint
+    does this deployment actually call - a named vendor's hosted API (OpenAI, Anthropic, Azure
+    OpenAI, a hosted Ollama Cloud instance), or a model you run yourself on your own hardware?\" The
+    scan profile's own `features.llm.providers` field asks exactly this and gives \"self-hosted\" as
+    a worked example value - if it is not answered there, return needs_human rather than guessing.
+    This matters because the anchor this rule's header-toggle sibling is modelled on runs the
+    identical code path whether the configured host is a vendor's cloud endpoint or a container on
+    the operator's own network, and a self-hosted destination is not a third-party recipient at
+    all."
+  - "WHAT SHAPE IS THE MATCHED LINE - identity fields alone (name, id, email, role, with no
+    free-text content), content alone (a prompt or document field, with no identity field), the two
+    together in one request, or a stored record that merely LINKS a user identifier to an AI
+    conversation? Quote the fields actually present. The construct is written as identity AND/OR
+    content on purpose: an admin-panel prompt with no identity field is still the thing, just a
+    narrower disclosure than a payload that carries both. A stored linkage is narrower again - see
+    the evidence template's shape (iv) - because it shows the two associated in this product's own
+    database and does not by itself show either travelling to a model host."
+  - IF A FREE-TEXT FIELD IS PRESENT (a prompt, a document, a query), read what a user could put in
+    it before treating this as settled. A prompt or uploaded document can carry Art. 9(1) material -
+    data revealing racial or ethnic origin, political opinions, religious or philosophical beliefs
+    or trade union membership, genetic or biometric data, data concerning health, or data concerning
+    a person's sex life or sexual orientation - that this detector does not and cannot test for,
+    because the field's content is whatever this installation's own users choose to type. Where the
+    deployment's own documentation or support history shows this happening, the candidate may belong
+    in the `eu-special-categories` pack as well as, or instead of, this one.
+  - "IS THE PARTY BEHIND THE ENDPOINT A PROCESSOR WITH AN ART. 28 CONTRACT? The ordinary answer is
+    yes, for a named hosted vendor. It is not the only answer: where question 1 establishes a
+    self-hosted model runtime the operator controls, there is no external party to contract with and
+    no recipient row to write. Settle question 1 first."
+  - DOES THE ENDPOINT SIT OUTSIDE THE EEA? Most hosted model APIs named in this rule's marker list
+    (OpenAI, Anthropic, Google) are US-established. Where question 1's answer names one of them,
+    Chapter V's conditions belong in the record's transfer field (Art. 30(1)(e)) beside the
+    recipient category, not only in the recipient field.
+  - IS THE EU AI ACT'S OWN TRANSPARENCY DUTY ALREADY HANDLED SEPARATELY? This rule tests only the
+    recipient and disclosure question - whether personal data crosses to the model endpoint. Whether
+    the END USER is told they are dealing with an AI system at all is the `ai-transparency` pack's
+    question. A hit here does not satisfy that duty and is not duplicated by it.
+  - "IF THE MATCH IS A CREDENTIAL ON THE CALL RATHER THAN A PERSON-NAMED FIELD IN THE BODY, WHOSE
+    ACCOUNT IS IT? ADDED 2026-09-09 with clause 12. Limb (b) of that clause fires on an
+    authorization credential attached to an outbound request inside an inference-surface file, and a
+    credential identifies the account the call is made under, not necessarily a natural person. Find
+    where the token comes from and report which of these it is: a per-user session credential, in
+    which case every request is attributable to one identified person at the endpoint; a single
+    operator-configured API key shared by the whole deployment, in which case the endpoint sees the
+    installation and not the person; or an empty value, in which case no credential is sent at all.
+    Then read the body the same call carries and say whether any person-named field travels with it,
+    because limb (a) and limb (b) can fire on the same call or on different ones. THE DETECTOR DID
+    NOT CHECK ANY OF THIS: it read one line, and neither the ownership of the credential nor the
+    contents of the body is visible there."
+evidence_template: "{file}:{line} matched a construct in which an identity field (name, id, email or
+  role) and/or a free-text content field (a prompt, a document, a query) is placed into a request
+  payload, a struct literal or a stored record, inside a file whose `also_in_file` gate confirms
+  carries an AI-inference marker or an AI-conversation record. THAT IS THE WHOLE OF WHAT IS
+  ESTABLISHED. Five shapes reach this rule and they are not equally strong. (i) A
+  `payload['user']`-style dict built from a user object immediately before a request goes out - the
+  strongest, because the identity and the destination are in the same construct. (ii) The same
+  fields written in another language's idiom: `'email' => $user->email`, `UserID: req.UserID` inside
+  a struct literal. (iii) A prompt or content key posted to a route or SDK request object carrying
+  an AI-generation marker, with no identity field of its own - an admin content-generation panel
+  wrapping a vendor AI library is this. (iv) A user identifier standing beside an AI-CONVERSATION
+  RECORD's own name - a column declaration, a query filter, an admin list view. This establishes
+  that this product LINKS a person to AI conversation content IN ITS OWN STORAGE; it does not
+  establish that either half travelled to a model host, and the record may exist entirely for the
+  product's own history feature. (v) A user identifier beside an external-knowledge or
+  vector-retrieval marker, which establishes that IDENTITY AND AN EXTERNAL CONTENT LOOKUP ARE
+  CORRELATED IN THIS FLOW and - unlike (i) to (iii) - does not by itself show the identity value
+  travelling in the outbound request; read the surrounding function before asserting that it does.
+  WHAT THIS DETECTOR DID NOT ESTABLISH AND CANNOT: whether the endpoint is a named vendor or
+  infrastructure the operator runs themselves (context question 1); whether any free-text field
+  carries Art. 9(1) material (context question 3); whether the destination sits outside the EEA
+  (context question 5); and, for shapes (iv) and (v) specifically, whether anything leaves this
+  machine at all - a stored linkage and an outbound disclosure are two different facts and only
+  reading the call settles which is in front of you. ADDED 2026-09-09: A SIXTH SHAPE REACHES THIS
+  RULE, AND THE SENTENCE ABOVE SAYING FIVE IS LEFT STANDING SO A READER CAN SEE THAT THE COUNT MOVED
+  AND WHEN. (vi) AN OUTBOUND INFERENCE CALL READ ON THE TWO LINES IT IS ACTUALLY WRITTEN ON: a
+  QUOTED body key naming prompt or document content (`\"messages\":`, `\"prompt\":`, `\"input\":`),
+  which is the spelling shape (iii) misses because a quote sits between the word and its colon; and
+  an AUTHORIZATION CREDENTIAL attached to the outbound request builder - a `bearer_auth` call, an
+  `Authorization` header carrying a bearer token or an API key. THE IDENTIFYING ELEMENT IN THIS
+  SHAPE MAY BE THE CREDENTIAL RATHER THAN A PERSON-NAMED FIELD IN THE BODY. A credential travels to
+  the endpoint with the request and makes the call attributable to the account it belongs to; it
+  does NOT establish that the account is a natural person rather than a machine identity or a whole
+  installation sharing one operator-set key, and it does not establish that anything person-named is
+  in the body. Which of the two limbs fired, and whose account the credential is, are context
+  question 7 and are settled by reading the call rather than by this finding."
+remediation_template: >
+  Establish which of the five shapes fired (see the evidence note) before changing anything, and
+
+  read `features.llm.providers` in the scan profile - or ask the operator directly - to learn
+
+  whether the destination is a named vendor or infrastructure the operator runs themselves. A
+
+  self-hosted destination is not a third-party recipient and this finding closes there.
+
+  Where the shape is a stored linkage (shape (iv)) or a correlated log line (shape (v)) and no
+
+  outbound request is reachable from it, say so and close the recipient question; what remains is a
+
+  retention and purpose question about the stored conversation, which belongs to the retention pack
+
+  rather than to this one.
+
+  Where the destination is a vendor, add the category to the record of processing activities under
+
+  Art. 30(1)(d). Naming it as the operator of the AI model endpoint this deployment is configured to
+
+  call is honest where the specific vendor is chosen at deploy time rather than fixed in the code.
+
+  Then confirm an Art. 28(3) processor contract exists. Where the vendor is established outside the
+  EEA
+
+  (true of most hosted model APIs at the time of writing), add the corresponding Art. 30(1)(e)
+
+  transfer entry and confirm the transfer mechanism: an adequacy decision, standard contractual
+
+  clauses, or another Chapter V basis.
+
+  Write the record row from what the request actually carries, not from the vendor's name. A `user`
+
+  payload carrying name, id, email and role is a materially larger disclosure than one carrying a
+
+  numeric id, and if the receiving model does not functionally need the name or the email to serve
+
+  the request, dropping those two fields at the call site - keeping only what the abuse-monitoring
+
+  or rate-limiting purpose actually requires - is the data-minimisation fix, made in the code rather
+
+  than recorded after the fact.
+
+  Where a free-text prompt or document field is present, do not assume its content is screened: if
+
+  the operator's own documentation or support history shows Art. 9(1) material passing through it,
+
+  route this finding to the `eu-special-categories` pack as well.
+
+  Do not close this finding by removing the identity field from the payload while leaving it in a
+
+  request header instead - see the sibling rule `ai-inference-002`. That moves the same disclosure;
+
+  it does not end it.
+data_categories:
+  - user.contact.email
+  - user.content
+  - user.name
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 1
+      class: existence
+    - question: 2
+      class: per-location
+    - question: 7
+      class: per-location

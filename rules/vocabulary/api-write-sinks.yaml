@@ -1,0 +1,429 @@
+lists:
+  web_storage_writers:
+    kind: term
+    purpose: "The spellings a product writes to browser Web Storage with: the API's own method name, and
+      the library composables and hooks that stand in for it. For the rules that ask what a product
+      stores on the visitor's own device."
+    entries:
+      - term: Web Storage write method
+        anchors:
+          - setItem
+        position_bound: true
+        note: "The API's own name, and the one spelling every wrapper eventually calls. It is not a
+          receiver-bound anchor: a project-local helper of the same name is called bare, which is
+          why `eu-consent-022` match[0] and `baseline-007` match[6] both accept a call with no
+          receiver and both say in their own comments what that leaves unestablished."
+      - term: VueUse reactive Web Storage composable
+        anchors:
+          - useLocalStorage
+          - useSessionStorage
+          - useStorage
+        position_bound: true
+        note: "`@vueuse/core` returns a reactive reference backed by `window.localStorage` and writes one
+          `setItem` per value change, so a call to it is a Web Storage write spelled through a
+          library. A product whose entire preference layer — bearer token included — goes through
+          `useLocalStorage` is invisible to a rule that looks only for a direct
+          `localStorage.setItem` call. `useStorage` is the same composable's generic form, which
+          takes the store as an argument."
+      - term: React persistent-state hook backed by Web Storage
+        anchors:
+          - useLocalStorageState
+          - usePersistentState
+          - use-local-storage-state
+        position_bound: true
+        note: "The React ecosystem's equivalent of the composable above: a state hook whose value survives a
+          reload because it is written to Web Storage. `use-local-storage-state` is the package name
+          as it is written in an import specifier, which is how the dependency shows up in a file
+          that renames the hook."
+  project_local_storage_wrappers:
+    kind: term
+    purpose: "Project-local helper names that are NOT a spelling of any Web Storage API and that
+      products routinely write their stored values through. It is a separate list from
+      `web_storage_writers` on purpose: it may only be imported by a rule whose clause carries a
+      confirming path of its own, and `eu-consent-022`, whose clause 5 asks for nothing but the
+      call's parenthesis, deliberately does not import it."
+    entries:
+      - term: Project-local preference-setter wrapper
+        anchors:
+          - setPreference
+        position_bound: true
+        note: "ONE NAME, TWO PRODUCTS, TWO DIFFERENT THINGS, and that is why this list exists rather than an
+          entry in `web_storage_writers`. One product writes its bearer token through a helper of
+          this name, `setPreference(\"authToken\", token)`, which reaches VueUse's `useLocalStorage`
+          two functions later; another defines a helper of the same name whose body calls a server
+          action, which is a write to a DATABASE and not to the visitor's device. A rule that
+          reports the second one as a write to terminal equipment is wrong about the construct, so
+          the name is admitted only where a confirming path separates them: `baseline-007`'s clause
+          (7) requires a credential-named key or value, which the first line carries and the second
+          does not. WHAT A MATCH DOES NOT ESTABLISH: where the helper writes. That is the same limb
+          `baseline-007`'s clause (6) and its own evidence template already state for a bare
+          `setItem(` call, and the rule's third context question is what asks for it."
+  cookie_writers:
+    kind: term
+    purpose: "The spellings a product writes a cookie with: the cookie-setting call's own names, the
+      response-like objects such a call is made on, and the options values whose fields carry the
+      cookie's attributes. For the rules that ask what is written to terminal equipment and with
+      which protections."
+    entries:
+      - term: Cookie-setting call
+        anchors:
+          - set_cookie
+          - setcookie
+          - setrawcookie
+          - SetCookie
+          - setCookie
+          - put_resp_cookie
+          - addCookie
+        position_bound: true
+        note: "One call in each ecosystem: Flask, Django and Starlette write `set_cookie`, PHP writes
+          `setcookie` and `setrawcookie`, Go and Echo write `SetCookie`, Fastify writes `setCookie`,
+          Phoenix writes `put_resp_cookie`. The list is the same set the importing rules already
+          spell inline; it is exported so the next framework is one edit. `addCookie` was added
+          later. It is the name the JAVA SERVLET API itself uses -
+          `HttpServletResponse.addCookie(Cookie)` - so it is the spelling of every Java web
+          framework built on that API, which is all of them, and it was in no rule's method list and
+          in no list here. IT IS ALSO A METHOD ON THINGS THAT ARE NOT A RESPONSE: a Matomo request
+          builder may write `requestDetails.addCookie(name, value)`, which assembles an OUTBOUND
+          request's cookie parameter rather than telling a browser to store anything. That is what
+          `position_bound` means here and it is why the clause that splices this list for the write
+          position requires the receiver's dot and the call's own parenthesis around the name."
+      - term: Response object a cookie-setting method is called on
+        anchors:
+          - resp
+          - rsp
+          - res
+          - response
+          - reply
+          - ctx
+          - conn
+          - w
+          - c
+          - r
+        position_bound: true
+        note: "The receiver half is where a miss hides: an inline receiver list that holds `res` and
+          `response` and not Flask's own idiomatic `resp` cannot reach any cookie write made through
+          `resp`. Single letters are in the list because Go and Echo write `w`, `c` and `r` for the
+          response writer, the context and the request, and because every clause that splices this
+          list requires the receiver to be followed by a dot or an arrow, a cookie-setting method
+          name and an opening parenthesis. Spliced bare, `r` would report a codebase; that is what
+          `position_bound` says and no clause here splices it bare."
+      - term: Cookie or session options value whose attributes are set as fields
+        anchors:
+          - opts
+          - options
+          - cookieOptions
+          - sessionOptions
+        position_bound: true
+        note: "The third position a cookie's attributes are written in: not an argument of the write call
+          and not a key of an options literal, but a FIELD ASSIGNMENT on an options value that the
+          write call is given later, possibly in another function. For example, a Go helper `func
+          secureCookieOptions(o *sessions.Options)` that sets `o.HttpOnly`, `o.SameSite` and, inside
+          an `if`, `o.Secure`. What such a line establishes is only that an attribute is assigned
+          there; whether it is assigned on every path is a question about the block around it."
+      - term: Constructed cookie object handed to a separately named write
+        anchors:
+          - new Cookie(
+          - Cookie.cookie(
+          - new HttpCookie(
+          - NewCookie(
+          - http.Cookie{
+        position_bound: true
+        note: "THE CONSTRUCTION AND THE WRITE ARE TWO STATEMENTS, SO AN IMPORTING RULE'S CLAUSE MUST ACCEPT
+          EITHER HALF, and that is the whole reason this entry exists beside the cookie-setting-call
+          entry above. In the Java Servlet convention the value is built first and handed to a
+          differently named call afterwards - `Cookie cookie = new Cookie(name, value);` and later
+          `response.addCookie(cookie);` - so a clause that waits for the write sees nothing at the
+          line where the cookie is made, and the two lines may be ten apart or in two methods.
+          Vert.x spells the same construct as a static factory returning a builder,
+          `Cookie.cookie(name, value)`, and Go writes it as a struct literal, `http.SetCookie(w,
+          &http.Cookie{Name: ...})`. `NewCookie(` is JAX-RS and `new HttpCookie(` is `java.net` and
+          `System.Net`; both are kept although no tree read so far writes them, because a null
+          result never narrows this scanner. EVERY ANCHOR HERE CARRIES ITS OWN CALL OR BRACE SYNTAX,
+          which is what `position_bound` rests on for this entry: the text `new Cookie(` cannot
+          occur as an ordinary identifier, and a clause splicing this list selects exactly these
+          anchors out of the flat alternation by asserting that the matched text ends in `(` or `{`.
+          WHAT A MATCH DOES NOT ESTABLISH: that the constructed cookie is ever written to a
+          response. A cookie built and discarded, a cookie built to be READ back in a test, and a
+          cookie built to be sent as a REQUEST header all match, and the last of the three is not a
+          write to terminal equipment at all. The importing rule's evidence template says so."
+  dom_script_sinks:
+    kind: term
+    purpose: The methods that put an element a script has just created into the live document. For the
+      rules that ask whether a page loads a third-party script and when.
+    entries:
+      - term: Node insertion method
+        anchors:
+          - appendChild
+          - append
+          - prepend
+          - insertBefore
+          - replaceChildren
+          - replaceWith
+          - before
+          - after
+        position_bound: true
+        note: "`appendChild` is the classic spelling and `append` is the DOM Living Standard's, which is
+          what a modernised loader writes; `before`, `after`, `prepend`, `replaceWith` and
+          `replaceChildren` are the rest of that family. `before` and `after` are also ordinary
+          English words and one of them is a jQuery-era option name, which is why every splice site
+          requires a preceding dot and a following parenthesis."
+      - term: Adjacent-position insertion method
+        anchors:
+          - insertAdjacentElement
+          - insertAdjacentHTML
+        position_bound: true
+        note: The same act written with an explicit position argument. `insertAdjacentHTML` takes markup
+          rather than a node, so it is also the shortest path from an operator-supplied string to an
+          executing script tag.
+  log_sinks_dotted:
+    kind: term
+    purpose: The calls that write a value out of the process where the spelling itself carries a
+      receiver and a member — a stream or a console method. Bound by the member name, so an
+      importing clause needs no further call syntax after it. For the rules that ask whether a
+      credential-named value is written where it can be read afterwards.
+    entries:
+      - term: Process output stream write
+        anchors:
+          - stdout.write
+          - stderr.write
+        position_bound: true
+        note: A Django management command writes its output as `self.stdout.write(...)`, and Node and Python
+          write `process.stdout.write` and `sys.stdout.write` for the same act. Such a line carries
+          no `log` or `console` token at all, so a sink list keyed on those words misses it, even
+          when what it prints is a freshly generated private key.
+      - term: Browser and Node console method
+        anchors:
+          - console.log
+          - console.info
+          - console.debug
+          - console.warn
+          - console.error
+          - console.trace
+        position_bound: true
+        note: "The console family, written with the receiver because the bare method names are ordinary
+          words. Console output is not automatically ephemeral: a browser extension, a crash
+          reporter or a container log collector can persist it, which is what the importing rule's
+          own context question asks about."
+      - term: C, GLib, Qt and Apple platform log call
+        anchors:
+          - fprintf(stderr
+          - g_log
+          - g_warning
+          - qDebug
+          - qWarning
+          - NSLog
+          - os_log
+        position_bound: true
+        note: "The spellings a C, C++, Objective-C or Swift process writes a diagnostic line with. None of
+          them is ordinary English, so each is bound by the token itself and needs no call syntax
+          after it, which is what puts them in the dotted list rather than the bare one even though
+          `NSLog`, `qDebug` and `g_warning` carry no receiver and member. `fprintf(stderr` is
+          spelled with its first argument because `fprintf` alone is a write to any stream,
+          including a file the process opened for data, while the standard error stream is the one a
+          container log collector and a systemd journal capture. One reachability bound is kept with
+          the anchor rather than in a note elsewhere: the spelling admits no space before the
+          parenthesis, so `fprintf (stderr` is not reached."
+      - term: JVM and Android logger call
+        anchors:
+          - System.out.println
+          - System.err.println
+          - logger.debug
+          - logger.info
+          - Timber.d
+          - log.debug
+          - log.info
+          - Log.d
+          - Log.i
+          - Log.v
+          - Log.w
+          - Log.e
+        position_bound: true
+        note: "Java, Kotlin and Android. `Log.d`, `Log.i`, `Log.v`, `Log.w` and `Log.e` are the Android
+          framework's own level methods on `android.util.Log`, and `Timber.d` is the same act
+          through the Timber facade. `log.debug`, `log.info`, `logger.debug` and `logger.info` are
+          the two conventional field names a JVM project gives an SLF4J, Log4j or Commons Logging
+          instance. What the line carries is not decided here: this list says WHERE a value is
+          written, and the importing rule's other lookahead is what decides whether the value is
+          credential-named. Whether an Android debug line survives a release build, and whether a
+          JVM DEBUG line is emitted at all, are properties of the build and of the deployment's
+          configured log level rather than of the line, and the importing rule asks the operator
+          about both."
+  log_sinks_bare:
+    kind: term
+    purpose: The calls that write a value out of the process where the spelling is a bare word that is
+      also ordinary English or an ordinary identifier — one print statement per language. Every
+      importing clause must require the call's own syntax after the word. For the rules that ask
+      whether a credential-named value is written where it can be read afterwards.
+    entries:
+      - term: Language print statement
+        anchors:
+          - print
+          - println
+          - puts
+          - echo
+          - printf
+          - var_dump
+          - print_r
+        position_bound: true
+        note: One statement per language. Every one of these is also an ordinary word somewhere — `echo` is
+          a shell builtin and a Go package name, `print` is a template helper in Go's html/template,
+          `puts` is C's — so every splice site requires the call's own syntax and, in the importing
+          rule, a credential-named value beside it.
+      - term: C and kernel logging statement
+        anchors:
+          - syslog
+          - vsyslog
+          - perror
+          - printk
+          - dprintf
+        position_bound: true
+        note: "The system-log and diagnostic statements of C and of kernel and embedded code. `syslog` and
+          `vsyslog` write to the host's system log, `perror` writes the current error to the
+          standard error stream, `printk` is the Linux kernel's own statement and `dprintf` writes a
+          formatted line to a file descriptor. Every one of them is also a token in a position that
+          is not a call: `syslog` names a header, a Python module and a configuration section,
+          `dprintf` a debugger command, and `printk` a symbol in a header that declares it. So these
+          are bare words in the sense this list means, and every splice site keeps the call's own
+          syntax after them. `dprintf` is listed beside the `printf` above rather than folded into
+          it: the importing clause's own guard refuses a match inside an identifier, so `printf` on
+          its own never reached `dprintf(`."
+  job_dispatch_verbs:
+    kind: term
+    purpose: "The act of handing a payload to a background job or task queue — the enqueue verb itself,
+      never the broker's brand. For the rules that ask what crosses a process boundary by a route
+      that is not an HTTP request to a named destination: a job queue is a transport, and the worker
+      that picks the job up is a different process from the one that wrote it."
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - term: Celery enqueue verb
+        anchors:
+          - apply_async
+          - send_task
+          - shared_task
+          - delay
+        position_bound: true
+        note: "`delay` is Celery's shorthand for `apply_async` with positional arguments, and it is also an
+          ordinary word — a retry backoff, an animation timing, `Task.Delay` in C#. It is kept
+          because subtraction is the only operation that can create a miss, and it is safe only
+          because every splice site requires the call's own parenthesis AND either a personal-data
+          member on the line or a queue-named receiver."
+      - term: BullMQ and JavaScript queue enqueue verb
+        anchors:
+          - queue.add
+          - addBulk
+        position_bound: true
+        note: BullMQ's own two spellings. `queue.add` carries its receiver because `add` alone is every list
+          append there is; the separator tolerance this list declares also reaches
+          `notificationQueue.add` and `queue_add`.
+      - term: Ruby and Elixir background-job enqueue verb
+        anchors:
+          - perform_async
+          - perform_later
+          - Sidekiq::Client.push
+          - Oban.insert
+        position_bound: true
+        note: Sidekiq, ActiveJob and Oban. The two client spellings carry their module path because `push`
+          and `insert` on their own are ordinary collection methods.
+      - term: Python and .NET queue library enqueue verb
+        anchors:
+          - rq.enqueue
+          - dramatiq.send
+          - BackgroundJobClient.Enqueue
+        position_bound: true
+        note: RQ, Dramatiq and Hangfire, each with the receiver its own documentation writes, so the anchor
+          is a construct rather than a word.
+      - term: Generic enqueue and dispatch verb
+        anchors:
+          - enqueue
+          - dispatch
+          - .trigger
+        position_bound: true
+        note: The three spellings a product writes once it has wrapped the queue in its own helper. Every
+          one is also written about an IN-PROCESS event bus that crosses no boundary — a Redux
+          store's `dispatch`, an emitter's `.trigger` — which is why the importing clause binds them
+          and why `recipients-010`'s own context question asks the reader to say which one they
+          have. `.trigger` carries its receiver dot and NOT the parenthesis, because the splice site
+          supplies the call syntax; a leading separator run is never flexible.
+  process_launch_apis:
+    kind: term
+    purpose: "The spellings a product hands work to a program on the same machine with — a spawn, a fork
+      and exec, a process builder. For the rules that ask what crosses a process boundary: an
+      argument vector is a payload, and who operates the launched program is a question about the
+      deployment rather than about the source, which the importing rule puts to its reader."
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - term: JVM process launch
+        anchors:
+          - ProcessBuilder
+          - Runtime.getRuntime().exec
+        position_bound: true
+        note: Java's two. A typical launch is `ProcessBuilder pb = new ProcessBuilder(command);`, where the
+          argument vector may carry a user name or a password substituted into it a few lines above.
+      - term: Python subprocess launch
+        anchors:
+          - subprocess.run
+          - subprocess.Popen
+          - subprocess.check_output
+          - subprocess.check_call
+          - subprocess.call
+          - os.system
+          - os.execv
+          - os.execvp
+          - os.execve
+          - os.spawnv
+        position_bound: true
+        note: The `subprocess` family with its module name, and the `os` family the same way. The module
+          prefix is part of the anchor because `run`, `call` and `system` are ordinary words.
+      - term: Node process launch
+        anchors:
+          - child_process.spawn
+          - child_process.exec
+          - child_process.execFile
+          - child_process.fork
+          - spawnSync
+          - execFileSync
+        position_bound: true
+        note: Node's module name is carried for the four whose bare spellings are ordinary; the two
+          synchronous names are distinctive enough on their own.
+      - term: Go and Ruby process launch
+        anchors:
+          - exec.Command
+          - exec.CommandContext
+          - Open3.popen3
+          - Open3.capture3
+        position_bound: true
+        note: "`exec.Command` is also read by `recipients-010` match[8], which requires the literal program
+          name `git` in quotation marks after it. This list is the complement: the same API where
+          the program is not a literal at all. The two clauses overlap deliberately — a confirming
+          path beside the one already there, never a replacement for it."
+      - term: C and POSIX process launch
+        anchors:
+          - posix_spawn
+          - execvp
+          - execve
+          - execlp
+          - execv
+          - execl
+          - popen
+          - system
+          - fork
+        position_bound: true
+        note: "`system` and `fork` are the loudest anchors in this file: `System` is a Java class, a
+          `filesystem` contains the letters, and forking is what a repository host does to a
+          repository. Every splice site therefore requires a left word boundary, the call's own
+          parenthesis AND one of three bounds inside the call, so `System.out.println` and a fork
+          button reach nothing. A typical splice is `pid = fork();` followed by `execv(path,
+          argv);`."
+      - term: PHP and .NET process launch
+        anchors:
+          - proc_open
+          - shell_exec
+          - passthru
+          - Process.Start
+        position_bound: true
+        note: PHP's three and .NET's one, each distinctive as a token; the splice site still requires the
+          call's own parenthesis and one of the three bounds, so nothing here is read bare.

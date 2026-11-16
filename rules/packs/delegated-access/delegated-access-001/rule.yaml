@@ -1,0 +1,319 @@
+id: delegated-access-001
+pack: delegated-access
+short_name: Bulk data about many people fetched on one person's account
+problem_line:
+  text: Data about many people fetched in bulk from a platform
+fix_line: Record whose data arrives; inform them within a month (sooner if contacted or shared) or
+  record the Art. 14(5) ground.
+title: Bulk personal data about many people fetched from a platform on a principal who is not the subject
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 14(1) - 'Where personal data have not been obtained
+      from the data subject, the controller shall provide the data subject with the following
+      information', including 'the purposes of the processing for which the personal data are
+      intended as well as the legal basis for the processing', 'the categories of personal data
+      concerned' and 'the recipients or categories of recipients of the personal data, if any'. Art.
+      14(2)(f) adds 'from which source the personal data originate'. This is the central provision
+      for this construct: the people whose mailboxes, contacts, files or lists arrive here did not
+      hand them over and in the ordinary case do not know the product exists"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 14(3)(a) - the information must be provided 'within a
+      reasonable period after obtaining the personal data, but at the latest within one month,
+      having regard to the specific circumstances in which the personal data are processed'. Art.
+      14(3)(b) and (c) bring the deadline forward, to the first communication with the data subject
+      and to the first disclosure to another recipient respectively. The deadline runs from the
+      fetch, which is what makes it answerable at the point this rule fires
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 14(5) - 'Paragraphs 1 to 4 shall not apply where and
+      insofar as' one of four cases holds. Two of them bear directly on this construct. Point (a):
+      'the data subject already has the information' - which is the route an operator relying on the
+      consenting organisation to have told its own staff is taking, whether or not they say so.
+      Point (b): 'the provision of such information proves impossible or would involve a
+      disproportionate effort', and it is conditional rather than free - where it is relied on, 'In
+      such cases the controller shall take appropriate measures' to protect the person, the same
+      sentence naming one of them as 'including making the information publicly available'.
+      Reference only: this entry narrows the duty rather than establishing one, and no detector can
+      tell whether a case applies"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1)(c) - the record of processing activities shall
+      contain 'a description of the categories of data subjects and of the categories of personal
+      data'. The categories of data subjects are exactly what this construct leaves undetermined in
+      the code: the platform's directory or relationship graph decides who they are at run time"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(a) - personal data shall be 'processed lawfully,
+      fairly and in a transparent manner in relation to the data subject'. Transparency towards a
+      person who has no relationship with the product is the part that has to be arranged
+      deliberately, because nothing in the ordinary product flow will reach them
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - the same record shall contain 'the
+      categories of recipients to whom the personal data have been or will be disclosed including
+      recipients in third countries or international organisations'. Reference only for this rule:
+      here the platform is a SOURCE rather than a recipient, and the entry is cited so that the
+      direction is written down rather than assumed"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 6(1) - 'Processing shall be lawful only if and to the
+      extent that at least one of the following applies', the first ground being that 'the data
+      subject has given consent to the processing of his or her personal data for one or more
+      specific purposes'. Reference only, and cited for the mismatch it makes visible: the consent
+      given here was given by the administrator or account holder, who is not the data subject of
+      most of what arrives, so this ground does not carry the imported records without more"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(7) - 'controller' means 'the natural or legal person,
+      public authority, agency or other body which, alone or jointly with others, determines the
+      purposes and means of the processing of personal data'. Reference only: which of the product
+      operator, the consenting organisation and the platform is controller for the imported records
+      is not answerable from code"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.100 (Title 1.81.5, as amended by
+      the California Privacy Rights Act). The notice duty is in subdivision (a): a business that
+      controls the collection of a consumer's personal information 'shall, at or before the point of
+      collection, inform consumers of the following', beginning with 'The categories of personal
+      information to be collected and the purposes for which the categories of personal information
+      are collected or used and whether that information is sold or shared'. Subdivision (b) is a
+      route for discharging that duty rather than a separate one, and it is the route a business in
+      this construct's position would take: such a business 'may satisfy its obligation under
+      subdivision (a) by providing the required information prominently and conspicuously on the
+      homepage of its internet website'. The people whose records arrive through this construct are
+      consumers whose information is collected without any direct interaction, and Sec. 1798.110(a)
+      lets each of them ask what was collected and from what source"
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.100.
+    checked_at: 2026-09-01
+    jurisdiction: US
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.35
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    application_permission_scopes:
+      - User.Read.All
+      - User.ReadWrite.All
+      - Group.Read.All
+      - Group.ReadWrite.All
+      - Directory.Read.All
+      - Directory.ReadWrite.All
+      - People.Read.All
+      - Mail.Read
+      - Mail.ReadWrite
+      - MailboxSettings.Read
+      - MailboxSettings.ReadWrite
+      - Calendars.Read
+      - Calendars.ReadWrite
+      - Contacts.Read
+      - Contacts.ReadWrite
+      - Files.Read.All
+      - Files.ReadWrite.All
+      - Sites.Read.All
+      - Sites.ReadWrite.All
+      - Notes.Read.All
+      - Notes.ReadWrite.All
+      - Tasks.Read.All
+      - Tasks.ReadWrite.All
+      - TeamMember.Read.All
+      - ChannelMessage.Read.All
+      - Chat.Read.All
+      - Teamwork.Migrate.All
+      - admin.directory.user
+      - admin.directory.group
+      - auth/contacts
+      - auth/directory
+  match:
+    - (?&application_permission_scopes)
+    - (?:^|[^A-Za-z0-9_])(?:client_credentials|client_assertion_type|client_assertion|ClientAssertion|AcquireTokenForClient|ConfidentialClientApplication|WithClientAssertion|GetAppOnlyToken)\b|urn:ietf:params:oauth:client-assertion-type:jwt-bearer
+    - (?:^|[^A-Za-z0-9_])(?:CreateWithUser|ServiceAccountCredentials?|CreateScoped|with_subject|withSubject|DomainWideDelegation|domain_wide_delegation)\b|(?:^|[^A-Za-z0-9_])[Ii]mpersonat(?:e|ed|es|ing|ion)[A-Za-z_]*\s*\(
+    - /(?:v1\.0|beta)/(?:users|groups|sites)\b|/admin/directory/v[0-9]+/(?:users|groups)\b|(?:^|[^A-Za-z0-9_])(?:[Ll]ist|[Ff]etch|[Gg]et|[Ii]terate)_?[Aa]ll_?(?:[Uu]sers|[Gg]roups|[Ss]ites|[Mm]embers|[Aa]ccounts|[Pp]eople|[Mm]ailboxes)\w*\s*\(|(?:^|[^A-Za-z0-9_])[Ee]numerate_?(?:[Uu]sers|[Gg]roups|[Ss]ites|[Mm]embers|[Aa]ccounts|[Pp]eople|[Mm]ailboxes)\w*\s*\(
+    - (?:^|[^A-Za-z0-9_])(?:[Gg]et|[Ff]etch|[Ll]ist|[Ss]ync|[Ii]mport|[Ll]oad|[Rr]etrieve)(?:All)?(?:Friends|Followers|Following|Watchlist|Watchlists|Contacts|Connections|Subscribers|Buddies|Roster)\w*\s*\([^\n]{0,120}(?:[Tt]oken|[Cc]redential|[Aa]uthorization|[Aa]piKey|api_key)
+    - (?:www\.)?googleapis\.com/youtube/v[0-9]+/channels|youtube\.googleapis\.com/youtube/v[0-9]+/channels|graph\.facebook\.com/[^\s"'`]{0,60}/(?:friends|accounts|followers|members)|api\.twitter\.com/[0-9.]+/users|graph\.microsoft\.com/(?:v1\.0|beta)/(?:users|groups|sites)|admin\.googleapis\.com/admin/directory/v[0-9]+/users
+    - (?:^|[^A-Za-z0-9_])(?:userPrincipalName|accountEnabled|usageLocation|onPremisesImmutableId|onPremisesSyncEnabled|onPremisesSamAccountName|proxyAddresses)\b
+    - (?:^|[^A-Za-z0-9_])people\.googleapis\.com|(?:^|[^A-Za-z0-9_])(?:listPeopleConnections|list_people_connections|people_connections|otherContacts|other_contacts|PeopleV1|personFields|person_fields)\w*|(?:^|[^A-Za-z0-9_])[Pp]eople\s*(?:\(\s*\))?\s*\.\s*[Cc]onnections\s*(?:\(\s*\))?\s*\.\s*(?:[Ll]ist|[Gg]et)\b|(?:^|[^A-Za-z0-9_])people/me/connections|(?:^|[^A-Za-z0-9_])Google[^A-Za-z0-9]{1,2}(?:Service|Apis)[^A-Za-z0-9]{1,2}People\w*|(?:^|[^A-Za-z0-9_])PeopleService\s*\([^\n]{0,100}(?:[Cc]lient|[Cc]redential|[Tt]oken|[Aa]ccount)
+    - (?:^|[^A-Za-z0-9_])(?:IMAP4_SSL|IMAP4_stream|IMAP4|IMAPClient|ImapFlow|ImapClient|ImapMailbox|POP3_SSL|POP3)\s*\(|(?:^|[^A-Za-z0-9_])(?:imaplib|poplib|imapflow|imap_tools|mail_room|go-imap|MailKit|Webklex|PHPIMAP|node-imap|imap-simple)\w*|(?:^|[^A-Za-z0-9_])(?:jakarta|javax)\.mail\b|(?:^|[^A-Za-z0-9_])Net::(?:IMAP|POP3)\b|(?:^|[^A-Za-z0-9_])(?:[Gg]et|[Ll]ist|[Ff]etch|[Ii]terate|[Ww]alk|[Ee]numerate)_?(?:[Aa]ll_?)?(?:[Ff]olders|[Mm]ailboxes|[Mm]ail_?[Ff]olders)(?:Async)?\s*\(|(?:^|[^A-Za-z0-9_])(?:[Pp]rocess|[Ii]mport|[Ss]ync|[Ff]etch|[Rr]ead|[Ii]ngest|[Dd]ownload|[Aa]rchive)_?(?:[Mm]essages?|[Mm]ails?|[Ee]mails?)[A-Za-z_]{0,20}[Aa]ll[A-Za-z_]*\s*\(
+    - (?:^|[^A-Za-z0-9_])(?:boxyhq|saml-jackson|jacksonProduct|jacksonOption|JacksonOption)\w*|(?:^|[^A-Za-z0-9_])[Dd]irectory[-_]?[Ss]ync\w*|(?:^|[^A-Za-z0-9_])workos(?:-inc)?\b|(?:^|[^A-Za-z0-9_])(?:api\.merge\.dev|mergeapi|merge_hris|api\.rippling\.com)\w*|(?:^|[^A-Za-z0-9_])(?:azure|okta|onelogin|jumpcloud|google|generic|rippling|bamboohr|workday)[-_]scim[-_]v[0-9]|(?:^|[^A-Za-z0-9_])scim[-_]?[Pp]ath\b|/[Ss]cim/v[0-9]
+context_questions:
+  - WHOSE AUTHORITY IS THIS, AND WHOSE DATA COMES BACK? These are two different people in this
+    construct and the whole finding turns on the gap between them. Name the principal who granted
+    the access - a tenant administrator, an account owner, nobody at all because the product uses
+    its own key - and then name the people whose records the call returns. Where they are the same
+    person this is an ordinary self-service integration and not this construct; where they differ,
+    everything below applies to the second group.
+  - WHICH OF THE THREE SHAPES IS THIS? (a) Application-level permissions or a service account with
+    domain-wide delegation, where no user is in the authorisation loop at all. (b) One person's own
+    token walking their relationship graph, where the other people on that graph never consented to
+    anything. (c) A batch refresh of platform profiles on the product's own API key, where there is
+    no delegating principal and the people are stored rows rather than users. Art. 14 governs all
+    three in the same way, subject in each to Art. 14(5); who could possibly have consented differs,
+    and so does what the operator must be told.
+  - HOW MANY PEOPLE, AND CAN ANYBODY SAY WHO THEY ARE? The subject set is fixed by the platform at
+    run time - a directory listing, a friends list, a group membership - so it is not enumerable
+    from the source and may not be enumerable at all. Ask the operator for the actual scale in their
+    deployment and for whether any list of affected people can be produced, because an Art. 14
+    notice that cannot be addressed to anybody is a different problem from one that has not been
+    drafted.
+  - WHAT CATEGORIES ACTUALLY ARRIVE? Read the permission list and the endpoints rather than the
+    integration's name. The difference between reading a directory listing and reading mailbox
+    contents is the difference between a name and a work address on one hand, and message bodies,
+    attachments, calendar entries, contact folders and chat history on the other. Where a write
+    permission is present, note that the product can also MODIFY the records of people who never
+    dealt with it.
+  - "HOW IS ART. 14 SATISFIED, OR WHY IS IT DISAPPLIED? The information is owed within one month of
+    obtaining the data, or at the first communication with the person, or at the first disclosure to
+    another recipient, whichever comes first. Before asking how it is met, ask whether Art. 14(5)
+    removes it: point (a) disapplies it where the person already has the information, which is what
+    an operator relying on the consenting organisation to have told its own staff is in substance
+    claiming, and it may well be sound for employees of that organisation. Point (b) disapplies it
+    where providing the information is impossible or a disproportionate effort - but that route is
+    conditional, and where it is taken the controller must still take appropriate measures,
+    including making the information publicly available. Neither exemption reaches somebody outside
+    the consenting organisation automatically - a friend on a relationship graph, an external
+    correspondent in an imported mailbox, a person whose public profile was fetched: 14(5)(a) will
+    not, and 14(5)(b) is available only on its appropriate-measures condition, which includes making
+    the information publicly available. Record which group each affected person falls into and,
+    where an exemption is claimed, which one and on what basis."
+  - "IS THIS A FETCH OR A DECLARATION? Several shapes reach this rule that fetch nothing: a
+    permission name in a documentation table, a directory property in a mapping or a test double, a
+    confidential-client library named in an import. Those establish that the product is BUILT to
+    read a directory on somebody else's authority, which is worth recording, and they are not
+    evidence that a record was read. Say which the matched line is before writing a record row."
+  - WHERE DOES THE IMPORTED DATA COME TO REST, AND FOR HOW LONG? Data obtained this way is typically
+    copied into the product's own store - a backup archive, an index, a ranking table - and outlives
+    the session that fetched it. Name the store and its retention rule, and check whether a deletion
+    request from one of these people could be executed at all, given that they have no account here
+    to make it from.
+evidence_template: "{file}:{line} matched a construct through which this product obtains personal
+  data about MANY PEOPLE from a third-party platform, on the authority of a principal who is not
+  those people. THAT IS THE WHOLE OF WHAT IS ESTABLISHED. Ten shapes reach this rule and they
+  differ. (i) An application-permission scope name - the strongest, because an application
+  permission is by definition not scoped to the signed-in person. (ii) The app-only authentication
+  flow, in which no user is in the loop at all. (iii) A service-account impersonation call, the most
+  direct line here: it says act as this person, and that person did nothing. (iv) A directory being
+  enumerated, which is the subject set being produced rather than named. (v) A relationship
+  retrieval carrying one account holder's credential, where what returns is about other people on
+  their graph. (vi) A named platform endpoint that returns records about many people. (vii)
+  Directory user-object property names: THE LOOSEST SHAPE HERE, reaching a mapping table, a
+  documentation example or a test double as readily as a call, and therefore evidence that the
+  product handles directory objects rather than evidence that anything was fetched. (viii) A
+  personal-address-book read: one account holder's own token paging through their contacts graph,
+  where the people returned are their correspondents and not them. THE RESOURCE NAME ALONE IS NEVER
+  THIS SHAPE - a bare self resource is the ordinary self-service integration this rule excludes, and
+  what makes the call this construct is the connections collection on the end of it. (ix) A mailbox
+  opened under one stored sign-in credential, or the folders of such a mailbox being enumerated. The
+  correspondents whose addresses and names arrive in each message never dealt with this product. AN
+  IMPORT OR A CONSTRUCTOR IS CAPABILITY EVIDENCE HERE, in the same way shape (vii) is: it says the
+  product speaks a mail protocol, not that a message was read. THE CREDENTIAL CUSTODY ITSELF IS A
+  DIFFERENT QUESTION AND A DIFFERENT RULE - `delegated-access-002` reports the holding of somebody
+  else's sign-in password, and this rule reports the population that password reaches. (x) A
+  customer's employee directory arriving through a directory-sync broker, or a SCIM surface. One
+  administrator authorises the connection and every employee in the synchronised directory is
+  somebody else. THE MATCHED LINE DOES NOT SAY WHICH SIDE OF THE SYNC THIS PRODUCT IS ON: the same
+  SCIM path is written by a product that receives a directory and by one that writes into somebody
+  else's, and `identity-issuance-002` is the rule for the second. WHAT THIS DETECTOR DOES NOT
+  ESTABLISH: who granted the authority and whose data returns, which are two different people and
+  the point of the finding (context question 1); how many people are affected or whether they can be
+  identified at all, since the platform fixes the set at run time (question 3); which categories
+  actually arrive (question 4); whether anybody has been informed (question 5); or, for shapes (i),
+  (ii), (vii), and for the import, constructor and SCIM-path forms of (ix) and (x), that any record
+  was fetched on this path (question 6). THE ARTICLE 14 QUESTION IS THE ONE TO CARRY FORWARD: the
+  people whose data this construct obtains did not provide it and, in the ordinary case, have no
+  relationship with this product at all."
+remediation_template: >
+  Name the two parties first (context question 1): the principal who granted the access, and the
+
+  people whose records the call returns. Where they are the same person, this is an ordinary
+
+  self-service integration and the finding closes.
+
+  Read the permission list and the endpoints and write down the categories that actually arrive.
+
+  A directory listing and a mailbox body are very different rows in a record of processing
+
+  activities, and a write permission means the product can alter records belonging to people who
+
+  never dealt with it.
+
+  Record the categories of data subjects by the rule that produces them - "every account in the
+
+  tenant directory", "every person on the account holder's friends list" - and state plainly that
+
+  the membership is fixed by the platform at run time and is not enumerable from the product.
+
+  Decide how the Art. 14 information is provided, and to which group - or, where it is not provided,
+
+  which limb of Art. 14(5) is being relied on and why. Decide when, too, because Art. 14(3) sets the
+
+  time from the fetch: within a reasonable period and at the latest within one month, and earlier
+
+  where the path does either of two things first - at the latest at the first message to the person,
+
+  where the data are used to contact them, and at the latest at the first disclosure, where the data
+
+  are disclosed to another recipient. A product that mails these people or forwards their records in
+  the
+
+  first week has to have provided the information by then, not by the end of the month. Where the
+  affected people are staff of the
+
+  consenting organisation, the ordinary route is that organisation's own notice, and the operator
+
+  should confirm it covers this processing by name; where that notice really does reach them,
+
+  Art. 14(5)(a) is the provision that describes the position and it should be recorded as the reason
+
+  rather than left as an assumption. Where they are not staff of that organisation - an external
+
+  correspondent in an imported mailbox, a friend on a relationship graph, a person whose public
+
+  profile was refreshed - that route does not reach them and something else has to. Art. 14(5)(b)'s
+
+  disproportionate-effort limb is not a way of closing the question either: it carries its own
+
+  condition, that appropriate measures are still taken, including making the information publicly
+
+  available.
+
+  Check whether the permissions requested are the least that would do. An application permission
+
+  granted at tenant scope reads every mailbox in the organisation; several platforms offer a
+
+  narrowing to named mailboxes or groups, and where the product only needs some, the grant should
+
+  say so.
+
+  Name the store the imported data comes to rest in and its retention rule, and work out how a
+
+  deletion request from one of these people would be executed, given they have no account here.
+
+  Where the matched line is a documentation table, a mapping or an import, record the capability and
+
+  close the finding there.
+data_categories:
+  - user.account
+  - user.unique_id
+  - user.name
+  - user.contact.email
+  - user.contact.phone_number
+  - user.content
+  - user.behavior
+fingerprint_spec: directory

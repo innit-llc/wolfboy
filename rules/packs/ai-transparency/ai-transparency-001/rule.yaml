@@ -1,0 +1,315 @@
+id: ai-transparency-001
+pack: ai-transparency
+short_name: "AI chat or model call: telling people it is an AI"
+problem_line:
+  text: "Chat users: clear notice that they talk to an AI not found"
+fix_line: Tell users on the first screen of the chat that they are talking to an AI, and keep a
+  visible label in the conversation.
+title: Language-model call, binding, endpoint or SDK entry point - conversational surface and AI
+  disclosure need review
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 50(1) — addressed to providers (Art. 3(3)), not
+      to deployers (Art. 3(4)): providers must design and develop AI systems intended to interact
+      directly with natural persons so that those persons are informed they are interacting with an
+      AI system, unless that is obvious from the point of view of a reasonably well-informed,
+      observant and circumspect natural person. Applies from 2026-08-02. A statement buried in the
+      terms of service does not reach the user at the point of interaction."
+    url: https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-50
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 2(12) — the free and open-source exclusion, cited
+      here because it does NOT switch this rule off and because a reader of an AI Act finding whose
+      own product is open source reaches for it first. Art. 2(12): 'This Regulation does not apply
+      to AI systems released under free and open-source licences, unless they are placed on the
+      market or put into service as high-risk AI systems or as an AI system that falls under Article
+      5 or 50.' Article 50 is named inside that proviso alongside Article 5, so the Art. 50(1)
+      provider duty — the duty this rule tests — survives however the system is licensed. That is
+      the same disposal ai-prohibited-001, -002 and -003 make one article over, on the identical
+      words. How the project is funded does not reopen the question either. The conditions recital
+      103 attaches — that a component provided against a price or otherwise monetised does not
+      benefit, that making a component available through an open repository is not in itself a
+      monetisation, and that transactions between microenterprises are excepted — qualify the
+      exceptions this Regulation provides to free and open-source AI components, and the recital
+      says exceptions in the plural: Art. 2(12) here, and elsewhere Art. 25(4), Art. 53(2) and Art.
+      54(6). Microenterprise there is a defined term, tested by Commission Recommendation
+      2003/361/EC rather than by self-description. An Article 50 system is outside the Art. 2(12)
+      exclusion before any of those conditions is reached, and none of the other three exceptions
+      reaches an Article 50 duty at all. So being unmonetised, being a microenterprise and
+      publishing on a public repository change nothing here, in either direction. Commission
+      Guidelines C(2026) 5054 final — draft approval, not yet applicable, interpretation only — say
+      the same at para. 23 of the Annex: providers and deployers of open-source AI systems within
+      the scope of Article 50 still have to meet their respective transparency obligations. Its
+      footnote 11 anchors the free and open-source release on recital 102, not on recital 103.
+      Neither of those two Guidelines propositions is quoted here or carries a quote receipt: the
+      quote checker does not fetch guidance documents, and this entry's url resolves to the
+      Regulation, which does not contain them — the Guidelines have a separate entry in this rule's
+      legal_basis, carrying their own source link and their own not-yet-applicable status. Only the
+      single-quoted Art. 2(12) sentence above is machine-verified against the Official Journal. How
+      the system was released is a question for the person running the scan rather than for a
+      detector, read from the terms the system is actually released under, and a LICENSE file is
+      evidence about it rather than the answer. The Art. 2(12) quotation above is the text the four
+      ai-annex3 Article 6(4) checklists carry, re-verified against the same Official Journal source
+      on 2026-08-04. Those four quote recital 103 in full as well, because the Art. 2(12) exclusion
+      becomes available on an Annex III row only once the Article 6(4) derogation takes the system
+      out of high-risk — the proviso names high-risk systems first, so until then the exclusion is
+      as unavailable there as it is here — and the monetisation test then decides whether it
+      applies; on an Article 50 row it decides nothing, which is why it is not repeated here.
+      Reference only: a scope provision establishes no duty of its own, and this one removes none
+      from this rule."
+    url: http://publications.europa.eu/resource/celex/32024R1689
+    checked_at: 2026-08-04
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Commission Guidelines on the implementation of the transparency obligations for certain AI
+      systems under Article 50 of Regulation (EU) 2024/1689, C(2026) 5054 final, 20.7.2026 — STATUS:
+      DRAFT APPROVAL, NOT YET ADOPTED AND NOT YET APPLICABLE. Page 2 states that 'The Guidelines
+      will be formally adopted by the Commission at a later date, when all language versions are
+      available' and that 'It is only from that moment that these Guidelines will be applicable.'
+      Verified 2026-07-27; the Art. 5 family went through the same two stages (C(2025) 884 final
+      draft approval -> C(2025) 5052 final adopted), so the adopted version of this document is
+      expected to carry a different C() number and paragraph numbering may shift. — para. 28 (Art.
+      50(1) is addressed to providers); paras 10-11 (a party that places or puts a conversational AI
+      system into service under its own name or trademark is its provider); para. 12 (a party using
+      a third-party system under its own authority is a deployer); para. 15 (an operator may hold
+      both roles at once); para. 27 (a party building an AI system on someone else's general-purpose
+      AI model is a downstream AI system provider carrying the Art. 50(1) and (2) obligations)"
+    url: https://digital-strategy.ec.europa.eu/en/library/guidelines-transparency-obligations-providers-and-deployers-ai-systems
+    checked_at: 2026-07-22
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Utah Artificial Intelligence Consumer Protection Act, Utah Code Sec. 13-77-103
+      (published-code recodification of the provision enacted as Sec. 13-75-103 by S.B. 226, 2025
+      General Session), effective 2025-05-07 and replacing the disclosure provision that S.B. 149
+      (2024) had put at Sec. 13-2-12 — narrower than AI Act Art. 50(1): disclosure that the
+      individual is interacting with generative artificial intelligence is owed under Sec.
+      13-77-103(1) only where the individual makes a clear and unambiguous request, and proactively
+      under Sec. 13-77-103(2) only in a regulated occupation where the use is a high-risk artificial
+      intelligence interaction"
+    url: https://law.justia.com/codes/utah/title-13/chapter-77/part-1/section-103/
+    checked_at: 2026-07-27
+    jurisdiction: US
+  - cite: "New York General Business Law Art. 47 (Artificial Intelligence Companion Models), Sec.
+      1700-1704, in force 2025-11-05 — scope of the Article, quoting nothing: it is narrower than AI
+      Act Art. 50(1) in its reach, because it applies only to AI companions as defined in Sec. 1700,
+      where Art. 50(1) reaches AI systems intended to interact directly with natural persons
+      generally. The notification duty this rule tests is the next entry, which quotes Sec. 1702 and
+      carries that section's own url"
+    url: https://www.nysenate.gov/legislation/laws/GBS/A47
+    checked_at: 2026-09-07
+    jurisdiction: US
+    supports_rule_condition: false
+  - cite: New York General Business Law Sec. 1702 (Notifications), in Art. 47 (Artificial Intelligence
+      Companion Models), in force 2025-11-05 — periodic where AI Act Art. 50(1) states no
+      periodicity at all, so on that limb New York asks for something Art. 50(1) does not ask for;
+      Sec. 1702 reads in full "An operator shall provide a clear and conspicuous notification to a
+      user at the beginning of any AI companion interaction which need not exceed once per day and
+      at least every three hours for continuing AI companion interactions which states either
+      verbally or in writing that the user is not communicating with a human."
+    url: https://www.nysenate.gov/legislation/laws/GBS/1702
+    checked_at: 2026-09-07
+    jurisdiction: US
+effective_date: 2025-05-07
+severity: high
+rule_confidence: 0.5
+applicability_preconditions:
+  - features.llm.present
+detector:
+  shared_vocabulary:
+    - ai_assistant_recipients
+  engine: builtin-regex
+  match:
+    - useChat\(
+    - \buse[A-Z][A-Za-z0-9]*Chat\s*\(
+    - (?:^|[^A-Za-z0-9_])(?:load|get|init|create|make|build|use)[_-]?[Aa][Ii]\s*\(\s*\)\s*\.
+    - streamText\(|generateText\(
+    - chat\.completions\.create\(|responses\.create\(
+    - anthropic\.messages\.create\(|client\.messages\.create\(
+    - streamObject\(|generateObject\(|streamUI\(|useCompletion\(
+    - chat\.completions\.(stream|parse)\(|ChatCompletion\.a?create\(
+    - "[Cc]reateChatCompletion(Stream)?\\(|chatCompletions?\\("
+    - chat\(\)->create(Streamed)?\(|\.chat\(\s*parameters:|\.chat\.create\(
+    - \bmessages\.(create|stream)\(|Messages\.New\(
+    - generate_content(_stream)?\(|generateContent(Stream)?\(|:(stream)?[gG]enerateContent
+    - getGenerativeModel\(|start_chat\(|startChat\(
+    - Converse(Stream)?Command|InvokeModel(WithResponseStream)?Command
+    - \.(converse|converse_stream|invoke_model|invoke_model_with_response_stream)\(
+    - ollama\.(chat|generate)\(|:11434|:1234/v1
+    - llama_cpp\.Llama\(|getLlama\(|llama-server\b
+    - (new\s+)?(Azure)?Chat(OpenAI|Anthropic|Ollama|Mistral(AI)?|Groq|Cohere|Bedrock(Converse)?|VertexAI|GoogleGenerativeAI|GoogleVertexAI|Fireworks|Together(AI)?|DeepSeek|Perplexity|XAI|LiteLLM|HuggingFace|OpenRouter|AlibabaTongyi|Baidu|Moonshot|Nvidia|NVIDIA|WatsonX|Databricks|Sambanova|CometAPI|Cerebras|Nebius)\(
+    - as_chat_engine\(|chat_engine\.(chat|stream_chat)\(|(OpenAI|Anthropic)ChatGenerator\(|OpenAIGenerator\(
+    - (?:^|[^A-Za-z0-9_])[A-Za-z0-9_]*[eE]ngine\s*\.\s*(?:chat|stream_chat|achat|astream_chat)\s*\(
+    - GetChatMessageContents?Async\(|InvokePromptAsync\(|Add(Azure)?OpenAIChatCompletion\(
+    - ChatClient\.(create|builder)\(|chatModel\.call\(|(Streaming)?ChatLanguageModel\b|(OpenAi|Anthropic)ChatModel\b
+    - "RubyLLM\\.chat\\b|perform_completion!\\(|\\.ask\\(|\\.chat\\(\\s*model:"
+    - /v1/chat/completions|/chat/completions\b|/v1/responses\b|/v1/complete\b
+    - api\.openai\.com|api\.anthropic\.com|openai\.azure\.com|\.services\.ai\.azure\.com|/openai/deployments/|generativelanguage\.googleapis\.com
+    - api\.groq\.com|api\.mistral\.ai|openrouter\.ai|api\.deepseek\.com|api\.together\.xyz|api\.perplexity\.ai|api\.x\.ai|api\.cohere\.(com|ai)|api\.fireworks\.ai|bedrock-runtime\.[a-z0-9-]+\.amazonaws\.com
+    - (model|model_name|modelName|model_id|modelId|llm_model|deployment_name|DEFAULT_MODEL|OPENAI_MODEL|ANTHROPIC_MODEL)["']?\s*[:=]>?\s*["'](gpt-|gpt4|o[1345]-|claude-|gemini-|mistral-|mixtral|llama-?[0-9]|deepseek|qwen|command-r|grok-|phi-[0-9]|gemma)
+    - (?:^|[^A-Za-z0-9])(?&ai_assistant_recipients)
+  match_without:
+    - ^\s*(\*|//)
+    - streamText\(\s*[A-Za-z_$][\w$.]*\s*,
+    - \b(prisma|db|database|knex|trx|tx|orm|sequelize|supabase|repository|repo|models|entities)\.[\w$.]*([mM]essages|[rR]esponses)\.create\(
+    - "([mM]essages|[rR]esponses)\\.create\\(\\s*\\{[^}]*\\bdata\\s*:"
+    - "messages\\.create\\(\\s*\\{[^}]*\\b(to|from|body|message_type|mediaUrl|messagingServiceSid|m\
+      essaging_service_sid)\\s*:"
+  also_in_file:
+    - from\s+['"](ai|ai/react|ai/rsc|ai/vue|ai/svelte)['"]|import\(['"]ai['"]\)|require\(['"]ai['"]\)
+    - "@ai-sdk/"
+    - "@anthropic-ai/"
+    - from\s+['"]openai(/[a-z]+)?['"]|require\(['"]openai['"]\)|import\(['"]openai['"]\)
+    - api\.openai\.com|api\.anthropic\.com|openai\.azure\.com|generativelanguage\.googleapis\.com
+    - new (OpenAI|AzureOpenAI|Anthropic)\(
+    - langchain|groq-sdk|@mistralai/|@google/gen
+    - "['\"`](gpt-|gpt4|claude-|gemini-|mistral-|llama-|deepseek-|grok-|command-r)"
+    - from\s+['"][^'"]*[/-]ai(/[^'"]*)?['"]
+    - useChat\(\s*\{[^}]*(api\s*:\s*['"`]/|(streamProtocol|initialMessages|sendExtraMessageFields|onToolCall|experimental_throttle|keepLastMessageOnError)\s*:)|useCompletion\(|DefaultChatTransport|to(UIMessage|DataStream|TextStream)Response\(|convertTo(Model|Core)Messages\(
+    - \buse[A-Z][A-Za-z0-9]*Chat\(\s*\{[^}]*(api\s*:\s*['"`]/|(streamProtocol|initialMessages|sendExtraMessageFields|onToolCall|experimental_throttle|keepLastMessageOnError)\s*:)
+    - ^\s*(from|import)\s+(openai|anthropic|ollama|litellm|cohere|groq|mistralai|vertexai|transformers|llama_cpp|vllm|langchain[\w.]*|llama_index[\w.]*|haystack[\w.]*|semantic_kernel|google\.generativeai|google\.genai)\b|from\s+google\s+import\s+genai
+    - RubyLLM|OpenAI::Client|Anthropic::Client|require\s+['"](openai|anthropic|ruby_llm)['"]
+    - use\s+OpenAI\\|OpenAI\\Client|openai-php|aiprovider_(openai|azureai|gemini|ollama|deepseek|awsbedrock|anthropic)
+    - sashabaranov/go-openai|anthropics/anthropic-sdk-go|google\.golang\.org/genai|tmc/langchaingo|ollama/ollama
+    - com\.openai\.|dev\.langchain4j|org\.springframework\.ai|com\.theokanning\.openai|com\.aallam\.openai|com\.anthropic\.
+    - using\s+OpenAI|Azure\.AI\.OpenAI|Microsoft\.SemanticKernel|Anthropic\.SDK
+    - async[_-]openai|openai_api_rs|ollama-rs|llm_chain|dart_openai|google_generative_ai|package:langchain
+    - "@google/gen(erative-)?ai|@aws-sdk/client-bedrock-runtime|@huggingface/inference|@langchain/|\
+      cohere-ai|@azure/openai|openai-edge|\\bollama\\b"
+    - api\.groq\.com|api\.mistral\.ai|openrouter\.ai|api\.deepseek\.com|api\.together\.xyz|api\.perplexity\.ai|api\.x\.ai|api\.cohere\.(com|ai)|api\.fireworks\.ai|bedrock-runtime|\.services\.ai\.azure\.com|:11434|:1234/v1
+    - \b(lmstudio|vllm|llama[._-]?cpp)\b|LlamaCpp
+    - "['\"`](o[134]-|qwen|gemma|mixtral|phi-[0-9]|kimi-|command-a)"
+    - (?:^|[^A-Za-z0-9])(?&ai_assistant_recipients)
+  gate_scope: directory
+  resolve_import_aliases: true
+context_questions:
+  - "Which role does the scanned party hold for this conversational system — provider (AI Act Art.
+    3(3)) or deployer (Art. 3(4))? Answer from the codebase: is the model hosted, trained or
+    fine-tuned inside this repository, or reached over a third-party API; and is the assistant
+    surface shipped to end users or to third parties under this party's own name or brand, or is a
+    vendor's assistant embedded as-is under this party's authority? Art. 50(1) addresses providers
+    only, so record which branch the evidence supports and quote it."
+  - Does the model use this line belongs to reach an end-user-facing conversational surface, or only
+    an internal tool or batch job (out of scope)? Where the matched line is an endpoint, a binding,
+    an import or a type rather than a call, find the call site it serves before answering - it may
+    be in another file, and it may not exist in this repository at all. Trace the UI path and quote
+    it.
+  - Is the user told, before or at the start of the conversation, that they are interacting with an
+    AI, in a way that is clear and noticeable? Find the AI-disclosure UI and quote it; if nothing is
+    found, record the absence.
+  - Could the AI nature be obvious from the context of use (the AI Act Art. 50(1) exception)? Read
+    that exception narrowly and quote whatever would make it obvious.
+  - "Which of the four shapes did the detector match on this line - a call to a model API, a model
+    binding (a chat-model constructor, or a configuration key taking a model family as its value),
+    an inference endpoint, host or port, or an SDK entry point such as a Bedrock command class, a
+    chat-model type or a local model server? Quote the matched line and name the shape. Only a call
+    establishes that a model is invoked from this file; an endpoint or a binding establishes that
+    this file addresses a model provider, and a provider registry, a settings default, a model price
+    catalogue and a documentation example all match exactly as a live call path does. ADDED
+    2026-09-06: AND SAY WHERE THE CORROBORATION CAME FROM. Where the finding carries
+    corroborated_from, the SDK import, SDK idiom, provider host or port, model name, locally served
+    runtime or in-house AI module path that let this line through is in ANOTHER FILE of the same
+    directory, and the field names that file and that line. Open it and quote it. Then answer the
+    question the engine cannot: are the two files plausibly one module - the same package, the same
+    service, the same feature - or only neighbours in one directory? Say which the corroborating
+    file is, because this rule excludes no path of its own: an example, a generated file, a vendored
+    copy and a test whose name the scanner's production-path default does not catch all corroborate
+    exactly as first-party code does. Where the two are not one module, the matched name is a
+    homonym that this scope released and the candidate should be dismissed on that ground, with the
+    file you read named."
+evidence_template: "{file}:{line} carries one of five shapes: a call to a model API, a model binding
+  (a chat-model constructor, or a configuration key taking a model family as its value), an
+  inference endpoint, host or port, or an SDK entry point such as a Bedrock command class or a
+  chat-model type. Only the first is a call - an endpoint literal says where a model would be
+  reached, a binding says which model would be used, and either can sit in a file that contains no
+  call at all, which is how a provider registry, a settings default and a model price catalogue
+  match. The candidate also requires corroboration from somewhere in the same file, the matched line
+  included, and that is what tells these names from their homonyms: an SDK import or one of an SDK's
+  own identifiers, a provider host or port, a model name, a locally served runtime, or an in-house
+  AI module path. A fifth shape was added on 2026-09-04: an embedded third-party AI assistant widget
+  - the vendor's package, its component identifier or its service host - which names no model, no
+  SDK and no inference host, so on that shape the corroboration comes from the same list and the
+  finding says only that the product embeds an assistant somebody else operates. THE TWO SENTENCES
+  ABOVE PUT THE CORROBORATION IN THE SAME FILE, AND FROM 2026-09-06 THAT HOLDS WITHOUT QUALIFICATION
+  ONLY OF A FINDING THAT CARRIES NO corroborated_from. Added 2026-09-06: this rule's gate is scoped
+  to the DIRECTORY, so it may also be opened by another file whose immediate parent directory is the
+  cited file's own, and where it is, the finding names that file and that line in
+  locations[].corroborated_from. WHERE THE FINDING CARRIES corroborated_from, THE SDK EVIDENCE IS IN
+  ANOTHER FILE OF THE SAME DIRECTORY, AND THE HOMONYM TEST IS CORRESPONDINGLY WEAKER: it then
+  establishes only that SOME FILE IN THIS DIRECTORY CARRIES ONE OF THOSE CONSTRUCTS - not that this
+  line is an LLM call, and not that the directory is an LLM module - and a same-name API belonging
+  to a different SDK - messages.create from intercom-client or twilio, streamText from
+  hono/streaming, a home-grown useChat composable - written beside such a file will reach you this
+  way. Do not read the corroboration as a statement about the directory. In one measured case the
+  corroborating file was a fake-conversation fixture that nothing in the application imports, in a
+  flat utility folder of 74 files that is not a module at all. THE NAMED CORROBORATING LINE IS WHAT
+  TO READ FIRST. Open it, say what kind of corroboration it carries, and say what joins that file to
+  the cited line, because the record does not say which of this rule's corroboration branches
+  matched and the engine established only that the two files sit in one directory. This rule
+  declares no file_globs, no path_without and no path exclusions, so the named file is any file the
+  scanner treats as production: an example, a generated file, a vendored copy, or a test written to
+  a convention the scanner's default does not recognise. That default is the scanner's own and not
+  this rule's: as the shipped scanner has it, a file is kept out when any directory on its path is
+  named test, tests, spec, specs, testing, fixtures, __fixtures__, mocks, __mocks__, __snapshots__,
+  e2e, cypress, playwright, stories or .storybook, or when its own name ends in .test, .spec,
+  .stories or .cy before a JavaScript or TypeScript extension. Say which kind of file the
+  corroborator is before relying on it. A finding that carries no corroborated_from is unchanged and
+  means exactly what it meant before. Whether it reaches an end-user-facing conversational surface
+  is context question 2, and whether an AI disclosure exists is context question 3 - this detector
+  searches for neither"
+remediation_template: >
+  Settle the role first, because AI Act Art. 50(1) addresses providers and not deployers.
+
+  Provider branch (this party puts the conversational system into service under its own name or
+  brand,
+
+  including one built on a third-party model): build the disclosure into the surface itself — an
+  explicit
+
+  "you are chatting with an AI assistant" on the first render, a permanent label in the conversation
+  header
+
+  plus a declaration in the opening message. Wording placed only in the terms of service never
+  reaches the
+
+  user at the point of interaction.
+
+  Deployer branch (a vendor's assistant is embedded as-is under this party's authority): Art. 50(1)
+  sits with
+
+  the upstream provider, so the engineering task here is to keep the vendor's disclosure surfaced
+  rather than
+
+  restyled or suppressed by the embedding, and to check separately whether Art. 50(4) reaches any
+  AI-generated
+
+  text this product publishes on matters of public interest.
+
+  AI Act Art. 50 applies to EU-facing deployments from 2026-08-02.
+
+  Releasing this under a free and open-source licence does not remove the duty: Art. 2(12) withholds
+  that
+
+  exclusion from AI systems placed on the market or put into service as systems falling under
+  Article 5 or 50,
+
+  and Article 50 is the article this finding sits under. Neither does the way the project is funded.
+  Recital
+
+  103's monetisation test narrows the Art. 2(12) exclusion, and an Article 50 system does not have
+  that
+
+  exclusion to narrow, so being unmonetised, being a microenterprise and publishing on a public
+  repository
+
+  leave this duty exactly where it is.
+data_categories: []
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 2
+      class: per-location
+    - question: 5
+      class: per-location

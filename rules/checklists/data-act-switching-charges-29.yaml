@@ -1,0 +1,509 @@
+checklist_id: data-act-switching-charges-29
+title: Data Act Article 29 - switching charges and the information published about them
+law: Regulation (EU) 2023/2854 (Data Act)
+source_url: http://publications.europa.eu/resource/celex/32023R2854
+checked_at: 2026-07-28
+scope_note: "This checklist records what the published pages and the contract say about charges for
+  switching away, and about the fees and penalties a prospective customer is told of before signing.
+  **Article 29 runs to seven paragraphs; five of them have an item here and two deliberately do
+  not.** Article 29(2) is a permission rather than a duty - it allows a reduced switching charge
+  during a window, so there is nothing for a document to fail to contain - and it is quoted on the
+  gate instead, because the window it opens decides what several of the items below mean. Article
+  29(7) empowers the Commission to adopt delegated acts under Article 45 and imposes nothing on a
+  provider, so no item could ask anything of a document about it. Neither omission was written down
+  until 2026-09-01, and a reader counting items against the Article could not tell a considered
+  omission from an oversight. **Article 29(3) is split, and this list walks the document half of
+  it.** Whether a reduced switching charge actually exceeds the costs directly linked to the
+  switching process is a question about the provider's accounts and no document answers it, so
+  nothing here computes it. What a document does carry is the statement: a pricing page or a
+  contract that caps a reduced switching charge at the provider's directly linked costs, or that
+  states a charge and no such cap. That is a declaration this pillar exists to reconcile, and
+  `art-29-3-reduced-charge-cost-cap` asks for it. Article 29(3) is also the paragraph that governs a
+  switching charge until 11 January 2027, the last day on which this file treats a reduced charge as
+  safe: Article 29(1)'s prohibition begins on 12 January 2027, and until then Article 29(2) permits
+  a reduced charge on the condition Article 29(3) sets. From 12 January 2027 Article 29(1) governs
+  instead, and no reduced switching charge is left for Article 29(3) to cap. Article 29(3) had no
+  item at all until 2026-09-01. On whether a charge is a switching charge, note that Article 2(36)
+  settles more than an earlier version of this note allowed: the definition expressly includes data
+  egress charges and expressly excludes standard service fees and early termination penalties, so
+  what is left to a human is whether a particular charge is imposed for an action this Regulation
+  mandates for switching - not the whole question. **The dates this list turns on.** The Regulation
+  applies from 12 September 2025 under Article 50, whose only deferrals are Article 3(1), Chapter
+  III and Chapter IV, none of which touches Chapter VI - so every duty below is live today, and no
+  item is to be worded as preparation. 12 January 2027 is the day on which what several of these
+  items mean changes, and the gate says where to record the run date. The application date appeared
+  nowhere in this file until 2026-09-01, on a list whose whole design turns on dates. Pricing
+  usually lives outside the repository, so an absent answer here often means the page was not
+  reachable rather than that the provider is silent; say which."
+applicability:
+  question: "Is the project a data processing service - a digital service provided to a customer,
+    giving that customer ubiquitous and on-demand network access to a shared pool of configurable,
+    scalable and elastic computing resources, of a centralised, distributed or highly distributed
+    nature, that can be rapidly provisioned and released with minimal management effort or service
+    provider interaction - and is this provider the source provider, the one a customer would be
+    switching away from? **Both are facts about the business and its offer, and neither is settled
+    by anything in a repository.** They are asked of the person running the scan, or read from the
+    provider's own contract, service catalogue and price list, and neither may be inferred from what
+    the tree bills, meters, exports or imports. So, in the words the person running the scan can
+    answer: what do your customers provision and release for themselves, what do you allocate to
+    them flexibly as their demand rises and falls, and whom would they be leaving when they switch
+    away? Then the two exemptions, each of them three separate facts rather than a list of
+    alternatives. Article 31(2) needs every one of its three: is what you supply a non-production
+    version, is it supplied for testing and evaluation purposes, and is it supplied for a limited
+    period of time? Article 31(1) needs its first fact answered **no** and either of the other two
+    answered yes - a service sold at broad commercial scale is outside that exemption rather than
+    inside it, whatever the answers to the other two: is this service offered at broad commercial
+    scale through your service catalogue - or has the majority of its main features been
+    custom-built for one customer, or all of its components been developed for one customer?"
+  quote: ‘data processing service’ means a digital service that is provided to a customer and that
+    enables ubiquitous and on-demand network access to a shared pool of configurable, scalable and
+    elastic computing resources of a centralised, distributed or highly distributed nature that can
+    be rapidly provisioned and released with minimal management effort or service provider
+    interaction;
+  cite: Data Act Art. 2(8)
+  url: http://publications.europa.eu/resource/celex/32023R2854
+  checked_at: 2026-07-28
+  ask_the_user: true
+  supporting_quotes:
+    - quote: As commonly understood by providers and users and in line with broadly used standards, data
+        processing services fall into one or more of the following three data processing service
+        delivery models, namely Infrastructure as a Service (IaaS), Platform as a service (PaaS) and
+        Software as a Service (SaaS).
+      cite: Data Act Recital 81
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-28
+      why: "**What this recital does and does not settle.** It says every data processing service falls
+        into one or more of three delivery models, so Software as a Service is not excluded as a
+        category - a hosted application is not outside Article 2(8) merely because it is sold as a
+        subscription. It does **not** say the converse. \"All data processing services are IaaS,
+        PaaS or SaaS\" is not \"all SaaS is a data processing service\", and Article 2(8)'s own test
+        - a shared pool of configurable, scalable and elastic computing resources - still has to be
+        met. This file asserted the converse between 2026-07-28 and 2026-07-29, which was an
+        over-correction of the opposite error, and the coverage map's position (an open scope call)
+        was the defensible one all along."
+    - quote: The capability of the customer of the data processing service to unilaterally self-provision
+        computing capabilities, such as server time or network storage, without any human
+        interaction by the provider of data processing services could be described as requiring
+        minimal management effort and as entailing minimal interaction between provider and
+        customer.
+      cite: Data Act Recital 80
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-29
+      why: The Regulation's own gloss on the last clause of Article 2(8), and it points the other way from
+        the reading this file carried on 2026-07-28. The definition says "with minimal management
+        effort **or** service provider interaction"; the recital describes the paradigm as the
+        customer self-provisioning **without any human interaction by the provider**, and calls that
+        requiring minimal management effort **and** entailing minimal interaction. So a service the
+        provider provisions and administers on the customer's behalf is not comfortably inside on
+        the strength of the disjunction alone. Quoted because the argument turns on two conjunctions
+        and a reader is entitled to check them.
+    - quote: The responsibilities of providers of data processing services laid down in Articles 23, 25,
+        29, 30 and 34 shall apply only to the services, contracts or commercial practices provided
+        by the source provider of data processing services.
+      cite: Data Act Art. 24
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-28
+      why: Article 29 is in that list, so this checklist reaches only the provider a customer switches
+        away from. A destination provider owes nothing under it.
+    - quote: From 11 January 2024 to 12 January 2027, providers of data processing services may impose
+        reduced switching charges on the customer for the switching process.
+      cite: Data Act Art. 29(2)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-28
+      why: 'The window that makes the same document mean different things at different times. **This note
+        said "the reason every item below names the date it is being read against" until 2026-07-29,
+        and no item named a date — there is no field in an item to hold one, and the claim was about
+        a property this list does not have.** Where the date belongs is the output: the gate verdict
+        states the date the checklist was read on, and every item whose answer moves across 12
+        January 2027 repeats it in its own `reasoning`. That is an instruction to the agent, not a
+        property of this file, and stating it as the latter hid the fact that nothing enforced it.'
+    - quote: ‘switching’ means the process involving a source provider of data processing services, a
+        customer of a data processing service and, where relevant, a destination provider of data
+        processing services, whereby the customer of a data processing service changes from using
+        one data processing service to using another data processing service of the same service
+        type, or other service, offered by a different provider of data processing services, or to
+        an on-premises ICT infrastructure, including through extracting, transforming and uploading
+        the data;
+      cite: Data Act Art. 2(34)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-09-01
+      why: "**The definition that puts in-parallel use outside Article 29(1), and it was cited nowhere in
+        this file until 2026-09-01.** Switching is a process in which the customer **changes from**
+        using one service **to** using another, or to on-premises infrastructure. A customer running
+        two services side by side has changed from nothing, so traffic between them is not egress
+        for a mandated switching action, and the carve-out `art-29-1-no-switching-charge` states
+        rests on this definition and on Article 34(2) rather than on the item's own word."
+    - quote: ‘data egress charges’ means data transfer fees charged to customers for extracting their data
+        through the network from the ICT infrastructure of a provider of data processing services to
+        the system of a different provider or to on-premises ICT infrastructure;
+      cite: Data Act Art. 2(35)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-09-01
+      why: "**The name decides nothing, and this is the provision that says so.** 'Data egress charges' is
+        defined neutrally, by what is charged for, and Article 2(36) then brings egress charges
+        inside 'switching charges' only for the actions this Regulation mandates for switching. So a
+        tariff called an egress fee may be inside Article 29(1) or inside Article 34(2), and what
+        separates them is what the egress is for. Cited nowhere in this file until 2026-09-01, while
+        the item that turns on it asked the reader to take the distinction on its word."
+    - quote: Where a data processing service is being used in parallel with another data processing
+        service, the providers of data processing services may impose data egress charges, but only
+        for the purpose of passing on egress costs incurred, without exceeding such costs.
+      cite: Data Act Art. 34(2)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-09-01
+      why: "**The third exclusion from `art-29-1-no-switching-charge`, moved here from that item's prose
+        on 2026-09-01 so that a receipt binds it.** It carries no date, and Recital 99 supplies the
+        start of the continuation rather than an end to it, so a provider billing egress between two
+        services in concurrent use is doing something this paragraph provides for and Article
+        29(1)'s withdrawal of switching charges from 12 January 2027 does not reach. The item's own
+        note used to quote these words verbatim in a prose field, which the quote receipt does not
+        bind; the words now live here once and the note points at them."
+    - quote: The obligations laid down in Article 23, point (d), Article 29 and Article 30(1) and (3)
+        shall not apply to data processing services of which the majority of main features has been
+        custom-built to accommodate the specific needs of an individual customer or where all
+        components have been developed for the purposes of an individual customer, and where those
+        data processing services are not offered at broad commercial scale via the service catalogue
+        of the provider of data processing services.
+      cite: Data Act Art. 31(1)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-28
+      why: "Article 29 is named here, so this limb does switch this checklist off - but read its shape
+        exactly: [the majority of main features custom-built for one customer **OR** all components
+        developed for one customer] **AND** not offered at broad commercial scale via the provider's
+        service catalogue. The first half is a disjunction, which three sites in this repository
+        collapsed until 2026-07-29; the second half is a separate condition, so a bespoke build that
+        is also sold from the catalogue is not exempt."
+    - quote: The obligations laid down in this Chapter shall not apply to data processing services
+        provided as a non-production version for testing and evaluation purposes and for a limited
+        period of time.
+      cite: Data Act Art. 31(2)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-28
+      why: "The second limb, wider than the first: it disapplies the whole of Chapter VI, Article 29
+        included. Its three conditions are cumulative - non-production, for testing and evaluation,
+        and for a limited period of time."
+    - quote: providers of data processing services, irrespective of their place of establishment,
+        providing such services to customers in the Union;
+      cite: Data Act Art. 1(3)(f)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-29
+      why: "Why the territorial question is not asked: the Regulation reaches a provider wherever it is
+        established, and only in respect of customers in the Union — and **running the EU pack is
+        treated as the statement that the project is offered into the Union**, so the gate treats
+        this limb as settled by the premise and asks about it in no variant. Quoted so a reader can
+        see what the premise is standing in for. What the premise does not settle — is this a data
+        processing service, is this the source provider, is Article 31 in play — the gate still
+        asks."
+    - quote: "'switching charges' means charges, other than standard service fees or early termination
+        penalties, imposed by a provider of data processing services on a customer for the actions
+        mandated by this Regulation for switching to the system of a different provider or to
+        on-premises ICT infrastructure, including data egress charges;"
+      cite: Data Act Art. 2(36)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-29
+      why: '**The Regulation answers by definition a large part of the question this checklist was handing
+        to a human.** Its scope_note said the list "does not decide whether a charge is a switching
+        charge or an ordinary service fee", and Article 2(36) decides much of it: a switching charge
+        is what is imposed *for the actions this Regulation mandates for switching*, it expressly
+        **includes data egress charges**, and it expressly **excludes** standard service fees and
+        early termination penalties. So an egress fee billed on the way out is named by the
+        definition, while a monthly subscription and a cancellation penalty are named out of it.
+        What is genuinely left to a human is whether a particular charge is for a mandated switching
+        action. Added 2026-07-29; the definition was quoted nowhere before.'
+  when_unresolved: "Four questions. Three of them the Article 25 checklist asks as well - is it a data
+    processing service, is this the source provider, is Article 31 in play - and each of the three
+    is answered here rather than by following a cross-reference to another file: **all three are
+    facts about the business and its offer, all three are asked of the person running the scan or
+    read from the provider's own contract, service catalogue and price list, and no repository holds
+    any of them.** A billing dependency, an egress meter, an export routine or a preview feature
+    flag may corroborate or contradict such an answer and may never give one. The provider's own
+    contract, service catalogue and price list stand in a different relation, and it is the one the
+    question above names: where one of them states the thing asked about - that the service is sold
+    from the catalogue, that it was built for a single customer, that what is supplied is a
+    time-limited non-production version - that statement is an answer. **What a stated fact looks
+    like is not the same for all three questions, and this field named three document kinds for all
+    of them and gave examples for one.** The three examples just given are what a document states
+    about Article 31. For the source-provider question a document routinely states it: a set of
+    terms naming the counterparty a customer contracts with says whom that customer would be
+    leaving. For the first question no ordinary contract, catalogue or price list says \"this is a
+    data processing service\" in those words. What such a document states is the offer - what is
+    sold, what the customer gets, what they can turn up and turn down - and the classification is a
+    reading of that description rather than a sentence in it, which is why `ask_the_user` is true
+    here and why a document rarely closes this question on its own. Expect to ask it, and treat the
+    description as the material you ask against. A document that does not state it has not answered
+    it, and neither has an empty tree; **where the tree, the page and the contract all say nothing
+    about a service catalogue, a bespoke build or a time-limited preview, that question is
+    unanswered and not answered no** - record `unresolved`, never `does-not-apply`. The fourth
+    question is different in kind and is neither asked of anyone nor read from a document: today's
+    date is the agent's own. **Say what today's date is in the gate verdict, and repeat it in the
+    `reasoning` of every item whose answer moves across 12 January 2027, because the answer depends
+    on it.** Before 12 January 2027 a stated switching charge is permitted if it is reduced and does
+    not exceed the provider's direct costs, and neither of those is visible in a document; from that
+    date any switching charge at all is outside what Article 29(1) allows. On Article 31, quote the
+    limb relied on and check every one of its conditions rather than the label: **31(1)** needs [the
+    majority of main features custom-built for one customer **or** all components developed for one
+    customer] **and** not offered at broad commercial scale via the catalogue, and **31(2)** needs
+    non-production **and** for testing and evaluation purposes **and** a limited period, all three
+    together. This field read \"non-production **and** testing **or** evaluation **and** a limited
+    period\" until 2026-08-07, which is a wider exemption than the paragraph grants and than this
+    file's own quote and `why` four entries above state - the text is \"for testing and evaluation
+    purposes\", one purpose limb of three cumulative conditions, not two alternatives - and a wider
+    exemption switches this checklist off on services the Article still reaches. **The 31(1)
+    rendering here was short in the same direction until 2026-08-08**: it read \"custom-built for
+    one customer\" where the Article reads \"data processing services of which **the majority of
+    main features** has been custom-built to accommodate the specific needs of an individual
+    customer\", so a service with some features built to order satisfied this field and not the
+    paragraph. The same commit that repaired 31(2) on 2026-08-07 repaired 31(1) in this case's
+    `EXPECTATIONS.md` and left it short here, in the field the adjudicating agent decides from.
+    \"Supplied for testing\" on its own settles nothing. Record the outcome in the right place, too:
+    a project that is not a data processing service at all makes the gate `does-not-apply` for a
+    scope reason (the territorial limb of Article 1(3)(f) is settled by the pack's standing premise
+    - running the EU pack is the statement that the project is offered into the Union - and is not
+    asked), while one that is a data processing service and is exempt under Article 31 is a
+    different record - Article 31(3) makes the provider tell prospective customers which Chapter VI
+    obligations do not apply, which is a duty only the second kind has. Where a question is
+    unanswered, record `unresolved` and name which. **What becomes of the items on each branch,
+    which this field did not say until 2026-09-01.** Where the gate is `does-not-apply` - not a data
+    processing service, not the source provider, or Article 31 reaches it - walk no item, because
+    Article 29 is not owed; emit the items carrying the gate's own reasoning, and on the Article 31
+    branch look for the Article 31(3) pre-contract statement instead. Where the gate is
+    `unresolved`, walk every item below and record each of them `unresolved` too, conditional on the
+    gate, naming the question that was not settled. **This matters more here than on an ordinary
+    list, because `art-29-1-no-switching-charge` declares `finding_when: present`**: an agent that
+    improvises \"walk them anyway\" on a gate nobody has settled can report that a switching charge
+    was found against a project this Article may not reach at all, which is the pillar-2 false
+    positive that tells a developer they have misled their own users.
+    `art-29-3-reduced-charge-cost-cap` sits one step behind it and carries the same risk. Emitting
+    no item at all is not the third option either: a check that was skipped then prints exactly like
+    a check that passed."
+items:
+  - id: art-29-1-no-switching-charge
+    article: 29(1)
+    quote: From 12 January 2027, providers of data processing services shall not impose any switching
+      charges on the customer for the switching process.
+    cite: Data Act Art. 29(1)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Do the published pages or the contract impose a **switching charge** as Article 2(36)
+      defines it - a charge for the actions this Regulation mandates for switching to the system of
+      a different provider or to on-premises ICT infrastructure, including data egress charges, but
+      not a standard service fee, not an early termination penalty, and not an egress charge for
+      using this service in parallel with another, which Article 34(2) permits at no more than the
+      egress costs incurred?
+    finding_when: present
+    applicability_note: "**`finding_when: present`** - the only item in this list where the answer
+      \"yes, it is there\" is the problem. Report it in words rather than in a status: \"a switching
+      charge was found\" and \"no switching charge was found\" both read clearly, where \"present\"
+      alone can be read either way, and this repository has already published a fixture record that
+      used it in both senses in consecutive sentences. Egress or data transfer-out fees charged when
+      a customer leaves are the usual shape; a one-off \"migration assistance\" fee is another.
+      Quote the clause and state the date the run was made against — the date is not part of the
+      question because the question asks about the document, but it is part of every answer, since
+      the same clause is permitted before 12 January 2027 and not after it. **Three kinds of charge
+      are expressly outside this item and must never be reported under it.** The first two are in
+      Article 2(36), which excludes standard service fees and early termination penalties from the
+      definition. Article 29(4) then requires clear information about early termination penalties
+      \"that might be imposed\": it presupposes that such a penalty may exist and compels its
+      disclosure before signing, and it confers no permission on anybody. This note said until
+      2026-09-01 that Article 29(4) treats such a penalty as a charge the Regulation permits, which
+      overstates the paragraph; the conclusion is unchanged and rests on Article 2(36) alone. So an
+      annual-plan clause charging the remaining months on early cancellation is **not** a finding
+      here: it belongs to `art-29-4-pre-contract-information`, as this checklist's own fixture files
+      it. Reporting it under Article 29(1) tells a developer that a clause the definition excludes
+      breaches a prohibition, which is the worst thing this item can do. **The third is an egress
+      charge for in-parallel use, and it is not in Article 2(36) at all - it is in Article 34(2),
+      quoted on the gate**: read the paragraph's own words there rather than a second copy of them
+      here, which is what this note carried until 2026-09-01 in a field no quote receipt binds. A
+      customer running two services side by side may therefore be charged for egress between them,
+      at no more than the costs incurred, with no end date; Article 29(1)'s withdrawal of switching
+      charges from 12 January 2027 does not reach that charge, and a multi-cloud provider billing it
+      is not doing what the prohibition this item asks about forbids. That caveat was recorded in
+      this project's own coverage notes before this checklist was written, and the item shipped
+      without it until 2026-08-08. **What separates the third from the first: what the egress is
+      for, not what it is called.** Two definitions carry that, and both are quoted on the gate:
+      Article 2(34) makes switching a **change from** one service **to** another, which is what puts
+      concurrent use outside it, and Article 2(35) defines 'data egress charges' neutrally, so the
+      name on the invoice decides nothing. An egress fee charged on the way out of the service is
+      inside Article 29(1); an egress fee for traffic between two services in concurrent use is
+      inside Article 34(2); a single tariff that does not distinguish the two is arguable, and the
+      useful output is to quote it and say so rather than to choose for the reader. What is inside:
+      an egress or data transfer-out fee billed on the way out, a one-off migration or \"exit
+      assistance\" fee, a charge for producing an export. Where a clause is genuinely arguable — a
+      fee that is partly service and partly exit — say so and quote it rather than choosing for the
+      reader. **And one shape met in the same clause block that is not a charge at all.** A cap on
+      how many times a customer may run an export, or on how much they may export, is a quantitative
+      restriction on the way out rather than a price for it. Article 29 asks about charges; a
+      restriction of that kind is a candidate obstacle under Article 23, which the sibling checklist
+      `data-act-switching-terms-23-25` walks as `art-23-obstacles-removed`. Quote it, say it was met
+      while walking this item, and route it there rather than reporting it here - \"a charge for
+      producing an export\" in the list above sits one word away from it. Before 12 January 2027 a
+      found charge is not by itself a problem: Article 29(2) permits a reduced switching charge in
+      that window, and Article 29(3) caps it at the costs the provider incurs that are directly
+      linked to the switching process. Whether the document states that cap is asked by
+      `art-29-3-reduced-charge-cost-cap`; whether the charge really stays inside it is a question
+      about the provider's accounts that no document shows. Saying both of those plainly is more
+      useful than either status alone."
+  - id: art-29-3-reduced-charge-cost-cap
+    article: 29(3)
+    quote: The reduced switching charges referred to in paragraph 2 shall not exceed the costs incurred
+      by the provider of data processing services that are directly linked to the switching process
+      concerned.
+    cite: Data Act Art. 29(3)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-09-01
+    question: Where a reduced switching charge is imposed during the Article 29(2) window, do the
+      published pages or the contract state that it does not exceed the costs the provider incurs
+      that are directly linked to the switching process?
+    applicability_note: "**Until 11 January 2027 this is the paragraph that governs a switching
+      charge**, that being the last day on which this file treats a reduced charge as safe: Article
+      29(1)'s prohibition begins on 12 January 2027, and until then Article 29(2) permits a reduced
+      charge on the condition this paragraph sets. **From 12 January 2027 the paragraph that governs
+      is Article 29(1)**, and what becomes of this cap on that date is stated below. Article 29(3)
+      had no item in this list until 2026-09-01, and for the whole of that period it was the
+      operative test, described in prose and recorded against nothing. **What this item asks for is
+      a statement, and not an arithmetic result.** Whether a charge really does exceed the
+      provider's directly linked costs is a question about the provider's accounts, and no page and
+      no contract answers it; that half stays out of scope, as the `scope_note` says. What a
+      document can carry is the cap itself - a pricing page or a contract saying that any charge for
+      the switching process is limited to the costs directly linked to it, or naming a figure and
+      saying it is cost-based - and that statement is the declaration this pillar reconciles. Record
+      `present` where the document states the cap - including where it states it prospectively, of a
+      charge it does not currently impose, which is a statement about what the provider undertakes
+      and answers this item as fully as a cap on a live tariff does. Record `partial` where it
+      states a charge for switching and says something short of a cap on it, and `absent` where it
+      states such a charge and says nothing about what limits it. Never read a stated cap as
+      evidence that the arithmetic works: quote the sentence and say that its accuracy was not
+      checked and cannot be from a document. **State the date the run was made against.** This
+      item's answer moves across 12 January 2027 exactly as `art-29-1-no-switching-charge`'s does,
+      and in the opposite direction: the Article 29(2) window runs from 11 January 2024 to 12
+      January 2027, so from 12 January 2027 there are no reduced switching charges left for this cap
+      to bind, and reporting the absence of a cap after that date reports a shortfall against a
+      paragraph that no longer has anything to bite on. **Where neither a charge for switching nor a
+      cap on one is stated anywhere, this item has nothing to test.** Record `unresolved`, naming
+      the fact that nobody has stated a reduced switching charge, rather than reading the absence of
+      a charge as the absence of a cap: a provider that charges nothing has nothing to cap, and a
+      report saying it failed to publish a cap would be a shortfall recorded against a document that
+      is complete. Pricing usually lives outside the repository, so where no pricing page or
+      charging clause was reachable at all the item is `unresolved` and the reasoning says the page
+      was not reached - never `absent` for a page nobody read."
+  - id: art-29-4-pre-contract-information
+    article: 29(4)
+    quote: Before entering into a contract with a customer, providers of data processing services shall
+      provide the prospective customer with clear information on the standard service fees and early
+      termination penalties that might be imposed, as well as on the reduced switching charges that
+      might be imposed during the timeframe referred to in paragraph 2.
+    cite: Data Act Art. 29(4)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Is a prospective customer given clear information, before signing, about standard service
+      fees, early termination penalties and any reduced switching charges?
+    applicability_note: "Three things before 12 January 2027 and two after it. The third - the reduced
+      switching charges - is scoped by the paragraph's own words to \"the timeframe referred to in
+      paragraph 2\", which runs from 11 January 2024 to 12 January 2027, so from that date there are
+      no reduced switching charges left for a document to describe and its silence about them is not
+      a shortfall. **State the date the run was made against**, as this checklist's gate requires of
+      every item whose answer moves across 12 January 2027; this is such an item and this note
+      carried no date until 2026-08-08. **The paragraph asks for information that is clear, and the
+      question asked only whether the customer was told until 2026-09-01.** A document that mentions
+      fees obscurely - a figure with no unit, a penalty buried in a schedule the page never links -
+      answers the question and not the paragraph, so say how the information is presented as well as
+      whether it is there. **An element the paragraph cannot reach is not a shortfall, and the
+      second element is where that bites.** Article 29(4) asks for information on the standard
+      service fees and early termination penalties **\"that might be imposed\"**: where no early
+      termination penalty might be imposed and the document says so - no minimum term, cancel at any
+      time, no fee - there is nothing for the document to state and its treatment of that element is
+      complete, exactly as the third element's is once the Article 29(2) window has closed. This
+      note said until 2026-09-01 that a page listing prices while saying nothing about early
+      termination is partial either way, which reports a shortfall against a document that has
+      nothing to declare. So: `partial` where an element that might be imposed is left undescribed,
+      naming which; and where an element is stated not to arise, say so and name the sentence that
+      says it rather than counting it as missing. A pricing page that a customer sees before signing
+      up is the ordinary way this is satisfied, so its absence from the repository is often an
+      absence of the page rather than of the information - say which, and never record \"absent\"
+      for a page that was never reachable. **Two further states a real repository produces, neither
+      of which is \"the page is there\" or \"the page is not\".** First, the page is in the source,
+      was found and was extracted, and its figures are not: a page that renders prices from a
+      constants module or fetches them from a billing provider extracts as a shell with the amounts
+      missing, and the honest record is that the elements were found and the values were not -
+      `partial` naming which elements the page covers, with the reasoning saying the amounts are
+      computed at runtime and were not read, and never `absent` on the strength of missing numbers.
+      Second, the document that carries the figures is an internal one: a costing or billing-design
+      memo addressed to the team is not information given to a prospective customer before
+      contracting, and it cannot satisfy this paragraph however complete it is. Say which document a
+      finding rests on and whether a prospective customer would see it. **And a short document is
+      not a thin one here.** A commercial-disclosure page is a table and is short by design, so a
+      length flag on such a page is not by itself a reason to treat this item as unread; say that
+      the page is short by kind, and quote it."
+  - id: art-29-5-complex-switching
+    article: 29(5)
+    quote: Where relevant, providers of data processing services shall provide information to a customer
+      on data processing services that involve highly complex or costly switching or for which it is
+      impossible to switch without significant interference in the data, digital assets or service
+      architecture.
+    cite: Data Act Art. 29(5)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Where switching out of this service would be highly complex, costly, or impossible without
+      significant interference, do the documents say so?
+    applicability_note: "Qualified by \"where relevant\", so silence is only a gap where switching
+      really is complex - and whether it is is a question about the service, not about the document.
+      **Record `not-applicable` where the trigger is stated not to arise**, either by the person
+      running the scan or by the provider's own published page, and say which of the two it was and
+      that a provider's statement about its own service is unverified. Record `unresolved` where
+      nobody has said. **Do not record `present` for a page saying switching is straightforward**:
+      that is the trigger failing to arise, not the duty being discharged, and `present` would
+      report compliance with an obligation that never bit. Corrected 2026-07-29. **The fourth case,
+      which this note named three of and stopped before the one that produces a finding.** Where
+      switching out really would be highly complex, costly, or impossible without significant
+      interference, and the documents do not address it, the word is `absent`: the trigger arose,
+      the information is owed, and it is not there. Added 2026-09-01."
+  - id: art-29-6-published
+    article: 29(6)
+    quote: Where applicable, providers of data processing services shall make the information referred
+      to in paragraphs 4 and 5 publicly available to customers via a dedicated section of their
+      website or in any other easily accessible way.
+    cite: Data Act Art. 29(6)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Is that information made publicly available to customers, via a dedicated section of the
+      provider's website or in any other easily accessible way, rather than given only on request?
+    applicability_note: "The paragraph offers **two** routes and the question must not drop the second:
+      a dedicated section of the website, **or any other easily accessible way**. Information inside
+      a public pricing page, a public FAQ or a public help centre satisfies it as surely as a
+      dedicated section does. The trap is the same one the Article 28 checklist has: information
+      supplied only inside a signed agreement, or only to customers who ask, does not satisfy a duty
+      to make it publicly available however complete it is. Note \"where applicable\" in the
+      chapeau, and note what it can and cannot carry forward. **Read the chapeau's object as the
+      paragraph writes it: \"the information referred to in paragraphs 4 and 5\".** The
+      qualification is not divided between them, so on the enacted words it governs the publication
+      duty for both halves. Paragraph 5 is additionally qualified in its own terms (\"Where
+      relevant\"), so a service where switching is straightforward has nothing to publish under that
+      half. **The stricter reading is arguable and is not settled here**: \"where applicable\" can
+      be read as \"where such information exists\", which is always true of paragraph 4 information,
+      since paragraph 4's own duty to *provide* it to a prospective customer before contracting
+      carries no qualification at all - and on that reading nothing ever switches the paragraph 4
+      half of the publication duty off. Report it as this file reports its other arguable points:
+      say which reading a finding rests on, and where the two diverge treat the information as owed
+      rather than as excused, because \"where applicable\" is a phrase in a chapeau and not a
+      statement that this provider has nothing to publish. **Between 2026-08-07 and 2026-08-08 this
+      note asserted the stricter reading as settled**, in place of a wording that said the
+      qualification carried both; the enacted chapeau names paragraphs 4 and 5 together, and neither
+      reading is settled by anything in the text. **State the date the run was made against; this is
+      one of the items whose answer moves across 12 January 2027, and this note said nothing about a
+      date until 2026-09-01.** The object of this paragraph is \"the information referred to in
+      paragraphs 4 and 5\", so it moves whenever that information moves: the paragraph 4 information
+      shrinks from three elements to two on 12 January 2027, when the Article 29(2) window closes
+      and there are no reduced switching charges left to publish. After that date a published page
+      that is silent about reduced switching charges is a page with nothing left to say on the
+      point, and reporting that silence as a gap under Article 29(6) would be a finding against a
+      provider whose page is correct. **Whether a document is published cannot be read from what the
+      run hands you, so do not guess it.** The input carries the documents that were discovered; it
+      does not say which of them a customer can reach, and two copies of one text - a marketing-site
+      page and an in-product copy, a rendered page and its markdown source - arrive
+      indistinguishable. Where the routing in the tree does not settle which copy is served, record
+      `unresolved` and name what was missing: whether the document is published, not whether it says
+      the right thing. The run's `--policy` option takes a repository path, an absolute path or a
+      URL, and is how a page that is published on the website but not in the tree is put in front of
+      the agent; name it as what would settle the question. This note stated the trap correctly and
+      gave no way out of it until 2026-09-01, while the sibling item
+      `art-29-4-pre-contract-information` carried the analogous instruction for its own unknowable."

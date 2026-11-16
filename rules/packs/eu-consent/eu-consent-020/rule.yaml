@@ -1,0 +1,185 @@
+id: eu-consent-020
+pack: eu-consent
+short_name: Session recording may capture screen content or typing
+problem_line:
+  text: "Session recording: masking floor or consent gate not found"
+fix_line: Restore the SDK's protective masking defaults in code, unmask only what must be readable,
+  and record only after consent.
+title: Session-replay masking control written here - whether a recording would carry on-screen
+  content or input needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: GDPR Art. 25(2) — 'The controller shall implement appropriate technical and organisational
+      measures for ensuring that, by default, only personal data which are necessary for each
+      specific purpose of the processing are processed.'
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-29
+    jurisdiction: EU
+  - cite: GDPR Art. 5(1)(c) — personal data shall be 'adequate, relevant and limited to what is
+      necessary in relation to the purposes for which they are processed' (data minimisation)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-29
+    jurisdiction: EU
+  - cite: ePrivacy Directive 2002/58/EC Art. 5(3) (national transpositions); EDPB Guidelines 2/2023 v2.0
+      (adopted 2024-10-07) treat storing or reading anything on terminal equipment as requiring
+      prior consent, which reaches session-recording scripts
+    url: https://eur-lex.europa.eu/eli/dir/2002/58/oj
+    checked_at: 2026-07-29
+    jurisdiction: EU
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.8
+detector:
+  engine: builtin-regex
+  match:
+    - maskAllText\s*:\s*false
+    - maskAllInputs\s*:\s*false
+    - blockAllMedia\s*:\s*false
+    - unmask\s*:\s*\[[^\]]*["'](\*|body|html)["']
+    - unblock\s*:\s*\[[^\]]*["'](\*|body|html)["']
+    - (?:unmask|unblock|unmaskSelector)\s*:\s*\[[^\]]*$
+    - ([Mm]askAll(Text|Texts|Inputs|TextInputs|Images|Vectors|SandboxedViews|PlatformViews)|[Bb]lockAllMedia)\s*(?:=>|[:=])\s*false
+    - setMaskAll(Text|Texts|Inputs|TextInputs|Images|Vectors)\s*\(\s*(?:false\s*\)|(?!(?:true|True|TRUE|false|False|FALSE)(?![\w$]))[A-Za-z_$][\w$]*\s*\))
+    - (?:session-replay\.mask-all-(text|images)[^\n]*android:value\s*=\s*["']false|android:value\s*=\s*["']false["'][^\n]*session-replay\.mask-all-(text|images))
+    - session-replay\.mask-all-(text|images)\s*(?:(?:=>|[:=])\s*|\s+)["']?false
+    - ([Mm]askAll(Text|Texts|Inputs|TextInputs|Images|Vectors)|[Bb]lockAllMedia)\s*(?:=>|[:=])\s*[!(]
+    - ([Mm]askAll(Text|Texts|Inputs|TextInputs|Images|Vectors)|[Bb]lockAllMedia)\s*(?:=>|[:=])\s*[\w$.]+\s*(\?|&&|\|\||===|!==)
+    - ([Mm]askAll(Text|Texts|Inputs|TextInputs|Images|Vectors|SandboxedViews|PlatformViews)|[Bb]lockAllMedia)\s*(?:=>|[:=])\s*(?!(?:true|True|TRUE|false|False|FALSE|boolean|Boolean|bool|Bool|BOOL|Int|Long|any|unknown|never|number|string|undefined|null|nil|None)(?![\w$]))[A-Za-z_$][\w$]*[\s,;)\]}]*$
+    - maskInputOptions\s*:\s*\{[^}]*password\s*:\s*false
+    - defaultPrivacyLevel\s*(?:=>|[:=])\s*["'](allow|mask-user-input)["']
+    - (data-dd-privacy\s*=\s*["']allow|dd-privacy-allow)
+    - (TextAndInputPrivacy\.(MASK_SENSITIVE_INPUTS|MASK_ALL_INPUTS)|ImagePrivacy\.(MASK_NONE|MASK_LARGE_ONLY))
+    - \.\s*(?:MASK_SENSITIVE_INPUTS|MASK_ALL_INPUTS|MASK_NONE|MASK_LARGE_ONLY)(?![\w$])
+    - (textAndInputPrivacyLevel|imagePrivacyLevel)\s*(?:=>|[:=])\s*(?!(?:true|false|nil|None|null|undefined|TextAndInputPrivacyLevel|ImagePrivacyLevel|SessionReplayPrivacyLevel)(?![\w$]))[A-Za-z_$][\w$]*[\s,;)\]}]*$
+    - session-replay\.mask-all-(?:text|images)\s*(?:(?:=>|[:=])\s*|\s+)\$\{[A-Za-z_][A-Za-z0-9_.-]*:\s*false\s*\}
+    - session-replay\.mask-all-(?:text|images)[^\n]*(?<![\w.-])[A-Za-z_][\w.-]{0,20}:value\s*=\s*["']false|(?<![\w.-])[A-Za-z_][\w.-]{0,20}:value\s*=\s*["']false["'][^\n]*session-replay\.mask-all-(?:text|images)
+    - (textAndInputPrivacyLevel|imagePrivacyLevel)\s*(?:=>|[:=])\s*\.mask(SensitiveInputs|AllInputs|None|NonBundledOnly)
+    - data-hj-allow
+    - data-clarity-unmask
+    - (fs-unmask|data-fs-unmask)
+    - amp-unmask
+    - unmaskSelector\s*:\s*\[[^\]]*["'](\*|body|html)["']
+    - defaultMaskLevel\s*(?:=>|[:=])\s*["']light["']
+    - "[Ss]martlook\\s*\\(\\s*[\"']record[\"'][^\\n]*(forms|emails|numbers|ips)\\s*:\\s*true"
+    - "[\\w$]\\.record\\s*\\([^\\n]*(forms|emails|numbers|ips)\\s*:\\s*true"
+    - obscure(TextEmails|InputEmails|InputNumbers)\s*:\s*false
+    - defaultInputMode\s*:\s*0
+    - privacySetting\s*:\s*["']none["']
+    - (?:replayIntegration|sessionReplayPlugin|startSessionReplayRecording)\s*\(\s*(?:\.\.\.)?[A-Za-z_$][\w$]*\s*(?:\?\?|\|\||[.?,)])
+    - \.\.\.\s*(?:[A-Za-z_$][\w$]*\s*\.\s*)?[\w$]*(?:[Mm]ask|[Pp]rivacy|[Rr]edact|[Oo]bscure)[\w$]*\s*\(
+    - ([Mm]askAll(Text|Texts|Inputs|TextInputs|Images|Vectors|SandboxedViews|PlatformViews)|[Bb]lockAllMedia)\s*(?:=>|[:=])\s*true
+    - (?:text|input|image)Sanitizer\s*(?:=>|[:=])\s*(?:true|false|["'][A-Za-z][A-Za-z0-9_-]*["'])
+context_questions:
+  - Does this session-recording integration actually run for end users, or only under a development
+    flag? Name the file and line of the condition that decides it, or state that you traced the
+    initialisation path and found none.
+  - What sampling rate is configured (replaysSessionSampleRate, replaysOnErrorSampleRate,
+    session_recording)? A rate above zero means real visitors' screens are recorded, and a rate of 1
+    on error means every session that hits an error is.
+  - What can appear on the screens this records? Quote the form fields, tables or detail views that
+    the recorded routes render. Whether Art. 9 special-category data is swept in depends on this and
+    on nothing else.
+  - Is consent obtained before the recording script initialises? Search the whole repository for a
+    consent gate, a CMP vendor, or the SDK's own opt-out setting before concluding there is none.
+  - Does the privacy policy tell users that their screen and their keystrokes are recorded and sent
+    to a third party, and name that third party?
+  - "IF THE MATCHED LINE WRITES NO MASKING KEY AT ALL, WHERE IS THE MASKING FLOOR DECIDED? Two
+    shapes reach this rule without naming a single masking option, and the detector can only say
+    that the floor is elsewhere. (a) THE OPTIONS OBJECT IS HANDED THROUGH - the integration is
+    constructed from an identifier, a member expression or a spread rather than from a literal. Read
+    what that value is: where it comes from a configuration field an administrator fills in, the
+    product enforces no masking floor at all and every recorded session's contents depend on what
+    that administrator typed, so quote the schema of that field and say whether it constrains
+    anything. (b) THE MASKING OPTIONS ARE COMPUTED BY A FUNCTION and spread into the call. Open that
+    function and read EVERY branch, then compare them: where one branch sets a text-masking or
+    input-masking key that another branch omits, the omitting branch is the shipped behaviour for
+    whichever level selects it, and the key's absence is the finding. Say which branch is the
+    default, name the keys each branch sets, and name the keys the default branch leaves out. THE
+    DETECTOR CANNOT MAKE THIS COMPARISON - `match` is evaluated one line at a time and two branches
+    are never on one line - so a candidate on either shape is answered by reading, not by the
+    pattern."
+evidence_template: "{file}:{line} carries a session-replay privacy control - a named masking option,
+  a per-element unmask attribute or a vendor privacy-level enum. READ THE VALUE BEFORE READING
+  ANYTHING ELSE, BECAUSE SINCE 2026-09-04 THIS RULE REPORTS THE CONTROL IN BOTH DIRECTIONS AND ONE
+  OF THEM IS NOT A DEFECT. Where the value is the PROTECTIVE one - maskAllText, maskAllInputs,
+  blockAllMedia and their mobile spellings set to true, or LogRocket's textSanitizer and
+  inputSanitizer set to true or to a named masking mode - the finding is that the control IS SET,
+  which is the answer Art. 25(2) asks for and not a gap: record what it covers, note that a masking
+  option is not by itself consent to record at all, and close the candidate on this limb. Where the
+  value is the PERMISSIVE one, the paragraphs below apply. TWO THINGS THE PROTECTIVE POLE STILL DOES
+  NOT ESTABLISH: that masking is effective for what this product renders, since a text mask does not
+  cover images, canvases or a URL that carries an identifier, and that any of the other controls in
+  the same call are set - one option written protectively says nothing about its siblings. WHETHER
+  IT IS WRITTEN INTO A RUNNING INTEGRATION IS A SEPARATE QUESTION, because a vendor writes the same
+  assignment in its own documentation and in its marketing code samples: of the 19 locations this
+  rule produced across the pinned corpus on 2026-08-25, 12 were documentation or sample material -
+  fenced code blocks inside .md and .mdx partials, and template literals and code spans that a
+  documentation site renders as a sample - against 7 inside a configured integration. Read the
+  file's path and the lines around the match and say which of the two this is; where it is sample
+  material, no integration is being configured here and nothing is recorded, whatever the value
+  says. Where the line is a configured integration and the value is weaker than the default its SDK
+  documents, a session it records would carry the on-screen content or the values typed into inputs;
+  where the value is a negation, a ternary or another expression, the detector cannot evaluate it
+  and which way it resolves is a question for the reader. Whether the integration runs for end users
+  at all is context question 1, and the sampling rate that decides how many sessions are recorded -
+  which may be zero - is context question 2; the detector reads neither"
+remediation_template: |
+  This is a candidate for review against GDPR Art. 25(2) (data protection by default), which is
+  this rule's first legal basis and the provision a reversed protective default answers to. It is
+  not a determination about this code. Whether the recording script may run at all before consent
+  is the separate ePrivacy Art. 5(3) question, cited third in this rule's legal basis and asked at
+  context question 4. The changes below apply where the review confirms the candidate.
+  WHERE CONTEXT QUESTION 4 FINDS THE RECORDER INITIALISED BEFORE A CONSENT DECISION IS RECORDED,
+  that is a change of its own, and no masking setting stands in for it: initialise the recording
+  script only once the consent tool has recorded consent - load it dynamically, or wrap a
+  server-rendered snippet in a condition on the stored decision - so that nothing is stored on or
+  read from the visitor's device by it before then.
+  WHERE THE MATCHED VALUE IS THE PROTECTIVE ONE - a masking boolean set to true, or a LogRocket
+  sanitizer set to true or to a named masking mode - there is no change to make on this line and
+  the candidate closes on that ground. Two things are still worth recording rather than assumed:
+  which other controls in the same call are NOT set, since one protective option says nothing about
+  its siblings, and whether the recording runs before consent at all, which is the separate
+  ePrivacy Art. 5(3) question at context question 4 and is not answered by any masking setting.
+  Read the matched line first, because the change depends on which of three shapes it is. Where the
+  line assigns a named option a literal value, return the option to the SDK's own default. Where it
+  assigns that option a negation, a ternary or another expression, the detector cannot evaluate it:
+  read the expression and establish which way it resolves in a production build before changing
+  anything. Where the line is a per-element attribute or class - data-hj-allow,
+  data-clarity-unmask, fs-unmask, amp-unmask - there is no option and no default to restore; the
+  change is to remove the attribute from any element that should stay masked, and to keep it only
+  where that element genuinely has to be readable, as the closing paragraph below describes.
+  Where the line writes no masking key at all (context question 6), the floor has to be set
+  somewhere. Where the options are handed through from a field an administrator fills in, set the
+  protective values in code and let the administrator's options unmask only named elements on top
+  of them, so that an empty or careless field leaves the masking on. Where a function computes the
+  options, make its default branch set the same masking keys as its most protective branch.
+  Every vendor this rule covers documents the protective value as its default, which is why
+  writing the matched value reverses it:
+  - Sentry: maskAllText, maskAllInputs and blockAllMedia default to true and unmask and unblock to
+    the empty array; the Android, Apple and React Native SDKs mask text, images and input by
+    default, as does the Android manifest meta-data key.
+  - PostHog: maskAllInputs defaults to true on the web, and the React Native, Android, iOS, KMP and
+    Flutter SDKs default maskAllTextInputs, maskAllImages, maskAllSandboxedViews,
+    maskAllPlatformViews and maskAllTexts to true.
+  - rrweb, which PostHog records through: maskInputOptions masks password fields, and setting
+    password to false reverses that.
+  - Datadog RUM: defaultPrivacyLevel defaults to "mask" in the browser, and the Android and iOS
+    SDKs to MASK_ALL and .maskAll.
+  - Hotjar, Microsoft Clarity, FullStory and Amplitude suppress keystrokes and text by default;
+    data-hj-allow, data-clarity-unmask, fs-unmask and amp-unmask are the documented per-element
+    opt-ins that reveal them, and Amplitude's unmaskSelector and defaultMaskLevel do the same at
+    the configuration level.
+  - Smartlook records nothing sensitive until record() is asked for forms, emails, numbers or IPs.
+  - OpenReplay: obscureTextEmails, obscureInputEmails and obscureInputNumbers default to true, and
+    defaultInputMode defaults to 2 (ignored) rather than 0 (plain).
+  - Highlight.io: privacySetting defaults to 'default', which obfuscates inputs and PII-shaped
+    text.
+  Where specific elements genuinely need to be readable, name those elements - Sentry's unmask and
+  unblock selectors, Amplitude's unmaskSelector, PostHog's maskInputOptions and the per-element
+  attributes above exist for that - rather than reversing the default for the whole document.
+data_categories:
+  - user.contact
+  - user.device
+  - user.behavior
+fingerprint_spec: default

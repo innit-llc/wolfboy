@@ -1,0 +1,406 @@
+id: eu-dsa-001
+pack: eu-dsa
+short_name: "Content people can post: a way for others to report it"
+problem_line:
+  text: Notice-and-action route for user content not found or weak
+fix_line: Provide an easy electronic way to report a specific item, confirm receipt, and tell the
+  reporter the decision.
+title: Store a recipient could write into - who supplies the content and the Art. 16
+  notice-and-action mechanism need review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "Digital Services Act, Regulation (EU) 2022/2065, Art. 16(1)-(2) — addressed to providers of
+      hosting services (Chapter III, Section 2), which is the whole hosting rung of Art. 3(g)(iii)
+      and not only the narrower online-platform rung of Art. 3(i). Art. 16(1): \"Providers of
+      hosting services shall put mechanisms in place to allow any individual or entity to notify
+      them of the presence on their service of specific items of information that the individual or
+      entity considers to be illegal content. Those mechanisms shall be easy to access and
+      user-friendly, and shall allow for the submission of notices exclusively by electronic
+      means.\" Art. 16(2) requires the provider to take the necessary measures to enable and
+      facilitate notices containing all of: (a) a sufficiently substantiated explanation of the
+      reasons for the allegation; (b) a clear indication of the exact electronic location, such as
+      the exact URL or URLs, and where necessary additional identifying information adapted to the
+      type of content and type of hosting service; (c) the name and email address of the notifier,
+      except for information considered to involve one of the offences referred to in Arts. 3 to 7
+      of Directive 2011/93/EU; (d) a statement confirming the notifier's bona fide belief that the
+      information and allegations are accurate and complete. Arts. 16(4)-(6) add confirmation of
+      receipt, notification of the decision with redress information, and timely, diligent,
+      non-arbitrary and objective processing."
+    url: https://eur-lex.europa.eu/eli/reg/2022/2065/oj/eng
+    checked_at: 2026-07-28
+    jurisdiction: EU
+  - cite: 'Regulation (EU) 2022/2065, Art. 3(g) and Art. 3(i) — definitional ladder, no duty of its own.
+      Art. 3(g) defines "intermediary service" as one of three information society services: (i)
+      mere conduit, (ii) caching, (iii) a "hosting" service, "consisting of the storage of
+      information provided by, and at the request of, a recipient of the service". Art. 3(i) defines
+      "online platform" as a hosting service that, at the request of a recipient, also "stores and
+      disseminates information to the public", unless that is a minor and purely ancillary feature.
+      Hosting is therefore the broader rung: a service can be a hosting service without ever
+      disseminating to the public (private uploads, direct messages), and Art. 16 attaches at that
+      broader rung.'
+    url: https://eur-lex.europa.eu/eli/reg/2022/2065/oj/eng
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: 'Regulation (EU) 2022/2065, Arts. 19(1), 29(1) and 15(2) — the size carve-outs and where they
+      attach. Art. 19(1) reads "This Section, with the exception of Article 24(3) thereof, shall not
+      apply to providers of online platforms that qualify as micro or small enterprises as defined
+      in Recommendation 2003/361/EC" — "this Section" being Section 3 (additional provisions
+      applicable to providers of online platforms, Arts. 19-28). Art. 29(1) does the same for
+      Section 4 (online platforms allowing consumers to conclude distance contracts with traders).
+      Art. 15(2) disapplies only the Art. 15(1) transparency-reporting duty to micro or small
+      intermediary services. Verified against the OJ text on 2026-07-27: Section 2 (Arts. 16, 17,
+      18) carries no size carve-out anywhere in the Regulation, so Art. 16 reaches a micro or small
+      provider of a hosting service.'
+    url: https://eur-lex.europa.eu/eli/reg/2022/2065/oj/eng
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Regulation (EU) 2022/2065, Recital 50 — \"It is important that all providers of hosting
+      services, regardless of their size, put in place easily accessible and user-friendly notice
+      and action mechanisms\", which \"should be clearly identifiable, located close to the
+      information in question and at least as easy to find and use as notification mechanisms for
+      content that violates the terms and conditions of the hosting service provider\". The same
+      recital names the service kinds this rule's vocabulary is built to cover, verbatim: \"The
+      obligation to put in place notice and action mechanisms should apply, for instance, to file
+      storage and sharing services, web hosting services, advertising servers and paste bins, in so
+      far as they qualify as hosting services covered by this Regulation.\""
+    url: https://eur-lex.europa.eu/eli/reg/2022/2065/oj/eng
+    checked_at: 2026-07-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: 'Regulation (EU) 2022/2065, Art. 2(1) and Art. 93(2) — scope and application. Art. 2(1): the
+      Regulation "shall apply to intermediary services offered to recipients of the service that
+      have their place of establishment or are located in the Union, irrespective of where the
+      providers of those intermediary services have their place of establishment"; Art. 3(d) and
+      3(e) qualify that with "offer services in the Union" and "substantial connection to the Union"
+      (establishment in the Union, a significant number of recipients in a Member State relative to
+      population, or targeting of activities towards one or more Member States). Art. 93(2): the
+      Regulation applies from 17 February 2024.'
+    url: https://eur-lex.europa.eu/eli/reg/2022/2065/oj/eng
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: Directive (EU) 2015/1535, Art. 1(1), point (b), incorporated by Regulation (EU) 2022/2065 Art.
+      3(a) — "'service' means any Information Society service, that is to say, any service normally
+      provided for remuneration, at a distance, by electronic means and at the individual request of
+      a recipient of services". A hosting service must first be an information society service; the
+      remuneration limb is the outer boundary of the DSA's reach and is the open question for a
+      service that carries no advertising, subscription or other consideration.
+    url: https://eur-lex.europa.eu/eli/dir/2015/1535/oj/eng
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2024-02-17
+severity: high
+rule_confidence: 0.3
+applicability_preconditions:
+  - features.ugc
+detector:
+  engine: builtin-regex
+  resolve_import_aliases: true
+  resolve_local_values: true
+  vocabulary:
+    html_multipart_enctype:
+      - multipart/form-data
+    html_file_input_state:
+      - file
+  vocabulary_matching:
+    html_multipart_enctype:
+      case_insensitive: true
+    html_file_input_state:
+      case_insensitive: true
+  match:
+    - \b(prisma|db|database|knex|trx|tx|orm|sequelize|supabase|models|repo|repository|ctx\.db|payload|pool|conn|em|entityManager|queryRunner|mongo|firestore|drizzle|kysely|xata)\.[\w$]*\b([Pp]osts?|[Cc]omments?|[Rr]eply|[Rr]eplies|[Mm]essages?|[Tt]hreads?|[Tt]opics?|[Cc]onversations?|[Cc]hats?|[Dd]iscussions?|[Rr]eviews?|[Rr]atings?|[Tt]estimonials?|[Aa]nswers?|[Qq]uestions?|[Ss]ubmissions?|[Ll]istings?|[Uu]ploads?|[Aa]ttachments?|[Ff]iles?|[Mm]edia|[Ii]mages?|[Pp]hotos?|[Vv]ideos?|[Rr]ecordings?|[Dd]ocuments?|[Nn]otes?|[Aa]rticles?|[Ss]nippets?|[Pp]astes?|[Gg]ists?|[Ww]ikis?|[Pp]ages?|[Ss]ites?|[Pp]rofiles?|[Aa]vatars?|[Bb]anners?|[Cc]reatives?|[Aa]dverts?|[Bb]ookmarks?|[Bb]oards?|[Cc]hannels?|[Rr]ooms?|[Ff]orums?|[Ss]hares?|[Cc]ontents?|[Aa]ssets?|[Bb]lobs?|[Oo]bjects?|[Ff]olders?|[Aa]ds?|[Ll]inks?|[Uu]rls?|[Ss]hort[_-]?[Ll]inks?|[Rr]edirects?|[Dd]omains?|[Pp]aste[_-]?[Aa]lias(?:es)?)\b[\w$.]*\.(create|createMany|insert|insertOne|insertMany|upsert|save|add|put)\(
+    - \b(db|database|tx|trx|ctx\.db|drizzle)\.insert\(\s*([Pp]osts?|[Cc]omments?|[Rr]eply|[Rr]eplies|[Mm]essages?|[Tt]hreads?|[Tt]opics?|[Cc]onversations?|[Cc]hats?|[Rr]eviews?|[Rr]atings?|[Aa]nswers?|[Qq]uestions?|[Ss]ubmissions?|[Ll]istings?|[Uu]ploads?|[Aa]ttachments?|[Ff]iles?|[Mm]edia|[Ii]mages?|[Pp]hotos?|[Vv]ideos?|[Dd]ocuments?|[Nn]otes?|[Aa]rticles?|[Ss]nippets?|[Pp]astes?|[Gg]ists?|[Pp]ages?|[Ss]ites?|[Pp]rofiles?|[Aa]vatars?|[Cc]reatives?|[Bb]ookmarks?|[Bb]oards?|[Cc]hannels?|[Rr]ooms?|[Ss]hares?|[Cc]ontents?|[Aa]ssets?|[Bb]lobs?|[Oo]bjects?|[Ff]olders?|[Aa]ds?|[Ll]inks?|[Uu]rls?|[Ss]hort[_-]?[Ll]inks?|[Rr]edirects?|[Dd]omains?|[Pp]aste[_-]?[Aa]lias(?:es)?)\b
+    - \.(from|table|into|collection)\(\s*["'`](posts?|comments?|reply|replies|messages?|threads?|topics?|conversations?|chats?|discussions?|reviews?|ratings?|testimonials?|feedbacks?|answers?|questions?|submissions?|listings?|classifieds?|uploads?|attachments?|files?|media|images?|photos?|pictures?|videos?|clips?|recordings?|documents?|notes?|entries|articles?|stories|snippets?|pastes?|gists?|wikis?|pages?|sites?|bios?|profiles?|avatars?|banners?|creatives?|adverts?|bookmarks?|boards?|channels?|rooms?|forums?|guestbooks?|statuses|shares?|contents?|assets?|blobs?|objects?|folders?|ads?|user_content|ugc|links?|urls?|short[_-]?links?|redirects?|domains?|paste[_-]?alias(?:es)?)["'`]\s*\)\s*\.(insert|insertOne|insertMany|upsert|create|add|save)\(
+    - (pgTable|sqliteTable|mysqlTable|defineTable|createTable|schema\.createTable|sequelize\.define|mongoose\.model|model\.define|defineModel|@Entity|@Table|\[Table)\(\s*[{\s]*(tableName|name|modelName)?\s*(?:=>|[:=])?\s*["'`](posts?|comments?|reply|replies|messages?|threads?|topics?|conversations?|chats?|discussions?|reviews?|ratings?|testimonials?|feedbacks?|answers?|questions?|submissions?|listings?|classifieds?|uploads?|attachments?|files?|media|images?|photos?|pictures?|videos?|clips?|recordings?|documents?|notes?|entries|articles?|stories|snippets?|pastes?|gists?|wikis?|pages?|sites?|bios?|profiles?|avatars?|banners?|creatives?|adverts?|bookmarks?|boards?|channels?|rooms?|forums?|guestbooks?|statuses|shares?|contents?|assets?|blobs?|objects?|folders?|ads?|user_content|ugc|links?|urls?|short[_-]?links?|redirects?|domains?|paste[_-]?alias(?:es)?)["'`]
+    - \b([A-Z][A-Za-z]{0,20}?)?(Post|Comment|Reply|Message|Thread|Topic|Conversation|Chat|Discussion|Review|Rating|Testimonial|Answer|Question|Submission|Listing|Upload|Attachment|Media|Image|Photo|Picture|Video|Clip|Recording|Document|Note|Entry|Article|Story|Snippet|Paste|Gist|Wiki|Page|Site|Profile|Avatar|Banner|Creative|Advert|Bookmark|Guestbook|Share|Content|Asset|Blob|Folder|Ad|Link|Url|ShortLink|Shortlink|Redirect|Domain|PasteAlias)s?\.(?:(create!?|insert!?|insert_all!?|upsert)\(|new\s*(?:\(|$))
+    - \.(posts?|comments?|replies|messages?|threads?|topics?|conversations?|chats?|discussions?|reviews?|ratings?|testimonials?|answers?|questions?|submissions?|listings?|uploads?|attachments?|files?|media|images?|photos?|videos?|recordings?|documents?|notes?|articles?|snippets?|pastes?|gists?|pages?|sites?|profiles?|avatars?|creatives?|bookmarks?|boards?|channels?|rooms?|forums?|shares?|contents?|assets?|blobs?|folders?|ads?|links?|urls?|short[_-]?links?|redirects?|domains?|paste[_-]?alias(?:es)?)\.(?:(create!|create|insert_all!?|insert!?)\(|(new|build)\s*(?:\(|$))
+    - create_table\s+[:"'](posts?|comments?|replies|messages?|threads?|topics?|conversations?|chats?|discussions?|reviews?|ratings?|testimonials?|feedbacks?|answers?|questions?|submissions?|listings?|uploads?|attachments?|files?|media|images?|photos?|pictures?|videos?|clips?|recordings?|documents?|notes?|entries|articles?|stories|snippets?|pastes?|gists?|wikis?|pages?|sites?|bios?|profiles?|avatars?|banners?|creatives?|adverts?|bookmarks?|boards?|channels?|rooms?|forums?|guestbooks?|shares?|contents?|assets?|blobs?|folders?|ads?|user_content|ugc|links?|urls?|short[_-]?links?|redirects?|domains?|paste[_-]?alias(?:es)?)\b
+    - \bhas_(one|many)_attached\s+:|\bmount_uploaders?\s+:|\bhas_attached_file\s+:|\binclude\s+(ImageUploader|FileUploader|Shrine)\b|\bActiveStorage::(Blob|Attachment)\b
+    - \bclass\s+[A-Za-z]{0,20}?(Post|Comment|Reply|Message|Thread|Topic|Conversation|Chat|Discussion|Review|Rating|Testimonial|Answer|Question|Submission|Listing|Upload|Attachment|Media|Image|Photo|Picture|Video|Clip|Recording|Document|Note|Entry|Article|Story|Snippet|Paste|Gist|Wiki|Page|Site|Profile|Avatar|Banner|Creative|Advert|Bookmark|Board|Channel|Room|Forum|Guestbook|Share|Content|Asset|Blob|Object|Folder|Ad|Link|Url|ShortLink|Shortlink|Redirect|Domain|PasteAlias)s?\s*\(\s*(models\.Model|Base|db\.Model|SQLModel)\b
+    - __tablename__\s*=\s*["'](posts?|comments?|replies|messages?|threads?|topics?|conversations?|chats?|discussions?|reviews?|ratings?|feedbacks?|answers?|questions?|submissions?|listings?|uploads?|attachments?|files?|media|images?|photos?|videos?|recordings?|documents?|notes?|entries|articles?|stories|snippets?|pastes?|gists?|wikis?|pages?|sites?|profiles?|avatars?|banners?|creatives?|adverts?|bookmarks?|boards?|channels?|rooms?|forums?|shares?|contents?|assets?|blobs?|objects?|folders?|ads?|links?|urls?|short[_-]?links?|redirects?|domains?|paste[_-]?alias(?:es)?)["']
+    - \b[A-Za-z]{0,20}?(Post|Comment|Reply|Message|Thread|Topic|Conversation|Chat|Review|Rating|Answer|Question|Submission|Listing|Upload|Attachment|Media|Image|Photo|Video|Document|Note|Article|Snippet|Paste|Gist|Page|Site|Profile|Avatar|Creative|Bookmark|Board|Channel|Room|Forum|Share|Content|Asset|Blob|Folder|Ad|Link|Url|ShortLink|Shortlink|Redirect|Domain|PasteAlias)s?\.objects\.(create|bulk_create|get_or_create|update_or_create)\(
+    - \btype\s+[A-Za-z]{0,20}?(Post|Comment|Reply|Message|Thread|Topic|Conversation|Chat|Discussion|Review|Rating|Answer|Question|Submission|Listing|Upload|Attachment|Media|Image|Photo|Video|Recording|Document|Note|Article|Snippet|Paste|Gist|Wiki|Page|Site|Profile|Avatar|Banner|Creative|Advert|Bookmark|Guestbook|Share|Asset|Blob|Object|Folder|Ad|Link|Url|ShortLink|Shortlink|Redirect|Domain|PasteAlias)s?\s+struct\b
+    - \.Insert\(\s*["'`](Posts?|Comments?|Replies|Messages?|Threads?|Topics?|Conversations?|Chats?|Reviews?|Ratings?|Answers?|Questions?|Submissions?|Listings?|Uploads?|Attachments?|Files?|Media|Images?|Photos?|Videos?|Recordings?|Documents?|Notes?|Articles?|Snippets?|Pastes?|Gists?|Pages?|Sites?|Profiles?|Avatars?|Banners?|Creatives?|Bookmarks?|Boards?|Channels?|Rooms?|Forums?|Shares?|Contents?|Assets?|Blobs?|Objects?|Folders?|Ads?|posts?|comments?|messages?|threads?|topics?|uploads?|attachments?|files?|documents?|notes?|pages?|assets?|blobs?|objects?|folders?|ads?|Links?|Urls?|Short[Ll]inks?|Redirects?|Domains?|PasteAlias(?:es)?|links?|urls?|short[_-]?links?|redirects?|domains?|paste[_-]?alias(?:es)?)["'`]
+    - \b(Save|Create|Insert|Store|Publish|Submit|Upload)[A-Za-z]{0,15}?(Post|Comment|Reply|Message|Thread|Topic|Conversation|Review|Rating|Testimonial|Answer|Question|Submission|Listing|Attachment|Media|Image|Photo|Picture|Video|Clip|Recording|Document|Note|Article|Story|Snippet|Paste|Gist|Wiki|Profile|Avatar|Banner|Creative|Advert|Guestbook|Asset|Blob|Folder|Ad|Link|Url|ShortLink|Shortlink|Redirect|Domain|PasteAlias)s?\(
+    - \b[A-Za-z_]{0,20}?(post|comment|reply|message|thread|topic|conversation|chat|review|rating|answer|question|submission|listing|upload|attachment|media|image|photo|video|document|note|article|snippet|paste|gist|page|site|profile|avatar|creative|bookmark|board|channel|room|forum|share|content|asset|blob|folder|links?|urls?|short[_-]?links?|redirects?|domains?|paste[_-]?alias)s?([Rr]epository|[Rr]epo|[Dd]ao|[Ss]tore|[Dd]ata[Aa]ccess)(\.(save|saveAll|insert|persist|add|create|put|Save|SaveAll|Insert|Persist|Add|Create|Put)(Async)?\(|::(save|saveAll|insert|persist|add|create|put)\b)
+    - \b[A-Za-z]{0,20}?(Post|Comment|Reply|Message|Thread|Topic|Conversation|Chat|Review|Rating|Answer|Question|Submission|Listing|Upload|Attachment|Media|Image|Photo|Video|Document|Note|Article|Snippet|Paste|Gist|Page|Site|Profile|Avatar|Creative|Bookmark|Board|Channel|Room|Forum|Share|Content|Asset|Blob|Folder|Ad|Link|Url|ShortLink|Shortlink|Redirect|Domain|PasteAlias)s?::(create|insert|firstOrCreate|updateOrCreate|forceCreate)\(
+    - Schema::create\(\s*["'](posts?|comments?|replies|messages?|threads?|topics?|conversations?|chats?|reviews?|ratings?|feedbacks?|answers?|questions?|submissions?|listings?|uploads?|attachments?|files?|media|images?|photos?|videos?|documents?|notes?|entries|articles?|snippets?|pastes?|gists?|pages?|sites?|profiles?|avatars?|banners?|creatives?|bookmarks?|boards?|channels?|rooms?|forums?|shares?|contents?|assets?|blobs?|objects?|folders?|ads?|links?|urls?|short[_-]?links?|redirects?|domains?|paste[_-]?alias(?:es)?)["']
+    - \bmulter\(|\bupload\.(single|array|fields|any)\(|\bformidable\(|\b[Bb]usboy\(|@fastify/multipart|\bfastify-multipart\b|\bexpress-fileupload\b|\bkoa-body\b|\bmultiparty\b
+    - \bstorage\.from\([^)]*\)\.upload\(|\buploadBytes(Resumable)?\(|\bcloudinary\.uploader\.upload\(|\bnew\s+[\w$.@/-]*\bPutObjectCommand\(|\bcreateUploadthing\(|\bUpload(Dropzone|Button)\b|\bcreatePresignedPost\(|\.putObject\(|\bnew
+      Uppy\(|\bFilePond\b|\bDropzone\b|\btus-js-client\b|\bbucket\.file\(|\bbucket\([^)]*\)\.file\(|@vercel/blob|@uploadthing/
+    - \bUploadFile\b|\brequest\.files\b|\breq\.files\b|\$_FILES\[|\$request->file\(|\bMultipartFile\b|ParseMultipartForm\(|\.FormFile\(|\bmultipart\.NewReader\(|\bmodels\.(File|Image)Field\(|\bFileField\(|\bImageField\(
+    - <input[^>]*type=(["']file["']|file[\s>])|enctype=["']multipart/form-data["']|\.type\s*=\s*["'`]file["'`]|\.setAttribute\(\s*["'`]enctype["'`]
+    - "@tiptap/|\\bProseMirror\\b|\\bnew
+      Quill\\(|\\bCKEDITOR\\b|@ckeditor/|\\btinymce\\b|\\bTinyMCE\\b|@editorjs/|\\bEditorJS\\b|\\bs\
+      late-react\\b|@lexical/|\\bdraft-js\\b|\\bEasyMDE\\b|\\bSimpleMDE\\b|@toast-ui/editor|\\btrix\
+      -editor\\b"
+    - \bDOMPurify\.sanitize\(|\bsanitize[-_]?[Hh]tml\(|\bsanitizeHtml\(|\bbleach\.clean\(|\bRails::Html::|\bsanitize_html\b|\bHtmlSanitizer\b|\bjsoup\.clean\(|\bHTMLPurifier\b
+    - \bakismet\b|\bAkismet\b|\bperspectiveapi\b|\bPerspectiveAPI\b|\bmoderations\.create\(|\bomni-moderation\b|\btext-moderation\b|\bprofanity\b|\bbad-words\b|\bspam[-_]?[Cc]heck\b|\bSpamCheck\b|\bisSpam\b|\bspam[-_]?[Ss]core\b
+    - \.(set|setex|setEx|psetex|hset|hSet|mset|put|write)\(\s*[`"'][a-z_.:-]*(paste|snippet|gist|post|comment|reply|message|thread|topic|chat|review|upload|file|doc|document|media|image|photo|video|note|listing|profile|page|site|asset|blob|link|url|short[_-]?link|redirect|domain|paste[_-]?alias)s?[:/_-]
+    - \bexport\s+const\s+[A-Za-z_$]{0,24}(posts?|comments?|replies|messages?|threads?|topics?|conversations?|chats?|discussions?|reviews?|ratings?|testimonials?|feedbacks?|answers?|questions?|submissions?|listings?|classifieds?|uploads?|attachments?|files?|media|images?|photos?|pictures?|videos?|clips?|recordings?|documents?|notes?|entries|articles?|stories|snippets?|pastes?|gists?|wikis?|pages?|sites?|profiles?|avatars?|banners?|creatives?|adverts?|bookmarks?|boards?|channels?|rooms?|forums?|guestbooks?|shares?|contents?|assets?|blobs?|folders?|ads?|links?|urls?|short[_-]?links?|redirects?|domains?|paste[_-]?alias(?:es)?)\s*=\s*[A-Za-z_$][\w$.]{0,40}\(\s*[^,()\n]{1,80},\s*\{
+    - \.insert\(\s*[A-Za-z_$]{0,24}?(?:[Pp]osts?|[Cc]omments?|[Rr]eplies|[Mm]essages?|[Tt]hreads?|[Tt]opics?|[Cc]onversations?|[Cc]hats?|[Dd]iscussions?|[Rr]eviews?|[Rr]atings?|[Tt]estimonials?|[Ff]eedbacks?|[Aa]nswers?|[Qq]uestions?|[Ss]ubmissions?|[Ll]istings?|[Uu]ploads?|[Aa]ttachments?|[Ff]iles?|[Mm]edia|[Ii]mages?|[Pp]hotos?|[Vv]ideos?|[Rr]ecordings?|[Dd]ocuments?|[Nn]otes?|[Aa]rticles?|[Ss]nippets?|[Pp]astes?|[Gg]ists?|[Ww]ikis?|[Pp]ages?|[Ss]ites?|[Pp]rofiles?|[Aa]vatars?|[Bb]anners?|[Cc]reatives?|[Aa]dverts?|[Bb]ookmarks?|[Bb]oards?|[Cc]hannels?|[Rr]ooms?|[Ff]orums?|[Ss]hares?|[Cc]ontents?|[Aa]ssets?|[Bb]lobs?|[Oo]bjects?|[Ff]olders?|[Aa]ds?|[Ll]inks?|[Uu]rls?|[Ss]hort[_-]?[Ll]inks?|[Rr]edirects?|[Dd]omains?)\s*\)\s*\.values\s*\(
+    - \bdompurify\b|\bisomorphic-dompurify\b|\bsanitize-html\b|\bdomsanitizer\b
+    - (?:from|require\(|import\()\s*["'][^"'\n]{0,80}(?:[Rr]ich[_-]?[Tt]ext|[Ww]ysiwyg|WYSIWYG|[Mm]arkdown)[A-Za-z]{0,12}[Ee]ditor["']
+    - (?:from|require\(|import\()\s*["'][^"'\n]{0,80}[Mm]oderation[A-Za-z]{0,12}["']
+    - \b(?:check|scan|screen|moderate|filter)[A-Za-z]{0,10}(?:Content|Body|Text|Post|Comment|Message|Upload|Submission|Attachment)s?\s*\(
+    - \b[A-Za-z_\\]{0,24}?(Classified|Entry|Story|Testimonial|Feedback|Guestbook|Picture|Clip|Dialogue|Response|Remark|Opinion)s?::(create|insert|firstOrCreate|updateOrCreate|forceCreate|save)\(
+    - "Schema::create\\(\\s*[\\\\A-Za-z_]{0,40}(Post|Comment|Reply|Message|Thread|Topic|Conversatio\
+      n|Chat|Discussion|Review|Rating|Testimonial|Feedback|Answer|Question|Submission|Listing|Class\
+      ified|Upload|Attachment|File|Media|Image|Photo|Picture|Video|Clip|Recording|Document|Note|Ent\
+      ry|Article|Story|Snippet|Paste|Gist|Wiki|Page|Site|Profile|Avatar|Banner|Creative|Advert|Book\
+      mark|Guestbook|Share|Content|Asset|Blob|Folder|Ad|Link|Url|ShortLink|Redirect|Domain)s?[A-Za-\
+      z_]{0,20}::"
+    - \btype\s+[A-Za-z]{0,20}?(Entry|Story|Testimonial|Feedback|Classified|Picture|Clip|Guestbook|Dialogue|Response|Remark|Opinion)s?\s+struct\b
+    - \b(Save|Create|Insert|Store|Publish|Submit|Upload)[A-Za-z]{0,15}?(Entry|Story|Testimonial|Feedback|Classified|Picture|Clip|Guestbook|Dialogue|Response|Remark|Opinion)s?\(
+    - \bhas_(?:one|many)_attached\b
+    - ^\s*[a-z_]{0,24}(?:upload|attach|file|image|photo|picture|video|media|document|avatar|asset|blob)s?\s+:[a-z_]\w*\s*$
+    - \b[a-z_]{0,24}table\s*\(\s*:(posts?|comments?|replies|messages?|threads?|topics?|conversations?|chats?|discussions?|reviews?|ratings?|testimonials?|feedbacks?|answers?|questions?|submissions?|listings?|classifieds?|uploads?|attachments?|files?|media|images?|photos?|pictures?|videos?|clips?|recordings?|documents?|notes?|entries|articles?|stories|snippets?|pastes?|gists?|wikis?|pages?|sites?|profiles?|avatars?|banners?|creatives?|adverts?|bookmarks?|boards?|channels?|rooms?|forums?|guestbooks?|shares?|contents?|assets?|blobs?|folders?|ads?|links?|urls?|dialogues?|responses?)\b
+    - \b[a-z_]{0,24}table\s+[:"'](dialogues?|responses?|remarks?|opinions?|classifieds?|entries|stories|testimonials?|feedbacks?|guestbooks?|pictures?|clips?)\b
+    - \.(dialogues?|responses?|remarks?|opinions?|classifieds?|testimonials?|feedbacks?|guestbooks?|pictures?|clips?|stories|entries)\.(?:(create!|create|insert_all!?|insert!?)\(|(new|build)\s*(?:\(|$))
+    - \b([A-Z][A-Za-z]{0,20}?)?(Dialogue|Response|Remark|Opinion|Classified|Testimonial|Feedback|Guestbook|Picture|Clip|Story|Entry|Update)s?\.(?:(create!?|insert!?|insert_all!?|upsert)\(|new\s*(?:\(|$))
+    - \bclass\s+[A-Za-z]{0,20}?(Post|Comment|Reply|Message|Thread|Topic|Conversation|Chat|Discussion|Review|Rating|Testimonial|Feedback|Answer|Question|Submission|Listing|Classified|Upload|Attachment|Media|Image|Photo|Picture|Video|Clip|Recording|Document|Note|Entry|Article|Story|Snippet|Paste|Gist|Wiki|Page|Site|Profile|Avatar|Banner|Creative|Advert|Bookmark|Board|Channel|Room|Forum|Guestbook|Share|Content|Asset|Blob|Object|Folder|Ad|Link|Url|ShortLink|Shortlink|Redirect|Domain|PasteAlias)s?\s*\(\s*[A-Za-z_][\w.]{0,30}(?:Base|Model|Entity|Document)\b
+    - \{[^}\n]{0,60}\bfiles\b[^}\n]{0,60}\}\s*=\s*(?:req|request|ctx|context|c|r|event)\b
+    - \b[A-Za-z_]{0,24}?(?:[Pp]ost|[Cc]omment|[Rr]eply|[Mm]essage|[Tt]hread|[Tt]opic|[Cc]onversation|[Cc]hat|[Rr]eview|[Rr]ating|[Tt]estimonial|[Aa]nswer|[Qq]uestion|[Ss]ubmission|[Ll]isting|[Cc]lassified|[Uu]pload|[Aa]ttachment|[Mm]edia|[Ii]mage|[Pp]hoto|[Vv]ideo|[Dd]ocument|[Nn]ote|[Ee]ntry|[Aa]rticle|[Ss]nippet|[Pp]aste|[Gg]ist|[Pp]age|[Ss]ite|[Pp]rofile|[Aa]vatar|[Cc]reative|[Bb]ookmark|[Bb]oard|[Cc]hannel|[Rr]oom|[Ff]orum|[Ss]hare|[Cc]ontent|[Aa]sset|[Bb]lob|[Ff]older|[Ll]ink|[Uu]rl|[Ss]hort[_-]?[Ll]ink|[Rr]edirect|[Dd]omain|[Pp]aste[_-]?[Aa]lias)e?s?(?:[Rr]epository|[Rr]epo|[Dd]ao|[Ss]tore|[Dd]ata[Aa]ccess)(?:\.(?:save|saveAll|insert|persist|add|create|put|Save|SaveAll|Insert|Persist|Add|Create|Put)(?:Async)?\(|::(?:save|saveAll|insert|persist|add|create|put)\b)
+    - enctype\s*=\s*["'](?&html_multipart_enctype)["']
+    - <input[^>]*\btype\s*=\s*["'](?&html_file_input_state)["']
+  match_without:
+    - ^\s*(\*|//|/\*|#|<!--)
+    - \b(mock|Mock|MOCK|stub|Stub|STUB|dummy|Dummy|faker|Faker)\w*\b
+  shared_path_exclusions:
+    - attribution_documents
+  path_without:
+    - (^|/)(mock|__mock__|testdata|test-data|test-utils|test-helpers|test-fixtures)/
+    - \.(e2e|e2e-spec|integ|int-spec)\.[cm]?[jt]sx?$
+    - _test\.(go|py|rb|php)$|_spec\.rb$|_test\.exs?$
+    - (^|/)(generated|__generated__|codegen|\.output|\.vercel)/
+    - \.(min|bundle|chunk)\.[cm]?jsx?$
+context_questions:
+  - "Who supplies the content that reaches the write paths in the locations list? The detector no
+    longer decides this: it raises a candidate wherever a store exists that a recipient could write
+    into, and the operator-versus-recipient question is yours. Follow the request path into at least
+    one of the listed writes and say whether the value comes from an authenticated or anonymous
+    request body, an uploaded file or an editor surface (a recipient supplies it), or from a build
+    step, a seed script, an import job, an admin-only console or a hard-coded constant (the operator
+    supplies it). Quote the line where the value enters the process. If both happen in the same
+    repository, the recipient path decides: Art. 3(g)(iii) asks whether the service consists of
+    storing information provided by, and at the request of, a recipient, not whether it does so
+    exclusively. Code the operator runs over content recipients already supplied - a data migration
+    or backfill that moves uploaded files, an import or export job, a repair task - is not a
+    recipient write path although the content is the recipients': it is not_the_construct; where it
+    shows the store it moves content into, name that store under question 3. A development scenario
+    or seed is not_the_construct because the operator supplies its content (above), not because it
+    is reachable only outside production; it is not construct_but_gated."
+  - "Does this service provide an electronic mechanism by which any individual or entity can notify
+    the provider of SPECIFIC ITEMS of allegedly illegal content, and does that mechanism enable and
+    facilitate the four Art. 16(2) elements - (a) a sufficiently substantiated explanation of the
+    reasons for the allegation, (b) a clear indication of the exact electronic location such as the
+    exact URL, (c) the notifier's name and email address, which must stay optional for the Directive
+    2011/93/EU offences, and (d) a statement confirming the notifier's bona fide belief that the
+    information is accurate and complete? This is the whole absence half of the rule and the
+    detector no longer answers any part of it: it searches for no notice mechanism at all, so its
+    silence on the point is not evidence. Search the tree yourself. Terms that a codebase which has
+    built the channel usually spells it with, and which the deleted guard keyed on: report_illegal,
+    flag_illegal, notify_illegal, illegal_content, illegalContent, unlawful_content;
+    notice_and_action or noticeAndAction; a report-or-flag control bound to a content noun
+    (report_comment, flag-post, reportPost, flagContent, ReportPostModal, FlagCommentButton); a
+    persisted notice record (ContentFlagging, content_flags, takedown_request, abuse_notice,
+    flagged_post, reportedContent). Treat a hit as where the question starts, not where it ends -
+    three of those terms matched a stylesheet class, a Makefile line and a dashboard column label on
+    real repositories. Weigh, and do not accept on sight: a hosted help desk or ticket widget
+    (Intercom, Zendesk, Crisp, Beacon, Tawk, HubSpot); a support, abuse or legal address in a
+    footer, a Terms page or an email template; a moderation queue or review console only staff can
+    reach; an automated classifier, spam filter or profanity filter; a copyright-only DMCA form; an
+    /admin/reports analytics route; a feature-flag client, an emoji category named 'flags' or a
+    country-flag asset path; a navigator.sendBeacon call; a route that exists only as a directory
+    name; a third-party trust-and-safety vendor. A staff-only moderation queue is not it, and a
+    general support address is not it: Art. 16(1) requires a channel for notifying the provider
+    about specific items of content, submitted exclusively by electronic means. Record what you
+    searched, quote what you found and where, and state explicitly if you found nothing."
+  - "Which of the reported locations actually evidence stored recipient content, and which do not? A
+    location evidences stored recipient content when it declares the store (a schema, migration or
+    model for content a recipient supplies) or sits on a path that writes into it at a recipient's
+    request - the request handler, the model callbacks, sanitisers and attach steps run during that
+    save, and jobs that add to or re-home what a recipient stored because a recipient asked (moving
+    a thread moves its files). A line that only reads, searches, renders or exports what is stored
+    is not such a location, and neither is maintenance the operator runs (question 1). An editor
+    counts only where the window shows it bound to content that is saved - the component whose
+    document is submitted or synchronised to the server, or an extension wired to an uploader. A
+    package manifest entry, an import, or a formatting-mark or node definition is not a location of
+    the store. For an editor that counts, `data` includes `user_content`. The locations list is a
+    wide net and will contain incidental hits - an outbound transactional message send, an analytics
+    or audit write, an operator seed script, a demo dataset, a schema for the product's own
+    configuration, a module that only re-exports an upload component; and an in-app read view, a
+    search result, an export, or an outbound mail, digest or chat message that renders stored
+    content: evidence for question 6 or for another rule, not a location of the store. Name the
+    strongest two or three locations, quote the line at each, and list the ones you are discarding
+    with the reason. If every location is incidental, say so plainly: that is a complete answer and
+    it closes the candidate."
+  - "Is the service offered to recipients of the service established or located in the Union (Art.
+    2(1), read with the Art. 3(d) and 3(e) 'offer services in the Union' and 'substantial connection
+    to the Union' tests: establishment in the Union, a significant number of recipients in a Member
+    State relative to its population, or targeting of activities towards Member States)? Check
+    ScanProfile.distribution_regions and any EU-facing signal in the repository, such as EU locales,
+    EUR pricing or EU consent code. A region that is not in the list may not have been asked: that
+    question is open, not answered no."
+  - Does a carve-out or a different rung of the definitional ladder apply? The micro and small
+    enterprise exclusions attach to Section 3 (Art. 19(1), online-platform duties), Section 4 (Art.
+    29(1), marketplaces) and Art. 15(1) transparency reporting (Art. 15(2)) - not to Section 2,
+    where Art. 16 sits. Separately, check whether the service is a mere conduit or caching service
+    under Art. 3(g)(i)-(ii) rather than a hosting service; and whether it is an information society
+    service at all, since Art. 3(a) borrows the Directive (EU) 2015/1535 Art. 1(1)(b) definition,
+    which covers services normally provided for remuneration - the open question for an unmonetised
+    hobby service, noting that remuneration need not come from the recipient. Name the rung and the
+    provision relied on.
+  - "Is the stored content also disseminated to the public at the request of the recipient (Art.
+    3(i)), or is it visible only to its author or to a closed group? This does not change the Art.
+    16 answer, which attaches at the hosting rung either way, but it decides whether the
+    online-platform duties of Section 3 attach on top. Answer from the read path: a public route or
+    share link that renders the record without authentication, a sitemap or feed that includes it,
+    or an explicit visibility or published column. Say which. An in-app read view, a search result,
+    an export, or an outbound mail, digest or chat message that renders stored content is evidence
+    for this question or for another rule, not a location of the store (question 3)."
+  - "Where question 2 found a mechanism, does it meet the Art. 16(1) quality requirements as opposed
+    to merely existing? Art. 16(1) requires it to be easy to access and user-friendly and to allow
+    submission exclusively by electronic means, and Recital 50 adds that it should be clearly
+    identifiable, located close to the information in question, and at least as easy to find and use
+    as the notification mechanism the service already offers for content that violates its own terms
+    and conditions. Art. 16(1) also says 'any individual or entity', so a control reachable only by
+    signed-in recipients does not cover the non-user who wants to notify. Answer from the code: how
+    many steps from the item to the submission surface, is it rendered on the item itself or buried
+    in a settings tree, does it require an account, and is there a terms-and-conditions reporting
+    flow that is easier to reach than this one? Quote the submission surface and the route that
+    renders it."
+  - What happens after a notice arrives? Art. 16(4)-(6) expect a confirmation of receipt where
+    contact information is given, notification of the decision with information on redress, and
+    timely, diligent, non-arbitrary and objective processing, with disclosure where automated means
+    are used. Record which of these the code path provides and which it does not.
+evidence_template: "{file}:{line} carries one of this rule's user-content spellings: a create,
+  insert or upsert call on a table, model or class named for user content; a schema, migration or
+  model definition declaring such a table; an upload handler, an attachment macro, a storage-client
+  upload, a multipart form or a file input; a rich-text editor, an HTML sanitiser, or a spam or
+  moderation check; or a cache or key-value write whose key carries a content noun. That vocabulary
+  is where the Art. 3(g)(iii) hosting shape - storage of information provided by, and at the request
+  of, a recipient of the service - is usually written, and the spelling is all the detector
+  established: several of these strings also occur where nothing is stored for anyone. Shapes
+  already met in real code: a catalogue identifier naming a moderation vendor (`'id' =>
+  'analyze-with-perspectiveapi'`); a sanitiser call inside a JSX `data=` attribute on a hidden
+  element; a rich-text editor import inside a `.diff` test-example artefact; a file input built for
+  a desktop client's import dialog (`input.type = 'file'`); and key-value writes whose key merely
+  contains a content noun - `searchParams.set('post_logout_redirect_uri', ...)`, which builds a
+  logout URL, and `cookieStore.set('chat-model', model)`, which persists a UI preference. Read the
+  matched line and say which of those it is; context question 3 asks the same of the locations list.
+  Whether a recipient rather than the operator supplies what is stored, and whether this service
+  offers an Art. 16(1) notice-and-action mechanism at all, are both for the adjudicator: since
+  2026-07-28 the detector searches for no notice mechanism, so it is not asserting that none exists"
+remediation_template: >
+  Settle scope first, because DSA Art. 16 addresses providers of hosting services (Art. 3(g)(iii):
+
+  storage of information provided by, and at the request of, a recipient of the service). If the
+  only
+
+  stored content comes from the operator, this candidate does not apply and the reason belongs in
+  the
+
+  adjudication record. If recipients do supply the stored content, the size of the team does not
+  change
+
+  the answer: the micro and small enterprise exclusions in Arts. 19(1) and 29(1) cover Sections 3
+  and 4,
+
+  not Section 2 where Art. 16 sits. Recital 50 names file storage and sharing services, web hosting
+
+  services, advertising servers and paste bins as examples, so a service with no comment thread
+  anywhere
+
+  can still be squarely in scope.
+
+  Before any of that, check whether the channel already exists, because this rule no longer checks
+  for
+
+  you: as of 2026-07-28 the detector carries no suppression for a discharged duty, so it fires on a
+
+  service that ships a complete Art. 16 mechanism exactly as it fires on one that ships none. The
+
+  vocabulary its deleted guard used is a reasonable place to start searching, and no more than that
+  -
+
+  report_illegal, flag_illegal, illegal_content, unlawful_content, notice_and_action, a
+  report-or-flag
+
+  control bound to a content noun (report_comment, flag-post, reportPost, flagContent,
+  ReportPostModal),
+
+  a persisted notice record (ContentFlagging, content_flags, takedown_request, abuse_notice,
+
+  flagged_post, reportedContent). Every one of those terms has been measured matching something that
+  is
+
+  not a notice mechanism: a stylesheet class, a Makefile line, a translation key, an operator
+  dashboard's
+
+  column label. Weigh what you find against Art. 16(1) and Art. 16(2) rather than against the
+  string.
+
+  Where a mechanism exists outside this repository - a hosted help desk, a form in a separate
+  front-end
+
+  repository, a published address in a Terms page - record where it lives, and record equally that a
+
+  help desk or a published address is not by itself an Art. 16(1) mechanism.
+
+  Engineering change that closes the gap: add a notice channel that recipients and non-recipients
+  alike
+
+  can reach without an account, reachable from next to the content itself - a "report this" control
+  on
+
+  every post, comment, message, upload and profile surface - posting to a route that persists the
+  notice
+
+  with the content reference and the notifier's contact details.
+
+  Give the submission form fields for all four Art. 16(2) elements: a free-text explanation of why
+  the
+
+  notifier alleges the content to be within Art. 3(h); the exact electronic location, prefilled with
+  the exact URL
+
+  of the item; the notifier's name and email address, which must stay optional for the Directive
+
+  2011/93/EU offences; and a checkbox for the bona fide statement that the information given is
+  accurate
+
+  and complete.
+
+  Then close the loop that Arts. 16(4)-(6) describe: acknowledge receipt where the notifier gave
+  contact
+
+  details, notify the decision with information on the possibilities for redress, and record whether
+
+  automated means were used. Art. 16(1) permits electronic submission only, so a postal address or a
+
+  phone number does not substitute for the form.
+data_categories:
+  - user.content
+fingerprint_spec: project
+reading_class:
+  class: existence
+  elements:
+    - name: substantiated_explanation
+      question: 2
+      text: (a) a sufficiently substantiated explanation of the reasons for the allegation
+    - name: exact_location
+      question: 2
+      text: (b) a clear indication of the exact electronic location such as the exact URL
+    - name: notifier_contact
+      question: 2
+      text: (c) the notifier's name and email address, which must stay optional for the Directive
+        2011/93/EU offences
+    - name: bona_fide_statement
+      question: 2
+      text: (d) a statement confirming the notifier's bona fide belief that the information is accurate
+        and complete

@@ -1,0 +1,126 @@
+id: eu-consent-008
+pack: eu-consent
+short_name: AdSense ads may load before consent
+problem_line:
+  text: AdSense ads load with no consent gate found
+fix_line: Append the AdSense tag in the CMP's consent callback, or deny Consent Mode ad categories
+  first, updating only from it.
+title: AdSense script URL referenced, which may not be a load - consent signalling (TCF or Consent
+  Mode) needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC) (prior consent
+      for storing or accessing information on terminal equipment, applied to advertising cookies)
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: GDPR Art. 7 (conditions for consent, applied to advertising cookies)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) (replaces Art. 5(3) of Directive 2002/58/EC: the 2002
+      wording offered only a right to refuse, the replacement wording requires prior consent) and
+      Art. 4 (Member State transposition deadline 25 May 2011)"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "Google consent management requirements for publishers (AdSense / Ad Manager / AdMob) —
+      programme policy, not legislation: as of 2024-01-16 a Google-certified CMP integrated with the
+      IAB Europe TCF is required when serving personalized ads to users in the EEA and the UK, and
+      as of 2024-07-31 when serving personalized ads to users in Switzerland; traffic from a
+      non-certified CMP may still be eligible for non-personalized ads or limited ads"
+    url: https://support.google.com/adsense/answer/13554116
+    checked_at: 2026-07-22
+  - cite: "Google Ad Manager, Publisher integration with the IAB Europe TCF — product documentation, not
+      legislation: Google processes TCF v2.3 TC Strings today and requires TCF v2.3 for TC Strings
+      generated on or after 2026-03-01, dropping support for new TCF v2.2 strings on that date
+      (previously created v2.2 strings stay supported)"
+    url: https://support.google.com/admanager/answer/9805023
+    checked_at: 2026-07-22
+effective_date: 2011-05-25
+severity: high
+rule_confidence: 0.8
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  match:
+    - pagead2\.googlesyndication\.com/pagead/js/adsbygoogle
+context_questions:
+  - "Is the matched line a load at all, and where it is, does this tag's load path wait for a
+    consent signal or does it fire on page load? The detector matched the AdSense script URL, and
+    that string also sits in a Content-Security-Policy directive or another allow-list entry, which
+    declares the host permitted somewhere rather than loading the tag; where the matched line is one
+    of those, name it as such, then find the actual load and answer for that line instead. The
+    question is not whether a CMP exists anywhere in this project: a repository can ship a
+    Google-certified CMP and still place the AdSense script in the document head, where it runs
+    before the CMP has an answer. Trace the matched line back to whatever gates it and quote the
+    path. Shapes that do gate it: a TCF callback ('__tcfapi' with 'addEventListener', 2, cb) that
+    inspects tcData.eventStatus / tcData.purpose.consents and only then injects the script element;
+    a Consent Mode default command (gtag with 'consent', 'default') setting ad_storage and
+    ad_user_data to denied, followed later by an update command; a loader that appends the script
+    from inside the consent callback. Shapes that do not: a static script tag in the head, an
+    unconditional framework script component set to load before interactive, a tag-manager container
+    firing the ad tag on all pages, or a CMP initialised in a different entry point from the one
+    that loads this tag."
+  - If the tag does load unconditionally, does a Consent Mode default command run earlier in the
+    same document, and what does it deny? A default command setting ad_storage and ad_user_data to
+    denied changes what the tag is permitted to do even though the script itself loads, so quote the
+    default command and say where it runs relative to the matched line; if the only consent call you
+    find is an update command with no preceding default, the tag ran in its unrestricted state until
+    the update arrived.
+  - Are these ads served to users in the EEA, the UK or Switzerland? The region settings on the
+    AdSense side are in scope too.
+evidence_template: "{file}:{line} names the AdSense script host and path
+  pagead2.googlesyndication.com/pagead/js/adsbygoogle. That string is the whole of what this
+  detector matched, and it did not establish that a tag is loaded here: the same string sits in a
+  Content-Security-Policy directive or another allow-list entry. Read the matched line, and where it
+  is a load, check whether this tag's load path waits for a consent signal or fires on page load.
+  This scan asserts nothing either way: the phrase 'with no consent signalling' used to stand here
+  on the strength of a project-scoped suppression on __tcfapi and gtag('consent', ...), which
+  deleted every candidate in a repository that mentioned either token, and it was removed on
+  2026-07-27"
+remediation_template: >
+  Read the matched line first. This rule matches the AdSense script URL, and that string reaches a
+
+  file in more than one shape: a script tag or a framework Script component loads the tag, while a
+
+  Content-Security-Policy directive or another allow-list entry declares the host permitted
+
+  somewhere and loads nothing. Where the matched line is such an entry, find the actual load and
+
+  apply the rest of this to that line; where no load exists, this candidate closes with no change.
+
+  Integrate a Google-certified CMP running TCF v2.3 and load the ad tag only once the CMP records
+  consent.
+
+  TC Strings generated on or after 2026-03-01 must be TCF v2.3, so a CMP still emitting v2.2 strings
+  needs upgrading; without a certified CMP, EEA/UK/Swiss traffic is limited to non-personalized or
+  limited ads.
+
+  In addition, pair it with Consent Mode v2 default denied plus an update call.
+
+  Concretely, the change is in the load path rather than in the presence of a CMP. Register a TCF
+
+  listener ('__tcfapi' with 'addEventListener', 2, callback), read tcData.eventStatus and the
+
+  purpose consents, and create and append the AdSense script element from inside that callback, so
+
+  that a document with no consent decision never contains the tag. Where Consent Mode carries the
+
+  gate instead, issue the default command (gtag with 'consent', 'default') setting ad_storage,
+
+  ad_user_data and ad_personalization to denied in the first script in the document, ahead of the
+
+  tag, and issue the update command only from the CMP's own decision callback.
+
+  A CMP that is present but not consulted by this tag is the failure mode this rule is looking for:
+
+  finding '__tcfapi' or a consent command elsewhere in the repository does not answer the question,
+
+  and this detector deliberately no longer treats it as an answer.
+data_categories:
+  - user.behavior
+  - user.unique_id
+fingerprint_spec: default

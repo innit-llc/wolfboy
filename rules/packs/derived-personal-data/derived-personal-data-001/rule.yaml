@@ -1,0 +1,344 @@
+id: derived-personal-data-001
+pack: derived-personal-data
+short_name: Accounts matched as one person, then acted on automatically
+problem_line:
+  text: Accounts linked as one person, and the link acted on
+fix_line: Give each automated action on a match human review and a way to respond and contest;
+  record how the key can be wrong.
+title: Accounts re-linked by a derived identifier, with an automated adverse action on the match
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 22(1) - 'The data subject shall have the right not to
+      be subject to a decision based solely on automated processing, including profiling, which
+      produces legal effects concerning him or her or similarly significantly affects him or her.'
+      The construct this rule locates is a decision of exactly that shape when two conditions hold
+      that the detector cannot see: that the decision is taken SOLELY by the automated path, and
+      that its effect on the person reaches the threshold this paragraph sets - legal effects, or
+      effects that similarly significantly affect the person. Context questions 1 and 2 put both to
+      the operator"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 22(3) - where the decision is necessary for a contract
+      or based on explicit consent, 'the data controller shall implement suitable measures to
+      safeguard the data subject's rights and freedoms and legitimate interests, at least the right
+      to obtain human intervention on the part of the controller, to express his or her point of
+      view and to contest the decision.' This is the provision a finding here is usually answered
+      with rather than by removing the detection: the three safeguards are named, and whether the
+      deployment has any of them is context question 3"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(d) - personal data shall be 'accurate and, where
+      necessary, kept up to date; every reasonable step must be taken to ensure that personal data
+      that are inaccurate, having regard to the purposes for which they are processed, are erased or
+      rectified without delay'. A derived link between two accounts is itself personal data about
+      both people, and it can be wrong in a way the person cannot see: two people behind one
+      household address, one shared machine, a re-used payout instrument. Accuracy is a live duty
+      over the linkage row, not only over the fields the person typed"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(4) - 'profiling' means any form of automated
+      processing of personal data consisting of the use of personal data to evaluate certain
+      personal aspects relating to a natural person, in particular to analyse or predict aspects
+      concerning that natural person's performance at work, economic situation, health, personal
+      preferences, interests, reliability, behaviour, location or movements'. Reference only: a
+      definition establishes no duty of its own. It is carried because 'reliability' is the word
+      that names what a re-linkage key is used to evaluate, and because Art. 22(1) is written over
+      'including profiling'"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 15(1)(h) - the data subject has the right to obtain
+      from the controller information on 'the existence of automated decision-making, including
+      profiling, referred to in Article 22(1) and (4) and, at least in those cases, meaningful
+      information about the logic involved, as well as the significance and the envisaged
+      consequences of such processing for the data subject.' Reference only: this detector reads a
+      call site and establishes nothing about what an access request is answered with. It is carried
+      because the logic here is precisely what an access request would have to describe - which
+      fields the key is derived from, and what happens when it matches"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 21(1) - 'The data subject shall have the right to
+      object, on grounds relating to his or her particular situation, at any time to processing of
+      personal data concerning him or her which is based on point (e) or (f) of Article 6(1),
+      including profiling based on those provisions.' Reference only: whether this processing runs
+      on legitimate interests at all is an operator fact and is context question 4. It is carried
+      because a re-linkage programme is ordinarily defended on Art. 6(1)(f), and the objection right
+      is what comes with that defence"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.35
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    derived_identity_key:
+      - smurf_key
+      - smurf_of_id
+      - smurf_of
+      - client_app_hash
+      - payout_method_hash
+      - payout_method_fingerprint
+      - crypto_wallet_address
+      - wallet_address_hash
+      - veriff_session_id
+      - verification_session_id
+      - identity_session_id
+      - kyc_session_id
+      - device_hash
+      - device_fingerprint
+      - hardware_hash
+      - hardware_fingerprint
+      - hardware_id
+      - machine_fingerprint
+      - browser_fingerprint
+      - canvas_fingerprint
+      - fingerprint_hash
+      - installation_fingerprint
+      - signup_fingerprint
+      - account_fingerprint
+    linkage_column:
+      - smurf_of_id
+      - duplicate_account_id
+      - duplicate_partner_id
+      - duplicate_user_id
+      - duplicate_identity_id
+      - linked_account_id
+      - alt_account_id
+      - alternate_account_id
+      - related_account_id
+      - same_device_user_id
+      - shared_device_account_id
+      - ban_evasion_of
+      - sock_puppet_of
+    bare_identity_token:
+      - fingerprint
+      - device_id
+      - deviceid
+      - hwid
+      - machine_id
+      - visitor_id
+      - installation_id
+      - advertising_id
+      - hardware_key
+      - device_token
+      - client_hash
+      - ip_hash
+    account_noun:
+      - user
+      - account
+      - partner
+      - member
+      - player
+      - subscriber
+      - customer
+      - actor
+      - profile
+      - seller
+      - affiliate
+      - identity
+    multi_row_finder:
+      - find_many
+      - find_all
+      - findall
+      - where_in
+      - list_
+      - select_all
+      - group_by
+      - distinct
+      - duplicates
+      - matching
+      - collision
+      - filter
+      - where
+      - having
+      - in_(
+      - "_in:"
+      - "in:"
+    adverse_account_action:
+      - ban
+      - banned
+      - suspend
+      - suspension
+      - freeze
+      - frozen
+      - blocklist
+      - blacklist
+      - denylist
+      - disconnect
+      - kick
+      - terminate
+      - revoke
+      - quarantine
+      - withhold
+      - on_hold
+      - hold_pending
+      - hold_processed
+      - restrict_account
+      - disable_account
+      - close_account
+    abuse_apparatus:
+      - fraud
+      - abuse
+      - automod
+      - auto_moderation
+      - anti_abuse
+      - abuse_report
+      - ban_evasion
+      - evasion
+      - fraud_rule
+      - fraud_event
+      - fraud_alert
+      - fraud_detection
+      - detect_duplicate
+      - risk_monitoring
+      - smurf
+      - alt_account
+      - multi_account
+      - sock_puppet
+      - duplicate_account
+      - risk_score
+      - enforcement_action
+      - moderation_action
+  vocabulary_matching:
+    derived_identity_key:
+      case_insensitive: true
+      separator_insensitive: true
+    linkage_column:
+      case_insensitive: true
+      separator_insensitive: true
+    bare_identity_token:
+      case_insensitive: true
+      separator_insensitive: true
+    account_noun:
+      case_insensitive: true
+      separator_insensitive: true
+    multi_row_finder:
+      case_insensitive: true
+      separator_insensitive: true
+    adverse_account_action:
+      case_insensitive: true
+      separator_insensitive: true
+    abuse_apparatus:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?&derived_identity_key)
+    - (?&linkage_column)
+    - (?&bare_identity_token)[^\n]{0,60}(?&account_noun)|(?&account_noun)[^\n]{0,60}(?&bare_identity_token)
+    - (?&bare_identity_token)[^\n]{0,60}(?&multi_row_finder)|(?&multi_row_finder)[^\n]{0,60}(?&bare_identity_token)
+  also_in_file:
+    - (?&adverse_account_action)
+    - (?&abuse_apparatus)
+context_questions:
+  - "WHAT DOES THE MATCH ACTUALLY DO TO THE PERSON, AND IS IT DONE WITHOUT A HUMAN? This is the
+    first question because Art. 22(1) turns on it and no detector can see it. Follow the linkage
+    from the match site to its consequence and say which of three shapes this is: (i) the match only
+    raises a queue item a person reads before anything happens; (ii) the match itself bans, freezes,
+    withholds money, disconnects or excludes, with a person able to review afterwards; (iii) the
+    match acts and no review path exists. Only (ii) and (iii) are decisions 'based solely on
+    automated processing'. Quote the line where the consequence is applied, not the line where the
+    key is computed."
+  - DOES THE CONSEQUENCE PRODUCE LEGAL EFFECTS OR SIMILARLY SIGNIFICANT ONES? This is a fact about
+    the product and is asked of the operator, never read out of the code. Loss of earned money, loss
+    of a paid account, loss of access to a service the person depends on, and a record shared with
+    other operators are the shapes that ordinarily reach 'similarly significantly affects';
+    exclusion from a voluntary game lobby ordinarily does not. State which this deployment is and on
+    what basis, rather than treating the code path as settling it.
+  - WHICH OF THE THREE SAFEGUARDS IN ART. 22(3) EXISTS HERE - human intervention, the ability to
+    express a point of view, the ability to contest the decision? Name the route for each one that
+    exists and say plainly which are absent. An appeals inbox that is not mentioned anywhere in the
+    codebase may still exist as an operational process, so this is asked of the operator rather than
+    concluded from the tree.
+  - WHAT IS THE KEY DERIVED FROM, AND HOW OFTEN IS IT WRONG BY CONSTRUCTION? Open the derivation and
+    list its inputs. A hash over hardware attributes collides for two people who bought the same
+    machine model; a payout instrument is shared by a household; a network address is shared by
+    everyone behind one connection; a verification-session identifier is reused when a person
+    genuinely re-verifies. Each of these is a false link that the person cannot see and cannot
+    correct, which is what Art. 5(1)(d) is about. Say which inputs this deployment uses and what its
+    collision shape is.
+  - IS THE PERSON EVER TOLD? Check whether the linkage appears in any user-facing surface - an
+    account page, an export, an appeal response, a notice at the time of the action. A link that
+    decides an outcome and appears in no disclosure is the gap Art. 15(1)(h) describes; record
+    whether it is disclosed, and if so where, rather than assuming either way.
+evidence_template: "{file}:{line} matched one of four shapes: a purpose-built derived identity key,
+  a stored cross-account linkage column, a generic identity token beside an account noun, or a
+  generic identity token beside a call that can return more than one row. The file also carries an
+  adverse account action or the vocabulary of an automated-abuse apparatus, which is what
+  distinguishes this construct from ordinary device fingerprinting. This establishes only that THE
+  CODE HAS A CONSTRUCT for re-linking separate accounts by a derived value and acting on the result.
+  It does not establish that any person was actually re-linked, nor that any account was acted on.
+  It does not establish that the decision is taken solely by the automated path - the match may
+  raise a queue item a person reads, which is a different posture and is context question 1. And it
+  does not establish that the effect on the person reaches the Art. 22(1) threshold of legal effects
+  or similarly significant ones, which is where that provision turns and which is a fact about the
+  product, asked of the operator and not inferred from source vocabulary."
+remediation_template: >
+  Follow the match to its consequence before writing anything. The three shapes in context question
+  1
+
+  are materially different postures, and a finding that does not say which one this is has not
+
+  described the construct.
+
+  Where an automated path applies the consequence itself, record the three Art. 22(3) safeguards
+
+  separately - human intervention, the ability to express a point of view, the ability to contest -
+
+  and name the route for each. Where a route is absent, that is the specific item to add, and it is
+
+  ordinarily cheaper than removing the detection.
+
+  Write down what the key is derived from and what its collision shape is. A shared machine, a
+
+  household payout instrument, a shared network address and a re-used verification session each
+
+  produce a link that is wrong about the person, and Art. 5(1)(d) requires that inaccurate personal
+
+  data be rectified or erased without delay. A linkage the person can neither see nor correct cannot
+
+  satisfy that, whatever the match rate is.
+
+  Consider whether the stored linkage column needs to persist after the action it justified. Where
+  it
+
+  does, it is personal data about both people and belongs in the record of processing and in what an
+
+  access request returns; where it does not, the accuracy duty gets smaller by deleting it.
+
+  Consider whether the person is told, at the time of the action, that a cross-account link was the
+
+  reason. Art. 15(1)(h) describes meaningful information about the logic involved; a notice that
+  says
+
+  only that a rule was triggered does not carry it.
+data_categories:
+  - user.unique_id
+  - user.device
+  - user.account
+  - user.behavior
+  - user.payment
+fingerprint_spec: project
+reading_class:
+  class: existence
+  elements:
+    - name: human_intervention
+      question: 3
+      text: human intervention (Art. 22(3))
+    - name: express_point_of_view
+      question: 3
+      text: the ability to express a point of view (Art. 22(3))
+    - name: contest_decision
+      question: 3
+      text: the ability to contest the decision (Art. 22(3))

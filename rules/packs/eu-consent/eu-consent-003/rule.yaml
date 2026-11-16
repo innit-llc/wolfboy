@@ -1,0 +1,81 @@
+id: eu-consent-003
+pack: eu-consent
+short_name: TikTok Pixel may run before consent
+problem_line:
+  text: TikTok Pixel loads with no consent gate found
+fix_line: Call ttq.holdConsent() before the pixel loads and grant only on a recorded decision, or
+  load the script after consent.
+title: TikTok Pixel loaded - holdConsent gate needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC): storing
+      information, or gaining access to information already stored, in a user's terminal equipment
+      \"is only allowed on condition that the subscriber or user concerned has given his or her
+      consent, having been provided with clear and comprehensive information\""
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-28
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) (replaces Art. 5(3) of Directive 2002/58/EC: the 2002
+      wording offered only a right to refuse, the replacement wording requires prior consent) and
+      Art. 4 (Member State transposition deadline 25 May 2011)"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: GDPR Art. 7 and Art. 44 et seq. (conditions for consent; transfers of personal data to third
+      countries, at stake in third-party transmission)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-21
+    jurisdiction: EU
+effective_date: 2011-05-25
+severity: high
+rule_confidence: 0.8
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  vocabulary:
+    tiktok_vendor_names:
+      - tiktok
+  vocabulary_matching:
+    tiktok_vendor_names:
+      case_insensitive: true
+  match:
+    - ttq\.load\(
+    - (?&tiktok_vendor_names)[A-Za-z0-9_$]*\.load\(
+    - (?&tiktok_vendor_names)AnalyticsObject
+context_questions:
+  - Is the matched line an executable call at all, rather than a snippet quoted in documentation or
+    a comment? Where it is, does ttq.load() run only after consent has been recorded? Quote the call
+    path.
+  - "Before this pixel loads, is there a check that the visitor gave consent — and is the default
+    state denial, so that nothing is sent before the visitor acts? A ttq.holdConsent() or
+    ttq.revokeConsent() call is evidence, and since 2026-07-27 the detector no longer searches for
+    it, so finding one is a real contribution rather than a repeat of the search that produced this
+    candidate. It is not sufficient on its own. Quote the calls, then answer: does the hold run on
+    this page's load path and before the line in the evidence, and is ttq.grantConsent() reached
+    only from a recorded consent decision rather than called unconditionally afterwards?"
+  - "Is this page or app served to users in the EU? Read ScanProfile.distribution_regions, which is
+    supplied with this candidate. A region that is not in the list may not have been asked: that
+    question is open, not answered no. If it is absent, say so and return needs_human rather than
+    guessing — this question decides whether the obligation exists at all."
+evidence_template: "{file}:{line} carries the string ttq.load( - the call that loads TikTok Pixel in
+  TikTok's own base snippet. That string is the whole of what the detector matched: this rule has
+  one clause, no comment exclusion and no path exclusion, so the same text fires from a
+  documentation snippet or a fenced code block quoting the snippet, from a commented-out call or a
+  doc comment discussing one, and from a line of a diff hunk - none of which loads anything. Read
+  the matched line and say whether it is an executable call before reading the finding as a load.
+  Whether a holdConsent/grantConsent gate exists, and whether it covers this load path, is not
+  decided by the detector: see the context questions"
+remediation_template: >
+  Call ttq.holdConsent() before initialisation and ttq.grantConsent() once the CMP records consent.
+
+  Alternatively, load the script dynamically once the CMP records consent.
+
+  If such a call already exists, check what it is routinely wrong about rather than treating its
+  presence as the answer: it has to run on the same load path as this line and before it, and the
+  grant has to be conditioned on a recorded decision.
+data_categories:
+  - user.behavior
+  - user.unique_id
+fingerprint_spec: default

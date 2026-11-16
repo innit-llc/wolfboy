@@ -1,0 +1,712 @@
+id: eu-retention-001
+pack: eu-retention
+short_name: Retention setting with no time limit by default
+problem_line:
+  text: Personal data kept with no time limit by default
+  template: "{data} kept with no time limit by default"
+fix_line: Ship a bounded default, make sure the deletion job runs at it, and state the limit in your
+  privacy documentation.
+title: "Retention- or expiry-named setting whose shipped default is unbounded: a never-or-unlimited
+  option or a sentinel"
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(e), the storage-limitation principle, quoted in
+      full from the Official Journal text at CELEX 32016R0679, retrieved 2026-08-10. Art. 5(1) opens
+      'Personal data shall be:' and point (e) reads: 'kept in a form which permits identification of
+      data subjects for no longer than is necessary for the purposes for which the personal data are
+      processed'. Read the words exactly, because three of them decide what this rule may and may
+      not say. FOR NO LONGER THAN IS NECESSARY - the limit is set by the purpose, not by any fixed
+      number of days, so no duration is right or wrong on its face and a detector cannot compute the
+      permitted period from code. KEPT IN A FORM WHICH PERMITS IDENTIFICATION - the duty bites on
+      identifiability rather than on storage as such, so data that has been anonymised past
+      identification is outside the point altogether and pseudonymised data is not. PERSONAL DATA -
+      the subject of the sentence is defined in Art. 4(1), carried as entry 4, and whether any
+      particular table is within it is not a question this detector answers. The point carries its
+      own exception in the same sentence: 'personal data may be stored for longer periods insofar as
+      the personal data will be processed solely for archiving purposes in the public interest,
+      scientific or historical research purposes or statistical purposes in accordance with Article
+      89(1) subject to implementation of the appropriate technical and organisational measures
+      required by this Regulation in order to safeguard the rights and freedoms of the data
+      subject'. That clause is the reason a long or absent retention limit is not self-evidently a
+      gap, and it is CONJUNCTIVE - every conjunct has to hold before the longer storage is
+      permitted. The data must be processed SOLELY for one of three named purposes, and the list is
+      closed: archiving in the public interest, scientific or historical research, or statistics.
+      That processing must be 'in accordance with Article 89(1)'. And it must be 'subject to
+      implementation of the appropriate technical and organisational measures required by this
+      Regulation'. Note also that 'in the public interest' attaches to archiving alone and not to
+      research or statistics. Art. 89(1) is carried as entry 3 so its condition travels with the
+      exception. Corrected 2026-08-10. SUPERSEDED WORDING, reproduced without quotation marks
+      because every quoted span in this field is checked character-exact against the Official
+      Journal text: an audit or research store may lawfully be kept for longer where the safeguards
+      required by Art. 89(1) are in place. That named only the Art. 89(1) conjunct, dropped the word
+      solely and the closed list of purposes, and offered an audit store as something the exception
+      covers - and an audit trail kept for accountability is not an archiving purpose in the public
+      interest, which context_questions[3] said in terms while this field said otherwise. Where two
+      fields of one rule disagree the adjudicating agent weights the cite, so the wrong one was the
+      one being read. Art. 5(2) puts the burden of showing the position on the controller: 'The
+      controller shall be responsible for, and be able to demonstrate compliance with, paragraph 1'.
+      Applies since 2018-05-25, Art. 99(2): 'It shall apply from 25 May 2018.'"
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-10
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 39, from the same Official Journal text. Two
+      sentences corroborate Art. 5(1)(e) and neither enacts anything on its own. First: 'This
+      requires, in particular, ensuring that the period for which the personal data are stored is
+      limited to a strict minimum.' Second, and this is the sentence nearest to the code shape this
+      rule matches: 'In order to ensure that the personal data are not kept longer than necessary,
+      time limits should be established by the controller for erasure or for a periodic review.' Two
+      things a reader must not take from this entry. A recital does not enact a duty; it colours
+      Art. 5(1)(e), which is what this rule cites as its test. And the sentence offers erasure OR
+      periodic review as alternatives - but read what the alternative is between. The words are that
+      'time limits should be established by the controller for erasure or for a periodic review':
+      both limbs are things a TIME LIMIT is established for, so the choice is between two ways of
+      enforcing a limit and not between having a limit and not having one. A documented review cycle
+      answers the second limb only where it has a stated interval and actually results in erasure
+      once the purpose is exhausted. A review that runs on schedule and never erases leaves the data
+      kept for longer than is necessary, and the limit set by Art. 5(1)(e) is substantive: it is
+      breached on those facts however well documented the review is. The preceding sentence of this
+      same recital says the same thing directly, and it is quoted above - the storage period must be
+      'limited to a strict minimum'. A product with no stated review interval answers neither limb.
+      What this entry does support is that a candidate here is a question and not a conclusion.
+      Corrected 2026-08-10. SUPERSEDED WORDING, reproduced without quotation marks because every
+      quoted span in this field is checked character-exact against the Official Journal text: so a
+      product that keeps data indefinitely under a documented review cycle is answering the second
+      limb rather than failing the first. That handed the adjudicating agent a complete dismissal
+      ground - the mere existence of a documented review cycle - for the exact fact pattern this
+      rule raises, and it contradicted the strict-minimum sentence quoted eight words earlier in
+      this same field. The direction of the error was under-report, which is the dangerous one, and
+      no context question checked the dismissal ground it offered. context_questions[5] now carries
+      that check."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-10
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 89(1), from the same Official Journal text: 'Processing
+      for archiving purposes in the public interest, scientific or historical research purposes or
+      statistical purposes, shall be subject to appropriate safeguards, in accordance with this
+      Regulation, for the rights and freedoms of the data subject.' The paragraph then states what
+      those safeguards have to do: 'Those safeguards shall ensure that technical and organisational
+      measures are in place in particular in order to ensure respect for the principle of data
+      minimisation.' It then names two measures, and the modal verbs are not interchangeable. 'Those
+      measures may include pseudonymisation provided that those purposes can be fulfilled in that
+      manner.' But 'Where those purposes can be fulfilled by further processing which does not
+      permit or no longer permits the identification of data subjects, those purposes shall be
+      fulfilled in that manner.' Pseudonymisation is permissive; giving up the identifying form
+      altogether is MANDATORY wherever the purposes can be met that way. So visible pseudonymisation
+      does not close the safeguards question in a case where the purposes could have been fulfilled
+      without identification at all - it is a measure the paragraph allows, not a measure that
+      satisfies it in every case. Added 2026-08-10: the 'may include pseudonymisation' sentence was
+      previously elided between the second and third quotations here and the two were joined with
+      'and'. That left the only textual authority for naming pseudonymisation as an Art. 89(1)
+      measure unquoted, and it hid the may/shall split that context_questions[3] turns on. Carried
+      here because Art. 5(1)(e)'s longer-storage exception is expressly conditioned on this
+      paragraph, so quoting the exception without it would overstate how freely the exception can be
+      relied on. Whether a given store is within the archiving, research or statistical purposes,
+      and whether the safeguards are in place, are questions for the adjudicating agent and for the
+      operator; nothing in this detector tests either."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-10
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1), from the same Official Journal text. Personal
+      data 'means any information relating to an identified or identifiable natural person', and the
+      paragraph continues: 'an identifiable natural person is one who can be identified, directly or
+      indirectly, in particular by reference to an identifier such as a name, an identification
+      number, location data, an online identifier or to one or more factors specific to the
+      physical, physiological, genetic, mental, economic, cultural or social identity of that
+      natural person'. Reference only, and carried for a specific reason: this rule matches a
+      CONFIGURATION SHAPE and never a determination that the data behind the setting is within this
+      definition. A schema whose columns are literally named for a user or an address may be quoted
+      as corroboration in a finding's context, and a column name is closer to a schema fact than to
+      a product inference, but the definition above is applied by the adjudicating agent or by the
+      person running the scan, not by a pattern. Nothing in the detector tests this entry."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-10
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 17(1), from the same Official Journal text: 'The data
+      subject shall have the right to obtain from the controller the erasure of personal data
+      concerning him or her without undue delay and the controller shall have the obligation to
+      erase personal data without undue delay where one of the following grounds applies', the first
+      of which is that 'the personal data are no longer necessary in relation to the purposes for
+      which they were collected or otherwise processed'. Carried here to fix a boundary, not to test
+      one. Art. 17 is a right exercised by an identified person against an identified record and is
+      answered by a deletion endpoint or a support process; Art. 5(1)(e) is a standing property of
+      the store that applies whether or not anyone asks. A product with a working erasure-on-request
+      path can still ship the configuration this rule matches, and a product with no such path is a
+      different row and a different mechanism. Reference only: this entry establishes nothing the
+      detector tests."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-10
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 26, from the same Official Journal text. Two
+      sentences, and together they are the authority for the proposition entry 1 states without
+      support: that data anonymised past identification is outside the point altogether and that
+      pseudonymised data is not. On pseudonymised data: 'Personal data which have undergone
+      pseudonymisation, which could be attributed to a natural person by the use of additional
+      information should be considered to be information on an identifiable natural person.' On
+      anonymous data: 'The principles of data protection should therefore not apply to anonymous
+      information, namely information which does not relate to an identified or identifiable natural
+      person or to personal data rendered anonymous in such a manner that the data subject is not or
+      no longer identifiable.' The anonymisation half of entry 1's sentence also follows directly
+      from the words Art. 5(1)(e) itself uses, since the duty is on data 'kept in a form which
+      permits identification', but the pseudonymisation half does not follow from those words and
+      stood on bare assertion until this entry was added. It matters to this rule in one direction
+      only: a product that pseudonymises rather than anonymises has not put the store outside Art.
+      5(1)(e), so pseudonymisation is not an answer to a candidate raised here. A recital does not
+      enact a duty. Reference only: nothing in the detector tests it, and no candidate turns on it."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-10
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 83(5)(a): infringements of 'the basic principles for
+      processing, including conditions for consent, pursuant to Articles 5, 6, 7 and 9' are 'subject
+      to administrative fines up to 20 000 000 EUR, or in the case of an undertaking, up to 4 % of
+      the total worldwide annual turnover of the preceding financial year, whichever is higher'.
+      Quoted from the same Official Journal text, retrieved 2026-08-10. Article 5 is listed
+      expressly by number, so the storage-limitation principle sits in the upper fining band rather
+      than the Art. 83(4) one, and that is what `severity: high` records. The Journal prints
+      no-break spaces inside '20 000 000'; rendered as ordinary spaces here, as in eu-consent-016.
+      This entry fixes the exposure if a candidate turns out to be a real gap; it says nothing about
+      how likely that is, which is rule_confidence."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-10
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.18
+detector:
+  engine: builtin-regex
+  join_bracketed_constructs: true
+  shared_vocabulary:
+    - retention_sentinels
+    - retention_time_columns
+  match:
+    - ^(?=[^\n]*(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))[^\n]*,[
+      \t]*0[ \t]*,[ \t]*(?:$|\[|array[ \t]*\(|\{|//|#|/\*|[$A-Za-z_][\w$]*)
+    - ^(?=[^\n]*(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))))[^\n]*(?<![=!<>+\-*/%&|^])=(?!=)[
+      \t]*(?:-1|0ms|0[smhd]|0|[Dd]uration\.zero)(?![\w.])[ \t]*(?:[;,]|\r?$)
+    - ^[ \t]*(?:-[
+      \t]+)?['"]?(?=[\w.$/-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))))[\w.$/-]{1,80}['"]?[
+      \t]*:[ \t]*(?:-1|0ms|0[smhd]|0|[Dd]uration\.zero)(?![\w.])[ \t]*(?:#[^\n]*)?\r?$
+    - (?:[Dd]efault|DEFAULT)[A-Za-z_]{0,20}[ \t]*(?:=>|[:=])[ \t]*\{?[
+      \t]*[A-Za-z_$][\w$.]*(?:[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]ndefinite|INDEFINITE|[Nn]o[
+      _-]?limit|NO[ _-]?LIMIT)[\w$.]*[ \t]*\(
+    - ^[ \t]*\([ \t]*(?:[Dd]uration\.zero|(?:const[ \t]+)?[Dd]uration\([
+      \t]*(?:seconds|minutes|hours|days)[ \t]*:[ \t]*0[ \t]*\)|0)[
+      \t]*,[^\n]{0,100}(?:[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]ndefinite|INDEFINITE|[Nn]o[
+      _-]?limit|NO[ _-]?LIMIT)
+    - ^[
+      \t]*['"]?(?=[\w.$/-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))))(?=[\w.$/-]{0,60}(?:[Dd]ay|DAY|[Hh]our|HOUR|[Mm]inute|MINUTE|[Ss]econd|SECOND|[Ww]eek|WEEK|[Mm]onth|MONTH|[Yy]ear|YEAR|[Pp]eriod|PERIOD|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age)(?![a-z])|[Ii]nterval|INTERVAL|[Dd]uration|DURATION|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time)(?![a-z])|(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION)s?['"]?[
+      \t]*:|[Ss]ecs|SECS|[Mm]illis|MILLIS|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])))[\w.$/-]{1,80}['"]?[
+      \t]*:[ \t]*(?:#[^\n]*)?\r?$
+    - ^[ \t]*(?:['"]?[\w$.-]{0,20}(?:[Nn]ame|NAME|[Kk]ey|KEY|[Ss]etting|SETTING)[\w$.-]{0,20}['"]?[
+      \t]*(?:=>|:)[
+      \t]*)?['"](?=[\w.$/-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))[\w.$/-]{1,80}['"][
+      \t]*,[ \t]*\r?$
+    - ^[ \t]*(?:-[
+      \t]+)?['"]?(?=[\w.$/-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))[\w.$/-]{1,80}['"]?[
+      \t]*(?:(?<![=!<>+\-*/%&|^])=(?!=)|:)[
+      \t]*['"]?(?:0\.0|-1|0(?:ms|[smhdwy])?|[Dd]uration\.[Zz][Ee][Rr][Oo]|TimeSpan\.Zero|[Dd]uration\.of(?:Nanos|Millis|Seconds|Minutes|Hours|Days)\([
+      \t]*0[ \t]*\)|time\.Duration\([ \t]*0[ \t]*\)|timedelta\([ \t]*0[ \t]*\))['"]?(?![\w.])[
+      \t]*[,;]?[ \t]*(?:(?:#|//)[^\n]*)?\r?$
+    - ^[ \t]*(?:-[
+      \t]+)?['"]?(?=[\w.$/-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))[\w.$/-]{1,80}['"]?[
+      \t]*(?:=>|(?<![=!<>+\-*/%&|^])=(?!=)|:)[
+      \t]*(?:['"]?(?:null|NULL|nil|None|undefined)['"]?|~|[$A-Za-z_][\w$.\[\]]{0,60}[
+      \t]*(?:\|\||\?\?)[ \t]*['"]?(?:null|NULL|nil|None|undefined)['"]?)(?![\w.])[ \t]*[,;]?[
+      \t]*(?:(?:#|//)[^\n]*)?\r?$
+    - ^[
+      \t]*(?=[\w.$/-]{0,80}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))[\w.$/-]{1,120}[
+      \t]*=[ \t]*\$\{[\w.$/-]{1,160}:-[ \t]*(?:-1|0(?:ms|[smhdwy])?|null|NULL|None|nil)[ \t]*\}[
+      \t]*\r?$
+    - ^[ \t]*(?:(?:public|private|protected|internal|static|final|const|readonly|var|let|val)[
+      \t]+){0,3}(?=[\w$]{0,40}(?&retention_sentinels)(?![\w$]))[A-Za-z_$][\w$]*[
+      \t]*(?:[A-Za-z_$][\w$.<>\[\]]*[ \t]*)?=[ \t]*['"`]?(?&retention_sentinels)['"`]?[ \t]*[,;]?[
+      \t]*(?:\r?$|//|#|/\*)
+    - ^[ \t]*(?![^\n]*(?:[Nn]ot[_ ]?[Nn]ull|NOT NULL|\.default|defaultTo|[Dd]efault[Vv]alue|DEFAULT[
+      \t(]))(?=[\w$]{0,40}(?&retention_time_columns)(?![\w$]))[A-Za-z_$][\w$]*['"]?[ \t]*:[
+      \t]*(?:[A-Za-z_$][\w$.]{0,40}[ \t]*\(|\{[ \t]*['"]?type['"]?[ \t]*:)
+    - (?:INSERT|insert)[
+      \t]+(?:INTO|into)[^\n]{0,160}(?<![\w$])(?&retention_time_columns)(?![\w$])[^\n]{0,60}\)[^\n]{0,60}(?:VALUES|values)[^\n]{0,400}?,[
+      \t]*(?&retention_sentinels)[ \t]*\)[ \t]*;
+    - ^[ \t]*(?:-[
+      \t]+)?['"]?(?=[\w.$/-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))[\w.$/-]{1,80}['"]?[
+      \t]*(?:=>|(?<![=!<>+\-*/%&|^])=(?!=)|:)[ \t]*['"`]?(?&retention_sentinels)['"`]?(?![\w.])[
+      \t]*[,;)]?[ \t]*(?:(?:#|//)[^\n]*)?\r?$
+    - (?<![\w$.-])(?:-1|0(?:ms|[smhdwy]))(?![\w.])[ \t]*(?:[:=,]|[
+      \t]*(?:means|is|indicates|disables|will)(?![\w]))[^\n]{0,120}?(?<![\w-])(?:[Uu]nlimited|UNLIMITED|[Nn]ever|NEVER|[Ff]orever|FOREVER|[Ii]ndefinit|INDEFINIT|[Nn]o[
+      \t]+(?:limit|bound|expiry|expiration)|[Dd]oes[ \t]+not[ \t]+expire)(?![\w-])
+    - (?:^[
+      \t]*(?:(?:public|private|protected|internal|static|final|const|readonly|var|let|val|export|pub)[
+      \t]+){0,6}(?:[A-Za-z_$][\w$<>\[\],.]{0,30}[
+      \t]+)?(?=[\w.$/-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|[Pp]eriod|PERIOD|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))(?=[\w.$/-]{0,60}(?:[Nn]ull|NULL|[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]ndefinite|INDEFINITE|[Nn]o[_-]?[Ll]imit|NO[_-]?LIMIT|[Kk]eep[_-]?[Aa]ll|KEEP[_-]?ALL|[Ii]nfinite|INFINITE)(?![A-Za-z]))[\w.$/-]{1,80}['"]?[
+      \t]*(?:=>|(?<![=!<>+\-*/%&|^])=(?!=)|:)[ \t]*['"`]?-?[\w$.]|^[ \t]*(?:-[
+      \t]+)?['"]?(?=[\w.$/-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|[Pp]eriod|PERIOD|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))[\w.$/-]{1,80}['"]?[
+      \t]*(?:=>|(?<![=!<>+\-*/%&|^])=(?!=)|:)[
+      \t]*['"`]?(?:[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]ndefinite|INDEFINITE|[Nn]o[_-]?[Ll]imit|NO[_-]?LIMIT|[Kk]eep[_-]?[Aa]ll|KEEP[_-]?ALL|[Ii]nfinite|INFINITE|[Pp]ermanent|PERMANENT)['"`]?(?![\w.])[
+      \t]*[,;]?[ \t]*(?:(?:#|//)[^\n]*)?\r?$)
+    - ^(?=[^\n]*(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Ee]xpir|EXPIR|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Ee]rase|ERASE|[Pp]rune|PRUNE))[^\n]*(?<![\w$])(?=[A-Z0-9_]{0,40}(?:NEVER|FOREVER|UNLIMITED|INDEFINITE|NO_LIMIT|NO_EXPIRY|NO_EXPIRATION|KEEP_ALL|KEEP_FOREVER))(?=[A-Z0-9_]{0,40}DEFAULT)[A-Z][A-Z0-9_]*(?![\w$])
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|<%#)
+    - (?:[Mm]in|MIN|[Mm]ax|MAX)[_-]?(?:[Kk]eep|KEEP)|(?:[Kk]eep|KEEP)[_-]?(?:[Mm]in|MIN|[Mm]ax|MAX|[Cc]ount|COUNT)
+    - ^(?![^\n]*(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))))[^\n]*(?:[Ww]arn|WARN|[Nn]otif|NOTIF|[Aa]lert|ALERT|[Rr]emind|REMIND)
+  also_in_file:
+    - "['\"](?:(?![^'\"\\n]*(?:[Ww]arn|WARN|[Nn]otif|NOTIF|[Aa]lert|ALERT|[Rr]emind|REMIND))|(?=[^'\
+      \"\\n]*(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|\
+      [Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_\
+      -]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(\
+      ?![_-]?(?:[Aa]live|ALIVE)))))[^'\"\\n]{0,80}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ife\
+      time|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]lea\
+      nup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[K\
+      k]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[\
+      Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z]))[^'\"\\n]{0,60}['\"][\\s\\S]{0,240}?(?:=>\
+      |[,:])[ \\t\\r\\n]*0[ \\t\\r\\n]*,[ \\t\\r\\n]*(?:['\"]?[\\w$.-]{1,40}['\"]?[ \\t]*(?:=>|:)[
+      \\t]*)?(?:\\[|array[ \\t]*\\(|\\{)[ \\t\\r\\n]*(?:0|'0'|\"0\")[
+      \\t]*(?:=>|:)[^\\n]{0,100}(?:[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]nde\
+      finite|INDEFINITE|[Nn]o[ _-]?limit|NO_LIMIT|(?:[Kk]eep|KEEP|[Rr]etain|RETAIN)[
+      _-]?(?:[Aa]ll|ALL|[Ee]very|EVERY))"
+    - ([$A-Za-z_][\w$]*)[ \t]*=[ \t]*(?:array[ \t]*\(|\[|\{)[ \t\r\n]*(?:0|'0'|"0")[
+      \t]*(?:=>|:)[^\n]{0,100}(?:[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]ndefinite|INDEFINITE|[Nn]o[
+      _-]?limit|NO_LIMIT|(?:[Kk]eep|KEEP|[Rr]etain|RETAIN)[
+      _-]?(?:[Aa]ll|ALL|[Ee]very|EVERY))(?:(?!\1[
+      \t]*=)[\s\S]){0,2000}?['"](?:(?![^'"\n]*(?:[Ww]arn|WARN|[Nn]otif|NOTIF|[Aa]lert|ALERT|[Rr]emind|REMIND))|(?=[^'"\n]*(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE)))))[^'"\n]{0,80}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z]))[^'"\n]{0,60}['"][\s\S]{0,240}?,[
+      \t]*0[ \t]*,[ \t\r\n]*\1(?![\w$])
+    - "['\"`](?=[^'\"\\n]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]e\
+      tention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lea\
+      n[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-\
+      z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))))[^'\"\\n]{1,80}['\"`][ \\t\\r\\n]*,[
+      \\t\\r\\n]*(?:[\\w$]+[ \\t]*:[ \\t]*)?(?:-1|0ms|0[smhd]|0|[Dd]uration\\.zero)(?![\\w.])[
+      \\t]*,[^'\"]{0,240}?['\"`][^'\"\\n]{0,200}?(?<![\\w-])(?:0|-1|zero|ZERO)(?![\\w.])[^'\"\\n]{0\
+      ,60}?(?:[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]ndefinite|INDEFINITE|[Nn\
+      ]o[ _-]?limit|NO[
+      _-]?LIMIT|[Kk]ept|KEPT|[Kk]eep|KEEP|[Rr]etain|RETAIN|[Dd]isabled?|DISABLED?)"
+    - (?:^|\n)([
+      \t]*)['"]?(?=[\w.$/-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))))(?=[\w.$/-]{0,60}(?:[Dd]ay|DAY|[Hh]our|HOUR|[Mm]inute|MINUTE|[Ss]econd|SECOND|[Ww]eek|WEEK|[Mm]onth|MONTH|[Yy]ear|YEAR|[Pp]eriod|PERIOD|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age)(?![a-z])|[Ii]nterval|INTERVAL|[Dd]uration|DURATION|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time)(?![a-z])|(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION)s?['"]?[
+      \t]*:|[Ss]ecs|SECS|[Mm]illis|MILLIS|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])))[\w.$/-]{1,80}['"]?[
+      \t]*:[ \t]*(?:(?:-1|0ms|0[smhd]|0|[Dd]uration\.zero)(?![\w.])[
+      \t]*(?=\r?\n)[\s\S]{0,160}?(?<![\w-])(?:0|-1|zero|ZERO)(?![\w.])[^'"\n]{0,60}?(?:[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]ndefinite|INDEFINITE|[Nn]o[
+      _-]?limit|NO[
+      _-]?LIMIT|[Kk]ept|KEPT|[Kk]eep|KEEP|[Rr]etain|RETAIN|[Dd]isabled?|DISABLED?)|\r?(?=\n)(?:(?:\n\1[
+      \t][^\n]*){0,6}?\n\1[ \t]+['"]?(?:[Dd]efault|DEFAULT)['"]?[ \t]*:[
+      \t]*(?:-1|0ms|0[smhd]|0|[Dd]uration\.zero|null|NULL|nil|None|~)(?![\w.])[
+      \t]*\r?(?=\n)(?:\n\1[ \t][^\n]*){0,8}?\n\1[ \t](?:[
+      \t]*['"]?(?:[Mm]ax|MAX|[Mm]in|MIN|[Mm]aximum|MAXIMUM|[Mm]inimum|MINIMUM|[Rr]ange|RANGE)['"]?[
+      \t]*:[
+      \t]*-?\d|[^\n]*(?<![\w-])(?:0|-1|zero|ZERO)(?![\w.])[^'"\n]{0,60}?(?:[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]ndefinite|INDEFINITE|[Nn]o[
+      _-]?limit|NO[
+      _-]?LIMIT|[Kk]ept|KEPT|[Kk]eep|KEEP|[Rr]etain|RETAIN|[Dd]isabled?|DISABLED?))|(?:\n\1[
+      \t][^\n]*){0,6}?\n\1[ \t][
+      \t]*['"]?(?:[Mm]ax|MAX|[Mm]in|MIN|[Mm]aximum|MAXIMUM|[Mm]inimum|MINIMUM|[Rr]ange|RANGE)['"]?[
+      \t]*:[ \t]*-?\d[^\n]*(?:\n\1[ \t][^\n]*){0,8}?\n\1[ \t]+['"]?(?:[Dd]efault|DEFAULT)['"]?[
+      \t]*:[ \t]*(?:-1|0ms|0[smhd]|0|[Dd]uration\.zero|null|NULL|nil|None|~)(?![\w.])[
+      \t]*\r?(?=\n)))
+    - (?:[Dd]efault|DEFAULT)[A-Za-z_]{0,20}[
+      \t]*(?:=>|[:=])(?=[\s\S]{0,600}?(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))[
+      \t]*\{?[
+      \t]*([A-Za-z_$][\w$.]*(?:[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]ndefinite|INDEFINITE|[Nn]o[
+      _-]?limit|NO[ _-]?LIMIT)[\w$.]*)[ \t]*\([
+      \t]*\)[\s\S]{0,400}?(?:[Oo]ptions|OPTIONS)[^\n]{0,40}\[[^\]]{0,400}\1[ \t]*\(
+    - (?<![\w$])(?=[\w$]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))[A-Za-z_$][\w$]*[
+      \t]*=[ \t]*(?:<[^\n>]{0,60}>[ \t]*)?\[[ \t\r\n]*(?://[^\n]*[ \t\r\n]*)*\([
+      \t]*(?:[Dd]uration\.zero|0)[
+      \t]*,[^\n]{0,100}(?:[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]ndefinite|INDEFINITE|[Nn]o[
+      _-]?limit|NO[
+      _-]?LIMIT)[\s\S]{0,2000}?(?:[Ii]ndex|INDEX|[Ss]elected|SELECTED)[^\n]{0,140}(?<![\w.])0(?![\w.])
+    - function[ \t]+([A-Za-z_$][\w$]*)[ \t]*\([^\n]{0,120}\)[^\n]{0,60}[\s\S]{0,240}?return[
+      \t]+(?:array[ \t]*\(|\[|\{)[ \t\r\n]*(?:0|'0'|"0")[
+      \t]*(?:=>|:)[^\n]{0,100}(?:[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]ndefinite|INDEFINITE|[Nn]o[
+      _-]?limit|NO_LIMIT)[\s\S]{0,4000}?(?<![\w$.])\1[ \t]*\(
+    - ([$A-Za-z_][\w$]*)[ \t]*=[
+      \t]*(?!(?:array|list|new|require|include)(?![\w$]))[A-Za-z_$][\w$]*(?:(?:->|::|\.)[\w$]+){0,3}[
+      \t]*\([^\n]{0,120}\)[ \t]*[;,]?[ \t]*\r?\n(?:(?!\1[
+      \t]*=)[\s\S]){0,2000}?['"](?![^'"\n]*(?:[Ww]arn|WARN|[Nn]otif|NOTIF|[Aa]lert|ALERT|[Rr]emind|REMIND))[^'"\n]{0,80}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE)))[^'"\n]{0,60}['"][\s\S]{0,240}?,[
+      \t]*0[ \t]*,[ \t\r\n]*\1(?![\w$])
+    - (?:^|\n)(?:[
+      \t]*['"]?(?=[\w.$/-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))(?=[\w.$/-]{0,60}(?:[Dd]ay|DAY|[Hh]our|HOUR|[Mm]inute|MINUTE|[Ss]econd|SECOND|[Ww]eek|WEEK|[Mm]onth|MONTH|[Yy]ear|YEAR|[Pp]eriod|PERIOD|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age)(?![a-z])|[Ii]nterval|INTERVAL|[Dd]uration|DURATION|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time)(?![a-z])|(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION)s?['"]?[
+      \t]*:|[Ss]ecs|SECS|[Mm]illis|MILLIS|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])))[\w.$/-]{1,80}['"]?[
+      \t]*(?:=>|:)[ \t]*(?:-1|0|null|NULL|nil|None|~)(?![\w.])[ \t]*,[\s\S]{0,600}?\n(?:[
+      \t]*['"]?[\w.$/-]{1,80}['"]?[ \t]*(?:=>|:)[ \t]*[1-9][0-9_]*(?:[ \t]*\*[ \t]*[1-9][0-9_]*)+[
+      \t]*,|[
+      \t]*['"]?(?=[\w.$/-]{0,60}(?:[Dd]ay|DAY|[Hh]our|HOUR|[Mm]inute|MINUTE|[Ss]econd|SECOND|[Ww]eek|WEEK|[Mm]onth|MONTH|[Yy]ear|YEAR|[Pp]eriod|PERIOD|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age)(?![a-z])|[Ii]nterval|INTERVAL|[Dd]uration|DURATION|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time)(?![a-z])|(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION)s?['"]?[
+      \t]*:|[Ss]ecs|SECS|[Mm]illis|MILLIS|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])))[\w.$/-]{1,80}['"]?[
+      \t]*(?:=>|:)[ \t]*[1-9][0-9_]*[ \t]*,)|(?:[ \t]*['"]?[\w.$/-]{1,80}['"]?[ \t]*(?:=>|:)[
+      \t]*[1-9][0-9_]*(?:[ \t]*\*[ \t]*[1-9][0-9_]*)+[ \t]*,|[
+      \t]*['"]?(?=[\w.$/-]{0,60}(?:[Dd]ay|DAY|[Hh]our|HOUR|[Mm]inute|MINUTE|[Ss]econd|SECOND|[Ww]eek|WEEK|[Mm]onth|MONTH|[Yy]ear|YEAR|[Pp]eriod|PERIOD|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age)(?![a-z])|[Ii]nterval|INTERVAL|[Dd]uration|DURATION|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time)(?![a-z])|(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION)s?['"]?[
+      \t]*:|[Ss]ecs|SECS|[Mm]illis|MILLIS|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])))[\w.$/-]{1,80}['"]?[
+      \t]*(?:=>|:)[ \t]*[1-9][0-9_]*[ \t]*,)[\s\S]{0,600}?\n[
+      \t]*['"]?(?=[\w.$/-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))(?=[\w.$/-]{0,60}(?:[Dd]ay|DAY|[Hh]our|HOUR|[Mm]inute|MINUTE|[Ss]econd|SECOND|[Ww]eek|WEEK|[Mm]onth|MONTH|[Yy]ear|YEAR|[Pp]eriod|PERIOD|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age)(?![a-z])|[Ii]nterval|INTERVAL|[Dd]uration|DURATION|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time)(?![a-z])|(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION)s?['"]?[
+      \t]*:|[Ss]ecs|SECS|[Mm]illis|MILLIS|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])))[\w.$/-]{1,80}['"]?[
+      \t]*(?:=>|:)[ \t]*(?:-1|0|null|NULL|nil|None|~)(?![\w.])[ \t]*,)
+    - (?:^|\n)(?:[
+      \t]*(?=[\w.$/-]{0,80}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))[\w.$/-]{1,120}[
+      \t]*=[ \t]*\$\{[\w.$/-]{1,160}:-[ \t]*(?:-1|0(?:ms|[smhdwy])?)[ \t]*\}[\s\S]{0,1200}?\n[
+      \t]*(?=[\w.$/-]{0,80}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))[\w.$/-]{1,120}[
+      \t]*=[ \t]*\$\{[\w.$/-]{1,160}:-[ \t]*[1-9][0-9_]*(?:ms|[smhdwy])?[ \t]*\}|[
+      \t]*(?=[\w.$/-]{0,80}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))[\w.$/-]{1,120}[
+      \t]*=[ \t]*\$\{[\w.$/-]{1,160}:-[ \t]*[1-9][0-9_]*(?:ms|[smhdwy])?[ \t]*\}[\s\S]{0,1200}?\n[
+      \t]*(?=[\w.$/-]{0,80}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))[\w.$/-]{1,120}[
+      \t]*=[ \t]*\$\{[\w.$/-]{1,160}:-[ \t]*(?:-1|0(?:ms|[smhdwy])?)[ \t]*\})
+    - (?:(?<![\w$])(?&retention_sentinels)(?![\w$])[^\n]{0,80}(?:\r?\n[^\n]*){0,20}?['"`][1-9][0-9]{0,3}[
+      \t]*(?:ms|s|m|h|d|w|y|sec|secs|seconds?|min|mins|minutes?|hours?|days?|weeks?|months?|years?)['"`]|['"`][1-9][0-9]{0,3}[
+      \t]*(?:ms|s|m|h|d|w|y|sec|secs|seconds?|min|mins|minutes?|hours?|days?|weeks?|months?|years?)['"`][^\n]{0,80}(?:\r?\n[^\n]*){0,20}?(?<![\w$])(?&retention_sentinels)(?![\w$]))
+    - (?<![\w$])(?&retention_time_columns)(?![\w$])[^\n]{0,140}(?:[Nn]ot[Nn]ull[ \t]*\(|NOT
+      NULL|\.default|defaultTo|DEFAULT[ \t(])
+    - (?<![\w$])(?&retention_time_columns)(?![\w$])[^\n]{0,60}\)[^\n]{0,400}?,[ \t]*[1-9][0-9]{0,5}[
+      \t]*\)[ \t]*;
+    - (?<![\w$-])(?:['"`]?(?:-1|0(?:ms|[smhdwy])?)['"`]?|(?<![\w$])(?:[Nn]ever|NEVER)(?![\w$]))[^\n]{0,120}?(?<![\w-])(?:[Kk]eep|KEEP|[Kk]eeps|[Kk]ept|KEPT|[Rr]etain|RETAIN|[Rr]etains|[Rr]etained|[Ss]tore|[Ss]tored|[Pp]reserve|[Pp]reserved)(?:[
+      \t]+(?:it|them|all|every|each|the|your|any|data|rows?|records?|events?|versions?|entries)){0,3}[
+      \t"'`-]*(?:[Ff]orever|FOREVER|[Ii]ndefinitely|INDEFINITELY|[Pp]ermanently|PERMANENTLY)
+    - (?<![\w$-])['"`]?(?:-1|0(?:ms|[smhdwy])?)['"`]?[^\n]{0,120}?(?:[Nn]ever[ \t]+expires?|[Dd]oes[
+      \t]+not[ \t]+expire|[Nn]o[ \t]+(?:expiry|expiration|retention[ \t]+limit|time[
+      \t]+limit)|[Rr]etained[ \t]+indefinitely|[Uu]nbounded[ \t]+retention|[Dd]isables?[ \t]+(?:the[
+      \t]+)?(?:expiry|expiration|retention|cleanup|pruning|purging))
+    - (?<![\w$-])['"`]?(?:-1|0(?:ms|[smhdwy])?)['"`]?[^\n]{0,80}?means[ \t]+(?:that[
+      \t]+)?(?:all|every|no)[ \t]+[\w ]{0,40}?(?:are|is|remain|remains|will[ \t]+be)[
+      \t]+(?:available|kept|retained|preserved|stored)
+    - (?:(?<![\w$])(?:timedelta|Duration\.of[A-Z][a-z]{2,8}|Duration\.from[A-Z][a-z]{2,8}|TimeSpan\.From[A-Z][a-z]{2,8}|time\.Duration|Dur\.of[A-Z][a-z]{2,8})[
+      \t]*\([^\n)]{0,60}[1-9][0-9_]{0,9}[^\n)]{0,24}\)|(?<![\w$])[1-9][0-9_]{0,9}[ \t]*\*[
+      \t]*time\.(?:Hour|Minute|Second)|[(,][
+      \t]*(?<![\w$])[A-Za-z_$][\w$]{0,40}(?:[Ss]ecs|SECS|[Ss]econds|SECONDS|[Mm]inutes|MINUTES|[Hh]ours|HOURS|[Dd]ays|DAYS|[Ww]eeks|WEEKS|[Mm]onths|MONTHS|[Yy]ears|YEARS|[Mm]illis|MILLIS)(?![A-Za-z])[
+      \t]*,[ \t]*['"]?[1-9][0-9_]{0,9}['"]?[
+      \t]*\)|(?<![\w$-])['"`]?(?:-1|0(?:ms|[smhdwy]))['"`]?[^\n]{0,120}?(?<![\w-])(?:[Uu]nlimited|UNLIMITED|[Nn]ever[
+      \t]+(?:removed|deleted|pruned|purged|cleaned|expired|dropped)|[Nn]o[ \t]+(?:upper[
+      \t]+)?(?:limit|bound))(?![\w-]))
+    - ([$A-Za-z_][\w$]*)[ \t]*=[ \t]*(?:array[ \t]*\(|\[|\{)[ \t\r\n]*(?:0|'0'|"0")[
+      \t]*(?:=>|:)[^\n]{0,100}(?:[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]ndefinite|INDEFINITE|[Nn]o[
+      _-]?limit|NO_LIMIT|(?:[Kk]eep|KEEP|[Rr]etain|RETAIN)[
+      _-]?(?:[Aa]ll|ALL|[Ee]very|EVERY))(?:(?!\1[
+      \t]*=)[\s\S]){0,2000}?['"](?:(?![^'"\n]*(?:[Ww]arn|WARN|[Nn]otif|NOTIF|[Aa]lert|ALERT|[Rr]emind|REMIND))|(?=[^'"\n]*(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE)))))[^'"\n]{0,80}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z]))[^'"\n]{0,60}['"][\s\S]{0,240}?,[
+      \t\r\n]*0[ \t\r\n]*,[ \t\r\n]*\1(?![\w$])
+    - ([$A-Za-z_][\w$]*)[ \t]*=[ \t]*(?:array[ \t]*\(|\[|\{)[ \t\r\n]*(?:0|'0'|"0")[
+      \t]*(?:=>|:)[^\n]{0,100}(?:[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]ndefinite|INDEFINITE|[Nn]o[
+      _-]?limit|NO_LIMIT|(?:[Kk]eep|KEEP|[Rr]etain|RETAIN)[
+      _-]?(?:[Aa]ll|ALL|[Ee]very|EVERY))(?:(?!\1[
+      \t]*=)[\s\S]){0,2000}?['"](?:(?![^'"\n]*(?:[Ww]arn|WARN|[Nn]otif|NOTIF|[Aa]lert|ALERT|[Rr]emind|REMIND))|(?=[^'"\n]*(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE)))))[^'"\n]{0,80}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z]))[^'"\n]{0,60}['"][\s\S]{0,240}?,[
+      \t\r\n]*(?=[A-Z0-9_]{0,40}(?:NEVER|FOREVER|UNLIMITED|INDEFINITE|NO_LIMIT|NO_EXPIRY|KEEP_ALL|KEEP_FOREVER))[A-Z][A-Z0-9_]*[
+      \t\r\n]*,
+    - (?<![\w$])(?=[\w$]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])))[A-Za-z_$][\w$]*[
+      \t]*=[ \t]*(?:<[^\n>]{0,60}>[ \t]*)?\[[ \t\r\n]*(?://[^\n]*[ \t\r\n]*)*\([
+      \t\r\n]*(?:[Dd]uration\.zero|0)[
+      \t\r\n]*,[\s\S]{0,100}(?:[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]ndefinite|INDEFINITE|[Nn]o[
+      _-]?limit|NO[
+      _-]?LIMIT)[\s\S]{0,2000}?(?:[Ii]ndex|INDEX|[Ss]elected|SELECTED)[^\n]{0,140}(?<![\w.])0(?![\w.])
+    - ([$A-Za-z_][\w$]*)[ \t]*=[ \t]*(?:array[ \t]*\(|\[|\{)[ \t\r\n]*(?:0|'0'|"0")[
+      \t]*(?:=>|:)[^\n]{0,100}(?:[Nn]ever|NEVER|[Ff]orever|FOREVER|[Uu]nlimited|UNLIMITED|[Ii]ndefinite|INDEFINITE|[Nn]o[
+      _-]?limit|NO_LIMIT|(?:[Kk]eep|KEEP|[Rr]etain|RETAIN)[
+      _-]?(?:[Aa]ll|ALL|[Ee]very|EVERY))(?:(?!\1[
+      \t]*=)[\s\S]){0,2000}?['"](?:(?![^'"\n]*(?:[Ww]arn|WARN|[Nn]otif|NOTIF|[Aa]lert|ALERT|[Rr]emind|REMIND))|(?=[^'"\n]*(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE)))))[^'"\n]{0,80}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:[Ll]ifetime|LIFETIME|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]leanup|CLEANUP|[Cc]lean[_-][Uu]p|CLEAN[_-]UP|[Ee]rase|ERASE|[Pp]rune|PRUNE|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))|[Ee]xpir|EXPIR|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z]))[^'"\n]{0,60}['"][\s\S]{0,240}?,[
+      \t\r\n]*0[ \t\r\n]*,[ \t\r\n]*[A-Za-z_$][\w$]*(?![\w$])
+  shared_path_exclusions:
+    - prose_documents
+  gate_view:
+    - yaml-anchors
+    - comments-visible
+context_questions:
+  - "MANDATORY, and the detector did not check it: does a deletion, purge or cleanup routine keyed
+    to THIS setting exist in the tree, and what does it do when the setting holds the default? This
+    is the fourth element of the shape and the engine cannot reach it, because the routine lives in
+    a different file from the setting and this rule's file-scoped corroboration cannot cross that
+    boundary. Search the project for the setting's name as a string, not as an identifier - a
+    scheduled task, a cron entry, a management command, a migration - and read the first few lines
+    of what you find. The shape that makes a candidate concrete is a routine that reads the setting
+    and returns early when it is zero or empty, so that a job which is registered, scheduled and
+    running deletes nothing at all in the shipped configuration; both evidenced instances of that
+    shape are a scheduled task whose first statement after reading the setting is an early return.
+    Report which of three you found: (a) such a routine exists and no-ops at the default, which is
+    the full shape; (b) a routine exists and deletes on some other basis, so the setting is not the
+    only control and the finding is weaker than it looks; (c) no routine reads this setting at all,
+    in which case the setting may be vestigial or the deletion may live outside the repository, and
+    the candidate should be reported as a configuration observation only. Quote the file and the
+    lines in every case. ADDED 2026-09-06: where the thing that corroborated this candidate turns
+    out to be a COMMENT rather than code - which this rule's corroboration may now be, since it
+    declares the comment-visible gate view - the comment is a maintainer's claim about the setting
+    and not a fact about the program. It does not answer this question and it does not narrow it.
+    The routine, or its absence, is still the discriminator; report the comment as what raised the
+    candidate and the routine as what settles it."
+  - "Is the data governed by this setting personal data within GDPR Art. 4(1), and who says so? This
+    detector matched a configuration shape and is not permitted to answer this, under the standing
+    rule that a fact about what data a product handles is asked of the person running the scan or
+    read from their declared documents, and may be corroborated by code but never decided by it.
+    Work from the schema rather than from the setting's name: find the table, model or collection
+    the routine in question deletes from, and read its columns. Columns named for a user identifier,
+    an address of the requesting machine, a related person, a name or an email are corroboration and
+    are worth quoting verbatim; in the evidenced instance the log table declares four such columns
+    and one of them is commented as an address. Corroboration is not the determination. Where the
+    ScanProfile or the operator's declared documents answer the question, say which one you used and
+    quote it; where nothing answers it, return needs_human rather than deciding it from column
+    names. If the store holds no personal data, dismiss the candidate here and say what it holds
+    instead."
+  - Is this a shipped default, and is the shipped default what a real deployment runs? The finding
+    is about the value written in the source as this setting's default, which is what a new
+    installation gets and nothing more. Check three things and report each. (a) Is there an
+    installer, a seed, a migration or a configuration template in this repository that sets a
+    different value at install time, so that the default in the registration call is never what
+    anyone runs? (b) Is the setting exposed to the operator at all, or is it internal and
+    effectively fixed? (c) Does the product's own documentation tell operators to change it? A
+    default that every deployment overrides is a weaker finding than one nobody can see, and a
+    setting the operator cannot reach at all is a stronger one. Nothing in this rule claims to know
+    what any given deployer has configured.
+  - Does Art. 5(1)(e)'s own exception apply, and is the condition attached to it met? The point
+    permits storage for longer periods where the data will be processed solely for archiving
+    purposes in the public interest, scientific or historical research purposes or statistical
+    purposes, and only subject to Art. 89(1)'s safeguards. Two questions follow and they are
+    separate. First, is this store within one of those purposes on the face of the code and the
+    product's own description - an audit trail kept for accountability is not automatically an
+    archiving purpose in the public interest, and a security log is not automatically a statistical
+    purpose. Second, if it is, are Art. 89(1)'s technical and organisational measures in place? Ask
+    that in the order Art. 89(1) puts them, because the paragraph's two measures are not equivalent
+    and legal_basis[2] quotes both. Where the purposes CAN be fulfilled by processing that no longer
+    permits identification, Art. 89(1) says they SHALL be fulfilled that way - so start by asking
+    whether the purpose could be served by anonymised or aggregated data, and if it could, an
+    identifying store is not saved by any lesser measure. Only where the purposes genuinely require
+    identifiable data does the permissive limb apply, and there pseudonymisation, restricted access
+    and comparable measures are what to look for; the list is not closed. Visible pseudonymisation
+    on its own does not answer this question, because pseudonymised data is still personal data
+    (legal_basis[5], Recital 26). Where the answer to the first is yes and to the second is no, that
+    is a different observation from the one this rule raised and should be reported as such. Where a
+    separate legal retention duty applies instead, quote the instrument and the period rather than
+    naming it.
+  - "Does the setting's name actually govern deletion, or something else? This is the failure mode
+    this rule is built around, so check it before anything else in the code. The corpus contains a
+    setting whose option list is character-for-character the shape this rule matches - key zero
+    labelled never, then a descending list of day counts - and whose subject is whether an automated
+    backup SKIPS a course that has not been modified, not whether anything is deleted. A second one,
+    found on 2026-08-10 and now excluded by the detector, decided how many days before a password
+    expires the user is WARNED, where never meant never warn. Read what consumes the setting and say
+    what the zero value makes the code do: stop deleting, stop skipping, stop warning, disable a
+    feature, mean unlimited, or mean immediately. Zero and null mean unbounded in some interfaces
+    and immediate in others, and the sentinel carries no meaning without the code that reads it. If
+    the never-delete reading does not survive that check, dismiss the candidate and quote the
+    consumer. Extended 2026-08-10 with two families the detector is known NOT to separate, so that
+    this question carries them rather than leaving them to be rediscovered. FIRST, THE EXPIRY FAMILY
+    WRITTEN WITHOUT A WARNING WORD. The password-expiry instance above is excluded on the word
+    `warning`, not on the family, so a setting named for the expiry of a password, an API token, a
+    licence, a signing certificate, an awarded badge, a mutex lease or a queued job's retry is the
+    identical trap with nothing in the detector standing against it. Every one of those reaches this
+    rule through `expir` or `ttl`, which say a thing has ceased to be current and say nothing about
+    anything being removed. Where the consumer stops honouring a credential rather than deleting a
+    record, dismiss the candidate and say so. SECOND, THE GRACE-PERIOD INVERSION, WHICH RUNS THE
+    OTHER WAY. A setting spelled undelete_window_days, retention_grace_days, soft_delete_days or
+    purge_delay_days may be the number of days a record waits BEFORE permanent deletion, in which
+    case a zero default means deletion is immediate and permanent - the privacy-POSITIVE direction,
+    and the opposite of what this rule assumes a zero means. The same spellings are used the other
+    way round elsewhere, where the value is how long a soft-deleted record is KEPT, so the spelling
+    does not decide it and neither does this rule: read the consumer and say which way it runs.
+    Where the zero is the privacy-positive direction, dismiss the candidate and quote the code that
+    shows it."
+  - "If the product answers this candidate with a review cycle rather than a fixed period, does that
+    review cycle meet the two things Recital 39 actually asks for? Recital 39 offers erasure or a
+    periodic review as alternatives, but both limbs are things a TIME LIMIT is established for, so a
+    review policy is a mechanism for enforcing a limit and not a substitute for having one. Ask two
+    questions and report both. First, does the review have a STATED INTERVAL - a number of months, a
+    named trigger, a scheduled task - or is it a general undertaking to review from time to time?
+    Second, does it RESULT IN ERASURE when the purpose is exhausted, and is there anything in the
+    code, the documented process or the operator's own declaration that shows it has? A review that
+    runs on schedule and erases nothing leaves the data kept for longer than is necessary, and Art.
+    5(1)(e)'s limit is substantive: it is not discharged by a process. Where the answer to either
+    question is no, the review cycle does not close this candidate and the finding stands as raised.
+    Where both are yes, say which document or which code you read them from and quote it. Where the
+    product has not claimed a review cycle at all, this question does not arise and should be
+    reported as not applicable rather than left blank."
+  - "MANDATORY WHERE THE OPTION LIST IS PRODUCED BY A CALL, and not applicable otherwise - the
+    finding's own evidence says which, because this case is the one where the cited line ends `, 0,
+    $something` or `, 0, something(...)` and NO option list appears in the file. THE OPTION LIST
+    THIS DEFAULT SELECTS FROM IS PRODUCED BY THE NAMED CALL. READ ITS DEFINITION, WHEREVER IT LIVES,
+    AND ANSWER TWO THINGS. First: does that definition contain an explicit never, forever,
+    unlimited, indefinite or no-limit member? Second: does the shipped default select it - is the
+    member the call returns for this value the never member, and is it keyed by the same zero the
+    registration passes? Layer 1 established the setting's name, the shipped default and the fact
+    that the choices come from that call; it established NOTHING about what the call returns,
+    because the definition is not in this file and this detector cannot cross files. Find it by
+    searching the project for the callee's name as a DECLARATION rather than as a use - `function
+    <name>`, `def <name>`, `const <name> =`, a method on the class the call names - and where the
+    callee is a method or is imported, follow the import first. Report one of three and quote the
+    lines in every case: (a) the definition returns a list carrying an explicit never-or-unlimited
+    member and the shipped default selects it, which completes the shape this rule is about and
+    makes the candidate as strong as one raised with the list written inline; (b) the definition
+    returns a bounded list only, in which case the default is a bounded period and the candidate is
+    dismissed here; (c) the definition cannot be found in the scanned source - it comes from a
+    dependency, a framework, a database or a remote configuration - in which case say so and report
+    the candidate as a configuration observation whose option set is outside the scan. Do not guess
+    from the callee's NAME: a function called `retentionChoices` says nothing about whether one of
+    its choices is never."
+evidence_template: "{file}:{line} is the line this finding points at, in a file where this rule
+  bound a setting drawn from the retention-or-expiry vocabulary to an unbounded shipped default.
+  READ THOSE TWO CLAIMS SEPARATELY: the binding is a statement about the file, and the cited line is
+  the anchor the detector chose for it. The cited line usually carries the setting's own name, and
+  in the two option-list branches written for TypeScript and Dart it may instead be the line that
+  selects the never-member, which names no setting and carries no vocabulary of its own. The binding
+  took one of three forms and the finding means something different in each. EITHER the setting's
+  own option list carries an explicit never-or-unlimited member and the shipped default selects it -
+  written as a keyed array, as a list of option-constructing calls, as a list of record literals, or
+  returned by a named function defined in the same file. OR the shipped default is a bare SENTINEL -
+  a zero, a minus one, a zero duration, an empty value - and the corroboration is what the same file
+  says about it: the registration call's own description stating what the sentinel means, or a bound
+  declared by the setting's own block showing that its value is a bounded period and that the
+  default sits outside it. OR - and this third form claims LESS than the other two and must not be
+  read as one of them - the option list is not in this file at all: the shipped default is a zero
+  and the choices it selects from are produced by a NAMED CALL whose definition the detector could
+  not open. In that form nothing here establishes that a never-or-unlimited member exists or that
+  the default selects it, the candidate exists precisely to hand that question on, and the mandatory
+  context question about an option list produced by a call is the one that answers it. Either way
+  this is an UNBOUNDED-DEFAULT CONFIGURATION OBSERVATION about the source scanned, and that is the
+  whole of what layer 1 established. It is not a statement about any deployment, not a statement
+  that the data concerned is personal data, and not a finding that anything has been kept too long.
+  Three limits belong in the same breath as the claim. FIRST, this rule did NOT check whether a
+  cleanup routine keyed to the same setting exists or what it does at this value - that is the
+  fourth element of the shape, it is the fact that separates a real retention gap from a setting
+  that switches nothing off, and it is the first context question, answered by opening the project.
+  SECOND, OPEN THE FILE AND READ THE CITED SETTING'S OWN DEFAULT BEFORE REPORTING IT. Where the
+  setting is written as a block whose name and default are on different lines, the cited line is the
+  setting's NAME and the pattern could not see its value; a file registering a dozen
+  retention-period settings raises all of them once any one of them is at the sentinel, and most of
+  those will have bounded defaults. This is the single largest source of noise in this rule and it
+  is expected, not a malfunction. The same channel produces a second shape worth naming, because
+  reading the cited line alone gets it backwards: a line whose zero is a UNIT MARKER rather than a
+  period. One product sets its retention-in-days setting to 0 on the branch a FINITE retention
+  takes, because the period it saves is expressed in hours on the next line, and this rule cites the
+  line that sets the zero. THIRD, nothing here establishes WHICH WAY the sentinel runs. A zero means
+  unbounded in some interfaces and immediately in others, and a declared range does not distinguish
+  them; read the consumer, which is what the context question about whether the setting's name
+  actually governs deletion asks first and by name. ADDED 2026-09-04: A FOURTH FORM IS ALSO REPORTED
+  AND IT CLAIMS LESS THAN THE THREE ABOVE - a never-value declared inside a construct whose line
+  carries NO retention word at all. Three spellings: a named constant or enumeration member whose
+  identifier ends in a sentinel and whose value is one; a retention-named timestamp or period column
+  declared with neither a not-null constraint nor a default, so a record nobody set a period for
+  holds a null; and the last value of an INSERT whose column list names such a column. The
+  corroboration for this form is a BOUNDED SIBLING in the same file - a quoted period literal near
+  the sentinel, a sibling column carrying a constraint or a default, or a sibling row carrying a
+  finite period - so what is established is that the product declares a set of periods and ships one
+  member of it unbounded. NOTHING IN THIS FORM ESTABLISHES THAT THE UNBOUNDED MEMBER IS THE SHIPPED
+  DEFAULT: in the tree it was built from that is settled by a template in a different file, and no
+  clause here crosses a file. The column spelling also reaches a validation-schema or
+  data-transfer-object field written like a column declaration, which is the same shape in a
+  different library; read the line and say which it is. ADDED 2026-09-06: THE CORROBORATION MAY BE
+  PROSE. This rule declares the comment-visible gate view, so its file-level corroboration clauses
+  are run a second time against the file's own text with NOTHING BLANKED, and a COMMENT beside the
+  default can be what opened the gate. Two consequences, both about what the output does NOT tell
+  you. FIRST, NOTHING IN THE FINDING NAMES THE READING THAT OPENED THE GATE. The corroborated_from
+  field is written only for a rule whose corroboration scope is wider than one file, and this rule's
+  scope is the file, so no finding of this rule carries that field at all; the cause field that
+  names a derived view appears only on a SUPPRESSION record, which is a gate that shut. So when you
+  look for what corroborated this candidate, read the file's COMMENTS as well as its code, and quote
+  whichever one you find. SECOND, THE ENGINE CANNOT TELL A COMMENT STATING THE SENTINEL'S MEANING
+  FROM ONE STATING THE OPPOSITE, AND DOES NOT TRY. A maintainer's note saying that nothing here is
+  unlimited, written near a quoted bounded period, satisfies this rule's sibling-period
+  corroboration exactly as a note saying the value means keep-forever would. WHERE THE CORROBORATION
+  YOU FIND IS PROSE, READ THE SENTENCE AND SAY WHICH WAY IT RUNS before treating it as support: a
+  sentence meaning the reverse dismisses the candidate rather than weakening it. That is disclosed
+  cost and not a malfunction - this field is POSITIVE corroboration, so such a comment ADDS a
+  candidate for you to dismiss and can never delete one, and no derived view reaches the negative
+  guard field. ADDED THE SAME DAY, AND IT IS WHAT MAKES THE PARAGRAPH ABOVE OPERATIVE: three
+  corroboration alternatives that read the SENTENCE ITSELF. Each wants a retention sentinel as a
+  maintainer writes it - a minus one, a zero, a zero duration, the word never - and then, on the
+  same line and within about 120 characters, a specific phrase saying the data is not deleted: kept
+  or retained FOREVER or INDEFINITELY or PERMANENTLY; never expires, does not expire, no expiry, no
+  expiration, no retention limit, retained indefinitely, unbounded retention, disables the cleanup;
+  or means that all of something remains available or kept. IF THIS FINDING'S CORROBORATION IS ONE
+  OF THOSE SENTENCES, FOUR THINGS FOLLOW FOR YOU. First, quote the sentence, because it is the whole
+  of the local evidence and a reader who cannot see it cannot check the reading. Second, CHECK WHICH
+  VALUE THE SENTENCE IS ABOUT: a sentence documenting two values - zero means immediately, some
+  large number means forever - satisfies the clause on the first and says the opposite of what this
+  rule reports, and one real instance of exactly that was measured on 2026-09-06. Third, WATCH FOR A
+  NEGATION, which is the other way one of these sentences can mean the reverse: the word never is
+  itself an accepted sentinel here, so \"we never keep data forever\" and \"audit rows are never
+  kept forever, the retention job trims them to 30 days\" satisfy the clause while saying the
+  opposite of what this rule reports - read the sentence, and where it denies the reading, dismiss
+  the candidate. Fourth, the sentence is the product's own account of what its value means and NOT
+  evidence that a deletion routine exists; the first context question is still what settles that.
+  SUPERSEDED WORDING: 'Measured on 2026-09-06: the declaration adds no candidate on any pinned tree,
+  so it changes what may corroborate a finding and not what this rule reports.' That was true of the
+  declaration alone and is not true of the rule as it now stands. ADDED 2026-09-08: THREE MORE
+  SHAPES OF THE SAME SUBJECT, AND EACH CHANGES WHAT THE CITED LINE IS SHOWING YOU, SO READ THE LINE
+  BEFORE APPLYING ANY SENTENCE ABOVE TO IT. FIRST, THE MEANING MAY BE STATED IN A DESCRIPTION OR A
+  COMMENT RATHER THAN IN THE KEY NAME, AND THE CITED LINE MAY BE THAT DESCRIPTION. A product may
+  name a setting for what it counts rather than for what it keeps - a number of history entries, a
+  number of finished downloads - and write what its shipped default MEANS in the setting's own
+  description block or in a comment beside it: 'minus one: unlimited', 'if set to minus one,
+  downloads are never removed'. Where such a line is cited, THE SETTING'S OWN NAME CARRIES NO
+  RETENTION WORD AT ALL and the whole of the local evidence is the sentence. OPEN THE DESCRIPTION
+  AND READ IT, and then find the setting the description belongs to, because the cited line is prose
+  and not the declaration: the default it describes is on another line of the same block and the
+  detector did not read it. Say which value the sentence is about, exactly as the paragraph above
+  asks - a description that documents two values, one meaning keep nothing and one meaning keep
+  everything, is one sentence about two settings' worth of meaning and only one half of it is this
+  rule's subject. SECOND, A NEVER-WORD MAY SIT IN THE SETTING'S OWN NAME, OR BE THE VALUE ITSELF,
+  AND IN EITHER CASE THE NUMBER BESIDE IT SAYS NOTHING. A constant whose name ends in NULL, NEVER,
+  FOREVER or UNLIMITED and whose value is an ordinary integer - minus two, seven, four hundred - is
+  a named member of an option list, and the integer is a member index chosen by whoever wrote the
+  enumeration; it is NOT a period and it must not be reported as one. A configuration key whose
+  complete value is the bare word FOREVER or NEVER is the same fact written the other way round. THE
+  NUMBER IS NOT THE EVIDENCE IN EITHER FORM. What was established is that the product declares an
+  unbounded member; what was NOT established is that the member is the shipped default, which is a
+  second fact in the code that reads it - an XML preference default, a fallback in an accessor, an
+  installer - and the first context question is what settles it. Read the neighbours too: a family
+  of constants written together will usually contain the bounded members as well, and one of them
+  may be the aggressive option that means the opposite of never. THIRD, WHAT THE FILE-LEVEL
+  CORROBORATION MAY NOW BE. Added by the same unit: a bounded sibling period written as a duration
+  CONSTRUCTOR rather than as a quoted literal; a bounded period whose unit is in the identifier and
+  whose value is a plain number; and the sentinel beside the word UNLIMITED, or beside NEVER
+  followed by a removal verb. The first two are code and the third may be prose, so everything the
+  paragraphs above say about a prose corroboration applies to it unchanged. AND WHERE THE
+  CORROBORATION IS THE CITED LINE ITSELF - which happens where a product writes the sentinel and its
+  meaning on one line - THE PAIR IS ONE FACT AND NOT TWO. Say so when you report it, and do not read
+  it as the file declaring bounded periods elsewhere. ADDED 2026-09-14: SINCE THAT DATE THE MATCH
+  MAY ALSO COME FROM A CONSTRUCT RATHER THAN FROM THE CITED LINE ALONE. This rule reads the
+  bracket-balanced construct a line opens on as one folded text as well, so a record literal or a
+  setting constructor a formatter broke over several physical lines - a never-preset tuple written
+  one member per line, or a registration call whose argument list puts the setting name and its zero
+  default on different lines - is matched as a whole; where that is what happened the finding is
+  reported on the line the construct opens on and carries the span it was folded from in
+  locations[].joined_from, so read those lines together rather than the opening line alone."
+remediation_template: |
+  This is a candidate for review against GDPR Art. 5(1)(e), not a determination about this code. The
+  scanner matched a configuration shape - a setting whose name is drawn from the retention-or-expiry
+  vocabulary, bound to an unbounded shipped default - and that binding took ONE OF TWO FORMS. Read
+  the matched line before reading further, because the two mean different things.
+  EITHER the setting's own option list carries an explicit never-or-unlimited member and the shipped
+  default selects it - written as a keyed array, as a list of option-constructing calls, or as a
+  list of record literals.
+  OR the shipped default is a bare SENTINEL - a zero, a minus one, a zero duration, an empty value -
+  and the corroboration is what the same file says about it: the registration call's own description
+  of what the sentinel means, or a bound declared by the setting's own block showing that its value
+  is a bounded period and that the default sits outside it.
+  Either way the scanner did not establish that the setting governs the deletion of anything, it did
+  not establish that the data concerned is personal data, and it did not look outside this file.
+  Three checks close most candidates, so establish them first:
+  1. What does the setting actually govern? Read the code that consumes it and say what the zero
+     value makes that code do. A zero means unbounded in some interfaces and immediate in others,
+     and one setting in the wild has this exact option list while deciding whether a backup skips an
+     unmodified course rather than whether anything is deleted.
+  2. Is there personal data behind it? Find the table or collection the setting governs and read its
+     columns. Where it holds no data relating to identifiable people, the candidate is closed here.
+  3. Does anything delete on this setting at all? Search the project for the setting's name as a
+     string. The shape worth reporting is a scheduled routine that reads the setting and returns
+     without deleting when it is zero, so a job that runs on time removes nothing.
+  Where the gap is real, the engineering change has three parts and partial work leaves it open:
+  - A bounded shipped default. Changing the default value alone is the smallest change and it only
+    affects new installations; say so when you make it, because existing deployments keep the value
+    they already have and a release note is part of the fix rather than an optional extra.
+  - A deletion path that runs. If the routine keyed to this setting returns early at the default,
+    confirm it is registered, scheduled and reached once the value is bounded, and that it deletes
+    from every table that carries the same records rather than only the primary one.
+  - A retention limit the product can stand behind, and a statement of it. Recital 39 offers erasure
+    or a periodic review as the two things a time limit may be established for, so a review cycle is
+    an answer where a fixed number is not - but only a review with a stated interval that actually
+    results in erasure, because both limbs are ways of enforcing a limit rather than alternatives to
+    having one. Whichever route is taken, what the product does belongs in its own privacy
+    documentation - the number where there is a number, the interval and the erasure step where
+    there is a review - so that the reconciliation pillar can compare the statement against what the
+    code does.
+data_categories:
+  - user.behavior
+  - user.device.ip_address
+  - user.unique_id
+  - user.account
+fingerprint_spec: default

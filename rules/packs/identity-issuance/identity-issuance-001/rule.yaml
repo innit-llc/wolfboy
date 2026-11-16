@@ -1,0 +1,266 @@
+id: identity-issuance-001
+pack: identity-issuance
+short_name: User details released to another service at sign-in
+problem_line:
+  text: User attributes released to other services at sign-in
+  template: "{data} released to other services at sign-in"
+fix_line: Release only the attributes each relying party needs, and record the relying parties as a
+  recipient category.
+title: User attributes assembled into a token or assertion and released to a relying party
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - Art. 30(1) requires each controller to
+      maintain a record of processing activities and states that 'That record shall contain all of
+      the following information', including 'the categories of recipients to whom the personal data
+      have been or will be disclosed including recipients in third countries or international
+      organisations'. An identity provider's relying parties are recipients in exactly this sense:
+      each holds the released attributes afterwards, and the set of them is a registration list this
+      detector cannot read"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(c) - personal data shall be 'adequate, relevant and
+      limited to what is necessary in relation to the purposes for which they are processed'. The
+      question this rule raises for that principle is which attributes a given relying party
+      actually needs, as against which the claim assembly in fact releases to it
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 25(2) - 'The controller shall implement appropriate
+      technical and organisational measures for ensuring that, by default, only personal data which
+      are necessary for each specific purpose of the processing are processed. That obligation
+      applies to the amount of personal data collected, the extent of their processing, the period
+      of their storage and their accessibility.' What a claim set contains BY DEFAULT, before any
+      operator narrows a client's scopes, is the fact this provision is about; a matched line shows
+      the assembly and not the shipped default
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(9) - 'recipient' means 'a natural or legal person,
+      public authority, agency or another body, to which the personal data are disclosed, whether a
+      third party or not'. Reference only: a definition establishes no duty of its own, and it is
+      cited to mark that a relying party inside the same organisation is still a recipient"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 6(1) - 'Processing shall be lawful only if and to the
+      extent that at least one of the following applies', the first ground being that 'the data
+      subject has given consent to the processing of his or her personal data for one or more
+      specific purposes' and the second that 'processing is necessary for the performance of a
+      contract to which the data subject is party or in order to take steps at the request of the
+      data subject prior to entering into a contract'. Reference only: which ground carries a given
+      release is an operator fact, and this detector reads a claim assembly rather than a consent
+      record"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 44 - 'Any transfer of personal data which are
+      undergoing processing or are intended for processing after transfer to a third country or to
+      an international organisation shall take place only if, subject to the other provisions of
+      this Regulation, the conditions laid down in this Chapter are complied with by the controller
+      and processor, including for onward transfers of personal data from the third country or an
+      international organisation to another third country or to another international organisation.'
+      Reference only: where a relying party is established is a registration fact, and this detector
+      establishes neither that a release happened nor where it went"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose "The
+      categories of third parties to whom the business discloses personal information." Sec.
+      1798.130(a)(5)(B) requires the same categories in the privacy policy, and the relying parties
+      of an identity provider are such a category
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-09-01
+    jurisdiction: US
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.3
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  match:
+    - (?:^|[^A-Za-z0-9_])(?:ID|Id|id_)?(?:Access|access_)?[Tt]oken_?[Cc]laims\b
+    - (?:^|[^A-Za-z0-9_])(?:set|Set|hydrate|Hydrate|build|Build|assemble|Assemble|make|Make)(?:User|user)?(?:[Ii]nfo|[Cc]laims)(?:With|From|To)?\w*\s*\(
+    - (?:^|[^A-Za-z0-9_])(?:userinfo_endpoint|userinfo_signing_alg|userinfo_signed_response_alg)\b|/userinfo\b
+    - (?:^|[^A-Za-z0-9_])(?:Map\.put|Map\.merge|put_in)\s*\(\s*claims\b|\bclaims\s*\[[^\]\n]{0,40}\]\s*(?:=>|[:=])|\bclaims\s*\.\s*(?:put|set|add|update|merge)\s*\(
+    - \|>\s*Map\.(?:put|merge|put_new)\s*\(\s*:(?:sub|email|email_verified|preferred_username|given_name|family_name|middle_name|nickname|name|phone_number|phone_number_verified|address|locale|zoneinfo|birthdate|gender|picture|profile|groups|roles)\b
+    - \bclaims\s*(?:=|:=)\s*(?:%\{|\{|dict\()[^\n]{0,40}\bsub\b
+    - (?:^|[^A-Za-z0-9_])(?:sector_identifier_uri|sectorIdentifierUri|SectorIdentifierURI|sector_identifier|subject_types_supported|GenerateOpaqueUserID|UserOpaqueIdentifier|user_opaque_identifier)\b|\bpairwise\b[^\n]{0,40}(?:subject|sub_type|subject_type|identifier)|(?:subject|sub_type|subject_type|identifier)[^\n]{0,40}\bpairwise\b
+    - (?:^|[^A-Za-z0-9_])(?:AttributeStatement|AuthnStatement|IDPSSODescriptor|IdpAuthnRequest|NameIDFormat|NameIdFormat|nameIDFormat|name_id_format|NameIDPolicy|PersistentNameIDFormat|TransientNameIDFormat|EmailAddressNameIDFormat)\b
+    - \b(?:userinfo|userInfo|UserInfo|assertion|Assertion|claims|Claims)\s*\.\s*(?:[Ss]et|[Aa]dd|[Pp]ut|[Ww]ith)(?:Custom)?(?:Attribute|Email|Username|UserID|UserId|Surname|GivenName|FamilyName|FullName|DisplayName|Phone|PhoneNumber|Address|Locale|Claim)s?\s*\(
+    - (?:^|[^A-Za-z0-9_])(?:use_doorkeeper|Doorkeeper\.configure|Doorkeeper::[A-Za-z]+|doorkeeper_application|doorkeeper_token|doorkeeper_render_error)\b
+    - (?:^|[^A-Za-z0-9_])(?:authorization_endpoint|token_endpoint|jwks_uri|claims_supported|scopes_supported|response_types_supported|id_token_signing_alg_values_supported)\b
+    - "[\"'`](?:oidc-provider|@better-auth/oauth-provider(?:/[a-z-]+)?)[\"'`]|(?:^|[^A-Za-z0-9_])oa\
+      uthProvider[A-Za-z0-9_]{0,32}[
+      \\t]*\\(|(?:^|[^A-Za-z0-9_])OAuth2AuthorizationServer[A-Za-z0-9_]{0,24}"
+    - /\.well-known/(?:oauth-authorization-server|openid-configuration)|(?:^|[^A-Za-z0-9_])(?:registration_endpoint|client_id_issued_at|software_statement|authorization_servers)(?![A-Za-z0-9_])|/oauth2?/register(?![A-Za-z0-9_])|(?:^|[^A-Za-z0-9_])allow(?:Unauthenticated)?(?:Dynamic)?ClientRegistration(?![A-Za-z0-9_])|[Dd]ynamic[
+      _-][Cc]lient[ _-][Rr]egistration
+    - "[\"'`]/?(?:\\.well-known/)?jwks(?:\\.json)?[\"'`]|(?:^|[^A-Za-z0-9_])(?:jwks|Jwks|JWKS)[A-Za\
+      -z0-9_]{0,16}[ \\t]*(?::[^:=]|=[^=])"
+context_questions:
+  - "WHICH SIDE OF THE PROTOCOL IS THIS FILE ON? An identity provider ASSEMBLES a claim set and
+    signs it; a relying party RECEIVES one and verifies it. Only the issuing side is this rule's
+    construct - consuming somebody else's assertion is a separate, already-recorded class, and
+    reporting it here would be reporting the wrong thing about the product. Read the enclosing
+    function: a call that verifies a signature, parses an incoming response or reads a token into a
+    local struct is the consuming side and the finding closes there. A call that populates
+    attributes into an object which is then signed and returned is the issuing side."
+  - WHICH ATTRIBUTES ACTUALLY LEAVE, AND ON WHAT CONDITION? Open the assembly function and list the
+    fields it writes, rather than inferring them from the symbol name. In one anchor tree the claim
+    set carries subject, preferred username, e-mail with a verification flag, family and given name,
+    display name, phone number, postal address, locale and preferred language, and each is gated on
+    a requested scope; in another the same shape carries only a subject and a group list. Say which
+    fields this one writes and which scope, role assertion or configuration flag switches each on,
+    because that is the difference between a minimal release and a full profile.
+  - "WHO ARE THE RELYING PARTIES, AND CAN THEY BE ENUMERATED? This is the fact the detector cannot
+    reach: the client registrations live in the deployment's own database or configuration, not in
+    the source tree, so the recipient set is fixed after the code ships. ASK THE OPERATOR for the
+    registered client list, whether registration is open or administrator-controlled, and whether
+    any client is operated by a different organisation. Write the record entry by the category the
+    registration rule creates, and say plainly where the membership is kept."
+  - WHAT IS THE VALIDITY WINDOW OF WHAT WAS ISSUED, AND WHERE IS IT CONFIGURED? An issued assertion
+    is a copy of the person's attributes that lives in somebody else's system until it expires, so
+    its lifetime is a retention fact about a disclosure. Read the shipped defaults rather than
+    assuming them - one anchor tree ships twelve hours for access and identity tokens, thirty days
+    of refresh idle time and ninety days of absolute refresh validity - and note that this detector
+    matches no lifetime constant, so the numbers must be read from the configuration by hand.
+  - IS THE SUBJECT IDENTIFIER THE SAME FOR EVERY RELYING PARTY? A single account identifier released
+    to every client lets two unrelated relying parties discover that they are dealing with the same
+    person by comparing subjects. A per-sector or pairwise identifier does not. Read which of the
+    two this installation issues, and whether an operator can change it per client; where the code
+    shows a sector-identifier or opaque-identifier mechanism, check whether it is on by default or
+    opt-in.
+  - "IS THIS A DISCLOSURE OR A CAPABILITY? Several shapes reach this rule that are not releases of
+    anything: a route table naming an authorization endpoint, an initialiser configuring an OAuth
+    provider library, a discovery document's key list, an import of a SAML type, a well-known
+    metadata route, a dynamic-client-registration flag, and the table this installation keeps its
+    own signing key in. Those are evidence that the product speaks the issuing side of the protocol
+    - worth recording as a capability of the installation - and they are not evidence that any
+    person's attributes went anywhere. Say which of the two the matched line is before writing a
+    record row."
+  - WHERE IS THE RELYING PARTY ESTABLISHED? Unlike a named vendor, this recipient is chosen by
+    whoever administers the installation, so no fixed answer can be written into the code. Where a
+    client is operated outside the EEA, the transfer question arises for the attributes released to
+    it and not for the product as a whole; the honest record says the recipient set is
+    registration-determined and revisits the question against the client list the operator supplies.
+evidence_template: "{file}:{line} matched a construct through which this product acts as an IDENTITY
+  PROVIDER: attributes belonging to a person are assembled into a token or assertion, or a surface
+  that issues one is declared. THAT IS THE WHOLE OF WHAT IS ESTABLISHED. Thirteen shapes reach this
+  rule and they are not equally strong. (i) A named claim-set type being built, read or verified.
+  (ii) A claim-assembly function, which is the line that decides which attributes leave. (iii) A
+  userinfo endpoint declared or routed. (iv) A claims map being populated field by field - the
+  dynamic-language form of (i), and also the form most likely to be an ordinary local map that
+  happens to be called claims. (v) A claim set opened with a subject in it. (vi) The pairwise or
+  sector-identifier subject control, which decides whether two relying parties can correlate the
+  same person. (vii) SAML issuance symbols. (viii) Attribute setters writing a person's fields into
+  the object that becomes the assertion - the most direct shape here. (ix) An OAuth-provider library
+  being configured, (x) an authorization-server discovery key, (xi) the same declaration in the
+  spheres (ix) and (x) miss - an authorization-server library or plugin outside the ruby sphere, the
+  issuer's own `/.well-known/oauth-authorization-server` or `/.well-known/openid-configuration`
+  route, a dynamic-client-registration flag or endpoint, and the `jwks` table in which this
+  installation keeps the PRIVATE half of its signing key. TWO KNOWN REACHES INSIDE SHAPE (xi), NAMED
+  SO THAT NOBODY HAS TO INFER THEM: the registration alternative matches `/oauth/register` as well
+  as `/oauth2/register`, and in real trees that spelling is often an ordinary USER account sign-up
+  completed after a social login rather than a client registering itself - read the handler before
+  recording anything; and the key-set alternative matches a RELYING PARTY naming somebody else's key
+  set (`jwksUri` bound to a third-party issuer's URL, `\".well-known/jwks.json\"`) as readily as an
+  issuer naming its own. Both are the consuming side wearing the issuing side's spelling, both are
+  reported as cost rather than narrowed away, and context question 1 is where each is settled: THE
+  LAST THREE ARE CAPABILITY EVIDENCE, NOT DISCLOSURE EVIDENCE, and a route table, a registration
+  flag, a key table or an import means only that this product speaks - or runs - the issuing side of
+  the protocol. WHAT THIS DETECTOR DOES NOT ESTABLISH: which side of the protocol the file is on
+  (context question 1); which attributes the assembly actually writes (question 2); who the relying
+  parties are, which is a registration fact held in the deployment and not in the tree (question 3);
+  how long an issued assertion stays valid, since no clause here matches a lifetime constant
+  (question 4); or, for shapes (ix), (x) and (xi), that anything was released at all (question 6).
+  ONE THING SHAPE (xi) DOES ADD TO QUESTION 3, and it is a fact rather than a conclusion: where
+  client registration is DYNAMIC, and more so where it is UNAUTHENTICATED, the recipient set is
+  decided at runtime by whoever calls the registration endpoint, so the honest record entry names
+  the registration rule rather than a list."
+remediation_template: >
+  Confirm the file is on the ISSUING side before treating this as the construct at all (context
+
+  question 1). Verifying an incoming assertion is the consuming side, which is a different recorded
+
+  class, and the finding closes there.
+
+  Open the assembly function and write down the attribute list it actually releases, together with
+
+  the scope, role-assertion or configuration flag that gates each field. That list, not the symbol
+
+  name, is what goes into the record of processing activities.
+
+  Then set each field against what the relying parties need it for, and narrow what they do not.
+
+  Art. 5(1)(c) limits the data to what is necessary for the purpose, and Art. 25(2) asks that, by
+
+  default, only the data necessary for each specific purpose are processed - here, what the assembly
+
+  releases before any operator narrows a client's scopes. So gate each field on a scope or a
+
+  per-client setting that the relying party has to ask for, rather than releasing it to every
+
+  client, and make the shipped default the smallest set that sign-in itself needs. Where the
+
+  operator narrows scopes in configuration that is not in this repository, record where.
+
+  Ask the operator for the registered relying-party list and record the recipient category by the
+
+  registration rule that produces it - who may register a client, and whether any registered client
+
+  is run by a different organisation. State plainly where that list lives, since it is not in the
+
+  source tree.
+
+  Read the issued assertion's validity window out of the shipped configuration and record it as a
+
+  retention period for the copy held by each relying party; this detector matches no lifetime
+
+  constant, so the values have to be read by hand.
+
+  Check whether the subject identifier released to a relying party is the account identifier or a
+
+  per-sector one. Where it is the account identifier, note that any two relying parties can
+  correlate
+
+  the same person by comparing subjects, and consider whether the sector or pairwise mechanism the
+
+  product already has should be the default.
+
+  Where the matched line is a route table, an initialiser, an import, a discovery key, a well-known
+
+  metadata route, a client-registration flag or the table this installation keeps its own signing
+
+  key in, record the capability and stop: nothing on that line shows an attribute leaving.
+
+  Where client registration is DYNAMIC, and more so where it is UNAUTHENTICATED, say so in the
+
+  recipient entry rather than leaving the list blank: the recipient set is then decided at runtime
+
+  by whoever calls the registration endpoint, and the honest record names the registration rule and
+
+  where the resulting client list is kept.
+data_categories:
+  - user.account
+  - user.unique_id
+  - user.name
+  - user.contact.email
+  - user.contact.phone_number
+  - user.contact.address
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 1
+      class: per-location
+    - question: 2
+      class: existence
+    - question: 6
+      class: per-location

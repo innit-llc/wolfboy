@@ -1,0 +1,433 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/adjudicator-reply.schema.json",
+  "title": "Adjudicator reply, verdict mode",
+  "description": "What a legal-adjudicator seat in verdict mode returns, as it returns it: a JSON array holding one Verdict per candidate it was handed (product/plugin/agents/legal-adjudicator.md, section 'Output - the JSON array, and nothing else'). `verdict-capture` checks a reply against this schema before it writes the record to .legal/verdicts/ (the reply's bytes where the candidates carry no `kinds`). Every field refers to the definition verdict.schema.json already gives it, so the two cannot drift apart. The fields that differ are `decisions` and `searched`, which replace `reading`: the payload lists the skeleton of what the seat reads (every unit, sub-shape and member with an id), the seat returns one decision per unit keyed by those ids, and `verdict-capture` writes the record's `reading` block from them (`read`, `searched`, `declined` as a seat wrote them before; the CLI adds `census`, `covered` and `not_read` at step 5a). A reply carrying `reading` is refused naming this form. Fields the CLI or the orchestrator adds later (`quote_checks`, `rests_on`, `carried_forward`, `refutation`, ...) are not part of a reply, and neither are the row fields the CLI writes when it assembles `reading` (`kind_as_written`, `also_read_by_reader`), the replay's `hit_hash`, or the disposition `not_read`, which only the CLI writes, for a kind nobody opened. So the seat's rows are built in `$defs` below from verdict.schema.json's row properties, without those.",
+  "$comment": "Relay unit `capture`, 2026-09-24. The required list is verdict.schema.json's own. A reader seat's reply (reading mode) is reader-reply.schema.json, not this. Tightened the same day by the unit's third author, on the verification's findings N4-N6: every `searched[]` row requires `tool` (the Output section: 'Every `searched[]` row says which tool ran it'); an `evidence[]` entry whose `role` is `item` requires `name` ('never an entry without a name'); `evidence[]` holds at most three `premise` entries ('two or three of them and never a fourth'). The same paragraph's 'at most five for one element name' groups entries by a value, which a schema cannot say, so `verdict-capture` checks that one itself.",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "finding_id",
+      "verdict",
+      "confidence",
+      "evidence",
+      "reasoning"
+    ],
+    "properties": {
+      "finding_id": {
+        "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/finding_id"
+      },
+      "verdict": {
+        "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/verdict"
+      },
+      "confidence": {
+        "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/confidence"
+      },
+      "evidence": {
+        "type": "array",
+        "minItems": 1,
+        "description": "verdict.schema.json's `evidence`, with one more form of entry: a `premise`, or an `item` of a rule whose items are the matched word, may name by id a location the seat's decisions opened (`evidenceById`), and `verdict-capture` writes its `file`, `lines` and `quote` from the seat's own decision at that id and an item's `name` from the census token. Every other entry is verdict.schema.json's `codeEvidence`, as the record keeps it. Unit U1: an `item` entry may also be its `name` alone (`itemByName`), the form the answer seat's A3 has always offered and this schema refused (in run fm1 every name-only item an answer seat gave was refused for its missing `file`, `lines` and `quote`); the capture writes its location from a kept place that carries that item, and refuses it naming the item where none does.",
+        "items": {
+          "if": {
+            "anyOf": [
+              {
+                "required": [
+                  "unit"
+                ]
+              },
+              {
+                "required": [
+                  "item"
+                ]
+              }
+            ]
+          },
+          "then": {
+            "$ref": "#/$defs/evidenceById"
+          },
+          "else": {
+            "if": {
+              "required": [
+                "role"
+              ],
+              "properties": {
+                "role": {
+                  "const": "item"
+                }
+              },
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "file"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "lines"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "quote"
+                    ]
+                  }
+                ]
+              }
+            },
+            "then": {
+              "$ref": "#/$defs/itemByName"
+            },
+            "else": {
+              "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/codeEvidence",
+              "if": {
+                "required": [
+                  "role"
+                ],
+                "properties": {
+                  "role": {
+                    "const": "item"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "contains": {
+          "required": [
+            "role"
+          ],
+          "properties": {
+            "role": {
+              "const": "premise"
+            }
+          }
+        },
+        "minContains": 0,
+        "maxContains": 3
+      },
+      "reasoning": {
+        "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/reasoning"
+      },
+      "standing": {
+        "description": "H5a stage 1 (h5a-design-2026-10-28.md sections 2.1-2.5; product/plugin/agents/legal-adjudicator.md, section `standing`): on a `violation_candidate` or `needs_human`, the finding's short structured block. Any value is taken here: the capture checks each part (S1-S6, standing.ts `checkStanding`) and sets aside a part that fails, recording it, and never refuses the answer for it; a value that is not an object is dropped whole and recorded. The record holds what stood (`standing`) and what was set aside (`standing_set_aside`)."
+      },
+      "fix_available": {
+        "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/fix_available"
+      },
+      "decisions": {
+        "description": "One decision per unit the payload's `kinds` lists, keyed by the unit's id (`kind`), or by a sub-shape's id (`12/s2`) where the seat decided that sub-shape on its own; units the seat chose not to open are declined together under one note. Present only where the candidate carried `kinds`. The capture turns them into the record's `reading.read` and `reading.declined`.",
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/decision"
+        }
+      },
+      "searched": {
+        "description": "Every project-wide search the seat ran, as the record's `reading.searched[]` rows. Present only where the candidate carried `kinds`.",
+        "type": "array",
+        "items": {
+          "$ref": "#/$defs/seatSearchRow",
+          "required": [
+            "tool"
+          ]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "seatDisposition": {
+      "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/seatDisposition",
+      "description": "The four words a seat disposes of a kind with (legal-adjudicator.md, section 'When your candidate carries `kinds`'). Defined in verdict.schema.json since 2026-09-29, where the refuter's reading, which the log keeps, refers to it too; this name stays so that every reference to it here holds."
+    },
+    "seatSearchRow": {
+      "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/seatSearchRow",
+      "description": "A `searched[]` row as a seat writes it: verdict.schema.json's readingSearchRow without `hit_hash`, which the replay writes. Defined in verdict.schema.json since 2026-09-29, with `seatDisposition`; the adjudicator's `searched[]` above requires `tool`."
+    },
+    "decisionFields": {
+      "description": "The fields of a decision, one definition for the verdict seat's, the reader's and the refuter's.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "at": {
+          "type": "string",
+          "minLength": 1
+        },
+        "quote": {
+          "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/readingReadRow/properties/quote"
+        },
+        "disposition": {
+          "$ref": "#/$defs/seatDisposition"
+        },
+        "ground": {
+          "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/readingReadRow/properties/ground"
+        },
+        "rest": {
+          "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/readingReadRow/properties/cover_ground"
+        },
+        "also": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/alsoEntry"
+          }
+        },
+        "decline": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "members",
+            "note"
+          ],
+          "description": "Members of the decision's unit the seat did not read: `members`, \"rest\" (every member not opened in `also`) or member ids, and `note`, the seat's sentence. They are recorded as not read (`not_read: seat_declined`, with where each is), never as read or settled, and they bar `not_applicable` as a declined unit does - as do a place the seat names as opened and did not open and a file it could not read. A reader declines nothing.",
+          "properties": {
+            "members": {
+              "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/readingDeclinedRow/properties/members"
+            },
+            "note": {
+              "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/readingDeclinedRow/properties/note"
+            }
+          }
+        },
+        "units": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "declined": {
+          "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/readingDeclinedRow/properties/note"
+        }
+      }
+    },
+    "decision": {
+      "description": "One decision. Opening: `unit` (a unit id, or a sub-shape id), `quote` (the line read there, verbatim), `disposition`, `ground`, and, where the unit has members the seat neither opened nor declined, `rest` (the shape ground that settles them); `at` (\"file:line\") only where the quoted line is not the one the id names; `also`, one entry per other member the seat opened, each with its own quote; `decline`, the members it did not read, with its sentence. Declining: `units` and `declined` (one note). A decision never carries what the skeleton already holds (`kind`, `file`, `lines`, `sub_shape`, `cover_ground`, `members`, `by`, `key`): the capture refuses those by name, which is why they are not listed here as fields. Build unit F3 (full-read design 1.5): a seat handed the places of a place-plan candidate writes one row per place instead: `place` (its payload id), `decision`, `data`, `line`, `quote` and `why` on every row, `item` where the rule's items are found by reading, `beyond` only where a decision or its data rests on a line outside the place's window; the capture checks it (C1-C9, place-reply.ts).",
+      "if": {
+        "required": [
+          "place"
+        ]
+      },
+      "then": {
+        "$ref": "#/$defs/placeRow"
+      },
+      "else": {
+        "$ref": "#/$defs/decisionFields",
+        "if": {
+          "required": [
+            "units"
+          ]
+        },
+        "then": {
+          "required": [
+            "units",
+            "declined"
+          ]
+        },
+        "else": {
+          "required": [
+            "unit",
+            "quote",
+            "disposition"
+          ]
+        }
+      }
+    },
+    "refuterDecision": {
+      "description": "A refuter's decision: the fields of `decision`, with `disposition` optional where the refuter opens a unit, because its reading is a record and not a duty (its read rows carried no disposition as a duty before). It owes no `rest` either; the capture checks that, not the schema.",
+      "$ref": "#/$defs/decisionFields",
+      "if": {
+        "required": [
+          "units"
+        ]
+      },
+      "then": {
+        "required": [
+          "units",
+          "declined"
+        ]
+      },
+      "else": {
+        "required": [
+          "unit",
+          "quote"
+        ]
+      }
+    },
+    "alsoEntry": {
+      "description": "One more member of the decision's unit that the seat opened: `member` (its id, `12/m3`) or, past the members the payload lists, `at` (\"file:line\" of that member), and `quote`; `disposition` and `ground` only where they differ from the decision's.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "quote"
+      ],
+      "properties": {
+        "member": {
+          "type": "string",
+          "minLength": 1
+        },
+        "at": {
+          "type": "string",
+          "minLength": 1
+        },
+        "quote": {
+          "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/readingReadRow/properties/quote"
+        },
+        "disposition": {
+          "$ref": "#/$defs/seatDisposition"
+        },
+        "ground": {
+          "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/readingReadRow/properties/ground"
+        }
+      }
+    },
+    "evidenceById": {
+      "description": "An evidence entry that restates the seat's own trail, named by id: `role` `premise` with `unit`, the id of a unit, sub-shape or `also` member the seat's decisions opened; or `role` `item` with `item`, a census item id (`I4`), and `unit`, an opened location of a unit that carries it; or `role` `item` with `unit` a place id (`P17`) alone, the item at a kept place, whose name, line and quotation the capture writes from that place's row (fm1: the form the seat text gave was refused here for its missing `item`, and the program could have written every field of it). The capture refuses by name an entry that carries `file`, `lines` or `quote` beside the id, which is why they are allowed here: the schema names none of them twice.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "unit"
+      ],
+      "properties": {
+        "role": {
+          "enum": [
+            "premise",
+            "item"
+          ]
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "item": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/codeEvidence/properties/name"
+        },
+        "search": {
+          "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/codeEvidence/properties/search"
+        },
+        "file": {
+          "type": "string"
+        },
+        "lines": {
+          "type": "string"
+        },
+        "quote": {
+          "type": "string"
+        }
+      },
+      "if": {
+        "properties": {
+          "role": {
+            "const": "item"
+          },
+          "unit": {
+            "not": {
+              "pattern": "^P(?:0|[1-9][0-9]*)$"
+            }
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "item"
+        ]
+      }
+    },
+    "itemByName": {
+      "description": "Unit U1: an `item` entry named by its `name` alone, with no `file`, `lines` or `quote` and no id. The capture writes its location (and, where the program holds the items, the program's name of it) from the first kept place of the seat's own rows, the rows kept for it, or the answer seat's per-place table that carries that item; an item no kept place carries is refused by name. On a candidate read by kinds no place carries it, and the record's check refuses it for its missing quotation.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "name"
+      ],
+      "properties": {
+        "role": {
+          "const": "item"
+        },
+        "name": {
+          "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/codeEvidence/properties/name"
+        },
+        "search": {
+          "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/codeEvidence/properties/search"
+        }
+      }
+    },
+    "placeRow": {
+      "description": "Build unit F3 (full-read design 1.5): one row for one place of a place-plan candidate - `place` (its payload id), `decision`, `data` ([] on not_the_construct), `line` and a verbatim `quote` on every row, `why`, `item` where the rule's items are found by reading, and `beyond` only where a decision or its data rests on a line outside the place's window. No group row, nothing declined, nothing left not checked; the capture checks C1-C10 (place-reply.ts). C10 holds only a row that closes its place (`not_the_construct`): a `why` naming a line outside the window rests on lines the seat Read, one of them carried as `beyond`; a row that keeps the place or leaves it `undetermined` is not held to it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "place",
+        "decision",
+        "data",
+        "line",
+        "quote",
+        "why"
+      ],
+      "properties": {
+        "place": {
+          "type": "string",
+          "pattern": "^P(?:0|[1-9][0-9]*)$"
+        },
+        "decision": {
+          "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/seatDisposition"
+        },
+        "gate": {
+          "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/readingReadRow/properties/gate"
+        },
+        "gate_words": {
+          "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/readingReadRow/properties/gate_words"
+        },
+        "data": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "email",
+              "name",
+              "user_id",
+              "ip_or_device",
+              "user_content",
+              "other_personal"
+            ]
+          }
+        },
+        "item": {
+          "type": "string",
+          "minLength": 1
+        },
+        "line": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "quote": {
+          "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/readingReadRow/properties/quote"
+        },
+        "why": {
+          "type": "string",
+          "minLength": 1
+        },
+        "beyond": {
+          "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/readingReadRow/properties/beyond"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,376 @@
+id: recipients-007
+pack: recipients
+short_name: Cloud region the data is stored in
+problem_line:
+  text: Cloud region setting for personal data in this code
+fix_line: Confirm the region each service touching personal data runs in, and record any
+  third-country transfer that follows.
+title: Cloud region configured in this tree - where the deployment is set to put data, for Art. 30(1)(e)
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 30(1)(e) - each controller's record of processing
+      activities shall contain "where applicable, transfers of personal data to a third country or
+      an international organisation, including the identification of that third country or
+      international organisation and, in the case of transfers referred to in the second
+      subparagraph of Article 49(1), the documentation of suitable safeguards". A cloud region
+      written into a configuration file is evidence about the first limb - which country - and about
+      nothing else in the sentence
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(2)(c) - each processor's record shall contain
+      \"where applicable, transfers of personal data to a third country or an international
+      organisation, including the identification of that third country or international organisation
+      and, in the case of transfers referred to in the second subparagraph of Article 49(1), the
+      documentation of suitable safeguards\". Reference only: it is cited so that the record
+      instruction can fork on which of the two records the scanned product keeps, rather than naming
+      a field that may not exist in it"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: 'GDPR (Regulation (EU) 2016/679), Art. 30(5) - "The obligations referred to in paragraphs 1
+      and 2 shall not apply to an enterprise or an organisation employing fewer than 250 persons
+      unless the processing it carries out is likely to result in a risk to the rights and freedoms
+      of data subjects, the processing is not occasional, or the processing includes special
+      categories of data as referred to in Article 9(1) or personal data relating to criminal
+      convictions and offences referred to in Article 10." Reference only: this provision removes a
+      duty rather than creating one, and every fact it turns on is an operator fact'
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: 'California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose "The
+      categories of third parties to whom the business discloses personal information", and Sec.
+      1798.130(a)(5)(B) requires the same categories in the privacy policy. Reference only, and
+      cited to mark a limb this rule does NOT claim: the Californian duty is about WHICH PARTIES
+      receive personal information, and a configured cloud region establishes a PLACE rather than a
+      party. `recipients-001` to `recipients-006` carry the Californian limb because they name
+      parties; this rule does not name one'
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-08-25
+    jurisdiction: US
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.12
+detector:
+  engine: builtin-regex
+  vocabulary:
+    r2_location_hint:
+      - wnam
+      - enam
+      - weur
+      - eeur
+      - WNAM
+      - ENAM
+      - WEUR
+      - EEUR
+    fixed_region_code:
+      - nam4
+      - eur4
+      - eur5
+      - eur6
+      - eur7
+      - eur8
+      - asia1
+      - nam-eur-asia1
+      - NAM4
+      - EUR4
+      - EUR5
+      - EUR6
+      - EUR7
+      - EUR8
+      - ASIA1
+      - NAM-EUR-ASIA1
+    vendor_short_region:
+      - nyc1
+      - nyc2
+      - nyc3
+      - ams2
+      - ams3
+      - sfo1
+      - sfo2
+      - sfo3
+      - sgp1
+      - lon1
+      - fra1
+      - tor1
+      - blr1
+      - syd1
+      - atl1
+      - ric1
+      - mkc1
+      - mem1
+      - arn1
+      - bom1
+      - cdg1
+      - cle1
+      - cpt1
+      - dub1
+      - gru1
+      - hkg1
+      - hnd1
+      - iad1
+      - icn1
+      - kix1
+      - lhr1
+      - pdx1
+      - sin1
+      - ams
+      - arn
+      - atl
+      - bog
+      - bom
+      - bos
+      - cdg
+      - den
+      - dfw
+      - eze
+      - ewr
+      - fra
+      - gdl
+      - gig
+      - gru
+      - hkg
+      - iad
+      - jnb
+      - lax
+      - lhr
+      - mad
+      - mia
+      - nrt
+      - ord
+      - otp
+      - phx
+      - qro
+      - scl
+      - sea
+      - sin
+      - sjc
+      - syd
+      - waw
+      - yul
+      - yyz
+      - us-west-000
+      - us-west-001
+      - us-west-002
+      - us-west-004
+      - eu-central-003
+    cloud_construct:
+      - S3Client
+      - AmazonS3
+      - S3ClientBuilder
+      - S3Config
+      - boto3
+      - botocore
+      - "Aws::"
+      - AWS.config
+      - aws-sdk
+      - aws_config
+      - LoadDefaultConfig
+      - NewFromConfig
+      - MinioClient
+      - minio.New
+      - Minio.Client
+      - PutObjectCommand
+      - GetObjectCommand
+      - getSignedUrl
+      - createPresignedPost
+      - Storage::disk
+      - opendal
+      - google-cloud
+      - googleapis
+      - storage.Client
+      - BlobServiceClient
+      - BlobClient
+      - "@azure/storage-"
+      - "@azure/cosmos"
+      - "@azure/data-tables"
+      - "@azure/identity"
+      - "@azure/keyvault-secrets"
+      - "@azure/app-configuration"
+      - "@azure/search-documents"
+      - "@azure/service-bus"
+      - "@azure/event-hubs"
+      - "@azure/arm-"
+      - azure-storage
+      - DefaultAzureCredential
+      - provider "aws"
+      - provider "google"
+      - provider "azurerm"
+      - provider "digitalocean"
+      - provider "cloudflare"
+      - aws_s3_bucket
+      - google_storage_bucket
+      - azurerm_storage_account
+      - digitalocean_spaces_bucket
+      - AWS::S3
+      - AWS::Serverless
+      - AWS::Lambda
+      - CloudFormation
+      - Terraform
+      - terraform
+      - Pulumi
+      - pulumi
+      - serverless.yml
+      - serverless.yaml
+  match:
+    - (?:^|[^A-Za-z0-9])(?:[Uu]s|US|[Ee]u|EU|[Aa]p|AP|[Ss]a|SA|[Cc]a|CA|[Mm]e|ME|[Aa]f|AF|[Ii]l|IL|[Mm]x|MX|[Cc]n|CN)[-_](?:[Gg]ov[-_]|GOV[-_]|[Ii]so[a-z]?[-_]|ISO[A-Z]?[-_])?(?:[Nn]ortheast|NORTHEAST|[Nn]orthwest|NORTHWEST|[Ss]outheast|SOUTHEAST|[Ss]outhwest|SOUTHWEST|[Ee]ast|EAST|[Ww]est|WEST|[Nn]orth|NORTH|[Ss]outh|SOUTH|[Cc]entral|CENTRAL)[-_][0-9]{1,3}
+    - (?:^|[^A-Za-z0-9])(?:[Uu]s|US|[Ee]urope|EUROPE|[Aa]sia|ASIA|[Aa]ustralia|AUSTRALIA|[Ss]outhamerica|SOUTHAMERICA|[Nn]orthamerica|NORTHAMERICA|[Mm]e|ME|[Aa]frica|AFRICA)[-_](?:[Nn]ortheast|NORTHEAST|[Nn]orthwest|NORTHWEST|[Ss]outheast|SOUTHEAST|[Ss]outhwest|SOUTHWEST|[Ee]ast|EAST|[Ww]est|WEST|[Nn]orth|NORTH|[Ss]outh|SOUTH|[Cc]entral|CENTRAL)[0-9]{1,2}
+    - (?:^|[^A-Za-z0-9])(?:[Nn]ortheast|NORTHEAST|[Nn]orthwest|NORTHWEST|[Ss]outheast|SOUTHEAST|[Ss]outhwest|SOUTHWEST|[Ee]ast|EAST|[Ww]est|WEST|[Nn]orth|NORTH|[Ss]outh|SOUTH|[Cc]entral|CENTRAL)(?:[Nn]ortheast|NORTHEAST|[Nn]orthwest|NORTHWEST|[Ss]outheast|SOUTHEAST|[Ss]outhwest|SOUTHWEST|[Ee]ast|EAST|[Ww]est|WEST|[Nn]orth|NORTH|[Ss]outh|SOUTH|[Cc]entral|CENTRAL)?(?:[Uu]s|US|[Ee]urope|EUROPE|[Aa]sia|ASIA|[Ii]ndia|INDIA)[0-9]?
+    - (?:^|[^A-Za-z0-9])(?:[Aa]ustralia|AUSTRALIA|[Aa]ustria|AUSTRIA|[Bb]elgium|BELGIUM|[Bb]razil|BRAZIL|[Cc]anada|CANADA|[Cc]hile|CHILE|[Cc]hina|CHINA|[Dd]enmark|DENMARK|[Ff]inland|FINLAND|[Ff]rance|FRANCE|[Gg]ermany|GERMANY|[Gg]reece|GREECE|[Ii]ndia|INDIA|[Ii]ndonesia|INDONESIA|[Ii]reland|IRELAND|[Ii]srael|ISRAEL|[Ii]taly|ITALY|[Jj]apan|JAPAN|[Kk]orea|KOREA|[Kk]uwait|KUWAIT|[Mm]alaysia|MALAYSIA|[Mm]exico|MEXICO|[Nn]ewzealand|NEWZEALAND|[Nn]orway|NORWAY|[Pp]oland|POLAND|[Pp]ortugal|PORTUGAL|[Qq]atar|QATAR|[Ss]audiarabia|SAUDIARABIA|[Ss]outhafrica|SOUTHAFRICA|[Ss]pain|SPAIN|[Ss]weden|SWEDEN|[Ss]witzerland|SWITZERLAND|[Tt]aiwan|TAIWAN|[Uu]ae|UAE|[Uu]k|UK)(?:[Nn]ortheast|NORTHEAST|[Nn]orthwest|NORTHWEST|[Ss]outheast|SOUTHEAST|[Ss]outhwest|SOUTHWEST|[Ee]ast|EAST|[Ww]est|WEST|[Nn]orth|NORTH|[Ss]outh|SOUTH|[Cc]entral|CENTRAL)(?:[Nn]ortheast|NORTHEAST|[Nn]orthwest|NORTHWEST|[Ss]outheast|SOUTHEAST|[Ss]outhwest|SOUTHWEST|[Ee]ast|EAST|[Ww]est|WEST|[Nn]orth|NORTH|[Ss]outh|SOUTH|[Cc]entral|CENTRAL)?[0-9]?
+    - (?:^|[^A-Za-z0-9])(?&fixed_region_code)
+    - (?:(?:^|[^A-Za-z0-9])(?:[Aa]ws|AWS|[Gg]cp|GCP|[Gg]cloud|GCLOUD|[Gg]oogle|GOOGLE|[Aa]zure|AZURE|[Aa]rm|ARM|[Ss]3|S3|[Rr]2|R2|[Bb]ucket|BUCKET|[Ss]torage|STORAGE|[Ss]paces|SPACES|[Bb]ackblaze|BACKBLAZE|[Cc]loudflare|CLOUDFLARE|[Dd]igitalocean|DIGITALOCEAN|[Mm]inio|MINIO|[Ss]upabase|SUPABASE|[Ff]ly|FLY|[Vv]ercel|VERCEL|[Cc]loud|CLOUD|[Cc]ompute|COMPUTE|[Cc]luster|CLUSTER|[Nn]ode|NODE|[Dd]b|DB|[Dd]atabase|DATABASE|[Dd]eploy(?:ment)?|DEPLOY(?:MENT)?|[Rr]eplica|REPLICA|[Bb]ackup|BACKUP|[Pp]rimary|PRIMARY|[Dd]efault|DEFAULT|[Hh]ome|HOME|[Ee]dge|EDGE|[Ff]unction|FUNCTION|[Ll]ambda|LAMBDA|[Bb]edrock|BEDROCK|[Rr]ds|RDS|[Ss]es|SES|[Ss]ns|SNS|[Ss]qs|SQS)|(?<=[a-z0-9])(?:Aws|AWS|Gcp|GCP|Google|Azure|S3|R2|Bucket|Storage|Spaces|Supabase|Fly|Vercel|Cloud|Compute|Cluster|Node|Db|Database|Data|Deploy(?:ment)?|Replica|Backup|Primary|Default|Home|Edge|Function|Lambda|Bedrock))[^A-Za-z0-9\n]{0,3}(?:[Rr]egions?|REGIONS?|[Ll]ocations?|LOCATIONS?|[Zz]ones?|ZONES?|[Rr]esidency|RESIDENCY|[Jj]urisdictions?|JURISDICTIONS?)|(?:^|[^A-Za-z0-9])(?:[Dd]ata|DATA)[^A-Za-z0-9\n-]{0,3}(?:[Rr]egions?|REGIONS?|[Ll]ocations?|LOCATIONS?|[Zz]ones?|ZONES?)|(?:^|[^A-Za-z0-9])(?:[Dd]ata|DATA)[^A-Za-z0-9\n]{0,3}(?:[Rr]esidency|RESIDENCY|[Jj]urisdictions?|JURISDICTIONS?)
+    - (?:(?:^|[^A-Za-z0-9])(?:[Rr]egion|REGION|[Ll]ocation|LOCATION|[Aa]vailability[^A-Za-z0-9\n]{0,3}[Zz]one|AVAILABILITY[^A-Za-z0-9\n]{0,3}ZONE)|(?<=[a-z0-9])(?:Region|Location))[^A-Za-z0-9\n<>]{0,3}(?:[Nn]ames?|NAMES?|[Ii]ds?|IDs|IDS?(?![A-Za-z])|[Cc]odes?|CODES?|[Hh]ints?|HINTS?|[Ss]lugs?|SLUGS?|[Kk]eys?|KEYS?|[Ss]tatic|STATIC)
+    - (?:topology|failure-domain(?:\.beta)?)\.kubernetes\.io/(?:region|zone)
+    - (?:^|[^A-Za-z0-9])(?<![Aa]pp-)(?<!APP-)(?<![Dd]ata-)(?<!DATA-)(?:[Rr]egions?|REGIONS?|[Aa]vailability[^A-Za-z0-9\n]{0,3}[Zz]ones?|AVAILABILITY[^A-Za-z0-9\n]{0,3}ZONES?)["']?\s*(?:=>|:=|::=|[:=])
+    - (?:(?:^|[^A-Za-z0-9])|(?<=[a-z0-9]))(?:[Rr]egion|REGION|[Ll]ocation|LOCATION)\s*\(\s*["'`]
+    - (?:(?&cloud_construct)[^\n]{0,160}(?:[Rr]egion|REGION|[Ll]ocation|LOCATION|[Zz]one|ZONE)|(?:[Rr]egion|REGION|[Ll]ocation|LOCATION|[Zz]one|ZONE)[^\n]{0,160}(?&cloud_construct))
+    - (?:[Rr]egion|REGION|[Ll]ocation|LOCATION|[Jj]urisdiction|JURISDICTION|[Rr]esidency|RESIDENCY)["']?\s*(?:=>|[:=])\s*["'`]?(?:EU|US|ASIA|eu|us|asia|Eu|Us|Asia|fedramp|FEDRAMP|global|GLOBAL|auto|AUTO|apac|APAC|oc|OC|wnam|enam|weur|eeur|WNAM|ENAM|WEUR|EEUR)(?:["'`,;)\]}\s]|$)
+    - (?:\.[a-z]{2}-[a-z]+-[0-9]{1,3}\.(?:amazonaws\.com|api\.aws)|[a-z]{2}-[a-z]+-[0-9]{1,3}\.(?:pooler\.supabase\.com|rds\.amazonaws\.com)|(?:^|[^A-Za-z0-9])(?&vendor_short_region)\.(?:digitaloceanspaces\.com|r2\.cloudflarestorage\.com|backblazeb2\.com|linodeobjects\.com|wasabisys\.com)|(?:^|[^A-Za-z0-9])[a-z]{2,4}\.r2\.cloudflarestorage\.com|(?:^|[^A-Za-z0-9])[a-z]{2,12}-[a-z]{4,9}[0-9]{1,2}[-.](?:[a-z0-9-]{1,40}\.)?(?:cloudfunctions\.net|run\.app|firebasedatabase\.app)|\.privatelink\.|\.dualstack\.)
+    - (?:(?:[Rr]egions?|REGIONS?|[Ll]ocation|LOCATION)["']?\s*(?:=>|[:=])[^\n]{0,40}["'`](?&vendor_short_region)["'`]|["'`](?&vendor_short_region)["'`][^\n]{0,40}(?:[Rr]egions?|REGIONS?))
+    - (?:[Rr]egions?|REGIONS?|[Ll]ocation|LOCATION|[Hh]int|HINT)["']?\s*(?:=>|[:=])[^\n]{0,40}["'`](?&r2_location_hint)["'`]
+context_questions:
+  - "ASK THE PERSON RUNNING THE SCAN, do not conclude it from the code: \"Which cloud region does
+    this deployment actually store and process personal data in, for each service - object storage,
+    database, queue, functions, CDN - and where is that value set?\" The answer is very often NOT IN
+    THIS REPOSITORY: it is set in a cloud console, in a deployment platform's dashboard such as
+    Vercel, Fly or Render, in a Kubernetes secret, or in a secrets manager, and a tree that carries
+    no region at all can still be pinned to one. A value that IS in the tree may be a default that
+    production overrides. If the operator cannot say, return needs_human rather than reading the
+    answer out of the source."
+  - "WHAT SHAPE IS THE MATCHED LINE? Name it before treating it as a fact about this deployment. Six
+    shapes reach this rule and three of them are evidence about where the data goes: (a) a
+    configuration key with a value (`region = \"eu-west-1\"` in a Terraform provider block,
+    `AWS_REGION=eu-central-1` in an environment file, `location: europe-west4` in a values file);
+    (b) a configuration key whose value is supplied elsewhere (`region = var.aws_region`, `region:
+    ${AWS_REGION}`, `region: process.env.AWS_REGION`) - this establishes that the knob exists and
+    says NOTHING about which region, which is question 1's; (c) a hostname carrying a region
+    (`s3.eu-west-1.amazonaws.com`, `nyc3.digitaloceanspaces.com`), which is the strongest form
+    because a hostname is neither a menu nor a default. The other three are not evidence about this
+    deployment: (d) a MENU - a picker, a dropdown, a translation catalogue or an enumeration
+    offering the product's own users every region a vendor has, which says what the product permits
+    and not what it does; (e) a vendored SDK's own data files and generated models; (f) a test
+    double or a sample file. Quote the line and say which of the six it is."
+  - "IS THE MATCHED TEXT A REGION AT ALL? These identifiers are short and this detector is
+    deliberately wide, so a share of what it raises is a collision rather than a region. Six shapes
+    to dismiss by reading the line, and the first four were MEASURED on real repositories rather
+    than imagined: (a) an Azure region name inside an ordinary compound - `eastasia` matches inside
+    `majorFontEastAsian`, and `southeastus` inside `southeastusers`; (b) a Cloudflare location hint
+    inside a word - `enam` matches inside the POSIX constant `ENAMETOOLONG` and inside the Malay
+    word for six; (c) `region` naming a region of a PAGE rather than of a cloud - an HTML
+    `data-region` attribute is the largest single family of this kind; (d) `region` in its ordinary
+    sense for a sales territory, a continent in a dataset of countries, or an analytics dimension
+    for where a visitor was; (e) `zone` meaning a DNS zone or a time zone, and `location` meaning
+    where a person, a job or an event is - which is why a bare `location` key does not reach this
+    rule at all; (f) an airport-style three-letter code that is data rather than a data centre. Say
+    so plainly and dismiss it; a collision is a cost of casting wide, not a defect to argue around."
+  - WHICH SERVICE DOES THIS REGION GOVERN, AND DOES PERSONAL DATA REACH IT? A region pinned on an
+    object store that holds user uploads, on a database that holds accounts, on a queue that carries
+    event payloads or on a log sink is a fact about where personal data sits. The same region pinned
+    on a build cache, a container registry, a public asset bucket or a metrics endpoint may not be.
+    Read the surrounding block and name the service, then say what the service holds. Where one
+    repository configures SEVERAL services in SEVERAL regions, record each separately - this rule
+    reports one candidate per repository and the evidence array is where the separation lives.
+  - "WHICH RECORD DOES THIS FACT BELONG IN, AND IN WHICH FIELD? The two records are different and
+    have different fields. Where the scanned product is a CONTROLLER, the country goes in Art.
+    30(1)(e), which asks for transfers to a third country \"including the identification of that
+    third country or international organisation\". Where it is a PROCESSOR - the ordinary shape of a
+    multi-tenant product hosting its customers' data - its own record is the Art. 30(2) record and
+    its transfer field is Art. 30(2)(c), which asks for the same identification. Both fields open
+    with \"where applicable\": they are owed where a transfer to a third country occurs, and a
+    deployment entirely inside the EEA fills them with nothing. Settle which record the product
+    keeps before writing anything, and if that is not established, say so rather than choosing one."
+  - "DO NOT ANSWER THE SAFEGUARDS QUESTION FROM THIS FINDING. Both transfer fields have a second
+    limb - the documentation of suitable safeguards - and it is conditional: it is owed only \"in
+    the case of transfers referred to in the second subparagraph of Article 49(1)\", the
+    compelling-legitimate-interests derogation. Whether a transfer to the region named here meets
+    Chapter V at all, and on what basis, is a separate question that turns on the operator's
+    contracts and on an adequacy decision this detector has not read. This rule establishes WHERE
+    the deployment is configured to put data and nothing else. Record the place; leave the
+    assessment to whoever holds the contracts."
+  - "DOES THE ART. 30 RECORD DUTY APPLY TO THIS ORGANISATION AT ALL? Art. 30(5) switches it off for
+    an enterprise or organisation employing fewer than 250 persons UNLESS any one of three things is
+    true: the processing is likely to result in a risk to the rights and freedoms of data subjects,
+    the processing is not occasional, or it includes special categories of data under Art. 9(1) or
+    criminal-conviction data under Art. 10. Storing user accounts and uploads on a continuing basis
+    is not occasional, so the exemption often does not survive - but headcount and regularity are
+    facts the operator supplies, not facts in the tree. If the operator has not supplied them, say
+    so rather than assuming either way."
+  - DOES THIS REGION AGREE WITH WHAT THE OPERATOR HAS ALREADY WRITTEN DOWN? That is the gap this
+    rule exists to find, and it is answered by reading the operator's own declared documents against
+    the code - the record of processing activities, the privacy policy, the data-processing
+    agreement, the subprocessor list and any data-residency promise made to customers. A policy that
+    says data is held in the European Union beside a tree that pins `us-east-1` is a contradiction
+    worth reporting as one, and so is a record whose transfer column is empty beside a tree that
+    names a region outside the EEA. A record that already carries the country, with the operator's
+    answer to question 1, is not a finding at all.
+evidence_template: "{file}:{line} carries a string that names A CLOUD REGION OR A REGION-BEARING
+  ENDPOINT - the place a service is configured to run in. That is the whole of what the detector
+  established, and the sentence is written this way on purpose. WHERE THAT SERVICE HOLDS DATA, the
+  place named is where the data sits; where the region governs COMPUTE rather than storage - a
+  function's execution region, a build runner, a monitoring probe's location, an edge point of
+  presence - it says where the work happens and not by itself where anything is kept, and context
+  question 4 is the one that separates the two. THE REGION STRING IS A CODE FACT: it is written in
+  the repository, it is quotable, and the line is above. WHETHER IT IS THE REGION THIS DEPLOYMENT
+  USES IS A DEPLOYMENT FACT AND IS NOT ESTABLISHED. A repository can carry a default that production
+  overrides, a value in a sample environment file nobody deploys, a region in a
+  continuous-integration workflow that is not the production one, a menu of thirty regions the
+  product offers its own users, a vendored SDK's own data tables - or nothing at all, because the
+  operator set the region in a cloud console, a deployment platform's dashboard or a secrets
+  manager, in which case the true answer is not in this tree and cannot be put there. Context
+  question 1 asks the operator which region each service actually uses and where the value is set;
+  context question 2 names the six shapes a matched line takes and asks which one this is. What the
+  detector also did NOT establish: whether any personal data reaches the service the region governs,
+  who operates it, and whether a transfer to that place meets the conditions of Chapter V - that
+  last one is a separate question this rule does not ask and its answer is not to be inferred from
+  anything here. The fact this finding is for is the identification of the country in the record's
+  transfer field, Art. 30(1)(e) where the product keeps a controller's record and Art. 30(2)(c)
+  where it keeps a processor's. Finally, these identifiers are short and this detector is
+  deliberately wide: an Azure region name matches inside a longer word, `region` is also an ordinary
+  English noun, and a three-letter code is sometimes just data. Read the line before treating it as
+  configuration"
+remediation_template: |
+  Read the matched line first and decide what it is, because six shapes reach this rule and only
+  three of them say anything about where this deployment puts data: a configuration key with a
+  region value, a configuration key whose value comes from somewhere else, and a hostname carrying a
+  region. A picker or a translation catalogue offering every region a vendor has, a vendored SDK's
+  own data tables, and a test double are the other three, and none of them puts data anywhere.
+  If it is one of the three, the work is a question and then a record entry, in that order.
+  Ask whoever deployed this product which region each service that touches personal data actually
+  runs in - object storage, database, queue, functions, log sink, CDN - and where that value is set.
+  For a large share of deployments the answer is not in the repository at all: it is in a cloud
+  console, in a deployment platform's dashboard, or in a secrets manager, and no amount of reading
+  the tree will produce it. A default written in the source is what the code proposes, not what the
+  deployment does.
+  Then write the answer into the record's transfer field, and settle which record that is first.
+  Where the scanned product is a CONTROLLER the field is Art. 30(1)(e); where it is a PROCESSOR its
+  own record is the Art. 30(2) record and the field is Art. 30(2)(c). Both ask for the same thing
+  in the same words - the identification of the third country or international organisation - and
+  both are owed only "where applicable", so a deployment entirely inside the EEA fills them with
+  nothing and says so. The second limb of each, the documentation of suitable safeguards, is
+  conditional on the transfer resting on the second subparagraph of Article 49(1), so do not go
+  looking for that documentation on a transfer resting on an adequacy decision or on standard
+  contractual clauses.
+  Write the country rather than the region code. `eu-west-1` is a code an auditor should not have to
+  decode; "Ireland" is the fact the field asks for. Where one product runs services in several
+  regions, write each service and its country, because a single line saying "EU" is untrue of the
+  log sink that sits in Virginia.
+  Two engineering changes make this fact durable, and both are worth more than a one-off answer.
+  First, put the region in exactly one place per environment - a variable, a values file, a
+  parameter - and read it from there, so that the record has one thing to point at instead of nine.
+  Second, where a data-residency promise has been made to customers, make it checkable: a startup
+  assertion that the configured region is in the promised set turns a paragraph in a contract into
+  something that fails a deployment instead of failing an audit.
+  Do not delete the region setting in order to close the finding. Removing the knob does not move
+  the data; it moves it to whatever default the SDK picks, which for the AWS SDKs is a region the
+  code no longer names. A destination written down is a better answer than one nobody can see.
+data_categories: []
+fingerprint_spec: project
+reading_class:
+  class: enumeration
+  item: service and region pair
+  item_source: token

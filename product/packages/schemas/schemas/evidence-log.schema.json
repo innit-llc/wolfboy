@@ -1,0 +1,967 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/evidence-log.schema.json",
+  "title": "EvidenceLog (.legal/evidence/scan-<ts>.json)",
+  "$comment": "THIS FILE HAS THREE CROSS-FILE $refs AND A LOADER MUST REGISTER ALL THREE FIRST: scan-profile.schema.json, verdict.schema.json and - from 2026-09-17, with unknown_rules[].quote_checks and quote_check_outcome - declarations.schema.json, which verdict.schema.json also reaches. ajv resolves a cross-file $ref only against schemas registered in the same instance and fails loudly when one is missing.",
+  "description": "Auditable record of one scan: what was checked, what was decided, on what evidence, and against which rule bundle. Written so that a decision can still be defended months later.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["scan_id", "bundle", "candidates_total", "verdicts", "completed_at"],
+  "properties": {
+    "scan_id": { "type": "string", "description": "Identifier of the scan these verdicts belong to." },
+    "profile": { "$ref": "https://schemas.invalid/product/scan-profile.schema.json", "description": "The ScanProfile the run was scoped by, recorded so the reader can see which obligations were considered in scope." },
+    "bundle": {
+      "type": "object",
+      "required": ["version"],
+      "description": "The rule bundle in force at scan time. Rules change; the record has to say which ones were applied.",
+      "properties": { "version": { "type": "string", "description": "Bundle version (YYYY.MM.n)." }, "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$", "description": "The bundle's content digest: the sha256 of its file list as `sha256sum` writes one (`<sha256>  <name>` per file the manifest lists, sorted by name, newline after each), computed by the CLI from the files it verified at load and never copied from the manifest. A rebuild of the same rules keeps it; any change to a listed file moves it. Written by every run since 2026-10-12; absent from documents written before." }, "signature": { "enum": ["unsigned", "not-verified"], "description": "What the CLI could say about the bundle manifest's signature. `unsigned`: the manifest carries the explicit unsigned marker or, in a bundle built before 2026-10-12, `null`. `not-verified`: the manifest carries a signature this CLI has no key to verify. Either way the manifest itself is not authenticated: `sha256` says WHICH rules ran, not WHO published them." } }
+    },
+    "candidates_total": { "type": "integer", "description": "Number of candidates raised by the scan, before adjudication. Compare with verdicts to see whether everything was reviewed." },
+    "unknown_rules": {
+      "type": "array",
+      "description": "What the scan did NOT establish: one entry per bundle rule that produced no candidate, and what was done about it. THE ABSENCE OF A FINDING IS `unknown`, NEVER `clean`. An audit trail that records only what was found says, by omission, that everything else was in order - which is the statement a source scan cannot make, for the mirror of the reason it cannot establish a violation. Optional because a log written before 2026-08-19 has none and must still validate; a log written after it and carrying none is a log whose scan looked at nothing outside its own findings.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rule_id", "outcome"],
+        "allOf": [
+          {
+            "$comment": "The rule that was prose until 2026-09-17, now stated so a validator holds it. Written as if/then rather than as a blanket minItems because the field is legitimately absent on every OTHER outcome: an `apparently_absent` row's evidence IS its `searched[]` list and it has nothing to quote, and requiring one there would turn every honest absence into a defect, which is the mirror of reading the absence of a finding as an answer. The item shape stays untyped - typing it is a separate decision and this conditional is about presence.",
+            "if": { "properties": { "outcome": { "const": "construct_found" } }, "required": ["outcome"] },
+            "then": { "required": ["evidence"], "properties": { "evidence": { "minItems": 1 } } }
+          }
+        ],
+        "properties": {
+          "rule_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$", "description": "The rule that produced nothing, on the same terms as findings.schema.json's rules_without_candidates[].rule_id." },
+          "outcome": {
+            "enum": ["not_checked", "construct_found", "apparently_absent", "not_evaluated", "out_of_jurisdiction"],
+            "description": "`not_checked`: the detector produced nothing and no search was run - the weakest state, and it claims nothing. `construct_found`: a search found the construct the detector missed; `evidence` carries where. `apparently_absent`: a search was run and found nothing; `searched` carries what was looked for. THESE THREE ARE NEVER MERGED - 'we looked and found nothing' and 'nobody looked' are different results, and collapsing them rebuilds the defect this field exists to remove. `not_evaluated`: the ScanProfile put the rule out of scope before it ran. `out_of_jurisdiction`: the rule's jurisdiction is absent from the profile's distribution_regions."
+          },
+          "searched": { "type": "array", "items": { "type": "string" }, "description": "What was looked for and where, one entry per search INCLUDING the ones that returned nothing. Required in substance for `apparently_absent`: an absence claim with no search behind it is an assertion, and a zero-hit search is the evidence for it." },
+          "evidence": { "type": "array", "items": { "type": "object" }, "description": "For `construct_found`: file, lines and a verbatim quote of what the detector missed. This is the most valuable record in the log - a located layer-1 miss. FROM 2026-09-17 IT IS MECHANICALLY CHECKED like a verdict's own evidence: `verdict-verify` searches for each quote in the file the entry names and writes the result into `quote_checks[]` beside this array. A `construct_found` whose quote is nowhere, or is in a different file, is moved to `undetermined` - never to `apparently_absent`, which would be a clearance this scan cannot give, and the outcome descriptions above say why the three must never be merged. The item shape stays an untyped object here; the checker reads `file`, `lines` and `quote` off it defensively and names an entry it could not read." },
+          "note": { "type": "string", "description": "Free text: the declaration that switched a `not_evaluated` rule off, a disagreement between the project's own documents and the declared profile, or why no search was warranted." },
+          "quote_checks": { "type": "array", "items": { "$ref": "https://schemas.invalid/product/declarations.schema.json#/$defs/quoteCheck" }, "description": "The mechanical check of this row's `evidence[]` quotations against the real files, one row per entry. Written by `verdict-verify` and never by the agent; absent means the check has not been run, which is not the same as passing it. The row shape is IMPORTED from declarations.schema.json rather than restated, because one waterfall produces every such row in this product - a loader of this file must register that schema in the same ajv instance first." },
+          "quote_check_outcome": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/quoteCheckOutcome" },
+          "outcome_before_quote_check": { "enum": ["not_checked", "construct_found", "apparently_absent", "not_evaluated", "out_of_jurisdiction"], "description": "The outcome the investigator wrote, kept when the check moved `outcome`. Present only on an invalidated row. What the model said and what the check did are two facts and the log carries both. WHERE AN INVALIDATED `construct_found` GOES, AND THE GAP THAT FORCES IT: the raw silence record is moved to that seat's own `undetermined`, but this enum has no such member, so the row lands on `not_checked` - the log's own weakest state, which claims nothing. It is the safe direction and it is not the accurate one: `searched` is still populated and still says what was looked for, so a reader can see that a search DID run and that its quoted result did not check out. The accurate repair is an `undetermined` member here, which is a change to what the orchestrator writes and is not taken in this unit." },
+          "quote_check_notes": { "type": "array", "items": { "type": "string" }, "description": "Why this row was invalidated, one sentence per reason. Present only on an invalidated row." },
+          "quote_check_failures": { "type": "array", "items": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/quoteCheckFailure" }, "description": "Written by `verdict-verify`: every quotation of this row it could not confirm, with the reason and the effect. Absent where every quotation confirmed." }
+        }
+      }
+    },
+    "run_shape": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["shape", "chosen_by"],
+      "description": "WHICH RUN SHAPE THE USER CHOSE, AND THE NUMBERS THEY WERE SHOWN WHEN THEY CHOSE IT. Layer 2 runs in the user's own agent and THE USER PAYS FOR IT, so which shape was run is a decision about their money and belongs in the audit record beside the verdicts it bought. ABSENT ON A RUN THAT PREDATES THIS FIELD, which is not the same fact as `full`: a log with no `run_shape` says nothing about what was launched, and a reader must not read its absence as everything.",
+      "properties": {
+        "shape": { "enum": ["full", "important", "refute_later"], "description": "The shape this run was launched in. What each one means and what it was priced at is in the scan document's `context_payloads.cost_preview.shapes`, which `preview` below copies." },
+        "chosen_by": { "enum": ["user", "default"], "description": "`user` where the person was asked and answered; `default` where the run could not ask the person and the command that ran it named the shape (`--shape`; the program has no default shape, and the second check runs only where that command names a shape that includes it). THE DISTINCTION IS THE POINT OF THE FIELD: a shape nobody chose is not a choice, and a log that recorded the two the same way would let an unattended run read as a consented one." },
+        "preview": { "$ref": "https://schemas.invalid/product/findings.schema.json#/properties/context_payloads/properties/cost_preview", "description": "The preview AS THE PERSON WAS SHOWN IT, copied verbatim from the scan document's `context_payloads.cost_preview`. A snapshot and never a recomputation, for the reason `profile` is copied: this log is the audit record and must stand on its own, while `findings.json` is overwritten by the next scan. The shape is IMPORTED from findings.schema.json rather than restated, because one producer writes it and two copies of a contract disagree - a loader of this file must register that schema in the same ajv instance first, as it already must for verdict.schema.json and declarations.schema.json." },
+        "launches_run": { "type": "integer", "minimum": 0, "description": "Adjudicator launches this run actually made. Written beside the preview rather than instead of it: the gap between what was priced and what was spent is the one thing a reader cannot reconstruct afterwards." },
+        "refutation_deferred": { "type": "boolean", "description": "True where the run shape had no second check: no refuter ran, every surviving candidate in this log carries no `refutation` object, and the report labels it *no second check in this run*. The name is older than that decision and is kept so that every log reads the same way." }
+      }
+    },
+    "unadjudicated": {
+      "type": "array",
+      "description": "EVERY CANDIDATE THIS RUN DID NOT ADJUDICATE, NAMED ONE BY ONE (unit G, 2026-09-22). Non-empty exactly where `candidates_total` exceeds the verdict count for a reason the run chose, and NOTHING HERE IS SAMPLED: the ordering and the stop point are recorded and every skipped candidate is named. The report's WHAT WAS NOT ESTABLISHED section carries the heading *candidates not adjudicated in this run*, this array's length and the resume command whenever it is non-empty - a partial run must never read as a complete one. The conformance check the idea states is verdict count + this length = `candidates_total`.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "reason"],
+        "properties": {
+          "finding_id": { "type": "string", "description": "The candidate that was not adjudicated, by the id `findings.json` gives it." },
+          "reason": { "enum": ["run_shape", "budget", "invalid_answer", "not_answered", "unusable_answer"], "description": "`unusable_answer` where the answer its seat gave is on disk and cannot be used for a reason of its own - a file changed or removed outside the program, a transcript no route finds, a premise block that could not be derived, a word the record cannot hold - or where its entry could not be launched again: `why` says which. The report lists it as not checked; the run is never refused for it. `not_answered` (build unit F4, design section 3 A7) where the candidate was read by the place plan and the seat that answers it over its places (the answer seat, or the one place seat that held it), and then its one make-up seat, gave no answer that holds: it is shown with its place counts and every kept place, never as clean, and no verdict is made for it. `run_shape` where the chosen shape did not reach it; `budget` where a stated budget in children or yen stopped the run before it; `invalid_answer` where the seat launched for it answered, was refused twice by the plugin's hook, and its third answer did not hold either, so the hook kept it whole as invalid and wrote no record (relay integration part B, 2026-09-25: the hook's receipt says the seat's candidates are reported as not judged)." },
+          "shape": { "enum": ["full", "important", "refute_later"], "description": "The shape that did not reach it, where `reason` is `run_shape`." },
+          "ordering": { "enum": ["severity"], "description": "The order candidates were taken in, where one was stated." },
+          "seat": { "type": "string", "description": "Where `reason` is `invalid_answer`: the agent id of the seat whose answer stayed invalid." },
+          "why": { "type": "string", "description": "Where `reason` is `unusable_answer`: why the answer could not be used, in the program's words." },
+          "kept": { "type": "string", "description": "Where `reason` is `invalid_answer` or `not_answered`: the file the hook kept that answer in, relative to the `.legal` directory." },
+          "places": { "type": "integer", "minimum": 0, "description": "Where `reason` is `not_answered`: how many places the candidate has." },
+          "places_read": { "type": "integer", "minimum": 0, "description": "Where `reason` is `not_answered`: how many of them a place seat decided." },
+          "places_carried": { "type": "integer", "minimum": 1, "description": "Where `reason` is `not_answered` and places were carried: how many of them were decided in an earlier scan and carried into this one; they are not among `places_read`, which counts this scan's. Absent where none was." },
+          "carried_from_scans": { "type": "array", "items": { "type": "string" }, "description": "Where `places_carried` is present: the scans those places were carried from." },
+          "not_checked": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["reason", "places"], "properties": { "reason": { "type": "string" }, "places": { "type": "integer", "minimum": 0 } } }, "description": "Where `reason` is `not_answered`: the places no seat decided, counted by the program's reason (`not_answered`, `unreadable`)." },
+          "kept_places": { "type": "array", "items": { "type": "string" }, "description": "Where `reason` is `not_answered`: every place a seat found to be the construct (gated or not), as `P<n> file:line`." },
+          "per_place_table": { "type": "string", "description": "Where `reason` is `not_answered`: the candidate's per-place table, relative to the `.legal` directory." }
+        }
+      }
+    },
+    "places_read": {
+      "type": "array",
+      "description": "EVERY CANDIDATE OF THIS RUN'S VERDICTS READ BY THE PLACE PLAN, WITH HOW EVERY PLACE WAS READ (build unit F4, design section 3, 'How the person sees it'). Made by the program from the candidate's per-place table, which is written whole at `per_place_table` (one JSON row per place; the row of place P<n> is line n + 2). Absent where no candidate was read by the place plan.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "places", "places_read", "window", "fact", "summary", "not_checked", "beyond", "kept", "per_place_table"],
+        "properties": {
+          "finding_id": { "type": "string" },
+          "places": { "type": "integer", "minimum": 0, "description": "Every place of the candidate." },
+          "places_read": { "type": "integer", "minimum": 0, "description": "The places a seat decided: `window` + `fact` + `summary`." },
+          "carried": { "type": "integer", "minimum": 0, "description": "Integration of F4 and F5: decided in an earlier scan and carried, every premise reproduced; not counted in `places_read` or by read basis. Absent where none was carried." },
+          "carried_from_scans": { "type": "array", "items": { "type": "string" }, "description": "The scans the carried rows came from." },
+          "window": { "type": "integer", "minimum": 0, "description": "Decided in their window." },
+          "fact": { "type": "integer", "minimum": 0, "description": "Decided on a line the program verified as the fact." },
+          "summary": { "type": "integer", "minimum": 0, "description": "Decided in a data summary the program verified (read basis `data_summary`, build unit F6; zero while the summaries are off, until their capture is built)." },
+          "not_checked": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["reason", "places"], "properties": { "reason": { "type": "string" }, "places": { "type": "integer", "minimum": 0 } } } },
+          "beyond": { "type": "integer", "minimum": 0, "description": "Places decided with a line outside the window, which the seat read." },
+          "kept": { "type": "integer", "minimum": 0, "description": "Places a seat found to be the construct (gated or not)." },
+          "items": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["item", "places"], "properties": { "item": { "type": "string" }, "places": { "type": "integer", "minimum": 0 } } }, "description": "A rule with an enumeration limb: every distinct item of the kept places, with its place count." },
+          "items_missing": { "type": "object", "additionalProperties": false, "required": ["places", "first"], "properties": { "places": { "type": "integer", "minimum": 0 }, "first": { "type": "array", "items": { "type": "object", "additionalProperties": false, "required": ["place", "at"], "properties": { "place": { "type": "string" }, "at": { "type": "string" } } } } }, "description": "Fix C2-5: a rule with an enumeration limb: how many kept places name no item, with the first of them as P<n> and file:line. Where places is not 0 the list in items may leave an item out, and the report says so." },
+          "own_name": { "type": "object", "additionalProperties": false, "required": ["entry", "item", "places", "read", "named_only", "publisher_service", "undetermined"], "properties": { "entry": { "type": "string" }, "item": { "type": "string" }, "places": { "type": "integer", "minimum": 0 }, "read": { "type": "integer", "minimum": 0 }, "named_only": { "type": "integer", "minimum": 0 }, "publisher_service": { "type": "integer", "minimum": 0 }, "undetermined": { "type": "integer", "minimum": 0 } }, "description": " The places read in own-name seats (the person declared the code to be this vendor entry's software or a fork of it), as one item: how many, how many were read, and how the seats decided them. Absent where no place was read in an own-name seat." },
+          "per_place_table": { "type": "string", "description": "The per-place table, relative to the `.legal` directory." }
+        }
+      }
+    },
+    "model_overrides": {
+      "type": "array",
+      "description": "EVERY RULE THIS RUN READ ON A MODEL OTHER THAN ITS OWN SETTING (review R18; design section 1.6), from the launch list's `model_overrides`: the run-wide `--seat-model` override is never silent. Absent where none was.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rule_id", "own", "read_on", "places"],
+        "properties": {
+          "rule_id": { "type": "string" },
+          "own": { "type": "string", "description": "The rule's own `seat_model` (`sonnet` where absent)." },
+          "read_on": { "type": "string", "description": "The model the run read it on." },
+          "places": { "type": "integer", "minimum": 0, "description": "How many places of the rule the run read on that model." }
+        }
+      }
+    },
+    "refutations_not_established": {
+      "type": "array",
+      "description": "EVERY violation_candidate WITH NO REFUTATION RECORD THAT THE RUN CAN ACCOUNT FOR (relay integration part B, 2026-09-25). Either its second review was launched and could not be used - the refuter answered, was refused twice by the plugin's hook, and its third answer did not hold either (`invalid_answer`, naming the seat and the kept answer) - or none was launched because `refuter-entries` held the candidate back and made no entry for it (`held`, with the reason the launch list's `appended[].held[]` records). Either way the verdict carries no `refutation` object and the report labels it *not yet refuted* with the reason. A violation_candidate with no refutation record that neither accounts for is not written here: the assembly refuses it as `refutation-missing`. Absent where there is none.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "reason"],
+        "properties": {
+          "finding_id": { "type": "string", "description": "The candidate whose refutation is not established." },
+          "reason": { "enum": ["invalid_answer", "held", "unusable_answer"], "description": "Why: `unusable_answer` where the refuter's answer is on disk and cannot be used, or its entry could not be launched again (`why` says which); `invalid_answer` where the refuter's answer stayed invalid; `held` where `refuter-entries` held the candidate back, so no refuter was launched for it." },
+          "seat": { "type": "string", "description": "Where `reason` is `invalid_answer`: the refuter seat's agent id." },
+          "kept": { "type": "string", "description": "Where `reason` is `invalid_answer`: the file the hook kept its answer in, relative to the `.legal` directory." },
+          "why": { "type": "string", "description": "Where `reason` is `unusable_answer`: why the answer could not be used, in the program's words." },
+          "held_reason": { "type": "string", "description": "Where `reason` is `held`: the reason `refuter-entries` wrote for holding the candidate back (the launch list's `appended[].held[].reason`), several joined by \"; \"." }
+        },
+        "if": { "properties": { "reason": { "const": "invalid_answer" } } },
+        "then": { "required": ["seat", "kept"] }
+      }
+    },
+    "severity_raised": {
+      "type": "array",
+      "description": "Every finding the facts at one of its places raise above its rule's own level (severity-at-place.ts), composed at assembly from this run's records only - the per-place tables and the verdicts as the check left them, never the scanned tree. Personal data and transport without protection at the same line or call make it high, whoever the recipient; transport without protection is a held place of a rule in severity-at-place.ts's `PLAINTEXT_RULES` (a URL scheme without TLS, mail without TLS or with STARTTLS optional, a service connection without TLS, a connection whose peer is not verified). A finding is never made lighter: `rule_severity` is the floor and stays beside `severity`. Absent where nothing was raised.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "rule_id", "rule_severity", "severity", "basis", "file", "line", "data", "because"],
+        "properties": {
+          "finding_id": { "type": "string" },
+          "rule_id": { "type": "string" },
+          "rule_severity": { "enum": ["high", "medium", "low"] },
+          "severity": { "enum": ["high", "medium", "low"] },
+          "basis": { "enum": ["place", "flow", "standing"], "description": "`place` - personal data over transport without protection at one call (F5); `flow` - another finding of the same flow holds a higher level at the same line (F6); `standing` - raised to high by weight: a `duty_unmet` finding of group 0 whose parts that stood put it at order tier O1 or O2 (fix-order.ts). A finding raised both by its place and by weight has one entry of each." },
+          "standing": { "type": "object", "additionalProperties": false, "required": ["order_tier", "duty", "data", "people", "runs", "reaches", "ships"], "properties": { "order_tier": { "enum": ["O1", "O2"] }, "duty": { "type": "array", "items": { "type": "string" } }, "data": { "type": "array", "items": { "type": "string" } }, "people": { "type": "array", "items": { "type": "string" } }, "runs": { "type": "string" }, "reaches": { "type": "string" }, "ships": { "type": "string" } }, "description": "With basis `standing` only: the parts of the review's block the raise rests on, as they stood; a part the review did not establish (the raise took it at its lightest) is `not_established`, or no data." },
+          "file": { "type": "string", "description": "The place that raised it: the first by line where several do." },
+          "line": { "type": "integer", "minimum": 1 },
+          "to_line": { "type": "integer", "minimum": 1, "description": "The last line of the call where its places span more than one line." },
+          "call": { "type": "array", "items": { "enum": ["next_line", "joined", "resolved"] }, "description": "How the call's places meet where they are not on one line - the next line, a construct the scan joined (`joined_from`), a definition a location was reached through (`resolved_from`)." },
+          "flow": { "type": "object", "additionalProperties": false, "required": ["finding_id", "rule_id", "severity"], "properties": { "finding_id": { "type": "string" }, "rule_id": { "type": "string" }, "severity": { "enum": ["high", "medium", "low"] } }, "description": "The finding of the same flow at the same line whose level this one shows." },
+          "data": { "type": "array", "items": { "type": "string" }, "description": "The data words of the held rows at the place." },
+          "recipient": { "type": "object", "additionalProperties": false, "required": ["finding_id", "rule_id"], "properties": { "finding_id": { "type": "string" }, "rule_id": { "type": "string" }, "item": { "type": "string" }, "line": { "type": "integer", "minimum": 1 }, "own_install": { "const": true } }, "description": "The held place naming a recipient outside the operator; absent where the raise is to medium." },
+          "plaintext": { "type": "object", "additionalProperties": false, "required": ["finding_id", "rule_id"], "properties": { "finding_id": { "type": "string" }, "rule_id": { "type": "string" }, "item": { "type": "string" }, "line": { "type": "integer", "minimum": 1 } }, "description": "The held place of transport without protection (a rule in `PLAINTEXT_RULES`); the raise's words say what it travels over and who receives it there, from that rule's entry." },
+          "because": { "type": "string", "description": "The words the report prints." }
+        }
+      }
+    },
+    "standing": {
+      "type": "array",
+      "description": "THE ORDER OF EVERY FINDING THAT STANDS: its group (0 to fix; 1 stands against an answer the person gave; 2 records a duty met; 3 does not ship), its order tier O1-O4 from the review's `standing` block, the program's penalty-tier table and the person's answers, the parts the review did not establish (placed as their heaviest value, W13), the parts the capture set aside, the cites not applying on the person's region answers, and whether it was raised to high by weight. Absent where nothing stands.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "rule_id", "group", "order_tier", "status", "heaviest", "set_aside", "raised"],
+        "properties": {
+          "finding_id": { "type": "string" },
+          "rule_id": { "type": "string" },
+          "group": { "enum": [0, 1, 2, 3] },
+          "order_tier": { "enum": ["O1", "O2", "O3", "O4"] },
+          "status": { "enum": ["duty_unmet", "duty_met", "waits_on_answer", "exempt"] },
+          "question": { "type": "string", "description": "The question a finding waiting on an answer waits on (a profile field with an `x-question`)." },
+          "heaviest": { "type": "array", "items": { "enum": ["status", "duty", "data", "runs", "reaches", "ships"] } },
+          "set_aside": { "type": "array", "items": { "type": "string" } },
+          "not_applying": { "type": "array", "items": { "type": "string" }, "description": "Cites whose region the person answered out (S3's region half, applied at assembly)." },
+          "raised": { "type": "boolean" }
+        }
+      }
+    },
+    "questions_raised": {
+      "type": "array",
+      "description": "THE QUESTIONS THIS REPORT SHOWS IN FIX FIRST: a question findings wait on (`waits_on_answer`, W5), or a product question the person left unanswered whose answer would move a finding into O1 or O2 (`order_moving`, W7). None is asked before a scan in stage 1; `scan --review-declaration` plans these from the latest evidence log, as a planning input, and asks each once. Absent where the report shows none.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["question", "header", "kind", "finding_ids", "rules"],
+        "properties": {
+          "question": { "type": "string", "description": "The profile field the question sets." },
+          "header": { "type": "string" },
+          "kind": { "enum": ["waits_on_answer", "order_moving"] },
+          "finding_ids": { "type": "array", "items": { "type": "string" } },
+          "rules": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "listed": {
+      "type": "array",
+      "description": " (delivery design rf11, section 3.4) Each finding this scan's report listed, as it listed it: one row per finding id (every place of a group under the group's short id), with its list, level, kept places, the provisions and regions it is reported under, its rule's clause digest and the kind of its open point. What a person's decision (`legal-scan decide`) is recorded against, and what each later assembly compares a decision with, both from the one function that makes these rows from the report's model (assemble-report.ts `listedRowsOf`). Presentation only: no verdict, count or carry reads it, and the person's decisions never reach the log.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "short_id", "group", "title", "list", "level", "places", "provisions", "rule_id", "rule_digest", "open_point", "read_in_part"],
+        "properties": {
+          "finding_id": { "type": "string", "minLength": 1 },
+          "short_id": { "type": "string", "minLength": 1 },
+          "group": { "type": "string", "minLength": 1, "description": "The short id of the entry the finding is listed under; the places of one group share it." },
+          "title": { "type": "string" },
+          "list": { "enum": ["to_fix", "to_clarify", "to_answer", "not_counted"] },
+          "level": { "type": "string" },
+          "places": { "type": "array", "items": { "type": "string" }, "description": " The kept places, as the comparison reads a place set (place-key.ts `placeSetOf`): the held rows' places, else every location, each `<file>#<line_key>`; the naming place only where the finding has no location. A decision records them and needs a new look when they change." },
+          "provisions": {
+            "type": "array",
+            "items": { "type": "object", "additionalProperties": false, "required": ["cite", "region"], "properties": { "cite": { "type": "string" }, "region": { "type": "string" } } }
+          },
+          "rule_id": { "type": "string" },
+          "rule_digest": { "type": ["string", "null"], "description": "The verdict's `rests_on.rule.hash` (rests-on.ts `ruleHash`, which leaves out the two presentation lines); null where the verdict records none." },
+          "open_point": { "enum": ["question", "law_unclear", "code_not_readable", null], "description": "The prefix of the review's `standing.settles` (verdict.schema.json), or null." },
+          "read_in_part": { "type": "boolean", "description": "Whether the record names places no review read." }
+        }
+      }
+    },
+    "finding_numbers": {
+      "type": "array",
+      "description": " (delivery design rf11, section 3.5) The F-number each finding this scan's report listed was shown with: every finding to fix, to clarify or to answer, every place of a group under the group's number. Written so that a report and its log say the same, and so that a computer with no number list for this folder takes the numbers from the log the person chose to carry from. A ruled-out verdict takes no number. Presentation only: no verdict, count or carry reads it.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "number"],
+        "properties": {
+          "finding_id": { "type": "string", "minLength": 1 },
+          "number": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "project",
+        "completed_at",
+        "code",
+        "review",
+        "counts",
+        "not_checked",
+        "laws",
+        "items"
+      ],
+      "description": " THE RECORD'S SUMMARY (delivery design rf11, 3.7 and section 4's summary.json): the counts, what was not checked and the findings that stand, without a code line, made by the assembly from the same model as the report's first screen and the end screen, so `record` (which reads it from this log, whose digest this computer records) cannot show another number. `code.commit` is the commit the scanned folder stood at when the assembly ran, null with `commit_why` where git was not run or there was none.",
+      "properties": {
+        "project": {
+          "type": "string"
+        },
+        "completed_at": {
+          "type": "string"
+        },
+        "code": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "commit",
+            "files_read",
+            "rules"
+          ],
+          "properties": {
+            "commit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "commit_date": {
+              "type": "string"
+            },
+            "tree_changed": {
+              "type": "boolean"
+            },
+            "commit_why": {
+              "type": "string"
+            },
+            "files_read": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "rules": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            }
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "once",
+            "second_looks"
+          ],
+          "properties": {
+            "once": {
+              "type": "boolean"
+            },
+            "second_looks": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "needs_action",
+            "to_fix",
+            "high",
+            "medium",
+            "low",
+            "to_clarify",
+            "to_answer",
+            "questions",
+            "taken_off",
+            "ruled_out",
+            "out_of_scope",
+            "set_aside",
+            "not_counted"
+          ],
+          "properties": {
+            "needs_action": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "to_fix": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "high": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "medium": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "low": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "to_clarify": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "to_answer": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "questions": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "taken_off": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "ruled_out": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "out_of_scope": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "set_aside": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "not_counted": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "not_checked": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "no_verdict",
+            "partly",
+            "rules_nothing",
+            "carried",
+            "folders",
+            "not_read"
+          ],
+          "properties": {
+            "no_verdict": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "partly": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "rules_nothing": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "carried": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "folders": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "not_read": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "laws": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "f",
+              "short",
+              "finding_ids",
+              "title",
+              "place",
+              "more_places",
+              "provisions",
+              "disposition",
+              "level",
+              "area"
+            ],
+            "properties": {
+              "f": {
+                "type": "string"
+              },
+              "short": {
+                "type": "string"
+              },
+              "finding_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "title": {
+                "type": "string"
+              },
+              "place": {
+                "type": "string"
+              },
+              "more_places": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "provisions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "disposition": {
+                "enum": [
+                  "to_fix",
+                  "to_clarify",
+                  "to_answer"
+                ]
+              },
+              "level": {
+                "type": "string"
+              },
+              "area": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "challenges": {
+      "type": "array",
+      "description": "THE SECOND LOOK AT A FINDING THE REPORT DOES NOT COUNT AS A PROBLEM: one entry per challenge the run appended (a high finding recorded on the seat's `duty_met` or `exempt`, or placed outside the shipped product where the seat and the premise do not both say so; in a run with the second check, also a high finding the seat ruled out as not applicable), with what it returned. `overturned` puts the finding back among those to fix; `not_answered` keeps the first placement and the report says so. A verdict carried from an earlier run with its second look (the verdict's `second_look`) has its entry too. Absent where the run has none.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "outcome"],
+        "properties": {
+          "finding_id": { "type": "string" },
+          "outcome": { "enum": ["upheld", "overturned", "needs_human", "not_answered"] },
+          "grounds": { "enum": ["duty-not-met", "not-exempt", "ships-after-all", "duty-arises-there", "applies-after-all"], "description": "Present only on `overturned`." }
+        }
+      }
+    },
+    "facts_named_in_words": {
+      "type": "array",
+      "description": "THE FACTS SEATS NEEDED THAT NO QUESTION OF THE PROGRAM CARRIES: one entry per finding that waits on a fact named in words (`standing.fact`), so the maker can see which questions the program lacks. Never asked of the person; the report shows each as a question named in words. Absent where there is none.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "rule_id", "words", "about"],
+        "properties": {
+          "finding_id": { "type": "string" },
+          "rule_id": { "type": "string" },
+          "words": { "type": "string", "minLength": 1 },
+          "about": { "type": "string", "pattern": "^L[1-9][0-9]*$" }
+        }
+      }
+    },
+    "data_set_aside": {
+      "type": "array",
+      "description": "The data a connection place's row recorded that the severity composition did not raise on, because they rest on no line the seat named apart from the connection itself - neither a `beyond` line (which the capture's C9 holds to a line the seat Read) nor the row's own line where that is a line of the window outside the matched construct. A connection place is a held place whose rule asks what crosses it (severity-at-place.ts's `isConnectionPlace`): a place of a rule in `CONNECTION_RULES` (a mail transport, a store connection, or a TLS verification or version setting of a connection), or a baseline-003 place whose recorded URL schemes are all connection schemes (`CONNECTION_SCHEMES`: redis, amqp, mqtt, smtp, ldap and the like; an http://, ws:// or gopher:// request line stays outside). The place stays held and nothing is refused; only these data do not raise it. Absent where nothing was set aside.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "rule_id", "file", "line", "data", "why"],
+        "properties": {
+          "finding_id": { "type": "string" },
+          "rule_id": { "type": "string" },
+          "file": { "type": "string" },
+          "line": { "type": "integer", "minimum": 1, "description": "The place's matched line." },
+          "data": { "type": "array", "items": { "type": "string" }, "description": "The data words set aside." },
+          "why": { "type": "string" }
+        }
+      }
+    },
+    "verdicts": { "type": "array", "items": { "$ref": "https://schemas.invalid/product/verdict.schema.json" }, "description": "Adjudication result for each candidate. A VERDICT'S `reading` BLOCK NAMES EVERY KIND OF ITS CANDIDATE - read, covered by a representative that was read, or not read with a reason - AND THE MEMBERS OF EACH KIND ARE IN THE FINDINGS DOCUMENT under kinds[].members, which reading.census.hash pins: the log and the document together answer, for every matched location of the scan, which kind covered it and which representative was read. Neither alone does, and the hash is what ties them." },
+    "unconfirmed_classifications": {
+      "type": "array",
+      "description": "LOCATIONS WHOSE CLASSIFICATION THE CHECK COULD NOT CONFIRM. A quotation row that dismissed a location other than the ones its record's conclusion stands on, failed the quote check, and so withdrew only that dismissal (`quote_check_failures[].effect` `withdraws_dismissal`) on a record that keeps its finding in the report. Every location of each such group is listed here; the report shows the group as one line. None of these locations is cleared. Absent where no dismissal was withdrawn.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "rule_id", "seat", "rows", "file", "lines", "reason", "locations"],
+        "properties": {
+          "finding_id": { "type": "string" },
+          "rule_id": { "type": "string" },
+          "seat": { "enum": ["adjudicator", "refuter"] },
+          "rows": { "type": "array", "items": { "type": "string" }, "description": "The withdrawn rows of the record, relative to it (`reading.read[<n>]`, `evidence[<n>]`)." },
+          "file": { "type": "string", "description": "The file of the row the group is named by (the trail row where there is one)." },
+          "lines": { "type": "string" },
+          "kind": { "type": "string", "description": "The census kind the group is, where the row names one." },
+          "reason": { "type": "string", "description": "The check's reason for that row (`quoteCheckFailure.reason` of verdict.schema.json)." },
+          "locations": {
+            "type": "array",
+            "items": { "type": "object", "additionalProperties": false, "required": ["file", "line"], "properties": { "file": { "type": "string" }, "line": { "type": "integer" } } },
+            "description": "Every member of the group: the kind's members from the scan's census, less the locations other rows of the same record opened and the check confirmed."
+          }
+        }
+      }
+    },
+    "coverage_limits": {
+      "type": "array",
+      "description": "WHAT THE SCAN DID NOT READ, copied verbatim out of findings.json's own coverage_limits, plus what the adjudicating agent did about each entry. SKILL.md step 3h requires the block to be reproduced in the report and step 7 requires it here, and this property is what makes such a log valid: without it a compliant layer-2 run wrote a log its own schema rejected (found by independent verification, 2026-09-10, MATERIAL 1). THE SAME ARGUMENT AS files_not_read BELOW, one layer out: a log that records the files that were read says by omission that everything else was read, and a log that records no coverage limit says by omission that the scan read the tree. Optional because a log written before 2026-09-10 has none and must still validate.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "sentence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z-]*(:[a-z][a-z-]*)?$",
+            "description": "The member id, verbatim from findings.json: read-scope:<class>, refused-by-rule, not-readable-as-code, rules-not-run or rules-silent."
+          },
+          "counts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "The member's own counts, verbatim. Never added across members."
+          },
+          "sentence": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The scanner's own wording for this member, copied verbatim. The console, the SARIF and the report all print this string; a paraphrase here would make the audit log disagree with the thing it audits."
+          },
+          "lift": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The option that lifts this limit, or null where nothing does. Verbatim from findings.json."
+          },
+          "read": {
+            "type": "boolean",
+            "description": "Read-scope members only: whether the run opted into this class."
+          },
+          "patterns_set": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Read-scope members only: the sets the class is composed of."
+          },
+          "patterns_source": {
+            "type": "string",
+            "description": "Read-scope members only: the file those sets are declared in."
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "rules-not-run only: the rules a --rules run was narrowed to."
+          },
+          "layer2_outcome": {
+            "enum": [
+              "not_checked",
+              "re_scanned",
+              "read_by_hand"
+            ],
+            "description": "What the adjudicating agent did about this limit. not_checked: nothing beyond the scanner, and it is the weakest statement in the log. re_scanned: the agent re-ran the scan with the lift this member names and adjudicated what came back. read_by_hand: the agent opened the held-back paths itself. A member whose lift is null can only be not_checked or read_by_hand."
+          }
+        }
+      }
+    },
+    "files_not_read": {
+      "type": "array",
+      "description": "What the scan did not READ, as opposed to what it did not establish: one entry per file the walker offered the engine, the engine opened, and no rule was then allowed to see. Copied verbatim out of findings.json's own files_not_read, plus what the adjudicating agent did about each. THE SAME ARGUMENT AS unknown_rules ABOVE, one layer lower down: a log that records only the files that were read says by omission that every other file was read, and a file nobody opened is outside every statement the report makes about the code. The commonest reason is a proxy misfiring - the minification test treats any file with a line over its ceiling as build output, and an authored YAML document, a squashed SQL migration and a base64 blob in a configuration file all reach it. FROM 2026-09-16 A THIRD REASON CAN APPEAR HERE, time-budget: the per-file wall-clock budget (--file-budget, 60 seconds by default) was already spent before the first rule reached the first line, so no rule read a line of the file. It is copied like the others, and it is the one reason on this list the person running the scan can lift - by re-running with a longer budget or with --file-budget off. Optional because a log written before 2026-08-25 has none and must still validate.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["file", "reason"],
+        "properties": {
+          "file": { "type": "string", "description": "Path relative to the scan root, verbatim from findings.json." },
+          "reason": { "enum": ["long-line", "unreadable", "time-budget"], "description": "Why the engine handed the file to no rule. See findings.schema.json files_not_read for what each means and for why the long-line test is named as a proxy rather than as a fact about build output. time-budget was added 2026-09-16 with the per-file wall-clock budget: the budget was spent before the first rule reached the first line, and budget_ms and elapsed_ms beside it carry the measurement it was stopped on. A scan run with --file-budget off can never write one." },
+          "longest_line": { "type": "integer", "minimum": 0, "description": "Characters in the file's longest line. Present for long-line." },
+          "threshold": { "type": "integer", "minimum": 0, "description": "The ceiling that line exceeded, carried per row so the record stays self-describing when the ceiling moves." },
+          "detail": { "type": "string", "description": "What the runtime said, for unreadable." },
+          "budget_ms": { "type": "integer", "minimum": 1, "description": "The per-file wall-clock budget in force, in milliseconds, verbatim from findings.json. Present for time-budget." },
+          "elapsed_ms": { "type": "integer", "minimum": 0, "description": "Wall-clock milliseconds the file had already cost when the budget stopped it, verbatim from findings.json. Present for time-budget, and at least budget_ms. A MEASUREMENT and not an output: two runs of the same scan over the same tree give different values, because the machine was busier for one of them." },
+          "layer2_outcome": { "enum": ["not_checked", "read_by_hand", "construct_found"], "description": "What the adjudicating agent did about this file. not_checked: nothing beyond the scanner, and it is the weakest statement in the log. read_by_hand: the agent opened the file itself and raised nothing. construct_found: the agent opened the file and found something a rule should have raised, which is reported in the verdicts as a detector gap with file, lines and quote, exactly as unknown_rules construct_found requires." }
+        }
+      }
+    },
+    "files_partially_read": {
+      "type": "array",
+      "description": "What the scan READ WITH LINES MISSING, as opposed to what it did not read at all: one entry per file the engine read with at least one line blanked by the minification ceiling, copied verbatim out of findings.json's own files_partially_read, plus what the adjudicating agent did about it. THE SAME ARGUMENT AS files_not_read ABOVE, one unit smaller: a log that records a file as read says by omission that all of it was read. From 2026-09-07 the ceiling is applied to the LINE rather than to the file, so the commonest shape here is an ordinary source or configuration document with one squashed value in it - the rest of which the scan did read. The line numbers are the file's own and can be opened directly. TWO CAUSES FROM 2026-09-16 AND A ROW SAYS WHICH BY WHICH BLOCK IT CARRIES: lines is the minification ceiling, stopped_for_time is the per-file wall-clock budget (--file-budget), and a row carries at least one of the two and may carry both. That is why file is the only required property here - a file the budget stopped and the ceiling never touched has no blanked line to name, and writing lines as an empty array would state a measurement nobody took. The two are different losses and must not be merged in the report: the ceiling takes named LINES out of a file every rule read, while the budget stops the file part-way through the RULES, so the lines below the stop were read by every rule above it and by none below it. Optional because a log written before 2026-09-07 has none and must still validate.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["file"],
+        "properties": {
+          "file": { "type": "string", "description": "Path relative to the scan root, verbatim from findings.json." },
+          "threshold": { "type": "integer", "minimum": 0, "description": "The ceiling these lines exceeded, verbatim from findings.json. Absent on a row the budget stopped and the ceiling never touched." },
+          "lines": {
+            "type": "array",
+            "description": "Every line the ceiling blanked, verbatim from findings.json.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["line", "length"],
+              "properties": {
+                "line": { "type": "integer", "minimum": 1, "description": "1-based line number in the file as it is on disk." },
+                "length": { "type": "integer", "minimum": 0, "description": "Characters the line held before it was blanked." }
+              }
+            }
+          },
+          "census_stopped_for_time": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "stage",
+              "budget_ms",
+              "elapsed_ms"
+            ],
+            "properties": {
+              "stage": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Where the census stopped: binary-check, long-line-ceiling, line-split, probe:<kind>, swift-manifests, package-manifest, comment-blanking, imports, collector:<name> or request-construct."
+              },
+              "budget_ms": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "The file's time budget, in milliseconds (--file-budget)."
+              },
+              "elapsed_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "What the census had spent on the file when it read its clock and stopped."
+              },
+              "lines_read": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "For a stage that reads line by line: the lines it read before the stop."
+              },
+              "lines_total": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "For a stage that reads line by line: the file's lines."
+              }
+            },
+            "description": "The census's stop on this file. The census is a second pass over every file with its own clock per file; when the file's time budget was spent it stopped reading the file at `stage`, keeping what it had raised. Present only on such a file: a file the census read whole carries no such member."
+          },
+          "stopped_for_time": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["budget_ms", "elapsed_ms", "lines_read", "lines_total", "rules_completed", "rules_total"],
+            "description": "The per-file wall-clock budget stopped this file part-way through, copied verbatim from findings.json. WHAT THE SHAPE MEANS, because it is not \"the file was read down to line N\": the engine reads a file RULE BY RULE and each rule reads every line, so a stop splits the rules into three groups. Rules 1..rules_completed finished with the file; the next rule read lines 1..lines_read and stopped, keeping every candidate it had already raised; the rules below it never read the file at all. See findings.schema.json files_partially_read.stopped_for_time for the full account, including the one reading that can go the other way. Added 2026-09-16.",
+            "properties": {
+              "budget_ms": { "type": "integer", "minimum": 1, "description": "The budget in force, in milliseconds." },
+              "elapsed_ms": { "type": "integer", "minimum": 0, "description": "What the file had cost when the clock was read, in milliseconds. At least budget_ms. A MEASUREMENT, not an output: it moves with how busy the machine was." },
+              "lines_read": { "type": "integer", "minimum": 0, "description": "Lines the INTERRUPTED RULE read before the stop. 0 is a real value and means the clock ran out before that rule read line 1." },
+              "lines_total": { "type": "integer", "minimum": 0, "description": "Lines the file has." },
+              "rules_completed": { "type": "integer", "minimum": 0, "description": "Rules that had finished with this file when it was stopped - those that read every line of it and those that declined it on file_globs or path_without, which finished with it as surely." },
+              "rules_total": { "type": "integer", "minimum": 1, "description": "Rules in the bundle this scan ran." }
+            }
+          },
+          "layer2_outcome": { "enum": ["not_checked", "read_by_hand", "construct_found"], "description": "What the adjudicating agent did about the lines this file lost. not_checked: nothing beyond the scanner, and it is the weakest statement in the log. read_by_hand: the agent opened the named lines itself and raised nothing. construct_found: the agent opened them and found something a rule should have raised, which is reported in the verdicts as a detector gap with file, lines and quote. On a row carrying stopped_for_time the lines in question are lines_read+1 to lines_total for the interrupted rule and the whole file for every rule below it, so read_by_hand there is a statement about the rules that did not run and not only about a handful of lines." }
+        }
+      }
+    },
+    "suppressions": {
+      "type": "array",
+      "description": "Findings a human chose to set aside. Recorded rather than deleted: a suppression is a decision, and the reason for it is exactly what an auditor will ask about.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "reason"],
+        "properties": {
+          "finding_id": { "type": "string", "description": "The finding that was set aside." },
+          "reason": { "type": "string", "minLength": 3, "description": "Why it was set aside. Required, so that suppression cannot become a silent default." },
+          "by": { "type": "string", "description": "Who made the call." }
+        }
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["basis"],
+      "description": " THE COMPARISON WITH THE EARLIER REVIEW, made by the program at assembly. `basis` is what this log reported for each finding (its list, level and places), which the next run's comparison reads; written on every run. On a run that carried from an earlier log, `earlier` names that log and whether its digest matched the one this computer recorded when WolfBoy wrote it, `changes` classes each compared finding's change against the earlier log's basis, and `gone` holds the earlier findings this scan raised no candidate for, with those still gone from earlier comparisons carried forward. Gone is never fixed: a scan that raised nothing for the rule there is not a check that the duty is met.",
+      "properties": {
+        "basis": {
+          "type": "array",
+          "description": "One row per finding this log gives a disposition to (its verdicts and the candidates the person's answers settled), sorted by finding id. `places` is the candidate's location count; `file` and `line` its decisive place.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["finding_id", "rule_id", "disposition", "level", "places", "file", "line"],
+            "properties": {
+              "finding_id": { "type": "string" },
+              "rule_id": { "type": "string" },
+              "disposition": { "type": "string" },
+              "level": { "type": ["string", "null"] },
+              "places": { "type": "integer", "minimum": 0 },
+              "file": { "type": ["string", "null"] },
+              "line": { "type": ["integer", "null"] },
+              "place_keys": { "type": "array", "items": { "type": "string" }, "description": " The finding's place set, sorted (place-key.ts `placeSetOf`): per place `<file>#<line_key>` (the location's line-text fingerprint, findings.schema.json `line_key`), `#<n>` added for the n-th place of the same file and text, or `<file>:<line>` for a location written without one. `unchanged` needs the same set where both logs hold one; a place the earlier set lacks is a place gained." },
+              "reviewed_at": { "type": ["string", "null"], "description": " When the review this finding's verdict stands on was made: this log's own completion time for a verdict read in this run; for a carried verdict, the time the log it was carried from records for it (that log's `reviewed_at`, or its completion time where the verdict was read in that run); null where that log does not say. Absent on a row with no verdict (settled by an answer). Each log records it, so the date follows a verdict carried any number of times without reading older logs." }
+            }
+          }
+        },
+        "earlier": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["label", "path", "digest", "compared"],
+          "description": "The earlier log this run carried from, as the person chose it. `digest`: `matches` where its sha256 is the one this computer recorded when WolfBoy wrote it; `changed` where this computer recorded another (it changed since WolfBoy wrote it); `none` where this computer kept no digest of it (who wrote it cannot be said); `unread` where the record of digests could not be read (`digest_why` says why). `compared` is false where the earlier log holds no comparison basis (a log made before release 1), and then `changes` is empty and `why` says so.",
+          "properties": {
+            "label": { "type": "string" },
+            "path": { "type": "string" },
+            "completed_at": { "type": ["string", "null"] },
+            "commit": { "type": ["string", "null"], "description": "The commit the earlier review scanned, as its log's summary.code.commit records it; null where it recorded none." },
+            "commit_tree_changed": { "type": "boolean", "description": "Whether the earlier review's tree differed from that commit (its summary.code.tree_changed), where recorded." },
+            "digest": { "enum": ["matches", "changed", "none", "unread"] },
+            "digest_why": { "type": "string" },
+            "compared": { "type": "boolean" },
+            "why": { "type": "string" }
+          }
+        },
+        "changes": {
+          "type": "array",
+          "description": "Each compared finding's change against the earlier log: `new_or_higher` (to fix or to clarify now and not before in that list, a higher level, or more places), `lower_or_moved` (every other change: a lower level, fewer places, a move out of the lists or between the lists outside them), `now_ruled_out`, `gone`, `unchanged` (the same disposition, the same level and the same place count, and nothing else), and `new_ruled_out` (a new place the review ruled out, which takes no since row).",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["finding_id", "rule_id", "change", "kind", "earlier", "now", "carried"],
+            "properties": {
+              "finding_id": { "type": "string" },
+              "rule_id": { "type": "string" },
+              "change": { "enum": ["new_or_higher", "lower_or_moved", "now_ruled_out", "gone", "unchanged", "new_ruled_out"] },
+              "kind": { "enum": ["new_place", "moved_in", "level_rose", "place_gained", "level_fell", "place_lost", "moved_out", "moved", "new_outside_lists", "ruled_out", "gone", "same"] },
+              "earlier": {
+                "type": ["object", "null"],
+                "additionalProperties": false,
+                "required": ["finding_id", "disposition", "level", "places"],
+                "properties": {
+                  "finding_id": { "type": "string" },
+                  "disposition": { "type": "string" },
+                  "level": { "type": ["string", "null"] },
+                  "places": { "type": "integer", "minimum": 0 }
+                }
+              },
+              "now": {
+                "type": ["object", "null"],
+                "additionalProperties": false,
+                "required": ["disposition", "level", "places"],
+                "properties": {
+                  "disposition": { "type": "string" },
+                  "level": { "type": ["string", "null"] },
+                  "places": { "type": "integer", "minimum": 0 }
+                }
+              },
+              "carried": { "type": "boolean" },
+              "cause": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["reason"],
+                "description": "Why the finding was judged again or carried: the pre-launch plan's row reason and, where one differs, the premise it names (rests-on.ts PREMISE_ORDER).",
+                "properties": {
+                  "reason": { "type": "string" },
+                  "premise": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "gone": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["finding_id", "rule_id", "place", "earlier_disposition", "earlier_level", "cause", "first_gone", "still_gone", "same_file"],
+            "properties": {
+              "finding_id": { "type": "string" },
+              "rule_id": { "type": "string" },
+              "place": {
+                "type": ["object", "null"],
+                "additionalProperties": false,
+                "required": ["file", "line"],
+                "properties": { "file": { "type": "string" }, "line": { "type": ["integer", "null"] } }
+              },
+              "earlier_disposition": { "type": ["string", "null"] },
+              "earlier_level": { "type": ["string", "null"] },
+              "cause": { "enum": ["file_removed", "rule_removed", "rule_changed", "line_changed", "unknown"] },
+              "first_gone": { "type": "string" },
+              "still_gone": { "type": "boolean", "description": "True for a row carried from an earlier log's comparison: gone before this run and still not raised." },
+              "same_file": { "type": ["array", "null"], "items": { "type": "string" } }
+            }
+          }
+        },
+        "not_compared": { "type": "integer", "minimum": 0, "description": "Earlier findings compared with nothing in this run and not gone (the plan's `not_chosen`, or no longer given a disposition); never counted as gone." }
+      }
+    },
+    "pre_settled": {
+      "type": "array",
+      "description": "CANDIDATES DISPOSED OF BEFORE DISPATCH, BY THE PERSON'S OWN DECLARATION AND NOT BY ANY READING OF THE CODE. Unit F of the layer-2 cost lane: the jurisdiction question is answered once per rule at the orchestrator, out of findings.json's per_rule_applicability, and a rule the declared distribution_regions do not reach launches no adjudicator. Its candidates are recorded HERE - never deleted, never absent, one record per finding_id, exactly as verdicts requires one verdict per finding_id - so a reader of the log sees what was set aside and on whose answer. NOT IN verdicts, and that is deliberate: a verdict's evidence[] is a quotation of the user's own source (verdict.schema.json codeEvidence), the ground for these rows is a declaration rather than a line of code, and verdict-verify refuses a quotation whose path lands under the tree's own .legal/ directory - so a not_applicable quoting .legal/profile.json would be invalidated to needs_human and the saving would be a detour. The declaration itself is in this log's profile block; these rows name the field it was read from. NOT suppressions either: a suppression is a human setting aside a finding that was assessed, and nothing here was assessed.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["finding_id", "rule_id", "outcome", "ground", "rule_jurisdiction", "declared_regions", "answered_from", "because"],
+        "properties": {
+          "finding_id": { "type": "string", "description": "The candidate this record disposes of. A candidate that is neither in verdicts nor here has been dropped, which is the one thing this product must never do." },
+          "rule_id": { "type": "string", "description": "The rule whose per-rule answer settled it." },
+          "outcome": { "enum": ["not_applicable"], "description": "The disposition, and it has one value: the pre-pass answers the applicability question and never reaches a view about the code." },
+          "ground": { "enum": ["out_of_jurisdiction", "out_of_scope_by_answer"], "description": "WHY, in the vocabulary unknown_rules already uses for the same fact about a rule that raised nothing. `out_of_scope_by_answer`: a `scope` answer from the program's confirmed record put the rule out of scope (its `settled_by` says which answer and when); named, as the first value is, so a further ground cannot arrive unannounced." },
+          "rule_jurisdiction": { "type": "array", "items": { "type": "string" }, "description": "What the rule declares. Both sides of the judgement are quoted so a reader can overturn it in one line." },
+          "declared_regions": { "type": "array", "items": { "type": "string" }, "description": "What the person declared in distribution_regions, verbatim." },
+          "answered_from": { "type": "string", "description": "The profile field the answer was read from: ScanProfile.distribution_regions, or with ground `out_of_scope_by_answer` the scope field (for example ScanProfile.audience.consumer). A fact about the product is asked of the person and never inferred from the codebase." },
+          "because": { "type": "string", "minLength": 3, "description": "The sentence the scan wrote in per_rule_applicability, copied rather than re-worded: the reason of record has one author." },
+          "locations": { "type": "integer", "minimum": 0, "description": "Locations the candidate carried, so a reader sees the size of what was set aside." },
+          "disposition": { "const": "settled_by_answer", "description": " The disposition the record takes (disposition.ts `dispositionOf`, row 1 of design-not-violations.md section 2.2): the rule was settled by the person's answer and no seat ran. Written by the assembly on every record it copies from the plan; absent on a log written before it." },
+          "answered_at": { "type": "string", "minLength": 10, "description": " With ground `out_of_jurisdiction` only: when the region answers that settled it were recorded, the latest of the confirmed record's No answers that take in every jurisdiction the rule declares (a settlement is always shown with the answer and its date). Absent where the confirmed record does not hold such an answer for every one of them; never borrowed from an answer that did not settle it. A scope settlement carries its time in `settled_by.recorded_at`." },
+          "settled_by": { "type": "object", "additionalProperties": false, "required": ["field", "answer", "recorded_at"], "description": " Present only with ground `out_of_scope_by_answer`: the profile field, the answer as the confirmed record holds it and when it was recorded, copied from findings.json's per-rule applicability row.", "properties": { "field": { "type": "string", "minLength": 1 }, "answer": { "description": "The answer as the confirmed record holds it." }, "recorded_at": { "type": "string", "minLength": 1 } } }
+        }
+      }
+    },
+    "agent_model": { "type": "string", "description": "Model that performed adjudication. Part of the provenance of every verdict below." },
+    "answers_used": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["whose"],
+      "description": " Whose answers about the product the scan used (design rf11 3.3), copied from the scan's declaration plan so that every view reads it from this log, never from the answer files as they stand later. own: answers the program wrote in the scanned folder on this computer; team: a saved pair the person confirmed in that folder on this computer; file: a --profile read as given, outside a session; none, with the reason. Absent where the scan wrote no plan (no --out, or CI, where no saved answer is read) or was made by an earlier build.",
+      "properties": {
+        "whose": { "enum": ["own", "team", "file", "none"] },
+        "reason": { "enum": ["no-saved-answers", "not-usable", "not-confirmed-here", "not-now"] },
+        "file": { "type": "string" },
+        "saved_at": { "type": "string" },
+        "confirmed_at": { "type": "string" },
+        "profile_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "record_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "commit": {
+          "description": "The commit that last changed the record file, the author as git records it: information, not proof of who answered. Null: not in git, or git not read.",
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["id", "author", "date", "default_branch", "on_default_branch"],
+          "properties": {
+            "id": { "type": "string" },
+            "author": { "type": "string" },
+            "date": { "type": "string" },
+            "default_branch": { "type": ["string", "null"] },
+            "on_default_branch": { "type": ["boolean", "null"] }
+          }
+        },
+        "answers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "header", "answer"],
+            "properties": { "id": { "type": "string" }, "header": { "type": "string" }, "answer": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "agent_effort": { "type": "string", "description": "The effort (thinking) level the adjudicating children were launched at, named because it is a parameter of the same kind as the model and a verdict's reliability depends on it. Recorded from 2026-09-17 with the JSON-only return contract; a log written before then carries the model alone, which is not a statement that the level was any particular one." },
+    "state_folder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "account_default"],
+      "description": " The state folder the assembly read and wrote the person's records in (their decisions, finding numbers and confirmations). path: the folder, written from ~ where it lies in the OS account's home (os.userInfo().homedir), null where none could be named. account_default: whether it is the folder the account's home gives with no environment value; where false, the end screen says so in one line. Absent in a log made by an earlier build.",
+      "properties": { "path": { "type": ["string", "null"] }, "account_default": { "type": "boolean" } }
+    },
+    "completed_at": { "type": "string", "format": "date-time" },
+    "server_signature": {
+      "type": ["object", "null"],
+      "description": "Optional server countersignature over the log digest, for teams that need third-party attestation that the record has not been edited after the fact.",
+      "properties": {
+        "digest": { "type": "string", "description": "Digest that was signed." },
+        "sig": { "type": "string", "description": "Signature over the digest." },
+        "signed_at": { "type": "string", "description": "When the signature was issued." }
+      }
+    },
+    "disclaimer": {
+      "type": "string",
+      "description": "Must state that this output is informational only and does not constitute legal advice."
+    }
+  }
+}

@@ -1,0 +1,970 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/questionnaire-answers.schema.json",
+  "title": "QuestionnaireAnswers (drafted answers to a questionnaire the user brought in from outside)",
+  "description": "The answers this product drafts to somebody else's questionnaire - a customer's security review, an auditor's schedule, a marketplace's onboarding form. It is not the ScanProfile: that is the declaration form this product defines and asks, and this is a form written by a third party that arrives with questions no detector was built for. THE OUTPUT GOES TO THE USER'S CUSTOMER, which makes fabrication the worst failure available here, worse than in a scan report: a scan report is read by the developer who can check it against their own tree, and this is read by somebody who cannot. So every answer carries where it came from - `scan` (material the scan already produced), `targeted` (an investigation run for this question, with every search recorded including the ones that found nothing), or `human` (nobody could answer it from the code, and it says so in words rather than guessing). The shapes an answer's evidence, searches, refutation and mechanical quote checks take are IMPORTED from declarations.schema.json rather than restated - see the $comment at the foot of this file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "questionnaire",
+    "target",
+    "answers",
+    "answered_at",
+    "disclaimer"
+  ],
+  "properties": {
+    "questionnaire": {
+      "$ref": "#/$defs/questionnairePin"
+    },
+    "target": {
+      "type": "string",
+      "description": "Root of the tree the answers were drawn from; every evidence file path below is relative to it."
+    },
+    "agent_model": {
+      "type": "string",
+      "description": "Model that drafted these answers, recorded because the reliability of every judgement in them depends on it and the user's own agent supplies the model."
+    },
+    "answers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/questionnaireAnswer"
+      },
+      "description": "One entry per item that was answered. AN ITEM WITH NO ENTRY IS NOT AN ERROR AND IS NEVER SILENT: `questionnaire verify` and `questionnaire export` both list the items that carry no answer, because an unanswered question and a question answered \"we cannot tell from the code\" are different results and only the second one is an answer."
+    },
+    "answered_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the drafting finished. Separate from the questionnaire's `ingested_at`: the questions were pinned at ingest and the answers were written later, and a customer asking which version was answered needs both."
+    },
+    "disclaimer": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Statement that these are drafts for the user's own review and are not legal advice. Mandatory, and it carries more weight here than anywhere else in this product: this text is the only thing travelling with a document that leaves the user's machine for a third party."
+    },
+    "quote_verification": {
+      "$ref": "#/$defs/answerVerification"
+    }
+  },
+  "$defs": {
+    "questionnairePin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "source_file",
+        "source_sha256",
+        "ingested_at"
+      ],
+      "description": "Which questionnaire, in which version, these answers belong to. The digest is the pin: a questionnaire re-exported from a portal with one question added is a different document with the same filename, and item ids would silently shift under answers already written against it.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The slug the questionnaire was ingested under; the directory name under .legal/questionnaires/."
+        },
+        "source_file": {
+          "type": "string",
+          "description": "The stored copy of the source, e.g. `source.csv`. The copy is verbatim - the ingest never rewrites the file it was given."
+        },
+        "source_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "Digest of the exact bytes that were ingested. `questionnaire export` compares it against the stored source and refuses to pass a mismatch off as a fit."
+        },
+        "ingested_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the source was read, copied from the ingest record rather than taken from a clock here."
+        },
+        "items": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many items the ingest decomposed the source into, copied from items.json so a reader can see at a glance whether every question was answered."
+        }
+      }
+    },
+    "questionnaireAnswer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "question",
+        "answer_draft",
+        "provenance",
+        "evidence",
+        "detector_gap"
+      ],
+      "description": "One drafted answer. `answer_draft` is the word that matters: it is a draft for the person running the scan to read, correct and decide to send, never a statement this product makes to their customer on their behalf.",
+      "properties": {
+        "item_id": {
+          "type": "string",
+          "pattern": "^q[0-9]{3,}$",
+          "description": "The item in items.json this answers. Machine-generated at ingest; an id naming no item is reported and never quietly dropped."
+        },
+        "question": {
+          "type": "string",
+          "description": "The question, copied VERBATIM from items.json. Carried here rather than only referenced so that the answer document reads on its own - and so that the copy can be compared against the item mechanically, which `questionnaire verify` does: an answer whose question text has drifted from the question asked is answering something else."
+        },
+        "answer_draft": {
+          "type": "string",
+          "description": "The drafted answer, in prose. Empty is legitimate for `human` provenance and for nothing else, and that is ENFORCED below: there the marker carries the whole content, which is that a person has to answer this one, while an empty draft on a `scan` or `targeted` answer exports as a blank answer cell under a provenance word saying the code was read for it. It never asserts that a legal requirement is met."
+        },
+        "provenance": {
+          "enum": [
+            "scan",
+            "targeted",
+            "human"
+          ],
+          "description": "Where the answer came from, and the three are exhaustive by design. \"scan\": drafted from material the deterministic half already produced - a pillar-1 candidate, a census fact - and it names them in finding_refs/fact_refs. \"targeted\": nothing in that material covered the question, so an investigation was run for this item alone, and every search it ran is in searches[] including the ones that returned nothing. \"human\": the code cannot answer it - insurance cover, staff training, where a server physically sits - so nobody guesses, and human_marker says so in the words the RoPA export already uses."
+        },
+        "finding_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^fp_[a-f0-9]{16}$"
+          },
+          "description": "Pillar-1 candidates this answer rests on, by finding_id, machine-checkable against the findings document the assemble pack pointed at."
+        },
+        "fact_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^cf_[a-f0-9]{16}$"
+          },
+          "description": "Census facts this answer rests on, by fact_id, machine-checkable against the reconciliation input the assemble pack pointed at."
+        },
+        "searches": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.invalid/product/declarations.schema.json#/$defs/reconSearch"
+          },
+          "description": "The searches a targeted investigation ran, in the shape pillar 2 already records searches in, and re-runnable verbatim. A ZERO-HIT SEARCH IS RECORDED AND IS NOT A FAILED SEARCH: for an answer that says the code does not do something, the empty searches are the whole evidence."
+        },
+        "human_marker": {
+          "type": "string",
+          "pattern": "^\\[REQUIRED — OPERATOR MUST ANSWER",
+          "description": "The marker a `human` answer carries, written by `operatorMarker()` in the RoPA emitter and imported rather than re-invented, so the two customer-facing outputs of this product say the same words when they refuse to guess. It names the reason, so the person reads what to go and find out rather than only that something is missing."
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.invalid/product/declarations.schema.json#/$defs/declarationFinding/properties/evidence/items"
+          },
+          "description": "Code the answer rests on, quoted verbatim, in the shape `reconcile-verify` already checks - which is why it is that shape: `questionnaire verify` runs the same waterfall over these quotations and over each listed search hit. Empty is legitimate and common: a `human` answer rests on no code, and an answer whose content is that the code does nothing of the kind rests on its searches."
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ],
+          "description": "How firmly the evidence supports the draft. Required for `scan` and `targeted` and FORBIDDEN on a `human` answer, both enforced below: there is no evidence to be confident about there, and a confidence word beside an operator marker is read as confidence in an answer nobody has given yet."
+        },
+        "refutation": {
+          "$ref": "https://schemas.invalid/product/declarations.schema.json#/$defs/declarationFinding/properties/refutation",
+          "description": "The second pass: a fresh agent, given the answer and not the drafter's reasoning, trying to prove it wrong. Optional in this schema because a document written between the drafting and the refuter pass is still a valid document - and `questionnaire export` counts the answers that carry none and says so, because an un-refuted answer heading for a customer is a fact the person should see before they send it."
+        },
+        "detector_gap": {
+          "type": "boolean",
+          "description": "True when this question could be answered from the code and NO rule or census collector covers its subject - so the answer exists only because an agent went and read the tree for this item. THIS IS THE LOG THAT GROWS THE NET: questionnaires arriving from customers ask what the detectors were never built to ask, and the gaps they expose are the material for the next round of rule work. Only a `targeted` answer may set it, which this schema enforces below: a `scan` answer by definition sits inside the detectors' reach, and a `human` answer names a fact no detector could ever hold."
+        },
+        "quote_checks": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.invalid/product/declarations.schema.json#/$defs/quoteCheck"
+          },
+          "description": "The mechanical check of every quotation this answer owns - each evidence excerpt and each listed search hit - against the real files under the target. Added by `questionnaire verify` and never by the agent; absent means the check has not been run, which is not the same as passing it."
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "detector_gap is a claim about the DETECTORS, and only a targeted investigation is in a position to make it.",
+          "if": {
+            "properties": {
+              "detector_gap": {
+                "const": true
+              }
+            },
+            "required": [
+              "detector_gap"
+            ]
+          },
+          "then": {
+            "properties": {
+              "provenance": {
+                "const": "targeted"
+              }
+            }
+          }
+        },
+        {
+          "$comment": "A targeted investigation that lists no search has recorded nothing a reader could re-run, and 'I looked and found nothing' is precisely the answer that needs the search written down.",
+          "if": {
+            "properties": {
+              "provenance": {
+                "const": "targeted"
+              }
+            },
+            "required": [
+              "provenance"
+            ]
+          },
+          "then": {
+            "required": [
+              "searches",
+              "confidence"
+            ],
+            "properties": {
+              "searches": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "$comment": "A scan-provenance answer must name the material it was drafted from, or the word 'scan' is decoration.",
+          "if": {
+            "properties": {
+              "provenance": {
+                "const": "scan"
+              }
+            },
+            "required": [
+              "provenance"
+            ]
+          },
+          "then": {
+            "required": [
+              "confidence"
+            ],
+            "anyOf": [
+              {
+                "properties": {
+                  "finding_refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "finding_refs"
+                ]
+              },
+              {
+                "properties": {
+                  "fact_refs": {
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "fact_refs"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "$comment": "A human answer says so in the marker's own words. Without the marker an empty answer_draft is indistinguishable from an answer somebody forgot to write.",
+          "if": {
+            "properties": {
+              "provenance": {
+                "const": "human"
+              }
+            },
+            "required": [
+              "provenance"
+            ]
+          },
+          "then": {
+            "required": [
+              "human_marker"
+            ]
+          }
+        },
+        {
+          "$comment": "A confidence word beside a question nobody has answered reads as confidence in the answer. The field's own description said this before anything enforced it, and a description asserting a rule the schema does not hold is the class of defect this file is checked for.",
+          "if": {
+            "properties": {
+              "provenance": {
+                "const": "human"
+              }
+            },
+            "required": [
+              "provenance"
+            ]
+          },
+          "then": {
+            "not": {
+              "required": [
+                "confidence"
+              ]
+            }
+          }
+        },
+        {
+          "$comment": "An empty answer_draft is legitimate for `human` and for nothing else: on a scan or targeted answer it exports as an empty answer cell under a provenance word that says the code was read for it. Same reason as the clause above - the description said so and nothing held it.",
+          "if": {
+            "properties": {
+              "provenance": {
+                "enum": [
+                  "scan",
+                  "targeted"
+                ]
+              }
+            },
+            "required": [
+              "provenance"
+            ]
+          },
+          "then": {
+            "properties": {
+              "answer_draft": {
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "answerVerification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tool",
+        "verifier_version",
+        "counts",
+        "fallback_anchored",
+        "total",
+        "code_scope",
+        "answers_checked",
+        "items_without_answer",
+        "answers_naming_no_item",
+        "question_text_mismatches",
+        "answers_without_refutation",
+        "detector_gap_items",
+        "searches_reporting_more_hits_than_listed",
+        "source_pin",
+        "not_verified_here"
+      ],
+      "description": "The mechanical check over a whole answers document, written by `questionnaire verify` into an annotated COPY - the agent's own file is left untouched, which is why this field can be absent: absent means nobody has run the check, not that it passed. No timestamp is carried, deliberately: two runs over the same answers and the same tree produce byte-identical output, which is what lets a gate compare one run against the next.",
+      "properties": {
+        "tool": {
+          "const": "questionnaire-verify",
+          "description": "Which command wrote this. The waterfall underneath is `reconcile-verify`'s, called and not copied, but the caller is named here so an annotation is never mistaken for something the agent produced about itself."
+        },
+        "verifier_version": {
+          "type": "integer",
+          "description": "The quote verifier's own version, carried through from reconcile-verify so a reader can tell which tier behaviour produced these rows."
+        },
+        "counts": {
+          "$ref": "https://schemas.invalid/product/declarations.schema.json#/$defs/quoteVerification/properties/counts",
+          "description": "One count per status, all five always present, and they are the same five words with the same meanings pillar 2 uses - imported rather than restated, because a sixth status word invented here would mean the two halves of one waterfall disagreed about what it found."
+        },
+        "fallback_anchored": {
+          "type": "integer",
+          "description": "How many checks rest on the first-line fallback alone. Counted beside `counts` because such a row wears a status word that reads as success while carrying the weight of an unverified one, and the exit code turns on this number as well as on the unverifiable count."
+        },
+        "total": {
+          "type": "integer",
+          "description": "Quotations checked. Equals the sum of `counts`."
+        },
+        "code_scope": {
+          "type": "integer",
+          "description": "Files named anywhere in this answers document, which is the whole scope a quotation can be re-attributed within. A file nothing here mentions is not opened."
+        },
+        "answers_checked": {
+          "type": "integer",
+          "description": "How many answers were walked, whether or not they carried a quotation."
+        },
+        "items_without_answer": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Item ids in items.json that no answer names. Not an error and never silent: the person is sending this to a customer and needs to see which questions are still blank."
+        },
+        "answers_naming_no_item": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Item ids in the answers that items.json does not carry. These cannot be placed in an export, so they are named loudly and the run does not exit as if the document fitted."
+        },
+        "question_text_mismatches": {
+          "type": "array",
+          "description": "Answers whose copy of the question is not byte-identical to the item's. An answer that has quietly reworded the question is answering a question nobody asked.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "item_id",
+              "in_items",
+              "in_answer"
+            ],
+            "properties": {
+              "item_id": {
+                "type": "string"
+              },
+              "in_items": {
+                "type": "string"
+              },
+              "in_answer": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "answers_without_refutation": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Answers carrying no `refutation`. Stated rather than enforced: the second pass is the skill's step, and a count that is printed is a fact where an absent field the reader has to notice is not."
+        },
+        "detector_gap_items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Answers marked `detector_gap`. Surfaced by both verify and export so the log that grows the net is visible in the run rather than only inside the JSON."
+        },
+        "searches_reporting_more_hits_than_listed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Searches whose `hit_count` exceeds the hits they list. Only the listed lines can be checked, and a search claiming 47 hits while listing none reads, in the answer sheet the customer receives, as 47 found lines standing behind the answer. The same population pillar 2 already names on a report, computed here by the same exported function rather than by a second copy of the arithmetic."
+        },
+        "source_pin": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "answers_sha256",
+            "stored_sha256",
+            "matches"
+          ],
+          "description": "Whether the questionnaire these answers name is the questionnaire on disk. A mismatch means the answers were drafted against different bytes - a portal re-export with a question added shifts every id after it - and it is said out loud rather than resolved, because nothing here picks one of them to believe.",
+          "properties": {
+            "answers_sha256": {
+              "type": "string"
+            },
+            "stored_sha256": {
+              "type": "string"
+            },
+            "matches": {
+              "type": "boolean"
+            }
+          }
+        },
+        "not_verified_here": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What this check does NOT cover, carried in the output itself. A check that appears to cover a whole document and covers part of it is how \"verified\" gets claimed for something nobody measured, so the boundary travels with the result."
+        },
+        "extractions": {
+          "type": "array",
+          "description": "Evidence entries whose quote this tool wrote from a declared location, and the ones it refused to write - the same field a declarations report's verification carries, produced by the same exported pass over the same CodeEvidence shape. Present only where at least one entry named a location and no text.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "source",
+              "declared"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "description": "JSON path of the entry, in the vocabulary quote_checks[].path uses."
+              },
+              "source": {
+                "type": "string",
+                "description": "The file under --target the range was read from."
+              },
+              "declared": {
+                "type": "string",
+                "description": "The range as the report declared it."
+              },
+              "lines": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Lines taken, where the extraction succeeded."
+              },
+              "refusal": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Why nothing was taken, where it did not. The entry then carries no quote at all."
+              }
+            }
+          }
+        }
+      }
+    },
+    "itemsDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "questionnaire",
+        "source_file",
+        "source_sha256",
+        "format",
+        "items"
+      ],
+      "description": "items.json - the decomposition of one ingested questionnaire into items with stable ids. Written by `questionnaire ingest` and NEVER EDITED BY HAND: a mis-split is repaired by re-ingesting with different options, because a hand-edit leaves ingest.json describing a split that no longer exists and the two files are the record of one decision.",
+      "properties": {
+        "questionnaire": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The slug this was ingested under."
+        },
+        "source_file": {
+          "type": "string",
+          "description": "The stored verbatim copy the items were read from."
+        },
+        "source_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "Digest of those exact bytes."
+        },
+        "format": {
+          "enum": [
+            "csv",
+            "markdown",
+            "text"
+          ],
+          "description": "How the source was read. `markdown` and `text` share one line-based decomposition and differ in that markdown also reads headings as section context and skips fenced code blocks."
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/questionnaireItem"
+          }
+        }
+      }
+    },
+    "questionnaireItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "question",
+        "anchor"
+      ],
+      "description": "One question, as the source carries it. The text is verbatim and is not trimmed, normalised or re-cased: it is what the customer asked, and the answer document copies it again so the two can be compared.",
+      "properties": {
+        "item_id": {
+          "type": "string",
+          "pattern": "^q[0-9]{3,}$",
+          "description": "Stable within one ingest of one source: assigned in source order, so the same bytes read with the same options always produce the same ids."
+        },
+        "question": {
+          "type": "string",
+          "description": "The question text, verbatim."
+        },
+        "anchor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "line"
+          ],
+          "description": "Where in the source this came from, so a person confirming the split can open the file at the place rather than searching for the wording.",
+          "properties": {
+            "kind": {
+              "enum": [
+                "csv-cell",
+                "text-line"
+              ]
+            },
+            "line": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "1-based physical line where the record or the item's first line starts."
+            },
+            "record": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "CSV only: 1-based record number, the header being record 1."
+            },
+            "column_index": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "CSV only: 1-based index of the column the question was read from."
+            },
+            "column_header": {
+              "type": "string",
+              "description": "CSV only: that column's header text, as the file spells it."
+            },
+            "end_line": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Last physical line of the item, where it runs over more than one - a wrapped markdown question, or a CSV cell with an embedded newline."
+            }
+          }
+        },
+        "existing_answer": {
+          "type": "string",
+          "description": "An answer cell the source already carried, carried through untouched. It is the person's own earlier answer or the customer's example, and it is evidence for the drafting, never an answer this run produced."
+        },
+        "section": {
+          "type": "string",
+          "description": "The heading this item sits under, for a markdown source. Context for the reader; nothing routes on it."
+        },
+        "parse_note": {
+          "type": "string",
+          "description": "What was ambiguous about this row or line, in words. THE POINT OF THIS FIELD IS THAT A GUESS IS NEVER SILENT: a record with the wrong number of fields, a cell that swallowed a line break, a line that could be a heading or a question - each lands here as an item WITH the doubt attached, rather than being dropped or being reshaped into something tidy."
+        }
+      }
+    },
+    "ingestRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tool",
+        "ingest_version",
+        "questionnaire",
+        "source",
+        "ingested_at",
+        "format",
+        "items",
+        "rows_without_item",
+        "items_with_parse_note",
+        "notes",
+        "disclaimer"
+      ],
+      "description": "ingest.json - every decision the ingest made, so the split can be argued with. It is the second half of the record items.json opens: what was read, what was skipped and why, and which column or line rule produced the questions.",
+      "properties": {
+        "tool": {
+          "const": "questionnaire-ingest"
+        },
+        "ingest_version": {
+          "type": "integer",
+          "description": "Bumped whenever the parsing rules change, so a reader of an items.json can tell which rules produced it."
+        },
+        "questionnaire": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "given_path",
+            "stored_as",
+            "bytes",
+            "sha256",
+            "lines"
+          ],
+          "properties": {
+            "given_path": {
+              "type": "string",
+              "description": "The path as it was typed, kept because the stored copy's name says nothing about where it came from."
+            },
+            "stored_as": {
+              "type": "string",
+              "description": "The verbatim copy's filename inside the questionnaire directory."
+            },
+            "bytes": {
+              "type": "integer"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "lines": {
+              "type": "integer",
+              "description": "Physical lines in the source."
+            }
+          }
+        },
+        "ingested_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the source was read. THE ONLY CLOCK IN THE INGEST: items.json carries none, so the decomposition is byte-identical across runs and a gate can compare it."
+        },
+        "format": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "decided_by"
+          ],
+          "properties": {
+            "value": {
+              "enum": [
+                "csv",
+                "markdown",
+                "text"
+              ]
+            },
+            "decided_by": {
+              "enum": [
+                "flag",
+                "extension",
+                "default"
+              ],
+              "description": "`default` means the extension was not one this tool knows, so it was read as plain text - which is stated rather than assumed, because a spreadsheet saved with an unusual extension read as text produces a split nobody expected."
+            }
+          }
+        },
+        "csv": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "delimiter",
+            "records",
+            "header_fields",
+            "question_column"
+          ],
+          "description": "Present for a CSV source. `delimiter` is stated rather than detected: this reader splits on commas, and a semicolon- or tab-separated export arrives as one column, which the notes say out loud instead of guessing at the shape.",
+          "properties": {
+            "delimiter": {
+              "type": "string"
+            },
+            "records": {
+              "type": "integer",
+              "description": "Records parsed, the header included."
+            },
+            "header_fields": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "question_column": {
+              "$ref": "#/$defs/csvColumnChoice"
+            },
+            "answer_column": {
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/csvColumnChoice"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "The column an already-filled answer was read from, or null where the source carries none."
+            },
+            "unterminated_quote": {
+              "type": "boolean",
+              "description": "True when a quoted field was still open at end of file, so everything after the opening quote became one field. Said loudly: the split downstream of that point is not what the file's author meant."
+            }
+          }
+        },
+        "text": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "rule_used",
+            "headings",
+            "fenced_code_lines"
+          ],
+          "description": "Present for a markdown or text source.",
+          "properties": {
+            "rule_used": {
+              "enum": [
+                "numbered-or-bulleted",
+                "question-mark-lines",
+                "every-non-blank-line"
+              ],
+              "description": "Which of the three line rules produced the items, tried in this order and the first that finds anything wins. The third is the honest fallback for a file with no structure at all: every non-blank line becomes an item and every item says so in its parse_note, rather than the file coming back with no questions in it."
+            },
+            "headings": {
+              "type": "integer",
+              "description": "Markdown headings read as section context rather than as questions."
+            },
+            "fenced_code_lines": {
+              "type": "integer",
+              "description": "Lines inside fenced code blocks, which are never items. A numbered line inside a code fence is a code sample, and it is counted here rather than being dropped invisibly."
+            }
+          }
+        },
+        "items": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rows_without_item": {
+          "type": "array",
+          "description": "Every source record or line that produced no item, with the reason. NOTHING IS DROPPED SILENTLY: the raw text is carried so a person reading this file can see exactly what was skipped and disagree with the reason.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "line",
+              "reason",
+              "raw"
+            ],
+            "properties": {
+              "record": {
+                "type": "integer",
+                "description": "CSV only: which record it was."
+              },
+              "line": {
+                "type": "integer"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "raw": {
+                "type": "string",
+                "description": "The record's or line's own text, whole."
+              }
+            }
+          }
+        },
+        "items_with_parse_note": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Item ids carrying a parse_note, so the count of doubtful splits is readable without walking items.json."
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Decisions true of the whole file rather than of one row - which rule chose the question column, what the format was decided from, a header that looks like it was not comma-separated."
+        },
+        "disclaimer": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "csvColumnChoice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "index",
+        "header",
+        "chosen_by"
+      ],
+      "description": "Which column was read and WHY it was read, because the second half is what the person confirms. A column picked by a heuristic and a column named on the command line are different degrees of certainty and must not print alike.",
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "1-based column index."
+        },
+        "header": {
+          "type": "string",
+          "description": "The column's header text, as the file spells it."
+        },
+        "chosen_by": {
+          "enum": [
+            "flag-header-name",
+            "flag-column-index",
+            "header-name-match",
+            "longest-average-cell",
+            "only-column"
+          ],
+          "description": "`flag-*` means the person named it. `header-name-match` means a header said so. `longest-average-cell` is the last resort - the questions are usually the longest text in a row - and it is the choice most worth confirming, which is why the console prints it as a question rather than a statement."
+        }
+      }
+    },
+    "answerInputPack": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tool",
+        "assemble_version",
+        "questionnaire",
+        "target",
+        "materials",
+        "items",
+        "matching_note",
+        "detector_gap_items",
+        "disclaimer"
+      ],
+      "description": "answer-input.json - the deterministic pack an answering agent starts from. It carries the items and an INVENTORY of the material available, and it matches nothing to anything: which material answers which question is judgement, and a pack that pre-matched would be handing the agent a conclusion dressed as an input. It is the pillar-2 split applied to this feature - everything a machine can settle is settled here, and nothing else is.",
+      "properties": {
+        "tool": {
+          "const": "questionnaire-assemble"
+        },
+        "assemble_version": {
+          "type": "integer"
+        },
+        "questionnaire": {
+          "$ref": "#/$defs/questionnairePin"
+        },
+        "target": {
+          "type": "string"
+        },
+        "materials": {
+          "type": "array",
+          "description": "One entry per kind of material this feature can draw on, PRESENT OR NOT. An absent material is stated in words - \"the code scan was not run\" - because a pack that simply omitted it looks exactly like a pack whose material was empty, and an agent reading the second will answer questions it has no business answering.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "present",
+              "path",
+              "note"
+            ],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "pillar1-findings",
+                  "reconcile-input",
+                  "census",
+                  "questionnaire-answers"
+                ]
+              },
+              "present": {
+                "type": "boolean"
+              },
+              "path": {
+                "type": "string",
+                "description": "Where it was looked for, whether or not it was found."
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$",
+                "description": "Digest of the bytes read, for a material that was found. It is what ties an answer's finding_refs and fact_refs to a particular version of the material."
+              },
+              "counts": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer"
+                },
+                "description": "What the material holds, counted - candidates, facts per collector, documents. Counts and never contents: the agent reads the material itself."
+              },
+              "note": {
+                "type": "string",
+                "minLength": 1,
+                "description": "What this material can and cannot answer, or - when it is absent - what is missing and what would supply it."
+              }
+            }
+          }
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/questionnaireItem"
+          },
+          "description": "Every item, copied from items.json unchanged."
+        },
+        "matching_note": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The sentence saying that nothing here is matched to an item, carried in the pack itself so it reaches the agent that reads the pack rather than only the person who read the documentation."
+        },
+        "detector_gap_items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Items an existing answers document already marked `detector_gap`, or empty where no answers exist yet. Surfaced here so a re-assembly after a first pass shows the gaps without anyone opening the answers."
+        },
+        "disclaimer": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "$comment": "THE SHARED SHAPES ARE IMPORTED, NOT COPIED. `searches[]`, `evidence[]`, `refutation`, `quote_checks[]` and the five-status `counts` object are cross-file $refs into declarations.schema.json, so a search recorded for a questionnaire answer is the same object a pillar-2 finding records, and `questionnaire verify` can hand both to one waterfall. ANY LOADER OF THIS FILE MUST REGISTER declarations.schema.json IN THE SAME AJV INSTANCE FIRST, or compilation fails loudly."
+}

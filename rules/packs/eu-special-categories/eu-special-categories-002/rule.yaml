@@ -1,0 +1,506 @@
+id: eu-special-categories-002
+pack: eu-special-categories
+short_name: Biometric identification data named in the code
+problem_line:
+  text: Biometric identification with no Art. 9 basis named
+fix_line: Use detect-only calls or platform passkeys and delete stored templates, or name the Art.
+  9(2) exception before it runs.
+title: Biometric template or identification/verification operation named - GDPR Art 9(1) purpose
+  element needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(1): 'Processing of personal data revealing racial or
+      ethnic origin, political opinions, religious or philosophical beliefs, or trade union
+      membership, and the processing of genetic data, biometric data for the purpose of uniquely
+      identifying a natural person, data concerning health or data concerning a natural person's sex
+      life or sexual orientation shall be prohibited.' Quoted verbatim from the Official Journal
+      text (CELEX 32016R0679), retrieved 2026-07-30 from the Publications Office cellar
+      (publications.europa.eu/resource/celex/32016R0679; eur-lex.europa.eu itself returns an empty
+      WAF challenge, and the cellar URL answers only when the request carries BOTH an Accept header
+      of application/xhtml+xml AND an Accept-Language header of eng - with the Accept header alone
+      it returns HTTP 400 and a 205-byte body, which this file stated as sufficient until 2026-08-03
+      and which was re-tested that day, returning 400 without the language header and 200 with it;
+      the C-184/20 entry below already carried the correct pair). The Journal prints 'natural
+      person's' with an ASCII apostrophe; copied unchanged. The biometric limb carries its purpose
+      qualifier inside the prohibition: 'biometric data for the purpose of uniquely identifying a
+      natural person'. Biometric-shaped processing without that purpose is outside Art. 9(1)
+      altogether, which is why this detector aims at identification and verification shapes -
+      templates, embeddings, matchers, 1:1 verification and 1:N search - and never at face detection
+      as such, and why the purpose element itself is context question 2 rather than something a
+      regex asserts. Art. 9 has applied since 2018-05-25 (Art. 99(2): 'It shall apply from 25 May
+      2018.')."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(14): '‘biometric data’ means personal data resulting
+      from specific technical processing relating to the physical, physiological or behavioural
+      characteristics of a natural person, which allow or confirm the unique identification of that
+      natural person, such as facial images or dactyloscopic data;'. Quoted from the same Official
+      Journal text, retrieved 2026-07-30; the Journal wraps the defined term in U+2018/U+2019 curly
+      quotation marks, preserved here. Two definitional elements no detector can establish and
+      context question 1 therefore asks: 'resulting from specific technical processing' (a raw
+      photograph or audio file is not yet biometric data - Recital 51 below), and 'which allow or
+      confirm the unique identification' (a face bounding box or a blur mask allows no
+      identification, a face embedding does). 'dactyloscopic data' is fingerprint data, and it is
+      the reason the fingerprint vocabulary below is template/minutiae/sensor-shaped - the
+      Regulation's own example is the fingerprint, and the trap is that software fingerprinting
+      (browsers, devices, TLS keys, builds) shares the word and is not this concept at all."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(2), in full: 'Paragraph 1 shall not apply if one of
+      the following applies: (a) the data subject has given explicit consent to the processing of
+      those personal data for one or more specified purposes, except where Union or Member State law
+      provide that the prohibition referred to in paragraph 1 may not be lifted by the data subject;
+      (b) processing is necessary for the purposes of carrying out the obligations and exercising
+      specific rights of the controller or of the data subject in the field of employment and social
+      security and social protection law in so far as it is authorised by Union or Member State law
+      or a collective agreement pursuant to Member State law providing for appropriate safeguards
+      for the fundamental rights and the interests of the data subject; (c) processing is necessary
+      to protect the vital interests of the data subject or of another natural person where the data
+      subject is physically or legally incapable of giving consent; (d) processing is carried out in
+      the course of its legitimate activities with appropriate safeguards by a foundation,
+      association or any other not-for-profit body with a political, philosophical, religious or
+      trade union aim and on condition that the processing relates solely to the members or to
+      former members of the body or to persons who have regular contact with it in connection with
+      its purposes and that the personal data are not disclosed outside that body without the
+      consent of the data subjects; (e) processing relates to personal data which are manifestly
+      made public by the data subject; (f) processing is necessary for the establishment, exercise
+      or defence of legal claims or whenever courts are acting in their judicial capacity; (g)
+      processing is necessary for reasons of substantial public interest, on the basis of Union or
+      Member State law which shall be proportionate to the aim pursued, respect the essence of the
+      right to data protection and provide for suitable and specific measures to safeguard the
+      fundamental rights and the interests of the data subject; (h) processing is necessary for the
+      purposes of preventive or occupational medicine, for the assessment of the working capacity of
+      the employee, medical diagnosis, the provision of health or social care or treatment or the
+      management of health or social care systems and services on the basis of Union or Member State
+      law or pursuant to contract with a health professional and subject to the conditions and
+      safeguards referred to in paragraph 3; (i) processing is necessary for reasons of public
+      interest in the area of public health, such as protecting against serious cross-border threats
+      to health or ensuring high standards of quality and safety of health care and of medicinal
+      products or medical devices, on the basis of Union or Member State law which provides for
+      suitable and specific measures to safeguard the rights and freedoms of the data subject, in
+      particular professional secrecy; (j) processing is necessary for archiving purposes in the
+      public interest, scientific or historical research purposes or statistical purposes in
+      accordance with Article 89(1) based on Union or Member State law which shall be proportionate
+      to the aim pursued, respect the essence of the right to data protection and provide for
+      suitable and specific measures to safeguard the fundamental rights and the interests of the
+      data subject.' Quoted from the same Official Journal text, retrieved 2026-07-30,
+      word-for-word: the point letters are kept, the Journal's per-point line breaks are joined by
+      single spaces, and the six no-break spaces (U+00A0) the Journal prints inside 'Member State
+      law' (points a, b, h, i), 'paragraph 3' (point h) and 'Article 89(1)' (point j) are written as
+      ASCII spaces, following eu-consent-016's treatment of the same character. Nine of the ten
+      exceptions are structurally invisible to a scanner (only a consent surface near an enrolment
+      leaves a code trace, and even that shows neither that the consent is explicit nor that the
+      purposes are specified), so the exceptions live in context question 5 rather than in any
+      suppression."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(3): 'Personal data referred to in paragraph 1 may be
+      processed for the purposes referred to in point (h) of paragraph 2 when those data are
+      processed by or under the responsibility of a professional subject to the obligation of
+      professional secrecy under Union or Member State law or rules established by national
+      competent bodies or by another person also subject to an obligation of secrecy under Union or
+      Member State law or rules established by national competent bodies.' Art. 9(4): 'Member States
+      may maintain or introduce further conditions, including limitations, with regard to the
+      processing of genetic data, biometric data or data concerning health.' Both quoted from the
+      same Official Journal text, retrieved 2026-07-30, word-for-word, with the no-break spaces
+      noted above normalised to ASCII spaces. Art. 9(4) names biometric data expressly: a member
+      state may add conditions on top of the Regulation, so an adjudication of this rule's
+      candidates can never conclude more than the GDPR position, and context question 6 says so."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 51, third sentence: 'The processing of photographs
+      should not systematically be considered to be processing of special categories of personal
+      data as they are covered by the definition of biometric data only when processed through a
+      specific technical means allowing the unique identification or authentication of a natural
+      person.' Quoted verbatim from the same Official Journal text, retrieved 2026-07-30. This is
+      the textual reason no photo, image, avatar, selfie or profile-picture vocabulary appears in
+      the detector: a stored photograph is not biometric data until a specific technical means (a
+      template, an embedding, a matcher) is applied to it for identification or authentication - and
+      when that happens, the template or the matcher is what this detector fires on."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(2): '‘processing’ means any operation or set of
+      operations which is performed on personal data or on sets of personal data, whether or not by
+      automated means, such as collection, recording, organisation, structuring, storage, adaptation
+      or alteration, retrieval, consultation, use, disclosure by transmission, dissemination or
+      otherwise making available, alignment or combination, restriction, erasure or destruction;'.
+      Art. 4(7): '‘controller’ means the natural or legal person, public authority, agency or other
+      body which, alone or jointly with others, determines the purposes and means of the processing
+      of personal data;'. Art. 4(8): '‘processor’ means a natural or legal person, public authority,
+      agency or other body which processes personal data on behalf of the controller;'. Art. 5(2):
+      'The controller shall be responsible for, and be able to demonstrate compliance with,
+      paragraph 1'. All quoted verbatim from the same Official Journal text (CELEX 32016R0679),
+      re-fetched 2026-08-03; the Journal's U+2018/U+2019 quotation marks around each defined term
+      are preserved. TWO CONSEQUENCES. (1) NO SINK REQUIREMENT. Computing a template server-side, or
+      receiving one, or storing one, is each an operation of processing under Art. 4(2) in its own
+      right - 'disclosure by transmission' is one further item on the same list, not a precondition.
+      A face descriptor written to a first-party table and never sent anywhere is inside Art. 9(1),
+      which is why this detector fires on a template artifact with no vendor call and no network
+      sink anywhere near it. (2) THE ADDRESSEE IS WHOEVER PROCESSES. Art. 9(1) is passive and names
+      no role; Art. 5(2) shows what the Regulation writes when it means the controller specifically,
+      and Art. 9 contains no such sentence. A processor processes (Art. 4(8)) and Art. 9(1)
+      prohibits processing, so a body running someone else's matcher is inside the prohibition. What
+      is controller-shaped is Art. 9(2), whose exceptions turn on the purposes and means that only
+      the Art. 4(7) controller determines. Context question 6 asks both questions separately."
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-03
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "European Data Protection Board, Guidelines 3/2019 on processing of personal data through
+      video devices, version 2.0, adopted 29 January 2020. THE THREE CUMULATIVE CRITERIA, paragraph
+      76: 'To sum up, in light of Article 4.14 and 9, three criteria must be considered: - Nature of
+      data : data relating to physical, physiological or behavioural characteristics of a natural
+      person, - Means and way of processing : data “resulting from a specific technical processing”,
+      - Purpose of processing: data must be used for the purpose of uniquely identifying a natural
+      person.' WHAT FALLS OUTSIDE, paragraph 80: 'However, when the purpose of the processing is for
+      example to distinguish one category of people from another but not to uniquely identify anyone
+      the processing does not fall under Article 9.' WHAT FALLS INSIDE, AND THE POINT THAT CORRECTS
+      THIS RULE - paragraph 82: 'However, Article 9 applies if the controller stores biometric data
+      (most commonly through templates that are created by the extraction of key features from the
+      raw form of biometric data (e.g. facial measurements from an image)) in order to uniquely
+      identify a person. If a controller wishes to detect a data subject re-entering the area or
+      entering another area (for example in order to project continued customized advertisement),
+      the purpose would then be to uniquely identify a natural person, meaning that the operation
+      would from the start fall under Article 9. This could be the case if a controller stores
+      generated templates to provide further tailored advertisement on several billboards throughout
+      different locations inside the shop. Since the system is using physical characteristics to
+      detect specific individuals coming back in the range of the camera (like the visitors of a
+      shopping mall) and tracking them, it would constitute a biometric identification method
+      because it is aimed at recognition through the use of specific technical processing.' NOBODY
+      IN THAT EXAMPLE LEARNS A NAME. Recognising the same person again IS uniquely identifying them.
+      EPHEMERAL TEMPLATES ARE STILL BIOMETRIC DATA - Example 5, printed under paragraph 83: 'The
+      system would be unlawful if it captures visitors or passers-by who have not consented to the
+      creation of their biometric template, even if their template is deleted within the shortest
+      possible period. Indeed, these temporary templates constitute biometric data processed in
+      order to uniquely identify a person who may not want to receive targeted advertisement.' SO IS
+      ON-THE-FLY CAPTURE FOR A MEMBER/NON-MEMBER DECISION, paragraph 84: 'Since the purpose is to
+      uniquely identify natural persons, an exception under Article 9 (2) GDPR is still needed for
+      anyone captured by the camera.' AND ON THE EXCEPTIONS, paragraph 70: 'data controllers
+      processing those data in the context of video surveillance cannot rely on Article 9 (2) (e),
+      which allows processing that relates to personal data that are manifestly made public by the
+      data subject. The mere fact of entering into the range of the camera does not imply that the
+      data subject intends to make public special categories of data relating to him or her.'
+      Fetched 2026-08-03 from the EDPB's document server (666,727 bytes); quotations transcribed
+      from the PDF text layer, with the Board's typographic quotation marks preserved and its own
+      spacing before colons reproduced as printed. STANDING: EDPB guidelines are not binding law.
+      They are the supervisory authorities' common position and a controller departing from them
+      should expect to justify it. This rule cites them for the meaning of an element, never as the
+      source of the duty."
+    url: https://www.edpb.europa.eu/system/files/documents/files/file1/edpb_guidelines_201903_video_devices_en_0.pdf
+    checked_at: 2026-08-03
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "CJEU, Case C-184/20, OT v Vyriausioji tarnybinės etikos komisija (Grand Chamber, 1 August
+      2022), ECLI:EU:C:2022:601, paragraph 127: 'Consequently, those provisions cannot be
+      interpreted as meaning that the processing of personal data that are liable indirectly to
+      reveal sensitive information concerning a natural person is excluded from the strengthened
+      protection regime prescribed by those provisions, if the effectiveness of that regime and the
+      protection of the fundamental rights and freedoms of natural persons that it is intended to
+      ensure are not to be compromised.' Operative part, point 2: 'Article 8(1) of Directive 95/46
+      and Article 9(1) of Regulation 2016/679 must be interpreted as meaning that the publication,
+      on the website of the public authority responsible for collecting and checking the content of
+      declarations of private interests, of personal data that are liable to disclose indirectly the
+      sexual orientation of a natural person constitutes processing of special categories of
+      personal data, for the purpose of those provisions.' The reading the Court REJECTS is at
+      paragraph 123, and it rejects it at paragraph 124 because Art. 4(15) and recital 35 already
+      define 'data concerning health' by what they 'reveal', so no Art. 9(1) limb receives a
+      narrower test than another. Quoted verbatim from the English text (CELEX 62020CJ0184), fetched
+      2026-08-03 from the Publications Office cellar; the request needs BOTH an Accept header of
+      application/xhtml+xml AND an Accept-Language header of eng, or it returns HTTP 400. WHAT IT
+      MEANS FOR THIS RULE, WHICH IS NOT WHAT IT MEANS FOR ITS SIBLINGS. A biometric template is
+      inherently biometric data, so this rule rarely needs the indirect route to reach its own limb
+      - its hard element is purpose, not category. The judgment bites DOWNSTREAM instead: what is
+      derived from a face, a voice or a gait can indirectly reveal a DIFFERENT Art. 9(1) category.
+      An ethnicity or ancestry estimate reveals racial or ethnic origin; an age-and-sex estimate
+      feeding a health or fertility inference, an emotion or stress score, a gait analysis read as a
+      mobility impairment, or a retinal image read for disease all reveal data concerning health.
+      Those outputs are inside Art. 9(1) whichever limb they belong to and however they were
+      produced - and they are inside it even where this rule's own purpose element FAILS, because no
+      identity was matched. Context question 2 therefore routes such a pipeline onward rather than
+      closing it, and names eu-special-categories-001 and -003 as well as the AI Act rules. Note the
+      limit: the judgment settles that indirectly revealing data are not excluded, not how strong an
+      inference must be, and this rule asserts no threshold."
+    url: https://publications.europa.eu/resource/celex/62020CJ0184
+    checked_at: 2026-08-03
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 35(1): 'Where a type of processing in particular using
+      new technologies, and taking into account the nature, scope, context and purposes of the
+      processing, is likely to result in a high risk to the rights and freedoms of natural persons,
+      the controller shall, prior to the processing, carry out an assessment of the impact of the
+      envisaged processing operations on the protection of personal data.' Art. 35(3)(b): 'A data
+      protection impact assessment referred to in paragraph 1 shall in particular be required in the
+      case of: ... (b) processing on a large scale of special categories of data referred to in
+      Article 9(1), or of personal data relating to criminal convictions and offences referred to in
+      Article 10'. Quoted verbatim from the same Official Journal text, re-fetched 2026-08-03; the
+      elision marks the omitted point (a). READ THE TWO TOGETHER, because quoting only 35(3)(b)
+      would overstate the duty in one direction and quoting only 35(1) would understate it in the
+      other. Art. 35(3)(b) makes a DPIA mandatory for LARGE-SCALE processing of Art. 9(1) data, and
+      'large scale' is a real element that a small enrolment set may not meet. But Art. 35(3) says
+      'in particular', so it is a non-exhaustive list of cases falling under the Art. 35(1) test,
+      and biometric identification is capable of triggering Art. 35(1) on its own facts at a smaller
+      scale. So the accurate statement is that a DPIA is required where Art. 35(1)'s high-risk
+      threshold is met, and is required in particular where the processing is on a large scale;
+      neither this rule nor its detector can see the scale, so the remediation asks rather than
+      asserts. Marked as not supporting the rule condition: Art. 35 is a separate duty from Art.
+      9(1) and this rule does not test it."
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-03
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 83(5)(a): infringements of 'the basic principles for
+      processing, including conditions for consent, pursuant to Articles 5, 6, 7 and 9' are 'subject
+      to administrative fines up to 20 000 000 EUR, or in the case of an undertaking, up to 4 % of
+      the total worldwide annual turnover of the preceding financial year, whichever is higher'.
+      Art. 9 is listed expressly, so a real Art. 9(1) gap sits in the Regulation's upper fining
+      band. Quoted from the same Official Journal text, retrieved 2026-07-30."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.55
+detector:
+  engine: builtin-regex
+  match:
+    - (?:(?<![A-Za-zÀ-ɏ])f|F)ace[_\-]?(?:[Dd]escriptor|[Ee]mbedding|[Tt]emplate|[Ee]ncoding|[Ss]ignature|[Vv]ector|[Pp]rint|[Rr]ecognition|[Mm]atch|[Ss]earch|[Vv]erif|[Ii]dentif|[Ee]nrol)|(?<![A-Za-zÀ-ɏ])FACE[_\-]?(?:DESCRIPTOR|EMBEDDING|TEMPLATE|ENCODING|SIGNATURE|VECTOR|PRINT|RECOGNITION|MATCH|SEARCH|VERIF|IDENTIF|ENROL)|(?:(?<![A-Za-zÀ-ɏ])f|F)acial[_\-]?(?:[Tt]emplate|[Ee]mbedding|[Rr]ecognition|[Ss]ignature)|(?<![A-Za-zÀ-ɏ])FACIAL[_\-]?(?:TEMPLATE|EMBEDDING|RECOGNITION|SIGNATURE)
+    - (?:(?<![A-Za-zÀ-ɏ])v|V)oice[_\-]?(?:[Pp]rint|[Tt]emplate|[Ee]mbedding|[Bb]iometric|[Vv]erif)|(?<![A-Za-zÀ-ɏ])VOICE[_\-]?(?:PRINT|TEMPLATE|EMBEDDING|BIOMETRIC|VERIF)|[Ss]peaker[_\-]?(?:[Ee]mbedding|[Vv]erification|[Ii]dentification|[Rr]ecogni|[Dd]iari[sz]|[Ee]nrol)|SPEAKER[_\-]?(?:EMBEDDING|VERIFICATION|IDENTIFICATION|RECOGNI|DIARI[SZ]|ENROL)|speaker/(?:verification|identification)|[Rr]esemblyzer|RESEMBLYZER|(?<![A-Za-zÀ-ɏ])[Ee][Cc][Aa][Pp][Aa]|spkrec|SPKREC|[Pp]yannote|PYANNOTE
+    - "[Ff]ingerprint[_\\-]?(?:[Tt]emplate|[Mm]inutiae|[Ss]can|[Ss]ensor|[Rr]eader|[Ee]nrol|[Mm]atc\
+      her)|FINGERPRINT[_\\-]?(?:TEMPLATE|MINUTIAE|SCAN|SENSOR|READER|ENROL|MATCHER)|(?<![A-Za-zÀ-ɏ]\
+      )[Mm]inutiae|(?<=[a-z])Minutiae|(?<![A-Z])MINUTIAE|[Dd]actyloscop|DACTYLOSCOP|(?:(?<![A-Za-zÀ\
+      -ɏ])i|I)ris[_\\-]?(?:[Ss]can|[Cc]ode|[Tt]emplate|[Rr]ecognition|[Mm]atch)|(?<![A-Za-zÀ-ɏ])IRI\
+      S[_\\-]?(?:SCAN|CODE|TEMPLATE|RECOGNITION|MATCH)|[Rr]etina(?:l)?[_\\-]?[Ss]can|RETINA(?:L)?[_\
+      \\-]?SCAN|[Pp]alm[_\\-]?(?:[Vv]ein|[Pp]rint)|PALM[_\\-]?(?:VEIN|PRINT)|[Gg]ait[_\\-]?(?:[Rr]e\
+      cognition|[Ss]ignature|[Ii]dentification)|GAIT[_\\-]?(?:RECOGNITION|SIGNATURE|IDENTIFICATION)\
+      |[Kk]eystroke[_\\-]?[Dd]ynamics|KEYSTROKE[_\\-]?DYNAMICS|[Bb]iometric[_\\-]?(?:[Tt]emplate|[E\
+      e]nrol|[Dd]atabase|[Mm]atch|[Ii]dentif|[Vv]erif|[Ss]ignature)|BIOMETRIC[_\\-]?(?:TEMPLATE|ENR\
+      OL|DATABASE|MATCH|IDENTIF|VERIF|SIGNATURE)"
+    - "[Ii]ndex[_\\-]?[Ff]aces|INDEX[_\\-]?FACES|[Ss]earch[_\\-]?[Ff]aces|SEARCH[_\\-]?FACES|[Cc]om\
+      pare[_\\-]?[Ff]aces|COMPARE[_\\-]?FACES|[Ss]earch[_\\-]?[Uu]sers[_\\-]?[Bb]y[_\\-]?[Ii]mage|S\
+      EARCH[_\\-]?USERS[_\\-]?BY[_\\-]?IMAGE|[Aa]ssociate[_\\-]?[Ff]aces|ASSOCIATE[_\\-]?FACES|[Pp]\
+      erson[_\\-]?[Gg]roup|PERSON[_\\-]?GROUP|[Pp]erson[_\\-]?[Dd]irectory|PERSON[_\\-]?DIRECTORY|[\
+      Vv]erify[_\\-]?[Ff]ace[_\\-]?[Tt]o[_\\-]?[Ff]ace|VERIFY[_\\-]?FACE[_\\-]?TO[_\\-]?FACE|face/v1\
+      \\.0/(?:identify|verify|findsimilars|persongroups)|face_distance\\s*\\(|(?:DeepFace|[Dd]eepfa\
+      ce)\\.(?:verify|find|represent|stream)\\s*\\(|[Ii]nsight[_\\-]?[Ff]ace|INSIGHT[_\\-]?FACE|[Aa\
+      ]rc[_\\-]?[Ff]ace|ARC[_\\-]?FACE|(?:(?<![A-Za-zÀ-ɏ])f|F)ace[_\\-]?[Nn]et(?![a-z])|(?<![A-Za-z\
+      À-ɏ])FACE[_\\-]?NET(?![a-z])"
+    - "[Ee]nroll?[_\\-]?(?:[Ff]ace|[Ff]ingerprint|[Vv]oice|[Ss]peaker|[Bb]iometric)|ENROLL?[_\\-]?(\
+      ?:FACE|FINGERPRINT|VOICE|SPEAKER|BIOMETRIC)"
+    - (?:[Cc]osine[_\-]?[Ss]imilarity|COSINE[_\-]?SIMILARITY|[Ee]uclidean[_\-]?[Dd]istance|EUCLIDEAN[_\-]?DISTANCE)[^\n]{0,60}(?:(?<![A-Za-zÀ-ɏ])[Ff]ace|(?<![A-Za-zÀ-ɏ])FACE|[Ss]peaker|SPEAKER|[Vv]oiceprint|VOICEPRINT|[Ff]ingerprint|FINGERPRINT)
+    - (?<![A-Za-zÀ-ɏ])[Ff]ace[A-Za-z_]{0,16}[^\n]{0,60}(?:[Cc]osine[_\-]?[Ss]imilarity|COSINE[_\-]?SIMILARITY|[Ee]uclidean[_\-]?[Dd]istance|EUCLIDEAN[_\-]?DISTANCE)
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|--\s)
+context_questions:
+  - "Is the matched value biometric data within GDPR Art. 4(14) at all - personal data resulting
+    from specific technical processing relating to the physical, physiological or behavioural
+    characteristics of a natural person, which allow or confirm the unique identification of that
+    natural person? Quote the line where the template, embedding or comparison input is built and
+    say what it derives from. ASK WHAT IS MEASURED, NOT WHICH WORD IS USED. The question is whether
+    the value derives from a measurement of a person's body or behaviour, or from something else
+    that shares the vocabulary. Four look-alikes recur and each is outside this rule: browser or
+    device fingerprinting (FingerprintJS, visitorId, canvas and audio-context entropy - this
+    measures a MACHINE CONFIGURATION, not a person's physical, physiological or behavioural
+    characteristics); TLS certificate, SSH key and build-artifact fingerprints, which measure bytes;
+    3D-geometry 'face' identifiers, where mesh faces next to a distance call are polygons; and
+    model, dataset or product names that merely contain the vocabulary (InterSystems IRIS, the
+    Fisher iris dataset, PaLM). TWO WARNINGS ABOUT USING THAT LIST. First, do not close on the word:
+    keystroke dynamics, mouse dynamics, gait and continuous-authentication products are routinely
+    marketed as 'fingerprinting' and they measure a person's BEHAVIOUR, which is squarely inside
+    Art. 4(14)'s 'behavioural characteristics'. If what is measured is the human, the shared word is
+    irrelevant and the candidate stays open. Second, 'wrong rule' is not 'no issue': a browser or
+    device fingerprint is still personal data under Art. 4(1) and still engages the ePrivacy
+    terminal-equipment rule eu-consent-012, so close this candidate by naming that rule as the right
+    home, never by writing that nothing is wrong. Where what you find is genuinely one of the four,
+    say which, say what it measures, and say where the question goes instead."
+  - "Is the processing for the purpose of uniquely identifying a natural person - the qualifier Art.
+    9(1) places inside the biometric limb, and the question this detector never answers? Two shapes
+    pass it: 1:1 verification of a probe against an enrolled template (verify, CompareFaces,
+    compare_faces, verifyFaceToFace), and 1:N identification against a gallery or collection
+    (IndexFaces + SearchFaces, PersonGroup identify, FaceMatcher over LabeledFaceDescriptors,
+    speaker identification). Three shapes fail it: detection used only to crop, blur, count or
+    autofocus, with no template stored and no comparison; liveness or presence checking with no
+    enrolment; and emotion or attribute estimation with no identity match. FAILING THIS RULE'S
+    PURPOSE ELEMENT IS NOT THE SAME AS THERE BEING NO PROBLEM, and the third shape is where that
+    distinction bites. Attribute estimation from a face or a voice is outside the BIOMETRIC limb of
+    Art. 9(1) because nobody is being singled out - but its OUTPUT may sit in another Art. 9(1) limb
+    entirely: an ethnicity or ancestry estimate is personal data revealing racial or ethnic origin,
+    and an emotion, stress, fertility or disease-risk estimate is data concerning health. C-184/20
+    (quoted in legal_basis) holds that data liable indirectly to reveal a special category are
+    inside Art. 9(1) whichever limb they belong to, and it does not matter that a model produced
+    them. So route this shape onward rather than closing the GDPR question:
+    eu-special-categories-003 for race, ethnicity, religion, political opinion, trade union
+    membership, sex life or sexual orientation; eu-special-categories-001 for anything
+    health-shaped; and the AI Act rules for the separate prohibitions on the system itself
+    (ai-prohibited-003 for biometric categorisation, ai-prohibited-001 and ai-transparency-007 for
+    emotion). Those are different instruments with different addressees - Art. 5(1)(g) of the AI Act
+    bites on the provider or deployer of the categorisation system, while Art. 9(1) bites on anyone
+    processing its output, including a downstream party that never built a model. Say which rule you
+    are routing to and why; do not write 'not biometric identification' and stop. Recital 51 (quoted
+    in legal_basis) makes photographs as such neither special-category nor biometric data. Where the
+    surfaced line is an artifact with no visible comparison, trace where the template goes -
+    enrolment in one file and matching in another is the normal layout, and a detect-only call whose
+    output feeds an identification pipeline elsewhere is inside the purpose after all. Quote the
+    enrolment and the comparison, or record that you traced and found neither, in which case the
+    identification limb is unproven - say so and stop. THE TEST IS RECOGNITION, NOT A NAME, and this
+    is the correction that matters most in this question. Unique identification does not require
+    that anyone learn who the person is. EDPB Guidelines 3/2019 paragraph 82 (quoted in legal_basis)
+    decides exactly this: a shop that stores templates in order to detect a data subject
+    're-entering the area or entering another area' is uniquely identifying a natural person and the
+    operation falls under Article 9 'from the start', because 'it is aimed at recognition through
+    the use of specific technical processing' - and that shop never learns a name. So singling the
+    same person out again, across sessions, visits, recordings or camera ranges, IS the purpose,
+    however the label is spelled and even if the label is a random cluster id. Two corollaries. A
+    template deleted immediately after the comparison is still biometric data processed to uniquely
+    identify (Example 5 under paragraph 83), so do not close a candidate because the template is
+    ephemeral or held only in memory. And where a system captures everyone in order to decide who is
+    enrolled and who is not, paragraph 84 says an Art. 9(2) exception is needed for everyone
+    captured, not only for the enrolled. Speaker diarisation is the case this distinction actually
+    decides, and it goes both ways: clusters computed within ONE recording purely to separate turns,
+    discarded with the transcript, do not single anybody out across anything and the purpose is not
+    shown; voiceprints that PERSIST across recordings so the same speaker is recognised again are
+    inside Art. 9(1) whether the cluster is called SPEAKER_00 or Alice. Quote the retention and the
+    scope of the labels, not whether a name appears."
+  - "Does this party's code ever hold the sample, the template, or the comparison? THAT is the
+    question, and it is deliberately not 'where is the template stored'. A WebAuthn or passkey
+    platform authenticator (navigator.credentials.create with authenticatorAttachment 'platform',
+    userVerification 'required'), Android BiometricPrompt, and Face ID / Touch ID wrappers do close
+    the candidate - but for a precise reason: the capture, the template and the comparison all
+    happen inside the device's secure hardware, and the relying party receives a public key and a
+    signed assertion, so it never processes biometric data at all. Where that is the whole of the
+    biometric-adjacent code, record it and close. DO NOT GENERALISE THAT TO 'THE TEMPLATE IS ON THE
+    USER'S DEVICE, SO WE ARE OUT'. EDPB Opinion 11/2024 assesses precisely the case where the
+    enrolled template sits 'in the hands of the individual, for example, on their individual device,
+    under their sole control' for 1:1 authentication, and still analyses the operation as Art. 9
+    processing by the controller, requiring safeguards - storage location is a mitigation and a
+    proportionality argument, not an exit from Art. 9. So a system where this party's code captures
+    the face, builds the template, or runs the match is inside Art. 9(1) however the template is
+    stored afterwards, including where it is written back to the user's phone or held only in memory
+    for the duration of one comparison. A server-side enrolment is the clearest case and stays open:
+    a template computed or received server-side, stored in a database or object store, or sent to a
+    vendor API is processing by (or on behalf of) the party running that server, whatever
+    authentication vocabulary surrounds it."
+  - "Whose characteristics are processed - an identified or identifiable natural person? Quote what
+    the template or match result is keyed to: a user id, an employee record, a customer account, a
+    visitor session that is later joined to an identity. Synthetic test faces, stock demo images and
+    the vendor's own sample datasets are not personal data about anyone; say so if that is all the
+    code touches, and note that the same pipeline pointed at real users re-opens the question."
+  - "Which Art. 9(2) exception could the processing rest on, and can you name its legal basis? All
+    ten points are quoted in legal_basis; nine are invisible to a scanner, so answer from the code
+    and the repository's own statements, and quote what you find. Walk them in the order a real
+    product turns them on: (a) explicit consent for one or more specified purposes - a consent
+    checkbox or enrolment opt-in near the biometric code is a lead, never an answer, because the
+    consent must be explicit and the purposes specified, and a record of it must exist (the
+    eu-consent-016 questions apply to that record); (b) employment and social security law - the
+    common claim for workplace fingerprint or face attendance and access-control terminals, and it
+    requires authorisation by Union or Member State law or a collective agreement, not merely an
+    employment contract; (e) manifestly made public by the data subject - and treat this one with
+    particular care, because EDPB Guidelines 3/2019 paragraph 70 (quoted in legal_basis) says a
+    controller processing special categories through video surveillance cannot rely on it, since
+    'the mere fact of entering into the range of the camera does not imply that the data subject
+    intends to make public special categories of data relating to him or her'; the same reasoning
+    defeats a claim that a scraped public photograph was manifestly made public as biometric data;
+    (f) legal claims; (g) substantial public interest on the basis of a named Union or Member State
+    law. Where the code shows nothing either way, record explicitly that you looked and it shows
+    nothing."
+  - "Who is the controller, where do the templates go, and what does Art. 9(4) leave open? A
+    library, SDK or integration connector that wraps a face API for a caller is not thereby the
+    controller - record the finding against the integrating application where this repository is a
+    component. Trace the template store and every recipient: a vendor API call (AWS, Azure) sends
+    biometric data to a processor, and a recipient outside the EEA adds the Chapter V transfer
+    questions (Arts. 44-49), which are separate duties not decided here. And because Art. 9(4) lets
+    member states maintain or introduce FURTHER conditions on biometric data expressly, an answer
+    that everything above is in order is still only the GDPR position - name the member states the
+    deployment shows, and say that national conditions were not assessed."
+  - "WHO ANSWERS WHICH ART. 9(2) CONDITION THE ORGANISATION RELIES ON? Whether the organisation that
+    runs this product has a condition under Art. 9(2) for the special-category data it keeps, and
+    has it written down, is a fact about that organisation: the person running the scan is asked it
+    as the Art 9 condition question, ScanProfile.operator.special_category_condition, and the code
+    never decides it. Where the matched value is special-category data about an identifiable person
+    and what remains open is that condition - the Art. 9(2) question above - write the finding as
+    waiting on operator.special_category_condition, whether or not it has been answered, and let the
+    program apply the answer. The leads the Art. 9(2) question asks you to quote from the repository
+    corroborate or contradict the answer; where they contradict it, say so in the reasoning. The
+    answer settles that condition and nothing else: whether the value is special-category data at
+    all and whom it concerns, any further condition Member State law adds under Art. 9(4), and
+    whether the condition covers the use this finding is about, stay yours, so where one of those
+    decides the finding, answer it instead of waiting. An answer that the organisation has a
+    condition never says that it covers a particular use: each condition is tied to its purpose
+    (Art. 9(2)(a) consent is given for one or more specified purposes), so each onward use the code
+    shows - the value sent to a log or an error tracker, an analytics, marketing or session-replay
+    SDK or another tracker, a language model or another third-party API, or an export - is yours to
+    judge on its own line, with the transfer, minimisation and integrity questions it raises, and is
+    never written as waiting on this answer."
+evidence_template: "{file}:{line} names a biometric template artifact or a biometric
+  identification/verification operation (face, voice/speaker, fingerprint, iris, palm, gait or
+  keystroke). SOME OF THAT VOCABULARY IS A BARE TOKEN THAT IS ALSO AN ORDINARY ENGLISH WORD, and
+  some of it names a picture rather than an operation. `minutiae` is the standard word for
+  fingerprint template features and is also the ordinary English noun, met in a company newsletter
+  paragraph about product engineering; and a case arm of an icon-name mapping table that returns a
+  face-recognition glyph names an icon, not a comparison. Read the matched line and say which kind
+  you are holding, or that it is neither; context question 1 sets out four further look-alikes and
+  asks what each of them measures. Whether the processing is for the purpose of uniquely identifying
+  a natural person - the qualifier GDPR Art. 9(1) places inside the biometric limb - and whether an
+  Art. 9(2) exception applies are not tested by the detector; they are context questions 2 and 5."
+remediation_template: |
+  This is a candidate for review against GDPR Art. 9(1), which prohibits processing biometric data
+  for the purpose of uniquely identifying a natural person unless an Art. 9(2) exception applies -
+  not a determination about this code. Art. 9 is listed expressly in Art. 83(5)(a), the
+  Regulation's upper fining band (up to 20 000 000 EUR or 4 % of total worldwide annual turnover,
+  whichever is higher), and has applied since 2018-05-25.
+  Establish three facts first, because most candidates close on one of them:
+  1. Is it biometric data within Art. 4(14) at all - a template, embedding or matcher over a
+     person's physical, physiological or behavioural characteristics? Device and browser
+     fingerprints, TLS/SSH/build fingerprints and 3D-mesh "faces" are not; a photograph as such
+     is not either (Recital 51) until a specific technical means is applied to it.
+  2. Is the purpose uniquely identifying a person - 1:1 verification or 1:N search? Recognising
+     the same person again is enough; nobody has to learn a name (EDPB Guidelines 3/2019 para.
+     82), and a template deleted straight after the comparison still counts. Detection used only
+     to crop, blur or count, and liveness with no enrolment, fail this element. Emotion or
+     attribute estimation with no identity match also fails it - but its OUTPUT may be a
+     different Art. 9(1) category, so route it to eu-special-categories-003 (race, ethnicity,
+     religion, politics, trade union, sex life, orientation) or eu-special-categories-001
+     (health) as well as to the AI Act rules, rather than closing the GDPR question.
+  3. Does this party process the biometric at all? WebAuthn/passkey platform authenticators,
+     BiometricPrompt and Face ID keep it on the user's device; the server holds a public key.
+  If all three hold, the engineering choices are concrete. Where identification is incidental to
+  the feature (the feature is cropping, filtering, deduplicating photos), remove the
+  identification limb: use detect-only calls, stop computing or storing templates, and delete
+  stored template columns and collections (Rekognition collections, PersonGroups, descriptor
+  tables). Where authentication is the goal, prefer the on-device shape: platform authenticators
+  (WebAuthn/passkeys) give the server a public key and take the biometric out of the controller's
+  hands entirely. Where identification IS the product (KYC selfie-to-document verification, access
+  control, attendance), the processing needs a named Art. 9(2) basis before it runs: explicit
+  consent for specified purposes with a demonstrable record (point (a)), or an employment /
+  social-security law authorisation (point (b)) - an employment contract alone is not that.
+  Around that basis sit further duties which are SEPARATE from Art. 9(1), which this rule does
+  not test, and which it states here only so they are not forgotten: minimisation and storage
+  limitation (Art. 5(1)(c) and (e)), and the Chapter V analysis for any non-EEA vendor
+  (Arts. 44-49). On the data protection impact assessment specifically, state it accurately
+  rather than flatly: Art. 35(1) requires one where the processing is 'likely to result in a
+  high risk to the rights and freedoms of natural persons', and Art. 35(3)(b) makes one required
+  in particular for 'processing on a large scale of special categories of data referred to in
+  Article 9(1)'. Both are quoted in legal_basis. Whether this deployment is large scale is not
+  something the code shows, so establish the scale before asserting the duty - but note that
+  Art. 35(3) says 'in particular', so a smaller biometric identification system can still meet
+  the Art. 35(1) threshold on its own facts. Two limits to state plainly:
+  member states may impose further conditions on biometric data (Art. 9(4)), so a GDPR-only
+  answer is never the whole answer; and where the pipeline also infers emotions or protected
+  characteristics, or its gallery was built by untargeted scraping, the AI Act prohibitions
+  (ai-prohibited-001/-002/-003) are separate duties with their own rules - a finding here does
+  not absorb them, and clearing this rule does not clear them.
+data_categories:
+  - user.biometric
+fingerprint_spec: file

@@ -1,0 +1,242 @@
+id: eu-dsr-008
+pack: eu-dsr
+short_name: Changes to personal data kept in an append-only log
+problem_line:
+  text: Erasure and correction stop short of the event log
+fix_line: Make erasure reach the events (for example by destroying a per-person key), or record what
+  stays and for how long.
+title: Personal-data changes stored as immutable events in an append-only event store, with the read
+  side served by projections
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 16 - 'The data subject shall have the right to obtain
+      from the controller without undue delay the rectification of inaccurate personal data
+      concerning him or her. Taking into account the purposes of the processing, the data subject
+      shall have the right to have incomplete personal data completed, including by means of
+      providing a supplementary statement.' The Article says rectification, not supersession: a
+      store whose only write operation is an append raises the question of what the controller does
+      with the inaccurate value that the appended event replaces"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 17(1) - 'The data subject shall have the right to obtain
+      from the controller the erasure of personal data concerning him or her without undue delay and
+      the controller shall have the obligation to erase personal data without undue delay where one
+      of the following grounds applies'. Whether an erasure that rewrites or drops a projection row,
+      leaving the events it was projected from in place, discharges this obligation is the question
+      this construct raises; the detector does not answer it
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(d) - personal data shall be 'accurate and, where
+      necessary, kept up to date; every reasonable step must be taken to ensure that personal data
+      that are inaccurate, having regard to the purposes for which they are processed, are erased or
+      rectified without delay'. The principle names erasure and rectification as the two remedies
+      for inaccuracy, and an append-only log offers neither to the stored event
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(e) - personal data shall be 'kept in a form which
+      permits identification of data subjects for no longer than is necessary for the purposes for
+      which the personal data are processed'. Cited because the anchor tree's audit-log retention
+      default keeps every event for an unbounded period; whether that is true of the tree in front
+      of the reader is a deployment fact this detector does not read
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 25(1) - the controller shall 'implement appropriate
+      technical and organisational measures, such as pseudonymisation, which are designed to
+      implement data-protection principles, such as data minimisation, in an effective manner and to
+      integrate the necessary safeguards into the processing in order to meet the requirements of
+      this Regulation and protect the rights of data subjects', both 'at the time of the
+      determination of the means for processing and at the time of the processing itself'. Reference
+      only: this detector reads a storage architecture, and whether that architecture is an
+      appropriate measure is a judgement about the whole system that no matched line can carry"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.35
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  match:
+    - (?:^|[^A-Za-z0-9_])(?:eventstore|event_store|eventStore|EventStore|event_journal|EventJournal)\s*\.\s*(?:events?|Events?|streams?|Streams?)[0-9]{0,3}(?![A-Za-z_])
+    - (?:Eventstore|EventStore|EventStoreClient|EventStoreDBClient|RailsEventStore|RubyEventStore|NewEventstore|NewEventStore)(?![A-Za-z0-9_])
+    - (?:(?:^|[^A-Za-z0-9_])(?:eventstore|event_store)\s*\.\s*[A-Za-z_][A-Za-z0-9_]*|/(?:eventstore|event_store|eventsourcing)")
+    - (?:^|[^A-Za-z0-9_])(?:PushEvents|AppendEvents|append_events|appendEvents|AppendToStream|AppendToStreamAsync|appendToStream|append_to_stream)\s*\(
+    - (?:^|[^A-Za-z0-9_])(?:eventstore|eventStore|Eventstore|EventStore|event_store)\s*\.\s*(?:Push|push)\s*\(
+    - (?:^|[^A-Za-z0-9_])(?:AggregateType|AggregateID|AggregateId|AggregateRoot|aggregate_type|aggregate_id|aggregateType|aggregateId|aggregate_root)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:editor_user|editorUser|EditorUser|FieldEditorUser)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:events?|eventstore|event_store|event_log|event_type|EventType)(?![A-Za-z0-9_])[^\n]{0,120}?(?:^|[^A-Za-z0-9_])(?:created_by|creator|editor|editor_user)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:created_by|creator|editor|editor_user)(?![A-Za-z0-9_])[^\n]{0,120}?(?:^|[^A-Za-z0-9_])(?:events?|eventstore|event_store|event_log|event_type|EventType)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])projections\s*\.\s*[A-Za-z_][A-Za-z0-9_]*
+    - (?:(?:ReadModel|ReadModelHandler|ProjectionHandler|NewCreateStatement|NewUpdateStatement|NewMultiStatement|EventReducers?|AggregateReducers?|eventReducers?|aggregateReducers?|reduceEvent)|(?:^|[^A-Za-z0-9_])(?:Reducers|read_model|projection_handler|new_create_statement|event_reducer|aggregate_reducer))(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])@(?:EventSourcingHandler|Aggregate|AggregateIdentifier)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])AggregateLifecycle\s*\.\s*apply\s*\(
+    - (?:^|[^A-Za-z0-9_])(?:Commanded\.(?:Aggregate|Event|Commands|EventStore)|eventsourcing\.(?:domain|application)|event_store\s*\.\s*publish)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:apply|Apply|on|On|handle|Handle|when|When|evolve|Evolve)\s*\(\s*(?:final\s+)?(?:[A-Za-z_][A-Za-z0-9_.<>]*\s+)?(?:@event|@?[A-Za-z_][A-Za-z0-9_]*[Ee]vent)(?![A-Za-z0-9_.])
+    - (?:^|[^A-Za-z0-9_])(?:apply|Apply|evolve|Evolve|when|When)\s*\(\s*(?:[A-Za-z_][A-Za-z0-9_]*\s*,\s*)?(?:final\s+)?(?:[A-Za-z_][A-Za-z0-9_.<>]*\s+)?@?(?:event|evt|Event)\s*[),]
+    - (?:^|[^A-Za-z0-9_])(?:RegisterFilterEventMapper|RegisterEventMapper|register_event_mapper|EventTypeMapping|eventTypeMapping)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:tinybird|Tinybird|TINYBIRD|tinybirdco|clickhouse_driver|ClickHouseClient|createClickHouseClient|snowplow|Snowplow|SnowplowTracker|rudderstack|Rudderstack|RudderStack|rudderanalytics|KinesisFirehose|FirehoseClient|PutRecordBatchCommand|PutRecordBatch|DeliveryStreamName|buildIngestEndpoint|buildPipe|buildDatasource)(?![A-Za-z0-9_])|@tinybirdco/|@clickhouse/client|@snowplow/|@rudderstack/|@google-cloud/bigquery|clickhouse-connect|clickhouse_connect
+    - (?:^|[^A-Za-z0-9_])(?:ENGINE_SORTING_KEY|ENGINE_PARTITION_KEY|ENGINE_TTL|IMPORT_SERVICE|ENGINE_VER)(?![A-Za-z0-9_])|^[
+      \t]*(?:SCHEMA|SQL)[
+      \t]*>|(?:^|[^A-Za-z0-9_])[A-Za-z0-9_/.-]{0,60}\.(?:datasource|pipe)(?![A-Za-z0-9_.])(?![
+      \t]*\()|(?:^|[^A-Za-z0-9_])(?:insertAll|createDeliveryStream)[
+      \t]*\(|(?:^|[^A-Za-z0-9_])(?:v0/(?:datasources|pipes)/|(?:datasources|pipes)/[A-Za-z0-9_.-]*\.(?:datasource|pipe)(?![A-Za-z0-9_.])|tinybird/(?:datasources|pipes)/)
+    - (?:^|[^A-Za-z0-9_])(?:[Aa]ppend[-_ ]?only|APPEND[-_
+      ]?ONLY)(?![A-Za-z0-9_])[^\n]{0,90}(?:^|[^A-Za-z0-9_])(?:immutable|Immutable|IMMUTABLE|tables?|Tables?|TABLES?|stores?|Stores?|STORES?|logs?|Logs?|LOGS?|records?|Records?|RECORDS?|events?|Events?|EVENTS?|rows?|Rows?|ROWS?|histor(?:y|ies)|Histor(?:y|ies)|changes?|Changes?|transactions?|Transactions?|journals?|Journals?)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:immutable|Immutable|IMMUTABLE|tables?|Tables?|TABLES?|stores?|Stores?|STORES?|logs?|Logs?|LOGS?|records?|Records?|RECORDS?|events?|Events?|EVENTS?|rows?|Rows?|ROWS?|histor(?:y|ies)|Histor(?:y|ies)|changes?|Changes?|transactions?|Transactions?|journals?|Journals?)(?![A-Za-z0-9_])[^\n]{0,90}(?:^|[^A-Za-z0-9_])(?:[Aa]ppend[-_
+      ]?only|APPEND[-_ ]?ONLY)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:[A-Za-z0-9_]{0,40}(?:Record|Event|Entry|Change)s?\s*(?:::\s*(?:Delete|Deleted|Deletion|Tombstone|Removed)|\.\s*(?:Deleted|Deletion|Tombstone|Removed))|[Tt]ombstone[A-Za-z0-9_]*|TOMBSTONE[A-Z0-9_]*|(?:push|append|write|emit|publish)_(?:record|records)|(?:push|append|write|emit|publish)Records?)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:TARGET_DATASOURCE|ENGINE_SETTINGS|ENGINE_SIGN|ENGINE_VERSION|ENGINE_PRIMARY_KEY|ENGINE_SAMPLING_EXPRESSION|ENGINE_JOIN_STRICTNESS|ENGINE_JOIN_TYPE|ENGINE_KEY_COLUMNS|IMPORT_STRATEGY|IMPORT_SCHEDULE|KAFKA_TOPIC|KAFKA_GROUP_ID|KAFKA_BOOTSTRAP_SERVERS)(?![A-Za-z0-9_])
+    - ^[ \t]*NODE[ \t]+[A-Za-z_][A-Za-z0-9_]*[ \t]*$|^[ \t]*TYPE[
+      \t]+(?:endpoint|materialized|copy|sink|stream)[ \t]*$
+    - (?:api|api\.[a-z0-9-]+)\.tinybird\.co|(?:^|[^A-Za-z0-9_])v0/(?:events|pipes|datasources)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])tb[
+      \t]+(?:push|pull|deploy|build|datasource|pipe|token|workspace|materialize)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])@(?:EventHandler|CommandHandler|ProcessingGroup|AggregateMember|EventSourcedEntity|SagaEventHandler)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:eventstore|event_store|eventStore|EventStore)\s*\.\s*(?:subscribe|subscribe_to_all|subscribeToAll|read|readStream|read_stream|SubscribeToStream|subscribeToStream)\s*\(
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|<%#|--)
+context_questions:
+  - "MANDATORY, AND IT IS THE BOUNDARY THIS RULE EXISTS ON: IS THE EVENT LOG THE STORE, OR AN AUDIT
+    TRAIL BESIDE ONE? Find the write path for one personal-data attribute - an e-mail address, a
+    phone number, a display name - and say which of two things happens. (a) The application appends
+    an event and a projection or read model is rebuilt from it, with no UPDATE of a durable row
+    anywhere: that is this rule's construct. (b) The application UPDATEs a row in a primary table
+    and ALSO writes a history record: that is the already-recorded class
+    `audit-trail-of-record-changes`, it is NOT this construct, and the candidate should be dismissed
+    here with the UPDATE statement quoted. Do not decide this from the presence of an events table;
+    decide it by finding the write."
+  - DO THE EVENTS CARRY PERSONAL DATA, OR ONLY REFERENCES TO IT? Open the event payloads actually
+    appended for the user-facing aggregates and quote their fields. Three answers are common and
+    they are not the same finding. The payload may carry the attribute values themselves; it may
+    carry only an identifier with the values living in the projection; or it may carry an encrypted
+    blob whose key is held per subject. Say which, and quote the payload struct, schema or
+    serialiser rather than inferring it from the event's name.
+  - WHAT IS THE RETENTION OF THE LOG ITSELF, AND WHERE IS IT SET? An event store's retention is
+    usually a single setting, and where it is unset or set to a sentinel meaning `keep everything`
+    the events outlive every retention period the product states elsewhere. Find the setting, quote
+    its shipped default, and say whether an operator can change it. Where the setting is itself
+    stored as an event - which the anchor tree does - say so, because that means the retention
+    decision has the same immutability as the data it governs.
+  - "HOW DOES THIS PRODUCT RECTIFY AND ERASE, AND DOES THAT PATH REACH THE EVENTS? This is the
+    question the whole rule is for and the detector cannot answer any part of it. Find the erasure
+    or deletion routine and follow it. Report which of these it does: rewrites or drops the
+    projection row only, leaving the events; appends a redaction or tombstone event; deletes or
+    rewrites events in place, which an append-only store usually cannot do; or destroys a
+    per-subject encryption key so the events remain but cannot be read, which is the
+    crypto-shredding answer and is a genuine discharge worth recording as such. If the path stops at
+    the projection, say so plainly and quote where it stops - that is the finding."
+  - WHO IS THE EDITOR STAMP ABOUT, AND IS THAT PERSON A DATA SUBJECT TOO? An editor column names the
+    account that made a change, which is ordinarily a staff member or an administrator rather than
+    the subject of the record. Their identity is personal data on the same footing, it is written
+    into an immutable log, and an erasure request from THEM reaches every event they ever wrote. Say
+    whether the deployment's own record of processing accounts for this population; where it does
+    not, that omission is worth reporting on its own.
+  - "IF THE MATCH IS A PROJECTION READ RATHER THAN AN APPEND, SAY SO. The `projections.` clause
+    reaches every query against a projected read model, which in a tree that has one is a large
+    number of ordinary lines. A read of a projection is not by itself a finding: it is evidence
+    about where the application looks. Group these with the append sites rather than reporting them
+    individually, and use them to answer question 4 - whether anything on the erasure path touches
+    the log the projection was built from."
+  - "IF THE MATCH IS GROUP (v), WHICH OF ITS TWO SHAPES IS IT, AND WHAT IS ON THE OTHER SIDE OF THE
+    BOUNDARY? For a table or log DESCRIBED as append-only or immutable, find the table that holds
+    the current value of the same attribute and say whether it exists: where it does, this is an
+    audit trail beside a mutable store and question 1 is answered that way; where the described
+    table IS where the value lives, it is the store. For a DELETION EXPRESSED AS AN APPEND - a
+    Delete or Tombstone record pushed onto a log - follow the projection or rebuild step and say
+    whether the created record is also removed from the store the log projects into, or only masked
+    by the tombstone. Those two answers are opposite findings about the same line, and only the code
+    on the rebuild path settles it."
+evidence_template: "{file}:{line} matched event-sourcing machinery: an append-only event store named
+  as a schema, table, type or client; an append call; an aggregate identity; an editor or creator
+  stamp on an event row; or the projection layer that serves the read side. THAT IS THE WHOLE OF
+  WHAT IS ESTABLISHED - that this tree stores state as appended events and reads it from
+  projections. FIVE GROUPS REACH THIS RULE AND THEY ARE NOT EQUALLY STRONG. (i) The store named as a
+  schema-qualified table or a client type - the strongest, because the compound is written by nobody
+  who is not doing this. (ii) An append call or an aggregate identity, which is the construct at the
+  point of use, and which also reaches column lists, struct tags and field declarations that are
+  evidence about the product rather than about one write. (iii) The projection layer - THE LOOSEST
+  GROUP, reaching every read of a projected model, which in such a tree is many ordinary lines. (iv)
+  Reach clauses for Axon, EventStoreDB, Commanded and the python eventsourcing package, written so
+  the rule does not read only the one language its construct was declared in; no corpus tree was
+  seen using them. (v) THE STORE DECLARED IN THE TREE'S OWN WORDS, AND THE DELETION THAT IS AN
+  APPEND - a table, log or store described as append-only or immutable on the line that names it,
+  and a deletion expressed as a record appended to a log rather than as a row removed: a Delete or
+  Tombstone variant built and pushed, or a record-log append call. This group needs no framework
+  vocabulary, so it reaches trees that build the architecture out of their own ordinary nouns. A
+  TOMBSTONE IS AMBIGUOUS AND THE AMBIGUITY IS THE POINT: a log that appends a delete and never
+  removes the created row is an event store whose write model admits no erasure, while a log that
+  appends a delete AND removes the row from the store it projects into is a working erasure path
+  with an append-only journal beside it. The detector cannot tell those two apart and neither
+  reading may be assumed from the line. WHAT THIS DETECTOR DOES NOT ESTABLISH: that the log is the
+  primary store rather than an audit trail beside a mutable one (context question 1, and this is the
+  boundary the rule lives on); that the events carry personal data (question 2); how long the log is
+  kept (question 3); or whether any rectification or erasure path reaches the events rather than
+  stopping at the projection (question 4, which is the question the finding exists to raise). AND
+  THE BOUNDARY, RESTATED BECAUSE GROUP (v) SITS ON IT: an append-only table BESIDE a mutable primary
+  table is an AUDIT TRAIL, and an audit trail raises a different question from an event store -
+  whether the trail may lawfully outlive the record it describes, rather than whether erasure can
+  happen at all. Nothing in this rule establishes which of the two this is. Read the write path
+  before writing a finding, and say which of the five groups the line is."
+remediation_template: >
+  Establish first whether the event log IS the store or sits beside a mutable one (context
+
+  question 1). An audit trail beside an UPDATEable primary table is a different, already-recorded
+
+  construct and the finding closes there.
+
+  Where the log is the store, write down what the product's rectification and erasure routes
+
+  actually reach. The honest record distinguishes four outcomes and they are not equivalent: a
+
+  projection rewritten while the events stand; a redaction or tombstone event appended; events
+
+  rewritten or dropped in place; and a per-subject key destroyed so the events survive unreadable.
+
+  Only the last two remove the personal data from the log, and the third is usually unavailable in
+
+  an append-only store by construction.
+
+  If the route stops at the projection, do not record the erasure route as complete anywhere the
+
+  product describes it to users. State in the record of processing that a superseded value remains
+
+  in the event log, name the retention that governs it, and check that retention against Art.
+  5(1)(e)
+
+  for the purpose the log serves - an audit or reconstruction purpose is a real purpose and should
+  be
+
+  written down as one rather than left implied.
+
+  Where crypto-shredding is the answer, record where the per-subject key lives, who can destroy it,
+
+  and what happens to events whose key is gone; that is a genuine discharge and it is worth being
+
+  able to show.
+
+  Account for the editor or creator stamp as a data category of its own. It names staff rather than
+
+  customers, it is written into every event, and an erasure request from a former employee reaches
+
+  all of them.
+
+  Art. 25(1) is cited here as reference only. Do not treat this finding as a statement that
+
+  event sourcing is an inappropriate measure; it is a statement that two data-subject rights need a
+
+  route through this architecture, and that the route should be written down.
+data_categories:
+  - user.account
+  - user.contact
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: existence

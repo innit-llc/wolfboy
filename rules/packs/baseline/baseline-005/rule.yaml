@@ -1,0 +1,239 @@
+id: baseline-005
+pack: baseline
+short_name: "Cookie with no Secure flag found: it can go over plain HTTP"
+problem_line:
+  text: Cookie that can be sent without encryption
+fix_line: Make Secure, HttpOnly and SameSite (Lax, or Strict where the flow allows) the default in
+  the shared cookie settings.
+title: Cookie set with no Secure attribute, with the attribute switched off, or with it emitted only
+  under a runtime condition
+jurisdiction:
+  - EU
+  - US
+  - JP
+legal_basis:
+  - cite: GDPR Art. 32 (security of processing; protection of session data)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "ePrivacy Directive 2002/58/EC (confidentiality and security of information stored on the
+      user's terminal equipment). No article is pinned for the Secure attribute: the security duty
+      in Art. 4 is addressed to providers of publicly available electronic communications services
+      rather than to site operators, and Art. 5(3) governs consent for storage of or access to
+      terminal-equipment information rather than the transport attributes of a cookie. Treat this
+      entry as background; GDPR Art. 32 is the operative basis"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-22
+  - cite: "Japan APPI (Act on the Protection of Personal Information, Act No. 57 of 2003), Art. 23
+      (security control measures — necessary and appropriate measures for the security control of
+      personal data). A cookie without Secure may travel over a plaintext connection, and PPC
+      Guidelines (General Rules) Q&A 10-21 gives encryption of personal data on networks that may be
+      intercepted (SSL/TLS) as a method under this duty. General basis: the Act names no cookie
+      attribute, and it reaches this finding through the session cookie of a logged-in user, whose
+      identifier is personal data in the operator's hands. A cookie set for an unidentified visitor
+      is personal-related information under Art. 31 instead, which governs provision to third
+      parties rather than security"
+    url: https://laws.e-gov.go.jp/law/415AC0000000057
+    checked_at: 2026-07-22
+    jurisdiction: JP
+  - cite: California Civil Code Sec. 1798.100(e) (CCPA as amended by Proposition 24, operative 1 January
+      2023) — a business that collects a consumer's personal information shall implement reasonable
+      security procedures and practices appropriate to the nature of the personal information, in
+      accordance with Sec. 1798.81.5. Sec. 1798.140(v)(1)(A) counts a unique personal identifier or
+      online identifier as personal information and Sec. 1798.140(aj) names cookies as such an
+      identifier, which is what this rule looks at. State scope only, applying to businesses that
+      meet the CCPA thresholds, and the duty is a reasonableness standard rather than a named
+      attribute
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=1798.100&lawCode=CIV
+    checked_at: 2026-07-22
+    jurisdiction: US
+  - cite: "United States, FTC Act Sec. 5 (15 U.S.C. Sec. 45(a)(1) and (n)) — unfair acts or practices in
+      or affecting commerce, the authority behind the Federal Trade Commission's data-security line
+      (failure to employ reasonable security causing or likely to cause substantial injury to
+      consumers, not reasonably avoidable and not outweighed by countervailing benefits). General
+      basis: no federal statute names cookie attributes"
+    url: https://www.govinfo.gov/content/pkg/USCODE-2023-title15/html/USCODE-2023-title15-chap2-subchapI-sec45.htm
+    checked_at: 2026-07-22
+    jurisdiction: US
+severity: medium
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  join_bracketed_constructs: true
+  shared_vocabulary:
+    - cookie_writers
+  match:
+    - Set-Cookie["']?\s*[,:]\s*[\[\s]*["'`](?![^"'`]*(?<![\w-])[Ss][Ee][Cc][Uu][Rr][Ee](?![\w-]))[^"'`;\s]+=
+    - "[\"'`](?![^\"'`]*(?<![\\w-])[Ss][Ee][Cc][Uu][Rr][Ee](?![\\w-]))(?=[^\"'`]*[;,]\\s*(?:[Pp][Aa\
+      ][Tt][Hh]|[Mm][Aa][Xx]-[Aa][Gg][Ee]|[Ee][Xx][Pp][Ii][Rr][Ee][Ss]|[Dd][Oo][Mm][Aa][Ii][Nn]|[Ss\
+      ][Aa][Mm][Ee][Ss][Ii][Tt][Ee])\\s*=)[^\"'`;\\s]*=[^\"'`;]*;[^\"'`]*[Hh][Tt][Tt][Pp][Oo][Nn][L\
+      l][Yy]"
+    - ^(?=.*(?:[A-Za-z_]*[Cc]ookie[A-Za-z_]*\s*(?:[:(]|\(\s*\)\s*\.|\.\s*[A-Za-z_]+\s*\()|[Ss]et-[Cc]ookie|[Ss]erialize\s*\(|[Ii]s[Hh]ttp[Oo]nly))(?!.*(?<![\w-])[Ss][Ee][Cc][Uu][Rr][Ee](?![\w-])\s*:).*[,(:]\s*\{(?![^{}]*\.\.\.)(?![^{}]*(?<![\w-])(?:[Ii]s)?[Ss][Ee][Cc][Uu][Rr][Ee](?![\w-]))[^{}]*[Hh][Tt][Tt][Pp][Oo][Nn][Ll][Yy]\s*:\s*true[^{}]*\}
+    - ^(?=.*(?:[Cc][Oo][Oo][Kk][Ii][Ee]|[Ss][Ee][Ss][Ss][Ii][Oo][Nn]|[Cc][Ss][Rr][Ff]|[Xx][Ss][Rr][Ff]|[Jj][Ww][Tt]|[Aa][Uu][Tt][Hh]))(?=.*(?<![\w-])(?:[A-Za-z0-9_.-]*[_.-])?(?:[Ss]et)?[Ss][Ee][Cc][Uu][Rr][Ee](?![\w-])["']?\s*\]?\s*(?:=>|[:=]|\(|["']\s*,|,)\s*["']?(?:false|False|FALSE|0|[Oo]ff|no)(?![\w-]))
+    - set(?:raw)?cookie\s*\((?![^()]*(?<![\w-])['\"]?[Ss][Ee][Cc][Uu][Rr][Ee]['\"]?\s*(?:=>|:)\s*true)[^()]*['\"]?[Hh][Tt][Tt][Pp][Oo][Nn][Ll][Yy]['\"]?\s*(?:=>|:)\s*true
+    - set_cookie\s*\((?![^()]*(?<![\w-])secure\s*=\s*True)[^()]*httponly\s*=\s*True
+    - (?:[Cc]ookie\s*\{|[Ss]et[Cc]ookie\s*\([^\n]{0,80}\{)(?![^{}]*(?<![\w-])Secure\s*:\s*true)[^{}]*HttpOnly\s*:\s*true
+    - cookie(?:s|_?jar)?(?:\s*\.\s*[a-z_]+)?\s*\[[^\]]*\]\s*=\s*\{(?![^{}]*(?<![\w-])secure\s*:\s*true)[^{}]*[Hh][Tt][Tt][Pp][Oo][Nn][Ll][Yy]\s*:\s*true
+    - ^(?!.*(?<![\w-])[Ss][Ee][Cc][Uu][Rr][Ee](?![\w-]))(?=.*[Dd]ocument\s*\.\s*[Cc]ookie\s*\+?=(?!=)).*[;,]\s*["'`]?\s*(?:[Pp][Aa][Tt][Hh]|[Mm][Aa][Xx][-_]?[Aa][Gg][Ee]|[Ee][Xx][Pp][Ii][Rr][Ee][Ss]|[Dd][Oo][Mm][Aa][Ii][Nn]|[Ss][Aa][Mm][Ee][Ss][Ii][Tt][Ee])\s*=
+    - ^(?!.*(?<![\w-])[Ss][Ee][Cc][Uu][Rr][Ee](?![\w-])).*(?:(?<![A-Za-z0-9_])[Ss]et[-_]?[Cc]ookie|(?<![A-Za-z0-9_])[A-Za-z_]*[Cc]ookies?[A-Za-z_]*\s*\.\s*[Ss]et|[.$]\s*[Cc]ookie)\s*\(\s*["'`][^"'`]*["'`]\s*,\s*(?:[^,()]|\([^()]*\))+\s*\)
+    - ^(?!.*(?<![\w-])(?:[Ss][Ee][Cc][Uu][Rr][Ee]|[Hh][Tt][Tt][Pp][Oo][Nn][Ll][Yy]|[Ss][Aa][Mm][Ee][Ss][Ii][Tt][Ee])(?![\w-]))(?=.*(?<![A-Za-z0-9_])(?:[A-Za-z_]*[Cc]ookie[A-Za-z_]*|[Ss]ession[A-Za-z_]*)(?:\s*\.\s*[A-Za-z_][A-Za-z0-9_]*)?\s*[({\[])(?!.*\.\.\.).*[,(:=]\s*&?\s*(?:[A-Za-z_][A-Za-z0-9_.]*\s*)?\{[^{}]*(?<![\w-])(?:[Mm][Aa][Xx][-_]?[Aa][Gg][Ee]|[Ee][Xx][Pp][Ii][Rr][Ee][Ss]?|[Kk][Ee][Yy][Ss]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Ss][Ii][Gg][Nn][Ee][Dd])(?![\w-])\s*(?:=>|[:=])
+    - ^(?=.*(?:\?[^?:]*:|&&|\|\|))(?=.*["'`]\s*;?\s*(?:(?<![\w-])(?:[Ss][Ee][Cc][Uu][Rr][Ee]|[Hh][Tt][Tt][Pp][Oo][Nn][Ll][Yy]|[Ss][Aa][Mm][Ee][Ss][Ii][Tt][Ee]\s*=\s*[A-Za-z]+)(?![\w-])\s*;?\s*)+["'`]).*
+    - ^(?=.*(?:[Cc][Oo][Oo][Kk][Ii][Ee]|[Ss][Ee][Ss][Ss][Ii][Oo][Nn]|[Cc][Ss][Rr][Ff]|[Xx][Ss][Rr][Ff]|[Jj][Ww][Tt]|[Aa][Uu][Tt][Hh]))(?=.*(?<![\w-])(?:[A-Za-z0-9_.-]*[_.-])?[Ss][Ee][Cc][Uu][Rr][Ee](?![\w-])["']?\s*\]?\s*(?:=>|[:=])\s*(?!(?:true|True|TRUE|false|False|FALSE|0|1|[Oo]n|[Oo]ff|[Nn]o|[Yy]es|nil|[Nn]one|null|NULL)(?![\w-]))[!A-Za-z_$(]).*
+    - ^(?!.*(?<![\w-])(?:[Ss][Ee][Cc][Uu][Rr][Ee]|[Hh][Tt][Tt][Pp][Oo][Nn][Ll][Yy]|[Ss][Aa][Mm][Ee][Ss][Ii][Tt][Ee])(?![\w-])).*(?<![\w.])(?&cookie_writers)[
+      \t]*(?:\.|->)[ \t]*(?:set_cookie|setCookie|SetCookie|setcookie|put_resp_cookie|cookie)[
+      \t]*\([^\n]*,
+    - ^(?:\t{2,}|[ ]{8,})[^\n]*(?<![\w.])(?&cookie_writers)[ \t]*\.[
+      \t]*(?:[Ss]ecure|[Hh]ttp[Oo]nly|[Ss]ame[Ss]ite)[ \t]*=(?!=)
+    - ^(?=.*(?<![\w-])(?:[A-Za-z0-9_.-]*[_.-])?[Ss][Ee][Cc][Uu][Rr][Ee](?![\w-])["']?\s*\]?\s*(?:=>|[:=])\s*(?:[A-Za-z_$][A-Za-z0-9_$.\[\]'"]*)?(?:(?<![\w-])(?:[Ss][Ee][Cc][Uu][Rr][Ee]|[Hh][Tt][Tt][Pp][Ss]|[Tt][Ll][Ss]|[Ss][Ss][Ll])|(?<=[a-z0-9])(?:Secure|Https|HTTPS|Tls|TLS|Ssl|SSL))[A-Za-z0-9_$]*(?![\w-])).*
+    - ^(?!.*(?<![\w-])(?:[Ss][Ee][Cc][Uu][Rr][Ee]|[Hh][Tt][Tt][Pp][Oo][Nn][Ll][Yy]|[Ss][Aa][Mm][Ee][Ss][Ii][Tt][Ee])(?![\w-]))[
+      \t]*(?:flask[ \t]*\.[ \t]*session|(?:request|req|ctx)[ \t]*\.[ \t]*session|session)[
+      \t]*(?:\[[^\n]{1,80}\]|\.[ \t]*[A-Za-z_][\w]*)[ \t]*=(?!=)
+  match_without:
+    - ^\s*(?://|\*)
+    - ^\s*/\*(?!.*\*/.*\S)
+    - (?:;\s*[Mm][Aa][Xx][-_ ]?[Aa][Gg][Ee]\s*=|[Mm][Aa][Xx][-_ ]?[Aa][Gg][Ee]\s*:)\s*-?0(?![0-9])
+    - (?:;\s*[Mm][Aa][Xx][-_ ]?[Aa][Gg][Ee]\s*=|[Mm][Aa][Xx][-_ ]?[Aa][Gg][Ee]\s*:)\s*-[1-9]
+    - 01 Jan 1970
+    - "[\"'`][^\"'`;=\\s]*=\\s*;"
+    - "[\"'`]\\s*;[^\"'`]*(?<![\\w-])[Ss][Ee][Cc][Uu][Rr][Ee](?![\\w-])"
+context_questions:
+  - 'Which of the two matched shapes is this line? Where a secure setting is on the line and
+    switched off, the answer is already in front of you: record the value as it stands, say whether
+    the line is a live default, a sample environment file or documentation, and do not go hunting
+    for the attribute elsewhere. Where instead a cookie is written out here with no Secure attribute
+    inside it: Are the cookie attributes (Secure / HttpOnly / SameSite) applied on another line,
+    inside a builder function, or in shared framework configuration? Find where they are set and
+    quote it. Added 2026-09-06: where the finding carries locations[].joined_from, THIS QUESTION IS
+    ASKED OF THE WHOLE SPAN AND NOT OF THE CITED LINE. The words "on the line" above mean "inside
+    the construct the span names": read every line between joined_from.start_line and
+    joined_from.end_line before deciding which shape you are holding, because the cited line is only
+    where the construct opens.'
+  - Is this a session or authentication cookie? For those, Secure together with HttpOnly is the
+    baseline expectation rather than extra hardening.
+  - "This question applies only where the matched line puts a cookie attribute behind a condition -
+    a ternary, an if-guard, or a key whose value is an expression such as `secure: isProduction`.
+    What decides that condition in the deployments this product actually runs in? The code
+    establishes that the attribute is conditional and nothing more; which way the condition resolves
+    is a fact about how the product is configured and deployed, so ask it rather than reading it off
+    the source, and where it cannot be answered, record it as unanswered instead of assuming either
+    value. Added 2026-09-04: where the value is a named configuration flag rather than an inline
+    predicate, the flag's own default is usually written in another file, which this detector did
+    not read - find it, quote it with its file and line, and say which value the deployment under
+    review runs with. Added 2026-09-06: \"the matched line\" here means the construct where the
+    finding carries locations[].joined_from - the condition, the ternary or the expression may be
+    written on any line of that span rather than on the line the finding names."
+evidence_template: "{file}:{line} matched ONE OF TWO SHAPES, and which one it is has to be read off
+  the line before anything else. FIRST SHAPE - a cookie written out on this line with no Secure
+  attribute inside it: a Set-Cookie header value, a hand-assembled cookie string that reaches
+  HttpOnly, a one-line options object, a PHP setcookie call, a Python set_cookie call, a Go cookie
+  struct literal, or a Rails cookie-jar assignment. SECOND SHAPE - a secure setting switched OFF, on
+  a line that also carries a cookie, session, CSRF, XSRF, JWT or auth word: `secure = False`,
+  `secure: false`, `'secure' => false`, `COOKIE_SECURE=false`, `cookie_secure = 0`. ON A
+  SECOND-SHAPE LINE THE SECURE ATTRIBUTE IS NOT ABSENT - IT IS ON THE LINE AND SET TO FALSE, which
+  is the strongest evidence this detector produces, so read what is in front of you rather than
+  going looking for the attribute elsewhere. That shape also does not require a cookie to be set
+  here, and the corpus carries four kinds of line that match it while setting none: a configuration
+  key of a bundled service, a sample environment file that no deployment reads as it stands, an
+  environment-variable read where what matched is only the fallback default (so the attribute is
+  operator-configurable, which is a different finding from a cookie written without Secure), and
+  sample code inside published documentation. Read the matched line, say which shape and which kind
+  you are holding, and word the finding to it. ADDED 2026-09-02. The two shapes above keep their
+  wording, and what changed is what falls inside the first of them: the FIRST SHAPE now also covers
+  a cookie written with NO attribute at all - a `document.cookie` assignment carrying only path or
+  expires, a library call given a cookie name and a value and no options argument, or a
+  session-middleware options object that carries a lifetime or key material and names none of
+  Secure, HttpOnly or SameSite - which is the strongest form of the first shape and was the one form
+  no clause could reach until this date. A THIRD SHAPE was added with them: the attribute is WRITTEN
+  but its emission is CONDITIONAL, either spliced in from a ternary such as `(useSSL ? \"Secure;\" :
+  \"\")` or set from an expression such as `secure: isProduction`. On a third-shape line the
+  attribute is neither absent nor switched off. What the detector established is that it is
+  conditional, and which way the condition resolves in a real deployment is a fact about how this
+  product is configured and run: it is asked of the person running the scan through this rule's
+  third context question, and a finding that asserts the attribute is off has said more than the
+  line supports A FOURTH SHAPE WAS ADDED 2026-09-04 and it is none of the three above: a
+  cookie-attribute FIELD ASSIGNMENT on an options value - `opts.Secure = true` - written at least
+  two tabs or eight spaces deep. What the detector established there is the assignment, and that it
+  is NOT in the straight-line body of its function. The value on such a line is usually a plain
+  literal, so do not go looking for the ternary or the runtime expression the third shape describes;
+  and the clause does not establish that the enclosing block is a conditional at all, because a loop
+  body, a closure and a switch arm are written at the same depth. Which way any predicate around it
+  resolves is the same deployment question the third shape raises, and it is asked rather than
+  inferred. ADDED 2026-09-04 AND IT IS THE THIRD SHAPE AGAIN, reached on a line that names no
+  cookie: the attribute is set from a NAMED CONFIGURATION FLAG whose own name says transport
+  security - `secure: config.secureHeaders`, `secure: cookieOptions.secure`, `secure: isSecure`.
+  What identified the line as a cookie attribute here is the value's name and not a cookie word,
+  because there is no cookie word on it: the enclosing options block is opened lines above and line
+  scope does not see it. So read what encloses the line before treating it as a cookie at all - a
+  transport flag of an SMTP client or a field of an audit record is written the same way and this
+  detector cannot tell them apart. Where it is a cookie, the finding is that the Secure attribute is
+  CONFIGURABLE, and the flag's own default is very often set in a different file that this detector
+  did not read: find that default, quote it with its file and line, and say which value the
+  deployment under review runs with. Where that cannot be established from the repository, record it
+  as unanswered rather than assuming either value. ADDED 2026-09-06, AND IT IS NOT A NEW SHAPE - IT
+  IS THE FIRST FOUR SHAPES READ OVER A CONSTRUCT INSTEAD OF OVER A LINE. This rule now declares the
+  engine's joined-construct view, so where a physical line raised nothing its clauses are tested
+  once more against the whole bracket-balanced construct that OPENS on that line, folded onto one
+  string. WHEN A FINDING CARRIES locations[].joined_from, {line} IS THE LINE THE CONSTRUCT OPENS ON
+  AND NOT THE LINE THAT CARRIES THE EVIDENCE: the opening line may be nothing but `&http.Cookie{` or
+  `response.cookies.set(`, and the attribute the finding is about is absent several lines below it.
+  READ THE WHOLE SPAN joined_from NAMES before you write anything, and quote from inside it rather
+  than from the opening line. WHAT SUCH A FINDING CLAIMS DEPENDS ON WHICH SHAPE MATCHED, AND THE
+  SPAN IS WHERE YOU READ THAT OFF - corrected 2026-09-06, because the sentence that stood here said
+  absence of every one of them and that is false for half of what this view adds. Where the finding
+  is a FIRST-SHAPE or FOURTH-SHAPE one - a cookie written out with no Secure attribute inside it, or
+  a cookie-attribute field assignment - what is established is that the attribute is absent across
+  the WHOLE of that span and not merely on the opening line: the clause was tested against the whole
+  of it, so the attribute is not on a later line of the construct either. Where it is a THIRD-SHAPE
+  one - the attribute spliced in from a ternary, set from a runtime expression such as `secure:
+  process.env.NODE_ENV === \"production\"`, or taken from a named configuration flag - THE ATTRIBUTE
+  IS WRITTEN INSIDE THE SPAN and nothing here says it is absent: what is established is that its
+  emission is CONDITIONAL, exactly as it is when the same code sits on one line, and which way the
+  condition resolves is the deployment question the third context question asks. Measured over the
+  sixteen repositories this view was first run on, 86 of the 169 findings it added are of that
+  second kind, so DO NOT READ `joined_from` AS A CLAIM OF ABSENCE: open the span, find the attribute
+  or find that it is not there, and word the finding to what you found. A third population arrives
+  the same way and is neither: a `secure:` key on a MAIL CLIENT'S TRANSPORT OPTIONS rather than on a
+  cookie - the span will show a `createTransport` call or a nodemailer import, and that is not a
+  cookie finding at all. WHAT IT STILL DOES NOT CLAIM is anything the shapes above do not claim: the
+  attribute may be applied outside the construct, in a builder, in shared framework configuration or
+  in a later mutation of the same object, and the first context question is what sends you looking
+  for it. TWO THINGS THIS VIEW DOES NOT SEE, so do not read silence as absence: a statement
+  continued by a trailing operator or a backslash rather than by an open bracket, and a construct
+  longer than 40 lines or 4,000 characters, which is refused and read as a plain line. AND ONE COST
+  TO EXPECT: a construct written inside another construct is reported once per opening line, so the
+  same cookie can arrive as two or three candidates whose spans nest - a closure and the function
+  around it and the literal inside both. They are the same construct seen at three depths; say so
+  and adjudicate them together rather than three times. A FIFTH SHAPE WAS ADDED 2026-09-08 AND IN IT
+  THE PRODUCT WRITES NO COOKIE LINE AT ALL: a value assigned into a framework's SESSION PROXY -
+  `session[\"tree\"] = ...`, `request.session[...] = ...`, `req.session.user = ...`,
+  `ctx.session[...] = ...`. Flask, Django, Express and Koa all back that proxy with a cookie:
+  assigning into it marks the session modified and the framework emits the `Set-Cookie` header
+  itself, at the end of the request, from code that is not in this repository. What the detector
+  established is that a session cookie will be emitted for this request and that its attributes are
+  therefore the FRAMEWORK'S DEFAULTS unless the deployment overrides them. IT DID NOT ESTABLISH WHAT
+  THOSE DEFAULTS ARE, and this finding does not assert that Secure is off. Look the default up for
+  the framework and the version this project actually pins - they differ between frameworks and
+  between versions of one framework - and then look for the override: `SESSION_COOKIE_SECURE`,
+  `SESSION_COOKIE_HTTPONLY` and `SESSION_COOKIE_SAMESITE` in Flask and Django, the `cookie` options
+  object given to `express-session`, and their equivalents elsewhere, in application configuration,
+  in an environment file or in a deployment manifest. Quote what you find with its file and line and
+  say which value the deployment under review runs with; where the repository does not settle it,
+  record it as unanswered rather than assuming either value. ONE LIMIT OF THIS SHAPE IS DISCLOSED
+  RATHER THAN FIXED: the clause does NOT check whether the tree sets those keys, because that is a
+  fact about the whole tree and this detector reads one line at a time, so a project that configures
+  its session cookie correctly still raises this candidate. Where you find that configuration, quote
+  it and say so: it is the answer to the question this shape raises. AND ONE LOOK-ALIKE IS NAMED
+  RATHER THAN EXCLUDED, because `session` is an ordinary word: a DOMAIN OBJECT called `session` - a
+  workout session, a chat session, a database session - is written the same way, and
+  `session.routine = value` on such an object stores nothing on anybody's device. Read what the name
+  refers to before treating the line as a cookie at all; if it is a model instance or a database
+  handle, that is what you are holding."
+remediation_template: |
+  This is a candidate for review against GDPR Art. 32 (security of processing), not a determination
+  about this code. The changes below apply where the review confirms it.
+  Make Secure; HttpOnly; SameSite=Lax (or Strict where the flow allows) the default.
+  Set the attributes once in the framework's shared cookie configuration rather than repeating them
+  at each call site.
+data_categories:
+  - user.unique_id
+fingerprint_spec: default

@@ -1,0 +1,459 @@
+id: ai-transparency-003
+pack: ai-transparency
+short_name: "AI-generated images: marking them as AI-made"
+problem_line:
+  text: "AI-made images or video: marking or disclosure not found"
+fix_line: As provider, keep outputs marked through delivery; as deployer, label deep fakes where
+  shown; do both if China-facing.
+title: Image-generation call or generation-host reference - provenance marking and AI-origin
+  disclosure need review
+jurisdiction:
+  - EU
+  - CN
+legal_basis:
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 50(2) — addressed to providers (Art. 3(3)) of AI
+      systems, including general-purpose AI systems, generating synthetic audio, image, video or
+      text: the provider must ensure the system's outputs are marked in a machine-readable format
+      and detectable as artificially generated or manipulated. The obligation does not reach a party
+      that merely uses someone else's generation system under its own authority, which is a deployer
+      (Art. 3(4)). Applies from 2026-08-02."
+    url: https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-50
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 50(4) first subparagraph — addressed to deployers
+      (Art. 3(4)): a deployer of an AI system that generates or manipulates image, audio or video
+      content constituting a deep fake (defined in Art. 3(60)) must disclose that the content has
+      been artificially generated or manipulated, clearly and distinguishably and at the latest at
+      the time of first exposure (Art. 50(5)); an attenuated disclosure applies where the content
+      forms part of an evidently artistic, creative, satirical, fictional or analogous work. This is
+      the paragraph that typically reaches application code calling a third-party image or video
+      generation API."
+    url: https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-50
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 111(4), added by Art. 1(39)(b) of Regulation (EU)
+      2026/1744 (Digital Omnibus on AI), CELEX 32026R1744, OJ L series 2026/1744 of 24.7.2026, in
+      force 27 July 2026: 'Providers of AI systems, including general-purpose AI systems, generating
+      synthetic audio, image, video or text content, that have been placed on the market before 2
+      August 2026 shall take the necessary steps in order to comply with Article 50(2) by 2 December
+      2026.' Recital 38 of the same Regulation gives the reason and the length: 'it is appropriate
+      to introduce a transitional period of four months for providers who have already placed their
+      systems on the market before the 2 August 2026'. Two limits are worth stating because both are
+      easy to read past. It reaches the Art. 50(2) marking and detection duty ALONE, so the Art.
+      50(1) interaction disclosure and the Art. 50(4) deployer disclosure are both outside it. And
+      it reaches only a system placed on the market before 2026-08-02, so a system placed on the
+      market on or after that date never had the four months. Art. 113 was amended by Art. 1(40) of
+      the same Regulation in its third paragraph only, at points (a) and (c) and by a new point (d);
+      none of them moves the date Chapter IV, which contains Article 50, applies from, so Art. 50
+      still applies from 2026-08-02. Reference only: this fixes by when the duty in the first entry
+      of this list has to be met, not what it requires."
+    url: https://publications.europa.eu/resource/celex/32026R1744
+    checked_at: 2026-09-07
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 2(12) — the free and open-source exclusion, cited
+      here because it does NOT switch this rule off and because a reader of an AI Act finding whose
+      own product is open source reaches for it first. Art. 2(12): 'This Regulation does not apply
+      to AI systems released under free and open-source licences, unless they are placed on the
+      market or put into service as high-risk AI systems or as an AI system that falls under Article
+      5 or 50.' Article 50 is named inside that proviso alongside Article 5, so the Art. 50(2) and
+      Art. 50(4) first subparagraph duties — the two duties this rule tests — survive however the
+      system is licensed. That is the same disposal ai-prohibited-001, -002 and -003 make one
+      article over, on the identical words. How the project is funded does not reopen the question
+      either. The conditions recital 103 attaches — that a component provided against a price or
+      otherwise monetised does not benefit, that making a component available through an open
+      repository is not in itself a monetisation, and that transactions between microenterprises are
+      excepted — qualify the exceptions this Regulation provides to free and open-source AI
+      components, and the recital says exceptions in the plural: Art. 2(12) here, and elsewhere Art.
+      25(4), Art. 53(2) and Art. 54(6). Microenterprise there is a defined term, tested by
+      Commission Recommendation 2003/361/EC rather than by self-description. An Article 50 system is
+      outside the Art. 2(12) exclusion before any of those conditions is reached, and none of the
+      other three exceptions reaches an Article 50 duty at all. So being unmonetised, being a
+      microenterprise and publishing on a public repository change nothing here, in either
+      direction. Commission Guidelines C(2026) 5054 final — draft approval, not yet applicable,
+      interpretation only — say the same at para. 23 of the Annex: providers and deployers of
+      open-source AI systems within the scope of Article 50 still have to meet their respective
+      transparency obligations. Its footnote 11 anchors the free and open-source release on recital
+      102, not on recital 103. Neither of those two Guidelines propositions is quoted here or
+      carries a quote receipt: the quote checker does not fetch guidance documents, and this entry's
+      url resolves to the Regulation, which does not contain them — the Guidelines have a separate
+      entry in this rule's legal_basis, carrying their own source link and their own
+      not-yet-applicable status. Only the single-quoted Art. 2(12) sentence above is
+      machine-verified against the Official Journal. How the system was released is a question for
+      the person running the scan rather than for a detector, read from the terms the system is
+      actually released under, and a LICENSE file is evidence about it rather than the answer. The
+      Art. 2(12) quotation above is the text the four ai-annex3 Article 6(4) checklists carry,
+      re-verified against the same Official Journal source on 2026-08-04. Those four quote recital
+      103 in full as well, because the Art. 2(12) exclusion becomes available on an Annex III row
+      only once the Article 6(4) derogation takes the system out of high-risk — the proviso names
+      high-risk systems first, so until then the exclusion is as unavailable there as it is here —
+      and the monetisation test then decides whether it applies; on an Article 50 row it decides
+      nothing, which is why it is not repeated here. Reference only: a scope provision establishes
+      no duty of its own, and this one removes none from this rule."
+    url: http://publications.europa.eu/resource/celex/32024R1689
+    checked_at: 2026-08-04
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Commission Guidelines on the implementation of the transparency obligations for certain AI
+      systems under Article 50 of Regulation (EU) 2024/1689, C(2026) 5054 final, 20.7.2026 — STATUS:
+      DRAFT APPROVAL, NOT YET ADOPTED AND NOT YET APPLICABLE. Page 2 states that 'The Guidelines
+      will be formally adopted by the Commission at a later date, when all language versions are
+      available' and that 'It is only from that moment that these Guidelines will be applicable.'
+      Verified 2026-07-27; the Art. 5 family went through the same two stages (C(2025) 884 final
+      draft approval -> C(2025) 5052 final adopted), so the adopted version of this document is
+      expected to carry a different C() number and paragraph numbering may shift. — paras 10-15
+      (role allocation: Art. 50(1) and (2) fall on providers, Art. 50(3) and (4) on deployers, and
+      one operator may hold both roles); para. 27 (a downstream party building an AI system on
+      another provider's general-purpose AI model carries the Art. 50(1) and (2) obligations); para.
+      74 (a provider may rely on an upstream or third-party marking solution but keeps the burden of
+      demonstrating Art. 50(2) compliance); para. 117 (a deployer cannot discharge the Art. 50(4)
+      disclosure through the provider's machine-readable marking, which is not perceivable to the
+      persons exposed); para. 153 (the amending AI Omnibus Regulation grandfathers only Art. 50(2)
+      marking and detection for generative systems placed on the market or put into service before
+      2026-08-02, giving those providers up to and including 2026-12-02). Two things about that
+      para. 153 clause, because a reader has to know which text governs. Para. 153 describes the
+      transitional as reaching generative systems placed on the market OR PUT INTO SERVICE before
+      2026-08-02, and the words above report the paragraph faithfully. The enacted paragraph is
+      narrower: Art. 111(4), added by Art. 1(39)(b) of Regulation (EU) 2026/1744 and quoted in full
+      in this rule's Art. 111(4) entry, reaches only a system that has been PLACED ON THE MARKET
+      before 2 August 2026. The omission is a drafting choice rather than shorthand - the same Art.
+      1(39)(a), four lines earlier in the same instrument, writes Art. 111(2) with both formulas.
+      The enacted text is the one that governs, and guidance that describes it more widely does not
+      extend it. Nothing beyond that is asserted here."
+    url: https://digital-strategy.ec.europa.eu/en/library/guidelines-transparency-obligations-providers-and-deployers-ai-systems
+    checked_at: 2026-09-07
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Code of Practice on Transparency of AI-generated Content, published 10 June 2026, drawn up in
+      a multi-stakeholder process facilitated by the AI Office, in two working groups with
+      independent academic chairs and vice-chairs. 38 pages, in two sections, whose own headings
+      name Article 50(2) and (5) for Section 1 - providers, marking and detection - and Article
+      50(4) and (5) for Section 2 - deployers, labelling of deep fakes and of AI-generated or
+      manipulated published text. STATUS: VOLUNTARY, AND THE SOURCE OF NO DUTY. WHAT THE CODE CAN BE
+      ASSESSED AGAINST IS FIXED BY STATUTE, AND IT IS NARROWER THAN SOME OF THE QUOTATIONS BELOW. AI
+      Act Art. 50(7), as replaced by Art. 1(20) of Regulation (EU) 2026/1744, CELEX 32026R1744,
+      provides that the Commission, taking utmost account of the opinion of the Board, 'shall assess
+      whether adherence to those codes of practice is adequate to ensure compliance with the
+      obligations laid down in paragraphs 2 and 4 of this Article, in accordance with the procedure
+      laid down in Article 56(6)'. So the statutory adequacy assessment runs to Art. 50(2) and Art.
+      50(4). Art. 50(5) is the horizontal manner-of-provision requirement attaching to the
+      information those two paragraphs require, and the Commission's own Art. 50 guidance states the
+      code route just as narrowly, at Article 50(2) and (4), in the para. 146 quotation further
+      down. Where a Commission document quoted below words the Code's reach over paragraphs 2, 4 and
+      5, that is that document's wording and is attributed to it here; the enacted paragraph is what
+      fixes the scope of the assessment. The Commission page for the Code states that 'Even though
+      adherence to the code is voluntary, the transparency requirements under article 50 of the AI
+      Act are legal obligations.', and reports that 'By the end of July 2026, about 190 companies
+      organisations have signed the code.' - the missing conjunction is the source's, quoted as it
+      stands. By Commission Opinion C(2026) 4839 final of 8.7.2026, on the assessment of the Code in
+      accordance with Articles 50(7) and 56(6) of Regulation (EU) 2024/1689, the Commission
+      concluded at para. 52 that the Code 'adequately covers the obligations provided for in
+      Articles 50(2), (4) and (5) AI Act and facilitates their effective implementation', that
+      providers and deployers inside the scope of those obligations 'may rely on the Code as the
+      EU-wide recognised instrument that is considered adequate to ensure compliance with their
+      respective obligations, regardless of their place of establishment, operation or competent
+      market surveillance authority', and that all of this holds 'while recognising that adherence
+      to the Code does not constitute conclusive evidence of compliance with these obligations'.
+      Commission Guidelines C(2026) 5054 final Annex para. 146 - the same draft-approval document
+      cited above in this rule, interpretation only - records that 'Providers and deployers of AI
+      systems falling within the scope of Article 50(2) and (4) AI Act may demonstrate compliance
+      with their respective transparency obligations for AI-generated content under those provisions
+      by adhering to a code of practice that is assessed as adequate pursuant to Article 50(7) AI
+      Act', and para. 147 records that for signatories the Commission and the competent market
+      surveillance authorities 'will focus their supervisory activities on assessing whether those
+      signatories have adhered to the code of practice and implemented the measures contained
+      therein'. For this rule both Sections are in point: Section 1 covers the Art. 50(2) marking
+      and detection duty on the provider branch, and Section 2 the Art. 50(4) first-subparagraph
+      labelling of deep fakes on the deployer branch. Neither Section reaches the Chinese labelling
+      duties this rule also tests, which have their own entry below. WHAT THIS ENTRY CHANGES, and
+      what it does not: it changes how a finding on this rule is worded and which evidence the
+      reader is asked for. It never changes whether a candidate is reported, and it establishes no
+      duty of its own - the duty is in Art. 50, in the entries above. Whether the scanned party is a
+      signatory is a fact about the operator, read from the Commission signatory list or from the
+      party's own declarations and never inferred from source vocabulary; the matching question is
+      in context_questions. Downloaded and read on 2026-09-07: the Code from newsroom document
+      129555, the Commission Opinion from newsroom document 130913, both linked from the page this
+      entry names. Reference only."
+    url: https://digital-strategy.ec.europa.eu/en/policies/code-practice-ai-generated-content
+    checked_at: 2026-09-07
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "China Measures for Labelling AI-Generated Synthetic Content (人工智能生成合成内容标识办法), 国信办通字〔2025〕2号,
+      issued 2025-03-07 by the Cyberspace Administration of China with the Ministry of Industry and
+      Information Technology, the Ministry of Public Security and the National Radio and Television
+      Administration, in force 2025-09-01 — a dual duty: Art. 4 requires an explicit label the user
+      can perceive, added in the generated text, audio, image, video or virtual scene or in the
+      interaction interface; Art. 5 requires an implicit label in the file metadata of the generated
+      content, carrying the synthetic-content attribute, the service provider's name or code and a
+      content number"
+    url: https://www.cac.gov.cn/2025-03/14/c_1743654684782215.htm
+    checked_at: 2026-07-22
+    jurisdiction: CN
+  - cite: GB 45438-2025, Cybersecurity technology — Labeling method for content generated by artificial
+      intelligence (网络安全技术 人工智能生成合成内容标识方法), issued 2025-02-28 and implemented 2025-09-01 alongside
+      the Measures. The CAC's own Q&A on the Measures records that this standard was made as a
+      mandatory national standard (强制性国家标准) implemented on the same date; it fixes the label
+      formats, the metadata fields and the application scenarios that Art. 4 and Art. 5 of the
+      Measures leave to the standard, and it addresses both generation services and content
+      distribution platforms.
+    url: https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=F32EA2A561F1886CD8D606513512D547
+    checked_at: 2026-07-22
+    jurisdiction: CN
+effective_date: 2025-09-01
+severity: high
+rule_confidence: 0.45
+applicability_preconditions:
+  - features.genai_media
+detector:
+  engine: builtin-regex
+  match:
+    - images\s*\.\s*generate\s*\(|createImage\s*[(.]
+    - stability\.ai|api\.replicate\.com|fal\.ai|fal\.run
+    - \bopenai\s*\.\s*images\b
+    - "[\"'`](?:gpt-image-\\d|dall-e-\\d|dalle-\\d|stable-diffusion(?:-xl)?|sdxl|flux\\.\\d|flux-(?\
+      :pro|dev|schnell)|imagen-\\d|kandinsky|playground-v\\d)"
+    - api\.openai\.com/v\d+/images\b
+    - \bprocess\.env\.(?:STABILITY|REPLICATE|FAL)[A-Z0-9_]*_(?:API_BASE|BASE_URL|API_URL)\b
+context_questions:
+  - "Is an image or video generated at this location at all, and if it is, which role does the
+    scanned party hold for the generating system — provider (AI Act Art. 3(3)) or deployer (Art.
+    3(4))? Settle the first half first, because two of this rule's patterns also match code that
+    generates nothing: `createImage` is an ordinary name for a locally defined helper that
+    constructs, crops, downloads or resizes an image that already exists, and a generation host also
+    occurs as a catalogue display name, a comparison-table row, a documentation link or an
+    allow-list entry. Read the matched line and the definition of whatever it calls, and quote the
+    model, endpoint or SDK method that produces a new image or video. If no reported location
+    produces generated content, record that together with what you read, and the candidate closes
+    there: the questions below all assume a generating system and none of them re-opens this one.
+    Where something is generated, answer from the codebase: is the image or video model hosted,
+    trained or fine-tuned in this repository, or reached over a third-party generation API (OpenAI
+    images, Replicate, fal, Stability); and is the generation feature offered onward to users or
+    third parties under this party's own name or brand? Art. 50(2) machine-readable marking
+    addresses providers, while Art. 50(4) deep-fake disclosure addresses deployers, so record which
+    branch the evidence supports and quote it."
+  - Is the generated asset distributed or published to users, or does it stay internal (out of
+    scope)? Trace the delivery path and quote it.
+  - Does the generated image or video appreciably resemble an existing person, object, place, entity
+    or event in a way that could pass as authentic (the Art. 3(60) deep-fake test that gates Art.
+    50(4))? Quote the prompt construction, reference-image handling or preset that shows the
+    intended use.
+  - "PROVIDER BRANCH (AI Act Art. 50(2), and Art. 5 of the Chinese Labelling Measures). Does the
+    OUTPUT PATH attach machine-readable marking that is detectable as artificially generated or
+    manipulated — a C2PA / Content Credentials manifest, an IPTC digitalsourcetype field, XMP or
+    EXIF provenance, or an embedded watermark in the pixels? The detector performs no absence check
+    at all: it raises the candidate on the generation call and leaves this entire search to you. The
+    vocabulary this rule's deleted guard clauses keyed on is now evidence for you to weigh — c2pa,
+    C2PA, contentauth, ContentCredentials, watermark, Watermark — and weighing it means three
+    things. First, read what the string is attached to: 'watermark' is one of the most overloaded
+    words in a product codebase, and this project has measured it silencing genuine findings as a
+    PDF or image overlay, a Zoom screen-share watermark, a preview-image stamp and, in one AI chat
+    product, a `config.watermark.label` setting in the image and video generation UI. Second, check
+    that the marking is on the OUTPUT of the generation call rather than somewhere else in the
+    repository, and that it survives the steps after it — re-encode, resize, format conversion, CDN
+    transform and social-card generation all strip metadata routinely. Third, check that it is
+    reached in production rather than behind a disabled flag or in an unused helper. If the marking
+    comes from the upstream model provider rather than from this code, say so and quote it: relying
+    on an upstream or third-party marking solution is allowed, but Commission Guidelines C(2026)
+    5054 final para. 74 keeps the burden of demonstrating Art. 50(2) compliance with the provider of
+    the system. Quote what you find, or record the absence together with the places searched."
+  - "DEPLOYER BRANCH (AI Act Art. 50(4) first subparagraph with Art. 50(5), and Art. 4 of the
+    Chinese Labelling Measures). Is a person who sees the generated image or video actually TOLD
+    that it was artificially generated or manipulated, in a form they can perceive, at the latest at
+    the time of first exposure? This is a different question from the one above and a
+    machine-readable mark does not answer it: Commission Guidelines C(2026) 5054 final para. 117
+    records that a deployer cannot discharge the Art. 50(4) disclosure through the provider's
+    machine-readable marking, because that marking is not perceivable to the persons exposed. The
+    Chinese Measures make the same split explicit, and require BOTH halves: Art. 4 an explicit label
+    the user can perceive, added in the generated image or video or in the interaction interface,
+    and Art. 5 an implicit label in the file metadata. So look where the asset is rendered rather
+    than where it is produced — the image or video component, the gallery, the share and download
+    paths, the social card, the feed item, the email template, the print view — and read the string
+    that ships. An attenuated form applies where the content is part of an evidently artistic,
+    creative, satirical or fictional work; say so if that is what this is. Three shapes look like
+    the answer and are not: an internal flag or column recording that the asset was generated, which
+    tells the operator and not the viewer; a provenance manifest or meta tag, which is the
+    machine-readable answer to the other question; and a component or i18n key named for a label
+    whose rendered string you have not read. Quote the string that ships and where it renders, or
+    record the absence together with the places searched."
+  - Are these outputs served to users in the EU or in China? China states the metadata-embedding
+    duty expressly, and states it alongside a perceivable-label duty, so both halves of the previous
+    two questions have to be answered for a China-facing deployment.
+  - "CODE OF PRACTICE, AND WHO ANSWERS THIS. Is the scanned party a signatory of the Code of
+    Practice on Transparency of AI-generated Content, and if it is, does the marking or labelling in
+    this code follow the Code measures it signed up to? SOURCE CODE CANNOT ANSWER THE FIRST HALF,
+    and no detector should try: whether a party has signed is a fact about the operator, held on the
+    Commission signatory list and in the party's own declarations, not in its source vocabulary. Ask
+    the person running the scan, or read it from the operator's declared documents. THE ANSWER
+    CHANGES ONLY HOW THIS FINDING IS WORDED, NEVER WHETHER THIS CANDIDATE IS REPORTED. A signatory
+    has an EU-wide recognised way of demonstrating compliance with the Art. 50(2) and Art. 50(4)
+    duties, because enacted AI Act Art. 50(7) confines the adequacy assessment to 'the obligations
+    laid down in paragraphs 2 and 4 of this Article'. Commission Opinion C(2026) 4839 final para. 52
+    words its own conclusion over Articles 50(2), (4) and (5); that is the Opinion's wording and not
+    the statutory scope, and Art. 50(5) is in any case the manner-of-provision requirement attaching
+    to the information Art. 50(2) and (4) require rather than a separate duty. Ask a signatory which
+    Code measures the code path here implements; a non-signatory is expected to show that its own
+    means are adequate. The Commission concluded that adherence to the Code is not conclusive
+    evidence of compliance either way, so neither answer disposes of the finding. If the answer is
+    not known, say so and word the finding without it."
+evidence_template: "{file}:{line} matched one of this rule's four patterns: an `images.generate(` or
+  `createImage` call; one of the four generation hosts it names (`stability.ai`,
+  `api.replicate.com`, `fal.ai`, `fal.run`); an `api.openai.com/vN/images` path; or a `STABILITY`,
+  `REPLICATE` or `FAL` base-URL environment variable. Two of those patterns also match code that
+  generates nothing, and both shapes have already been met in real repositories: `createImage` is an
+  ordinary name for a locally defined helper - one built an `HTMLImageElement` from a URL so that a
+  canvas could crop an app icon, another downloaded a remote federated image into a file store - and
+  a generation host also occurs as a display name in a catalogue entry (`Generate with fal.ai`)
+  rather than in a call. The spelling is what the detector established; whether anything is
+  generated here is context question 1, and it is answered by reading the matched line and the
+  definition of whatever it calls. The detector also makes no finding about whether provenance
+  marking or an AI-origin disclosure exists — machine-readable marking on the output path is context
+  question 4, and a disclosure the viewer can perceive is context question 5"
+remediation_template: >
+  Settle the role first, because the two duties land on different parties.
+
+  Provider branch (this party puts the generating system into service under its own name or brand,
+  or hosts or
+
+  fine-tunes the model itself): AI Act Art. 50(2) asks for machine-readable marking plus a matching
+  detection
+
+  path — C2PA content credentials (c2pa-node or similar), or the vendor SDK's watermark/metadata
+  option, kept
+
+  intact through re-encode, resize and CDN steps rather than stripped there. Relying on an upstream
+  model
+
+  provider's marking solution is allowed, but the burden of evidencing it stays with the system
+  provider
+
+  (Commission Art. 50 guidelines para. 74).
+
+  Deployer branch (this code only calls a third-party generation API as-is): Art. 50(2) sits with
+  the upstream
+
+  provider, and the duty that may attach here is the Art. 50(4) deep-fake disclosure — a
+  human-perceivable label
+
+  on the published asset at first exposure, since para. 117 of the same guidelines records that a
+  deployer cannot
+
+  discharge it with the provider's machine-readable mark. Preserving any upstream marking is still
+  worthwhile.
+
+  For a China-facing deployment both halves are required and neither substitutes for the other: an
+  explicit label
+
+  the user can perceive, in the generated image or video or in the interaction interface (Measures
+  Art. 4), and an
+
+  implicit label in the file metadata carrying the synthetic-content attribute, the service
+  provider's name or
+
+  code and a content number (Measures Art. 5, with GB 45438-2025).
+
+  Four things look like the answer and are not, and all four occur in real repositories: the word
+  "watermark"
+
+  attached to something else - a PDF or image overlay, a preview stamp, a screen-share watermark, a
+
+  `config.watermark.label` setting in a generation UI - which this project has measured silencing
+  genuine
+
+  findings; a `c2pa`, `contentauth` or `ContentCredentials` identifier in a helper nothing on the
+  output path
+
+  calls; marking that is applied and then stripped by the next re-encode, resize, format conversion
+  or CDN
+
+  transform; and a component or i18n key named for a label whose rendered string nobody has read.
+  Put the
+
+  machine-readable mark on the generation output and the perceivable label where the asset is
+  displayed, and
+
+  carry the label into every surface the same asset reaches - the page, the gallery, the download,
+  the social
+
+  card, the feed and the email - subject to the one temporal limit stated at the end of this
+  template, which
+
+  exempts outputs generated or manipulated before 2026-08-02 from being marked or labelled
+  retroactively.
+
+  Check today's date before reading on, because it decides which of the next two paragraphs applies.
+  Art. 50
+
+  applies from 2026-08-02, and AI Act Art. 111(4), added by Art. 1(39)(b) of Regulation (EU)
+  2026/1744, gives
+
+  providers of generative systems placed on the market before 2026-08-02 up to and including
+  2026-12-02 to take
+
+  the necessary steps to comply with Art. 50(2) - a transitional period of four months.
+
+  UP TO AND INCLUDING 2 DECEMBER 2026 a provider in exactly that position still has that period for
+  the
+
+  Art. 50(2) marking and detection duty. Art. 111(4) says the necessary steps are to be taken BY 2
+  December
+
+  2026, so that day is the last day of the period and not the first day after it. A finding on that
+  branch is
+
+  worded as preparation for that date rather than as a statement about present conduct.
+
+  FROM 3 DECEMBER 2026 there is no period left to rely on: the Art. 50(2) duty stands on the same
+  terms as it
+
+  does for a system placed on the market after 2026-08-02, and the preparation wording no longer
+  describes the
+
+  position.
+
+  Neither branch reaches the Art. 50(1) interaction disclosure, the Art. 50(4) deployer disclosure
+  or the
+
+  Chinese labelling duties. Art. 111(4) names none of them, and all three have applied throughout -
+
+  Art. 50(1) and Art. 50(4) from 2026-08-02, the Measures from 2025-09-01.
+
+  A separate limit runs beside both branches and qualifies the carry-it-everywhere instruction
+  above: it is
+
+  about which OUTPUTS the duty reaches rather than about when the duty starts. Commission Guidelines
+  C(2026) 5054 final Annex para. 154 - the same draft-approval
+
+  document this rule cites for interpretation only - records that outputs within Art. 50(2) and deep
+  fakes
+
+  within Art. 50(4) first subparagraph generated or manipulated before 2026-08-02 do not have to be
+  marked or
+
+  labelled retroactively, while encouraging those who hold or disseminate pre-existing unlabelled
+  deep fakes to
+
+  label them without disproportionate effort such as auditing existing content databases.
+
+  Releasing this under a free and open-source licence does not remove either duty: Art. 2(12)
+  withholds that
+
+  exclusion from AI systems placed on the market or put into service as systems falling under
+  Article 5 or 50,
+
+  and Article 50 is the article both duties sit in. Neither does the way the project is funded.
+  Recital 103's
+
+  monetisation test narrows the Art. 2(12) exclusion, and an Article 50 system does not have that
+  exclusion to
+
+  narrow, so being unmonetised, being a microenterprise and publishing on a public repository leave
+  both duties
+
+  exactly where they are.
+data_categories: []
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 1
+      class: per-location

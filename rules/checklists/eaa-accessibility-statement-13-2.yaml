@@ -1,0 +1,991 @@
+checklist_id: eaa-accessibility-statement-13-2
+title: EAA Article 13(2) and Annex V - the published accessibility information
+law: Directive (EU) 2019/882 (European Accessibility Act)
+source_url: http://publications.europa.eu/resource/celex/32019L0882
+checked_at: 2026-07-28
+scope_note: "This checklist records whether the project publishes the information Annex V requires
+  and what that information contains. **It does not assess accessibility.** Whether the service
+  actually meets the requirements in Annex I is a question for the code-side checks of Part C row
+  22. Those checks exist — the rule `eu-accessibility-001` — and they reach only a fraction of the
+  question: the rule decides six defect classes from a single line each and says in its own words
+  that colour contrast, focus visibility, focus and reading order, live-region behaviour, media
+  captions, form-label association and everything else needing a rendered page with computed styles
+  are outside what it can see. So a project can satisfy every item here with a statement that is
+  wholly inaccurate, and the code side can contradict such a statement in the crudest cases and can
+  never confirm one. This checklist also says nothing about the disproportionate-burden assessment
+  in Article 14 and Annex VI, which is a separate document with separate contents. **Annex V point 2
+  is quoted in this gate's supporting quotes from 2026-09-02 and is no longer characterised here.**
+  Until that date this field called it a provision \"which offers the provider the option of
+  applying harmonised standards rather than imposing a duty\" and quoted nothing; the old words are
+  kept here rather than written away. They were accurate as far as they went and they stopped short
+  of the thing that decides whether the point bears on this checklist at all, which is what the
+  point is addressed to. Read the quoted words and their `why` in the gate below. **Two duties
+  inside the provisions this checklist is named after are deliberately not items**, and both are
+  unqualified `shall`s: Article 13(2)'s third sentence, quoted in this gate's supporting quotes from
+  2026-09-02, which is a duty about the provider's conduct rather than about what the information
+  must contain, so asking it of a document would invent a content requirement Annex V does not
+  impose; and the second sentence of Annex V point 1, requiring the information to describe the
+  applicable requirements and cover the design and the operation of the service as far as relevant,
+  which overlaps items 1(b) and 1(c) and is not separately asked. Recorded 2026-07-29 rather than
+  left silent. **Corrected 2026-09-02 on the first of those two, and the old words are kept rather
+  than written away.** This field used to give the reason for that omission as \"which is about
+  conduct over time and no document can show\", and it used to present the sentence itself as a
+  quotation with no receipt behind it. No document can show that any of the six items' claims are
+  true either, and this file says so three times without treating that as a reason to omit an item.
+  The reason now given is the narrower and stronger one: the third sentence imposes a duty on what
+  the provider DOES with the information over time, not a requirement on what the information
+  CONTAINS, and only the second kind can be an item of a checklist that reads documents. **A third
+  duty of the same kind was neither an item nor a declared omission until 2026-08-10, and it is now
+  treated as asked rather than omitted.** Article 13(2)'s first sentence - \"Service providers shall
+  prepare the necessary information in accordance with Annex V and shall explain how the services
+  meet the applicable accessibility requirements\" - carries two duties: prepare the Annex V
+  information, and explain how the services meet the applicable accessibility requirements. It is
+  the sentence that creates the information the rest of Article 13(2) and the whole of Annex V speak
+  about, and until 2026-08-10 it stood in no quote field, was asked by no item and was disclaimed in
+  no field, which made it the only sentence of the two provisions this checklist is named after that
+  was in none of the three. The repair is on the item `art-13-2-publicly-available`, whose quote now
+  runs from the first sentence into the second and whose note reads the two together: the
+  preparation duty is asked through the availability duty, since information made available to the
+  public has been prepared and information that was never prepared cannot be made available. The
+  explain-duty overlaps item `annex-v-1-how-requirements-met`, which asks Annex V point 1(c), and
+  the overlap is not certainly complete: point 1(c) is expressed against the requirements \"set out
+  in Annex I\" and is introduced by the \"where applicable\" chapeau, while Article 13(2)'s
+  explain-duty is expressed against \"the applicable accessibility requirements\" and sits in the
+  operative Article, which carries no words of condition at all. Where a description answers point
+  1(c) and addresses no requirement applying to the service beyond Annex I, record it on that item
+  and say so in the reasoning. **The clearest thing that could sit outside Annex I is Annex III**,
+  which Article 4(4) lets a Member State require of the built environment used by clients; where the
+  national measure that reaches this provider has exercised that option, a description addressing
+  only Annex I may not exhaust Article 13(2)'s explain-duty. That example was added on 2026-09-02,
+  because until then the instruction named a residue and nothing that could be in it, which left it
+  untestable. Recorded 2026-08-10 rather than left silent. **The EAA is a Directive, so the duty
+  that binds a service provider is the Member State's transposing measure and not the Directive
+  itself.** Article 31(1) and 31(2), Article 30(1) and Article 29(2)(a) are quoted in this gate's
+  supporting quotes from 2026-09-02 and carry the three steps between them: the Member States adopt
+  the transposing measures and apply them from 28 June 2025; the penalties attach to infringements
+  of the national provisions adopted pursuant to the Directive; and a consumer's action is taken to
+  enforce the national provisions transposing it. **Until 2026-09-02 all four stood here as
+  quotation-marked strings in this prose field and in no quote field**, which is the defect the note
+  on Article 2(4) below states in its own terms — a limb stated only in a note cannot be checked
+  against the text — and it had reached them the day the paragraph was written. One drift had
+  already happened and was invisible: this field wrote Article 31(2) as \"they shall apply those
+  measures from 28 June 2025\" where the Official Journal sentence begins \"They\". The `cite`
+  fields on this gate and on the six items below name the Directive because that is where the quoted
+  wording comes from, and a finding produced from them is to be worded against the national measure
+  that reaches this provider: the wording, the penalty, the competent authority under Article 23(2)
+  and the enforcement route under Article 29 are national and may differ between Member States. The
+  code half of this row, the rule `eu-accessibility-001`, has carried that sentence in its own legal
+  basis since 2026-07-27 and this file did not carry it until 2026-08-10. Two provisions that are
+  sometimes offered as the reason are **not** the reason and are not to be cited as it: Article 4(4)
+  is the Member State option to require the **built environment** used by clients to comply with
+  Annex III, and Article 31(3) defers one obligation only, the Article 4(8) answering of 112
+  emergency communications by the most appropriate PSAP. Neither can vary the Annex V information
+  duty. Recorded 2026-08-10. **Which provisions this file describes without quoting, said once so
+  that a reader knows.** Every provision an item or a limb of this gate turns on is quoted with a
+  receipt. These are named or described in prose and stand in no quote field: Article 13(3)'s
+  opening reservation; Article 4(3), which is the nearest of them to load-bearing and is qualified
+  below, and Article 4(8); Article 4(4) with Annex III; Article 14 with Annex VI; Article 23(2), and
+  Article 29 read as a whole, of which only Article 29(2)(a) is quoted; Article 31(3); the second
+  sentence of Annex V point 1; and Directive 2011/83/EU. **None of them decides an item or a limb of
+  the gate.** Each is a cross-reference, a declared omission, or a provision named in order to say
+  that it is not the reason for something. A reader checking any of them has to read the Official
+  Journal, because this repository holds no receipt for them, and no cardinal is given here because
+  a count in prose is the thing that goes stale. Recorded 2026-09-02, when the four
+  national-transposition quotations, Article 32, Annex V point 2, Article 13(2)'s third sentence and
+  two paragraphs of Annex I were promoted out of this list into the gate's supporting quotes. **The
+  qualification on Article 4(3), added 2026-09-02.** Article 4(5) exempts a microenterprise from the
+  accessibility requirements \"referred to in paragraph 3 of this Article and any obligations
+  relating to the compliance with those requirements\", so the word \"those\" reaches back through
+  Article 4(3) and the microenterprise limb's reasoning passes through it. The reading this file
+  takes rests on Article 4(5)'s second limb and not on Article 4(3)'s structure - the `why` on the
+  Article 4(5) quote below says so in terms, and records that an earlier draft gave Article 4(3)'s
+  subparagraph structure as the reason and was corrected - so Article 4(3) corroborates that reading
+  rather than carrying it, and the sentence opening this paragraph holds. It is the one entry on the
+  list a reader could argue with, and it is named here rather than left to be found. **And one
+  definition was on neither side of that line until 2026-09-02.** Article 3(22) defines 'consumer'
+  for this Directive; the e-commerce limb of this gate turns on the word twice - the service is
+  provided \"at the individual request of a consumer\" and \"with a view to concluding a consumer
+  contract\" - and the departure recorded in `when_unresolved` below puts more weight on it than any
+  earlier text did. It stood in no quote field, under no receipt, and not on the list above, so the
+  sentence opening this paragraph was falsified by the one term the limb turns on most directly.
+  Article 3(22) is quoted in this gate's supporting quotes beside Article 3(30) from today, and the
+  sentence is now true as written. **What the verdicts on this checklist mean, written down here
+  because until 2026-08-07 no field of this file said.** `present` and `partial` record what the
+  declared documents were found to contain. `absent` records that the document which would carry
+  this information was identified and read in full and the element is not in it, which is a finding
+  about a document that was examined. Where no document of the kind an item is about was identified
+  at all, so that nothing was produced whose silence about that element could be read as a finding
+  about it, **the verdict is `unresolved` and never `not-applicable`**. \"We looked and found
+  nothing\" is a statement about the reading, and `not-applicable` would turn it into a statement
+  that the requirement does not reach this service. **Corrected 2026-09-02, and the withdrawn words
+  are quoted rather than written away.** Until today the sentence above read: \"Where no such
+  document was identified at all, or the documents produced say nothing that bears on an item, the
+  verdict is `unresolved` and never `not-applicable`.\" Its second branch was read on 2026-09-02 by
+  two independent blind walkers as reaching a document that WAS identified and read in full and
+  simply does not carry the element, which is the case the sentence before it defines as `absent`
+  and which all six item notes below decide as `absent` in their own words. Read that way this field
+  contradicts its own previous sentence and four verdicts on this row's absent-side fixture move.
+  **The item notes govern**, which is also what the runtime skill says of an item carrying an
+  `applicability_note`, and the branch above is now written as the one those notes leave open: no
+  document of the right kind was ever produced, so there is no reading of one to report. This is the
+  rule most likely to be broken by anything built from this file, so it is stated once here, again
+  on every one of the six items, and mechanically in the build's reconciliation gate check, which is
+  where a written decision in this project becomes something a build can fail on. **The rule
+  admitting `not-applicable` is this one, and both of its halves bind: a fact affirmatively stated
+  by the person running the scan closes a genuinely conditional limb.** It has to be a fact
+  **somebody stated** - a document that fails to mention something never supplies one, and neither
+  does this scanner's own failure to find something - and the limb has to be **genuinely
+  conditional**, since a limb carrying no words of condition cannot be closed by any fact at all.
+  **Zero such conditions exist on this checklist. They reach zero of the six items, and on an open
+  gate `not-applicable` is never a correct verdict on any of them.** **What \"on an open gate\" is
+  doing in that sentence, added 2026-09-02.** Until today the sentence above carried no such scope,
+  here or in any of the six item notes, and two independent blind walkers reading this file against
+  the runtime reconciliation skill on 2026-09-02 found the two texts in direct conflict over the
+  commonest answer this product's audience gives. What this field states is a rule about an item's
+  OWN conditionality: no item here carries a condition, so no fact anybody states closes one, and
+  that route to the verdict does not exist. **The gate is the other route, and it belongs to the
+  gate rather than to any item.** Where the person running the scan answers that the provider is a
+  microenterprise, Article 4(5) exempts it, the gate's own outcome is `does-not-apply`, and what the
+  runtime skill then writes on each of the six items is the gate's verdict carried down with the
+  gate's reasoning, which the runtime skill records under the name `not-applicable`, so that a list
+  nobody walked does not print like a list somebody walked. Nothing in this field and nothing in the
+  six item notes reaches that branch, and none of them may be read as forbidding it. The sibling
+  checklist `dsa-legal-representative-13` scoped the same sentence the same way on 2026-09-01 and
+  this file follows it. **Corrected 2026-08-07.** Until today this field licensed a verdict of
+  `not-applicable` on the elements (a) to (c) of Annex V point 1, and that licence is withdrawn. Its
+  words were that those elements are introduced by \"where applicable\", so that an element which
+  does not bear on a particular service took `not-applicable` rather than `absent`, while Annex V
+  point 3 carried no such qualifier. **The reading behind the licence is not withdrawn, and this
+  file settles it in neither direction**: \"where applicable\" does stand in the chapeau of point
+  1's list, it is capable of narrowing the three elements it introduces, and the Official Journal
+  text neither states that it does nor rules it out. **The chapeau is quoted in this gate's
+  supporting quotes from 2026-08-10**, so this passage and the four item notes that turn on it now
+  refer to a clause the receipt holds rather than to one they describe; until that day the words
+  stood in no quote field of this file at all, which is the defect the note on Article 2(4) states
+  in its own terms - a limb stated only in a note cannot be checked against the text. What follows
+  from leaving that reading open is narrow and it is the whole of the repair. **The chapeau names no
+  fact.** It gives no criterion for when an element is applicable, so there is nothing the person
+  running the scan could state that would close an element without simply asserting the conclusion;
+  and an open reading cannot carry `not-applicable` in any event, because that verdict is a positive
+  statement that the requirement does not reach this service, and a reading nobody has settled
+  cannot support one. The other three items rest on provisions carrying no words of condition at
+  all: the first sentence of Annex V point 1, Annex V point 3, and Article 13(2). Where the person
+  running the scan states that an element does not bear on their service, record the statement, say
+  that the reading it would support is unsettled, and leave the item `unresolved`. That is the
+  withdrawal `gpsr-distance-sales-19-16` made of its fourth condition on 2026-08-06, for the same
+  reason and with the same consequence. **Corrected 2026-08-06.** The third sentence above used to
+  read \"Whether the service actually meets the requirements in Annex I is a question for the checks
+  Part C row 22 would perform, and those are unbuilt\". That was false — the rule
+  `eu-accessibility-001` has existed since 2026-07-27 and is at `fixtures-pass` — and the same false
+  claim sat in the note on item `annex-v-1-how-requirements-met`. What the false reason was
+  supporting is unchanged: the row is still deliberately not counted as covered, and this checklist
+  still cannot say whether a published claim is true. The reason is now the narrowness of the code
+  half rather than its absence. The old words are quoted here rather than written away."
+applicability:
+  question: Two things. First, is what the project provides one of the **services** listed in Article
+    2(2) - in practice, for this product's audience, an e-commerce service, meaning one provided at
+    a distance through a website or mobile application, by electronic means, at the individual
+    request of a consumer, **with a view to concluding a consumer contract**? Second, is the
+    provider something other than a microenterprise - an enterprise employing fewer than 10 persons
+    **and** with an annual turnover not exceeding EUR 2 million **or** an annual balance-sheet total
+    not exceeding EUR 2 million (the headcount test has to be met, and then **either** of the two
+    financial tests is enough)?
+  quote: "Without prejudice to Article 32, this Directive applies to the following services provided
+    to consumers after 28 June 2025: (a) electronic communications services with the exception of
+    transmission services used for the provision of machine-to-machine services; (b) services
+    providing access to audiovisual media services; (c) the following elements of air, bus, rail and
+    waterborne passenger transport services, except for urban, suburban and regional transport
+    services for which only the elements under point (v) apply: (i) websites; (ii) mobile
+    device-based services including mobile applications; (iii) electronic tickets and electronic
+    ticketing services; (iv) delivery of transport service information, including real-time travel
+    information; this shall, with regard to information screens, be limited to interactive screens
+    located within the territory of the Union; and (v) interactive self-service terminals located
+    within the territory of the Union, except those installed as integrated parts of vehicles,
+    aircrafts, ships and rolling stock used in the provision of any part of such passenger transport
+    services; (d) consumer banking services; (e) e-books and dedicated software; and (f) e-commerce
+    services."
+  cite: EAA Art. 2(2)
+  url: http://publications.europa.eu/resource/celex/32019L0882
+  checked_at: 2026-07-29
+  ask_the_user: true
+  supporting_quotes:
+    - quote: "'service provider' means any natural or legal person who provides a service on the Union
+        market or makes offers to provide such a service to consumers in the Union;"
+      cite: EAA Art. 3(4)
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-07-29
+      why: "**The provision the pack's standing premise stands in for, quoted here rather than merely
+        named.** Until 2026-07-29 this gate asserted the substitution — \"Article 3(4) confines
+        'service provider' to the Union market, and the premise is what stands in for it\" — while
+        Article 3(4) appeared in no quote anywhere in the file. Every other gate in this pack quotes
+        the provision its premise replaces, precisely so a reader can see what is being assumed
+        rather than found. Note what the definition does and does not carry: it reaches a person who
+        provides a service on the Union market **or makes offers to provide such a service** to
+        consumers in the Union, so an offer is enough and an accepted contract is not required."
+    - quote: "'e-commerce services' means services provided at a distance, through websites and mobile
+        device-based services by electronic means and at the individual request of a consumer with a
+        view to concluding a consumer contract;"
+      cite: EAA Art. 3(30)
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-07-28
+      why: 'The Article 2(2)(f) limb that reaches almost everything this pack is built for, and the limb
+        an earlier draft of this gate left in unchecked prose. **Its last clause is the one that
+        matters**: "with a view to concluding a consumer contract". A site that sells, subscribes or
+        takes bookings is inside; a free tool with no contract to conclude, an open-source project
+        page and a documentation site are not e-commerce services, and a gate that omits the clause
+        over-triggers on all of them.'
+    - quote: "'consumer' means any natural person who purchases the relevant product or is a recipient of
+        the relevant service for purposes which are outside his trade, business, craft or
+        profession;"
+      cite: EAA Art. 3(22)
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-09-02
+      why: "**The word the e-commerce limb above turns on twice, quoted from 2026-09-02 rather than
+        carried one file away.** Article 3(30) reaches a service provided \"at the individual
+        request of a consumer\" and \"with a view to concluding a consumer contract\", and until
+        today the definition of that word stood in no quote field of this file, under no receipt,
+        and not on the scope_note's list of provisions this file describes without quoting. The
+        citation was carried in the legal basis of the code-side rule for this row instead, one
+        artefact away from the gate that turns on it, which is the second copy this file's own
+        scope_note complains of elsewhere. **What the definition decides, and what it does not.** It
+        turns on the PURPOSE the natural person acts for, \"outside his trade, business, craft or
+        profession\", so a natural person buying for their own business is not a consumer of that
+        purchase and a business customer is not one at all. That is a fact about the counterparty
+        and about what they are buying for, and it is exactly the reason the departure recorded in
+        `when_unresolved` below holds even a declared document to corroboration on this limb: a
+        provider's own description of what it sells says nothing about the purposes its buyers act
+        for. Note also what the definition does not do - it does not require a completed purchase,
+        because it reaches a person who \"is a recipient of the relevant service\" as well as one
+        who purchases, which sits with Article 3(4) above reaching an offer to provide a service."
+    - quote: "'microenterprise' means an enterprise which employs fewer than 10 persons and which has an
+        annual turnover not exceeding EUR 2 million or an annual balance sheet total not exceeding
+        EUR 2 million;"
+      cite: EAA Art. 3(23)
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-07-28
+      why: "The threshold the exemption below turns on, in the Directive's own words. It has three limbs
+        and they are not all conjunctive: headcount **and** (turnover **or** balance-sheet total).
+        The earlier draft carried the numbers in prose and dropped the balance-sheet limb."
+    - quote: Microenterprises providing services shall be exempt from complying with the accessibility
+        requirements referred to in paragraph 3 of this Article and any obligations relating to the
+        compliance with those requirements.
+      cite: EAA Art. 4(5)
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-07-28
+      why: "The exemption that decides this gate for most of this product's audience — but it is decided
+        by the Article 3(23) test above and **never by headcount alone**. A solo developer is very
+        likely a microenterprise and is not one by definition: the turnover-or-balance-sheet limb
+        has to hold too, and a one-person repository can belong to a company of fifty. An earlier
+        draft of this note asserted \"a solo developer is a microenterprise\" flat, which
+        presupposes the answer to the question this gate exists to ask. **What carries the exemption
+        to the Annex V information** is this paragraph's second limb — \"and any obligations
+        relating to the compliance with those requirements\" — not the subparagraph structure of
+        Article 4(3), which an earlier draft gave as the reason. Article 4(3) is the services-side
+        accessibility duty; the Annex V information duty is in Article 13(2), and it is an
+        obligation relating to compliance with those requirements."
+    - quote: For microenterprises and SMEs to benefit from this Directive they must genuinely fulfil the
+        requirements of Commission Recommendation 2003/361/EC (17), and the relevant case law, aimed
+        at preventing the circumvention of its rules.
+      cite: EAA Recital 53
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-07-29
+      why: 'Where the Recommendation enters, and it is not where an earlier draft of this gate said. The
+        Directive defines microenterprise **autonomously** in Article 3(23); the Recommendation is
+        hooked here, as an anti-circumvention condition. That matters for the answer, because the
+        Recommendation computes headcount and turnover **across linked and partner enterprises** —
+        the rule is Article 6(2) of its Annex, quoted below from 2026-08-10 — so on the mainstream
+        reading of that condition a small subsidiary of a large group is not a microenterprise, and
+        a founder answering about their own payroll will not think of it. Ask the question in a way
+        that says so. **Corrected 2026-08-10**: this note used to end that step flatly, "so a small
+        subsidiary of a large group is not a microenterprise", with the Recommendation unquoted; the
+        step is an interpretation of Recital 53 rather than a reading of Article 3(23), which
+        contains no aggregation rule, and the words are marked as one rather than written away.'
+    - quote: "This Directive does not apply to the following content of websites and mobile applications:
+        (a) pre-recorded time-based media published before 28 June 2025; (b) office file formats
+        published before 28 June 2025; (c) online maps and mapping services, if essential
+        information is provided in an accessible digital manner for maps intended for navigational
+        use; (d) third-party content that is neither funded, developed by, or under the control of,
+        the economic operator concerned; (e) content of websites and mobile applications qualifying
+        as archives, meaning that they only contain content that is not updated or edited after 28
+        June 2025."
+      cite: EAA Art. 2(4)
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-07-29
+      why: "A carve-out by content rather than by service. **Its five limbs were given in this prose and
+        not in the quote until 2026-07-29**, which is the same truncation the primary quote carried
+        and the same defect: a limb stated only in a note cannot be checked against the text. Each
+        has to be read as written: pre-recorded time-based media and office file formats **published
+        before 28 June 2025**; online maps and mapping services, **but only if essential information
+        is provided in an accessible digital manner for maps intended for navigational use**;
+        third-party content that is **neither funded, nor developed by, nor under the control of**
+        the economic operator — three limbs, not two; and archived content, meaning content not
+        updated or edited after 28 June 2025. It does not switch this checklist off, but a finding
+        about any of those parts of a site is wrong, and this gate is where a reader will look for
+        that."
+    - quote: "In addition to the consumer information requirements of Directive 2011/83/EU, the
+        information shall, where applicable, contain the following elements:"
+      cite: EAA Annex V, point 1
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-08-10
+      why: '**The clause the largest legal-reasoning passage in this file turns on, quoted from 2026-08-10
+        rather than described.** The withdrawal of the `not-applicable` licence recorded in the
+        scope_note is entirely about what this chapeau does and does not do, the phrase "where
+        applicable" occurs seven times in this file, and until 2026-08-10 the words themselves stood
+        in no quote field and in no receipt. That is the defect the note on Article 2(4) above
+        states in its own terms - a limb stated only in a note cannot be checked against the text -
+        and it reached this clause as squarely as that one. Read as written, the chapeau introduces
+        the list of elements (a) to (c) and nothing else: it does not govern the first sentence of
+        point 1, it does not reach point 3, and it does not reach Article 13(2), each of which is an
+        unqualified `shall`. It also names no fact. It gives no criterion for when an element is
+        applicable, so there is nothing the person running the scan could state that would close one
+        of those elements without simply asserting the conclusion, which is the whole of the reason
+        `not-applicable` is never a correct verdict here. Its opening clause is a cross-reference:
+        the Annex V elements are owed **in addition to** the pre-contractual consumer information
+        duties of Directive 2011/83/EU, which this checklist does not walk and does not ask about,
+        so a service that satisfies every item below may still owe information under that
+        Directive.'
+    - quote: The data, including the headcount, of an enterprise having partner enterprises or linked
+        enterprises are determined on the basis of the accounts and other data of the enterprise or,
+        where they exist, the consolidated accounts of the enterprise, or the consolidated accounts
+        in which the enterprise is included through consolidation. To the data referred to in the
+        first subparagraph are added the data of any partner enterprise of the enterprise in
+        question situated immediately upstream or downstream from it. Aggregation is proportional to
+        the percentage interest in the capital or voting rights (whichever is greater). In the case
+        of cross-holdings, the greater percentage applies. To the data referred to in the first and
+        second subparagraph is added 100 % of the data of any enterprise, which is linked directly
+        or indirectly to the enterprise in question, where the data were not already included
+        through consolidation in the accounts.
+      cite: Commission Recommendation 2003/361/EC, Annex, Art. 6(2)
+      url: http://publications.europa.eu/resource/celex/32003H0361
+      checked_at: 2026-08-10
+      why: "**The aggregation rule this gate instructs the reader to say aloud, quoted from the instrument
+        instead of asserted.** Recital 53, quoted above, conditions the benefit of the Directive on
+        genuinely fulfilling this Recommendation, and the Recommendation computes an enterprise's
+        headcount and financial data across its partner and linked enterprises: the data of a
+        partner enterprise are added in proportion to the shareholding, and the whole of the data of
+        a linked enterprise are added. Until 2026-08-10 this file stated that rule in three places,
+        quoted it nowhere, gave it no url and held no receipt entry for it - the same defect the
+        note on Article 2(4) above names. **The step from Recital 53 to a conclusion about a
+        particular business is an interpretation, and this file marks it as one from 2026-08-10.**
+        Article 3(23) of the Directive defines microenterprise autonomously and carries no
+        aggregation rule of its own; a recital cannot add a condition an article does not contain.
+        What Recital 53 does is make genuine fulfilment of the Recommendation a condition of
+        benefiting, so \"a small subsidiary of a large group is not a microenterprise\" is the
+        mainstream reading of that condition rather than a reading of the operative definition. It
+        is also the reading that errs in the safe direction for this scanner, because it makes the
+        exemption harder to claim and so reports more rather than less. Put it to the person running
+        the scan as how the Recommendation computes the figures, not as a further limb of Article
+        3(23). **Extended 2026-09-02 to the opening of Article 6(2).** From 2026-08-10 to today this
+        quote began \"To the data referred to in the first subparagraph are added...\", and the
+        first subparagraph was outside it, so the cross-reference the quote opens on pointed at
+        nothing a reader could reach. That is the same defect the item quote on Article 13(2) was
+        repaired for on 2026-08-10, and the repair is the same: the quote now carries the
+        subparagraph that establishes what the data are - the accounts and other data of the
+        enterprise, or its consolidated accounts - before the two subparagraphs that add to them."
+    - quote: Service providers shall keep that information for as long as the service is in operation.
+      cite: EAA Art. 13(2), third sentence
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-09-02
+      why: "**The one sentence of Article 13(2) that no item asks, quoted from 2026-09-02 because the
+        scope_note above presented it as the Official Journal's words while no receipt covered it.**
+        That is the defect the note on Article 2(4) above states in its own terms - a limb stated
+        only in a note cannot be checked against the text - and it had reached the declared
+        omissions as squarely as it reached the chapeau. Read as written, this sentence imposes a
+        duty on what the provider DOES with the information over time and states no requirement
+        about what the information CONTAINS. Only the second kind of duty can be an item of a
+        checklist that reads documents, which is why it is a declared omission and not an item, and
+        nothing here licenses reading a keep-it-in-operation duty out of a document's words."
+    - quote: To comply with point 1 of this Annex the service provider may apply in full or in part the
+        harmonised standards and technical specifications, for which references have been published
+        in the Official Journal of the European Union.
+      cite: EAA Annex V, point 2
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-09-02
+      why: '**Quoted from 2026-09-02 rather than characterised, because what this point is addressed to
+        decides whether it bears on four of the six items.** It is addressed to complying with
+        **point 1 of this Annex**, which is the provision items 1(a), 1(b), 1(c) and the terms item
+        ask about. So a statement saying that the service applies a named harmonised standard, in
+        full or in part, is a route to answering those points rather than an assertion of the kind
+        the note on `annex-v-1-how-requirements-met` warns against. **Today the route is empty**:
+        the point reaches only standards and technical specifications "for which references have
+        been published in the Official Journal of the European Union", and no harmonised standard
+        has been cited in the Official Journal for this Directive. The code half of this row, the
+        rule `eu-accessibility-001`, records that in its own text, and so does Part C row 22 of the
+        coverage map, which is where the reference will be recorded when one appears. So this point
+        opens no route today: a conformity claim naming a standard answers nothing under it, and no
+        statement can rely on it. **That reasoning has an expiry date on it and the date is written
+        down.** Part C row 22 of the coverage map records that the updated EN 301 549 is expected
+        around October 2026. When a reference is published for this Directive, the notes on points
+        1(a), 1(b) and 1(c) and on the first sentence of point 1 have to be re-read against this
+        point before the next release, and the sentence above about the empty route stops being true
+        on that day. Until 2026-09-02 the scope_note characterised this point as one that "offers
+        the provider the option of applying harmonised standards rather than imposing a duty",
+        quoted nothing, and rested on a ground that nothing in this file would have noticed
+        expiring.'
+    - quote: making websites, including the related online applications, and mobile device-based services,
+        including mobile applications, accessible in a consistent and adequate way by making them
+        perceivable, operable, understandable and robust;
+      cite: EAA Annex I, Section III, point (c)
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-09-02
+      why: "**The requirements point 1(c) cross-refers to, quoted from 2026-09-02 for the item
+        `annex-v-1-how-requirements-met`.** That item's own quote asks for \"a description of how
+        the relevant accessibility requirements set out in Annex I are met by the service\", and
+        until today no part of Annex I stood in any quote field of this file - so an adjudicator
+        judging whether a description describes how THOSE requirements are met had nothing in the
+        artefact to read it against. A checklist item carries no supporting quotes of its own, so
+        both Annex I paragraphs are carried here on the gate and the item's note points at them.
+        This is the general services paragraph and it is the one a website or a mobile service meets
+        first. **It is not the whole of what Annex I asks of a service**: Section III has four
+        lettered limbs and Section IV adds further requirements for particular kinds of service,
+        which is what the next quote carries."
+    - quote: "(g) E-Commerce services: (i) providing the information concerning accessibility of the
+        products and services being sold when this information is provided by the responsible
+        economic operator; (ii) ensuring the accessibility of the functionality for identification,
+        security and payment when delivered as part of a service instead of a product by making it
+        perceivable, operable, understandable and robust; (iii) providing identification methods,
+        electronic signatures, and payment services which are perceivable, operable, understandable
+        and robust."
+      cite: EAA Annex I, Section IV, point (g)
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-09-02
+      why: "**The Annex I limb attached to the service kind this gate's e-commerce test selects**, quoted
+        from 2026-09-02 beside the general paragraph above. It is here for one reason, and the
+        reason is about what a verdict does not mean. A statement that describes four properties of
+        its web pages in detail has said nothing about the accessibility information for the
+        products and services being sold, nothing about identification, security and payment
+        functionality delivered as part of the service, and nothing about electronic signatures and
+        payment services. Point 1(c) asks for a description of how the relevant requirements are
+        met, so `present` on that item records that a description of how exists; it never records
+        that the description reaches every requirement Annex I attaches to this service. The item's
+        note says so from the same date, and this quote is what makes that statement checkable
+        against the text rather than against a note."
+    - quote: 1. Without prejudice to paragraph 2 of this Article, Member States shall provide for a
+        transitional period ending on 28 June 2030 during which service providers may continue to
+        provide their services using products which were lawfully used by them to provide similar
+        services before that date. Service contracts agreed before 28 June 2025 may continue without
+        alteration until they expire, but no longer than five years from that date. 2. Member States
+        may provide that self-service terminals lawfully used by service providers for the provision
+        of services before 28 June 2025 may continue to be used in the provision of similar services
+        until the end of their economically useful life, but no longer than 20 years after their
+        entry into use.
+      cite: EAA Art. 32
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-09-02
+      why: "**The transitional article the gate's own quote reserves against, quoted from 2026-09-02
+        rather than paraphrased.** `when_unresolved` below reads its three limbs and concludes that
+        none of them postpones the Article 13(2) information duty; until today that conclusion
+        rested on a close paraphrase in a prose field that no receipt covered, on the one clause of
+        this file's quoted text that no field had explained until 2026-08-10. Read as written, every
+        limb is about a legacy thing: products lawfully used before the transitional period ends on
+        28 June 2030; service contracts agreed before 28 June 2025, which may run unaltered until
+        they expire and \"no longer than five years from that date\", which is the same 28 June 2030
+        and not an open-ended run to expiry; and self-service terminals in use before 28 June 2025,
+        which a Member State may allow to the end of their economically useful life and no longer
+        than 20 years after entry into use. **None of the three is about the duty to publish
+        information describing the service**, so none of them reaches any of the six items below."
+    - quote: 1. Member States shall adopt and publish, by 28 June 2022, the laws, regulations and
+        administrative provisions necessary to comply with this Directive. They shall immediately
+        communicate the text of those measures to the Commission. 2. They shall apply those measures
+        from 28 June 2025.
+      cite: EAA Art. 31(1)-(2)
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-09-02
+      why: "**What makes the enforceable duty national, quoted from 2026-09-02 rather than written as a
+        quotation-marked string in a prose field.** The scope_note above states that the duty
+        binding a service provider is the Member State's transposing measure and not the Directive
+        itself; these are the words that statement rests on. The penalty and the enforcement route
+        are the two quotes below. Until 2026-09-02 all four stood in the scope_note in quotation
+        marks that no receipt covered, and one had already drifted where nothing could see it: the
+        field wrote Article 31(2) as \"they shall apply those measures from 28 June 2025\" where the
+        Official Journal sentence begins \"They\". That is the difference a receipt makes and prose
+        does not."
+    - quote: Member States shall lay down the rules on penalties applicable to infringements of national
+        provisions adopted pursuant to this Directive and shall take all measures necessary to
+        ensure that they are implemented.
+      cite: EAA Art. 30(1)
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-09-02
+      why: "**The penalty half of the national-transposition statement, quoted from 2026-09-02.** Note
+        what the sentence attaches penalties to: infringements of the **national provisions adopted
+        pursuant to** this Directive, not infringements of the Directive. A finding produced from
+        this checklist is therefore worded against the national measure that reaches this provider,
+        and the penalty a provider faces is the national one and may differ between Member States."
+    - quote: provisions whereby a consumer may take action under national law before the courts or before
+        the competent administrative bodies to ensure that the national provisions transposing this
+        Directive are complied with;
+      cite: EAA Art. 29(2)(a)
+      url: http://publications.europa.eu/resource/celex/32019L0882
+      checked_at: 2026-09-02
+      why: "**The enforcement half of the same statement, quoted from 2026-09-02.** The action a consumer
+        may bring is one to enforce **the national provisions transposing** this Directive, which is
+        the third of the three steps the scope_note above sets out and the reason the competent
+        authority and the route to it are national questions."
+  when_unresolved: "**The territorial question is settled by the pack's standing premise** — running
+    the EU pack is treated as the statement that the service is offered to consumers in the Union,
+    so do not ask about Union consumers (Article 3(4), quoted above, confines 'service provider' to
+    the Union market, and the premise is what stands in for it). **\"Without prejudice to Article
+    32\" opens the scope provision quoted above, and it postpones nothing this checklist asks.**
+    Article 32 is the Directive's transitional measure, it is quoted whole in this gate's supporting
+    quotes from 2026-09-02, and everything in it is about legacy things: products lawfully used
+    before the transitional period ending on 28 June 2030; service contracts agreed before 28 June
+    2025, which may continue unaltered until they expire and for no longer than five years from that
+    date, which is the same 28 June 2030 and not an open-ended run to expiry; and self-service
+    terminals lawfully in use before 28 June 2025, which a Member State may allow to remain in use
+    to the end of their economically useful life and for no longer than 20 years after entry into
+    use. **None of that postpones the Article 13(2) information duty**, which is owed in full today
+    whatever legacy products, contracts or terminals a provider is running under Article 32. So the
+    reservation at the head of the gate's quote is not a reason to hedge, defer or withhold a
+    finding on any of the six items, and an adjudicator meeting it unexplained might reasonably have
+    inferred that something here runs to 2030. Article 13(3), which is the operative sibling of the
+    delivery-process item below, opens with the same reservation, so the cross-reference touches
+    this checklist's subject-matter twice. Recorded 2026-08-10: until that date this was the only
+    clause of the file's quoted text that no field explained. **Corrected 2026-09-02**: until today
+    the three limbs were given here as a close paraphrase and Article 32 stood in no quote field, so
+    the reading above could not be checked against the text; the article is quoted now and this
+    paragraph reads out of it. **The date limb of the scope provision needs no asking.** Article
+    2(2)'s chapeau applies the Directive to the listed services \"provided to consumers after 28
+    June 2025\", which is a third condition beside the service limb and the microenterprise limb.
+    Any service the person running the scan is providing today is being provided after that date, so
+    the limb is satisfied by the fact that there is something to scan and it is deliberately not one
+    of the two questions below. Recorded 2026-09-02, when it was noticed that the limb stood in the
+    quote and in no question. **Two facts remain, both of them are asked of the person running the
+    scan, and neither of them is settled by anything in a repository.** **Corrected 2026-08-07, and
+    this is the correction that matters most in this file.** From 2026-07-29 until today this field
+    said that of the two remaining facts \"only one of them needs asking\"; that **what kind of
+    service this is** is settled by \"the code and the published documents\"; that a reader should
+    \"read that out of the tree\" — naming a checkout or subscription route, a price or plan
+    identifier, a booking flow and a payments dependency with a call site as the evidence; that a
+    free documentation site, an open-source project page, an internal tool or a business-to-business
+    service was \"outside, and the honest record is `does-not-apply` with the reason named\"; and
+    that a reader should \"ask only where the tree is silent about what is being sold and to whom\".
+    **Every one of those sentences is withdrawn, and the old words are quoted here rather than
+    written away.** What kind of service this is — what the product does and who it serves — is a
+    fact about the **product**. This product's standing rule is that such a fact is asked of the
+    person running the scan or read from their declared documents and is **never inferred from
+    source vocabulary**; code may corroborate it or contradict it and may never decide it. **On this
+    limb the declared documents are held to corroboration only, and the reason is specific to
+    Article 3(30)**: the limb turns on whether the service is offered to a **consumer** at their
+    individual request **with a view to concluding a consumer contract**, and a provider's own
+    description of what it sells is not a characterisation of who its counterparty is or of what
+    kind of contract is concluded. So on this limb a declared document may corroborate the answer or
+    contradict it and may not decide it, and a source tree may do neither more nor less. **That is a
+    departure from the standing rule, recorded as one from 2026-09-02 rather than stated as if it
+    were the rule itself.** Until today this field stated the standing rule here and the stricter
+    one further down, fourteen lines apart and in incompatible terms, with nothing saying which
+    governed: a provider whose published terms of sale state that they govern the sale of goods to
+    consumers was settled by the first sentence and left unanswered by the second, and the two
+    answers are six reported obligations against none until somebody is asked. The stricter reading
+    is the one this file takes, the one its own fixture pins, and from today it is written where the
+    standing rule is written rather than left to be met later. **The strongest corroboration this
+    limb takes, named so that the departure is deliberate rather than silent.** Among the examples
+    given below, a statutory notice addressed to consumers - a distance-selling notice, a notice of
+    the right of withdrawal - is a legal statement that this provider concludes consumer contracts
+    at a distance, and it sits nearer to deciding the limb than a published price list or a line of
+    terms of sale does. **It is still corroboration and still not the answer**, because the answer
+    is a statement about this provider's own arrangements and is the person's to give, and because
+    Article 3(22), quoted above from 2026-09-02, defines a consumer by the purposes the natural
+    person acts for, which nothing the provider publishes about itself establishes. Holding it to
+    corroboration is cheap - an unresolved gate does not withhold the six items - and the reason is
+    written here rather than left to be read out of the file's silence. Added 2026-09-02. The
+    withdrawn wording made the tree the primary source, demoted asking to a fallback, and let a
+    reading of source vocabulary produce `does-not-apply`, which switches all six items off. It was
+    recorded doing exactly that on this project's own end-to-end run on 2026-07-29, when an agent
+    reported settling the service limb from a checkout route and the dependency census \"without
+    asking\". The fixture for this checklist has said the correct thing throughout: its
+    EXPECTATIONS.md lists the kind of service among the facts no repository holds. **So: what kind
+    of service is this, and who is it offered to?** Article 2(2), quoted in full above, lists the
+    covered services, and most of them - electronic communications, audiovisual access, passenger
+    transport, consumer banking, e-books - name themselves. The one to think about is
+    **e-commerce**, and the test is not \"does it have a website\": it is whether the service is
+    offered to a **consumer** at their individual request **with a view to concluding a consumer
+    contract**. **Ask the person running the scan, in those terms.** Their declared documents may
+    corroborate the answer or contradict it — a published price list, a statutory seller's notice,
+    terms of sale that name a consumer contract — and so may the source tree: a checkout or
+    subscription route, a price or plan identifier, a booking flow, a payments dependency with a
+    call site. **Neither may decide it, and neither may produce a `does-not-apply` on its own.** A
+    tree with no checkout route in it is a tree with no checkout route in it; it is not a statement
+    that nothing is being sold, and reading it as one is the failure this paragraph replaces. **Do
+    not infer the kind of service from what the source tree imports, links or implements** - the
+    same prohibition the microenterprise limb below carries, and for the same reason. Where the
+    person running the scan has not answered it, record `unresolved` and say that the service limb
+    is the one that was not answered. **Headcount and turnover** are the second fact, and they
+    decide the microenterprise exemption. Ask the person running the scan in one question, and put
+    all three limbs in it: fewer than 10 persons, and turnover at or under EUR 2 million, **or**
+    balance-sheet total at or under EUR 2 million. Note that Recital 53 - quoted above - conditions
+    the benefit on genuinely fulfilling Commission Recommendation 2003/361/EC, which computes those
+    figures across linked and partner enterprises, and Article 6(2) of that Recommendation's Annex
+    is quoted above from 2026-08-10, so on the mainstream reading of that condition a small
+    subsidiary of a large group is not a microenterprise. Say that when you ask, because a founder
+    answering about their own payroll will not think of it, and put it as how the Recommendation
+    computes the figures rather than as a further limb of Article 3(23). The Directive itself
+    defines the term in Article 3(23); the Recommendation is an anti-circumvention condition on top,
+    not the source of the definition, and a recital cannot add a condition an article does not
+    contain, so the step from Recital 53 to a conclusion about a particular business is an
+    interpretation. **Corrected 2026-08-10**: this passage stated that step flatly, \"so a small
+    subsidiary of a large group is not a microenterprise - say that when you ask\"; the reading is
+    unchanged and it is the one that errs in the safe direction here, since it makes the exemption
+    harder to claim. **Which answer opens this gate and which closes it, stated once because the two
+    fields put the question in opposite directions.** The `question` field above asks whether the
+    provider is something OTHER than a microenterprise, so a yes there opens the gate. The question
+    you actually put to a person, in the three limbs just given, is the other way round: a yes there
+    means they ARE a microenterprise, and it closes the gate and takes all six items with it.
+    **Record the answer in the words the person gave it and record which of the two questions it
+    answers** - \"yes, fewer than 10 persons and turnover at or under EUR 2 million\" closes the
+    gate; \"no, we employ more than that\" opens it. Nothing in the machinery types that answer or
+    carries its polarity, so an answer recorded without the question it answers can be read either
+    way, and reading it the wrong way reports six obligations to a provider who owes none or none to
+    a provider who owes six. Recorded 2026-09-02. **Do not infer the exemption from the size of the
+    repository or the number of committers** - a one-person repository can belong to a company of
+    fifty, and a large monorepo can belong to one person. Where either fact is unanswered, record
+    `unresolved` and say which. **An unresolved gate does not withhold the six items**: walk them
+    anyway, record a verdict on each of them from the declared documents, and let the gate's outcome
+    stand beside those verdicts rather than over them. An unwalked list and a walked list must not
+    print alike, and an item left blank because a gate is open is a question this product never
+    asked and never said it did not ask. It is not a licence to read the gate's answer out of the
+    items either: six `present` verdicts on a well-written statement say what the declared documents
+    contain and say nothing about whether this Directive reaches this provider, and the two facts
+    above stay open until somebody answers them. Recorded 2026-09-02, after two independent blind
+    walkers found that this field disposed of the two facts and said nothing at all about the items,
+    and each recorded that a walker reading it could as defensibly have withheld every item verdict
+    instead."
+items:
+  - id: annex-v-1-general-description
+    article: Annex V, point 1(a)
+    quote: a general description of the service in accessible formats;
+    cite: EAA Annex V, point 1(a)
+    url: http://publications.europa.eu/resource/celex/32019L0882
+    checked_at: 2026-07-28
+    question: Does the published information give a general description of the service, in a format that
+      is itself accessible?
+    applicability_note: "Two things: that there is a general description, and that it is available in
+      accessible formats. **The second limb is answered from what the document itself states about
+      the formats it is published in** - \"this page is also available as a large-print page and as
+      an audio recording\", and the like. What reaches this pass is the extracted text of the
+      declared documents and nothing else, so a property of the publication that no document states
+      is a property this pass cannot see: a statement offered only as a page image with no text
+      layer produces no extracted text at all and never reaches this item, and a statement offered
+      only inside a video is the same case at the other end. **A document's statement about its own
+      formats is a claim and not an observation**, so where it is worth testing it belongs in the
+      direction-A claim work of the runtime reconciliation skill - the claim, what would falsify it
+      under `falsifiable_by`, and the searches that were run - and is recorded there as a
+      declaration finding rather than lowering the verdict here. **Corrected 2026-09-02, and the old
+      words are kept rather than written away.** This note used to read: \"The second is a property
+      of how the page is published rather than of its words, and a statement offered only as a PDF
+      image, or only inside a video, is worth naming.\" It pointed the reader away from the only
+      source this pass has, and the case it named as the worked example is one that cannot reach
+      this item at all. Where no document of the kind this item is about was produced at all, so
+      that nothing exists whose silence about either limb could be read as a finding, **the verdict
+      is `unresolved`, and never `not-applicable`**. A statement or a set of terms read in full that
+      carries no general description is `absent`, which is a finding about a document somebody read;
+      no document to read at all is `unresolved`. **A category name dropped into a sentence about
+      something else is not a general description and does not make this item `partial`** - \"these
+      terms govern X, a hosted build service\" names the business in passing, and point 1(a) asks
+      what the Annex V information contains, so where no Annex V information exists at all there is
+      nothing for such a clause to be part of. Recorded 2026-09-02, after two blind walkers each
+      reached `absent` on exactly that sentence and each recorded that `partial` was arguable on the
+      text as it stood. On an open gate `not-applicable` is never correct on this item, and no fact
+      stated by anybody can close it: point 1(a) carries no words of condition, and the \"where
+      applicable\" chapeau that introduces it names no fact for anybody to state."
+  - id: annex-v-1-operation-explained
+    article: Annex V, point 1(b)
+    quote: descriptions and explanations necessary for the understanding of the operation of the service;
+    cite: EAA Annex V, point 1(b)
+    url: http://publications.europa.eu/resource/celex/32019L0882
+    checked_at: 2026-07-28
+    question: Does the published information explain how the service operates, in enough detail for a
+      reader to understand how to use it?
+    applicability_note: "Point 1(b) asks for the descriptions and explanations **necessary for the
+      understanding of the operation of the service**, so what answers it is an account of how the
+      service is used - a sequence of actions a reader can follow — what follows here is a reading
+      and this file settles it no further than the item needs — and not a bare feature list offered
+      in place of any account of operation, and not a sentence saying the service is simple to use.
+      The provision prescribes no sequence and a structured account of what the service's functions
+      do can be necessary for understanding its operation; what it cannot be is a list standing in
+      for the account. Marked as an interpretation on 2026-09-02: until today this note gave the
+      sequence reading and the exclusion of a feature list as though both followed from the words,
+      and it was the one step in this file that was not marked as one. Where no document of the kind
+      this item is about was produced at all, so that nothing exists whose silence about how the
+      service operates could be read as a finding, **the verdict is `unresolved`, and never
+      `not-applicable`**. Declared documents read in full that never explain the operation are
+      `absent`; no such document to read at all is `unresolved`. On an open gate `not-applicable` is
+      never correct on this item, and no fact stated by anybody can close it: point 1(b) carries no
+      words of condition, and the \"where applicable\" chapeau that introduces it names no fact for
+      anybody to state."
+  - id: annex-v-1-how-requirements-met
+    article: Annex V, point 1(c)
+    quote: a description of how the relevant accessibility requirements set out in Annex I are met by
+      the service.
+    cite: EAA Annex V, point 1(c)
+    url: http://publications.europa.eu/resource/celex/32019L0882
+    checked_at: 2026-07-28
+    question: Does the published information describe how the service meets the accessibility
+      requirements - not merely assert that it does?
+    applicability_note: "The heart of the Annex, and the item most often answered by a sentence rather
+      than a description. \"This site is accessible\" and \"we aim to conform to WCAG 2.1 AA\" are
+      assertions; the Annex asks for a description of *how*. **Nothing in this repository can check
+      whether the description is true** - the code-side checks of Part C row 22 exist, as the rule
+      `eu-accessibility-001`, but they decide six defect classes from a single line each and leave
+      colour contrast, focus visibility, focus and reading order, live-region behaviour, media
+      captions and form-label association outside what they can see, so they can contradict a
+      description in the crudest cases and can never confirm one - so a `present` here means the
+      text exists and says something, never that the claim holds. **Corrected 2026-08-06**: this
+      note used to give the reason as \"the code-side checks are unbuilt\", which was false from the
+      day it was written; the reason is their narrowness, and what it supports is unchanged. **And a
+      `present` here says nothing about coverage.** The item asks whether the published information
+      describes how the requirements are met rather than merely asserting it; it does not ask
+      whether the description reaches every requirement of Annex I that applies to this service.
+      Annex I Section III point (c) and Section IV point (g) are quoted in the gate above from
+      2026-09-02 so that a reader can see what those requirements are: the first is the general
+      services paragraph, the second is the one attached to e-commerce services and it asks for
+      accessibility information about the products and services being sold, and for identification,
+      security and payment functionality that is perceivable, operable, understandable and robust. A
+      statement that describes four properties of its web pages in detail and says nothing about the
+      requirements Annex I attaches to this particular kind of service answers the question this
+      item puts and does not thereby satisfy point 1(c). Record what is described and what is not;
+      do not read `present` as a statement that the description is complete. Recorded 2026-09-02,
+      when Annex I was first quoted in this file at all. **A conformity claim naming a harmonised
+      standard is a separate case, and the reason it is an assertion today is dated.** Annex V point
+      2, quoted in the gate above from 2026-09-02, lets a provider comply with point 1 of the Annex
+      by applying in full or in part the harmonised standards and technical specifications for which
+      references have been published in the Official Journal. No such reference has been published
+      for this Directive, so no named standard is a route to answering this item today and \"we
+      conform to WCAG 2.1 AA\" stays an assertion. Part C row 22 of the coverage map records that
+      the updated EN 301 549 is expected around October 2026; when a reference is published, this
+      paragraph and the assertion examples above have to be re-read against point 2 before the next
+      release. Where no document of the kind this item is about was produced at all, so that nothing
+      exists whose silence about how the requirements are met could be read as a finding, **the
+      verdict is `unresolved`, and never `not-applicable`**. Declared documents read in full that
+      assert conformity without describing how are `absent`, and that is the trap this item's
+      fixture turns on; no such document to read at all is `unresolved`. On an open gate
+      `not-applicable` is never correct on this item, and no fact stated by anybody can close it:
+      point 1(c) carries no words of condition, and the \"where applicable\" chapeau states a
+      conclusion about reach rather than a fact anybody could state. **Where a code fact about the
+      properties a description claims belongs, and it is not this verdict.** A scan finding that an
+      image carries no text alternative, or that a document element declares no language, bears on
+      whether a claim is true and not on whether a description was published, and an item lowered on
+      the strength of one has been answered from a source tree. Where such a finding belongs is the
+      direction-A claim work of the runtime reconciliation skill: the claim in the document's own
+      words, what would falsify it under `falsifiable_by`, the searches that were run, and a
+      declaration finding recorded there rather than a lower verdict recorded here. Added
+      2026-09-02, on the measurement that this rule stood on one of the six item notes and not on
+      the two the contradictions actually land on, and moved to the end of this note later the same
+      day, after a verification left the rule's words untouched, wrote a paragraph after them
+      withdrawing them, and passed every gate in this repository. So the rule is the last thing this
+      note says: **what a repository shows about the properties a description claims may corroborate
+      or contradict what the published statement says, and may never decide this item**, which asks
+      what the published information contains and is answered from the declared documents."
+  - id: art-13-2-publicly-available
+    article: 13(2)
+    quote: Service providers shall prepare the necessary information in accordance with Annex V and
+      shall explain how the services meet the applicable accessibility requirements. The information
+      shall be made available to the public in written and oral format, including in a manner which
+      is accessible to persons with disabilities.
+    cite: EAA Art. 13(2)
+    url: http://publications.europa.eu/resource/celex/32019L0882
+    checked_at: 2026-08-10
+    question: Is the information Annex V requires published to the public, in written and in oral
+      format, and in a manner accessible to persons with disabilities?
+    applicability_note: "**What \"the information\" is, and why the quote above now carries two
+      sentences.** Article 13(2)'s second sentence, which is the one this item asks, opens \"The
+      information shall be made available to the public\". Its subject is a back-reference to the
+      Article's first sentence, \"the necessary information in accordance with Annex V\", so the
+      duty is not to publish something in writing and in speech, it is to publish **the Annex V
+      information** in writing and in speech. Both sentences are quoted above from 2026-08-10,
+      because until that day the first was in no quote field of this file and the subject of this
+      item's own quote had no antecedent a reader could reach. The **oral format** limb is the one
+      almost every statement misses, and it is in the operative Article rather than the Annex. Where
+      some part of the Annex V information exists in written form and no oral form of it is offered,
+      that is `partial`: say so, and quote the written part that exists rather than recording the
+      whole item absent. Where none of the Annex V information exists in written form either, this
+      item has nothing to be partly about, and documents read in full are `absent` here for the same
+      reason they are on the five items asking what the information contains. **Corrected
+      2026-08-10.** Until today this note read \"A written page alone is partial: say so, and quote
+      the written part that exists rather than recording the whole item absent\" and \"Documents
+      read in full that show a written form and no oral one are `partial`\", and the fixture
+      recorded `partial` for this item on the variant whose terms and privacy policy carry none of
+      the Annex V information at all. The old words are quoted here rather than written away, and
+      they were wrong in two ways at once. They read \"the information\" as any published writing,
+      which makes the written limb true of every project with a public page and puts `absent`
+      permanently out of reach on this item. And they report a provider who has published none of
+      the required information as one limb short of complying, which is an understatement of five
+      items and points the remediation at recording an audio version of a page that does not exist.
+      **The third limb is a property of the making-available, and it is not Annex V point 1(a) asked
+      again.** Point 1(a) asks whether the general description is in accessible formats; the words
+      \"including in a manner which is accessible to persons with disabilities\" ask whether the way
+      the information is put before the public is itself usable by them, which is a question about
+      the whole of the information and about the route to it rather than about one element's format.
+      Information published only as a page image with no text layer satisfies the written limb and
+      fails this one, because a screen reader cannot reach it. A route that can be used only by
+      someone able to place a voice telephone call is the same failure at the other end, unless the
+      same content is reachable another way. Record `partial` and name the limb that fails, exactly
+      as for a missing oral format; a `present` on this item is a statement that all three limbs
+      hold, and it is not to be given where only the first two were looked at. **What answers the
+      third limb affirmatively is what the declared documents state about the routes by which the
+      information is made available** - the same content offered as ordinary web text, as a
+      large-print page, as a recording, on request by post - and such a statement is a claim about
+      the route rather than an observation of it. Where the claim is worth testing it belongs in the
+      direction-A claim work of the runtime reconciliation skill, under `falsifiable_by`, and not in
+      this verdict. The page-image example above is named as the shape of the failure and not as a
+      case this pass can meet: a page offered only as an image with no text layer produces no
+      extracted text, so it never reaches this item at all. Recorded 2026-09-02, because until today
+      the note set a bar for `present` on all three limbs and supplied no test for the third. Where
+      no document of the kind this item is about was produced at all, so that nothing exists whose
+      silence about how the information is made available could be read as a finding, **the verdict
+      is `unresolved`, and never `not-applicable`**; no such document to read at all is
+      `unresolved`. **Article 13(2) carries no words of condition whatever** - it is an unqualified
+      `shall`, and the \"where applicable\" chapeau belongs to Annex V point 1, is quoted in the
+      gate above from 2026-08-10, and does not reach the operative Article - so on an open gate
+      `not-applicable` is never correct on this item, and no fact stated by anybody can close it.
+      **Where the evidence for the third limb may come from, and it is the same rule the other five
+      items carry.** The three limbs are read from the declared documents and from what those
+      documents state about the form in which they are published. A scan finding that the document
+      element declares no language, or that a control on the page has no accessible name,
+      contradicts what the statement claims and belongs in a finding against that claim: the
+      direction-A claim work of the runtime reconciliation skill, with the claim in the document's
+      own words, what would falsify it under `falsifiable_by`, and the searches that were run. It
+      may not lower this item, and that holds even though this limb is about the manner of
+      publication rather than about the words. Added 2026-09-02, on the measurement that the note's
+      own worked examples were properties of a published artefact while the rule that only a
+      document may decide the item stood on one of the six item notes and not on this one, and moved
+      to the end of this note later the same day, after a verification left the rule's words
+      untouched, wrote a paragraph after them withdrawing them, and passed every gate in this
+      repository. So the rule is the last thing this note says: **a code fact about the pages that
+      carry the information may corroborate or contradict what the published statement says, and may
+      never decide this item.**"
+  - id: annex-v-3-delivery-process-monitoring
+    article: Annex V, point 3
+    quote: The service provider shall provide information demonstrating that the service delivery
+      process and its monitoring ensure compliance of the service with point 1 of this Annex and
+      with the applicable requirements of this Directive.
+    cite: EAA Annex V, point 3
+    url: http://publications.europa.eu/resource/celex/32019L0882
+    checked_at: 2026-07-28
+    question: Does the published information show that the way the service is delivered, and the way
+      that delivery is monitored, keeps two things true - that the Annex V information itself stays
+      compliant with point 1 of this Annex, and that the service stays compliant with the
+      requirements of this Directive that apply to it - a process, a review cycle, testing, a named
+      owner?
+    applicability_note: "**A separate `shall`, and it was neither asked nor disclaimed until
+      2026-07-28.** Point 1 asks what the service does about accessibility now; point 3 asks about
+      the process and its monitoring - how the provider keeps it that way. A statement that
+      describes the current state of the product and says nothing about testing, review or ownership
+      answers point 1 and not this one. **Point 3 names two objects and both are asked here, from
+      2026-09-02.** The first is compliance **with point 1 of this Annex** - the delivery process
+      and its monitoring must keep the published information itself right - so a stated interval for
+      reviewing the statement against the service answers this limb and is not to be read as
+      answering only point 1. The second is **the applicable requirements of this Directive**, which
+      is wider than the accessibility requirements alone. **Corrected 2026-09-02, and the old words
+      are kept rather than written away.** The question on this item used to read \"Does the
+      published information show how the service is built and monitored so that it keeps meeting the
+      accessibility requirements - a process, a review cycle, testing, an owner?\", which dropped
+      the first object of the provision entirely and narrowed the second. A provider whose statement
+      describes a review cycle for the accessibility statement itself - \"we re-check this statement
+      against the service every March\" - was answering a limb the item never asked, and an
+      adjudicator following the old wording would have recorded that `absent`. A stated review
+      interval is one of the two commonest real answers named in the sentence below, so this note
+      had been naming it while the question excluded it. The two most common real answers are an
+      accessibility testing step in the release process and a stated review interval, and both are
+      usually visible in a repository as well as in the statement, which makes this the item in the
+      list most open to being read against the code - though not by the row 22 checks as they stand
+      (**corrected 2026-08-06**: this sentence used to say \"once the row 22 checks exist\", and
+      they do exist; `eu-accessibility-001` reads single lines of markup and sees nothing of a
+      release process or a review interval, so the code-side reading this item invites is owed work
+      rather than a waiting dependency). Note the \"where applicable\" in point 1's chapeau does
+      **not** reach this point: it qualifies the list of elements (a) to (c), and point 3 is a
+      sentence of its own. Where no document of the kind this item is about was produced at all, so
+      that nothing exists whose silence about the delivery process or its monitoring could be read
+      as a finding, **the verdict is `unresolved`, and never `not-applicable`**. Declared documents
+      read in full that describe only the current state of the product are `absent` here; no such
+      document to read at all is `unresolved`. Point 3 is an unqualified `shall` carrying no words
+      of condition, so on an open gate `not-applicable` is never correct on this item, and no fact
+      stated by anybody can close it. **And what a statement answering only one of those two objects
+      takes, which no field of this file said until 2026-09-02.** Real statements commonly reach one
+      object and not the other: an accessibility test in the release process and a named owner speak
+      to the service staying compliant with the requirements of this Directive, while a stated
+      interval for re-checking the published statement against the service is what reaches the Annex
+      V information staying compliant with point 1. Point 3 asks for information demonstrating that
+      the delivery process and its monitoring ensure compliance, and a published account of a
+      process that does so for one of the two named objects is such information; the item is not a
+      pair of limbs each of which has to be satisfied before anything can be recorded - what follows
+      here is a reading and this file settles it no further than the item needs. **It is not
+      `partial`, and this is the third field of this checklist in which `partial` is refused for a
+      half-answer**: `annex-v-1-general-description` refuses it for a category name dropped into a
+      sentence about something else and `annex-v-1-in-terms-or-equivalent` for terms carrying a bare
+      conformity assertion, and on both of those the refusal lands on `absent` while here it lands
+      on `present`. Where `partial` does belong on this checklist is `art-13-2-publicly-available`,
+      whose note directs it where the Annex V information exists in written form and no oral form of
+      it is offered, because that item asks a multi-limb duty of the operative Article. Recorded
+      2026-09-02, after two independent blind walkers reading the same statement split, one
+      recording `present` and one `partial`, because the question above had named two objects and no
+      field said what a statement answering one of them takes. So a published account of the
+      delivery process and its monitoring that reaches one of the two named objects and not the
+      other is `present` on this item, with the object it does not reach named in the reasoning; and
+      the distance between what such a statement claims about its process and what that process does
+      not cover is direction-A claim work of the runtime reconciliation skill - the claim in the
+      document's own words, what would falsify it under `falsifiable_by`, and the searches that were
+      run - and never a lower verdict recorded here. **What a repository shows about a release
+      process may corroborate or contradict what the published statement says, and may never decide
+      this item**, which asks what the published information shows and is answered from the declared
+      documents. The same rule governs the fact the gate turns on, and it governs it in an item note
+      exactly as it governs it in the gate: what kind of service this is, is asked of the person
+      running the scan or read from their declared documents, and a source tree may corroborate it
+      or contradict it and may never decide it - and on the Article 3(30) e-commerce limb the gate
+      above departs from that standing rule from 2026-09-02 and holds the declared documents to
+      corroboration only, for a reason specific to that limb, so read the gate rather than this
+      sentence when the question is what kind of service this is."
+  - id: annex-v-1-in-terms-or-equivalent
+    article: Annex V, point 1
+    quote: The service provider shall include the information assessing how the service meets the
+      accessibility requirements referred to in Article 4 in the general terms and conditions, or
+      equivalent document.
+    cite: EAA Annex V, point 1
+    url: http://publications.europa.eu/resource/celex/32019L0882
+    checked_at: 2026-07-28
+    question: Is the information Annex V requires in the general terms and conditions, or in a document
+      that serves the same purpose?
+    applicability_note: "Annex V point 1 says only \"in the general terms and conditions, or equivalent
+      document\", and the Directive defines neither \"equivalent\" nor the class, so what follows is
+      a reading and this file settles it no further than the item needs. **The property that makes a
+      document equivalent is that the provider holds it out as its own formal statement of the terms
+      on which the service is supplied, and publishes it at a stable public location a user can
+      reach without asking for it.** A dedicated accessibility statement linked from the footer
+      beside the terms and the privacy policy has that property in the ordinary case, and answers
+      this item. A blog post, a help-centre article or a commit message does not, and the ground of
+      exclusion is that property: none of them is held out as a statement of the terms on which the
+      service is supplied. Where a project's arrangement is not the ordinary one, record what the
+      document is and how it is held out, and treat the reading as unsettled rather than deciding
+      the class. **Corrected 2026-08-10.** This note used to read: \"A dedicated accessibility
+      statement linked from the footer is the ordinary 'equivalent document' and satisfies this.
+      What does not is information that exists only in a blog post, a help-centre article that is
+      not part of the terms, or a commit message.\" The old words are quoted here rather than
+      written away. They left an adjudicator no usable line, because the first sentence admitted a
+      document that in the ordinary case is **not** part of the terms while the second excluded a
+      help-centre article **because** it is not part of the terms, so the stated ground of exclusion
+      was the very property the sentence before it had waived. The reading is also exercised by no
+      fixture: `complete/`'s statement says in terms that it forms part of the general terms and
+      conditions, which answers point 1's first limb directly and never reaches the
+      equivalent-document limb. **A statement that says in terms that it forms part of the general
+      terms and conditions answers point 1's first limb from its own words**, and the terms
+      themselves do not have to be produced separately for that answer to stand: the document
+      carrying the information is the document this item asks about, and a document declared and not
+      observed is never a statement that the document does not exist. So the first limb is answered
+      and the equivalent-document reading is never reached. Recorded 2026-09-02, because until today
+      this was written as an observation about one fixture rather than as the rule, and a reader
+      following the runtime skill's \"no candidate document of the kind this item is about was
+      found\" branch instead would have recorded `unresolved` on a statement that answers the
+      question outright. Where no document of the kind this item is about was produced at all, so
+      that nothing exists whose silence about where this information sits could be read as a
+      finding, **the verdict is `unresolved`, and never `not-applicable`**. Terms read in full that
+      carry none of it and name no equivalent document are `absent`; no terms and no equivalent
+      document to read at all is `unresolved`. **Terms carrying an accessibility article that
+      asserts conformity and nothing else are `absent` here and not `partial`**: the vehicle is the
+      right one and the information this item asks about is not in it, and by the ruling on
+      `annex-v-1-how-requirements-met` an assertion of conformity is not that information. Recorded
+      2026-09-02, after two blind walkers each reached `absent` on that arrangement and each
+      recorded that a reader counting the conformity sentence as some of the information would have
+      reached `partial`. **The first sentence of Annex V point 1 is an unqualified `shall`** - the
+      \"where applicable\" chapeau governs the list of elements (a) to (c) that follows it and not
+      this sentence, and that chapeau is quoted in the gate above from 2026-08-10 - so on an open
+      gate `not-applicable` is never correct on this item, and no fact stated by anybody can close
+      it."

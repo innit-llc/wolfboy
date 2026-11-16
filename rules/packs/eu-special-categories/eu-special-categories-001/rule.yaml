@@ -1,0 +1,599 @@
+id: eu-special-categories-001
+pack: eu-special-categories
+short_name: Health data named in the code
+problem_line:
+  text: "Health: Art. 9 basis not named, or consent step not found"
+fix_line: Name the Art. 9(2) exception; for consent, add an explicit step naming the data and each
+  purpose; or stop and delete it.
+title: Health-related field, measurement or medical identifier named in code - GDPR Art 9(1) basis
+  needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(1): 'Processing of personal data revealing racial or
+      ethnic origin, political opinions, religious or philosophical beliefs, or trade union
+      membership, and the processing of genetic data, biometric data for the purpose of uniquely
+      identifying a natural person, data concerning health or data concerning a natural person's sex
+      life or sexual orientation shall be prohibited.' Quoted verbatim from the Official Journal
+      text (CELEX 32016R0679), retrieved 2026-07-30 from the Publications Office cellar
+      (publications.europa.eu/resource/celex/32016R0679; eur-lex.europa.eu returns an empty WAF
+      challenge, and the cellar URL answers only when the request carries BOTH an Accept header of
+      application/xhtml+xml AND an Accept-Language header of eng - with the Accept header alone it
+      returns HTTP 400 and a 205-byte body, which this file stated as sufficient until 2026-08-03
+      and which was re-tested that day, returning 400 without the language header and 200 with it).
+      The Journal spells 'person's' with an ASCII apostrophe. Art 9(1) lists its categories in two
+      groups: four introduced by 'revealing' (racial or ethnic origin, political opinions, religious
+      or philosophical beliefs, trade union membership), which belong to eu-special-categories-003,
+      and four introduced by 'the processing of' (genetic data; biometric data for the purpose of
+      uniquely identifying a natural person; data concerning health; data concerning a natural
+      person's sex life or sexual orientation). This rule tests the THIRD limb of that second group,
+      'data concerning health'. No legal consequence turns on how the limbs are counted, and
+      C-184/20 (quoted below) holds that the two groups do not receive different tests, so this rule
+      states the position of its own limb and no total. Health is the only element this rule's
+      detector can see; whether the data concerns an identified or identifiable natural person (Art
+      4(1)) and whether an Art 9(2) exception applies are the context questions. Art. 9 has applied
+      since 25 May 2018 - Art. 99(2): 'It shall apply from 25 May 2018.'"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(15): '‘data concerning health’ means personal data
+      related to the physical or mental health of a natural person, including the provision of
+      health care services, which reveal information about his or her health status;'. Quoted
+      verbatim from the same Official Journal text, retrieved 2026-07-30. Two consequences for this
+      rule: the definition covers mental as well as physical health (which is why PHQ-9/GAD-7 scores
+      and psychiatric vocabulary are in the detector), and it turns on what the data REVEALS about
+      health status, not on the label the developer gave the field - a wellness app's readiness
+      score can be data concerning health, while a hospital's healthcheck endpoint is not data about
+      a person at all. Note the verb: Art 4(15) defines data CONCERNING health as data which
+      'reveal' information about health status. That is not a stylistic detail; it is the textual
+      step the Court of Justice took in C-184/20 paragraph 124 to hold that no Art 9(1) limb gets a
+      narrower test than any other (see the C-184/20 entry below)."
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 35: 'Personal data concerning health should include
+      all data pertaining to the health status of a data subject which reveal information relating
+      to the past, current or future physical or mental health status of the data subject. This
+      includes information about the natural person collected in the course of the registration for,
+      or the provision of, health care services as referred to in Directive 2011/24/EU of the
+      European Parliament and of the Council (9) to that natural person; a number, symbol or
+      particular assigned to a natural person to uniquely identify the natural person for health
+      purposes; information derived from the testing or examination of a body part or bodily
+      substance, including from genetic data and biological samples; and any information on, for
+      example, a disease, disability, disease risk, medical history, clinical treatment or the
+      physiological or biomedical state of the data subject independent of its source, for example
+      from a physician or other health professional, a hospital, a medical device or an in vitro
+      diagnostic test.' Quoted from the same Official Journal text, retrieved 2026-07-30; '(9)' is
+      the Journal's own footnote marker, and the Journal's no-break spaces (after 'Directive' and
+      'Council') are rendered as ordinary spaces here, as in every other rule quoting this document.
+      Three detector consequences stated by the recital itself: a patient identifier is health data
+      ('a number, symbol or particular assigned ... for health purposes' - which is why patientId is
+      in the vocabulary and why a patient id in a log line is a candidate); a computed 'disease
+      risk' and 'the physiological or biomedical state of the data subject' are health data (which
+      is why a disease-risk score and physiological readings are in the vocabulary); and
+      registration data collected in the course of providing health care is health data (which is
+      why a clinical system's person-record fields count even where the field itself names no
+      disease). WHAT THE RECITAL DOES NOT SAY, stated here because an earlier draft of this rule
+      asserted it: the recital does not decide that every wearable measurement is data concerning
+      health. 'Disease risk' and 'physiological or biomedical state' are its words and they carry
+      blood pressure, SpO2 and a computed risk score. A step count is behaviour rather than
+      physiological state and the recital nowhere addresses it; the only published guidance on the
+      point (the Art. 29 Working Party annex, quoted in its own entry below) decides the isolated
+      case the other way and makes the answer depend on combination, duration and context. The
+      detector deliberately still matches step counts and every other measurement listed - that is a
+      question for the adjudicating agent, and context question 2 states the test rather than the
+      answer."
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(2): '‘processing’ means any operation or set of
+      operations which is performed on personal data or on sets of personal data, whether or not by
+      automated means, such as collection, recording, organisation, structuring, storage, adaptation
+      or alteration, retrieval, consultation, use, disclosure by transmission, dissemination or
+      otherwise making available, alignment or combination, restriction, erasure or destruction;'.
+      Art. 4(7): '‘controller’ means the natural or legal person, public authority, agency or other
+      body which, alone or jointly with others, determines the purposes and means of the processing
+      of personal data;'. Art. 4(8): '‘processor’ means a natural or legal person, public authority,
+      agency or other body which processes personal data on behalf of the controller;'. Art. 5(2):
+      'The controller shall be responsible for, and be able to demonstrate compliance with,
+      paragraph 1'. All quoted verbatim from the same Official Journal text (CELEX 32016R0679),
+      re-fetched 2026-08-03; the Journal wraps each defined term in U+2018/U+2019 curly quotation
+      marks, preserved here. TWO CONSEQUENCES. (1) NO SINK REQUIREMENT. Art 9(1) prohibits
+      processing, and Art 4(2) makes collection, recording, organisation, structuring and storage
+      each an operation of processing in their own right; 'disclosure by transmission' is one item
+      in that list, not a precondition for the others. A diagnosis column written to a first-party
+      database and sent nowhere is therefore squarely inside the prohibition, and a detector that
+      required a third-party sink, an analytics call or a log write would make the commonest real
+      shape permanently unreachable. (2) THE ADDRESSEE IS WHOEVER PROCESSES. Art 9(1) is written in
+      the passive and names no role - processing of the listed categories 'shall be prohibited'. Art
+      5(2) shows what the Regulation writes when it means the controller specifically, and Art 9
+      contains no such sentence; a processor processes (Art 4(8)), and Art 9(1) prohibits
+      processing, so the prohibition reaches a processor too. What IS controller-shaped is Art 9(2):
+      its exceptions turn on purposes, legal bases and organisational facts that only the body
+      determining 'the purposes and means' (Art 4(7)) can supply. That is a fact about the
+      exceptions, not about the prohibition, and context question 5 asks both questions separately."
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-03
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "CJEU, Case C-184/20, OT v Vyriausioji tarnybinės etikos komisija (Grand Chamber, 1 August
+      2022), ECLI:EU:C:2022:601. Paragraph 123 sets out the reading THE COURT GOES ON TO REJECT, and
+      is quoted here only so that the rejection is legible: 'As the Advocate General has observed,
+      in essence, in point 85 of his Opinion, whilst the use, in those provisions, of the verb
+      ‘reveal’ is consistent with the taking into account of processing not only of inherently
+      sensitive data, but also of data revealing information of that nature indirectly, following an
+      intellectual operation involving deduction or cross-referencing, the preposition ‘concerning’
+      seems, on the other hand, to signify the existence of a more direct and immediate link between
+      the processing and the data concerned, viewed inherently.' Paragraph 124 REJECTS it, and does
+      so through this rule's own provisions: 'Such an interpretation, which would result in a
+      distinction being drawn according to the type of sensitive data at issue, would not, however,
+      be consistent with a contextual analysis of those provisions, in particular with Article 4(15)
+      of the GDPR, according to which ‘data concerning health’ are personal data related to the
+      physical or mental health of a natural person, including the provision of health care
+      services, which ‘reveal’ information about his or her health status, and with recital 35 of
+      that regulation, which states that personal data concerning health should include all data
+      pertaining to the health status of a data subject which ‘reveal’ information relating to the
+      past, current or future physical or mental health status of the data subject.' Paragraph 127
+      states the conclusion: 'Consequently, those provisions cannot be interpreted as meaning that
+      the processing of personal data that are liable indirectly to reveal sensitive information
+      concerning a natural person is excluded from the strengthened protection regime prescribed by
+      those provisions, if the effectiveness of that regime and the protection of the fundamental
+      rights and freedoms of natural persons that it is intended to ensure are not to be
+      compromised.' Operative part, point 2: 'Article 8(1) of Directive 95/46 and Article 9(1) of
+      Regulation 2016/679 must be interpreted as meaning that the publication, on the website of the
+      public authority responsible for collecting and checking the content of declarations of
+      private interests, of personal data that are liable to disclose indirectly the sexual
+      orientation of a natural person constitutes processing of special categories of personal data,
+      for the purpose of those provisions.' Quoted verbatim from the English text (CELEX
+      62020CJ0184), fetched 2026-08-03 from the Publications Office cellar; the request needs BOTH
+      an Accept header of application/xhtml+xml AND an Accept-Language header of eng, otherwise it
+      returns HTTP 400. The Court's typographic quotation marks (U+2018/U+2019) around 'reveal',
+      'concerning' and 'data concerning health' are reproduced as printed. WHAT IT MEANS FOR THIS
+      RULE: personal data liable INDIRECTLY to reveal health status are inside Art 9(1), and the
+      Court's reason is textual and specific to the health limb - Art 4(15) and Recital 35 already
+      define data concerning health by what they 'reveal', so the reveal/concern wording cannot be
+      used to give health a narrower test. The category actually at issue in the case was sexual
+      orientation, which sits in the same 'the processing of' group as health, so the holding
+      reaches a 'concerning'-limb category directly. Context question 3 is this entry's question.
+      Note the limit of what is quoted: the judgment settles that indirect revelation is not
+      excluded; it does not say how strong an inference must be, and this rule does not assert one."
+    url: https://publications.europa.eu/resource/celex/62020CJ0184
+    checked_at: 2026-08-03
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Article 29 Data Protection Working Party, ANNEX - health data in apps and devices (annex to
+      the WP29 letter to the European Commission, 5 February 2015). THE SUMMARY TEST, quoted
+      verbatim: 'In summary, personal data are health data when: 1. The data are inherently/clearly
+      medical data 2. The data are raw sensor data that can be used in itself or in combination with
+      other data to draw a conclusion about the actual health status or health risk of a person 3.
+      Conclusions are drawn about a person's health status or health risk (irrespective of whether
+      these conclusions are accurate or inaccurate, legitimate or illegitimate, or otherwise
+      adequate or inadequate)'. ON A STEP COUNT, which is the passage that decides the question this
+      rule previously pre-empted: 'if an app would only count the number of steps during a single
+      walk, without being able to combine those data with other data from and about the same data
+      subject, and in the absence of specific medical context in which the app data are to be used,
+      the collected data are not likely to have a significant impact on the privacy of the data
+      subject and do not require the extra protection of the special category of health data. They
+      are just raw (relatively low impact lifestyle) personal data (provided, the app does not
+      process location data), not information from which knowledge about that persons health can be
+      inferred.' ON VITAL SIGNS, which qualifies the same way and is why this rule no longer states
+      a flat conclusion about heart rate or blood pressure either: 'a single registration of a
+      person's weight, blood pressure or pulse/heart rate (if not excessive in absolute terms), at
+      least without any further information about age or sex, does not allow for the inference of
+      information about the actual or likely future health status of that person. However, that
+      aspect measured over time, especially in combination with age and sex, may be used to
+      determine a significant aspect of an individual's health'. ON SCALE, from the Working Party's
+      own footnote 5 - and this is the strongest available answer to any future proposal to narrow
+      this rule's vocabulary on a null result: 'a pedometer tracking and storing how many steps one
+      has taken for a few days (and deleting such data after a week by default) may not process
+      'health data'. But an app combining several years' worth of extensive quantified-self records
+      of an individual (tracking, for example, sleep and exercise habits, detailed records of diet,
+      weight, body mass index, blood pressure and other vital statistics, as well as a mood diary)
+      will be processing health data.' ON INFERENCES: 'When conclusions are drawn about someone's
+      health, regardless of their reliability, these conclusions are to be treated as health data.'
+      And: 'Raw sensor data thus may lead to the drawing of conclusions (whether accurate or
+      inaccurate) concerning the health status of a data subject. Such conclusions are health data,
+      even though the raw sensor data may not always be.' Fetched 2026-08-03 from the Commission's
+      Article 29 documentation archive; the PDF is 576,787 bytes (SHA-256
+      3f4da2febc8fe1b271f511a319c786505e5451cab2d8e1579721399d2866af52) and the quotations above are
+      transcribed from its text layer. TYPOGRAPHY, corrected 2026-08-03 after an independent
+      re-check: the annex prints the marks around the words health data in the footnote 5 passage as
+      ASCII apostrophes (U+0027), and this file wrote them as U+2018/U+2019 until that day - the
+      same defect shape, in the opposite direction, that the sibling rule -003 spent a repair round
+      removing. The same text layer contains U+2018, U+2019, U+201C and U+201D elsewhere, so the
+      straight marks are what the document prints and not an artefact of the renderer; every other
+      quotation in this entry uses the document's own characters unchanged. STANDING: this is
+      guidance from a body that no longer exists, construing a repealed Directive. It is not
+      binding, the EDPB has not re-adopted it, and it is cited here as the reasoning a competent
+      adjudicator should engage with rather than as authority that settles anything. WHY IT DOES NOT
+      NARROW THE DETECTOR: the same document says scale, combination and purpose turn the identical
+      value into health data, and says a controller using ANY personal data 'with the purpose of
+      identifying disease risks' is inside the concept. A regex sees one line, not a retention
+      period or a join. So the vocabulary stays wide and the question moves to context question 2,
+      where it belongs."
+    url: https://ec.europa.eu/justice/article-29/documentation/other-document/files/2015/20150205_letter_art29wp_ec_health_data_after_plenary_annex_en.pdf
+    checked_at: 2026-08-03
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(2): 'Paragraph 1 shall not apply if one of the
+      following applies: (a) the data subject has given explicit consent to the processing of those
+      personal data for one or more specified purposes, except where Union or Member State law
+      provide that the prohibition referred to in paragraph 1 may not be lifted by the data subject;
+      (b) processing is necessary for the purposes of carrying out the obligations and exercising
+      specific rights of the controller or of the data subject in the field of employment and social
+      security and social protection law in so far as it is authorised by Union or Member State law
+      or a collective agreement pursuant to Member State law providing for appropriate safeguards
+      for the fundamental rights and the interests of the data subject; (c) processing is necessary
+      to protect the vital interests of the data subject or of another natural person where the data
+      subject is physically or legally incapable of giving consent; (d) processing is carried out in
+      the course of its legitimate activities with appropriate safeguards by a foundation,
+      association or any other not-for-profit body with a political, philosophical, religious or
+      trade union aim and on condition that the processing relates solely to the members or to
+      former members of the body or to persons who have regular contact with it in connection with
+      its purposes and that the personal data are not disclosed outside that body without the
+      consent of the data subjects; (e) processing relates to personal data which are manifestly
+      made public by the data subject; (f) processing is necessary for the establishment, exercise
+      or defence of legal claims or whenever courts are acting in their judicial capacity; (g)
+      processing is necessary for reasons of substantial public interest, on the basis of Union or
+      Member State law which shall be proportionate to the aim pursued, respect the essence of the
+      right to data protection and provide for suitable and specific measures to safeguard the
+      fundamental rights and the interests of the data subject; (h) processing is necessary for the
+      purposes of preventive or occupational medicine, for the assessment of the working capacity of
+      the employee, medical diagnosis, the provision of health or social care or treatment or the
+      management of health or social care systems and services on the basis of Union or Member State
+      law or pursuant to contract with a health professional and subject to the conditions and
+      safeguards referred to in paragraph 3; (i) processing is necessary for reasons of public
+      interest in the area of public health, such as protecting against serious cross-border threats
+      to health or ensuring high standards of quality and safety of health care and of medicinal
+      products or medical devices, on the basis of Union or Member State law which provides for
+      suitable and specific measures to safeguard the rights and freedoms of the data subject, in
+      particular professional secrecy; (j) processing is necessary for archiving purposes in the
+      public interest, scientific or historical research purposes or statistical purposes in
+      accordance with Article 89(1) based on Union or Member State law which shall be proportionate
+      to the aim pursued, respect the essence of the right to data protection and provide for
+      suitable and specific measures to safeguard the fundamental rights and the interests of the
+      data subject.' Quoted verbatim from the same Official Journal text, retrieved 2026-07-30; the
+      Journal's no-break spaces (inside 'Member State' in points (a), (b), (h) and (i), after
+      'paragraph' in point (h), and after 'Article' in point (j)) are rendered as ordinary spaces.
+      Point (h) is the exception a real clinical system relies on, so a finding on a hospital's or
+      insurer's own records is expected output, answered by naming the (h) basis and the Art 9(3)
+      secrecy arrangement rather than by changing code. Point (a) requires consent that is EXPLICIT
+      and for SPECIFIED purposes - a consent surface near a health field is a lead, never an
+      answer."
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(3): 'Personal data referred to in paragraph 1 may be
+      processed for the purposes referred to in point (h) of paragraph 2 when those data are
+      processed by or under the responsibility of a professional subject to the obligation of
+      professional secrecy under Union or Member State law or rules established by national
+      competent bodies or by another person also subject to an obligation of secrecy under Union or
+      Member State law or rules established by national competent bodies.' Art. 9(4): 'Member States
+      may maintain or introduce further conditions, including limitations, with regard to the
+      processing of genetic data, biometric data or data concerning health.' Both quoted verbatim
+      from the same Official Journal text, retrieved 2026-07-30, no-break spaces rendered as
+      ordinary spaces. 9(3) means an (h) reliance is conditional on professional secrecy, an
+      organisational fact no scanner can see. 9(4) means that for data concerning health a member
+      state may add conditions beyond the GDPR, so the adjudicating agent must never present a GDPR
+      analysis as the complete national answer for this rule's subject matter."
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 83(5)(a): infringements of 'the basic principles for
+      processing, including conditions for consent, pursuant to Articles 5, 6, 7 and 9' are 'subject
+      to administrative fines up to 20 000 000 EUR, or in the case of an undertaking, up to 4 % of
+      the total worldwide annual turnover of the preceding financial year, whichever is higher'.
+      Quoted from the same Official Journal text, retrieved 2026-07-30. Art. 9 is listed expressly,
+      so a real Art 9 gap sits in the upper fining band."
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  match:
+    - (?:[Dd]iagnos(?:is|es|ed)|DIAGNOS(?:IS|ES|ED)|[Ss]ymptom|SYMPTOM|[Mm]edication|MEDICATION|[Pp]rescription|PRESCRIPTION|(?<!hypo)(?<!Hypo)[Aa]llerg|(?<!HYPO)ALLERG|[Cc]omorbid|COMORBID|[Ii]mmunis|[Ii]mmuniz|IMMUNIS|IMMUNIZ|[Vv]accin|VACCIN|[Pp]athology|PATHOLOGY|[Cc]hemotherap|CHEMOTHERAP|[Pp]sychiatr|PSYCHIATR|[Pp]regnan|PREGNAN|[Mm]enstrua|MENSTRUA|[Dd]isabilit(?:y|ies)|DISABILIT(?:Y|IES)|[Mm]edical[_\-
+      ]?(?:[Rr]ecord|[Hh]istory|[Cc]ondition|[Nn]ote|[Cc]ertificate)|MEDICAL[_\-
+      ]?(?:RECORD|HISTORY|CONDITION|NOTE|CERTIFICATE)|[Hh]ealth[_\-
+      ]?(?:[Rr]ecord|[Cc]ondition|[Ss]tatus|[Mm]etric|[Ii]nsurance)|HEALTH[_\-
+      ]?(?:RECORD|CONDITION|STATUS|METRIC|INSURANCE)|[Hh]ealth[_\- ]?[Cc]heck[_\- ]?[Uu]p|HEALTH[_\-
+      ]?CHECK[_\- ]?UP|(?:(?<![A-Za-zÀ-ɏ])mental|Mental)[_\- ]?[Hh]ealth|(?<![A-Z])MENTAL[_\-
+      ]?HEALTH|[Cc]linical[_\- ]?(?:[Nn]ote|[Rr]ecord|[Ff]inding|[Tt]rial)|CLINICAL[_\-
+      ]?(?:NOTE|RECORD|FINDING|TRIAL)|ICD[_\-]?(?:9|10|11)|[Ii]cd[_\-]?(?:9|10|11)|SNOMED|[Ss]nomed|LOINC|[Ll]oinc|[Hh][Bb][Aa]1[Cc]|[Gg]lucose|GLUCOSE|[Ii]nsulin|INSULIN|[Dd]isease[_\-
+      ]?(?:[Cc]ode|[Nn]ame|[Rr]isk)|DISEASE[_\- ]?(?:CODE|NAME|RISK)|[Cc]ondition[_\-
+      ]?[Cc]ode|CONDITION[_\-
+      ]?CODE|(?<![A-Za-zÀ-ɏ0-9])[Pp][Hh][Qq][_\-]?9(?![0-9])|(?<![A-Za-zÀ-ɏ0-9])[Gg][Aa][Dd][_\-]?7(?![0-9])|[Tt]reatment[_\-
+      ]?(?:[Pp]lan|[Hh]istory|[Cc]ourse|[Rr]ecord|[Ss]tory)|TREATMENT[_\-
+      ]?(?:PLAN|HISTORY|COURSE|RECORD|STORY)|[Pp]atient[_\-
+      ]?(?:[Ii][Dd]s?(?![A-Za-z])|[Ii]dentifier|[Nn]ame|[Rr]ecord|[Dd]ata|[Cc]hart|[Pp]rofile)|PATIENT[_\-
+      ]?(?:IDS?(?![A-Za-z])|IDENTIFIER|NAME|RECORD|DATA|CHART|PROFILE)|[Pp]atient[_\-
+      ]?(?:[Rr]ef(?:erence)?s?(?![a-z]))|PATIENT[_\- ]?(?:REF(?:ERENCE)?S?(?![A-Z])))
+    - (?:[Hh]eart[_\- ]?[Rr]ate|HEART[_\- ]?RATE|[Rr]esting[_\- ]?[Hh]eart|RESTING[_\-
+      ]?HEART|(?<![A-Za-zÀ-ɏ0-9])HRV(?![A-Za-z0-9])|(?<=[a-z])HRV(?![A-Za-z0-9])|(?<![A-Za-zÀ-ɏ0-9])Hrv(?![a-z0-9])|[Bb]lood[_\-
+      ]?(?:[Pp]ressure|[Ss]ugar|[Gg]lucose|[Oo]xygen|[Tt]ype|[Gg]roup)|BLOOD[_\-
+      ]?(?:PRESSURE|SUGAR|GLUCOSE|OXYGEN|TYPE|GROUP)|[Ss]ystolic|SYSTOLIC|[Dd]iastolic|DIASTOLIC|[Aa][Bb][Oo][_\-
+      ]?[Gg]roup|ABO[_\- ]?GROUP|(?<![A-Za-zÀ-ɏ0-9])[DdRr][Xx][_\-
+      ]?[Cc]ode(?![A-Za-z])|(?<![A-Za-zÀ-ɏ0-9])[DR]X[_\-
+      ]?CODE(?![A-Za-z])|(?<![A-Za-zÀ-ɏ])[Ss][Pp][Oo]2(?![A-Za-z])|(?<=[a-z])(?:SpO2|SPO2|Spo2)(?![A-Za-z])|[Bb]ody[_\-
+      ]?(?:[Ww]eight|[Ff]at|[Tt]emperature|[Tt]emp(?![A-Za-z])|[Mm]ass)|BODY[_\-
+      ]?(?:WEIGHT|FAT|TEMPERATURE|TEMP(?![A-Za-z])|MASS)|(?<![A-Za-zÀ-ɏ])[Bb][Mm][Ii](?![a-z])|(?<=[a-z])(?:BMI|Bmi)(?![a-z])|(?:(?<![A-Za-zÀ-ɏ])step|Step)[_\-
+      ]?[Cc]ount|STEP[_\- ]?COUNT|[Dd]aily[_\- ]?[Ss]teps|DAILY[_\- ]?STEPS|[Ss]leep[_\-
+      ]?(?:[Ss]ession|[Ss]tage|[Dd]uration|[Qq]uality|[Ss]core|[Tt]racking|[Aa]pnea)|SLEEP[_\-
+      ]?(?:SESSION|STAGE|DURATION|QUALITY|SCORE|TRACKING|APNEA)|[Vv][Oo]2[_\-
+      ]?(?:[Mm]ax|MAX)|[Cc]alories?[_\- ]?[Bb]urn|CALORIES?[_\- ]?BURN|[Vv]ital[_\-
+      ]?[Ss]igns?|VITAL[_\- ]?SIGNS?|[Ss]tress[_\- ]?(?:[Ll]evel|[Ss]core|[Ii]ndex)|STRESS[_\-
+      ]?(?:LEVEL|SCORE|INDEX)|[Rr]espirat(?:ory|ion)[_\- ]?[Rr]ate|RESPIRAT(?:ORY|ION)[_\-
+      ]?RATE|[Oo]xygen[_\- ]?[Ss]aturation|OXYGEN[_\- ]?SATURATION)
+    - (?:HKHealthStore|HKQuantityType|HKWorkout|HKSample|HKObjectType|HKAuthorizationStatus|HKUnit|HKCharacteristicType|HKClinicalType|[Hh]ealth[Kk]it|HEALTHKIT|androidx\.health\.connect|HealthConnectClient|HEALTH[_\-]?CONNECT|FitnessOptions|com\.google\.android\.gms\.fitness|Fitness\.getHistoryClient|[Gg]oogle[_\-
+      ]?[Ff]it|GOOGLE[_\-
+      ]?FIT|[Ff]itbit|FITBIT|react-native-health|expo-health|com\.samsung\.android\.sdk\.healthdata|[Ss]amsung[_\-
+      ]?[Hh]ealth|SAMSUNG[_\-
+      ]?HEALTH|FHIR|(?<![A-Za-zÀ-ɏ])fhir(?![A-Za-z])|[Ff]hir[_\-]?(?:[Cc]lient|[Rr]esource|[Bb]undle|[Ss]erver|[Vv]ersion)|HL7|[Oo]pen[Ee][Hh][Rr]|[Dd]icom|DICOM|[Oo]rthanc|ORTHANC)
+    - (?:[Pp]atients?|[Ss]ubjects?|[Ii]nsureds?|[Ee]ncounters?|[Aa]dmissions?)(?:_doc|_data|_record|_row)?\s*(?:\.(?:get\(\s*["'])?|\[\s*["'])\s*(?:[Ww]eight|[Hh]eight|[Tt]emperature|[Tt]emp|[Pp]ulse|[Vv]itals|[Cc]onditions?|[Tt]reatments?|[Hh]istory|[Nn]otes?|[Ll]abs?|[Mm]eds?|[Dd]iseases?|[Nn]ames?)(?![A-Za-z])
+    - (?:(?<![A-Za-z0-9_])(?:[Cc]ause[_\- ]?(?:[Oo]f[_\- ]?)?[Dd]eath|CAUSE[_\- ]?(?:OF[_\-
+      ]?)?DEATH|[Dd]eath[_\- ]?[Cc]ause|DEATH[_\- ]?CAUSE|[Dd]eath[_\- ]?[Cc]ertificate|DEATH[_\-
+      ]?CERTIFICATE|[Aa]utops(?:y|ies)|AUTOPS(?:Y|IES)|[Pp]ost[_\- ]?[Mm]ortem|POST[_\-
+      ]?MORTEM|[Nn]ecrops(?:y|ies)|NECROPS(?:Y|IES)|[Ss]tillbirth|STILLBIRTH|[Mm]iscarriage|MISCARRIAGE|[Tt]erminal[_\-
+      ]?[Ii]llness|TERMINAL[_\- ]?ILLNESS|[Mm]edical[_\-
+      ]?(?:[Ee]vent|[Pp]rocedure|[Dd]iagnosis)|MEDICAL[_\-
+      ]?(?:EVENT|PROCEDURE|DIAGNOSIS)|[Cc]linical[_\- ]?[Ee]vent|CLINICAL[_\-
+      ]?EVENT)|(?<=[a-z])(?:Cause(?:Of)?Death|DeathCause|DeathCertificate|Autops(?:y|ies)|PostMortem|Necrops(?:y|ies)|Stillbirth|Miscarriage|TerminalIllness|Medical(?:Event|Procedure|Diagnosis)|ClinicalEvent))
+    - (?<![A-Za-z])[Pp][Tt][_\-](?:[Nn]ame|[Ii][Dd]|[Rr]ef(?:erence)?|[Cc]hart|[Rr]ecord|[Dd][Oo][Bb]|[Mm][Rr][Nn])(?![A-Za-z])|(?<![A-Za-z])PT[_\-](?:NAME|ID|REF(?:ERENCE)?|CHART|RECORD|DOB|MRN)(?![A-Za-z])|[Ii]ntoleran|INTOLERAN|[Hh]ealth[_\-
+      ]?[Cc]onnect|HEALTH[_\- ]?[Cc]onnect
+    - ^\s*(?:pulse|Pulse|PULSE|sbp|Sbp|SBP|dbp|Dbp|DBP)\s+(?:INT|INTEGER|SMALLINT|BIGINT|NUMERIC|DECIMAL|FLOAT|REAL|DOUBLE|int|integer|smallint|bigint|numeric|decimal|float|real|double)(?![A-Za-z])
+    - REFERENCES\s+(?:[A-Za-z_][A-Za-z0-9_]*\.)?(?:[Pp]atients?|PATIENTS?|[Ee]ncounters?|ENCOUNTERS?|[Oo]bservations?|OBSERVATIONS?|[Cc]onditions?|CONDITIONS?|[Dd]iagnos[ei]s|DIAGNOS[EI]S|[Pp]rescriptions?|PRESCRIPTIONS?|[Mm]edications?|MEDICATIONS?|[Ii]mmuni[sz]ations?|IMMUNI[SZ]ATIONS?)\s*\(
+    - \[[^\]\n]{0,60}["'](?:[Nn]uts?|NUTS?|[Pp]eanuts?|PEANUTS?|[Tt]ree[_\-
+      ]?[Nn]uts?|[Gg]luten|GLUTEN|[Ww]heat|WHEAT|[Cc]elery|CELERY|[Ee]ggs?|EGGS?|[Mm]ilk|MILK|[Dd]airy|DAIRY|[Ll]actose|LACTOSE|[Ss]oy(?:a|beans?)?|SOY(?:A|BEANS?)?|[Ss]esame|SESAME|[Mm]ustard|MUSTARD|[Ll]upin|LUPIN|[Mm]ollu[sc]?[ck]s?|[Cc]rustaceans?|CRUSTACEANS?|[Ss]hellfish|SHELLFISH|[Ss]ul[fp]hites?|SUL[FP]HITES?|[Ff]ish|FISH)["'][^\]\n]{0,60}["'](?:[Nn]uts?|NUTS?|[Pp]eanuts?|PEANUTS?|[Tt]ree[_\-
+      ]?[Nn]uts?|[Gg]luten|GLUTEN|[Ww]heat|WHEAT|[Cc]elery|CELERY|[Ee]ggs?|EGGS?|[Mm]ilk|MILK|[Dd]airy|DAIRY|[Ll]actose|LACTOSE|[Ss]oy(?:a|beans?)?|SOY(?:A|BEANS?)?|[Ss]esame|SESAME|[Mm]ustard|MUSTARD|[Ll]upin|LUPIN|[Mm]ollu[sc]?[ck]s?|[Cc]rustaceans?|CRUSTACEANS?|[Ss]hellfish|SHELLFISH|[Ss]ul[fp]hites?|SUL[FP]HITES?|[Ff]ish|FISH)["']
+    - (?<![A-Za-z0-9_.$])smart\s*\.\s*(?:server|patient_for|patient_id|patient|prepare|authorize|handle_callback|ready|state|reauthorize|human_name)(?![A-Za-z0-9_])
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|--\s)
+  path_without:
+    - (^|/)__test__(/|$)
+    - \.(?:pem|crt|cer|der)$
+    - (^|/)(?:CODE_OF_CONDUCT|CONTRIBUTING|SECURITY|LICENSE|LICENCE|GOVERNANCE|AUTHORS|CONTRIBUTORS)[^/]*$
+    - (^|/)\.github/ISSUE_TEMPLATE/
+context_questions:
+  - "Does the matched value relate to an identified or identifiable natural person at all (GDPR Art.
+    4(1))? Art 9(1) governs personal data, so this question decides most candidates first. Not
+    personal data: a diagnosis or ICD-10 code on a disease MASTER table or code list with no person
+    key; an allergen list that is an attribute of a menu item or product; medical words inside
+    dictionary entries, teaching datasets or translation glosses; a veterinary or plant-pathology
+    record; aggregate statistics with no per-person row. Personal data: the same field keyed on a
+    user, patient, member, session or device identifier - and per Recital 35, the patient identifier
+    itself ('a number, symbol or particular assigned to a natural person to uniquely identify the
+    natural person for health purposes'). Quote the surrounding schema, type or query and say what
+    the row is keyed on. Where there is no person key anywhere, record that and stop - the remaining
+    questions do not arise."
+  - "Is the value data concerning health as Art. 4(15) defines it - personal data that 'reveal
+    information about his or her health status'? ANSWER THE TEST, DO NOT ASSUME THE ANSWER. Some of
+    what this detector matches is settled and some is genuinely open, and an earlier draft of this
+    rule wrongly told you the open cases were closed. SETTLED, on the words of Recital 35 itself:
+    information collected when registering for or receiving health care; a patient identifier
+    assigned for health purposes; a diagnosis, disease code, medication, prescription, allergy,
+    disability or medical history; a computed disease-risk score; 'the physiological or biomedical
+    state of the data subject', which carries blood pressure, blood glucose, SpO2 and clinical
+    laboratory values. For these, 'it is only wellness data' is not a dismissal. OPEN, and the
+    question you have to actually answer: an isolated lifestyle measurement - a step count, a
+    calorie count, a single heart-rate reading, a sleep-duration value - is not health data merely
+    because a wearable produced it. The Art. 29 Working Party's three-limb test (quoted in
+    legal_basis) is the one to apply: (1) is the data inherently or clearly medical; (2) is it raw
+    sensor data that, alone OR IN COMBINATION with other data this controller holds, can support a
+    conclusion about the person's actual health status or health risk; (3) are conclusions in fact
+    drawn about health status or health risk - and if they are, those conclusions are health data
+    whether or not they are accurate. So the deciding facts are usually not on the matched line:
+    what else is stored against the same person, for how long, and what the product does with it. A
+    pedometer keeping a few days of steps and deleting them may not be processing health data; the
+    same step count joined to weight, BMI, sleep and years of history is, and so is any field a
+    controller uses for the purpose of identifying disease risks. Say which limb you are relying on
+    and what evidence in the repository supports it; if the code does not show the combination or
+    the retention, say the question is unresolved rather than resolving it either way. THE RECURRING
+    NON-HEALTH READINGS, each measured on real trees: a healthcheck/health_check/liveness/readiness
+    endpoint or a service's healthStatus describes a SYSTEM, not a person; 'diagnostic' in tooling
+    (compiler diagnostics, a placement-test feature) describes software or a quiz; an A/B
+    experiment's 'treatment' arm describes the experiment; 'temperature' as an LLM sampling
+    parameter; Core Web Vitals metrics; a retry helper's sleep_duration or MAX_SLEEP_DURATION_MS; a
+    form wizard's stepCount; a university admissions record; a Material or Font Awesome icon name in
+    a generated icon catalogue (medication, allergy, vaccines, psychiatry and pregnancy are all icon
+    names). Quote the line and name which reading applies."
+  - "Does anything on or near this line indirectly reveal health status, even though no field names
+    a disease? This question exists because C-184/20 (quoted in legal_basis) holds that personal
+    data 'liable indirectly to reveal sensitive information concerning a natural person' are NOT
+    excluded from Art 9(1) - and the Court reached that conclusion by reasoning through Art. 4(15)
+    and Recital 35, which are this rule's own provisions: because 'data concerning health' are
+    themselves defined as data which 'reveal' information about health status, the health limb
+    cannot be given a narrower test than the 'revealing' categories. So a field that is not
+    health-shaped at all can still be inside Art 9(1). The shapes to look for, none of which this
+    detector can see on its own: a prescription-refill schedule, a repeat-medication reminder or a
+    pharmacy order history; a leave-of-absence, absence-reason or workplace-accommodation code on an
+    employee record; an accessibility or assistive-technology flag stored against a person rather
+    than a session; an insurance tier, premium band, underwriting class or claims-history flag;
+    membership of a named support group, clinic, specialist ward or disease-specific mailing list; a
+    dietary or allergen attribute recorded against a PERSON rather than against a product or a menu
+    item; a device or app identifier that only a single-condition product installs; an appointment
+    record whose only content is which department the person visited. For any such field, ask what a
+    reader holding this row could conclude about the person's physical or mental health, and quote
+    the join that makes the inference available. Two limits to respect: the judgment settles that
+    indirect revelation is not excluded, not how strong an inference has to be, so do not present a
+    weak inference as decided; and a field that is genuinely unrelated to health does not become Art
+    9(1) data because it sits in a health product's repository. Where you find nothing, record that
+    you looked."
+  - "Which Art 9(2) exception, if any, covers the processing, and can you name its legal basis? Nine
+    of the ten are invisible to a scanner, so this is your question, not the detector's. Walk them
+    in the order a real product turns on them. (h) preventive or occupational medicine, medical
+    diagnosis, provision of health or social care or management of its systems - the exception a
+    genuine clinical system (EHR, claims processor, pharmacy, telehealth) actually relies on; a
+    finding on such a system is expected output, and the answer is naming the (h) basis ('on the
+    basis of Union or Member State law or pursuant to contract with a health professional') plus the
+    Art 9(3) condition: is the processing under the responsibility of someone bound by professional
+    secrecy? Say whether the code or repository shows that organisational fact or whether it must be
+    confirmed outside the code. (a) explicit consent for one or more SPECIFIED purposes - a consent
+    checkbox or consent SDK near the health field is a lead, never an answer: quote what the consent
+    covers and whether it is explicit and purpose-specific, and note that Union or Member State law
+    can make the prohibition unliftable by consent. (b) employment and social security law, for HR
+    and occupational-health features. (c) vital interests where the person cannot consent, for
+    emergency features. (d) a not-for-profit body with a political, philosophical, religious or
+    trade-union aim processing only its members' data. (e) data manifestly made public by the data
+    subject - turns on how the value reached the system, so trace the write path. (f) legal claims.
+    (g) substantial public interest on a named Union or Member State legal basis. (i) public health.
+    (j) archiving, scientific or historical research or statistics under Article 89(1) - the
+    exception a research pipeline relies on, conditional on safeguards. Quote what you find, or
+    record explicitly that you looked and the code shows nothing either way."
+  - "Where does the value go? Trace it and quote each hop. A first-party database write is still Art
+    9(1) processing and this rule fires on it deliberately - but each further hop adds separate
+    questions: a log or console write (console.log, logger.*, print, Rails.logger - and note a
+    patient identifier in a log line is itself health data per Recital 35); an error tracker
+    (captureException, setContext, setUser, sendDefaultPii); a product-analytics or marketing SDK
+    (track, identify, logEvent, gtag, dataLayer.push); a session-replay recorder capturing screens
+    where health fields are typed; an LLM or other third-party API receiving the value in a prompt
+    or payload; an export or CSV feature. For any recipient outside the EEA, Arts 44-49 transfer
+    questions arise on top of Art 9; for logs and trackers, Art 5(1)(f) integrity/confidentiality
+    and Art 5(1)(c) minimisation. Say which sinks exist, quote them, and say which received the
+    health value itself rather than a foreign key."
+  - "Two separate questions, and they have different answers. FIRST, WHO PROCESSES? That is what Art
+    9(1) prohibits, and it names no role: the prohibition is written in the passive ('shall be
+    prohibited'), and Art 5(2) shows what the Regulation writes when it means the controller
+    specifically. A processor 'processes personal data on behalf of the controller' (Art 4(8)), so a
+    processor is inside the prohibition too, and so is this repository's party if its code collects,
+    records, structures or stores the value. SECOND, WHO DETERMINES THE PURPOSES AND MEANS (Art
+    4(7))? That is the controller, and it matters because the Art 9(2) exceptions are almost all
+    controller-shaped - only the body that sets the purpose can say which exception the purpose
+    falls under, and only it can hold the consent record or name the Union or Member State law. All
+    three provisions are quoted in legal_basis. Practical consequences: a library, SDK, FHIR client
+    wrapper or integration connector that carries health-shaped fields through to a caller processes
+    them, but does not thereby determine the purposes - record the finding as guidance for the
+    integrating application and say so. A hosted service running someone else's clinical workload is
+    a processor and is still inside Art 9(1), with Art 28 duties on top; naming the customer as
+    controller answers the second question, not the first."
+  - Does Art 9(4) change the answer for the member states this product is deployed in? For data
+    concerning health (with genetic and biometric data) a member state 'may maintain or introduce
+    further conditions, including limitations', so an analysis under the GDPR alone is never the
+    complete national answer for this rule's subject matter. Name the member states the repository
+    shows the product operating in, if it shows any, and record that national conditions were not
+    assessed by this scan.
+  - "IF THE MATCH IS A MEDICAL EVENT-TYPE CONSTANT, ASK THREE THINGS IN THIS ORDER. FIRST, IS IT A
+    NAME OR A VALUE? A constant, an enumeration member or a column declaration is a name; find
+    whether any code path writes a value for it and quote that path, because a product may carry a
+    vocabulary it never populates. SECOND, WHOSE HEALTH IS IT ABOUT, AND IS THAT PERSON LIVING? A
+    cause of death, an autopsy record or a death certificate is ordinarily about a deceased person,
+    and Recital 27 puts the deceased outside this Regulation while leaving member states free to
+    legislate - so name the deployment jurisdictions before concluding anything. Then ask separately
+    whether the same value is information about a LIVING person: a hereditary cause of death in a
+    relative record can be data concerning the health, and disease risk, of the living people linked
+    to it. THIRD, IS THE MEDICAL READING THE RIGHT ONE HERE? A miscarriage is a miscarriage of
+    justice in a legal corpus, and an autopsy or a post-mortem is a figure of speech about an
+    incident or a release in engineering prose. ONE OF THOSE WAS MEASURED RATHER THAN GUESSED AT:
+    `post_mortem` and `pdb-postmortem` are the Python debugger's own API and command-line flag, so a
+    tree that drops into a debugger on an unhandled exception carries the word with no medical sense
+    at all. Say which reading applies before going further."
+  - "WHO ANSWERS WHICH ART. 9(2) CONDITION THE ORGANISATION RELIES ON? Whether the organisation that
+    runs this product has a condition under Art. 9(2) for the special-category data it keeps, and
+    has it written down, is a fact about that organisation: the person running the scan is asked it
+    as the Art 9 condition question, ScanProfile.operator.special_category_condition, and the code
+    never decides it. Where the matched value is special-category data about an identifiable person
+    and what remains open is that condition - the Art. 9(2) question above - write the finding as
+    waiting on operator.special_category_condition, whether or not it has been answered, and let the
+    program apply the answer. The leads the Art. 9(2) question asks you to quote from the repository
+    corroborate or contradict the answer; where they contradict it, say so in the reasoning. The
+    answer settles that condition and nothing else: whether the value is special-category data at
+    all and whom it concerns, any further condition Member State law adds under Art. 9(4), and
+    whether the condition covers the use this finding is about, stay yours, so where one of those
+    decides the finding, answer it instead of waiting. An answer that the organisation has a
+    condition never says that it covers a particular use: each condition is tied to its purpose
+    (Art. 9(2)(a) consent is given for one or more specified purposes), so each onward use the code
+    shows - the value sent to a log or an error tracker, an analytics, marketing or session-replay
+    SDK or another tracker, a language model or another third-party API, or an export - is yours to
+    judge on its own line, with the transfer, minimisation and integrity questions it raises, and is
+    never written as waiting on this answer."
+evidence_template: "{file}:{line} carries vocabulary from this rule's health-data list - the name of
+  a field, a measurement, a medical identifier or a health-data interface. THAT IS VOCABULARY, NOT A
+  READING: the detector did not establish that the word carries its medical sense here, and context
+  question 2 names the recurring non-health readings that were measured on real trees - a
+  healthcheck, liveness or readiness endpoint and a service's healthStatus describe a SYSTEM rather
+  than a person; a step count can be an agent loop's tool-call limit or a setup wizard's step total;
+  medication, allergy, vaccines, psychiatry and pregnancy are all icon names in a generated icon
+  catalogue. A FURTHER KIND IS A MEDICAL EVENT-TYPE CONSTANT - a cause of death, an autopsy, a
+  post-mortem, a stillbirth, a death certificate or a named medical or clinical event, declared as a
+  constant, an enumeration member or a column name. A CONSTANT ESTABLISHES THE VOCABULARY AND
+  NOTHING ELSE: that this tree has a name for the thing, not that any person's record carries a
+  value for it, not that any such value was ever written, and not that any of it is data concerning
+  health within Art. 4(15) - that reading is context question 2's, and whether an Art. 9(2)
+  exception covers the processing is question 4's. Where the field is death-related there is a
+  further question before either of them, and it is context question 8's: whether any living person
+  is concerned at all, since information about a deceased person is outside this Regulation's own
+  material scope (Recital 27) while member-state law may still cover it, and a relative's cause of
+  death can be information about a living person's disease risk. Two further shapes sit outside that
+  list and were met on real code: one of these words as an entry in a common-password blocklist, and
+  one of them used metaphorically in English prose or documentation, as in a testing guide's 'a
+  timeout is usually a symptom, not the problem'. Say which reading applies, or that none of them
+  does, before going further - then check whether the value relates to an identifiable natural
+  person and which Art 9(2) exception, if any, covers the processing"
+remediation_template: |
+  This is a candidate for review against GDPR Art 9(1), which prohibits processing of data
+  concerning health unless an Art 9(2) exception applies - not a determination about this code.
+  Art 9 has applied since 2018-05-25 and is expressly inside the Art 83(5)(a) fining tier (up to
+  EUR 20 000 000 or 4% of worldwide annual turnover, whichever is higher).
+  Establish three facts first, because most candidates fail on one of them:
+  1. Does the value relate to an identified or identifiable natural person? A disease code list,
+     a product's allergen attribute, a dictionary entry and a service healthcheck are not
+     personal data; the same vocabulary keyed on a user or patient row is.
+  2. Does it reveal information about that person's physical or mental health (Art 4(15),
+     Recital 35)? Recital 35 reads broadly, and its own words carry clinical fields, patient
+     identifiers assigned for health purposes, disease-risk scores and the physiological or
+     biomedical state of the person. For an isolated lifestyle measurement - a step count, a
+     calorie total, a single heart-rate reading - the recital settles nothing, and the question
+     is whether this dataset, over this period, combined with what this controller also holds,
+     supports a conclusion about health status or health risk. Answer it; do not assume it in
+     either direction. Context question 2 sets out the test.
+  3. Even where no field names a health matter, ask whether the data are liable INDIRECTLY to
+     reveal health status - a refill schedule, an absence-reason code, an accessibility flag, an
+     insurance tier, a support-group membership. C-184/20 holds that indirectly revealing data
+     are not excluded from Art 9(1). Context question 3 sets out the shapes.
+  If these hold, the question is which Art 9(2) exception the processing rests on, and the answer
+  differs by what the system is:
+  - A clinical or care system (EHR, claims, pharmacy, telehealth, occupational health) normally
+    rests on Art 9(2)(h). That is answered by naming the legal or contractual basis and the
+    Art 9(3) professional-secrecy arrangement - an organisational fact to document next to the
+    code - not by deleting fields.
+  - A consumer wellness, fitness or symptom-tracking product normally needs Art 9(2)(a) explicit
+    consent for one or more specified purposes. Art 9(2)(a), which this rule quotes, carries two
+    elements and only two: the consent must be EXPLICIT and it must be for one or more SPECIFIED
+    purposes. A distinct, affirmative step that names the health data and each purpose is what
+    meets them, and a generic cookie banner or bundled ToS acceptance does not. The further
+    requirements a reviewer will also want - that consent be freely given, informed and
+    unambiguous (Art 4(11)), that the controller be able to demonstrate it (Art 7(1)), and that
+    it be as easy to withdraw as to give (Art 7(3)) - come from provisions this rule neither
+    quotes nor assesses; eu-consent-016 is the rule that tests the consent record itself.
+  - A research pipeline may rest on Art 9(2)(j) with Article 89(1) safeguards; an HR system on
+    (b); an emergency feature on (c).
+  Where no exception can be named, the engineering change is to stop processing the health value:
+  remove the field and the code that collects, derives or sends it, and delete what is held. Not
+  persisting it is not enough on its own: Art 9(1) prohibits processing, and Art 4(2), which this
+  rule quotes, counts collection, use and disclosure as processing as well as storage, so a feature
+  that holds the value only in memory while it works on it still processes it.
+  Independent of the basis, minimise the blast radius, because each of these is a separate
+  recurring gap: keep health values and patient identifiers out of application logs and error
+  trackers (a patient id in a log line is itself health data under Recital 35); do not attach
+  them to product-analytics or marketing events; exclude screens where health data is typed from
+  session replay (the session-replay rules eu-consent-005 and eu-consent-020 meet this rule in a
+  health application, in different files, and both findings are then correct); and treat any
+  transmission to a non-EEA recipient, including an LLM API assembling prompts from records, as
+  raising transfer questions on top of Art 9.
+  Each item in that paragraph is a SEPARATE duty under a provision this rule neither quotes nor
+  assesses, and none of them is decided here: integrity and confidentiality and minimisation
+  under Art 5(1)(f) and Art 5(1)(c), erasure of values already collected under Art 17, and
+  transfers to third countries under Arts 44-49. Satisfying Art 9 does not satisfy them, and
+  failing them is not an Art 9 finding.
+  Finally, Art 9(4) lets member states add further conditions for health data, so record which
+  member states the deployment covers and have the national layer checked - an analysis under
+  the GDPR alone is not the complete answer for health data anywhere.
+data_categories:
+  - user.health
+fingerprint_spec: file

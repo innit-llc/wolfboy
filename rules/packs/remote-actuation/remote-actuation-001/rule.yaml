@@ -1,0 +1,223 @@
+id: remote-actuation-001
+pack: remote-actuation
+short_name: Remote command can trigger a device on a person's body
+problem_line:
+  text: Remote or automated command can act on a person's body
+fix_line: Record who or what may command, enforce limits in the device, and tell the person before
+  acting where possible.
+title: A remote command relayed from a third party triggers a physical action on the person's body
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(1) - 'Processing of personal data revealing racial or
+      ethnic origin, political opinions, religious or philosophical beliefs, or trade union
+      membership, and the processing of genetic data, biometric data for the purpose of uniquely
+      identifying a natural person, data concerning health or data concerning a natural person's sex
+      life or sexual orientation shall be prohibited.' This is the operative provision: the
+      measurements that drive the channel and the doses that come out of it are data concerning
+      health, and the prohibition applies unless one of the paragraph 2 conditions is met"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(2)(a) - the paragraph 1 prohibition does not apply
+      where 'the data subject has given explicit consent to the processing of those personal data
+      for one or more specified purposes'. One of the two candidate grounds, and the one that has to
+      be checked against WHO is commanding: an explicit consent to a clinician commanding a dose is
+      not an explicit consent to anybody who can reach the relay"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(2)(h) - the prohibition does not apply where
+      'processing is necessary for the purposes of preventive or occupational medicine, for the
+      assessment of the working capacity of the employee, medical diagnosis, the provision of health
+      or social care or treatment or the management of health or social care systems and services'.
+      The other candidate ground, and the one whose further condition matters here: it is available
+      only on the basis named in the Article and, under Art. 9(3), where the data are processed by
+      or under the responsibility of a professional subject to an obligation of professional
+      secrecy"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 22(1) - 'The data subject shall have the right not to be
+      subject to a decision based solely on automated processing, including profiling, which
+      produces legal effects concerning him or her or similarly significantly affects him or her.'
+      This entry is for the SIBLING CLAUSE inside this rule - the autonomous form, where an
+      algorithm and no person decides the delivery. Whether an automated dosing decision similarly
+      significantly affects the person is a question this detector does not answer and
+      context_questions[4] asks; that it is a decision based solely on automated processing is what
+      the clause establishes
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 25(1) - the controller shall 'implement appropriate
+      technical and organisational measures, such as pseudonymisation, which are designed to
+      implement data-protection principles, such as data minimisation, in an effective manner and to
+      integrate the necessary safeguards into the processing'. A control channel whose relay is
+      chosen by a string in the incoming message is a design decision of exactly this kind, taken at
+      the time of determination of the means
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 32(1) - 'the controller and the processor shall
+      implement appropriate technical and organisational measures to ensure a level of security
+      appropriate to the risk'. The risk to weigh here is not confidentiality alone: an unauthorised
+      command on this channel is an unauthorised physical action, so the level appropriate to the
+      risk is set by what the actuator does rather than by what the data would reveal"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(f) - personal data shall be 'processed in a manner
+      that ensures appropriate security of the personal data, including protection against
+      unauthorised or unlawful processing and against accidental loss, destruction or damage, using
+      appropriate technical or organisational measures'. The principle the Art. 32 measures serve,
+      cited because the unauthorised-processing limb is the one an authentication weakness on this
+      channel engages
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "Medical Devices Regulation (Regulation (EU) 2017/745), Art. 2(1) - 'medical device' means
+      'any instrument, apparatus, appliance, software, implant, reagent, material or other article
+      intended by the manufacturer to be used, alone or in combination, for human beings for one or
+      more of the following specific medical purposes'. REFERENCE ONLY AND NOT A DATA-PROTECTION
+      DUTY: this entry is carried so that a reader knows a second regulatory regime is in the room
+      and can ask whether the product falls in it, and for no other purpose. Nothing in this rule
+      asserts that any scanned product is a medical device, that regime is not what this scanner
+      covers, and the finding must not be written as though it were"
+    url: https://eur-lex.europa.eu/eli/reg/2017/745/oj
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "AI Act (Regulation (EU) 2024/1689), Art. 6(1)(a) and (b) - an AI system is to be considered
+      high-risk where BOTH OF TWO CUMULATIVE CONDITIONS ARE FULFILLED, and the paragraph says so in
+      terms: it applies 'where both of the following conditions are fulfilled'. The first, point
+      (a), is that 'the AI system is intended to be used as a safety component of a product, or the
+      AI system is itself a product, covered by the Union harmonisation legislation listed in Annex
+      I'. THE SECOND IS THE ONE THAT ACTUALLY DECIDES A THERAPY-DEVICE APPLICATION, and it is named
+      here rather than left out: point (b) requires that the product 'is required to undergo a
+      third-party conformity assessment' with a view to placing it on the market or putting it into
+      service pursuant to that same Annex I legislation. A reader who meets (a) and stops has the
+      wrong answer. REFERENCE ONLY, and it reaches at most the autonomous sibling clause rather than
+      the relayed form: a rule-based dosing algorithm is not necessarily an AI system within the
+      Act's own definition, and whether either condition is engaged depends on the product
+      classification the entry above declines to make. Carried as the question, never as an answer"
+    url: https://publications.europa.eu/resource/celex/32024R1689
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.6
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  match:
+    - \bremoteNotificationWasReceived\s*\(|\bserviceForPushNotification\s*\(|\bhandleRemoteNotification\s*\(|\bdidReceiveRemoteNotification\b
+    - \bremoteCommandsEnabled\b|\bremoteOverridesEnabled\b|\bREMOTE_COMMANDS?_(?:ENABLED|DISABLED)\b
+    - \b(?:deliverRemoteBolus|deliverBolus|enactBolus|startBolus|extendedBolus|startExtendedBolus|cancelExtendedBolus|deliverRemoteCarbs|setTempBasal|cancelTempBasal|applyBasal|startInfusion|stopInfusion|dispenseDose|dispenseMedication|deliverShock|startStimulation|stopStimulation)\s*\(
+    - (?<!\bR\.)(?<!\btrx\.)\bdispense\s*\(
+    - \bremoteAddress\b|\benactTrigger\b|\bserviceIdentifier\b
+    - \b[A-Za-z]*[Ss]ms[Cc]ommunicator[A-Za-z]*\b|\b[A-Za-z]*[Rr]emote[Bb]olus[A-Za-z]*\b|\bremote_bolus\b|\bREMOTE_BOLUS\b
+    - \bonMessageReceived\s*\([^\n]{0,80}\b(?:MessageEvent|WearableMessage|DataEvent)\b|\bWearableListenerService\b
+    - \b[Cc]losedLoop\b|\bCLOSED_LOOP\b|\bisClosedLoopAllowed\s*\(|\bclosedLoopEnabled\b|\bloopEnabled\b
+    - \bdetermineBasal\b|\bDetermineBasal[A-Za-z]*\b|\bautosens\b|\bAutosens[A-Za-z]*\b|\bAPSResult\b|\bapplyAPSRequest\s*\(|\bopenAPS\b|\bOpenAPS[A-Za-z]*\b
+  gate_applies_to:
+    - match[4]
+    - match[7]
+  gate_mode: annotate
+  gate_scope: project
+  also_in_file:
+    - match[1]
+    - match[2]
+    - match[5]
+    - match[8]
+    - \benactTrigger\b
+context_questions:
+  - "WHO CAN SEND A COMMAND ON THIS CHANNEL, AND HOW IS THAT ESTABLISHED? Read the authentication of
+    the transport, not of the application: a push relay that resolves the handling service from a
+    string in the payload, a text message authenticated by a one-time code, and a paired watch
+    trusted by pairing alone are three different answers, and a product can have all three at once.
+    Name the relay operator too - where the default handler is a literal service name compiled into
+    the application, say which service that is and whether the operator runs it or a third party
+    does."
+  - WHAT DOES THE ACTUATION ACTUALLY DO, AND WHAT BOUNDS IT? Quote the limits enforced at the call
+    site and say where they are configured. A ceiling read from a local settings object is a
+    different guarantee from one enforced by the device firmware, and a limit the remote party can
+    also change is not a limit. This is the question that separates a command channel from a control
+    channel.
+  - WHAT IS THE PERSON AT THE RECEIVING END TOLD, AND WHEN? Establish whether a command produces a
+    notification before, after, or instead of the action, and whether it can be refused. A local
+    notification sent after the dose is a record, not a consent.
+  - IS THE RELAY IN THIS TREE AT ALL? On the anchor this rule was modelled on the default handler is
+    a literal name for a service that is NOT compiled into the codebase - it arrives as an external
+    plugin - so the code that interprets the remote command is not available to read here. Say so
+    explicitly where it is true, because it changes what any review of this channel can claim.
+  - "FOR THE AUTONOMOUS CLAUSE ONLY: IS THERE A HUMAN IN THE LOOP, AND WHAT WOULD IT TAKE TO REMOVE
+    THEM? Establish which mode ships enabled, what permission check gates the closed-loop mode, and
+    whether a person confirms each delivery or only the mode. Art. 22(1) is cited for this clause
+    and its own threshold - whether the decision produces legal effects or similarly significantly
+    affects the person - is a product fact this detector cannot establish and the operator must
+    answer."
+evidence_template: "{file}:{line} matched one of six clause groups describing a control channel that
+  ends in a physical action on a person's body: a remote entry point that resolves its handler from
+  the incoming payload, an actuation call from a therapy-device vocabulary, the recorded origin of a
+  command, the text-message and wearable relay forms, and - as a sibling clause inside this same
+  rule - the autonomous form, where an algorithm rather than a person decides the same delivery.
+  WHAT THIS ESTABLISHES is that the construct exists in this codebase and where its parts are. It
+  does not establish that any relay is configured in a deployment, who the remote party is, or that
+  any command has ever been sent: all three are deployment facts and are asked of the operator. It
+  does not establish what bounds the actuation, which is context_questions[1] and is the difference
+  between a command channel and a control channel. On the anchor this rule was modelled on the
+  default handler names a service that is not compiled into the tree at all, so the code that
+  interprets a remote command may not be readable here - context_questions[3]. THE TWO LOOSE
+  BRANCHES CARRY A PROJECT-WIDE MARK, `corroborated_in_project`: it says whether this scan found
+  this rule's own therapy vocabulary - the remote-command switches, the actuation calls, the
+  text-message and wearable relay forms, the autonomous dosing algorithms, or `enactTrigger` -
+  ANYWHERE in the tree, and `corroborated_in_project_from` names the file and line where it did.
+  `false` means the whole tree carries none of it, which is a strong reason to read the candidate as
+  an ordinary networking field or an ordinary flag rather than a control channel; `true` establishes
+  only that the vocabulary exists somewhere in the tree, not that it is on this code path and not
+  that this candidate is real. Neither value removes anything: the mark is a premise for the reader,
+  and the reading still has to be quoted from the line. TWO BRANCHES ARE LOOSE ON PURPOSE and are
+  named so a reader can weigh a match: a bare call to something named dispense, which vending and
+  pharmacy software also uses, and the field name for a command origin, which is an ordinary name in
+  networking code. THIS IS NOT A SAFETY REVIEW AND NOT A DEVICE-REGULATION FINDING. The two non-GDPR
+  entries in this rule's legal basis are carried as reference only, so that a reader knows a second
+  regime may be in the room; nothing here asserts that this product falls in it."
+remediation_template: |
+  Write down who may command, on which transport, and how that is proved - one line per transport.
+  A product with a push relay, a text-message relay and a paired wearable has three answers and
+  commonly only one of them was designed deliberately.
+  Bound the actuation where it cannot be re-configured by the party that commands it. A ceiling in a
+  local settings object bounds an application; a ceiling enforced by the device firmware bounds the
+  channel. Say which one this is.
+  Tell the person at the receiving end before the action where the transport allows it, and record
+  the origin with the resulting dose where it does not. A notification after the fact is a record
+  and should be described as one.
+  For the autonomous mode, write down the permission check that gates it, what ships enabled, and
+  what a person confirms - the mode, or each delivery. Art. 22(1) turns on a decision taken solely
+  by automated means, and the answer to whether a person is in the loop is a design fact rather than
+  an interpretation.
+  Where the handling service is an external plugin resolved by name, say that the code interpreting
+  remote commands is outside this repository, and name it. A review that does not say so is
+  describing half the channel.
+data_categories:
+  - user.health
+  - user.device
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 1
+      class: enumeration
+      item: channel present, with its transport authentication and its relay operator
+      item_source: reading
+    - question: 2
+      class: per-location
+    - question: 3
+      class: per-location
+    - question: 4
+      class: existence
+    - question: 5
+      class: per-location

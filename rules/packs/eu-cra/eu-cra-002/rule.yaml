@@ -1,0 +1,978 @@
+id: eu-cra-002
+pack: eu-cra
+short_name: Update delivery path, or a pinned runtime version
+problem_line:
+  text: "Update path or runtime pin: CRA duties from Dec 2027"
+fix_line: Ship secure, free security fixes with advisories, split if feasible, kept 10+ yrs, on
+  supported runtimes; CRA from 2027.
+title: Update delivery path or pinned runtime - CRA remediation, secure distribution and
+  dissemination duties from 2027-12-11
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Annex I, Part II (Vulnerability handling
+      requirements), chapeau and points (2), (7) and (8) - the three duties this rule asks about.
+      Chapeau: 'Manufacturers of products with digital elements shall:'. Point (2): 'in relation to
+      the risks posed to products with digital elements, address and remediate vulnerabilities
+      without delay, including by providing security updates; where technically feasible, new
+      security updates shall be provided separately from functionality updates;'. Point (7):
+      'provide for mechanisms to securely distribute updates for products with digital elements to
+      ensure that vulnerabilities are fixed or mitigated in a timely manner and, where applicable
+      for security updates, in an automatic manner;'. Point (8): 'ensure that, where security
+      updates are available to address identified security issues, they are disseminated without
+      delay and, unless otherwise agreed between a manufacturer and a business user in relation to a
+      tailor-made product with digital elements, free of charge, accompanied by advisory messages
+      providing users with the relevant information, including on potential action to be taken.'.
+      The addressee named in the chapeau is the MANUFACTURER, defined in Art. 3(13) as 'a natural or
+      legal person who develops or manufactures products with digital elements or has products with
+      digital elements designed, developed or manufactured, and markets them under its name or
+      trademark, whether for payment, monetisation or free of charge'. FIVE THINGS ABOUT HOW THE
+      DUTIES DIVIDE ACROSS THESE THREE POINTS, EVERY ONE OF WHICH THE FIRST DESCRIPTION OF THIS
+      COVERAGE-MAP ROW GOT WRONG; the corrections and the searches that establish them were made
+      against the Official Journal text on 2026-08-05, and each is stated in full below rather than
+      pointed at. (i) The separation requirement - new security updates supplied apart from
+      functionality updates - is the SECOND LIMB OF POINT (2). It is absent from point (8) and from
+      everywhere else in the operative text: searching the whole Regulation for the words 'where
+      technically feasible' returns exactly three hits, being Annex I Part II point (2), Recital 57
+      which elaborates that same point, and Art. 13(19) second subparagraph, which is the
+      end-of-support notification and a different duty. A finding that cites point (8) for the
+      separation requirement cites the wrong point. (ii) The qualifier on that limb is 'where
+      technically feasible'. The Regulation also uses 'where applicable' and, in Art. 13(19), 'Where
+      technically feasible in light of the nature of the product with digital elements'; the three
+      phrases have different scopes and the shorter form without the word technically is not the
+      text. (iii) The subject of that limb is 'new security updates', not updates generally. (iv)
+      Point (8) carries an advisory-messages limb, which no earlier description of this row
+      mentioned: an update must be 'accompanied by advisory messages providing users with the
+      relevant information, including on potential action to be taken'. That is a communication duty
+      sitting inside the dissemination point, and it is distinct from the Annex II duties in
+      legal_basis entry (5). (v) The words 'without delay' attach to BOTH points and to different
+      acts: point (2) requires the manufacturer to 'address and remediate vulnerabilities without
+      delay', point (8) requires that available updates 'are disseminated without delay'.
+      Remediation and dissemination are separately timed. One structural point, because it changes
+      how a reader should hear the qualifiers: Part II's chapeau is unconditional. Part I's point
+      (2) chapeau opens 'On the basis of the cybersecurity risk assessment referred to in Article
+      13(2) and where applicable, products with digital elements shall:'; Part II has no equivalent
+      risk-assessment condition and no equivalent blanket qualifier, so the only conditions on
+      points (2), (7) and (8) are the ones written inside those points."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    jurisdiction: EU
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Art. 13(8), Art. 3(20) and Annex VII points
+      2(b) and 4 - the operative clause that binds Part II to the manufacturer, the period it runs
+      for, and the documentation it has to produce. Art. 13(8), first subparagraph: 'Manufacturers
+      shall ensure, when placing a product with digital elements on the market, and for the support
+      period, that vulnerabilities of that product, including its components, are handled
+      effectively and in accordance with the essential cybersecurity requirements set out in Part II
+      of Annex I.' That subparagraph names Part II as a whole and singles out no point, so it
+      reaches points (2), (7) and (8) exactly as it reaches points (5) and (6). Art. 3(20) closes
+      the loop, defining the support period as 'the period during which a manufacturer is required
+      to ensure that vulnerabilities of a product with digital elements are handled effectively and
+      in accordance with the essential cybersecurity requirements set out in Part II of Annex I'.
+      Art. 13(8), third subparagraph, sets the floor and its one downward exception: 'Without
+      prejudice to the second subparagraph, the support period shall be at least five years. Where
+      the product with digital elements is expected to be in use for less than five years, the
+      support period shall correspond to the expected use time.' The fourth subparagraph
+      additionally empowers the Commission to raise category-specific minima by delegated act, so
+      five years is a default minimum rather than an absolute one. Annex VII point 2(b) is what a
+      manufacturer must be able to hand a market surveillance authority for point (7): 'necessary
+      information and specifications of the vulnerability handling processes put in place by the
+      manufacturer, including the software bill of materials, the coordinated vulnerability
+      disclosure policy, evidence of the provision of a contact address for the reporting of the
+      vulnerabilities and a description of the technical solutions chosen for the secure
+      distribution of updates;'. The closing clause of that point - a description of the technical
+      solutions chosen for the secure distribution of updates - is the documentation that point (7)
+      turns into paperwork. Annex VII point 4 requires 'relevant information that was taken into
+      account to determine the support period pursuant to Article 13(8) of the product with digital
+      elements;'. One framing point worth carrying into any finding: Art. 13(12), third
+      subparagraph, speaks of 'the processes put in place by the manufacturer' being assessed
+      against Part II, and the same pairing recurs in Art. 13(21) and Art. 13(22). Part I is
+      assessed as a property of the artefact; Part II is assessed as a process of the manufacturer.
+      A repository can evidence a process; it cannot by itself discharge one."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    jurisdiction: EU
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Art. 13(9) - a distinct obligation naming
+      Annex I Part II point (8) expressly, and the only one in this rule that can outlast the
+      support period: 'Manufacturers shall ensure that each security update, as referred to in Part
+      II, point (8), of Annex I, which has been made available to users during the support period,
+      remains available after it has been issued for a minimum of 10 years or for the remainder of
+      the support period, whichever is longer.' Three readings that matter and are easy to get
+      backwards. First, the comparison runs to whichever period is LONGER, so the ten years is a
+      floor and not a cap: where a support period still has twelve years to run, an update issued
+      today has to remain available for those twelve. Second, the clock is per update - it starts
+      when that individual update is issued, not when the product is placed on the market - so a
+      manufacturer with a ten-year support period and updates issued throughout it owes availability
+      for close to twenty years measured from first supply. Third, it is an AVAILABILITY duty, not a
+      re-issue duty: the update has to remain retrievable by a user who needs it, which is a
+      question about archives, artifact registries and download endpoints rather than about the
+      release pipeline that produced it. Art. 13(11) is the adjacent permission and is quoted
+      because it is the shape a manufacturer usually reaches for: 'Manufacturers may maintain public
+      software archives enhancing user access to historical versions. In those cases, users shall be
+      clearly informed in an easily accessible manner about risks associated with using unsupported
+      software.' Note that Art. 13(11) is permissive and Art. 13(9) is mandatory; keeping an archive
+      is optional, keeping each issued security update retrievable is not."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    jurisdiction: EU
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Art. 13(6) - how a vulnerability in a
+      third-party or open-source component enters the point (2) remediation duty: 'Manufacturers
+      shall, upon identifying a vulnerability in a component, including in an open source-component,
+      which is integrated in the product with digital elements report the vulnerability to the
+      person or entity manufacturing or maintaining the component, and address and remediate the
+      vulnerability in accordance with the vulnerability handling requirements set out in Part II of
+      Annex I. Where manufacturers have developed a software or hardware modification to address the
+      vulnerability in that component, they shall share the relevant code or documentation with the
+      person or entity manufacturing or maintaining the component, where appropriate in a
+      machine-readable format.' Two duties, not one: report upstream, and remediate in the product.
+      Recital 34 states the same reach in terms - 'The vulnerability handling obligations set out in
+      this Regulation, which manufacturers have to comply with when placing a product with digital
+      elements on the market and for the support period, apply to products with digital elements in
+      their entirety, including to all integrated components.' - and describes the due diligence
+      expected when a component is integrated, one of its named actions being 'verifying that a
+      component receives regular security updates, such as by checking its security updates
+      history'. That sentence is the closest the Regulation comes to the staleness question this
+      rule's runtime-pin branch is aimed at, and it is worded as due diligence on components rather
+      than as a prohibition on old pins."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    jurisdiction: EU
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Annex II (Information and instructions to
+      the user), chapeau and points 7, 8(c) and 8(e) - what has to travel with the product about
+      updates. Chapeau: 'At minimum, the product with digital elements shall be accompanied by:'.
+      Point 7: 'the type of technical security support offered by the manufacturer and the end-date
+      of the support period during which users can expect vulnerabilities to be handled and to
+      receive security updates;'. Point 8 opens 'detailed instructions or an internet address
+      referring to such detailed instructions and information on:', so a URL satisfies the form, and
+      its sub-point (c) requires information on 'how security-relevant updates can be installed;'
+      while sub-point (e) requires information on 'how the default setting enabling the automatic
+      installation of security updates, as required by Part I, point (2)(c), of Annex I, can be
+      turned off;'. Sub-point (e) is the only place in Annex II that names an Annex I point by
+      number, and the point it names is Part I point (2)(c) - the product-side automatic-update
+      property - and not Part II point (7). None of these three requires telling a user that a
+      SPECIFIC update exists; that duty is the advisory-messages limb of Annex I Part II point (8)
+      in legal_basis entry (1), and the notification limb of Annex I Part I point (2)(c) in entry
+      (7). THE POINTS THIS ENTRY DOES NOT QUOTE, NAMED SO THAT THE LIST ABOVE IS NOT MISTAKEN FOR AN
+      EXHAUSTIVE READING OF ANNEX II. Annex II has nine points. Points 1, 2, 3, 5 and 6 and
+      sub-points 8(a), 8(b), 8(d) and 8(f) do not bear on updates, and point 2 - the single point of
+      contact and where the coordinated vulnerability disclosure policy can be found - is the
+      subject of eu-cra-001. Point 4 is contextual only: it requires the intended purpose, the
+      security environment provided by the manufacturer and information about the security
+      properties, which frames an update question without asking one. Point 9 was omitted from this
+      enumeration until 2026-08-05 and is named now: it requires, where the manufacturer decides to
+      make the software bill of materials available to the user, information on where it can be
+      accessed. That is conditional on a manufacturer decision and belongs to the
+      software-bill-of-materials row rather than to this one, but a reader is entitled to see it
+      accounted for rather than absent. Note the formatting difference when citing: Annex II numbers
+      its points in arabic numerals without parentheses, where Annex I parenthesises them."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    jurisdiction: EU
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Art. 13(10), Art. 3(30) and Recital 40 - a
+      LIMITATION on Annex I Part II point (2), not an addition to it, and the only relief provision
+      in this rule. Art. 13(10) names point (2) expressly: 'Where a manufacturer has placed
+      subsequent substantially modified versions of a software product on the market, that
+      manufacturer may ensure compliance with the essential cybersecurity requirement set out in
+      Part II, point (2), of Annex I only for the version that it has last placed on the market,
+      provided that the users of the versions that were previously placed on the market have access
+      to the version last placed on the market free of charge and do not incur additional costs to
+      adjust the hardware and software environment in which they use the original version of that
+      product.' Two conditions have to hold before the relief is available, and both are about the
+      users of the older versions: free-of-charge access to the newest version, and no additional
+      cost to adjust the hardware and software environment they run it in. Recital 40 gives the
+      worked example - 'This could, for instance, be the case where a desktop operating system
+      upgrade does not require new hardware, such as a faster central processing unit or more
+      memory.' - and states the limit of the relief: 'Nonetheless, the manufacturer should continue
+      to comply, for the support period, with other vulnerability-handling requirements, such as
+      having a policy on coordinated vulnerability disclosure or measures in place to facilitate the
+      sharing of information about potential vulnerabilities for all subsequent substantially
+      modified versions of the software product placed on the market.' So the relief is specific to
+      point (2) and does not extend to points (5), (6), (7) or (8); that reading is supported by
+      Recital 40 and by the fact that Art. 13(10) names one point, but the operative text says
+      nothing beyond naming it, so it is offered as a reading rather than as settled law. Recital 40
+      also fixes the hardware case the other way: 'where a hardware product, such as a smartphone,
+      is not compatible with the latest version of the operating system it was originally delivered
+      with, the manufacturer should continue to provide security updates at least for the latest
+      compatible version of the operating system for the support period.' What counts as
+      substantially modified is Art. 3(30): 'a change to the product with digital elements following
+      its placing on the market, which affects the compliance of the product with digital elements
+      with the essential cybersecurity requirements set out in Part I of Annex I or which results in
+      a modification to the intended purpose for which the product with digital elements has been
+      assessed'. Note that the definition is expressed against Part I only, so on these words a
+      change affecting Part II compliance is not a substantial modification."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Recital 56, Art. 13(4) and Annex I Part I
+      point (2)(c) - the automatic-update limb of Annex I Part II point (7), what disapplies it, and
+      the neighbouring product-side duty it is easy to merge with. Point (7) ends with the words
+      'where applicable for security updates, in an automatic manner', and the qualifier is not
+      decorative. Recital 56 states two classes for which automatic updates are disapplied: 'The
+      requirements relating to automatic updates as set out in an annex to this Regulation are not
+      applicable to products with digital elements primarily intended to be integrated as components
+      into other products. They also do not apply to products with digital elements for which users
+      would not reasonably expect automatic updates, including products with digital elements
+      intended to be used in professional ICT networks, and especially in critical and industrial
+      environments where an automatic update could cause interference with operations.' It then
+      keeps the core duty alive regardless: 'Irrespective of whether a product with digital elements
+      is designed to receive automatic updates or not, its manufacturer should inform users about
+      vulnerabilities and make security updates available without delay.' So a product PRIMARILY
+      intended to be integrated as a component into other products sits outside the automatic limb
+      while remaining inside the rest of point (7) and inside points (2) and (8). The word primarily
+      is in the recital and is load-bearing: it is not enough that a product CAN be integrated, or
+      that some users integrate it, and this sentence dropped the word until 2026-08-05, which read
+      as though any component-bound product qualified. How far that can be pushed is uncertain and
+      should be reported as such: Recital 56 is a recital, the operative hook is only the words
+      'where applicable', and the recital's own phrase 'as set out in an annex to this Regulation'
+      names neither Annex I Part II point (7) nor Annex I Part I point (2)(c), both of which carry
+      automatic-update language. Where the conclusion is that a requirement does not apply, Art.
+      13(4) supplies the consequence rather than silence: 'Where certain essential cybersecurity
+      requirements are not applicable to the product with digital elements, the manufacturer shall
+      include a clear justification to that effect in that technical documentation.' The
+      neighbouring duty, quoted so that the two are not merged, is Annex I Part I point (2)(c):
+      'ensure that vulnerabilities can be addressed through security updates, including, where
+      applicable, through automatic security updates that are installed within an appropriate
+      timeframe enabled as a default setting, with a clear and easy-to-use opt-out mechanism,
+      through the notification of available updates to users, and the option to temporarily postpone
+      them;'. Part I point (2)(c) is a property of the product and is gated by the risk-assessment
+      chapeau of Part I point (2); Part II point (7) is a process of the manufacturer and is not
+      gated at all. They sit in different Parts and are assessed through different paragraphs of
+      Art. 13. This rule tests neither of them by detection; it raises the question."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Recital 57 and Recital 39, and the Article
+      3 finding that neither term is defined. Recital 57 is the rationale for the separation limb of
+      Annex I Part II point (2) and is a single sentence: 'To improve the transparency of
+      vulnerability handling processes and to ensure that users are not required to install new
+      functionality updates for the sole purpose of receiving the latest security updates,
+      manufacturers should ensure, where technically feasible, that new security updates are
+      provided separately from functionality updates.' The mischief it names is users being made to
+      take functionality they did not ask for in order to receive a security fix. THE BOUNDARY THAT
+      LIMB TURNS ON IS NOT A DEFINED ONE. Article 3 contains 51 definitions, numbered (1) to (51),
+      and all 51 were enumerated on the 2026-08-05 fetch: neither update, nor security update, nor
+      functionality update, nor feature update, nor patch appears among them. The only elaboration
+      anywhere is Recital 39, and it works by example rather than by definition: 'Where a security
+      update which is designed to decrease the level of cybersecurity risk of a product with digital
+      elements does not modify the intended purpose of a product with digital elements, it is not
+      considered to be a substantial modification. This usually includes situations where a security
+      update entails only minor adjustments of the source code.' Recital 39 also separates two
+      things an earlier description of this row had merged into one term - 'a minor functionality
+      update, such as a visual enhancement or the addition of new pictograms or languages to the
+      user interface, should not generally be considered to be a substantial modification' as
+      against 'where a feature update modifies the original intended functions or the type or
+      performance of a product with digital elements and meets the above criteria, it should be
+      considered to be a substantial modification, as the addition of new features typically leads
+      to a broader attack surface, thereby increasing the cybersecurity risk'. A functionality
+      update and a feature update are therefore not interchangeable in the recitals. The consequence
+      for anything this rule reports: state the boundary the way the recital does - a security
+      update is one whose purpose is to decrease cybersecurity risk and which does not modify the
+      intended purpose - and do not present it as a defined line, because there is no definition to
+      appeal to. Recital 39 closes by recording that 'The Commission should issue guidance on how to
+      determine what constitutes a substantial modification.', which had not issued as at
+      2026-08-05."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), the free-of-charge limb of Annex I Part II
+      point (8) and its tailor-made carve-out, with Recital 64 and the parallel carve-out in Annex I
+      Part I point (2)(b). The carve-out is written into point (8) as a condition on the
+      free-of-charge words: 'unless otherwise agreed between a manufacturer and a business user in
+      relation to a tailor-made product with digital elements'. Recital 64 is the only elaboration:
+      'Manufacturers should make their products with digital elements available on the market with a
+      secure by default configuration and provide security updates to users free of charge.
+      Manufacturers should only be able to deviate from the essential cybersecurity requirements in
+      relation to tailor-made products that are fitted to a particular purpose for a particular
+      business user and where both the manufacturer and the user have explicitly agreed to a
+      different set of contractual terms.' A tailor-made product with digital elements is NOT among
+      the 51 Article 3 definitions. Reading the operative words with Recital 64, two conditions have
+      to hold before the free-of-charge duty is displaced - the product is fitted to a particular
+      purpose for a particular business user, AND there is an explicit agreement to a different set
+      of contractual terms - so silence between the parties does not displace it. That two-limb
+      reading is drawn from Recital 64 and should be presented as a reading rather than as settled
+      law, since the operative text says only that it is displaced where otherwise agreed in
+      relation to a tailor-made product. A carve-out of the same shape sits on a different duty in
+      Annex I Part I point (2)(b), which is quoted so that a reader searching on the phrase does not
+      mistake one for the other: 'be made available on the market with a secure by default
+      configuration, unless otherwise agreed between manufacturer and business user in relation to a
+      tailor-made product with digital elements, including the possibility to reset the product to
+      its original state;'. Note the wording differs slightly between the two - Part I point (2)(b)
+      says between manufacturer and business user, point (8) says between a manufacturer and a
+      business user. Searching the Regulation for the tailor-made phrase returns four locations and
+      five occurrences, because Recital 19 uses it twice: the two operative provisions above,
+      Recital 64, and Recital 19 - which is a false friend and will be hit by any such search,
+      because it uses the same word to describe the open-source steward regime as a 'light-touch and
+      tailor-made regulatory regime' and has nothing to do with tailor-made products. WHETHER A
+      PRODUCT IS TAILOR-MADE, AND WHETHER A BUSINESS USER HAS AGREED DIFFERENT CONTRACTUAL TERMS,
+      ARE FACTS ABOUT THE PRODUCT AND ITS CONTRACTS. They are asked of the person running the scan
+      or read from their declared documents, and they are never inferred from vocabulary in the
+      tree."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Art. 71(2): 'This Regulation shall apply
+      from 11 December 2027. However, Article 14 shall apply from 11 September 2026 and Chapter IV
+      (Articles 35 to 51) shall apply from 11 June 2026.' Every provision this rule rests on - Annex
+      I Part II points (2), (7) and (8), Art. 13(6), Art. 13(8), Art. 13(9), Art. 13(10) and Annex
+      II - is reached through Article 13, which sits in Chapter II and is not among the provisions
+      the second subparagraph brings forward. THE DUTY THEREFORE APPLIES FROM 11 DECEMBER 2027, and
+      not from 11 September 2026, which is Article 14 alone (reporting of actively exploited
+      vulnerabilities and severe incidents, a separate obligation with no source-code trace, which
+      this product treats as an organisational duty with no source-code trace and tests by no rule).
+      Art. 69(2) additionally provides that products placed on the market before 11 December 2027
+      are subject to the Regulation only if they are substantially modified from that date, and Art.
+      69(3) carves Article 14 back out of that grandfathering. Two consequences for anything this
+      rule reports. First, nothing here is chargeable today and every finding is worded as
+      preparation for a dated obligation. Second, the date is not something the detector can see:
+      matched lines evidence an update path or a pinned runtime, and neither carries a date. The
+      date belongs to the duty the adjudicating agent is asked about, and context question 10 is
+      where it is stated to the reader."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Article 2 - scope. THIS ENTRY DELIBERATELY
+      CONTAINS NO SCOPE TEST AND NO ARTICLE 2 QUOTATION. The complete test lives in the shared CRA
+      scope gate, gate_id cra-scope, which SHIPS INSIDE THIS BUNDLE - the build splices it whole
+      into every checklist that names it, so a reader holds it as the applicability object of the
+      three CRA checklists in checklists.json - and which decomposes Article 2 in full - the
+      paragraph that brings a product in, and each of the seven subtractive paragraphs, every one
+      carrying its own limb, its own question and its own verbatim quote of the operative words -
+      alongside the Article 3 definitions, Art. 24, Art. 69(2), Art. 71(2) and the recitals that
+      elaborate them, into 37 limbs backed by 50 supporting quotes. Every one of those quotes was
+      verified against the Official Journal text and twice checked by independent adversarial legal
+      review on 2026-08-04; the receipts and the review records are held by the rule author and do
+      not ship, so nothing here asks a reader to open them. That gate's own header names the
+      update-mechanism duty as one of the rows expected to reference it rather than keep its own
+      copy, and this rule takes that instruction. Re-deriving Article 2 here is the drifting-copy
+      defect this repository has paid for repeatedly and is not done. One paragraph is worth a
+      reader's specific attention because of how close it sits to this subject matter, and it is in
+      the gate rather than here: Article 2(6) excludes spare parts made available to replace
+      identical components and manufactured to the same specifications as the components they
+      replace, and a rule about update supply will meet replacement-component cases. What the link
+      is and is not: no rule evaluates a gate directly - referencing a gate is a facility of
+      checklists and not of rules - so this pointer is documentary and a reader has to follow it
+      into the checklists the bundle ships. A scan nevertheless reaches the same gate by a different
+      route: it annotates every candidate whose legal_basis cites name an instrument that a shipped
+      gate assesses, and every cite in this file names Regulation (EU) 2024/2847 - so a candidate
+      raised by this rule arrives carrying depends_on_applicability, and context question 1 sends
+      the adjudicating agent to that output before anything else."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Art. 24 and Art. 3(14) - open-source
+      software stewards, a DIFFERENT addressee from the manufacturer, with a lighter regime and none
+      of the three duties this rule asks about. Art. 3(14) defines a steward as 'a legal person,
+      other than a manufacturer, that has the purpose or objective of systematically providing
+      support on a sustained basis for the development of specific products with digital elements,
+      qualifying as free and open-source software and intended for commercial activities, and that
+      ensures the viability of those products'. Art. 24(1) states what a steward owes instead:
+      stewards 'shall put in place and document in a verifiable manner a cybersecurity policy to
+      foster the development of a secure product with digital elements as well as an effective
+      handling of vulnerabilities by the developers of that product.' Art. 24(2) requires
+      cooperation with market surveillance authorities and production of that documentation on
+      reasoned request, and Art. 24(3) applies only Art. 14(1) and Art. 14(3) and (8) to stewards. A
+      steward therefore owes a documented cybersecurity policy and not the Annex I Part II point (2)
+      remediation duty, not the point (7) secure distribution mechanism, not the point (8)
+      dissemination duty, not the Art. 13(9) availability tail and not the Annex II accompanying
+      information - which is the distinction this entry exists to draw, and it holds on the
+      operative words of Art. 24 alone. Recital 19 confines the category to 'legal persons who
+      provide support on a sustained basis for the development of such products which are intended
+      for commercial activities, and who play a main role in ensuring the viability of those
+      products', naming 'certain foundations as well as entities that develop and publish free and
+      open-source software in a business context'. A solo developer or a small team publishing their
+      own application is a manufacturer if they market it under their own name in the course of a
+      commercial activity, and is outside the Regulation entirely if they do not; they are not
+      stewards of their own product. On fines, say only what the operative text says, and note that
+      the operative text changed on 2 July 2025. Art. 64(10), point (b), names 'any infringement of
+      this Regulation by open-source software stewards'. Its chapeau was corrected by the
+      corrigendum published as OJ L, 2025/90555 of 2 July 2025 and reads, in the consolidated text
+      at CELEX 02024R2847-20241120, 'By way of derogation from paragraphs 2 to 9, the administrative
+      fines referred to in those paragraphs shall not apply to the following:'; the base Official
+      Journal text at CELEX 32024R2847, which this entry's url names because of its recital quotes,
+      is not corrected in place and still serves the range beginning at paragraph 3. Paragraph 2 is
+      the tier reaching Annex I and Articles 13 and 14, so it is inside the corrected range, and
+      Recital 120's closing sentence reads with the operative provision rather than against it. This
+      entry stated the opposite until 2026-09-07. What this rule turns on is the duty and not the
+      fine: the Annex I Part II point (2), point (7) and point (8) duties, the Art. 13(9)
+      availability tail and the Annex II accompanying information do not attach to a steward, and
+      Art. 64(1) leaves the rules on penalties to the Member States. Nothing in this rule's
+      detection turns on the point either way."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-09-07
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Art. 64(2), with Recital 31 and Recital 61.
+      Art. 64(2): 'Non-compliance with the essential cybersecurity requirements set out in Annex I
+      and the obligations set out in Articles 13 and 14 shall be subject to administrative fines of
+      up to EUR 15 000 000 or, if the offender is an undertaking, up to 2,5 % of the its total
+      worldwide annual turnover for the preceding financial year, whichever is higher' - the phrase
+      of the its is the Official Journal wording and is reproduced rather than corrected. That tier
+      reaches both Annex I and Article 13, so every provision in entries (1) to (5) attracts it.
+      Art. 64(5)(c) requires due regard to 'the size, in particular with regard to microenterprises
+      and small and medium sized-enterprises, including start-ups, and the market share of the
+      economic operator'. Art. 64 sits in Chapter VII and therefore applies from 11 December 2027
+      under Art. 71(2). A SECOND EXPOSURE, WHICH IS NOT A FINE AND IS THE ONE MOST DIRECTLY ABOUT
+      MISSING UPDATES: Recital 31 records that the new product liability regime 'establishes the
+      principle that the manufacturer of a product is liable for damages caused by a lack of safety
+      in their product irrespective of fault (strict liability). Where such a lack of safety
+      consists in a lack of security updates after the placing on the market of the product, and
+      this causes damage, the liability of the manufacturer could be triggered. Obligations for
+      manufacturers that concern the provision of such security updates should be laid down in this
+      Regulation.' Failing to supply security updates is therefore not only a CRA fine exposure; it
+      is a route into strict liability under Directive (EU) 2024/2853. Recital 61 states what the
+      Regulation encourages once a support period ends: 'When products with digital elements reach
+      the end of their support periods, in order to ensure that vulnerabilities can be handled after
+      the end of the support period, manufacturers should consider releasing the source code of such
+      products with digital elements either to other undertakings which commit to extending the
+      provision of vulnerability handling services or to the public.' That is a should in a recital
+      and not an obligation, and it is quoted because it is the only place the Regulation addresses
+      what happens to a product after its support period, which is the question a developer reads
+      Art. 13(9) and immediately asks. Recital 38 fixes the other end of the timeline: 'for a
+      product type, each individual product with digital elements should have received all security
+      patches or updates available to address relevant security issues when it is placed on the
+      market'."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2027-12-11
+sunset: null
+superseded_by: null
+severity: medium
+rule_confidence: 0.35
+detector:
+  engine: builtin-regex
+  vocabulary:
+    cra_dockerfile_from:
+      - FROM
+    cra_runtime_names:
+      - nodejs
+      - node
+      - python
+      - ruby
+      - golang
+      - go
+      - java
+      - erlang
+      - elixir
+      - rust
+      - terraform
+      - deno
+      - bun
+      - dotnet
+      - php
+    cra_update_feed_manifests:
+      - latest.yml
+      - latest-mac.yml
+      - latest-linux.yml
+      - app-update.yml
+    cra_update_check_names:
+      - NewVersionCheck
+      - check_for_updates_task
+      - check_for_update_task
+      - check_for_updates_button
+      - check_for_updates_url
+      - shouldCheckForUpdates
+      - checkForUpdates
+      - checkForUpdate
+      - update_check
+      - check_update_url
+    cra_update_notice_keys:
+      - new_version_available
+      - new_update_available
+      - update_available
+      - new version available
+      - new version is available
+      - new update available
+    cra_update_endpoint_names:
+      - update_url
+      - update_endpoint
+      - update_feed
+      - update_host
+      - update_check_url
+      - update_check_endpoint
+  vocabulary_matching:
+    cra_dockerfile_from:
+      case_insensitive: true
+    cra_runtime_names:
+      case_insensitive: true
+    cra_update_feed_manifests:
+      case_insensitive: true
+    cra_update_check_names:
+      case_insensitive: true
+      separator_insensitive: true
+    cra_update_notice_keys:
+      case_insensitive: true
+      separator_insensitive: true
+    cra_update_endpoint_names:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - electron-updater|update-electron-app|autoUpdater\.(?:checkForUpdates|checkForUpdatesAndNotify|setFeedURL|getFeedURL|quitAndInstall|downloadUpdate)|Squirrel\.Windows|--squirrel-(?:install|updated|obsolete|uninstall)|electron-squirrel-startup|squirrel-windows|tauri-plugin-updater|@tauri-apps/plugin-updater|createUpdaterArtifacts|TAURI_SIGNING_PRIVATE_KEY|\.nupkg|(?:mv|cp|rsync|aws
+      s3 cp)\s+\S*/RELEASES\b
+    - "@todesktop|todesktop\\.(?:autoUpdater|json)|npx todesktop|todesktop[-_ ]build|TODESKTOP_"
+    - (?:^|[{,])\s*"publish"\s*:\s*[\[{]|^\s*"publish"\s*:\s*"(?:github|generic|spaces|s3|snapStore|keygen|bintray)"|(?:^|[{,])\s*"provider"\s*:\s*"(?:generic|spaces|snapStore|keygen|bintray|s3)"|latest-mac\.yml|app-update\.yml|latest\.yml
+    - CHECK_UPDATE_URL|check_update_url|check_for_updates?_(?:task|button|url)|NewVersionCheck|shouldCheckForUpdates|checkForUpdates|[Uu]pdateChecker|update[-_.][Cc]heck|\\core\\update\\checker
+    - can_auto_update|EnableAutoUpdates|[Aa]uto[-_]?[Uu]pdates?[-_]?[Ee]nabled|com\.centurylinklabs\.watchtower
+    - "[Nn]ew [Vv]ersion [Aa]vailable|[Nn]ew [Vv]ersion [Ii]s
+      [Aa]vailable|new_version_available|newVersionAvailable|[Nn]ew [Uu]pdate
+      [Aa]vailable|newUpdateAvailable|update_available"
+    - vsce publish|ovsx
+      publish|@vscode/vsce|\b(?:npm|pnpm|yarn|bun)\s+(?:install|add|i)\b[^\n]*\bvsce\b
+    - Sparkle\.framework|SUUpdater|SPUStandardUpdaterController|SPUUpdater|SUFeedURL|SUEnableAutomaticChecks|SUPublic(?:ED|DSA)Key|SUScheduledCheckInterval|appcast\.xml|generate_appcast|sparkle-project|WinSparkle|win_sparkle_|expo-updates|expo\.modules\.updates|EXUpdates|react-native-code-push|CodePush\.|codePush\(|shorebird_code_push|com\.google\.android\.play\b[^\n]{0,80}app-update|AppUpdateManager|@capgo/capacitor-updater|[Pp]ython[-_][Tt][Uu][Ff]|go[-_][Tt][Uu][Ff]|[Tt][Uu][Ff][-_]js|rust[-_][Tt][Uu][Ff]|theupdateframework|The
+      Update Framework|tuf\.ngclient|\.appinstaller|HoursBetweenUpdateChecks|deploymentProvider
+    - ^(?:FROM|from|From)\s+(?:--platform=\S+\s+)?[\w.$/{-]+:[\w.${}-]+|(?:^|[{,])\s*(?:node|python|ruby|go|java|dotnet|php)[-_]?[Vv]ersion\s*:|^\s*(?:nodejs|node|python|ruby|golang|go|java|erlang|elixir|rust|terraform)\s+\d+\.\d+|^["']?v?\d+\.\d+\.\d+["']?[
+      \t]*\r?$|distributionUrl=.*gradle-[\w.${}-]+-(?:bin|all)\.zip|\b(?:nvm|pyenv|rbenv|goenv|tfenv|jenv)\s+install\s+v?\d|\bsdk\s+install\s+\w+\s+\d|^\s*ARG\s+[A-Za-z_0-9]+=[\w./-]+:[\w.-]+|^\s*(?:NODE|NODEJS|PYTHON|RUBY|GOLANG|GO|JAVA|ERLANG|ELIXIR|RUST|TERRAFORM)[A-Z0-9_]*_VERSION[A-Z0-9_]*\s*=\s*["']?v?\d+\.\d+
+    - ^(?&cra_dockerfile_from)\s+(?:--platform=\S+\s+)?[\w.$/{-]+:[\w.${}-]+
+    - ^\s*(?&cra_runtime_names)\s+v?\d+\.\d+
+    - ^["']?[Vv]\d+\.\d+(?:\.\d+)?["']?[ \t]*\r?$
+    - (?&cra_update_feed_manifests)
+    - (?&cra_update_notice_keys)
+    - (?&cra_update_check_names)
+    - (?&cra_update_endpoint_names)
+    - ^["']?v?\d+\.\d+["']?[ \t]*\r?$
+    - ^\s*distributionUrl\s*=\s*\S*gradle-\d[\w.${}-]*
+    - \bgo1\.\d+(?:\.\d+)?\b
+    - \b(?:setFeedURL|getFeedURL|quitAndInstall|checkForUpdatesAndNotify|downloadUpdate)\s*\(
+    - "[Pp]oll[-_.]?[Ff]or[-_.]?(?:[Nn]ew[-_.]?)?(?:[Rr]elease|[Uu]pdate|[Vv]ersion)s?"
+    - \b(?:implementation|api|compileOnly|runtimeOnly|debugImplementation|releaseImplementation|classpath|ksp|kapt)\s*\(?\s*libs\.[A-Za-z0-9_.]{0,60}[Aa]pp[-_.]?[Uu]pdate[A-Za-z0-9_.]{0,20}\b
+    - ^\s*[A-Za-z0-9_-]{0,30}[Uu]pdater[A-Za-z0-9_-]{0,12}\s*(?:\.\s*workspace\s*=|=\s*[{"'])
+    - "[Ss]ecurit(?:y|ies)[
+      _-](?:fix|patch|update|release)[a-z]{0,3}\\b[^\\n]{0,140}\\b(?:restart|reinstall|relaunch|reb\
+      oot|update now|upgrade now|install it|apply it|pick up|take effect)"
+  match_without:
+    - ^\s*(?:node|python|ruby|go|java|dotnet|php)-version\s*:\s*(?:\r?$|#|["']?\$\{\{|["']?(?:lts|stable|latest|current|system|oldest|newest)\b)
+  path_without:
+    - (^|/)(?:_blog|blog|versioned_docs|versioned-docs|versioned_sidebars)/
+    - (^|/)(?:CHANGELOG|Changelog|changelog|CHANGES|HISTORY)[^/]*$
+    - (^|/)VERSION[^/]*$
+context_questions:
+  - "Does the Cyber Resilience Act reach what this repository supplies at all? Do not answer that
+    from Art. 2(1) alone and do not re-derive the test here. Article 2 has eight paragraphs: the
+    first brings a product in, and the other seven take it back out or limit what applies - among
+    them Art. 2(2) for products covered by the medical devices, in vitro diagnostic devices or motor
+    vehicle Regulations, Art. 2(3) for products certified under the civil aviation Regulation, Art.
+    2(4) for marine equipment, Art. 2(5) for a delegated act limiting or excluding application, Art.
+    2(6) for spare parts replacing identical components, Art. 2(7) for products developed or
+    modified exclusively for national security or defence and products designed to process
+    classified information, and Art. 2(8) for information whose disclosure would be contrary to
+    essential security interests. The whole test, decomposed into 37 limbs with the operative words
+    of each paragraph quoted, is the shared scope gate `rules/gates/cra-scope.yaml`, and a scan
+    evaluates that gate rather than leaving you to open a 37-limb file cold. Read the scan output
+    first, in this order. (a) On this candidate, `depends_on_applicability`: one entry per checklist
+    that names the gate, each carrying `verdict` (applies, likely-applies, does-not-apply or
+    unresolved) and `because`; identical entries from more than one checklist are one verdict
+    reported twice and not two verdicts. (b) At the top level of the findings file, `applicability`:
+    the same assessment in full, with every limb and its state, the evidence for and against each,
+    `unresolved_limbs` naming what nothing settled, and `contradictions` where the person running
+    the scan declared one thing and the tree shows another. If the verdict is does-not-apply, record
+    that and stop: the duties this rule asks about do not attach. If it is unresolved or
+    likely-applies, work through the limbs named in `unresolved_limbs` using the questions the gate
+    itself states, and note that every Art. 2(2) to 2(8) limb turns on a fact about what the product
+    IS - a medical device, a vehicle component, a spare part, defence software - which is asked of
+    the person running the scan or read from their declared documents, and is never inferred from
+    vocabulary in the tree. Art. 2(6) deserves a moment on this row specifically: a replacement
+    component manufactured to the same specifications as the part it replaces is outside the
+    Regulation, and a repository about update supply will meet that case. If no applicability
+    information reached you, say so plainly and answer the limbs by asking, rather than substituting
+    a scope analysis of your own."
+  - "Is what was matched actually a MECHANISM by which software reaches somebody else's machine, or
+    only something that looks like one? This is the question that separates a real candidate from a
+    false one, and the detector cannot answer it. Four distinctions, each of which was measured on
+    real repositories. (a) A VERSION CHECK IS NOT A DELIVERY PATH. An endpoint that reports the
+    latest version number and does nothing else tells a user that something newer exists; Annex I
+    Part II point (7) asks for mechanisms to securely DISTRIBUTE updates. Read the code around the
+    match: does anything download, verify, stage or install what the check found, or does the path
+    end at a notice? Both answers are useful - a notice with no delivery behind it is itself worth
+    reporting, against point (7) and against Annex II point 8(c) - but they are different findings
+    and must not be reported as the same one. (b) A DEVELOPER-TOOL NOTIFIER IS NOT A PRODUCT UPDATE
+    PATH. Five trees in the measurement use update-notifier or update-check to tell a DEVELOPER that
+    their own command-line tool is out of date; that is a fact about the repository's tooling, and
+    the same vocabulary sometimes appears as a disabled flag, which is the opposite fact. (c) SOME
+    OF THIS VOCABULARY IS NOT ABOUT UPDATES AT ALL, OR IS ABOUT SOMEBODY ELSE'S UPDATES. Measured on
+    the corpus: a check-for-updates call is git branch synchronisation in one tree; an update
+    checker is a framework file watcher in two others; a scheduled job named for an update check is
+    about topping up an account balance in a third; and 23 lines in one tree are translations of a
+    button label for updating PLUGINS - one line in each of 23 locale files, including the English
+    source - which is an update path for a third party's extension rather than for the product. A
+    sixth shape is a documentation anchor naming a feature rather than an endpoint. That last shape
+    matters beyond its count, because it is the one most likely to read as a genuine hit: the words
+    are exactly right and the object of the sentence is wrong. Quote the surrounding lines and say
+    which reading you took, and whose software the update would reach. (d) A MATCH IN DOCUMENTATION
+    CUTS BOTH WAYS: a framework page describing somebody else's updater is a false positive, while a
+    docs page describing how THIS product updates itself, naming its update server and its
+    configuration key, is among the best evidence in a repository and is what an Annex II point 8(c)
+    answer looks like. Say whose mechanism the matched line describes."
+  - "Whose update path is it, and what does it actually cover? Annex I Part II point (7) binds the
+    manufacturer of the product with digital elements. Three cases the measurement produced, and
+    they lead to different findings. First, a first-party mechanism the team operates - an updater
+    library wired into their own application, their own feed or update server, their own signing key
+    for updater artifacts. Second, a THIRD-PARTY CHANNEL the team relies on: an editor-extension
+    marketplace, an application store, a hosted build-and-update service, a container-image
+    auto-updater the end user runs. That is still capable of satisfying point (7), because the point
+    asks for mechanisms to be provided for and does not say by whom they must be operated - but it
+    makes the manufacturer's compliance depend on someone else's channel, and it is worth saying so
+    in the finding, together with which parts of the product the channel does NOT reach. Third, a
+    mechanism belonging to a dependency or to a vendored tree, which is not this repository's supply
+    at all. Say which, and quote the line you relied on. Then say what the mechanism covers: many
+    repositories in the measurement ship several artifacts - a desktop bundle, a container image, a
+    command-line tool, a library - and an updater wired into one of them says nothing about the
+    others."
+  - "Is the update mechanism SECURE, which is the word point (7) actually uses? The duty is not to
+    have an update path but to 'provide for mechanisms to securely distribute updates'. The detector
+    establishes only that a path exists. Look for, and quote, whatever is there: an updater-specific
+    signing key, distinct from the platform code-signing identity, held as a secret in the release
+    pipeline; verification of a downloaded artifact before it is applied; a feed URL fixed to a
+    transport that authenticates the server; pinned or published keys the client checks against. The
+    measurement found exactly one instance in 31 repositories of an updater-specific signing key
+    declared separately from the platform identity, which is the shape this limb is about, and it
+    found that generic signature-verification vocabulary is dominated by INBOUND webhook
+    verification and is not evidence about updates at all - so read what the verification is
+    verifying before counting it. Build-time code signing (notarisation, an installer signing
+    certificate) is evidence about the artifact and not by itself about the channel that delivers
+    it; record it as corroboration rather than as an answer. Where you find no verification anywhere
+    on the update path, say so as an observation about what the repository shows, not as a
+    conclusion about the product."
+  - "Are security updates supplied FREE OF CHARGE, and does the tailor-made carve-out apply? Annex I
+    Part II point (8) requires dissemination free of charge 'unless otherwise agreed between a
+    manufacturer and a business user in relation to a tailor-made product with digital elements'.
+    Recital 64 is the only elaboration. ON THE READING THIS RULE TAKES - and it is a reading, not
+    settled law, because the operative text says only that the duty is displaced where otherwise
+    agreed in relation to a tailor-made product, and the second limb is drawn from Recital 64's
+    words about both parties having explicitly agreed - two things have to hold before the duty is
+    displaced: the product is fitted to a particular purpose for a particular business user, AND
+    both parties have explicitly agreed to a different set of contractual terms. Report it as that
+    reading rather than as a settled test, and say which limb you think is or is not met. What is
+    not arguable on either reading: silence between the parties does not displace the duty, and
+    neither does the product merely being sold to businesses. WHETHER A PRODUCT IS TAILOR-MADE AND
+    WHETHER SUCH AN AGREEMENT EXISTS ARE FACTS ABOUT THE PRODUCT AND ITS CONTRACTS: ask the person
+    running the scan, or read their declared documents. Do not infer either from vocabulary in the
+    tree - an enterprise pricing page, a per-seat licence check or a paid-tier feature flag
+    establishes neither, and the measurement found paid-tier vocabulary to be almost entirely
+    translation strings about plans in general. What the tree CAN show, and what is worth quoting if
+    it is there, is a security fix placed behind a paid tier or a support contract, or a release
+    channel where the version carrying security fixes is available only to paying users. If you find
+    that, report it as a question against point (8) and name the two conditions above that would
+    have to be met for it to be permitted."
+  - "Does the automatic-update limb apply to this product, and if not, has that been justified?
+    Point (7) ends 'where applicable for security updates, in an automatic manner', and the
+    qualifier carries real weight. Recital 56 disapplies the automatic-update requirements for two
+    classes: products primarily intended to be integrated as components into other products, and
+    products for which users would not reasonably expect automatic updates, expressly including
+    products intended to be used in professional ICT networks and especially in critical and
+    industrial environments where an automatic update could interfere with operations. A great deal
+    of what this scanner is pointed at falls in one of those - a library, an SDK, a component
+    distributed for integration, a self-hosted server for a professional network. Two cautions.
+    First, this is a RECITAL and the operative hook is only the words 'where applicable'; Recital
+    56's own phrase 'as set out in an annex to this Regulation' names neither Annex I Part II point
+    (7) nor Annex I Part I point (2)(c), and both carry automatic-update language, so report it as
+    the recital's guidance on the qualifier and not as an operative exemption. Second, the
+    disapplication is narrow: it removes the automatic limb only. Recital 56 says in terms that
+    irrespective of whether a product is designed to receive automatic updates, its manufacturer
+    should inform users about vulnerabilities and make security updates available without delay, so
+    points (2) and (8) and the rest of point (7) stand. Where the conclusion is that the limb does
+    not apply, Art. 13(4) supplies the consequence: a clear justification to that effect belongs in
+    the technical documentation. Whether the product is a component for integration or is intended
+    for a professional or industrial environment is a fact about the product, asked of the person
+    running the scan and never read out of source vocabulary."
+  - "Are new security updates provided SEPARATELY from functionality updates, where that is
+    technically feasible? This is the second limb of point (2) - not, as an earlier description of
+    this row had it, part of point (8) - and the qualifier is 'where technically feasible' rather
+    than any looser form. Recital 57 gives the mischief: users should not have to install new
+    functionality updates for the sole purpose of receiving the latest security updates. NO DEFINED
+    LINE EXISTS BETWEEN THE TWO KINDS OF UPDATE. Article 3 defines neither update nor security
+    update nor functionality update nor feature update; all 51 definitions were enumerated and none
+    of those terms is among them. The only guidance is Recital 39, and it works by example: a
+    security update designed to decrease cybersecurity risk that does not modify the intended
+    purpose is not a substantial modification and usually entails only minor adjustments of the
+    source code, while a feature update that modifies the original intended functions or the type or
+    performance of the product is one. So state the boundary as the recital does and do not present
+    it as a definition. What to look for in the repository, and it is process evidence rather than
+    code: a maintenance or patch branch that receives fixes without receiving features; release
+    notes or a changelog that separate security fixes from other changes; a versioning policy under
+    which a security fix ships as a patch release on an existing line rather than only in the next
+    feature release; a supported-versions statement that backports fixes. Where everything ships in
+    one stream, the question to answer is not whether that is permitted but whether separating them
+    would be technically feasible for this product - and that is a judgment for the team, which the
+    finding should ask for rather than pre-empt."
+  - "Do updates carry ADVISORY MESSAGES, and does the product tell users what they need to know?
+    Point (8) requires that disseminated updates be 'accompanied by advisory messages providing
+    users with the relevant information, including on potential action to be taken'. This is a
+    communication duty inside the dissemination point and it is distinct from three neighbouring
+    things it is easy to merge with: Annex I Part II point (4), which is the public disclosure of
+    information about a fixed vulnerability once the update is available; Annex I Part I point
+    (2)(c), which is the product-side notification that an update EXISTS; and Annex II, which is the
+    standing instructions that travel with the product. Look for what accompanies a release rather
+    than what announces it: release notes that say what a security fix addresses and what a user
+    should do (restart, rotate a credential, change a configuration, apply a workaround where the
+    update cannot yet be installed); a security advisory published alongside the release; an
+    in-product message shown when an update is offered. A version number and a download link on
+    their own are not advisory messages. Separately, the standing information Annex II requires is
+    its own check: point 7, the type of technical security support and the END-DATE of the support
+    period during which users can expect vulnerabilities to be handled and to receive updates; point
+    8(c), how security-relevant updates can be installed; and point 8(e), how to turn off the
+    default that installs security updates automatically. Annex II point 8 allows an internet
+    address referring to detailed instructions rather than the instructions themselves, so a
+    documentation link satisfies the form. Report which of those a user could actually find, and
+    from where."
+  - "Would each security update still be retrievable in ten years, and does the
+    substantial-modification limitation apply? Two separate provisions, both missed by every earlier
+    description of this row, and they pull in opposite directions. Art. 13(9) ADDS a duty: each
+    security update made available during the support period must remain available after it is
+    issued 'for a minimum of 10 years or for the remainder of the support period, whichever is
+    longer'. Read the comparison carefully - the ten years is a floor and not a cap, the clock runs
+    per update from the date that update is issued, and the duty is availability rather than
+    re-issue. What that means in practice, and what to look for: whether old releases are retained
+    or pruned; whether the release channel is one the team controls or one a third party could
+    remove; whether a registry retention policy, an expiring artifact store or a garbage-collected
+    CI artifact would take a two-year-old security release offline; whether a container image tag is
+    overwritten in place, which leaves no retrievable older build at all. Art. 13(11) permits a
+    public software archive of historical versions, with a clear warning to users about the risks of
+    running unsupported software, and that is the shape most teams reach for. Art. 13(10) LIMITS the
+    other direction: where a manufacturer has placed subsequent substantially modified versions of a
+    software product on the market, compliance with point (2) may be ensured for the last version
+    placed on the market ONLY - provided users of the earlier versions have access to that last
+    version free of charge and incur no additional cost to adjust the hardware and software
+    environment they run it in. Both conditions must hold, and Recital 40 confines the relief to
+    point (2): a manufacturer relying on it still owes the other Part II requirements for every
+    version. If the repository shows several supported major lines, or a policy of fixing only the
+    newest, ask which of the two provisions the team is relying on and whether its conditions are
+    actually met."
+  - "For a matched runtime pin, is the pinned version still supported by whoever maintains that
+    runtime? The detector found a pin and nothing more. It cannot answer this, on purpose: a pin is
+    a version and not a date, and knowing when a version left support requires either a network call
+    this scanner does not make or knowledge the scanner does not carry - but YOU carry it. Take each
+    matched pin - a base image tag, a language-setup version input in CI, a whole-line version in a
+    runtime-version file, a build-tool distribution URL - and say, from your own knowledge of that
+    runtime's published support calendar, whether that version is still receiving security fixes,
+    and if not, roughly when it stopped. Where the pin is indirect, say so and resolve it from the
+    surrounding files if you can, rather than guessing. Three indirect shapes you will meet, and
+    what the detector does with each: a MATRIX ARRAY such as `node-version: [24.x]` is matched, and
+    in at least one measured repository the array lines are the only ones carrying the number the
+    expressions elsewhere refer to, so start there - but READ THE WHOLE ARRAY, because it may name
+    SEVERAL versions rather than one. `php-version: ['8.4.1', '8.5']` and `python-version: ['3.11',
+    '3.12']` both occur in the corpus, and an array of that shape is a test matrix rather than a
+    pin: it tells you which runtimes the project builds against, not which one the artifact it ships
+    is built on. Determining that is yours to do and it is a fact about the product - read the
+    release pipeline, the container image or the packaging configuration, or ask the person running
+    the scan - and where a matrix leg names an out-of-support runtime but the shipped artifact does
+    not use it, say both things rather than either alone; an EXPRESSION such as `node-version: ${{
+    matrix.node-version }}`, an EMPTY action input and a floating channel word such as `lts/*` or
+    `stable` are no longer raised at all, because they name no version and a support calendar cannot
+    be consulted for them - if you need them, they are in the file beside the locations you were
+    given; and a DIGEST pin such as `FROM node@sha256:...` is deliberately not raised for the same
+    reason, so where a build uses digests you will have to resolve the digest to a version from the
+    lock or build metadata, or record that you could not. Then connect it to the duty rather than
+    reporting it as hygiene: a product built on a runtime that no longer receives security fixes
+    cannot remediate vulnerabilities in that runtime by updating it, which is what Annex I Part II
+    point (2) asks for, and Art. 13(6) puts the vulnerabilities of integrated components inside the
+    same duty. Recital 34 is the nearest the Regulation comes to naming this, and it names it as due
+    diligence on components - one of its examples is verifying that a component receives regular
+    security updates by checking its security-update history - rather than as a prohibition on old
+    pins. Two things this question does NOT ask you to do: do not treat an old pin as a finding on
+    its own, since a pinned runtime inside a development container or a documentation example is not
+    what the product ships; and do not read the absence of a pin as anything at all."
+  - "Is the party behind this repository a manufacturer or an open-source software steward? They are
+    different addressees with different duties. Art. 3(13) makes a manufacturer anyone who develops
+    a product with digital elements 'and markets them under its name or trademark, whether for
+    payment, monetisation or free of charge'. Art. 3(14) makes a steward 'a legal person, other than
+    a manufacturer' that systematically sustains the development of free and open-source software
+    'intended for commercial activities' and ensures its viability; Recital 19 names foundations and
+    entities publishing open source in a business context. A steward owes the Art. 24(1) documented
+    cybersecurity policy plus cooperation with market surveillance, and owes none of the duties this
+    rule asks about - not the point (2) remediation duty, not the point (7) mechanism, not the point
+    (8) dissemination duty, not Art. 13(9)'s availability tail and not Annex II. A team publishing
+    its own application is not a steward of that application. Where the repository belongs to a
+    foundation sustaining somebody else's ecosystem, record that this rule's duties are the wrong
+    instrument and that Art. 24 is the one to read. On administrative fines, keep to what Art.
+    64(10) provides and say no more than it does. Point (b) disapplies 'the administrative fines
+    referred to in those paragraphs' for 'any infringement of this Regulation by open-source
+    software stewards', and its chapeau - as corrected by the corrigendum published as OJ L,
+    2025/90555 of 2 July 2025, which is the reading the consolidated text carries - derogates from
+    paragraphs 2 to 9. Paragraph 2 is the tier covering Annex I and Articles 13 and 14, so it is
+    inside the derogation, and Recital 120's closing sentence reads with the article rather than
+    against it. This question is nevertheless about the duty and not about the fine: report that the
+    point (2), point (7) and point (8) duties, Art. 13(9) and Annex II do not attach to a steward,
+    and leave what a national authority may impose to whoever asks about it, since Art. 64(1) leaves
+    the rules on penalties to the Member States."
+  - "What is the date position, and how should the finding be worded? Every duty this rule asks
+    about applies from 11 December 2027 (Art. 71(2), first subparagraph). None of them is among the
+    provisions the second subparagraph brings forward: only Article 14 (11 September 2026) and
+    Chapter IV, Articles 35 to 51 (11 June 2026), move earlier, and Article 14 is a separate
+    reporting obligation this rule does not test. Art. 69(2) additionally grandfathers products
+    placed on the market before 11 December 2027 unless they are substantially modified from that
+    date. NOTHING HERE IS CHARGEABLE TODAY, and the finding is written as preparation for a dated
+    obligation rather than as a present shortfall. Two things make that more than a formality on
+    this row. First, the lead time is real: an update channel, an artifact archive with a ten-year
+    floor and a release process that separates security fixes from features are quarters of work,
+    not a file. Second, Art. 13(9)'s clock runs from the moment each update is ISSUED, so updates a
+    team ships after the application date start accruing a ten-year availability obligation
+    immediately, and a retention policy set today is the thing that decides whether that obligation
+    can be met. Where the product is already on the market, note the Art. 69(2) position, and say
+    which kind of product it is, because placing on the market is per individual product (Recital
+    38): standalone software already released comes fully within the Regulation on a substantial
+    modification after the application date (and a new product or variant first released from that
+    date is within it then), while for hardware and firmware every unit placed on the market from 11
+    December 2027 must comply, of an old model or a new one."
+evidence_template: "{file}:{line} evidences ONE OF TWO UNRELATED THINGS, OR NEITHER, and which of
+  the three it is has to be read off the matched line before anything else: either a path by which
+  software supplied from this repository is updated on somebody else's machine, or a runtime version
+  pinned to a particular release or major line - or neither of those, which is a real answer and one
+  you may return. The version-shaped alternative matches a bare semantic version standing alone on a
+  line, and a shipped data file can carry one: in the corpus a word-list entry inside a
+  common-password dictionary reads `0.0.000` and is neither an update path nor a runtime pin. Where
+  a location is neither, say so and report nothing against it. READ THE LOCATIONS BEFORE ACCEPTING
+  THE HEADLINE. This rule is a single finding per repository, and a candidate can rest entirely on
+  pinned runtime versions - a container base-image tag, a language-setup version in continuous
+  integration, a .nvmrc - with NO update-mechanism evidence anywhere in it. On the 31-repository
+  corpus that is the case for 8 of the 31, so it is the ordinary case and not an edge one. Where
+  every location is a runtime pin, say so and answer context question 9 alone; do not report an
+  update-mechanism finding that no matched line evidences. What either kind of line establishes is
+  that CRA Annex I Part II points (2), (7) and (8) and Art. 13(9) are live questions for whatever
+  this repository supplies. It is not evidence that those duties are met, and it is not evidence
+  that they are unmet. The detector cannot see whether updates are disseminated without delay,
+  whether they are free of charge, whether they carry advisory messages, whether they are separated
+  from functionality updates, whether they install automatically where that applies, or whether each
+  one stays retrievable for ten years - all six are asked of the adjudicating agent in
+  context_questions. For an update-path line, check first whether it is a delivery mechanism at all
+  (a version check with no delivery behind it may not be) and whose mechanism it is; for a runtime
+  pin, check whether the pinned version still receives security fixes"
+remediation_template: >
+  This is a candidate for review against CRA (Regulation (EU) 2024/2847) Annex I, Part II,
+
+  points (2), (7) and (8), Art. 13(9) and Art. 13(10), not a determination about this repository.
+
+  What the scan established is narrower than it may look: this tree carries evidence of an update
+
+  delivery path, or of a runtime pinned to a specific version. It did NOT check whether any of the
+
+  duties below are met, and finding an updater here is not evidence that they are.
+
+  Six requirements sit behind those provisions. They are separate, a product can meet some and not
+
+  others, and a finding should name which one it is about rather than asking for an updater in
+
+  general.
+
+  1. REMEDIATE WITHOUT DELAY - point (2). Vulnerabilities in the product, including in its
+     third-party and open-source components (Art. 13(6)), are addressed and remediated without
+     delay, including by providing security updates. Art. 13(6) adds a second duty on the same
+     facts: report the component vulnerability to whoever maintains that component, and share the
+     fix with them where you developed one.
+  2. SEPARATE SECURITY FROM FUNCTIONALITY - point (2), second limb, where technically feasible.
+     A user should not have to accept new functionality in order to receive a security fix
+     (Recital 57). In practice this is a maintenance line that receives fixes without features, a
+     patch release on an existing version rather than only the next feature release, and release
+     notes that distinguish the two. The Regulation defines neither term; Recital 39 draws the line
+     by example, a security update being one whose purpose is to decrease cybersecurity risk
+     without modifying the intended purpose.
+  3. DISTRIBUTE SECURELY, AND AUTOMATICALLY WHERE THAT APPLIES - point (7). A mechanism that
+     delivers updates so that vulnerabilities are fixed or mitigated in a timely manner, and where
+     applicable for security updates, in an automatic manner. Securely is the operative word: an
+     updater-specific signing key held separately from the platform code-signing identity,
+     verification of the downloaded artifact before it is applied, and a feed the client can
+     authenticate. Recital 56 disapplies the automatic limb for products primarily intended to be
+     integrated as components into other products, and for products whose users would not
+     reasonably expect automatic updates - expressly including professional ICT networks and
+     critical or industrial environments. Where that applies to your product, Art. 13(4) asks for a
+     clear justification in the technical documentation rather than for silence. The rest of point
+     (7) still stands.
+  4. DISSEMINATE WITHOUT DELAY, FREE OF CHARGE, WITH ADVISORY MESSAGES - point (8). Three limbs in
+     one sentence. Without delay is its own timing standard, separate from point (2)'s. Free of
+     charge is displaced where the product is tailor-made and the parties have agreed otherwise, and
+     on the reading this rule takes - drawn from Recital 64, and a reading rather than settled law -
+     BOTH limbs have to hold: the product is fitted to a particular purpose for a particular
+     business user, and both parties have explicitly agreed a different set of contractual terms.
+     What is not arguable either way is that the duty is not displaced merely because the customer
+     is a business, nor by silence between the parties. Advisory messages must give users the relevant
+     information, including on potential action to be taken: what the fix addresses, and what the
+     user has to do (restart, rotate a credential, apply a workaround where the update cannot yet
+     be installed). A version number and a download link are not advisory messages.
+  5. KEEP EACH UPDATE RETRIEVABLE - Art. 13(9). Each security update made available during the
+     support period must remain available after it is issued for a minimum of 10 years or for the
+     remainder of the support period, whichever is longer. The clock runs per update, from the date
+     that update was issued, and the ten years is a floor rather than a cap. What usually breaks
+     this is not the release process but retention: a registry policy that prunes old versions, a
+     CI artifact store that expires, or a container tag overwritten in place so no older build
+     survives. Art. 13(11) permits a public archive of historical versions, provided users are
+     clearly informed about the risks of running unsupported software.
+  6. TELL THE USER - Annex II points 7, 8(c) and 8(e). The type of technical security support and
+     the END-DATE of the support period; how security-relevant updates can be installed; and how to
+     turn off the default that installs them automatically. Annex II point 8 allows an internet
+     address referring to detailed instructions, so a documentation page satisfies the form.
+  Where the product has been substantially modified into successive versions, Art. 13(10) is the
+
+  one relief provision: point (2) may be discharged for the last version placed on the market only,
+
+  provided users of the earlier versions get that version free of charge and incur no additional
+
+  cost to adjust the hardware and software environment they run it in. Both conditions have to
+
+  hold, and Recital 40 confines the relief to point (2) - the other Part II duties continue for
+
+  every version.
+
+  If the matched line is a RUNTIME PIN rather than an updater, the question is different: a product
+
+  built on a runtime that no longer receives security fixes cannot remediate vulnerabilities in
+
+  that runtime by updating it. Check the pinned version against that runtime's published support
+
+  calendar, and treat a development-container or documentation pin differently from the one the
+
+  shipped artifact is built on.
+
+  Dates, so the work can be scheduled rather than rushed. All of the above applies from
+
+  11 December 2027 (Art. 71(2)): to every hardware unit placed on the market from that date, and to
+
+  software first released, or substantially modified, from that date (Art. 69(2)). Nothing here is
+
+  chargeable before then. Two things still argue for
+
+  starting early: an update channel, an artifact archive with a ten-year floor and a release
+
+  process that separates security fixes from features are quarters of work rather than a file; and
+
+  Art. 13(9)'s ten-year clock starts on the day each update is issued, so a retention policy chosen
+
+  now decides whether that obligation can be met later. Recital 31 records a second exposure that
+
+  is not a fine at all: where a lack of security updates after placing the product on the market
+
+  causes damage, the manufacturer's liability under the product liability regime can be triggered
+
+  irrespective of fault.
+
+  Where the repository belongs to a foundation or entity that sustains open-source software it does
+
+  not itself market, read Art. 24 instead: a steward owes a documented cybersecurity policy and
+
+  cooperation with market surveillance, and none of the six requirements above.
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 3
+      class: existence
+    - question: 4
+      class: existence
+    - question: 5
+      class: existence
+    - question: 6
+      class: existence
+    - question: 7
+      class: existence
+    - question: 8
+      class: existence
+    - question: 9
+      class: existence
+    - question: 10
+      class: enumeration
+      item: matched pin with its version value
+      item_source: sub_shape

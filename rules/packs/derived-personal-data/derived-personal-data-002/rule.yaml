@@ -1,0 +1,378 @@
+id: derived-personal-data-002
+pack: derived-personal-data
+short_name: Assessments about a person kept as records of their own
+problem_line:
+  text: Assessments about a person kept as separate records
+fix_line: Make correction requests reach these rows or let the person add their own statement, and
+  record how each is computed.
+title: Assessments the product generates about a person and keeps as rows with their own lifecycle
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(d) - personal data shall be 'accurate and, where
+      necessary, kept up to date; every reasonable step must be taken to ensure that personal data
+      that are inaccurate, having regard to the purposes for which they are processed, are erased or
+      rectified without delay'. This is the provision the construct turns on. A stored assessment is
+      a statement about a person that the product wrote, and the accuracy duty covers it exactly as
+      it covers a field the person typed - including the duty to take every reasonable step to erase
+      or rectify it when it is wrong
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 16 - 'The data subject shall have the right to obtain
+      from the controller without undue delay the rectification of inaccurate personal data
+      concerning him or her. Taking into account the purposes of the processing, the data subject
+      shall have the right to have incomplete personal data completed, including by means of
+      providing a supplementary statement.' The second sentence is the one that matters most for a
+      derived statement: where the conclusion cannot simply be corrected, the person may still add
+      their own account of the matter beside it, and a store with no place to put a supplementary
+      statement cannot offer that"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(4) - 'profiling' means any form of automated
+      processing of personal data consisting of the use of personal data to evaluate certain
+      personal aspects relating to a natural person, in particular to analyse or predict aspects
+      concerning that natural person's performance at work, economic situation, health, personal
+      preferences, interests, reliability, behaviour, location or movements'. Reference only: a
+      definition establishes no duty of its own. It is carried because the list in it - performance
+      at work, economic situation, behaviour - is a close description of what the assessments this
+      rule finds are about, and because whether a given store is profiling decides which of the
+      transparency provisions below apply"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 14(2)(g) - where personal data have not been obtained
+      from the data subject, the controller shall provide 'the existence of automated
+      decision-making, including profiling, referred to in Article 22(1) and (4) and, at least in
+      those cases, meaningful information about the logic involved, as well as the significance and
+      the envisaged consequences of such processing for the data subject.' Art. 13(2)(f) carries the
+      identical wording for data obtained from the data subject. Reference only: both are
+      conditioned on Art. 22 being engaged, which this detector cannot establish. They are carried
+      because a derived assessment is precisely data not obtained from the subject, and because the
+      information duty is the one a product with an insights feature most often has no text for"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 15(1)(h) - the data subject has the right to obtain from
+      the controller information on 'the existence of automated decision-making, including
+      profiling, referred to in Article 22(1) and (4) and, at least in those cases, meaningful
+      information about the logic involved, as well as the significance and the envisaged
+      consequences of such processing for the data subject.' Reference only. Carried because an
+      access request over a product with this construct has to return the derived rows as well as
+      the collected ones, and a subject-access export built from the primary tables alone will not
+      contain them
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 22(1) - 'The data subject shall have the right not to
+      be subject to a decision based solely on automated processing, including profiling, which
+      produces legal effects concerning him or her or similarly significantly affects him or her.'
+      Reference only, and the reason it is reference only is the boundary between this rule and its
+      sibling: a stored assessment engages this provision only where something acts on it, and the
+      sibling rule `derived-personal-data-001` is the one written for that case. Where both fire on
+      one product, the assessment store is this rule's finding and the automated action is the
+      sibling's"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "AI Act (Regulation (EU) 2024/1689), Art. 50(2), quoted in full because its third sentence is
+      what decides whether the paragraph reaches this construct at all. First sentence: 'Providers
+      of AI systems, including general-purpose AI systems, generating synthetic audio, image, video
+      or text content, shall ensure that the outputs of the AI system are marked in a
+      machine-readable format and detectable as artificially generated or manipulated.' Third
+      sentence, the carve-out: 'This obligation shall not apply to the extent the AI systems perform
+      an assistive function for standard editing or do not substantially alter the input data
+      provided by the deployer or the semantics thereof, or where authorised by law to detect,
+      prevent, investigate or prosecute criminal offences.' WHAT THAT SETTLES AND WHAT IT LEAVES
+      OPEN: a writer that renders pre-computed facts into a sentence without changing what they say
+      is inside the carve-out on the ordinary reading, so the marking obligation does not attach to
+      it; whether a given deployment's writer substantially alters the semantics, and whether the
+      product is provider or deployer, are facts about the product and are context question 4. DATE:
+      Art. 113, as it stands in the consolidated text 02024R1689-20260727 after Regulation (EU)
+      2026/1744 replaced its points (a) and (c) and added a point (d), provides that the Regulation
+      'shall apply from 2 August 2026' with four exceptions: '(a) Chapters I and II shall apply from
+      2 February 2025, with the exception of Article 5(1), first subparagraph, points (ba) and (bb),
+      and Article 5(1a) and (1b) which shall apply from 2 December 2026;'; '(b) Chapter III Section
+      4, Chapter V, Chapter VII and Chapter XII and Article 78 shall apply from 2 August 2025, with
+      the exception of Article 101;'; '(c) Chapter III, Sections 1, 2, and 3, with the exception of
+      Article 6(5), shall apply from: (i) 2 December 2027 as regards AI systems classified as
+      high-risk pursuant to Article 6(2) and Annex III; and (ii) 2 August 2028 as regards AI systems
+      classified as high-risk pursuant to Article 6(1) and Annex I;'; and '(d) Articles 102 to 110
+      shall apply from 27 July 2026.' Art. 50 sits in Chapter IV, which is named in none of the
+      four, so this provision has been in application since 2 August 2026. TRANSITIONAL, AND IT HAS
+      NOT EXPIRED: Art. 111(4), added by Art. 1(39)(b) of Regulation (EU) 2026/1744 and quoted here
+      from the same consolidated text, provides that 'Providers of AI systems, including
+      general-purpose AI systems, generating synthetic audio, image, video or text content, that
+      have been placed on the market before 2 August 2026 shall take the necessary steps in order to
+      comply with Article 50(2) by 2 December 2026.' That addressee class is Art. 50(2)'s own, word
+      for word, so a system placed on the market before 2 August 2026 has two branches and they must
+      be held apart in words, because nothing in the engine conditions this on the date. UP TO AND
+      INCLUDING 2 DECEMBER 2026: Art. 111(4) sets that day as the date by which the necessary steps
+      must be taken, so for such a system anything said about Art. 50(2) is preparation for a date
+      in the future and must be worded that way. FROM 3 DECEMBER 2026: the transitional is spent and
+      Art. 50(2) stands on the same terms as for a system placed on the market on or after 2 August
+      2026, for which it has stood since that day. WHICH BRANCH A PRODUCT IS IN IS A FACT ABOUT THE
+      PRODUCT - the date it was placed on the market - so it is asked of the person running the scan
+      or read from their declared documents, and never inferred from source vocabulary. Reference
+      only: the duty this rule tests is the accuracy and rectification duty above, not a marking
+      obligation"
+    url: https://publications.europa.eu/resource/celex/02024R1689-20260727
+    checked_at: 2026-09-07
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.3
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    assessment_noun:
+      - insight
+      - assessment
+      - anomaly
+      - enrichment
+      - prediction
+      - propensity
+      - risk_score
+      - score
+      - rating
+      - grading
+      - evaluation
+      - appraisal
+      - report
+      - analysis
+      - profile_summary
+      - recommendation
+      - forecast
+      - estimate
+      - segment
+    schema_declaration:
+      - create_table
+      - create table
+      - alter table
+      - add_column
+      - add_index
+      - add_check_constraint
+      - add_constraint
+      - create_index
+      - create index
+      - createmodel
+      - add_field
+      - models.model
+      - models.datetimefield
+      - models.jsonfield
+      - models.charfield
+      - applicationrecord
+      - activerecord::base
+      - typed_schema
+      - ecto.schema
+      - "@entity"
+      - "@table"
+      - prisma.schema
+      - column(
+      - "field :"
+      - belongs_to
+    column_builder:
+      - t.string
+      - t.text
+      - t.jsonb
+      - t.json
+      - t.integer
+      - t.decimal
+      - t.datetime
+      - t.date
+      - t.references
+    purpose_built_assessment:
+      - dedup_key
+      - spending_anomaly
+      - cash_flow_warning
+      - net_worth_milestone
+      - savings_rate_change
+      - budget_at_risk
+      - budget_on_track
+      - subscription_audit
+      - idle_cash
+      - data_enrichment
+      - cost_estimate
+      - contributor_stats
+      - translator_work
+      - risk_score
+      - trust_score
+      - reputation_score
+      - churn_score
+      - credit_score
+      - anomaly_score
+      - propensity_score
+      - engagement_score
+      - quality_score
+      - throughput
+      - percentile
+    generated_stamp:
+      - generated_at
+      - computed_at
+      - scored_at
+      - evaluated_at
+      - derived_at
+      - inferred_at
+      - assessed_at
+      - refreshed_at
+      - last_calculated_at
+    generator_machinery:
+      - insight_generator
+      - generate_insight
+      - insight_writer
+      - body_writer
+      - summarize_metric
+      - summarise_metric
+      - compute_score
+      - calculate_score
+      - score_generator
+      - risk_engine
+      - scoring_engine
+      - assessment_generator
+      - report_generator
+      - generate_report
+      - collect_report_data
+      - anomaly_detector
+      - detect_anomaly
+      - enrichment_provider
+      - enrich_transaction
+      - profile_builder
+    delivery_verb:
+      - notify
+      - notification
+      - deliver
+      - push_message
+      - send_email
+      - mailer
+      - broadcast
+      - webhook
+      - feed_item
+      - digest_email
+    statistical_summary:
+      - median
+      - average
+      - mean(
+      - stddev
+      - std_dev
+      - standard_deviation
+      - p75
+      - p90
+      - p95
+      - quantile
+      - z_score
+      - moving_average
+      - baseline_months
+      - deviation_threshold
+  vocabulary_matching:
+    assessment_noun:
+      case_insensitive: true
+      separator_insensitive: true
+    schema_declaration:
+      case_insensitive: true
+      separator_insensitive: true
+    column_builder:
+      case_insensitive: true
+      separator_insensitive: true
+    purpose_built_assessment:
+      case_insensitive: true
+      separator_insensitive: true
+    generated_stamp:
+      case_insensitive: true
+      separator_insensitive: true
+    generator_machinery:
+      case_insensitive: true
+      separator_insensitive: true
+    delivery_verb:
+      case_insensitive: true
+      separator_insensitive: true
+    statistical_summary:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?&assessment_noun)[^\n]{0,60}(?&schema_declaration)|(?&schema_declaration)[^\n]{0,60}(?&assessment_noun)|(?&assessment_noun)[^\n]{0,60}(?:^|[^A-Za-z0-9])(?&column_builder)|(?:^|[^A-Za-z0-9])(?&column_builder)[^\n]{0,60}(?&assessment_noun)
+    - (?&purpose_built_assessment)
+    - (?&generator_machinery)
+    - (?&assessment_noun)[^\n]{0,60}(?&delivery_verb)|(?&delivery_verb)[^\n]{0,60}(?&assessment_noun)
+    - (?&assessment_noun)[^\n]{0,60}(?&statistical_summary)|(?&statistical_summary)[^\n]{0,60}(?&assessment_noun)
+    - (?&generated_stamp)[^\n]{0,60}(?&schema_declaration)|(?&schema_declaration)[^\n]{0,60}(?&generated_stamp)|(?&generated_stamp)[^\n]{0,60}(?:^|[^A-Za-z0-9])(?&column_builder)|(?:^|[^A-Za-z0-9])(?&column_builder)[^\n]{0,60}(?&generated_stamp)
+  shared_path_exclusions:
+    - localisation_catalogues
+context_questions:
+  - DOES THE PRODUCT'S RECTIFICATION ROUTE REACH THESE ROWS? This is the first question because Art.
+    16 is what the construct turns on. Find the code that answers a correction request and check
+    whether it touches the derived store at all. A route that updates the fields the person typed
+    and leaves the generated rows untouched is the ordinary shape, and it means the product cannot
+    correct a statement it made about them. Say which it is here, and quote the code path rather
+    than assuming from the presence of an account-settings form.
+  - DOES ANYTHING ACT ON THE ASSESSMENT, OR IS IT ONLY SHOWN? If a stored score, flag or percentile
+    feeds a decision about the person - pricing, ranking, access, pay, moderation - then Art. 22
+    comes into play and the sibling rule `derived-personal-data-001` carries the right questions. If
+    it is only rendered for the person to read, it does not. This is a fact about the product and is
+    asked of the operator, not concluded from the code.
+  - WHAT IS THE CONCLUSION COMPUTED FROM, AND HOW CAN IT BE WRONG? Open the generator and list its
+    inputs and its thresholds. A spending anomaly computed over three months of history is wrong for
+    anyone whose circumstances changed last month; a throughput percentile is wrong for a
+    contributor who works in a language with different unit sizes; an enrichment fetched from a
+    third party is wrong whenever that third party is. Quote the threshold constants, because they
+    are the part a person could contest and the part no user-facing text usually mentions.
+  - "IS ANY PART OF THE SENTENCE WRITTEN BY A MODEL, AND DOES THE PERSON KNOW? Some products compute
+    the numbers deterministically and have a language model phrase them. Where that is the case,
+    record which fields are model-written and which are computed, whether the model call goes to a
+    third party (which makes it a recipient question as well), and whether the person is told that
+    what they are reading was machine-written. On the AI Act entry in this rule's legal basis: the
+    marking obligation in Art. 50(2) does not attach where the system does not substantially alter
+    the input data or the semantics thereof, which is the ordinary reading of a writer that phrases
+    pre-computed facts - so the question to answer here is the factual one, whether THIS writer
+    alters the semantics, and whether the product is the provider or the deployer of that system."
+  - "WHAT IS THE RETENTION AND THE EXPORT POSITION OF THE DERIVED STORE? Two separate checks. First,
+    whether these rows have a deletion path of their own or only inherit the account's - a
+    de-duplicated row keyed to a month can outlive the record it was computed from. Second, whether
+    a subject-access export includes them: an export built from the primary tables will not, and the
+    derived rows are the part of the answer the person has never seen."
+evidence_template: "{file}:{line} matched one of five shapes: an assessment noun beside a schema
+  declaration, a purpose-built derived-statement name, generator machinery named as such, an
+  assessment noun beside a delivery call, or an assessment noun beside a statistical summary. This
+  establishes only that THE CODE HAS A CONSTRUCT for generating statements about a person and
+  keeping them. It does not establish that the statements are inaccurate, that any person has asked
+  for one to be corrected, or that any of them is shown to anyone. It does not establish that
+  anything acts on the assessment - that is the boundary with the sibling rule
+  `derived-personal-data-001` and is context question 2. And it does not establish whether the
+  product's rectification and export routes reach the derived rows, which is the gap the construct
+  usually carries and which has to be read out of the code that answers those requests, not out of
+  the line that matched."
+remediation_template: |
+  Start from the rectification route, not from the store. Open the code that answers a correction
+  request and establish whether it reaches the derived rows at all. Where it does not, that is the
+  concrete item: either the derived rows become correctable, or the generator re-runs on corrected
+  inputs and the stale conclusion is removed.
+  Art. 16 has a second sentence that is easy to miss and is often the cheaper answer: where a
+  conclusion cannot be corrected as such, the person may have incomplete data completed by providing
+  a supplementary statement. A derived store with a place to record the person's own account of the
+  matter, shown wherever the conclusion is shown, satisfies something a delete-only route does not.
+  Write down the inputs and the thresholds of each generator. This is the meaningful information
+  about the logic that the transparency provisions describe, and it is ordinarily already in the
+  source as named constants - it needs surfacing rather than inventing.
+  Check the export. A subject-access export assembled from the primary tables will not contain the
+  derived rows, and those are the part of the answer the person has never seen.
+  Check the retention. Rows keyed to a period, de-duplicated by a composite key, or refreshed on a
+  schedule frequently have no deletion path of their own and outlive the records they were computed
+  from.
+  Where a language model writes the user-facing sentence, record which fields are model-written and
+  which are computed, and whether the call leaves the deployment - if it does, the model provider is
+  a recipient and belongs in the record of processing alongside anything already recorded for it.
+data_categories:
+  - user.behavior
+  - user.account
+  - user.financial
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: existence

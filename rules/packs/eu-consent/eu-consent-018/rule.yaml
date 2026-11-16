@@ -1,0 +1,366 @@
+id: eu-consent-018
+pack: eu-consent
+short_name: "Marketing messages: opt-in and opt-out"
+problem_line:
+  text: "Marketing message: consent, opt-out or sender name not found"
+fix_line: Send only on recorded consent or the existing-customer route; ship boxes unticked; name
+  the sender and add unsubscribe.
+title: Marketing-consent control, message template, send call, list write or vendor SDK - opt-in and
+  opt-out need review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "ePrivacy Directive 2002/58/EC, Art. 13 ('Unsolicited communications'), as replaced by
+      Directive 2009/136/EC - ADDRESSEE: the Directive itself is addressed to the Member States
+      (Art. 17(1): 'Before 31 October 2003 Member States shall bring into force the provisions
+      necessary to comply with this Directive'), so it has no direct effect against a private sender
+      and the operative duty on the party scanned here is the NATIONAL TRANSPOSITION of Art. 13 in
+      each Member State whose subscribers or users are addressed - typically located in
+      unfair-competition or telecoms codes rather than in the data-protection statute. The
+      transposed prohibition binds the natural or legal person who uses electronic mail or automated
+      calling for direct marketing, and Art. 13(4) reaches equally the person 'on whose behalf the
+      communication is made'. Art. 13(1): 'The use of automated calling and communication systems
+      without human intervention (automatic calling machines), facsimile machines (fax) or
+      electronic mail for the purposes of direct marketing may be allowed only in respect of
+      subscribers or users who have given their prior consent.' Art. 13(2): 'Notwithstanding
+      paragraph 1, where a natural or legal person obtains from its customers their electronic
+      contact details for electronic mail, in the context of the sale of a product or a service, in
+      accordance with Directive 95/46/EC, the same natural or legal person may use these electronic
+      contact details for direct marketing of its own similar products or services provided that
+      customers clearly and distinctly are given the opportunity to object, free of charge and in an
+      easy manner, to such use of electronic contact details at the time of their collection and on
+      the occasion of each message in case the customer has not initially refused such use.' Art.
+      13(4): 'In any event, the practice of sending electronic mail for the purposes of direct
+      marketing which disguise or conceal the identity of the sender on whose behalf the
+      communication is made, which contravene Article 6 of Directive 2000/31/EC, which do not have a
+      valid address to which the recipient may send a request that such communications cease or
+      which encourage recipients to visit websites that contravene that Article shall be
+      prohibited.' Art. 13(5) confines paragraphs 1 and 3 to subscribers who are natural persons and
+      leaves the position of legal persons to national law, which is one of the reasons the B2B
+      rules differ by Member State. 'Electronic mail' is defined in Art. 2(h) as 'any text, voice,
+      sound or image message sent over a public communications network which can be stored in the
+      network or in the recipient's terminal equipment until it is collected by the recipient',
+      which is why SMS and push-style stored messages fall inside the same provision as email."
+    url: http://publications.europa.eu/resource/celex/02002L0058-20091219
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(11) and Recital 32, read into Art. 13(1) of Directive
+      2002/58/EC through GDPR Art. 94(2) (references to the repealed Directive 95/46/EC are
+      construed as references to the GDPR). Art. 4(11): consent means 'any freely given, specific,
+      informed and unambiguous indication of the data subject's wishes by which he or she, by a
+      statement or by a clear affirmative action, signifies agreement to the processing of personal
+      data relating to him or her'. Recital 32: 'Consent should be given by a clear affirmative act
+      ... This could include ticking a box when visiting an internet website ... Silence, pre-ticked
+      boxes or inactivity should not therefore constitute consent.' GDPR Art. 95 keeps the ePrivacy
+      regime specific: this Regulation 'shall not impose additional obligations' where Directive
+      2002/58/EC sets out specific obligations with the same objective."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "CJEU, Case C-654/23, Inteligo Media SA v Autoritatea Nationala de Supraveghere a Prelucrarii
+      Datelor cu Caracter Personal, judgment of 13 November 2025 (First Chamber). Operative part
+      point 1: Art. 13(1) and (2) \"must be interpreted as meaning that the email address of a user
+      is obtained by the publisher of an online publication 'in the context of the sale of a product
+      or a service', within the meaning of Article 13(2) of that directive, where that user creates
+      a free account on that publisher's online platform giving him or her the right to access, free
+      of charge, a certain number of articles of that publication, to receive, free of charge, via
+      email, a daily newsletter ... and the right to access, for a fee, additional articles and
+      analyses of that publication. The transmission of such a newsletter constitutes a use of
+      electronic mail 'for the purposes of direct marketing' for 'similar products or services'
+      within the meaning of that provision.\" The three pairs of single quotation marks inside that
+      passage are the Court's own, around the terms of Art. 13(2) it is construing, and they are
+      part of the quotation; CORRECTION 2026-08-03, this entry dropped all three pairs until the
+      quote-verification gate was extended to rule cites and found them, so do not remove them
+      again. The passage is delimited with double quotation marks for the reason the extraction
+      convention gives for that style - the quoted matter itself contains single marks - so that the
+      whole passage is verified rather than a prefix of it.Point 2: where the controller uses the
+      email address under Art. 13(2), 'the conditions for lawful processing laid down in Article
+      6(1) of that regulation are not applicable'. Two consequences for adjudication: an editorial
+      newsletter that steers free-tier users towards a paid tier is direct marketing, and a sign-up
+      that costs the user no money can still be a 'sale' for the soft opt-in, because indirect
+      remuneration suffices."
+    url: http://publications.europa.eu/resource/celex/62023CJ0654
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "e-Commerce Directive 2000/31/EC, Art. 6, incorporated by reference into ePrivacy Art. 13(4):
+      commercial communications must be clearly identifiable as such, and the natural or legal
+      person on whose behalf they are made must be clearly identifiable. This is the source of the
+      'do not disguise or conceal the sender' limb; like ePrivacy it is a directive, so the
+      operative rule is again the national transposition."
+    url: http://publications.europa.eu/resource/celex/02000L0031-20240217
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2003-10-31
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.6
+detector:
+  engine: builtin-regex
+  match:
+    - (?:[Dd]efault[Cc]hecked|default_checked|(?<![A-Za-z])[Cc]hecked\s*(?:=|:|/?>|\}|,|\)|\(|[A-Za-z-]{1,20}\s*=))[^\n]{0,110}(?:[Nn]ewsletter|NEWSLETTER|[Mm]arketing|MARKETING|[Pp]romotional|PROMOTIONAL|[Mm]ailing[_\-
+      ]?[Ll]ist|MAILING[_\-
+      ]?LIST|(?:[Ee]mail|EMAIL|[Ss]ms|SMS|[Nn]ews|[Mm]ail|[Oo]ffer)\w{0,12}[_\-]?[Oo]pt(?:ed)?[_\-]?[Ii]n|[Oo]pt(?:ed)?[_\-]?[Ii]n\w{0,4}[_\-]?(?:[Ee]mail|[Mm]arketing|[Nn]ewsletter|[Ss]ms|SMS)|[Aa]ccepts?[_\-]?[Mm]arketing|[Ee]mail[_\-]?[Uu]pdates|[Pp]roduct[_\-]?[Uu]pdates|[Ss]ubscribe(?!r)|SUBSCRIBE)
+    - (?:[Nn]ewsletter|NEWSLETTER|[Mm]arketing|MARKETING|[Pp]romotional|PROMOTIONAL|[Mm]ailing[_\-
+      ]?[Ll]ist|MAILING[_\-
+      ]?LIST|(?:[Ee]mail|EMAIL|[Ss]ms|SMS|[Nn]ews|[Mm]ail|[Oo]ffer)\w{0,12}[_\-]?[Oo]pt(?:ed)?[_\-]?[Ii]n|[Oo]pt(?:ed)?[_\-]?[Ii]n\w{0,4}[_\-]?(?:[Ee]mail|[Mm]arketing|[Nn]ewsletter|[Ss]ms|SMS)|[Aa]ccepts?[_\-]?[Mm]arketing|[Ee]mail[_\-]?[Uu]pdates|[Pp]roduct[_\-]?[Uu]pdates|[Ss]ubscribe(?!r)|SUBSCRIBE)[^\n]{0,110}(?:[Dd]efault[Cc]hecked|default_checked|(?<![A-Za-z])[Cc]hecked\s*(?:=|:|/?>|\}|,|\)|\(|[A-Za-z-]{1,20}\s*=))
+    - (?:[Nn]ewsletter|NEWSLETTER|[Mm]arketing|MARKETING|[Pp]romotional|PROMOTIONAL|[Mm]ailing[_\-
+      ]?[Ll]ist|MAILING[_\-
+      ]?LIST|(?:[Ee]mail|EMAIL|[Ss]ms|SMS|[Nn]ews|[Mm]ail|[Oo]ffer)\w{0,12}[_\-]?[Oo]pt(?:ed)?[_\-]?[Ii]n|[Oo]pt(?:ed)?[_\-]?[Ii]n\w{0,4}[_\-]?(?:[Ee]mail|[Mm]arketing|[Nn]ewsletter|[Ss]ms|SMS)|[Aa]ccepts?[_\-]?[Mm]arketing|[Ee]mail[_\-]?[Uu]pdates|[Pp]roduct[_\-]?[Uu]pdates|[Ee]mail[_\-]?[Dd]igest|[Dd]igest[_\-]?[Ee]mail)\w{0,20}["'`]?\s*(?:=>|:|(?<![=!<>+\-*/%&|^])=(?!=))\s*(?:true|True|TRUE)(?![A-Za-z])
+    - (?:[Nn]ewsletter|NEWSLETTER|[Mm]arketing|MARKETING|[Pp]romotional|PROMOTIONAL|[Mm]ailing[_\-
+      ]?[Ll]ist|MAILING[_\-
+      ]?LIST|(?:[Ee]mail|EMAIL|[Ss]ms|SMS|[Nn]ews|[Mm]ail|[Oo]ffer)\w{0,12}[_\-]?[Oo]pt(?:ed)?[_\-]?[Ii]n|[Aa]ccepts?[_\-]?[Mm]arketing|[Ee]mail[_\-]?[Uu]pdates|[Ee]mail[_\-]?[Dd]igest|[Dd]igest[_\-]?[Ee]mail)[^\n]{0,70}[Dd]efault[^\n]{0,30}(?:true|True|TRUE)(?![A-Za-z])
+    - (?<![A-Za-z]
+      )(?:[Tt]emplate|TEMPLATE|[Ss]ubject|SUBJECT|[Pp]reheader|[Mm]ailer|[Cc]ampaign)\w{0,14}["'`]?\s*[:=(]\s*(?:[A-Za-z_][\w:\\]{0,24}\(\s*)?["'`][^"'`\n]{0,60}(?:[Nn]ewsletter|[Mm]arketing|[Pp]romotional|[Ee]mail[_\-
+      ]?[Bb]last)
+    - (?:=>|[:=])\s*["'`][^"'`\n]{0,40}(?:(?:[Nn]ewsletter|NEWSLETTER|[Mm]arketing|MARKETING|[Pp]romotional|PROMOTIONAL)[_\-./][A-Za-z0-9]|[A-Za-z0-9][_\-./](?:[Nn]ewsletter|NEWSLETTER|[Mm]arketing|MARKETING|[Pp]romotional|PROMOTIONAL)|[Ee]mail[_\-][Bb]last)[^"'`\n]{0,40}["'`]
+    - (?:<td|<table|<mj-|cellpadding|cellspacing|role=["']presentation|<center)[^\n]{0,160}(?:[Nn]ewsletter|NEWSLETTER|[Mm]arketing|[Pp]romotional|[Uu]nsubscri|UNSUBSCRI)
+    - (?:[Nn]ewsletter|NEWSLETTER|[Mm]arketing|[Pp]romotional|[Uu]nsubscri|UNSUBSCRI)[^\n]{0,160}(?:<td|<table|<mj-|cellpadding|cellspacing|role=["']presentation|<center)
+    - (?<![\w-])(?:class|id)\s*=\s*["'][^"'\n]{0,60}(?:[Nn]ewsletter|NEWSLETTER|[Mm]arketing|MARKETING|[Pp]romotional|PROMOTIONAL|[Uu]nsubscri|UNSUBSCRI)
+    - (?:[Ss]end|SEND|[Dd]eliver|DELIVER|[Dd]ispatch|[Tt]rigger|[Ss]chedule|[Ee]nqueue|[Bb]last)\w{0,14}[_\-]?(?:[Cc]ampaign|CAMPAIGN|[Nn]ewsletter|NEWSLETTER|[Bb]ulk[_\-]?[Ee]mail|[Mm]ass[_\-]?[Ee]mail|[Ee]mail[_\-]?[Bb]last|[Mm]arketing[_\-]?[Ee]mail|[Bb]roadcast[_\-]?(?:[Ee]mail|[Mm]ail|[Cc]ampaign|[Nn]ewsletter))
+    - (?:[Cc]ampaign|CAMPAIGN|[Nn]ewsletter|NEWSLETTER|[Bb]ulk[_\-]?[Ee]mail|[Mm]ass[_\-]?[Ee]mail|[Ee]mail[_\-]?[Bb]last|[Mm]arketing[_\-]?[Ee]mail)\w{0,14}[_\-.]?(?:[Ss]end(?![A-Za-z])|SEND(?![A-Z])|[Dd]eliver(?![A-Za-z])|DELIVER(?![A-Z])|[Dd]ispatch|[Bb]last)
+    - campaign-send-jobs|campaignSendJob|campaign_send_job|CampaignSendJob|/campaigns/[^\n]{0,48}/actions/(?:send|schedule)|emailCampaigns/[^\n]{0,24}/sendNow|smsCampaigns/[^\n]{0,24}/sendNow|sendEmailCampaignNow|send_email_campaign_now|SendEmailCampaignNow|sendSmsCampaignNow|send_sms_campaign_now|EmailCampaignsApi|SMSCampaignsApi|SmsCampaignsApi|(?:[\w$]{1,24}\.)?(?:emailCampaigns|email_campaigns|smsCampaigns|sms_campaigns)\.[A-Za-z_]|[Bb]roadcasts?\.(?:[Ss]end|[Cc]reate|[Ss]chedule)|triggerBroadcast|trigger_broadcast|TriggerBroadcast|/v1/campaigns/[^\n]{0,24}/triggers|marketing/singlesends|singlesends|MessageStreamType|MessageStream["']?\s*(?:=>|[:=])\s*["'][Bb]roadcast
+    - SendBulkTemplatedEmail|SendBulkEmail|send_bulk_templated_email|send_bulk_email|sendBulkTemplatedEmail|sendBulkEmail|send_mass_mail|sendMultiple\(|sendEmailBatch|(?:emails|outbound|messages|mail)\.send_batch\(|deliver_in_batches|deliver_messages|SendMessagesAsync|SendEmailsWithTemplateAsync|[Bb]atch\.[Ss]end|batchListMembers|batch_list_members|recipient-variables|recipientVariables|comms\.twilio\.com|(?<![A-Za-z])BatchMessage(?![A-Za-z])|deliver_message_with_template|/emails/batch
+    - addListMember|add_list_member|/marketing/contacts|marketing/lists|subscribeProfiles|subscribe_profiles|bulkSubscribeProfiles|bulk_subscribe_profiles|profile-subscription-bulk|createDoiContact|create_doi_contact|doubleOptinConfirmation|[Ee]mailBlacklisted|[Ss]msBlacklisted|managecontactslists|managemanycontacts|IsExcludedFromCampaigns|contactslist|mailingLists|%[a-z_]{0,32}unsubscribe_url%|pm:unsubscribe|UnsubscribeHandlingType|SubscriptionManagementConfiguration|cio_subscription_preferences|manage_subscription_preferences_url|List-Unsubscribe|GlobalID::Locator\.locate_signed|email_subscriptions\.create!
+    - bypass_list_management|bypassListManagement|BypassListManagement|bypass_unsubscribe_management|bypassUnsubscribeManagement|BypassUnsubscribeManagement|send_to_unsubscribed|sendToUnsubscribed|SendToUnsubscribed|["']?[Aa]ction["']?\s*(?:=>|[:=])\s*["']addforce["']|addnoforce|subscription_tracking[^\n]{0,40}(?:false|False)|subscriptionTracking[^\n]{0,40}false
+    - (?:[Tt]wilio|TWILIO)[\w$]{0,16}(?:\.|->)[Mm]essages(?:\.|->)[Cc]reate\(|(?<![\w$])\$[\w$]{1,24}->[Mm]essages->[Cc]reate\(|[Mm]essages(?:\.|->)[Cc]reate\([^\n]{0,160}(?:[Mm]essaging[Ss]ervice[Ss]id|messaging_service_sid|MESSAGING_SERVICE_SID|\+\d{9,})|(?:[Cc]reate|[Ss]end)_?[Mm]essages?\s*\([^\n]{0,160}(?:[Mm]essaging[Ss]ervice[Ss]id|messaging_service_sid|MESSAGING_SERVICE_SID|\+\d{9,})|MessageResource\.CreateAsync|MessageResource\.Create\(|Message\.creator\(|Api\.CreateMessage\(|(?<![A-Za-z_$])CreateMessageParams\s*\{|OptOutType|bulkConsents|bulk_consents|BulkConsentsResource
+    - "@mailchimp/mailchimp_marketing|mailchimp_marketing|MailchimpMarketing|mailchimp/marketing|ma\
+      ilchimp_transactional|MailchimpTransactional|mandrillapp|klaviyo-api|klaviyo_api|KlaviyoAPI|@\
+      getbrevo/brevo|sib-api-v3-sdk|SibApiV3Sdk|brevo_python|getbrevo|customerio-node|go-customerio\
+      |customer\\.io/api|sendNewsletter|scheduleNewsletter"
+    - (?<![A-Za-z_\-\u00C0-\u024F])(?:[Tt]o[_\-]?[Ee]mails?|toEmails?|[Tt]o[_\-]?[Aa]ddress(?:es)?|toAddress(?:es)?|ToAddresses|[Aa]dd[Aa]ddress|addAddress|[Ss]et[Tt]o|setTo|[Ss]end[_\-]?[Mm]ail|sendMail|[Ss]endmail|[Ss]end[_\-]?[Tt]o)["']?\s*(?:=>|:|=|\(|\[|,|\.(?:[Aa]dd|[Pp]ush|[Aa]ppend)\()\s*[^\n]{0,80}(?:[\w$]{1,24}(?:\.|->)(?:[Gg]et)?[Ee]mail|(?<![A-Za-z.])\$?(?:[Uu]ser|USER|[Ss]ubscriber|[Cc]ontact|[Rr]ecipient|[Mm]ember|[Cc]ustomer|[Ll]ead|[Aa]udience|[Pp]rofile)\w{0,14}|[\w$]{0,16}(?:[Ee]mails|EMAILS|[Aa]ddresses|ADDRESSES)(?![A-Za-z]))
+    - (?<![A-Za-z_\-\u00C0-\u024F])(?:[Tt]o|TO)["']?\s*(?:=>|:|\(|\[|,|\.(?:[Aa]dd|[Pp]ush|[Aa]ppend)\()\s*[^\n]{0,80}(?:[\w$]{1,24}(?:\.|->)(?:[Gg]et)?[Ee]mail|(?<![A-Za-z.])\$?(?:[Uu]ser|USER|[Ss]ubscriber|[Cc]ontact|[Rr]ecipient|[Mm]ember|[Cc]ustomer|[Ll]ead|[Aa]udience|[Pp]rofile)\w{0,14}|[\w$]{0,16}(?:[Ee]mails|EMAILS|[Aa]ddresses|ADDRESSES)(?![A-Za-z]))
+    - (?<![A-Za-z_\-\u00C0-\u024F:])(?:[Tt]o|TO)["']?\s*=(?![=>])\s*(?!\{|["'`]?[/#]|["'`]?https?:)[^\n]{0,80}(?:[\w$]{1,24}(?:\.|->)(?:[Gg]et)?[Ee]mail|(?<![A-Za-z.])\$?(?:[Uu]ser|USER|[Ss]ubscriber|[Cc]ontact|[Rr]ecipient|[Mm]ember|[Cc]ustomer|[Ll]ead|[Aa]udience|[Pp]rofile)\w{0,14}|[\w$]{0,16}(?:[Ee]mails|EMAILS|[Aa]ddresses|ADDRESSES)(?![A-Za-z]))
+    - (?<![A-Za-z_\-\u00C0-\u024F])(?:[Rr]ecipients?|RECIPIENTS?|[Rr]ecipient[_\-]?[Ll]ist|recipientList|[Ss]et[Rr]ecipients?)["']?\s*(?:=>|:|=|\(|\[|,|\.(?:[Aa]dd|[Pp]ush|[Aa]ppend)\()\s*[^\n]{0,80}(?:[\w$]{1,24}(?:\.|->)(?:[Gg]et)?[Ee]mail|(?<![A-Za-z.])\$?(?:[Uu]ser|USER|[Ss]ubscriber|[Cc]ontact|[Mm]ember|[Cc]ustomer|[Ll]ead|[Aa]udience|[Pp]rofile)\w{0,14}|[\w$]{0,16}(?:[Ee]mails|EMAILS|[Aa]ddresses|ADDRESSES)(?![A-Za-z]))
+    - (?:\.forEach\(|\.each\b|\.find_each\b|\.map\(|for\s*\(|foreach\s*\(|for\s+[\w$,()
+      ]{1,24}\s+in\s|:=\s*range\s)[^\n]{0,90}(?:[Ss]end[_\-]?[Mm]ail|sendMail|[Ss]endmail|send_mass_mail|[Ss]end[_\-]?[Ee]mail|sendEmail|[Ss]end[_\-]?[Mm]essage|sendMessage|deliver_now|deliver_later|\.[Ss]end\(|->send\(|::send\()
+    - "[Mm]ailer[^\\n]{0,60}\\.deliver_(?:now|later)|[Mm]ailer[^\\n]{0,60}\\.deliver\\b|Mail::(?:to\
+      |send|queue|later|raw)\\(|->(?:send|queue|later)\\(new\\s"
+    - (?:(?<![\w$.\]])<(?=[\w.]{0,40}(?:[Nn]ewsletter|NEWSLETTER|[Mm]arketing|MARKETING|[Pp]romotional|PROMOTIONAL|[Mm]ailing[_\-
+      ]?[Ll]ist|MAILING[_\-
+      ]?LIST|(?:[Ee]mail|EMAIL|[Ss]ms|SMS|[Nn]ews|[Mm]ail|[Oo]ffer)\w{0,12}[_\-]?[Oo]pt(?:ed)?[_\-]?[Ii]n|[Oo]pt(?:ed)?[_\-]?[Ii]n\w{0,4}[_\-]?(?:[Ee]mail|[Mm]arketing|[Nn]ewsletter|[Ss]ms|SMS)|[Aa]ccepts?[_\-]?[Mm]arketing|[Ee]mail[_\-]?[Uu]pdates|[Pp]roduct[_\-]?[Uu]pdates))(?=[\w.]{0,40}(?:[Oo]pt(?:ed)?[_\-]?[Ii]n|OPT[_\-]?IN|[Cc]onsent|CONSENT|[Cc]heck[_\-]?[Bb]ox|CHECK[_\-]?BOX|[Tt]oggle|TOGGLE|[Ss]witch|SWITCH|[Aa]gree|AGREE|[Pp]ermission|PERMISSION))[A-Z][\w.]*(?=[\s/>])|(?<![\w$.\]])<[A-Z][\w.]{0,40}[^\n>]{0,80}[
+      \t](?:[\w-]{0,20}(?:[Nn]ame|NAME|[Ff]ield|FIELD)|name|field|id|control|checkbox)[ \t]*=[
+      \t]*\{?[
+      \t]*[\"'`](?:[Nn]ewsletter|NEWSLETTER|[Mm]arketing|MARKETING|[Pp]romotional|PROMOTIONAL|[Mm]ailing[_\-
+      ]?[Ll]ist|MAILING[_\-
+      ]?LIST|(?:[Ee]mail|EMAIL|[Ss]ms|SMS|[Nn]ews|[Mm]ail|[Oo]ffer)\w{0,12}[_\-]?[Oo]pt(?:ed)?[_\-]?[Ii]n|[Oo]pt(?:ed)?[_\-]?[Ii]n\w{0,4}[_\-]?(?:[Ee]mail|[Mm]arketing|[Nn]ewsletter|[Ss]ms|SMS)|[Aa]ccepts?[_\-]?[Mm]arketing|[Ee]mail[_\-]?[Uu]pdates|[Pp]roduct[_\-]?[Uu]pdates))
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|--|;;)
+    - "[Cc]hecked\\s*=\\s*\\{?\\s*[\"']?false|[Cc]hecked\\s*:\\s*false|[Cc]hecked\\s*=\\s*\\{?\\s*[\
+      Ff]alse"
+    - utm_campaign|utm_source|utm_medium|utmCampaign|gclid|fbclid
+    - "[Tt]o\\s+\\[[^\\]]{1,60}\\]\\("
+    - \bGRANT\b[^\n]{0,80}\bTO\b
+  path_without:
+    - \.e2e\.[cm]?[jt]sx?$
+  resolve_import_aliases: true
+context_questions:
+  - "Which national transposition applies, and does the product address subscribers or users in that
+    Member State at all? Art. 13 is a directive provision: it binds Member States, and the operative
+    duty on this sender is the national implementing law of each country whose recipients are
+    addressed - commonly located in unfair-competition or telecoms codes rather than in the
+    data-protection statute. Nothing in a repository proves who the recipients are. State what the
+    code shows about the audience - locales, currencies, country lists, address forms, phone-number
+    validation, the regions in the ScanProfile - and if there is no evidence of EU recipients,
+    record that this rule's premise is unproven and stop. Two provisions make the national answer
+    diverge, and they are different provisions: Art. 13(5) confines paragraphs 1 and 3 to
+    subscribers who are natural persons and leaves the protection of subscribers other than natural
+    persons to Member State law, so a strictly B2B sender may sit under a different national rule;
+    and Art. 13(3) governs unsolicited direct marketing by means OTHER than those in paragraphs 1
+    and 2 - a live voice call, for instance - where the choice between an opt-in and an opt-out
+    regime is 'to be determined by national legislation', subject to both options being free of
+    charge. Neither is answerable from source code: say which channel this send uses, whether the
+    recipients are natural or legal persons on the evidence in the code, and which questions that
+    leaves open."
+  - "Is this message direct marketing, or is it transactional or service content? A password reset,
+    a one-time passcode, an order confirmation, a delivery notice, a security alert and a system
+    notification are not direct marketing. A newsletter is, even when its content is editorial: in
+    Case C-654/23 (13 November 2025) the Court held that a daily newsletter summarising new
+    legislation, sent to free-account holders and linking to articles some of which are paid, is a
+    use of electronic mail 'for the purposes of direct marketing'. Quote the message body, the
+    template, or the subject line, and say which side of that line it falls on. Where one send path
+    carries both kinds of message, say so - the duty attaches to the marketing ones."
+  - "For a send path: before this message goes out, is there a check that the recipient gave prior
+    consent, or that the address was obtained in the context of a sale to that customer and the
+    message concerns the sender's own similar products (Art. 13(2))? And does every message carry a
+    working objection route? This is the question the detector cannot answer and the reason the
+    candidate was raised - no regex can separate a lawful soft opt-in from an unlawful blast,
+    because they are the same code. Follow the call backwards - the recipient query, the list or
+    segment the audience comes from, any WHERE clause, filter or early return - and quote the line
+    that reads a consent, subscription, suppression or opt-out field, or state that no such read
+    exists on this path. The vocabulary worth searching for on the way: a consent or opt-in column
+    with a timestamp, a double-opt-in confirmation record, a subscription-status or suppression
+    table, a segment defined by that status, an unsubscribe token, List-Unsubscribe and
+    List-Unsubscribe-Post headers, a provider suppression list. Finding one of those words is not
+    the answer - what settles it is whether the send path READS the state before selecting
+    recipients. A field written at signup but never read before sending does not discharge the duty;
+    neither does a vendor suppression list if the code also overrides it."
+  - "For a per-recipient send inside a loop - one message per row, sent from application code with
+    no campaign API involved: where does the collection being iterated come from? Quote the query or
+    the source of the list and say whether it is the whole user, contact or customer table, or a set
+    already filtered by a subscription or consent state. This shape is what the detector flagged:
+    `to: user.email` inside `for (const user of users)`, `Mail::to($user->email)` inside `foreach`,
+    `User.find_each` around a mailer, `[]string{u.Email}` inside `range`. It is the same code
+    whether the audience is an opted-in list or every row in the database, so the query is the
+    evidence. Where the loop draws from an unfiltered table, say so and quote it; where it draws
+    from a filtered set, quote the filter and say which field it reads and when that field was
+    written."
+  - "For an SMS or automated-calling path: is there an opt-out keyword handler and a recorded
+    consent? Quote the inbound-message handling (Twilio's default keywords are STOP, UNSUBSCRIBE,
+    END, QUIT, STOPALL, REVOKE, OPTOUT and CANCEL, surfaced to application code through the
+    OptOutType webhook field), any messaging-service or sender-pool configuration such as
+    MessagingServiceSid, and any consent record written before the send. Say whether the recipients
+    are drawn from a list that carries consent state or from an arbitrary contact table."
+  - "For a template or a send configuration: does every marketing message carry a free and easy
+    means of opting out, and does it identify its sender? Art. 13(4) requires a valid address to
+    which a recipient may send a request that the communications cease, and prohibits disguising or
+    concealing the identity of the sender on whose behalf the message is made. Quote the unsubscribe
+    link in the body, the List-Unsubscribe and List-Unsubscribe-Post headers if present, and the
+    From and Reply-To values. A no-reply sender address with no working opt-out route in the body is
+    the shape this question exists to catch. Where the vendor adds the link automatically only on a
+    particular stream or setting - Postmark's Broadcast streams, SendGrid's subscription tracking -
+    check which stream or setting this send actually uses."
+  - "Does the Art. 13(2) soft opt-in plausibly apply, and if so is it complete? It requires all of:
+    the electronic contact details were obtained from the recipient as a customer, in the context of
+    the sale of a product or a service; the marketing is for the same person's OWN SIMILAR products
+    or services; and the opportunity to object was given free of charge and in an easy manner BOTH
+    at the time of collection AND on the occasion of each message. C-654/23 read 'sale' broadly
+    enough to cover a free registration that carries indirect remuneration and gives access to a
+    paid tier. Quote the collection point and the objection mechanism at each of the two moments. Do
+    not resolve the member-state variation: the exact conditions differ between national
+    transpositions, so where the answer turns on which country's rule applies, say which conditions
+    are met and which are undetermined rather than reaching a verdict."
+  - "For a pre-checked or default-true control: what value does a new user actually receive, and
+    where does it come from? Trace the value to its origin - the JSX prop, the form's default
+    values, the validation schema default, the ORM column default, the migration, or a server-side
+    merge - and quote it. Recital 32 of the GDPR states that silence, pre-ticked boxes or inactivity
+    do not constitute consent, and GDPR Art. 94(2) carries that meaning into Art. 13(1). Distinguish
+    three cases and say which this is: a control that ships pre-checked; a controlled input whose
+    initial state is set elsewhere; and a field that is not a consent control at all, such as an
+    internal feature flag or a notification preference for content the user asked for."
+  - "Who is the sender for the purposes of this provision - is the scanned project the party sending
+    the marketing, or is it infrastructure that other people send through? A notification platform,
+    an ESP client library, an integration connector or a self-hosted CRM that exposes a campaign
+    feature is not itself doing the direct marketing; its operator's customers are, and the duty
+    falls on the person on whose behalf each communication is made. Say which the repository is, and
+    quote what it shows. Where the project is infrastructure, the useful finding is different:
+    whether it makes the compliant path available and reachable - a consent field on the recipient
+    record, an unsubscribe token in the template, a suppression check before send - not whether it
+    sent anything."
+  - Is this candidate on a code path that ships at all? Say whether the file is production code, a
+    sample or demo, a connector's example payload, a translation catalogue, a migration that a later
+    migration reverses, or documentation, and quote what shows it. Where it is a translation of a
+    string that also exists in the default locale, treat the several language copies as one fact
+    about one product rather than as several findings.
+  - "MANDATORY WHERE THE CITED LINE IS A CAPITALISED COMPONENT ELEMENT (`<MarketingOptIn />`,
+    `<PreTickedBox field=\"newsletter\" />`), and skip it where it is not: the control this
+    candidate is about IS NOT ON THE CITED LINE, and the detector could not follow the reference.
+    Layer 1 established two things and no more - that a component element carries marketing-consent
+    vocabulary in its own name or in one of its name-shaped attributes, and that a component name is
+    a reference to a definition somewhere else. OPEN THAT DEFINITION AND READ IT. Find it by the
+    import at the top of the same file, or by searching the project for the component's name as a
+    declaration rather than as a use. Then answer four things and quote the lines for each. (a) Does
+    the component render a consent control at all - a checkbox, a switch, a radio or a toggle - or
+    is it a label, a layout wrapper, a list row or a chart? Where it is not a control, dismiss the
+    candidate here and say what it renders. (b) If it is a control, what state does it ship in? Look
+    for `defaultChecked`, `checked`, `defaultValue`, `value`, an initial value in the form library's
+    `defaultValues`, and any default assigned to the prop the call site leaves unset. A control that
+    ships ticked is the Recital 32 shape and the candidate stands; one that ships unticked does not
+    present that shape at all, and the candidate is dismissed here. (c) Where the state comes from a
+    prop the call site passes, read the CALL SITE's value - that is on the cited line and it is the
+    one half layer 1 could see. (d) Which field does it bind, and is that field a marketing consent
+    or something else - a terms acceptance, a notification preference for content the user asked
+    for, or an internal flag? This question is the reason the candidate exists: layer 1 raised it
+    precisely because it could not answer, and a dismissal here is a correct outcome and not a
+    failure of the rule."
+evidence_template: "{file}:{line} is on a path this rule screens against ePrivacy Art. 13 as
+  nationally transposed - a pre-checked or default-true marketing control, a marketing message
+  template or email layout, a campaign or bulk send call, a marketing vendor's SDK named on a
+  dependency or import line, a list-subscription or suppression write, code overriding a recorded
+  opt-out, an SMS send, a recipient in the `to` position of a send, a send inside a loop, or -
+  claiming less than any of those - a capitalised component element whose own name or whose field
+  name carries marketing-consent vocabulary, where the control itself is defined in another file and
+  this detector could not open it. THAT ENUMERATION NAMES WHAT THE CLAUSES ARE AIMED AT, NOT WHAT
+  EVERY MATCHED LINE IS. Several of them match on ordinary English words - a bare `to` sharing an
+  80-character window with a person-noun, `recipient`, `recipients` - so a match may be prose rather
+  than any message path at all. Three shapes were found in real repositories: a README sentence in
+  which `to` is the English preposition ('unless you have a specific reason not to (90% of users)');
+  a row of a Markdown troubleshooting table in self-hosting documentation ('Recipient: contact the
+  TSP', where the recipient is the person signing a document and 'contact' is an instruction to a
+  human); and an API error-message string in a configuration array ('Message with the requested ID
+  has no recipients (topics or users or targets).'). None of the three is a control, a template, a
+  send, a list write or a `to` position. Read the matched line first and name which member of the
+  enumeration it is, or say it is none of them and record that; where it is none of them, stop there
+  rather than opening the Art. 13 analysis on the line. The detector cannot tell a lawful soft
+  opt-in under Art. 13(2) from a blast Art. 13 does not allow, and cannot tell direct marketing from
+  transactional mail: those questions turn on where the address came from, what the message says,
+  and whether an objection route was offered at collection and on every message. Read the path and
+  answer them"
+remediation_template: >
+  This is a candidate for review against Art. 13 of the ePrivacy Directive 2002/58/EC as transposed
+
+  into national law, not a determination about this code. What layer 1 matched is a shape - a send
+
+  path, a consent control or a marketing template. It cannot distinguish a mailing that satisfies
+  the
+
+  Art. 13(2) soft opt-in from a blast to an unfiltered contact table, and it cannot distinguish
+  direct
+
+  marketing from a password reset, because those differ in facts the source does not carry: where
+  the
+
+  address came from, what the message says, and whether the recipient was given a free and easy way
+  to
+
+  object at collection time and on every message.
+
+  Art. 13 is a directive provision: it binds
+
+  the Member States, and the rule that applies to a sender is the national implementing law of each
+
+  country whose recipients are addressed. The soft opt-in conditions differ between those national
+
+  laws, so the questions below have a common core and a country-specific edge.
+
+  Establish two facts first, because most candidates are resolved by one of them:
+
+  1. Is this direct marketing, or transactional or service content? Password resets, one-time
+     passcodes, order and delivery notices and security alerts are not direct marketing. An
+     editorial newsletter generally is - see CJEU Case C-654/23, 13 November 2025.
+  2. Is the sending party this project, or its operator's customers? A notification platform, an
+     ESP client or an integration connector is infrastructure; the duty sits with the person on
+     whose behalf each message is sent.
+  If it is marketing and this project is the sender, three engineering changes address what the rule
+
+  looked for:
+
+  - Consent state that is written AND read. Persist an opt-in per channel with a timestamp and a
+    record of what the person was shown, and make the send path select recipients from that state
+    rather than from an unfiltered contact table. A flag captured at signup but never consulted
+    before the send leaves nothing to demonstrate.
+  - Controls that start unset. Ship marketing checkboxes unchecked and boolean marketing columns
+    defaulting to false, at every layer that can supply a default - the component, the form's
+    default values, the validation schema, the ORM column and the migration. GDPR Recital 32
+    records that silence, pre-ticked boxes and inactivity do not amount to consent.
+  - An opt-out on every message, and an identifiable sender. Put a working unsubscribe link in the
+    body of every marketing template and set List-Unsubscribe and List-Unsubscribe-Post so one-click
+    unsubscribe works; make the handler write suppression state that the send path reads; keep the
+    From and Reply-To values identifying the organisation on whose behalf the message is sent. Where
+    the provider adds these only on a particular stream or setting, send marketing on that stream,
+    and remove any option that bypasses list, suppression or unsubscribe management.
+  Where the same contact details were obtained from a customer in the context of a sale and the
+
+  marketing is for that sender's own similar products or services, Art. 13(2) allows an objection-
+
+  based route instead of prior opt-in - but only where the opportunity to object was given free of
+
+  charge and easily both at collection time and on every message, and only to the extent the
+
+  applicable national transposition allows.
+data_categories:
+  - user.contact.email
+  - user.contact.phone_number
+  - user.behavior.marketing_preference
+fingerprint_spec: directory

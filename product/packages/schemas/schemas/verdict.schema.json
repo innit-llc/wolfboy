@@ -1,0 +1,2110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/verdict.schema.json",
+  "title": "Verdict (one adjudicated candidate)",
+  "$comment": "THE SHARED SHAPES ARE IMPORTED, NOT COPIED. `quote_checks[]`, here and on `refutation`, is a cross-file $ref into declarations.schema.json's `quoteCheck`, so a quotation checked for a layer-2 verdict is recorded in the same object a pillar-2 finding and a questionnaire answer are - one waterfall produces all three, and a second copy of its output shape is what this project's rules forbid. Same arrangement, and same direction, as questionnaire-answers.schema.json has with the same file: this schema depends on declarations.schema.json and never the reverse.",
+  "description": "The adjudicator's decision on a single candidate. \"violation_candidate\" is deliberately the strongest verdict available: the pipeline never concludes that the law has been broken, only that something needs review. THE QUOTATIONS IN IT ARE MECHANICALLY CHECKED from 2026-09-17: `verdict-verify` searches for every `evidence[].quote` in the file that entry names, writes the result into `quote_checks[]`, and routes a verdict whose quotation is nowhere - or is only in a DIFFERENT file - to `needs_human`, keeping the model's original word in `verdict_before_quote_check`. A checked quotation is real and correctly placed; whether it supports the verdict is reading comprehension and belongs to the refuter and to the human reader.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "finding_id",
+    "verdict",
+    "confidence",
+    "evidence",
+    "reasoning"
+  ],
+  "$defs": {
+    "standingAt": {
+      "description": "H5a stage 1 (h5a-design-2026-10-28.md section 2.2): the quotation a standing part rests on - an entry of the verdict's own `evidence[]` (`E<n>`, counted from E1, the first entry), a place of the candidate a seat kept (`P<n>`, its position in `locations`, counted from P0; product/packages/cli/src/ref-ids.ts is the one definition), or a line of the tree checked by C9's rule (`{file, line, quote}`, the line where the quote stands).",
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^(?:E[1-9][0-9]*|P(?:0|[1-9][0-9]*))$"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "line",
+            "quote"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "minLength": 1
+            },
+            "line": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "quote": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "standingRecord": {
+      "description": "H5a stage 1 (h5a-design-2026-10-28.md sections 2.1-2.5): the parts of the seat's `standing` block that passed the capture's checks S1-S6 (standing.ts `checkStanding`). A part that failed is not here; it is in `standing_set_aside[]`. The order reads `status`, `question`, `duty`, `data`, `runs`, `reaches` and `ships`; `people` and `effect` are words only; `decisive` is the place shown; `settles` places a `needs_human`. The status `exempt`, the `ships` value `documentation` and the parts `element`, `exemption`, `fact` and `same_as` belong to the record from that design on; the capture keeps each only where its own check passed (standing.ts, S2-S5 and S8: every way out of \"to fix\" carries its own quotation), and a `ships` the seat left out may come from the program's premise (`ships.premise`).",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "at"
+          ],
+          "properties": {
+            "value": {
+              "enum": [
+                "duty_unmet",
+                "duty_met",
+                "waits_on_answer",
+                "exempt"
+              ]
+            },
+            "at": {
+              "$ref": "#/$defs/standingAt"
+            }
+          }
+        },
+        "question": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "at"
+          ],
+          "properties": {
+            "value": {
+              "type": "string",
+              "minLength": 1
+            },
+            "at": {
+              "$ref": "#/$defs/standingAt"
+            }
+          }
+        },
+        "duty": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "at"
+          ],
+          "properties": {
+            "value": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^L[1-9][0-9]*$"
+              }
+            },
+            "at": {
+              "$ref": "#/$defs/standingAt"
+            }
+          }
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "at"
+          ],
+          "properties": {
+            "value": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "contact",
+                  "identifier",
+                  "content",
+                  "records_about_people",
+                  "images_or_video_of_people",
+                  "audio_of_people",
+                  "location",
+                  "biometric_template",
+                  "special_category_field",
+                  "criminal_or_violence_field",
+                  "credential",
+                  "financial",
+                  "no_personal_data"
+                ]
+              }
+            },
+            "at": {
+              "$ref": "#/$defs/standingAt"
+            }
+          }
+        },
+        "people": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "at"
+          ],
+          "properties": {
+            "value": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "account_holders",
+                  "visitors",
+                  "people_recorded",
+                  "operator_staff",
+                  "nobody"
+                ]
+              }
+            },
+            "at": {
+              "$ref": "#/$defs/standingAt"
+            }
+          }
+        },
+        "runs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "at"
+          ],
+          "properties": {
+            "value": {
+              "enum": [
+                "default",
+                "default_setting_fixes",
+                "feature_in_use",
+                "non_default_setting"
+              ]
+            },
+            "at": {
+              "$ref": "#/$defs/standingAt"
+            }
+          }
+        },
+        "reaches": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "at"
+          ],
+          "properties": {
+            "value": {
+              "enum": [
+                "third_party",
+                "anyone_on_path",
+                "other_users",
+                "readable_at_rest",
+                "operator_only",
+                "kept",
+                "not_about_data",
+                "nobody"
+              ]
+            },
+            "at": {
+              "$ref": "#/$defs/standingAt"
+            }
+          }
+        },
+        "ships": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value"
+          ],
+          "properties": {
+            "value": {
+              "enum": [
+                "product",
+                "documented_example",
+                "maker_site",
+                "documentation",
+                "development",
+                "test",
+                "depends_on_deployment"
+              ]
+            },
+            "at": {
+              "$ref": "#/$defs/standingAt"
+            },
+            "premise": {
+              "description": " Written by the capture, never by a seat: the value is the program's premise for the decisive place's file (findings.json `ships_premises`, every `because` line found at its line in the tree), taken where the seat left `ships` out, its own value was set aside, or it gave the premise's value without a quotation of its own. `value` is the premise; the manifest lines are the findings document's.",
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "file",
+                "value"
+              ],
+              "properties": {
+                "file": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "value": {
+                  "enum": [
+                    "product",
+                    "ci",
+                    "build_tooling",
+                    "development",
+                    "test",
+                    "docs_site",
+                    "documentation",
+                    "outside_artifacts",
+                    "unknown"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "decisive": {
+          "type": "string",
+          "pattern": "^(?:E[1-9][0-9]*|P(?:0|[1-9][0-9]*))$"
+        },
+        "effect": {
+          "type": "string",
+          "minLength": 1
+        },
+        "settles": {
+          "type": "string",
+          "pattern": "^(question|law_unclear|code_not_readable):.+$"
+        },
+        "element": {
+          "description": " On `duty_met` only: which part of the duty the line at `status.at` meets - an element name the rule declares in `reading_class.elements`, or at most 12 words.",
+          "type": "string",
+          "minLength": 1
+        },
+        "exemption": {
+          "description": " On `exempt` only: `basis`, an `L<n>` naming an entry of the rule's own `legal_basis_refs`, and `limb`, the exempting limb of that basis in at most 12 words. The line that shows the exempt shape is `status.at`.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "basis",
+            "limb"
+          ],
+          "properties": {
+            "basis": {
+              "type": "string",
+              "pattern": "^L[1-9][0-9]*$"
+            },
+            "limb": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "fact": {
+          "description": " On `waits_on_answer` where no question of the program's list carries the fact: the fact in at most 20 English words on one line (`words`), and the `L<n>` of the basis it concerns (`about`). The line the fact bears on is `status.at`. The report asks it as a question named in words.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "words",
+            "about"
+          ],
+          "properties": {
+            "words": {
+              "type": "string",
+              "minLength": 1
+            },
+            "about": {
+              "type": "string",
+              "pattern": "^L[1-9][0-9]*$"
+            }
+          }
+        },
+        "same_as": {
+          "description": " The line of the processing this finding was traced to, checked by C9's rule; where it is a kept place of another finding of the same rule, the report folds this finding under that one.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "line",
+            "quote"
+          ],
+          "properties": {
+            "file": {
+              "type": "string",
+              "minLength": 1
+            },
+            "line": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "quote": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "codeEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "lines",
+        "quote"
+      ],
+      "description": "One quotation of the real source, with where it was taken from. The same shape the adjudicator and the refuter both return, named once here so the two cannot drift.",
+      "properties": {
+        "file": {
+          "type": "string",
+          "description": "Path the quote was taken from, relative to the scanned tree. `verdict-verify` decides what may be opened by WHERE THE PATH RESOLVES AND WHERE ITS REAL PATH LANDS, never by how it is spelled, and refuses four things: an absolute path, a path resolving outside the tree, a path whose symbolic link leaves the tree, and a path landing under the tree's own `.legal/` directory - the last however it is written (`.legal/x`, `./.legal/x`, `a/../.legal/x`, a symlink into it, and `.LEGAL/x` on any filesystem). `.legal/` holds this run's own output, the orientation notes a model wrote and every other child's verdict file, and a quotation of that is not a quotation of the user's code. A refused path is named with its reason in the run's `files_refused[]` and its quotation cannot be confirmed."
+        },
+        "lines": {
+          "type": "string",
+          "description": "Line or line range the quote covers (e.g. \"42\" or \"42-47\"). Only the ENDPOINTS are read as declared claims. A drifted line number is the common and harmless case: the position is recovered from the text and recorded in quote_checks[].final, and the number written here is left exactly as it was, because it is the record of what was asserted."
+        },
+        "role": {
+          "enum": [
+            "element",
+            "premise",
+            "item",
+            "site",
+            "dismissal"
+          ],
+          "description": "WHAT THIS ENTRY IS FOR (design section 2, evidence rule E3 + E4 + E2; added by unit R1 on 2026-09-22 as the repair section 11.2 pre-registered when P2a failed on 3 of 8 candidates). 'element' - it answers one of the parts the rule's own question text walks, named in 'name' and declared in the rule's 'reading_class.elements'; it quotes a location this seat's own trail disposed is_the_construct or construct_but_gated, or else names in 'search' a recorded search that found one hit or more, and at most five entries carry one element name. 'premise' - it establishes that the construct is here at all, quoted from one of the strongest kinds the seat read; the rules' own words are 'the two or three strongest locations', so at most three entries carry it, on every reading class. 'item' - it is one member of the list an enumeration rule's finding IS, named in 'name' and never unnamed, one entry per item; where the rule's items ARE the matched word it quotes a location the census holds for that item under any disposition, and where they are found by reading (item_source 'reading', 'clause' or 'sub_shape', where no census holds the names to check one against) it stands on the two grounds an 'element' entry stands on - a location this trail disposed is_the_construct or construct_but_gated, or a recorded search with one hit or more named in 'search'. 'site' - it is one place a declared element was found or is missing, named in 'name' by the class of line or the route; admitted only where the rule is read per location, and only at a location this seat disposed affirmatively. 'dismissal' (the parent's decision of 2026-10-07, unit U1, amending the list of four) - it quotes a place the record's trail read and disposed not_the_construct, shown as part of why the finding does not hold; admitted only on a not_applicable verdict, only at a location a reading.read[] row of the trail disposed not_the_construct, and at most three entries carry it. The capture writes this role in for an entry that carries none and meets exactly those conditions; its quotation and its read are checked as every entry's are. OPTIONAL HERE AND REQUIRED BY THE GATE, on exactly the verdicts the requirement is about: a candidate carrying a kind census whose rule declares a reading class. Every other verdict is unchanged and every record written before this field existed stays valid. WHAT THE BOUNDS MAKE MECHANICAL: every role that quotes a location is accountable for it and bounded, so a finding quotes at most 3 + 5 x (declared elements) + (items) + 3 locations and each one is a row the seat judged affirmative, a location the census holds for that item, a search the seat recorded, or (on a not_applicable verdict only) a row the trail dismissed - 'no restatement on trail rows' is then a count rather than a judgement; anything beyond that is a reading duty the run's verifier reads and no gate claims it."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "WHICH element or item this entry answers, matched exactly. For role 'element' it is the declared element's 'name' from the rule's 'reading_class.elements'; for 'item' it is the census item token where the rule's items are the matched word (the gate checks the string is one of them) and the seat's own name for the member where they are found by reading, never empty either way; for 'site' it is a short label - the class of line, or the route. Absent for 'premise', which answers no named part."
+        },
+        "search": {
+          "type": "string",
+          "minLength": 1,
+          "description": "THE RECORDED SEARCH THIS ENTRY STANDS ON, for an entry whose location is not a kind this seat opened - role 'element', or role 'item' on a rule whose items are found by reading rather than matched as words. It is the 'for' of a row of this verdict's own reading.searched[], and that row's 'hits' must be one or more: a search that returned nothing is an answer to whether the element is there but it is not how a site was found, so it cannot carry a quotation. Absent on the other roles and on an entry quoting a location the trail disposed is_the_construct or construct_but_gated - an element entry with neither is the gap evidence-role, because it quotes a place nobody in the record opened and nothing in the record found."
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Verbatim excerpt from the actual source. Must be quoted, never paraphrased or reconstructed, so a reader can check it against the file - and so `verdict-verify` can. An ellipsis joining two real strings that are not adjacent is the commonest way this field goes wrong and it produces a string that exists nowhere; it is caught, and it invalidates the verdict."
+        }
+      }
+    },
+    "quoteCheckOutcome": {
+      "enum": [
+        "confirmed",
+        "no_evidence",
+        "repaired",
+        "parts_confirmed",
+        "invalidated"
+      ],
+      "description": "What the mechanical check did with this record. \"confirmed\": every quotation is in the file it names, at the lines it names. \"repaired\": every quotation is in the file it names and at least one line number drifted; the corrected position is in quote_checks[].final beside the declared one, and the record stands - declared positions drift and declared TEXT is usually real. \"invalidated\": at least one quotation was found nowhere, or found ONLY BY ITS FIRST LINE, or found in a DIFFERENT file from the one it names, or found in several files so that no single position could be asserted, or the record carried no evidence that its own seat requires. \"parts_confirmed\": the quotation is ELIDED - written in parts joined by an ellipsis - and EACH PART was found on its own in the file the entry names, in the order written, spread within the declared span plus 40 lines (the parts need not sit inside the declared lines), while THE QUOTATION AS WRITTEN IS IN NO FILE. What that establishes: every part is real, it is in that file, and the parts occur in that order. WHAT IT DOES NOT: the lines between the parts were never looked at, so nothing here says what they contain, and a reader opening the declared range will see text this check did not read. It is a strictly weaker claim than \"repaired\", which asserts the quotation itself is in the file, and a record takes it over \"repaired\" when any of its rows earns it. No positional bound beyond the ones already stated was added to it: two of the three shapes that motivated this word - a condition whose meaning the elided code inverts, and a construct quoted from inside a commented-out block - are unreachable by any count or distance test, and the two candidates measured 3 % and 25 % of the real admitted elisions in two recorded runs. Reading the passage is the reader's and the refuter's, and this word is what tells them there is a passage to read. \"no_evidence\": the record carried no quotation at all and its seat's contract allows that, so NOTHING WAS CHECKED - an absence, stated, and never a pass. THE THREE WRONG-FILE CASES ARE NOT WEAKER FORMS OF \"FOUND\": the waterfall searches the named file first and returns if it matches, so reaching another file at all means the text is not in the file the record names. For a child holding several files' candidates in one payload, that is the context leak, not a citation slip."
+    },
+    "readingDisposition": {
+      "enum": [
+        "is_the_construct",
+        "not_the_construct",
+        "construct_but_gated",
+        "undetermined",
+        "not_read"
+      ],
+      "description": "What one seat said about one same-kind line group. \"is_the_construct\": the line is the thing the rule is looking for. \"not_the_construct\": it is not, and `ground` says what settled that. \"construct_but_gated\": it is the construct and something stands in front of it - a consent check, a server-side branch, a flag - which is a reading a representative cannot settle for a whole group and belongs per file. \"undetermined\": the seat opened it and could not decide; A VERDICT SEAT MAY NOT TURN AN UNDETERMINED INTO A DISMISSAL (design section 3.5). \"not_read\": nobody opened it, and the row for that lives in not_read[] with its reason, not here."
+    },
+    "readingNotReadReason": {
+      "enum": [
+        "repository_answer",
+        "budget",
+        "rule_instruction",
+        "unreadable",
+        "seat_declined",
+        "not_opened",
+        "not_answered"
+      ],
+      "description": "Why a kind was not opened, from a fixed list, so that \"not read\" is a recorded fact and not an absence. \"repository_answer\": an existence-class candidate above the reading cap - the verdict rests on the premise established from the kinds that were read, on the recorded repository-wide search, and on the catalogue, and IT MAY THEN NEVER BE `not_applicable`. \"budget\": a planned reader did not return within the run's budget, and the verdict is `needs_human` naming the kind. \"rule_instruction\": the rule's own adjudication text told the seat not to read them all - eu-dsa-002 Q3's \"say plainly which parts of the list you did not read\" now has a field to say it in. \"unreadable\": a file the seat could not open; it bars `not_applicable` as `seat_declined` does. \"seat_declined\": THE SEAT WAS HANDED THIS UNIT AND CHOSE NOT TO OPEN IT, in its own sentence in `note` - written by the assembler from the seat's own `declined[]` and by nothing else. It was added by unit R1 from mechanism finding M6 of the U4 verification, where a seat handed 70 units opened 7 and accounted for the other 63 in prose: the trail had no word for that state, so 63 honest sentences became 63 partition gaps. IT IS NOT AN EXCUSE AND NOT AN ESCAPE HATCH - a unit nobody opened is a unit nobody opened, so a `seat_declined` row bars `not_applicable` exactly as `repository_answer` does, and a dispatched unit with neither a read row nor a `declined[]` entry is still a gap: silence is a gap. \"not_opened\": A LOCATION THE SEAT ANSWERED AS OPENED AND ITS OWN TRANSCRIPT SHOWS IT DID NOT OPEN - no Read covering the line, and no excerpt of it in a payload the seat Read whole; at most it saw the one line, as a search result shows it. Written by the assembler from the capture's `unopened` rows and by nothing else, with the program's note; it bars `not_applicable` exactly as `seat_declined` does, and the person is told the place was not checked."
+    },
+    "readingCoverGround": {
+      "enum": [
+        "translation_string",
+        "identifier_or_uri_literal",
+        "type_definition",
+        "generated_or_fixture_path",
+        "documentation_text",
+        "import_specifier"
+      ],
+      "description": "THE SIX GROUNDS A COVER MAY REST ON, and no seventh (design annex section 3.5, the safety line). A kind's members may be covered by the reading of its representative only on a ground INTRINSIC TO THE SHAPE: a translation string, an identifier or URI literal, a type definition, a generated or fixture path, documentation text, or an import specifier of one package. A ground that depends on a CALL PATH OR A GATE - consent recorded, dead code, server-side only, not shipped - is not here and never will be: it is per file, so the seat opens every member's file at least once, or disposes those members undetermined and says so. This is a value and not prose because a gate has to read it; the seat's own words about what settled the one row it opened are the free-text 'ground' beside it."
+    },
+    "readingReadRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "file",
+        "lines",
+        "quote",
+        "disposition"
+      ],
+      "description": "ONE KIND THE SEAT OPENED, with the verbatim line it opened it at. The quotation is checked by `verdict-verify` exactly as evidence[].quote is, so the trail of a verdict holds at least as many checked quotes as there are kinds in read[] - which is the evidence floor the whole design turns on: today a split candidate records a median of 2 quotes per part and 4.5 per 100 locations, with no record at all of the other 95.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1,
+          "description": "THE READING UNIT THIS ROW IS ABOUT, NAMED BY ITS POSITION: the group's index in the candidate's `kinds.groups` as a decimal string, or `L<index>` into `locations[]` where the plan reads by locations. IT IS THE INDEX AND NOT THE KEY, because `KindGroup.key` IS NOT UNIQUE - a location whose evidence is not its own line (a value hop, a fold, an absorbed enclosing construct, a multi-line span, a corroboration from another file) is a group of ONE under the same key, since no representative can be read for it. A record keyed on the key would merge two groups and pass a verdict that read one of them."
+        },
+        "sub_shape": {
+          "type": "string",
+          "description": "Present where the seat disposed at the sub-shape level rather than at the kind's: the L1s sub-shape key inside the kind. A kind whose sub-shapes are disposed separately carries one row per sub-shape and each one is a line the seat opened."
+        },
+        "file": {
+          "type": "string",
+          "description": "The file the opened line is in, relative to the scanned tree. Refused on the same terms evidence[].file is - no absolute path, nothing outside the tree, nothing under the tree's own .legal/."
+        },
+        "lines": {
+          "type": "string",
+          "description": "Line or line range the quotation covers, on the same terms as evidence[].lines: only the endpoints are read as declared claims and a drifted number is recovered from the text rather than corrected in place."
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Verbatim excerpt of the line that was opened. A row without one is a reading nobody can check, and the coverage gate refuses it."
+        },
+        "disposition": {
+          "$ref": "#/$defs/readingDisposition"
+        },
+        "ground": {
+          "type": "string",
+          "description": "What settled the disposition, in the seat's own words. A ground that is INTRINSIC TO THE SHAPE - a translation entry, an identifier or URI literal, a type declaration, a fixture or generated path, documentation, an import specifier of one package - is what allows the kind's other members to be covered by this reading. A ground that depends on a call path or a gate is per file and covers nothing (design section 3.5)."
+        },
+        "kind_as_written": {
+          "type": "string",
+          "description": "THE SEAT'S OWN SPELLING OF `kind`, where the assembler had to normalise it, and absent where the two agree. `kind` is matched as an exact string, and two seats of the U4 verification wrote something else: eleven rows labelled \"0 (/square+square, declaration)\" where every other seat wrote the bare key, which matched nothing and showed `read: 0` for a seat that had disposed all eleven units, and a refuter naming many units at once in one comma-joined string. The assembler now recovers those two shapes - a key followed by a space or a parenthesis, and a comma-joined list whose every part is a key - and refuses anything else with the row printed. What the seat wrote is kept HERE rather than in `kind`, so the record carries both the census's unit and the seat's own bytes and never presents one as the other."
+        },
+        "also_read_by_reader": {
+          "type": "boolean",
+          "description": "This row is the VERDICT SEAT re-opening a unit one of its readers had already disposed. The row is kept - the seat is entitled to look, and its reading is its own record - and the arithmetic counts the location ONCE, at the reader's row. Without this, one run's `eu-dsr-002` record \"accounts for 106 of this candidate's 104 matched location(s)\" and fails the every-location-has-a-trail condition while nothing at all went unread (U4 finding M4)."
+        },
+        "cover_ground": {
+          "$ref": "#/$defs/readingCoverGround",
+          "description": "Which of the six intrinsic grounds THIS KIND'S OTHER MEMBERS may be covered on, where the seat means to cover them. Absent where it does not, and a covered row assembled from a read row that names none carries no ground at all - the CLI does not turn the prose that settled one representative into a claim about members nobody opened."
+        },
+        "place": {
+          "type": "string",
+          "pattern": "^P(?:0|[1-9][0-9]*)$",
+          "description": "Build unit F3 (full-read design 1.5): the place this row decides, by its payload id; `kind` is the plan's `L<n>` for the same location. Present only on a row a place seat wrote."
+        },
+        "data": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "email",
+              "name",
+              "user_id",
+              "ip_or_device",
+              "user_content",
+              "other_personal"
+            ]
+          },
+          "description": "Build unit F3 (full-read design 1.5): the personal data that reach what the code at this place does, in the six words; [] on not_the_construct (W0, C3)."
+        },
+        "item": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Build unit F3: the item this place is, where the rule's items are found by reading (C3)."
+        },
+        "beyond": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "line",
+            "quote"
+          ],
+          "description": "Build unit F3 (full-read design 1.5, C9): the one line outside the place's window a decision or its data rests on - the send a supporting line serves, the helper's emitting line, the vendor call a first-party call reaches. The seat Read that line; `quote` is a verbatim part of it.",
+          "properties": {
+            "file": {
+              "type": "string",
+              "minLength": 1
+            },
+            "line": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "quote": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "read_basis": {
+          "enum": [
+            "window",
+            "fact",
+            "data_summary"
+          ],
+          "description": "Build unit F3: what the place was given - its own window, or a fact line the program tested (full-read design 1.3); `data_summary`: a data summary the program verified (build unit F6), written by no capture yet."
+        },
+        "line_declared": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Build unit F3 (C5): the seat's own `line` where its quote stood on another line of the place's window; `lines` is the line that holds it."
+        },
+        "gate": {
+          "enum": [
+            "development_or_test",
+            "setting_changed_from_default",
+            "feature_or_integration_in_use",
+            "after_consent_or_permission",
+            "other"
+          ],
+          "description": "On a row decided construct_but_gated, what the gate in front of the place is, from a closed list (product/packages/cli/src/reading.ts PLACE_GATE_KINDS): the code runs only in development or in tests; only when the person or operator changes a setting from its default (or gives a value to a setting that has none); only when a feature or integration is in use; only after a consent or permission check; or other, said in `gate_words`. Absent on every other row, and on a gated row written by an earlier version. Only `development_or_test` keeps a place out of a severity raise (severity-at-place.ts); `ground` stays the seat's free text."
+        },
+        "gate_words": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The gate in the seat's own words, where `gate` is `other`; absent elsewhere."
+        },
+        "premises": {
+          "$ref": "#/$defs/placePremises",
+          "description": "Build unit F5 (full-read design section 4): what this place's row rests on, written by the capture; never by a seat."
+        },
+        "carried_from": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["scan_id", "finding_id"],
+          "properties": {
+            "scan_id": { "type": "string", "minLength": 1 },
+            "finding_id": { "type": "string", "minLength": 1 }
+          },
+          "description": "Build unit F5 M3 (full-read design section 4): this place's row was not read in this run. It is the row of the earlier run named here, every premise of which this run reproduced, re-based to where the place's window stands now. Carried, not re-verified; written by the pre-launch step, never by a seat."
+        }
+      }
+    },
+    "readingCoveredRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "members",
+        "by",
+        "disposition",
+        "ground"
+      ],
+      "description": "THE MEMBERS OF ONE KIND SETTLED BY THE READING OF ITS OWN REPRESENTATIVE. `covered` is a property of a MEMBER and never of a kind: a row is admitted only for a kind that is in read[], so a finding can never rest on one line read and everything else covered by it. Independent verification of the design required exactly this, because the first form - a covered row keyed by kind, with nothing requiring the kind to have been read - was a way back to the one-line finding.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The reading unit, named by its position exactly as `readingReadRow.kind` is. IT MUST ALSO APPEAR IN read[], and the gate refuses the verdict if it does not."
+        },
+        "members": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "How many of this kind's matched locations were settled by the representative rather than opened. Opened plus covered is the kind's whole member count, and the gate checks that arithmetic per kind."
+        },
+        "by": {
+          "type": "string",
+          "description": "The representative this rests on, as file:lines - the row in read[] that carries the quotation."
+        },
+        "disposition": {
+          "$ref": "#/$defs/readingDisposition"
+        },
+        "ground": {
+          "$ref": "#/$defs/readingCoverGround",
+          "description": "The shape-intrinsic ground this cover rests on, carried from the representative's 'cover_ground'. REQUIRED SINCE 2026-09-22 (unit R1, D3(e)) and one of the six, never free text and never absent: a cover is the only row in the trail where members nobody opened are settled, and a row that settles members without saying by what is the one row a reader of the finding cannot check. The gate reports a missing ground as 'cover-ground-missing' and a ground outside the six as 'covered-ground'. Before that date the field was optional and the assembler wrote it only where the representative named a cover ground; records written under that contract are read as they were written: what settles members nobody opened is what the shape is, and a ground that depends on a call path or a gate is per file (design annex section 3.5)."
+        }
+      }
+    },
+    "readingNotReadRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "members",
+        "reason"
+      ],
+      "description": "ONE KIND NOBODY OPENED, WITH THE REASON. This is the field the schemas did not have: `eu-dsa-002` Q3 orders a seat to \"say plainly which parts of the list you did not read\", verdict.schema.json was additionalProperties:false, and the only place to say it was `reasoning` (rule-inventory.md section 11 item 7).",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The reading unit, named by its position exactly as `readingReadRow.kind` is."
+        },
+        "members": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "How many matched locations nobody opened. It equals the census's own member count for this unit, and the gate refuses a row that says otherwise - the count of what was not read is the one number this record exists to carry. On a row that carries `locations` it counts the locations this row accounts for, and the gate adds it to the unit's opened and covered locations, which must equal the census's count."
+        },
+        "reason": {
+          "$ref": "#/$defs/readingNotReadReason"
+        },
+        "note": {
+          "type": "string",
+          "description": "Anything the reason alone does not say, in the seat's or the orchestrator's words."
+        },
+        "locations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "WHERE THE MEMBERS NOBODY READ ARE, on the one `not_read` row a unit that was opened may carry. Reason `seat_declined` (the seat read the unit's representative and declined these members in its own sentence, `note`) or `not_opened`; an opened unit carries at most one row of each. Each entry is \"file:line\" of a member of this unit. Written by the assembler from the seat's `declined[]` row of member form or from the capture's `unopened` rows; a row without it is a whole unit nobody opened."
+        }
+      }
+    },
+    "readingDeclinedRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "note"
+      ],
+      "description": "ONE UNIT THE VERDICT SEAT WAS HANDED AND CHOSE NOT TO OPEN, with its own sentence for why. A row here is not a lighter kind of reading: it bars `not_applicable` exactly as an unread tail does, and a unit with neither a read row nor an entry here is still a gap.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The reading unit, named by its position exactly as `readingReadRow.kind` is - the key as it was handed, with nothing appended."
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Why this unit was not opened, in the seat's own words. The assembler carries it onto the not_read row, and the coverage gate refuses a `seat_declined` row that carries none: a reason a seat states from its own reading is its sentence or it is not a reason."
+        },
+        "kind_as_written": {
+          "type": "string",
+          "description": "As on a read row: the seat's own spelling, where the assembler had to normalise it."
+        },
+        "members": {
+          "oneOf": [
+            {
+              "const": "rest"
+            },
+            {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          ],
+          "description": "MEMBERS OF A UNIT THE SEAT OPENED AND DID NOT READ, exactly as its decision's `decline` named them: \"rest\" (every member it did not open) or member ids (\"12/m3\"). Absent where the whole unit is declined. The assembler writes the `not_read` row with the members' `locations` from it."
+        }
+      }
+    },
+    "readingSearchRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "for",
+        "pattern",
+        "hits"
+      ],
+      "description": "ONE REPOSITORY-WIDE SEARCH THE SEAT RAN, RECORDED WHETHER OR NOT IT FOUND ANYTHING. A search that returned nothing is recorded and never omitted: for an existence-class candidate the answer to the rule's question comes from this search rather than from reading every kind, so a search that is not written down leaves the verdict resting on nothing a reader can check.",
+      "properties": {
+        "for": {
+          "type": "string",
+          "description": "The element of the duty this search was for - one entry per element the rule walks."
+        },
+        "pattern": {
+          "type": "string",
+          "description": "What was searched for, verbatim."
+        },
+        "tool": {
+          "type": "string",
+          "enum": [
+            "grep",
+            "glob"
+          ],
+          "description": "WHICH TOOL RAN IT, and therefore how a later run replays it: 'grep' searches file CONTENT with a regular expression, 'glob' matches file PATHS with a path pattern. Write it on every search row. A row that omits it is replayed as a regular expression, and a path glob written without it - '**/pages/**/export*' - does not compile as one, so the verdict it supports is never carried forward (refused, never guessed): that is the cost of leaving this out, and it is adjudication, never a stale answer."
+        },
+        "paths": {
+          "type": "string",
+          "description": "Where it was searched, where the seat narrowed it."
+        },
+        "hits": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many the search returned. 0 is a result and is recorded as one."
+        },
+        "hit_hash": {
+          "type": "string",
+          "description": "A digest over the hit set, so that a later run can tell an unchanged search from one that now returns something else (design section 9, unit H's rests_on)."
+        }
+      }
+    },
+    "reading": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "census",
+        "read",
+        "covered",
+        "not_read"
+      ],
+      "description": "EVERY MATCHED LINE OF THIS CANDIDATE, CLASSIFIED: read, covered by a representative that was read, or not read with a reason. THE GATE RULE, in one sentence: every kind of the census is in read[] with its representative's verified quote or in not_read[] with a reason, and a covered[] row is admitted only for a kind that is in read[]. `verdict-verify --findings` checks it and exits 5 on a gap.",
+      "properties": {
+        "census": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "spec",
+            "level",
+            "unit",
+            "kinds_total",
+            "units_total",
+            "locations_total",
+            "hash"
+          ],
+          "description": "WHAT THIS VERDICT RESTS ON. `hash` is a digest over the census rows - keys, member lists and sub-shape counts - re-derivable by the CLI with no model, so a new kind (a new vendor, a new store, a new route) changes it and the candidate is adjudicated again rather than carried forward. It is also what ties this record to findings.json: the member list of every kind is in the document under kinds[].members, and the log and the document together answer, for every location, which kind covered it and which representative was read.",
+          "properties": {
+            "spec": {
+              "type": "string",
+              "description": "The census specification the rows were built to, as layer 1 spelled it."
+            },
+            "level": {
+              "type": "string",
+              "description": "The clustering level the key is at - L2 for the product's own key."
+            },
+            "kinds_total": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "How many same-kind line groups the census holds, whether or not they are the reading unit. It is the number the corpus-wide measurement of 2026-09-17 counted at the product's own key."
+            },
+            "locations_total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "unit": {
+              "enum": [
+                "kind",
+                "location"
+              ],
+              "description": "THE READING UNIT THE PLAN CHOSE. `kind` for a rule read as one question for the installation, as a list to be enumerated, or as a mixture - the seat reads same-kind line groups. `location` for a rule each of whose matched lines is separately a possible violation (baseline-006, exposure-surface-004, and every rule that declares no class), where the unit is the line and a unit is a group of one whose representative is itself. The rows below account for whichever this says; nothing else in this object changes between the two."
+            },
+            "units_total": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "How many reading units the rows below account for - the same-kind line groups where `unit` is `kind`, the matched locations where it is `location`. It is what the 70-unit bound is counted in."
+            }
+          }
+        },
+        "read": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/readingReadRow"
+          },
+          "description": "Every kind the seats opened, one row per kind - or per sub-shape where the disposition was taken at that level."
+        },
+        "covered": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/readingCoveredRow"
+          }
+        },
+        "not_read": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/readingNotReadRow"
+          }
+        },
+        "searched": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/readingSearchRow"
+          }
+        },
+        "declined": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/readingDeclinedRow"
+          },
+          "description": "THE ONE LIST ABOUT UNREAD UNITS THAT THE SEAT ITSELF WRITES. A seat may not write not_read[] - the reasons on that list are the plan's - so a unit it was handed and judged not worth opening had nowhere to go and became a gap. Each entry becomes a not_read row with the reason `seat_declined` and the seat's own sentence; the list itself is carried through verbatim beside them, because the row is the assembler's restatement and this is the seat's original."
+        },
+        "unopened": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "kind",
+              "file",
+              "lines",
+              "member"
+            ],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sub_shape": {
+                "type": "string"
+              },
+              "file": {
+                "type": "string",
+                "minLength": 1
+              },
+              "lines": {
+                "type": "string",
+                "minLength": 1
+              },
+              "member": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "description": "WRITTEN BY THE CAPTURE, NEVER BY A SEAT: each row a seat answered as opened - its unit, a sub-shape, an `also` member, at the id's line or its `at` - whose location its own transcript does not show it opened: no Read covering the line, and no excerpt of it in a payload the seat Read whole. `file` and `lines` are where the row would have stood, `member` the member of the unit it accounts for. The assembler turns them into a `not_read` row with the reason `not_opened`; the list is carried beside it, as `declined` is."
+        },
+        "quote_checks": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.invalid/product/declarations.schema.json#/$defs/quoteCheck"
+          },
+          "description": "Written by `verdict-verify`, never by a model: one row per read[] entry, in order, checking its quotation exactly as the record's own quote_checks[] checks evidence[]. Declared here on 2026-09-25 (fix/quote-elision): the tool has written it since 2026-09-21, and a record annotated with a reading trail did not validate against this schema until it was declared."
+        },
+        "quote_check_outcome": {
+          "$ref": "#/$defs/quoteCheckOutcome",
+          "description": "Written by `verdict-verify`: the weakest outcome of the rows in quote_checks, as the record's own quote_check_outcome is of its rows."
+        }
+      }
+    },
+    "seatDisposition": {
+      "description": "THE FOUR WORDS A SEAT DISPOSES OF A KIND WITH, wherever a seat writes one: the adjudicator's and the reader's `reading.read[]` rows (adjudicator-reply.schema.json refers here) and the refuter's `reading` rows (`refutationReadRow`, `refutationCoveredRow`). `readingDisposition` has a fifth, `not_read`, which only the CLI writes, for a kind nobody opened; a seat's row is a kind the seat opened. Moved here from adjudicator-reply.schema.json on 2026-09-29, so that the refuter's reading, which the log keeps, is defined in the log's own schema with no reference into a reply schema.",
+      "enum": [
+        "is_the_construct",
+        "not_the_construct",
+        "construct_but_gated",
+        "undetermined"
+      ]
+    },
+    "seatSearchRow": {
+      "description": "A `searched[]` row as a seat writes it: `readingSearchRow` without `hit_hash`, which the replay writes. `tool` is optional here because the refuter's rows refer here too; the adjudicator's `searched[]` (adjudicator-reply.schema.json) requires it. Moved here from adjudicator-reply.schema.json on 2026-09-29, with `seatDisposition`.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "for",
+        "pattern",
+        "hits"
+      ],
+      "properties": {
+        "for": {
+          "$ref": "#/$defs/readingSearchRow/properties/for"
+        },
+        "pattern": {
+          "$ref": "#/$defs/readingSearchRow/properties/pattern"
+        },
+        "tool": {
+          "$ref": "#/$defs/readingSearchRow/properties/tool"
+        },
+        "paths": {
+          "$ref": "#/$defs/readingSearchRow/properties/paths"
+        },
+        "hits": {
+          "$ref": "#/$defs/readingSearchRow/properties/hits"
+        }
+      }
+    },
+    "refutationReading": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "THE REFUTER'S READING - ONE DEFINITION FOR THE CAPTURE AND THE LOG. refuter-reply.schema.json's `reading`, which `verdict-capture` holds a refuter's answer to, is a `$ref` to this node, and the log keeps the block under `refutation.reading` by the same node, so a reading the capture accepts cannot fail the log's schema. Until that date there were two copies: the capture's, whose rows are the ones legal-refuter.md's Output gives since relay item 6 (2026-09-25: `disposition` and `cover_ground` on a read row, a `ground` on a covered row), and this node's, written by relay item 5 (2026-09-24) from the Output of the day before, which asked for neither. Live run 2 (2026-09-29) met the difference: every seat had returned, and step 6 refused the report because 9 of its 80 refutations broke this node 263 times. The shape is legal-refuter.md's Output: `read`, `covered`, `not_read` and `searched`, each optional, because \"an empty `reading` is honest where you worked from the candidate's own locations alone\". The quote check's annotations on this block are not part of the record: assemble-report takes them off before the log is written, as it does on the verdict's own reading.",
+      "properties": {
+        "read": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/refutationReadRow"
+          }
+        },
+        "covered": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/refutationCoveredRow"
+          }
+        },
+        "not_read": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/readingNotReadRow"
+          }
+        },
+        "searched": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/seatSearchRow"
+          }
+        }
+      }
+    },
+    "refutationReadRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "file",
+        "lines",
+        "quote"
+      ],
+      "description": "One kind the refuter opened, with its quotation, and where the refuter gives them its `ground`, `disposition` and `cover_ground` (legal-refuter.md Output). THE DISPOSITION IS THE REFUTER'S OWN WORD FOR THE LINE GROUP IT OPENED - the construct the rule looks for (`is_the_construct`), not it (`not_the_construct`), the construct behind a gate (`construct_but_gated`), or not told (`undetermined`) - and `cover_ground` names which of the six shape-intrinsic grounds the kind's other members may be covered on, the ground its `covered[]` row for that kind rests on. Both are the refuter's record of its own reading and nothing more: the refutation's reading is not coverage-checked, nothing counts them, and they do not enter the verdict's own `reading` block, which is assembled from the adjudicator's and the readers' rows. The quotation is checked against the file exactly as evidence[] is. Until 2026-09-29 this row had no `sub_shape`, `disposition` or `cover_ground` while the capture accepted all three.",
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/readingReadRow/properties/kind"
+        },
+        "sub_shape": {
+          "$ref": "#/$defs/readingReadRow/properties/sub_shape"
+        },
+        "file": {
+          "$ref": "#/$defs/readingReadRow/properties/file"
+        },
+        "lines": {
+          "$ref": "#/$defs/readingReadRow/properties/lines"
+        },
+        "quote": {
+          "$ref": "#/$defs/readingReadRow/properties/quote"
+        },
+        "ground": {
+          "$ref": "#/$defs/readingReadRow/properties/ground"
+        },
+        "disposition": {
+          "$ref": "#/$defs/seatDisposition"
+        },
+        "cover_ground": {
+          "$ref": "#/$defs/readingReadRow/properties/cover_ground"
+        }
+      }
+    },
+    "refutationCoveredRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "members",
+        "by"
+      ],
+      "description": "Members the refuter took as covered by the representative it read (legal-refuter.md Output), with its `disposition` and the shape-intrinsic `ground` where it gives them. Not coverage-checked. Until 2026-09-29 this row had no `disposition` or `ground` and took `members` from 0, while the capture accepted both fields and took `members` from 1.",
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/readingCoveredRow/properties/kind"
+        },
+        "members": {
+          "$ref": "#/$defs/readingCoveredRow/properties/members"
+        },
+        "by": {
+          "$ref": "#/$defs/readingCoveredRow/properties/by"
+        },
+        "disposition": {
+          "$ref": "#/$defs/seatDisposition"
+        },
+        "ground": {
+          "$ref": "#/$defs/readingCoveredRow/properties/ground"
+        }
+      }
+    },
+    "restsOnFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path"
+      ],
+      "description": "One file a seat opened, as a path and a digest. The SEAT WRITES NEITHER: it writes `reading.read[].file` and `evidence[].file`, and the CLI's assembly step computes the digest from the tree. Asking a model for a hash is asking it to assert something it cannot compute.",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Path relative to the scanned tree, exactly as the seat's row wrote it. A file with the same content at a NEW path is a changed premise, not an unchanged one: the seat's rows, the quotations in evidence[] and the audit trail all name the old path, and a verdict carried onto a path that no longer exists is a verdict nobody can check."
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "sha256 over the file's bytes when the block was written. Absent only where the file could not be read, which makes the block incomplete."
+        },
+        "missing": {
+          "const": true,
+          "description": "The path named no readable file when the block was written."
+        }
+      }
+    },
+    "restsOnSearch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "for",
+        "pattern",
+        "scope",
+        "flags",
+        "hits"
+      ],
+      "description": "One search a seat ran, made replayable. The seat writes `for`, `pattern`, `paths` and `hits` in its `reading.searched[]` row; `scope`, `flags` and `hit_hash` are the CLI's, resolved ONCE when the block is written so that a later run replays a decision rather than re-parsing the seat's prose.",
+      "properties": {
+        "for": {
+          "type": "string",
+          "description": "The element of the duty this search was for, in the seat's words. Carried for a reader; never compared."
+        },
+        "pattern": {
+          "type": "string",
+          "description": "The pattern the seat wrote, verbatim. Part of the search's identity."
+        },
+        "tool": {
+          "type": "string",
+          "enum": [
+            "grep",
+            "glob"
+          ],
+          "description": "Which tool the seat's row said ran it, copied here because it decides the replay: 'glob' replays over the tree's file PATHS with the scanner's own glob matcher, 'grep' and an absent field over file CONTENT with a regular expression."
+        },
+        "paths": {
+          "type": "string",
+          "description": "The seat's own words about where it searched. Carried for a reader; the machine reads `scope`."
+        },
+        "scope": {
+          "type": "string",
+          "description": "THE RESOLVED SCOPE, and the only thing a replay reads: the empty string is the whole tree, anything else a path relative to it. A prose `paths` that resolves to no path in the tree becomes the whole tree, which is the wider reading and therefore the one that cannot hide a change."
+        },
+        "flags": {
+          "type": "string",
+          "description": "Regular-expression flags the replay uses, resolved with `scope` from the seat's prose."
+        },
+        "hits": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "How many lines the CLI's replay matched when the block was written. 0 is a result and is recorded as one."
+        },
+        "seat_hits": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "The seat's own count, where it recorded one. Carried so that a disagreement between the seat's tool and this replay is visible; never compared."
+        },
+        "hit_hash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "sha256 over the sorted hit set, each hit the file path and the FOLDED line. A multiset, so a second copy of a line that already matched is a change; position-free, so the same line one row further down is not."
+        },
+        "unreplayable": {
+          "type": "string",
+          "description": "Why this row carries no `hit_hash`. Its presence makes the block incomplete, and an incomplete block is never carried forward."
+        },
+        "dialect": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "C2-4: where the pattern holds a construct the host's search (ripgrep) and the replay read differently on some characters - `\\w`, `\\d`, `\\s`, `\\b`, case-insensitive matching (outside ASCII), `.`, `$`, `^`, a negated class (at a carriage return, U+2028, U+2029, a byte-order mark, an undecodable byte, a character outside the Basic Multilingual Plane) - sha256 over every line of the scope that holds such a character (in a search across lines, every such file whole). A later run whose digest differs reads again what rests on the search: a line the two may read differently was added or changed, and no host is there to say what it would return. Absent where the pattern reads alike on every line; a construct the two read differently on any text makes the row `unreplayable` instead."
+        },
+        "glob": {
+          "type": "string",
+          "description": " The seat's Grep `glob`, verbatim. The replay reads it piece by piece as ripgrep's overrides do, or hands it to the host's engine (`engine`). Absent where the search named none, and on every row written before the capture kept it."
+        },
+        "type": {
+          "type": "string",
+          "description": " The seat's Grep `type` (a ripgrep file type), verbatim. Only the host's engine replays it."
+        },
+        "input": {
+          "type": "object",
+          "description": " The host call's whole input, every key the seat passed, as its transcript holds it. A replay reads the row only where it understands every key and value here; any other makes the search unreplayable."
+        },
+        "engine": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path",
+            "version"
+          ],
+          "description": " The host's own search engine (the ripgrep Claude Code ships) that replayed this search at capture. Wherever that engine is found, every Grep and Glob that holds the host call's input and searches a path the tree holds is replayed by it, and the row names it where its answer reproduces the host's result (one that differs, or a run that fails, leaves the row unreplayable). Absent where no engine was found - the row then stands only on today's replay, and only where that replay searches at least every file the host's search could - and on every row with no `input`. A premise: a later run replays the row with this engine alone, and one whose engine has another path or version, or that has none, reads the place again.",
+          "properties": {
+            "path": {
+              "type": "string",
+              "description": "The real path of the Claude Code executable that ran as ripgrep."
+            },
+            "version": {
+              "type": "string",
+              "description": "Its whole `--version` text, as ripgrep printed it."
+            }
+          }
+        }
+      }
+    },
+    "answerPremises": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "spec",
+        "fold",
+        "files",
+        "searches",
+        "complete"
+      ],
+      "description": "VA-5: WHAT AN ANSWER SEAT'S ANSWER RESTS ON BEYOND ITS PLACES, written by the capture and never by a seat. A later run carries the answer only where every place is carried, `fold` equals the digest of the fold it would hand a new answer seat over the carried places, every file is unchanged and every search replays to the same hits (and the same `dialect`); otherwise one new answer seat runs over the carried places. A block that is not `complete` is never carried.",
+      "properties": {
+        "spec": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fold": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "sha256 of the fold the program lays out over the per-place table, without what names the run: the finding id, the table's path, the readers' account, and which seat or earlier scan a row came from. Every place's decision, data, item and quote at its file and line, and the counts, remain."
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The model the answer seat ran on, as its launch entry named it (written by the capture). Compared with the model an answer seat of this candidate would run on now; absent on premises written before, and then the answer is given again over the carried places."
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/restsOnFile"
+          },
+          "description": "Every file of the tree the answer seat Read (its own transcript), outside the fold and `.legal/`."
+        },
+        "searches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/restsOnSearch"
+          },
+          "description": "Every search the answer seat ran (its own transcript), compared with the host's result at capture and replayed in a later run."
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "incomplete": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "restsOnAnswer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rule_id",
+        "question",
+        "digest",
+        "source"
+      ],
+      "description": "ONE PER-RULE QUESTION THE DECLARATION SETTLED, and a premise every verdict of that rule rests on. The scan settles the fact once, from the profile and the developer's own declarations - never from source vocabulary - and writes it into findings.json's `per_rule_applicability`; the assembly step (`verdict-reading --assemble-into --tree --bundle`) attaches that rule's rows to each of its verdicts, and `adjudicate --previous` compares them as the premise kind `answers`, straight after the bundle's version. A verdict of a rule this run settles no answer for carries no `answers` array at all - absent and empty would be two spellings of one fact.",
+      "properties": {
+        "rule_id": {
+          "type": "string"
+        },
+        "question": {
+          "type": "string",
+          "description": "The question F asked, verbatim. With `rule_id` it is the row's identity."
+        },
+        "digest": {
+          "type": "string",
+          "description": "A digest over the answer and its source: what changes when the answer changes."
+        },
+        "source": {
+          "type": "string",
+          "description": "Where the answer came from - the profile field or the declared document. A fact about the product is asked of the person running the scan or read from their declared documents, and this field is the record of which."
+        }
+      }
+    },
+    "placePremises": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "spec",
+        "key",
+        "rule_id",
+        "file",
+        "occurrence",
+        "reading_spec",
+        "model",
+        "window",
+        "window_start",
+        "followed",
+        "files",
+        "searches",
+        "row",
+        "complete"
+      ],
+      "description": "Build unit F5 (full-read design section 4, review R8): ONE PLACE'S PREMISES, so that a later run reads again only the places whose ground moved. The identity is content: `key` is sha256 over the rule id, the file, the matched line's folded text and its occurrence in the file - never the line number. Compared in this order, the first that differs naming the reason: `reading_spec` (a digest of the bundle version, the adjudicator's agent text, the reply schemas and the program files that write a place's payload - never a hand-kept constant), the verdict block's `rule` and `answers`, `model`, `window` (the text the program wrote for the place, without absolute line numbers), `followed` (reserved, empty), `files` (every file the seat Read outside its payload) and `searches` (every search the seat ran, from its own transcript, replayed). A block that is not `complete` is never carried; a carried row is labelled carried with the run it came from.",
+      "properties": {
+        "spec": {
+          "type": "string",
+          "minLength": 1
+        },
+        "key": {
+          "type": "string"
+        },
+        "rule_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "occurrence": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reading_spec": {
+          "type": "string"
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "effort": {
+          "description": "The effort levels the place's seat's own transcript records; null where none could be read. A place is carried only where this is exactly the adjudicator's pin.",
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "window": {
+          "type": "string"
+        },
+        "window_start": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "followed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "file",
+              "line",
+              "sha256"
+            ],
+            "properties": {
+              "file": {
+                "type": "string"
+              },
+              "line": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "sha256": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/restsOnFile"
+          }
+        },
+        "searches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/restsOnSearch"
+          }
+        },
+        "row": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "line",
+            "quote",
+            "decision",
+            "data",
+            "why",
+            "read_basis"
+          ],
+          "description": "The row the place seat wrote, as a carry re-bases it.",
+          "properties": {
+            "line": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "quote": {
+              "type": "string"
+            },
+            "decision": {
+              "type": "string"
+            },
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "why": {
+              "type": "string"
+            },
+            "read_basis": {
+              "enum": [
+                "window",
+                "fact",
+                "data_summary"
+              ]
+            },
+            "item": {
+              "type": "string"
+            },
+            "beyond": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "file",
+                "line",
+                "quote"
+              ],
+              "properties": {
+                "file": {
+                  "type": "string"
+                },
+                "line": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "quote": {
+                  "type": "string"
+                }
+              }
+            },
+            "line_declared": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "gate": {
+              "$ref": "#/$defs/readingReadRow/properties/gate"
+            },
+            "gate_words": {
+              "$ref": "#/$defs/readingReadRow/properties/gate_words"
+            }
+          }
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "incomplete": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "restsOn": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "spec",
+        "candidate",
+        "rule",
+        "bundle",
+        "files",
+        "searches",
+        "complete"
+      ],
+      "description": "WHAT THIS VERDICT RESTS ON, so that a later run can tell an untouched question from a moved one with no model (unit H; ideas.md section H calls this block `rests_on`). Every field is a digest a machine derives from the tree and the bundle: the candidate's identity keyed on CONTENT, the census, the files a seat opened, the searches it ran, the rule's own clause, the instructions the seat judged by and what it was handed beside its payload; the bundle's version is recorded and not compared. A later run re-derives all of them and carries the verdict forward, with `carried_forward_from`, only when every one is reproduced exactly. IDENTITY IS CONTENT, NEVER POSITION - the discipline `reconcile-diff.schema.json`'s $defs.contentKey states for pillar 2, applied here to pillar 1's candidates. A BLOCK THAT IS NOT `complete` IS NEVER CARRIED: a verdict may not become `no violation` by silence.",
+      "properties": {
+        "places": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/placePremises"
+          },
+          "description": "Build unit F5: a place-plan candidate's places, each with its own premises; absent on a candidate of the old form."
+        },
+        "answer": {
+          "$ref": "#/$defs/answerPremises",
+          "description": "VA-5: the answer seat's own premises, for a candidate answered after its place seats; absent elsewhere, and absent on an answer captured before them (a later run then gives that answer again)."
+        },
+        "spec": {
+          "type": "string",
+          "description": "The derivation this block was written by. A block written to another spec is a CHANGED premise, never a matching one."
+        },
+        "candidate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "content_key",
+            "locations"
+          ],
+          "description": "The candidate's identity: its rule, and every matched location as its file plus the FOLDED TEXT of the line it names, sorted and digested. The line number is deliberately absent, which is what makes a candidate that merely moved down its file the same candidate.",
+          "properties": {
+            "content_key": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "locations": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "How many matched locations went into the key."
+            }
+          }
+        },
+        "rule": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "hash"
+          ],
+          "description": "The rule's own compiled clause, digested. A rule whose clause changed re-adjudicates EVERY verdict of that rule and of no other, which is why the digest is per rule and not per bundle.",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "hash": {
+              "type": "string"
+            }
+          }
+        },
+        "bundle": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "version",
+            "md5"
+          ],
+          "description": "The bundle the verdict was given under. The per-rule digest above carries the rule, and `instructions` below carries what the version used to stand for besides.",
+          "properties": {
+            "version": {
+              "type": "string"
+            },
+            "md5": {
+              "type": "string"
+            }
+          }
+        },
+        "instructions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "digest",
+            "agent",
+            "skill",
+            "verdict_rules"
+          ],
+          "description": "WHAT THE SEAT JUDGED BY: sha256 of the adjudicator's agent text, sha256 of the legal-scan skill, and the declared version of the program's verdict rules. `digest` is over the three and is what a later run compares: a verdict judged under other instructions is given again, with the reason `instructions`.",
+          "properties": {
+            "digest": {
+              "type": "string"
+            },
+            "agent": {
+              "type": "string"
+            },
+            "skill": {
+              "type": "string"
+            },
+            "verdict_rules": {
+              "type": "string"
+            },
+            "verdict_rules_build": {
+              "type": "string",
+              "description": "The digest of the verdict-rule files of the build that judged (instructions.ts `verdict_rules_build`); not in `digest`. A verdict of a build recorded as never released, or of another build of today's version, is given again."
+            }
+          }
+        },
+        "handed": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "digest",
+            "profile_digest",
+            "packages"
+          ],
+          "description": "WHAT EVERY SEAT WAS HANDED BESIDE ITS PAYLOAD: the scan's `profile_digest` and the dependency inventory, digested without positions (rests-on.ts `handedPremiseOf`). `digest` is compared; a verdict whose seat was handed another profile or another inventory is given again, with the reason `handed`.",
+          "properties": {
+            "digest": {
+              "type": "string"
+            },
+            "profile_digest": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "packages": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "sheet": {
+              "const": false,
+              "description": "Present, false, where the briefs named no orientation sheet (rests-on.ts `handedPremiseOf`); absent where they named one."
+            },
+            "rest": {
+              "type": "string",
+              "description": "Everything in `digest` but the packages' declaration rows (rests-on.ts `handedPremiseOf`). Where it and the profile are the same and only `rows` differ, a changed package counts only for a verdict that rests on it (carry-forward.ts `packageChangeCounts`). Absent on a block written before, which carries only where `digest` is the same."
+            },
+            "rows": {
+              "type": "object",
+              "description": "Per package name, the first 16 hex of the digest of its declaration rows without positions.",
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{16}$"
+              }
+            }
+          }
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "description": "THE MODEL THE SEAT THAT GAVE THIS VERDICT RAN ON, for a candidate not read place by place - the record's `seat_model`, which the capture wrote from the seat's launch entry, moved here by the assembly. Compared after `handed`; a verdict given on another model than its seat would run on now, or recording none, is given again. Absent on a place-plan candidate, whose places and answer seat record their own."
+        },
+        "facts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "digest",
+            "fields"
+          ],
+          "description": "WHAT THE SCAN COMPUTED BEYOND THE MATCHED LINES AND HANDED THE SEAT on this candidate and its locations - every field rests-on.ts `CANDIDATE_FIELDS` / `LOCATION_FIELDS` name `facts` (`corroborated_in_project` above all, which the agent text calls a strong reason to dismiss; `corroborated_in_project_from`, `corroborated_from`, `resolved_from`'s names, `depends_on_applicability`), digested without positions (`scanFactsOf`). Compared after `handed`; absent on a block written by an earlier version, and such a verdict is given again.",
+          "properties": {
+            "digest": {
+              "type": "string"
+            },
+            "fields": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "effort": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "THE EFFORT LEVELS THE SEAT'S OWN TRANSCRIPT RECORDS, the record's `seat_effort`, moved here by the assembly. A verdict is carried only where this is exactly the adjudicator's pin; absent, it is given again."
+        },
+        "census": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "hash",
+            "content_hash"
+          ],
+          "description": "The candidate's kind census, twice. `hash` is `reading.census.hash` carried verbatim for audit - it includes each member's file and LINE, which is what ties a trail's row names to one document (design section 9) and what makes it the wrong digest for asking whether the candidate is the same candidate. `content_hash` is the one the comparison uses: the kind keys IN CENSUS ORDER with their member counts, sub-shape counts and the files their members sit in, and no line numbers. A new vendor, store or route is a new key and re-adjudicates; an import added at the top of a file is not. Absent where the candidate carries no kind census and is read location by location.",
+          "properties": {
+            "hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "content_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/restsOnFile"
+          },
+          "description": "Every file a seat opened: the union of `reading.read[].file` and `evidence[].file`, sorted."
+        },
+        "searches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/restsOnSearch"
+          },
+          "description": "Every search a seat recorded in `reading.searched[]`, made replayable."
+        },
+        "answers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/restsOnAnswer"
+          },
+          "description": "The per-rule questions the declaration settled for this verdict's rule, sorted by question: the jurisdiction question and one row per applicability precondition. Written by the assembly step, never by a seat and never by the scan, and absent where the run settles none. See $defs.restsOnAnswer."
+        },
+        "complete": {
+          "type": "boolean",
+          "description": "False where any premise could not be derived. AN INCOMPLETE BLOCK IS NEVER CARRIED FORWARD, and the coverage gate refuses a verdict that carries one."
+        },
+        "incomplete": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Why it is not complete, one sentence per reason. Absent when it is."
+        },
+        "untaken": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": "Premises the seat's own transcript could not give when the seat ended (what it opened and searched, the effort it ran at), one sentence each - the record's `seat_untaken`, moved here by the assembly. A block that holds it is NEVER CARRIED FORWARD (`previous-premises-untaken`), and it is NOT a reason the block is incomplete: the coverage gate does not refuse the run that wrote it, whose rows were held to the seat's transcript by the capture and by the assembly's transcript check. Absent where there is none."
+        }
+      }
+    },
+    "quoteCheckFailure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "row",
+        "file",
+        "lines",
+        "reason",
+        "effect"
+      ],
+      "description": "One quotation row `verdict-verify` could not confirm, and what its failure does to its record. Written by the check and never by a seat. The report states a demoted finding's reasons from these rows, and lists a withdrawn dismissal's locations from them; `quote_check_notes` keep the check's full sentences.",
+      "properties": {
+        "row": {
+          "type": "string",
+          "description": "The row relative to its record: `evidence[<n>]` or `reading.read[<n>]`."
+        },
+        "file": {
+          "type": "string",
+          "description": "The file the row names, as written (empty where it names none)."
+        },
+        "lines": {
+          "type": "string",
+          "description": "The lines the row names, as written."
+        },
+        "reason": {
+          "enum": [
+            "not_found",
+            "other_file",
+            "several_files",
+            "first_line_only",
+            "no_content",
+            "redacted"
+          ],
+          "description": "\"not_found\": the text is in no file the check could read. \"other_file\": it is not in the named file and is in one other (`found_in`). \"several_files\": it is not in the named file and is in several others. \"first_line_only\": only its first line was found. \"no_content\": the quotation carries no content of its own (punctuation, a placeholder, a bare keyword), whatever the search found. \"redacted\": it carries a redaction marker that could not be restored from the file."
+        },
+        "effect": {
+          "enum": [
+            "demotes",
+            "withdraws_dismissal"
+          ],
+          "description": "\"demotes\": the row folds into the record's outcome, which is then `invalidated`. \"withdraws_dismissal\": the row dismissed a location other than the ones the conclusion stands on (a trail row saying `not_the_construct`, or the `item` entry at exactly that location), on a record whose class keeps its finding in the report (`violation_candidate`, `upheld`, `construct_found`); only that dismissal is withdrawn, the location is reported as \"classification not confirmed\", and the record keeps its class."
+        },
+        "found_in": {
+          "type": "string",
+          "description": "For `other_file`: the file and lines the text was found in."
+        },
+        "kind": {
+          "type": "string",
+          "description": "The census kind of the dismissed location: the trail row's own `kind`, or that of the trail row an `item` entry pairs with."
+        }
+      }
+    }
+  },
+  "properties": {
+    "finding_id": {
+      "type": "string",
+      "description": "The candidate this verdict applies to."
+    },
+    "verdict": {
+      "enum": [
+        "violation_candidate",
+        "not_applicable",
+        "needs_human"
+      ],
+      "description": "\"violation_candidate\": the code may not meet the obligation and should be reviewed. \"not_applicable\": the obligation does not reach this code, or the match was incidental. \"needs_human\": the code alone does not settle it, typically because the answer depends on facts outside the repository."
+    },
+    "confidence": {
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "description": "How firmly the evidence supports the verdict. Low confidence on \"not_applicable\" is a reason to look again, not to close the finding."
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "description": "What the verdict rests on. At least one item is mandatory in every direction, including dismissals: an unevidenced verdict is an opinion, and this record has to survive an audit. `verdict-verify` enforces that rather than only stating it: a verdict reaching it with this array absent or empty is counted in its own population and invalidated, never folded into a quotation count where it would read exactly like a verdict whose every quotation confirmed.",
+      "items": {
+        "$ref": "#/$defs/codeEvidence"
+      }
+    },
+    "reasoning": {
+      "type": "string",
+      "description": "Why the evidence leads to this verdict, in terms a reviewer can disagree with."
+    },
+    "fix_available": {
+      "type": "boolean",
+      "description": "True if a concrete remediation can be offered for this finding."
+    },
+    "quote_checks": {
+      "type": "array",
+      "items": {
+        "$ref": "https://schemas.invalid/product/declarations.schema.json#/$defs/quoteCheck"
+      },
+      "description": "The mechanical check of this verdict's quotations against the real files, one row per `evidence[]` entry, in the order they appear. Written by `verdict-verify` and NEVER by the agent; absent means the check has not been run, which is not the same as passing it. A loader of this file must register declarations.schema.json in the same ajv instance first, exactly as questionnaire-answers.schema.json requires. WHAT THE ROW SAYS: `declared` is what the model wrote, copied and never corrected; `final` is where the text really is; `status` is one of five words; `fallback` true means only the quotation's FIRST line was found, which is what a real first line with an invented remainder looks like."
+    },
+    "quote_check_outcome": {
+      "$ref": "#/$defs/quoteCheckOutcome"
+    },
+    "verdict_before_quote_check": {
+      "enum": [
+        "violation_candidate",
+        "not_applicable",
+        "needs_human"
+      ],
+      "description": "The word the model wrote, kept when the check moved `verdict` to `needs_human`. Present only on an invalidated verdict. THE ORIGINAL IS NEVER OVERWRITTEN WITHOUT BEING KEPT: what the model said and what the check did are two facts, and an audit trail that carries only the second cannot show that anything was corrected. Same discipline as `quote_checks[].declared`, one level up."
+    },
+    "quote_check_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Why this verdict was invalidated, one sentence per reason, naming the evidence entry. Present on an invalidated record, and on one where a dismissal was withdrawn. Nothing is deleted and nothing is re-adjudicated by the checker: the verdict, its reasoning and its quotations are all still here, exactly as written, and deciding what to do about them belongs to the orchestrator and to the reader."
+    },
+    "quote_check_failures": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/quoteCheckFailure"
+      },
+      "description": "Written by `verdict-verify`: every quotation row it could not confirm, with the reason and its effect on this record. Absent where every row confirmed. Never written by a seat."
+    },
+    "refutation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reasoning"
+      ],
+      "description": "The second pass. A separate agent, instructed to prove the violation_candidate wrong, reports what it found. Measured 2026-07-27 on 28 held-out findings: the first pass had already dismissed the obvious cases, and this pass still overturned 3 that the first pass had marked violation_candidate — two sample-code directories and one where a consent manager gated the call. That third overturn would not stand today: since 2026-10-06 a consent check is never a ground to overturn (see `grounds`), so the same candidate would be `upheld`, naming the check. Only violation_candidate verdicts carry this object; nothing else is worth a second agent.",
+      "properties": {
+        "outcome": {
+          "enum": [
+            "upheld",
+            "overturned",
+            "needs_human"
+          ],
+          "description": "\"upheld\": the refuter tried and could not disprove it — this is what the user is shown. \"overturned\": the refuter found the ground it fails on; the finding is demoted to not_applicable and the ground is recorded. \"needs_human\": the refuter found the question genuinely open."
+        },
+        "reasoning": {
+          "type": "string",
+          "description": "What was checked and what was found, quoting source when it overturns."
+        },
+        "grounds": {
+          "enum": [
+            "non-production-code",
+            "doc-example",
+            "dead-code",
+            "server-side-context",
+            "identifier-uri",
+            "already-gated",
+            "legal-interest-not-engaged"
+          ],
+          "description": "Present only when overturned: which class of mistake the first pass made. Aggregating these is how the adjudication prompt gets better over time. `already-gated` is the call that never runs, or never reaches the third party, in any shipped build - a condition no shipped build meets, or a resource the build serves from the site itself - and NEVER a consent check: a consent check never overturns (`legal-refuter.md`). The report never lists an overturn on this ground with the clean items: it is shown, with the gate it quotes, among the answers a person has to check."
+        },
+        "agent_model": {
+          "type": "string",
+          "description": "Model that ran the refutation, recorded because the verdict's reliability depends on it and the user's own agent supplies the model."
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/codeEvidence"
+          },
+          "description": "What the refuter read, quoted. ADDED 2026-09-17, and the gap it closes is not cosmetic. `legal-refuter.md` has always asked the refuter for `evidence: [{file, lines, quote}]` and SKILL.md step 5 says to \"keep the refuter's grounds and quote as the reason\" when a candidate is overturned - and this object had no field for it, so every refuter quotation was dropped at assembly and none was ever checkable. Optional, because a log written before this date carries none - and THAT ALLOWANCE IS TRANSITIONAL, not a rule. While it stands, a refutation with no quotation is annotated `no_evidence` rather than checked, so this seat is uncheckable in substance even though the field now exists. It tightens - `evidence` becoming required for an `overturned` outcome - as soon as no log written before 2026-09-17 is in circulation; the calendar date for that is the owner's to set and is recorded as an open item, because nothing in this repository can know when the last such log is gone."
+        },
+        "quote_checks": {
+          "type": "array",
+          "items": {
+            "$ref": "https://schemas.invalid/product/declarations.schema.json#/$defs/quoteCheck"
+          },
+          "description": "The mechanical check of the refutation's own quotations, one row per `evidence[]` entry. Written by `verdict-verify`, never by the agent; absent means the check has not been run."
+        },
+        "quote_check_outcome": {
+          "$ref": "#/$defs/quoteCheckOutcome"
+        },
+        "outcome_before_quote_check": {
+          "enum": [
+            "upheld",
+            "overturned",
+            "needs_human"
+          ],
+          "description": "The word the refuter wrote, kept when the check moved `outcome` to `needs_human`. Present only on an invalidated refutation. An overturn resting on a quotation that is nowhere must not be allowed to dismiss a candidate quietly, and the record has to show both what was said and what was done about it."
+        },
+        "quote_check_notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Why this refutation was invalidated, one sentence per reason. Present only on an invalidated refutation."
+        },
+        "quote_check_failures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/quoteCheckFailure"
+          },
+          "description": "Written by `verdict-verify`: every quotation row it could not confirm, with the reason and its effect on this record. Absent where every row confirmed. Never written by a seat."
+        },
+        "reading": {
+          "$ref": "#/$defs/refutationReading",
+          "description": "THE REFUTER'S OWN RECORD OF WHAT IT OPENED, on the same terms - and THE COVERAGE GATE DOES NOT APPLY TO IT. The refuter's duty is to try to overturn the candidate on the grounds its brief lists, not to classify every kind of the census; requiring it to would make every refutation of a 670-kind candidate a second full reading. Its quotations are checked exactly as the adjudicator's are. ITS SHAPE IS legal-refuter.md's Output, `$defs.refutationReading`, THE ONE DEFINITION the capture also holds a refuter's answer to: no census, and a `disposition` only where the refuter gives one, as its own record, never required and counted by nothing."
+        }
+      }
+    },
+    "reading": {
+      "$ref": "#/$defs/reading",
+      "description": "See $defs.reading. Present only on a verdict whose candidate carries a `kinds` census."
+    },
+    "second_look": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome"
+      ],
+      "description": " THE SECOND LOOK, KEPT WITH THE VERDICT IT CHALLENGED. Written by the assembly into the log's copy of a verdict, never by a seat: the challenge seat's record (`legal-refuter` in challenge mode, `refutation/challenge-<id>.json`) as the quote check left it, less the reply-only fields, or `not_answered` where the finding was due a second look and none stood. A finding's verdict records are one set (the verdict, its `refutation`, its `second_look`; cli `verdict-set.ts`): a later run carries the set whole or not at all, so a carried verdict keeps the second look its placement rests on, and one whose second look was not answered is judged again.",
+      "properties": {
+        "outcome": {
+          "enum": [
+            "upheld",
+            "overturned",
+            "needs_human",
+            "not_answered"
+          ],
+          "description": "What the second look returned: `upheld` (the first review's reason for not counting the finding stands, or the second review's, where the look checks its overturn on a location ground), `overturned` (it does not: the finding is one to fix after all), `needs_human` (it could not settle it; also what the quote check leaves of one whose quotation was not found), or `not_answered` (the finding was due a second look and no answer stood)."
+        },
+        "reasoning": { "$ref": "#/properties/refutation/properties/reasoning" },
+        "grounds": {
+          "enum": [
+            "duty-not-met",
+            "not-exempt",
+            "ships-after-all",
+            "duty-arises-there",
+            "applies-after-all"
+          ],
+          "description": "Present only on `overturned`: which of the first review's claims the second look found wrong, or (`duty-arises-there`) that the second review's overturn on a location ground does not take the rule's duty away at that line, or (`applies-after-all`) that a high finding the first review ruled out as not applicable is one the rule reaches after all, in a run with the second check."
+        },
+        "claim": {
+          "enum": [
+            "duty_met",
+            "exempt",
+            "not_shipped",
+            "location",
+            "not_applicable"
+          ],
+          "description": "Written by the assembly, never by a seat, and only where the second review's overturn on a location ground stands, or where the look checked a high finding the first review ruled out (`not_applicable`, a run with the second check): the claim this second look checked, `location` for the second review's reason, `not_applicable` for the first review's ruling-out, and any other value for the first review's claim. A later run that carries the row words the look by it, and places it, as the run that made it did."
+        },
+        "agent_model": { "$ref": "#/properties/refutation/properties/agent_model" },
+        "evidence": { "$ref": "#/properties/refutation/properties/evidence" },
+        "quote_checks": { "$ref": "#/properties/refutation/properties/quote_checks" },
+        "quote_check_outcome": { "$ref": "#/properties/refutation/properties/quote_check_outcome" },
+        "outcome_before_quote_check": { "$ref": "#/properties/refutation/properties/outcome_before_quote_check" },
+        "quote_check_notes": { "$ref": "#/properties/refutation/properties/quote_check_notes" },
+        "quote_check_failures": { "$ref": "#/properties/refutation/properties/quote_check_failures" },
+        "reading": { "$ref": "#/properties/refutation/properties/reading" }
+      }
+    },
+    "refutation_not_established": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason"],
+      "description": " A REFUTATION THAT WAS NOT ESTABLISHED, KEPT WITH THE VERDICT. Written by the assembly into the log's copy of a violation_candidate, never by a seat, beside the same entry in the log's `refutations_not_established` (whose fields it repeats, less `finding_id`): the second review's answer could not be used (`unusable_answer`, with `why`), stayed invalid (`invalid_answer`, with `seat` and `kept`), or the finding was held back (`held`, with `held_reason`). A later run that carries the verdict says the same reason again, rather than that no second review is recorded.",
+      "properties": {
+        "reason": { "enum": ["invalid_answer", "held", "unusable_answer"] },
+        "seat": { "type": "string" },
+        "kept": { "type": "string" },
+        "why": { "type": "string" },
+        "held_reason": { "type": "string" }
+      }
+    },
+    "rests_on": {
+      "$ref": "#/$defs/restsOn",
+      "description": "See $defs.restsOn. Written by the CLI's assembly step from what the seat already recorded, never by a seat."
+    },
+    "seat_model": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The model the seat's launch entry named, written by the capture on a verdict not read place by place and never by a seat (the reply schema has no such field). The assembly records it as `rests_on.model`."
+    },
+    "seat_effort": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "The effort levels the seat's own transcript records, distinct, read by the capture hook when the seat ended (seat-effort.ts `transcriptEffort`) and never written by a seat. The assembly records it as `rests_on.effort`."
+    },
+    "seat_instructions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "digest",
+        "agent",
+        "skill",
+        "verdict_rules"
+      ],
+      "description": "The instructions digested by the capture hook when the seat ended (instructions.ts `instructionsPremise`), from the plugin the host loaded - not when the run is assembled. The assembly records them as `rests_on.instructions`; a record without them gives an incomplete block.",
+      "properties": {
+        "digest": {
+          "type": "string"
+        },
+        "agent": {
+          "type": "string"
+        },
+        "skill": {
+          "type": "string"
+        },
+        "verdict_rules": {
+          "type": "string"
+        },
+        "verdict_rules_build": {
+          "type": "string",
+          "description": "The digest of the verdict-rule files of the build the host loaded (instructions.ts `verdict_rules_build`)."
+        }
+      }
+    },
+    "seat_sight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "files",
+        "searches"
+      ],
+      "description": "What the seat's own transcript shows it opened (paths of the tree) and searched (each search as a premise, replayed and held to the host's result at capture: place-premises.ts `seatPremisesOf`), written by the capture on a verdict not read place by place. The assembly adds both to `rests_on`; a verdict not read place by place whose record lacks it gives an incomplete block.",
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "searches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/restsOnSearch"
+          }
+        },
+        "incomplete": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "seat_untaken": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Why the seat's own transcript could not give a premise when the seat ended - its sight (`seat_sight` is then empty) or its effort (`seat_effort` is then absent) - one sentence each (place-premises.ts `seatUntakenOf`), written by the capture hook on every verdict of that seat and never by a seat. The assembly records it as `rests_on.untaken`: the verdict is never carried, and the run is not refused for it."
+    },
+    "carried_forward_from": {
+      "type": "string",
+      "description": "THE SCAN THIS VERDICT WAS GIVEN IN, present only on a verdict no seat read in THIS run. Its premises were re-derived and every one was reproduced exactly, so the verdict was carried rather than re-asked. CARRIED IS NOT RE-VERIFIED: nothing re-read the code, and the claim is only that nothing the comparison can see has moved."
+    },
+    "standing": {
+      "$ref": "#/$defs/standingRecord"
+    },
+    "standing_set_aside": {
+      "description": "H5a stage 1 (h5a-design-2026-10-28.md section 2.5): every part of the seat's `standing` block the capture set aside, never refusing the answer for it, with the value the seat gave and why (`part` `standing` where the whole value was not an object, or a key that is not a part). The order places a set-aside part at its heaviest value and the report says so (W13).",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "part",
+          "why"
+        ],
+        "properties": {
+          "part": {
+            "enum": [
+              "standing",
+              "status",
+              "question",
+              "duty",
+              "data",
+              "people",
+              "runs",
+              "reaches",
+              "ships",
+              "decisive",
+              "effect",
+              "settles",
+              "element",
+              "exemption",
+              "fact",
+              "same_as"
+            ]
+          },
+          "value": {},
+          "why": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "disposition": {
+      "description": " What the report does with this finding, one of ten, computed at assembly by one function (disposition.ts `dispositionOf`) and written into the evidence log's copy of the verdict; never written by a seat, and absent from the record the capture writes. Only `to_fix` is counted as a problem. Absent in a log written before the disposition existed: a reader that needs one takes the heaviest, `to_fix`.",
+      "enum": [
+        "settled_by_answer",
+        "not_applicable",
+        "folded",
+        "not_shipped",
+        "check_answer",
+        "question",
+        "for_operators",
+        "recorded",
+        "counsel",
+        "to_fix"
+      ]
+    },
+    "folded_under": {
+      "type": "string",
+      "minLength": 1,
+      "description": " With `disposition: folded` only: the `finding_id` of the head finding this one is counted with (fold-findings.ts). Written by the assembly on the log's copy of the verdict, beside `disposition`; a seat never writes it."
+    },
+    "carried_forward": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scan_id",
+        "finding_id",
+        "premises_rechecked"
+      ],
+      "description": "The re-check itself, beside the scan id: which premise kinds were re-derived, how many files were re-hashed and how many searches replayed. It is the audit record of a carry - the original evidence, the original scan id and the re-check result in one place.",
+      "properties": {
+        "scan_id": {
+          "type": "string"
+        },
+        "finding_id": {
+          "type": "string",
+          "description": "The candidate's id in the previous run, which need not equal this run's."
+        },
+        "source": {
+          "type": "string",
+          "description": "The file the previous verdict was read from."
+        },
+        "premises_rechecked": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The premise kinds re-derived, in the order they were compared."
+        },
+        "files_rechecked": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "searches_replayed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

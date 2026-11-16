@@ -1,0 +1,314 @@
+id: derived-personal-data-003
+pack: derived-personal-data
+short_name: Past anonymous activity re-linked to a person
+problem_line:
+  text: Past anonymous activity re-linked to a known person
+fix_line: Bound the merge to rows after sign-up, or tell people first and rest it on consent or a
+  compatibility test.
+title: Historical pseudonymous events re-keyed to one identity when a declared attribute arrives,
+  with the alias map kept
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(b) - personal data shall be 'collected for
+      specified, explicit and legitimate purposes and not further processed in a manner that is
+      incompatible with those purposes'. This is the provision the construct turns on. Behaviour
+      recorded against an anonymous visitor identifier and behaviour recorded against a named person
+      are collected in different circumstances and very often for different stated purposes;
+      re-keying the first set to the second is further processing of the earlier rows, and whether
+      it is compatible with the purpose they were collected for is the question this rule raises.
+      The same point carries its own express carve-out in the following words: 'further processing
+      for archiving purposes in the public interest, scientific or historical research purposes or
+      statistical purposes shall, in accordance with Article 89(1), not be considered to be
+      incompatible with the initial purposes' - a closed list of three purposes, none of which
+      describes a merge performed to serve the person a more complete profile"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 6(4) - 'Where the processing for a purpose other than
+      that for which the personal data have been collected is not based on the data subject's
+      consent or on a Union or Member State law which constitutes a necessary and proportionate
+      measure in a democratic society to safeguard the objectives referred to in Article 23(1), the
+      controller shall, in order to ascertain whether processing for another purpose is compatible
+      with the purpose for which the personal data are initially collected, take into account, inter
+      alia:' - and the paragraph then lists five factors, of which three decide this construct: '(a)
+      any link between the purposes for which the personal data have been collected and the purposes
+      of the intended further processing'; '(b) the context in which the personal data have been
+      collected, in particular regarding the relationship between data subjects and the controller';
+      and '(e) the existence of appropriate safeguards, which may include encryption or
+      pseudonymisation'. Read the opening words exactly, because they set the condition rather than
+      the duty: the test is owed where the further processing rests on NEITHER consent NOR the named
+      kind of law. Factor (e) is the one that bites hardest here - pseudonymisation is named as a
+      safeguard, and this construct is the operation that removes it from data already collected"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1) - personal data 'means any information relating to
+      an identified or identifiable natural person', and an identifiable natural person is 'one who
+      can be identified, directly or indirectly, in particular by reference to an identifier such as
+      a name, an identification number, location data, an online identifier or to one or more
+      factors specific to the physical, physiological, genetic, mental, economic, cultural or social
+      identity of that natural person'. Reference only: a definition establishes no duty of its own.
+      It is carried because this construct is the moment the second half of the sentence becomes the
+      first - a corpus that was identifiable only indirectly becomes attached to a named person -
+      and because the alias registry means that transition is recorded rather than implicit"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 26 - 'Personal data which have undergone
+      pseudonymisation, which could be attributed to a natural person by the use of additional
+      information should be considered to be information on an identifiable natural person.'
+      Reference only, and a recital enacts no duty. It is carried because it answers in advance the
+      objection a reader of this construct reaches for first: that the events were only ever
+      pseudonymous, so nothing changed when they were re-keyed. On the Regulation's own reading the
+      earlier rows were already information about an identifiable person, and the merge is what
+      supplies the additional information the recital describes"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 13(3) - 'Where the controller intends to further
+      process the personal data for a purpose other than that for which the personal data were
+      collected, the controller shall provide the data subject prior to that further processing with
+      information on that other purpose and with any relevant further information as referred to in
+      paragraph 2.' Art. 14(4) carries the same duty for data not obtained from the data subject.
+      Reference only: whether a given merge is a further purpose at all is the Art. 5(1)(b) question
+      above, and this detector cannot settle it. Both are carried because the word in each of them
+      is PRIOR - if the merge is a further purpose, the information is owed before it runs, and a
+      merge that fires the instant a form is submitted has no obvious moment at which that could
+      happen"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.3
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    purpose_built_rekey:
+      - update_with_query_and_stored_script
+      - update_by_query_and_script
+      - update_profile_id
+      - update_visitor_id
+      - reassign_profile_data
+      - reassign_browsing_data
+      - reassign_persisted_browsing_data
+      - merge_profiles
+      - merge_profile_on_property
+      - merge_visitors
+      - merge_identities
+      - merge_anonymous_profile
+      - identity_resolution
+      - identity_stitching
+      - profile_stitching
+      - identity_graph
+      - deanonymize
+      - de_anonymise
+      - deanonymise
+      - reidentify
+      - re_identify
+      - backfill_profile_id
+      - backfill_user_id
+    alias_registry:
+      - profile_alias
+      - visitor_alias
+      - identity_alias
+      - user_alias
+      - alias_registry
+      - alias_to_profile
+      - add_alias_to_profile
+      - remove_alias_from_profile
+      - get_profile_alias
+      - find_profile_alias
+      - identity_map
+      - identity_link
+      - merge_record
+      - merged_profile_id
+      - master_profile_id
+      - merged_profile_ids
+      - surviving_profile_id
+      - canonical_profile_id
+    identity_column:
+      - profile_id
+      - visitor_id
+      - anonymous_id
+      - anon_id
+      - distinct_id
+      - person_id
+      - contact_id
+      - identity_id
+      - user_id
+      - customer_id
+      - device_id
+    bulk_update_call:
+      - update_by_query
+      - update_all
+      - bulk_update
+      - update_many
+      - bulk_write
+      - execute_update
+      - mass_update
+      - update_where
+      - batch_update
+      - stored_script
+      - script_params
+    behavioural_corpus:
+      - event
+      - events
+      - session
+      - sessions
+      - visit
+      - visits
+      - pageview
+      - page_view
+      - activity
+      - activities
+      - interaction
+      - impression
+    declared_attribute:
+      - email
+      - email_address
+      - login
+      - username
+      - crm_id
+      - external_id
+      - customer_number
+      - phone_number
+      - merge_profile_property_name
+      - merge_property
+      - merge_on_property
+    merge_verb:
+      - identify
+      - alias
+      - merge
+      - stitch
+      - resolve_identity
+      - link_profile
+      - attach_identity
+      - claim_profile
+  vocabulary_matching:
+    purpose_built_rekey:
+      case_insensitive: true
+      separator_insensitive: true
+    alias_registry:
+      case_insensitive: true
+      separator_insensitive: true
+    identity_column:
+      case_insensitive: true
+      separator_insensitive: true
+    bulk_update_call:
+      case_insensitive: true
+      separator_insensitive: true
+    behavioural_corpus:
+      case_insensitive: true
+      separator_insensitive: true
+    declared_attribute:
+      case_insensitive: true
+      separator_insensitive: true
+    merge_verb:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?:^|[^A-Za-z0-9_])(?&purpose_built_rekey)
+    - (?:^|[^A-Za-z0-9_])(?&alias_registry)
+    - (?&bulk_update_call)[^\n]{0,80}(?&identity_column)|(?&identity_column)[^\n]{0,80}(?&bulk_update_call)
+    - "[Uu][Pp][Dd][Aa][Tt][Ee]\\s+[\"'`\\[]?[A-Za-z0-9_]*(?&behavioural_corpus)[A-Za-z0-9_]*[\"'`\
+      \\]]?\\s+[Ss][Ee][Tt]\\s[^\\n]{0,80}(?&identity_column)"
+    - (?&merge_verb)[^\n]{0,60}(?&declared_attribute)|(?&declared_attribute)[^\n]{0,60}(?&merge_verb)
+    - (?&alias_registry)[^\n]{0,80}(?&identity_column)|(?&identity_column)[^\n]{0,80}(?&alias_registry)
+    - (?:^|[^A-Za-z0-9_])alias(?![A-Za-z0-9_])[^\n]{0,80}(?&identity_column)|(?&identity_column)[^\n]{0,80}(?:^|[^A-Za-z0-9_])alias(?![A-Za-z0-9_])
+context_questions:
+  - "WHAT EXACTLY IS RE-KEYED, AND HOW FAR BACK? Find the update and read its scope. Say which
+    tables it rewrites, whether it is bounded by time or by anything at all, and whether it runs
+    over rows collected before the person had any relationship with this product. That last part is
+    the whole of the type: an update that touches only rows created after sign-up is an ordinary
+    account merge, and an update whose predicate is the old identifier alone reaches everything ever
+    recorded. Quote the query rather than describing it."
+  - "IS THE MERGE WIRED IN THIS DEPLOYMENT, AND ON WHAT? The detector cannot answer this and must
+    not be read as having answered it. The merge is almost always a configuration - a rule, an
+    action definition, a plugin registration - naming the property whose arrival triggers it. Find
+    that configuration and say whether it exists outside samples and integration tests, which
+    property it names, and who can change it. Where the mechanism is present but unwired, say so:
+    the finding is then about a capability rather than about a running process."
+  - "WHAT WAS THE PERSON TOLD WHEN THE EARLIER ROWS WERE COLLECTED, AND WHAT GROUNDS THE MERGE? Two
+    separate answers. First, the purpose stated at collection time for the anonymous events - a
+    cookie banner, a privacy notice, a consent record - because Art. 5(1)(b) measures the merge
+    against that purpose and not against today's. Second, what the further processing rests on. This
+    matters more than it looks: Art. 6(4)'s compatibility test is owed only WHERE the further
+    processing is based neither on the data subject's consent nor on a Union or Member State law
+    measure of the kind that paragraph names. If the person consented to the merge, the paragraph
+    does not ask for the test at all; if they did not, it does, and factor (e) - the existence of
+    appropriate safeguards, expressly including pseudonymisation - is the one this construct
+    removes."
+  - DOES THE ALIAS REGISTRY EXPIRE, AND WHAT REACHES IT? The registry is the part that survives
+    everything else. Say whether rows in it have a lifetime of their own, whether an erasure of the
+    profile removes the aliases that pointed to it, and whether a subject-access export includes
+    them. An erasure route written against the profile table commonly leaves the alias rows behind,
+    and those rows are a record that this person and that anonymous identifier were the same - which
+    is personal data about them, and is the part they have never seen.
+  - "CAN THE PERSON UNDO IT, AND WHAT HAPPENS IF THEY OBJECT? Ask the question in the direction the
+    code makes hard rather than the one it makes easy. After a re-key there is usually no stored
+    record of which rows came from which original profile except the alias registry, so an objection
+    to the merge cannot be honoured by reversing it. Say what the product would actually do:
+    separate the profiles again, delete the merged rows, or nothing. If the honest answer is that
+    the merge is irreversible, record it as such - it is a limit of the design and belongs in the
+    answer given to the person, not in a promise that cannot be kept."
+  - IS THE TRIGGER A DECLARED ATTRIBUTE OR A DERIVED ONE? This is the boundary with
+    `derived-personal-data-001`. A merge triggered by the person typing an e-mail address is this
+    rule. A link drawn between two accounts by a fingerprint, a shared device identifier or a
+    probabilistic match is that rule's construct, and where an adverse decision follows the link its
+    questions are the right ones. Say which the trigger is, and where both are present say so - the
+    two findings are different sentences about one subsystem.
+evidence_template: "{file}:{line} matched a place where this product COLLAPSES SEPARATELY-COLLECTED
+  PROFILES ONTO ONE IDENTITY: purpose-built re-key or merge machinery, a persistent alias registry,
+  a bulk update writing an identity column, an SQL update over a behavioural table setting one, a
+  merge or identify verb beside a declared attribute, or an alias table's two identifier columns
+  together. THAT IS THE WHOLE OF WHAT IS ESTABLISHED - that the code has the mechanism. IT DOES NOT
+  ESTABLISH THE TWO FACTS THE TYPE TURNS ON. Whether the update reaches rows collected BEFORE the
+  person was identified - that is retroactivity, it is what makes this different from an account
+  merge, and it is context question 1, answered by reading the query's scope. And whether the merge
+  is WIRED in this deployment - in the tree this rule was written from, only sample configurations
+  and integration tests configure one, which is context question 2. IT ALSO DOES NOT ESTABLISH what
+  the person was told when the earlier rows were collected, which is what Art. 5(1)(b) measures the
+  merge against (question 3). THE CLAUSES ARE NOT EQUALLY INFORMATIVE. Purpose-built machinery and
+  an alias registry are strong: each names the operation. A bulk update beside an identity column is
+  a construct but says nothing about scope. The merge-or-identify clause is the loosest in the rule
+  and will also reach ordinary sign-in code that names both halves on one line - treat a match from
+  it as a place to start reading, not as a finding."
+remediation_template: |
+  Start from the query's scope, because that is what decides whether this is the construct at all.
+  Read the update's predicate and write down how far back it reaches. An update bounded to rows
+  created after the account existed is an ordinary merge and the candidate closes there.
+  Where it does reach the earlier rows, compare the purpose stated when those rows were collected
+  with what the merged profile is used for. That comparison is the Art. 5(1)(b) question, and it is
+  answered from the notice and the consent record in force at collection time, not from today's.
+  Then establish what the further processing rests on. If the person consented to the merge, Art.
+  6(4)'s compatibility test is not owed; if it rests on something else, the test is, and the factor
+  that bites is the last one - pseudonymisation is named in the Regulation as a safeguard, and this
+  operation is the one that removes it from data already collected.
+  Where the merge serves a purpose other than the one stated at collection, the person is told
+  before it runs, whatever it rests on: Art. 13(3) - and Art. 14(4) for data not obtained from the
+  person - asks for information on that other purpose prior to the further processing. A merge that
+  fires the instant a form is submitted leaves no such moment, so put the information in the step
+  that leads to it - the sign-up or sign-in screen that supplies the identifying attribute - or hold
+  the re-key of the earlier rows until that information has been shown.
+  Give the alias registry a lifetime and a deletion path. It is the part of this construct that
+  survives every other route: the profile is deleted and the map from the old identifiers to it
+  remains, which is a record about the person that no export shows them.
+  Decide, and write down, what happens when somebody objects. A re-key is usually irreversible
+  because nothing records which rows came from which original profile. Say so plainly in the answer
+  the product gives, rather than offering a separation it cannot perform.
+  Where the merge is a configuration that is not switched on, record that too, with the file that
+  would switch it on. A capability nobody has enabled is a different finding from a running process,
+  and conflating them wastes the reader's attention on the wrong one.
+data_categories:
+  - user.behavior
+  - user.contact
+  - user.unique_id
+  - user.account
+fingerprint_spec: directory

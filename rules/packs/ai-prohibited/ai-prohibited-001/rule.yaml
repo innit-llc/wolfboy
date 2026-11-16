@@ -1,0 +1,409 @@
+id: ai-prohibited-001
+pack: ai-prohibited
+short_name: Emotion inference named in the code
+problem_line:
+  text: Emotions inferred from biometrics at work or in education
+fix_line: Drop the emotion attribute or model for workers and students, unless the use is medical or
+  for safety.
+title: Affect-inference call, model or term named, screened against AI Act Art. 5(1)(f) - signal and
+  setting need review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 5(1)(f) — 'the placing on the market, the putting
+      into service for this specific purpose, or the use of AI systems to infer emotions of a
+      natural person in the areas of workplace and education institutions, except where the use of
+      the AI system is intended to be put in place or into the market for medical or safety
+      reasons'. Addressee: providers (Art. 3(3)) AND deployers (Art. 3(4)) alike, each within their
+      respective responsibilities — the prohibition names three acts, placing on the market, putting
+      into service and use, so unlike Art. 50 (whose paragraphs (1)-(2) fall on providers and
+      (3)-(4) on deployers) it does not split by role. Applies from 2025-02-02 (Art. 113(a),
+      Chapters I and II); the penalties chapter applies from 2025-08-02 (Art. 113(b))."
+    url: https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-5
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 99(3) and Art. 99(6). Art. 99(3): 'Non-compliance
+      with the prohibition of the AI practices referred to in Article 5 shall be subject to
+      administrative fines of up to EUR 35 000 000 or, if the offender is an undertaking, up to 7 %
+      of its total worldwide annual turnover for the preceding financial year, whichever is higher.'
+      The highest tier in the Regulation. Art. 99(6) reverses that comparison for the audience this
+      scanner is built for: 'In the case of SMEs, including start-ups, each fine referred to in this
+      Article shall be up to the percentages or amount referred to in paragraphs 3, 4 and 5,
+      whichever thereof is lower.' Both quotations verified against the Official Journal text (L
+      series, 32024R1689) on 2026-07-27. The penalties chapter has applied since 2025-08-02 while
+      the prohibition itself has applied since 2025-02-02. Reference only: this article sets the
+      consequence, it does not establish the duty the rule tests, which is Art. 5(1)(f)."
+    url: http://publications.europa.eu/resource/celex/32024R1689
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), definitions and scope carve-outs that govern how a hit
+      is adjudicated. Art. 3(3) 'provider'; Art. 3(4) 'deployer' — 'a natural or legal person ...
+      using an AI system under its authority except where the AI system is used in the course of a
+      personal non-professional activity'; Art. 2(10) — the Regulation 'does not apply to
+      obligations of deployers who are natural persons using AI systems in the course of a purely
+      personal non-professional activity'; Art. 3(39) 'emotion recognition system' — 'an AI system
+      for the purpose of identifying or inferring emotions or intentions of natural persons on the
+      basis of their biometric data', which is why intentions and not only emotions are in this
+      detector's vocabulary; Art. 2(8) research, testing and development prior to placing on the
+      market or putting into service; Art. 2(12) free and open-source licence exclusion, which
+      expressly does NOT reach systems falling under Art. 5. Reference only: definitional and scope
+      provisions, they do not themselves establish the duty."
+    url: https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-3
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Commission Guidelines on prohibited artificial intelligence practices established by
+      Regulation (EU) 2024/1689 (AI Act), C(2025) 5052 final, 29.7.2025 — para. 243 ('The
+      prohibition, therefore, applies to both providers and deployers of AI systems, each within
+      their respective responsibilities'); para. 245 (the prohibition is to be construed as limited
+      to inferences based on a person's biometric data, so Art. 3(39) is relevant to Art. 5(1)(f));
+      para. 251 (the signals reach beyond face and voice: keystrokes, gait, body posture, eye
+      tracking, heartbeat, EEG and ECG); para. 254 ('workplace' read broadly: any physical or
+      virtual space where tasks assigned by an employer are performed, independent of
+      employee/contractor/trainee/volunteer status, extended to candidates during the selection and
+      hiring process; tracking a call centre's own staff is caught, tracking that call centre's
+      customers is not); para. 255 (education institutions of every level and mode, including
+      vocational schools and admission testing; inferring students' interest and attention is given
+      as a worked example of the prohibition; an emotion-based language app used outside an
+      institution is not caught, the same app is caught once an institution requires students to use
+      it); paras 256-259 (the medical or safety exception is to be interpreted narrowly: therapeutic
+      use means CE-marked medical devices, safety covers protection of life and health only and not
+      property, theft or fraud, and general wellbeing, stress or burnout monitoring is outside it);
+      para. 261 (Recital 18 excludes physical states such as pain or fatigue from the
+      emotion-recognition definition, so driver- or pilot-fatigue detection falls outside); paras
+      34-35 (the personal non-professional exclusion removes deployer obligations only and leaves
+      the provider limb intact); para. 36 (Art. 2(12) free and open-source exclusion is unavailable
+      for Art. 5 systems); para. 55 (Art. 99(3) tier); para. 57 (the scope of the Art. 5
+      prohibitions is to be interpreted narrowly); para. 429 (Art. 5 applies from 2025-02-02).
+      Reference only: the Guidelines state at para. 5 that they are non-binding."
+    url: https://ai-act-service-desk.ec.europa.eu/sites/default/files/2025-08/guidelines_on_prohibited_artificial_intelligence_practices_established_by_regulation_eu_20241689_ai_act_english_ied3r5nwo50xggpcfmwckm3nuc_112367-1.PDF
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2025-02-02
+severity: high
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  vocabulary:
+    affect_signal:
+      - face
+      - facial
+      - webcam
+      - camera
+      - voice
+      - vocal
+      - prosody
+      - speech
+      - audio
+      - video
+      - gaze
+      - eye_tracking
+      - eye_track
+      - eye_gaze
+      - pupil
+      - keystroke
+      - typing_rhythm
+      - typing_cadence
+      - typing_pattern
+      - gait
+      - posture
+      - body_language
+      - heart_rate
+      - heartbeat
+      - hrv
+      - eeg
+      - ecg
+      - ekg
+      - eda
+      - gsr
+      - skin_conductance
+      - micro_expression
+      - facial_action
+      - facs
+      - action_unit
+      - blink_rate
+      - biometric
+      - face_landmark
+      - face_mesh
+    affect_machinery:
+      - hume
+      - morphcast
+      - affdex
+      - affectiva
+      - facereader
+      - imotions
+      - emotient
+      - realeyes
+      - opensmile
+      - hsemotion
+      - deepface
+      - py_feat
+      - pyfeat
+      - pyaudioanalysis
+      - rekognition
+      - face_api
+      - faceapi
+      - mediapipe
+      - from_pretrained
+      - load_model
+      - onnxruntime
+      - onnx
+      - tflite
+      - torch
+      - torchaudio
+      - torchvision
+      - torchscript
+      - keras
+      - pytorch
+      - tensorflow
+      - huggingface
+      - transformers
+      - opencv
+      - cv2
+      - dlib
+    affect_dimension:
+      - arousal
+      - valence
+      - valence_arousal
+      - arousal_valence
+      - valence_arousal_dominance
+      - circumplex
+      - panas
+      - pad_model
+      - self_assessment_manikin
+      - affective_state
+      - affect_state
+      - emotional_state
+      - emotion_state
+    affect_dataset:
+      - affectnet
+      - fer2013
+      - ferplus
+      - raf_db
+      - iemocap
+      - ravdess
+      - emodb
+      - emotic
+    person_role_wide:
+      - student
+      - pupil
+      - learner
+      - trainee
+      - employee
+      - worker
+      - staff
+      - applicant
+      - interviewee
+      - job_candidate
+      - candidate
+      - test_taker
+      - examinee
+      - proctor
+      - driver
+      - patient
+      - shopper
+      - customer
+      - passenger
+      - attendee
+      - participant
+      - respondent
+  vocabulary_matching:
+    affect_signal:
+      case_insensitive: true
+      separator_insensitive: true
+    affect_machinery:
+      case_insensitive: true
+      separator_insensitive: true
+    affect_dimension:
+      case_insensitive: true
+      separator_insensitive: true
+    affect_dataset:
+      case_insensitive: true
+      separator_insensitive: true
+    person_role_wide:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - api\.hume\.ai/v0/(?:batch|stream|evi)|[Ee]xpression[_]?[Mm]easurement|[Ee]mpathic[_]?[Vv]oice|\bstart[_]?[Ii]nference[_]?[Jj]ob\s*\(
+    - (?:Attributes|FaceAttributes)["']?\s*(?:=>|[:=])\s*[\[(][^\])]*['"](?:ALL|EMOTIONS)['"]|\.Emotions\b|\[['"]Emotions['"]\]
+    - return[_]?[Ff]ace[_]?[Aa]ttributes[^\n]*[Ee]motion|FaceAttributeType\.[Ee]motion\b|/emotion/v1\.0/recognize
+    - \.withFaceExpressions\s*\(|[Ff]ace[_]?[Ee]xpression[_]?[Nn]et\b
+    - \b(?:joy|sorrow|anger|surprise)_?[Ll]ikelihood\b|\b(?:JOY|SORROW|ANGER|SURPRISE)_LIKELIHOOD\b
+    - sdk\.morphcast\.com|[Mm]orph[Cc]ast|[Aa]ffdex|[Aa]ffectiva|[Ff]ace[Rr]eader|\b[Ii][Mm]otions\b|[Ee]motient|\b[Rr]ealeyes\b|\bopenSMILE\b|\bhsemotion\b|\bHSEmotion|[Rr]esidual[_-]?[Mm]asking
+    - \bfrom\s+fer\s+import\b|\bFER\s*\(|\bfrom\s+feat\s+import\b|\b(?:from|import)\s+deepface\b|\bDeepFace\.(?:analyze|represent)\s*\(|actions\s*=\s*\[[^\]]*['"]emotion|\bpyAudioAnalysis\b|\bpy[_-]feat\b
+    - "['\"`][^'\"`]*[Ee]motions?[_/-](?:recognition|detection|detector|inference|analysis|analyzer\
+      |analyser|classification|classifier|model|net|api|score|scoring|label|ferplus|fer)[^'\"`]*['\
+      \"`]"
+    - "['\"`][^'\"`]*(?:[Ff]acial?|[Ss]peech|[Vv]oice|[Aa]udio|[Vv]ideo|[Mm]ultimodal)[_/-][Ee]moti\
+      ons?[^'\"`]*['\"`]|['\"`][^'\"`]*(?:[Aa][Ff][Ff][Ee][Cc][Tt][Nn][Ee][Tt]|[Ff][Ee][Rr]2013|[Ff\
+      ][Ee][Rr][Pp][Ll][Uu][Ss]|[Rr][Aa][Ff][_-]?[Dd][Bb]|[Ii][Ee][Mm][Oo][Cc][Aa][Pp]|[Rr][Aa][Vv]\
+      [Dd][Ee][Ss][Ss]|(?<![A-Za-z0-9\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u024F\\u1E00-\\u1EFF])\
+      (?:[Ee][Mm][Oo][Dd][Bb]|[Ee][Mm][Oo][Tt][Ii][Cc])(?![A-Za-z0-9\\u00C0-\\u00D6\\u00D8-\\u00F6\
+      \\u00F8-\\u024F\\u1E00-\\u1EFF]))[^'\"`]*['\"`]"
+    - \b(?:detect|analy[sz]|infer|recogni|predict|classif|estimat|measur|assess|evaluat|extract|scor|read|sense|track|monitor|label|gauge|quantif|comput)\w*[Ee]motions?\w*\s*\(
+    - "[Ee]motions?[_]?(?:[Rr]ecognition|[Dd]etection|[Dd]etector|[Ii]nference|[Aa]nalysis|[Aa]naly\
+      zer|[Aa]nalyser|[Cc]lassifier|[Cc]lassification|[Mm]odel|[Nn]et|[Ss]cor|[Ee]stimat|[Ee]ngine|\
+      [Aa]pi|API|[Ss]dk|SDK)\\w*\\s*(?:\\(|(?:=>|[:=])\\s*\\{?\\s*(?:[Tt]rue|TRUE|1|yes|on|[Ee]nabl\
+      ed)\\b)"
+    - \b[Aa]rousal\b|\b[Vv]alence\b|[Aa]ffect(?:ive)?[_]?(?:[Rr]ecognition|[Dd]etection|[Dd]etector|[Ii]nference|[Aa]nalysis|[Aa]nalyzer|[Aa]nalyser|[Cc]lassifier|[Cc]lassification|[Mm]odel|[Nn]et\b|[Ss]core|[Ss]coring|[Ss]tate|[Ll]abel|[Ss]ignal|[Cc]lient|[Ee]ngine|[Cc]omputing|[Aa]pi\b|API|[Ss]dk|SDK)
+    - ^(?=[^\n]*(?:[Ff]ac(?:e|ial)|FACE|[Vv]oice|VOICE|[Vv]ocal|[Pp]rosod|[Ss]peech|[Aa]udio|[Ww]ebcam|[Cc]amera|[Vv]ideo|[Gg]aze|[Ee]ye[_
+      -]?[Tt]rack|[Pp]upil|[Kk]eystroke|[Kk]ey[_ -]?[Ss]troke|[Tt]yping[_
+      -]?(?:[Pp]attern|[Rr]hythm|[Cc]adence)|[Gg]ait|[Pp]osture|[Bb]ody[_ -]?[Ll]anguage|[Hh]eart[_
+      -]?[Rr]ate|[Hh]eartbeat|\bHRV\b|\bEEG\b|\bECG\b|\bEKG\b|\bEDA\b|\bGSR\b|[Ss]kin[_
+      -]?[Cc]onductance|[Bb]iometric|[Mm]icro[_ -]?[Ee]xpression|[Ff]acial[_
+      -]?[Aa]ction|\bFACS\b|[Aa]ction[_ -]?[Uu]nits?|[Bb]link[_
+      -]?[Rr]ate))(?=[^\n]*(?:(?:(?<![a-z])|(?=[A-Z]))(?:(?<=[A-Za-z0-9_])(?:[Ee]motion|[Aa]ffect(?:ive)?(?=[_-]|[A-Z]|[^A-Za-z])|[Aa]rousal|[Vv]alence|[Mm]oods?(?=[_-]|[A-Z]|[^A-Za-z])|[Ee]ngagement|[Aa]ttentiveness|[Aa]ttention|[Ii]nterest[_-]?(?:[Ll]evel|[Ss]core)|[Ii]ntentions?(?=[_-]|[A-Z]|[^A-Za-z])|[Ss]tress(?=[_-]|[A-Z]|[^A-Za-z])|[Aa]nxiety(?=[_-]|[A-Z]|[^A-Za-z])|[Ff]rustrations?(?=[_-]|[A-Z]|[^A-Za-z])|[Bb]oredom|[Ss]entiment)|(?:[Ee]motion|[Aa]ffect(?:ive)?(?=[_-]|[A-Z]|[^A-Za-z])|[Aa]rousal|[Vv]alence|[Mm]oods?(?=[_-]|[A-Z]|[^A-Za-z])|[Ee]ngagement|[Aa]ttentiveness|[Aa]ttention|[Ii]nterest[_-]?(?:[Ll]evel|[Ss]core)|[Ii]ntentions?(?=[_-]|[A-Z]|[^A-Za-z])|[Ss]tress(?=[_-]|[A-Z]|[^A-Za-z])|[Aa]nxiety(?=[_-]|[A-Z]|[^A-Za-z])|[Ff]rustrations?(?=[_-]|[A-Z]|[^A-Za-z])|[Bb]oredom|[Ss]entiment)(?:[A-Za-z0-9_]|\s*[(\[:=]))|[Ss]entiment[
+      _-][Aa]nalysis|[Ee]motion(?:al)?[
+      _-](?:[Aa]nalysis|[Dd]etection|[Rr]ecognition|[Ii]nference|[Ss]coring|[Ss]tate)|[Aa]ffect(?:ive)?[
+      _-](?:[Aa]nalysis|[Dd]etection|[Rr]ecognition|[Cc]omputing|[Ss]tate)|[Mm]ood[
+      _-](?:[Aa]nalysis|[Dd]etection|[Tt]racking)|(?:[Ee]ngagement|[Aa]ttention)[
+      _-](?:[Ss]core|[Ss]coring|[Dd]etection|[Tt]racking|[Ll]evel)))
+    - ^(?=[^\n]*(?:[Ss]tudent|STUDENT|[Pp]upil|[Ll]earner|[Tt]rainee|[Ee]mployee|EMPLOYEE|[Ww]orker|[Ss]taff|[Aa]pplicant|[Ii]nterviewee|[Jj]ob[_
+      -]?[Cc]andidate|[Tt]est[_
+      -]?[Tt]aker|[Ee]xaminee|[Pp]roctor))(?=[^\n]*(?:(?:(?<![a-z])|(?=[A-Z]))(?:(?<=[A-Za-z0-9_])(?:[Ee]motion|[Aa]ffect(?:ive)?(?=[_-]|[A-Z]|[^A-Za-z])|[Aa]rousal|[Vv]alence|[Ee]ngagement|[Aa]ttentiveness|[Aa]ttention|[Ii]nterest[_-]?(?:[Ll]evel|[Ss]core)|[Ii]ntentions?(?=[_-]|[A-Z]|[^A-Za-z]))|(?:[Ee]motion|[Aa]ffect(?:ive)?(?=[_-]|[A-Z]|[^A-Za-z])|[Aa]rousal|[Vv]alence|[Ee]ngagement|[Aa]ttentiveness|[Aa]ttention|[Ii]nterest[_-]?(?:[Ll]evel|[Ss]core)|[Ii]ntentions?(?=[_-]|[A-Z]|[^A-Za-z]))(?:[A-Za-z0-9_]|\s*[(\[:=]))|[Ss]entiment[
+      _-][Aa]nalysis|[Ee]motion(?:al)?[
+      _-](?:[Aa]nalysis|[Dd]etection|[Rr]ecognition|[Ii]nference|[Ss]coring|[Ss]tate)|[Aa]ffect(?:ive)?[
+      _-](?:[Aa]nalysis|[Dd]etection|[Rr]ecognition|[Cc]omputing|[Ss]tate)|[Mm]ood[
+      _-](?:[Aa]nalysis|[Dd]etection|[Tt]racking)|(?:[Ee]ngagement|[Aa]ttention)[
+      _-](?:[Ss]core|[Ss]coring|[Dd]etection|[Tt]racking|[Ll]evel)))
+    - ^(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))[Ee][Mm][Oo][Tt][Ii][Oo][Nn][Ss]?(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?:[Rr][Ee][Kk][Oo][Gg][Nn][Ii][Tt][Ii][Oo][Nn]|[Dd][Ee][Tt][Ee][Cc][Tt][_\-]?[Ff][Aa][Cc][Ee][Ss]?|[Ff][Aa][Cc][Ee][_\-]?[Dd][Ee][Tt][Aa][Ii][Ll][Ss]?|[Ff][Aa][Cc][Ee][_\-]?[Aa][Tt][Tt][Rr][Ii][Bb][Uu][Tt][Ee][Ss]?)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))
+    - ^(?=[^\n]*['\"`][^'\"`\s]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?:[Ee][Mm][Oo][Tt][Ii][Oo][Nn]|[Aa][Ff][Ff][Ee][Cc][Tt]|[Aa][Rr][Oo][Uu][Ss][Aa][Ll]|[Vv][Aa][Ll][Ee][Nn][Cc][Ee])[^'\"`\s]*['\"`])(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?:(?&affect_signal)|(?&affect_machinery))(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))
+    - ^(?=[^\n]*(?:(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&affect_dataset)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?:[Ff][Aa][Cc][Ii]?[Aa]?[Ll]?|[Ss][Pp][Ee][Ee][Cc][Hh]|[Vv][Oo][Ii][Cc][Ee]|[Aa][Uu][Dd][Ii][Oo]|[Vv][Ii][Dd][Ee][Oo]|[Mm][Uu][Ll][Tt][Ii][Mm][Oo][Dd][Aa][Ll])[_\-][Ee][Mm][Oo][Tt][Ii][Oo][Nn][Ss]?(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])))(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&affect_machinery)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))
+    - ^(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&affect_dimension)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?:(?&affect_signal)|(?&affect_machinery))(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))
+    - ^(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&person_role_wide)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?:[Ee][Mm][Oo][Tt][Ii][Oo][Nn]|[Aa][Ff][Ff][Ee][Cc][Tt]|[Aa][Rr][Oo][Uu][Ss][Aa][Ll]|[Vv][Aa][Ll][Ee][Nn][Cc][Ee]|[Ee][Nn][Gg][Aa][Gg][Ee][Mm][Ee][Nn][Tt]|[Aa][Tt][Tt][Ee][Nn][Tt][Ii][Vv][Ee][Nn][Ee][Ss][Ss]|[Aa][Tt][Tt][Ee][Nn][Tt][Ii][Oo][Nn]|[Ii][Nn][Tt][Ee][Nn][Tt][Ii][Oo][Nn][Ss]?)\w*(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])?)(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?:(?&affect_signal)|(?&affect_machinery))(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))
+  match_without:
+    - ^\s*(\*|//|#|<!--)
+    - ^\s*(export\s+)?(type|interface|declare|enum)\s
+    - ^\s*(import|export)\s.*\bfrom\s+['"]
+  path_without:
+    - (^|/)(test|tests|spec|specs|__tests__|__mocks__|mocks|e2e|cypress|playwright|stories|\.storybook)/
+    - (^|/)(fixtures|__fixtures__|__snapshots__|testdata|test-data|sample-data)/
+  resolve_import_aliases: true
+context_questions:
+  - "Does this code infer emotions or intentions of a natural person from biometric data — face,
+    voice, gaze, keystroke dynamics, gait, body posture, heartbeat, EEG, ECG or another bodily
+    signal — or is it a different use of the same SDK? Quote the request options and the response
+    fields that are read. Art. 5(1)(f) is construed as limited to inferences based on biometric data
+    (Guidelines para. 245, reading Art. 3(39)), so face detection, face matching, gaze or head-pose
+    tracking on their own, attendance counting and speech-to-text fall outside it, and so does
+    sentiment analysis over typed text. Two further exclusions to apply here rather than argue about
+    later: Recital 18 puts physical states such as pain and fatigue outside the definition
+    (Guidelines para. 261), and speech synthesis that takes an emotion parameter generates a voice
+    rather than reading one. If the evidence only shows one of those, record that and close the
+    candidate."
+  - "Are the natural persons whose emotions are inferred workers or students of the party running
+    this system? This is the question the detector no longer asks, and it decides whether the
+    candidate stands. Quote the code that shows whose faces, voices or behavioural signals reach the
+    model — the data source, the route that feeds it, the identity the results are stored against —
+    and follow it across files, because the affect client and its domain caller are usually
+    different modules. Guidelines para. 254 reads 'workplace' broadly (any physical or virtual space
+    where assigned tasks are performed, whatever the employment status, remote and hybrid included,
+    and extending to candidates during selection and hiring), and para. 255 reads 'education
+    institution' broadly (all levels and modes, including admission testing). The same paragraphs
+    draw the boundary the other way: a call centre inferring its customers' emotions, a storefront
+    measuring shoppers, or a consumer app used outside an institution, is not within Art. 5(1)(f).
+    If the subjects are customers, visitors or general consumers, this candidate belongs to the Art.
+    50(3) notice duty instead and should be closed here."
+  - "Is the deployment intended for medical or safety reasons within the Art. 5(1)(f) exception?
+    Read the exception narrowly (Guidelines paras 256-259): therapeutic use means CE-marked medical
+    devices, and 'safety' covers protection of life and health only, not property, theft or fraud.
+    General wellbeing, stress, burnout, engagement, motivation or satisfaction monitoring is outside
+    the exception even when the stated intent is benevolent. Quote the code or configuration that
+    evidences the medical or safety purpose and the limits on it; a comment asserting the purpose is
+    not evidence."
+  - "Is the scanned party a deployer who is a natural person using this in a purely personal,
+    non-professional activity (Art. 3(4) and Art. 2(10))? A hobby repository, a personal experiment
+    or a learning exercise carries no deployer obligation and must not produce a finding at this
+    tier. Quote what shows the capacity: is there a paying or contractual relationship, an
+    organisation behind the repository, a published or distributed artifact? Two limits on this
+    exclusion (Guidelines paras 34-36): it removes deployer obligations only and leaves the provider
+    limb (placing on the market, putting into service) intact, and the Art. 2(12) free and
+    open-source exclusion is expressly unavailable for Art. 5 systems, so publishing this openly
+    does not by itself take it out of scope."
+  - Which limb of Art. 5(1)(f) does the evidence support — placing on the market or putting into
+    service (provider, Art. 3(3)), or use (deployer, Art. 3(4))? The prohibition binds both, each
+    within their respective responsibilities (Guidelines para. 243), so this does not decide whether
+    the candidate stands; it decides what the remediation is and who owns it. Quote whether the
+    model is hosted, trained or fine-tuned here and offered onward under this party's own name or
+    brand, or whether a third-party affect API is called under this party's own authority. A
+    connector, plugin or integration that packages an affect API for other people to run is the
+    provider limb even though the party running it never sees a worker or a student.
+  - Is this code path live in a shipped product, or is it research, testing or development prior to
+    placing on the market or putting into service (Art. 2(8))? Trace the call from an entry point
+    and quote it. A demo under examples/ that is built and deployed counts as shipped; a branch that
+    nothing reaches does not. Note that testing in real-world conditions is not covered by the Art.
+    2(8) exclusion.
+  - Is there an EU nexus (Art. 2(1))? The Regulation reaches a provider placing the system on the
+    Union market or putting it into service in the Union wherever established, a deployer
+    established or located in the Union, and a provider or deployer in a third country where the
+    output of the system is used in the Union. Quote the deployment regions, tenant configuration or
+    customer targeting that the repository shows, and record the absence if it shows none.
+evidence_template: "{file}:{line} names an affect-inference surface — a vendor SDK or endpoint, an
+  emotion model, dataset or identifier, or a call reading emotions, intentions or a related
+  affective state (mood, arousal, valence, stress, engagement, interest or attention). READ THE LINE
+  AND SAY WHICH KIND OF BRANCH MATCHED IT, because the branches do not establish the same amount.
+  Some of them require a SECOND TOKEN on the same line, and that token is one of three kinds: a
+  biometric or behavioural signal (face, voice, gaze, pupil, keystrokes, gait, posture, or a
+  physiological sensor such as EEG, ECG or skin conductance); a model or SDK token (an affect vendor
+  such as Hume, Affectiva, MorphCast or Rekognition, or a model being loaded or run —
+  from_pretrained, load_model, onnxruntime, torch, tensorflow); or an observed-person word (a
+  worker, an employee, an applicant, an interviewee, a student, a test taker, and on one branch a
+  wider list that adds a candidate, a driver, a patient, a shopper or a passenger). One branch
+  requires an observed-person word AND a signal-or-model token, three tokens in all. Where a second
+  token was required, the match establishes the conjunction and not merely the affect word, and the
+  finding is correspondingly stronger. The remaining branches require no second token at all,
+  several of them are satisfied by a vendor name, a dataset name or a bare affect term, and there
+  the match establishes only that the word is present. No count of branches is given here on
+  purpose: the number changes as clauses are added and a number written into this sentence goes
+  stale silently, which is what happened to the sentence this one replaces. Five look-alikes of that
+  kind have been read on real matched lines, and on each of them the word was the whole of what was
+  matched: a bare affect term as an entry in a tokenizer or word-list file, where arousal is a
+  vocabulary row sitting between two unrelated tokens; emotion as the name of the CSS-in-JS styling
+  library, so a local binding such as emotion_1 matches on a line whose call injects stylesheet
+  rules; mood in its design sense, the visual tone of a surface, in a design-system table;
+  engagement and interest in their commercial sense, buying interest and sales meetings, inside a
+  prompt template; and editorial prose about a third party's product, where the affect surface named
+  belongs to another company rather than to this repository. Read the matched line first and say
+  which shape it is, or that it names no affect surface at all. Whether the call infers emotions
+  from biometric data, or is a different use of the same SDK, is context question 1. Whether the
+  observed persons are workers, job candidates or students is context question 2."
+remediation_template: |
+  Treat this as a candidate for review at the highest tier in the AI Act, not as a settled finding.
+  Art. 99(3) sets fines of up to EUR 35 000 000 or 7% of worldwide annual turnover, whichever is
+  higher — but Art. 99(6) reverses that comparison for SMEs including start-ups, for whom each fine
+  is capped at whichever of the two is lower. For a solo developer or a small team that is the
+  turnover percentage, not the EUR 35 000 000. Art. 5 has applied since 2025-02-02 and the penalties
+  chapter since 2025-08-02.
+  Establish three facts before changing anything, in this order.
+  1. Does the system infer emotions or intentions from biometric data (face, voice, gaze, keystroke
+  dynamics, gait, posture, heartbeat, EEG or ECG), rather than detect, match or count faces, track
+  gaze alone, synthesise speech with an emotion parameter, or analyse typed text? Read the request
+  options and the response fields, not the module name.
+  2. Are the observed persons the party's own workers, job candidates or students, rather than
+  customers or general consumers? The detector does not test this; it is the question that decides
+  whether the candidate stands, and the answer is usually in a different file from the one reported.
+  3. Is the purpose medical or safety within the narrow reading — a CE-marked medical device, or
+  protection of life and health? Wellbeing, stress, burnout, engagement and motivation monitoring
+  are outside it.
+  If all three point at Art. 5(1)(f), the engineering change is to stop inferring emotions for those
+  persons, not to paper over it. Concretely: drop the emotion attribute from the request rather than
+  the whole face call (AWS Rekognition Attributes ["DEFAULT"] instead of ["ALL"] or ["EMOTIONS"];
+  Azure Face without the emotion attribute), remove the expression model from the chain
+  (face-api.js: keep withFaceLandmarks, drop withFaceExpressions and stop loading
+  faceExpressionNet), drop the affect models from the job request (Hume Expression Measurement:
+  remove the face and prosody models), stop loading the affect model in the Python pipeline (fer,
+  py-feat, DeepFace's emotion action), or gate the whole path so it cannot be reached for worker,
+  candidate or student subjects.
+  Note what does not work here. Consent, a notice, a banner or a data protection impact assessment
+  do not lift an Art. 5 prohibition — a notice discharges the separate Art. 50(3) duty owed by a
+  deployer of an emotion-recognition system, which is a different obligation at a different tier.
+  Releasing the code under a free or open-source licence does not help either: Art. 2(12) expressly
+  withholds that exclusion from Art. 5 systems.
+  If the deployment genuinely sits inside the medical or safety exception, keep the evidence with
+  the code: the narrow purpose, the limits in time, scale and personal application, the safeguards,
+  and a record that the data is not reused for performance assessment.
+data_categories:
+  - user.biometric
+fingerprint_spec: file

@@ -1,0 +1,201 @@
+id: platform-store-001
+pack: platform-store
+short_name: Personal data in a store the device itself owns
+problem_line:
+  text: Personal data written to a store the device itself owns
+  template: "{data} written to a store the device itself owns"
+fix_line: Clear this store on log-out and account deletion, or, where it has no removal call, do not
+  write personal data to it.
+title: Personal data written into a store the operating system owns, which the app's own erasure
+  does not reach
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 17(1) - 'The data subject shall have the right to
+      obtain from the controller the erasure of personal data concerning him or her without undue
+      delay and the controller shall have the obligation to erase personal data without undue delay
+      where one of the following grounds applies'. This is the operative provision for this rule: a
+      store the operating system owns is outside the application's own deletion path, so an erasure
+      route that empties the application's database can be complete about the application and still
+      leave the value in place"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(c) - personal data shall be 'adequate, relevant
+      and limited to what is necessary in relation to the purposes for which they are processed'.
+      What reaches an operating-system store is frequently more than the feature needs: a whole
+      account handle placed in the system dictionary so that a text field stops underlining it,
+      where the feature needed only that one text field to stop underlining it"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 25(2) - 'The controller shall implement appropriate
+      technical and organisational measures for ensuring that, by default, only personal data which
+      are necessary for each specific purpose of the processing are processed. That obligation
+      applies to the amount of personal data collected, the extent of their processing, the period
+      of their storage and their accessibility.' The last three words are the ones this rule is
+      about: an operating-system store changes who else on the device can read the value, which is a
+      change in accessibility and not only in storage"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 32(1)(b) - among the measures a controller and
+      processor shall implement, 'the ability to ensure the ongoing confidentiality, integrity,
+      availability and resilience of processing systems and services'. Reference only: this detector
+      reads a write call and establishes nothing about what protection the platform store applies to
+      what is written into it, which is context_questions[2]"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(1) - 'Processing of personal data revealing racial or
+      ethnic origin, political opinions, religious or philosophical beliefs, or trade union
+      membership, and the processing of genetic data, biometric data for the purpose of uniquely
+      identifying a natural person, data concerning health or data concerning a natural person's sex
+      life or sexual orientation shall be prohibited.' Reference only, and it applies to a subset of
+      matches rather than to the rule's condition: where the value written into the platform store
+      is a health measurement - a blood-glucose reading placed in a watch complication or a
+      persistent notification - the data written is special-category, and the store it is written
+      into is readable by software the application does not control"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    personal_payload_words:
+      - account
+      - Account
+      - profile
+      - Profile
+      - username
+      - userName
+      - displayName
+      - display_name
+      - handle
+      - acct
+      - email
+      - Email
+      - patient
+      - Patient
+      - glucose
+      - Glucose
+      - bg
+      - Bg
+      - Username
+      - UserName
+      - DisplayName
+      - Handle
+      - Acct
+  match:
+    - (?:UITextChecker|NSSpellChecker)[^\n]{0,60}\blearnWord\s*\(
+    - \b(?:save|replace)CredentialIdentities\s*\(
+    - (?:^|[^A-Za-z0-9_])(?:save|replace)CredentialIdentities(?![A-Za-z0-9_])
+    - \bASCredentialIdentityStore\b|\bAS(?:Password|Passkey|OneTimeCode)CredentialIdentity\s*\(
+    - \bCNSaveRequest\b|\bEKEventStore\b[^\n]{0,60}\.\s*save\s*\(|\.\s*save\s*\([^\n]{0,60}\b(?:EKEvent|EKReminder)\b
+    - \bCNContactStore\b|\bCNMutableContact\s*\(|\bEKEvent\s*\(|\bEKReminder\s*\(
+    - \bUIPasteboard\s*\.\s*general\b|\bNSPasteboard\s*\.\s*general\b|\bNSUserActivity\s*\(|\.\s*becomeCurrent\s*\(\s*\)|\bCSSearchableItem\s*\(|\bCSSearchableIndex\b|\bINInteraction\s*\(|\bWidgetCenter\s*\.
+    - \b(?:contentResolver|getContentResolver\s*\(\s*\)|resolver|cr)\s*\.\s*(?:insert|bulkInsert|update|applyBatch)\s*\(
+    - \b(?:CalendarContract|ContactsContract|MediaStore|CallLog|Telephony|UserDictionary|Browser)\s*\.
+    - \bAccountManager[^\n]{0,80}\.\s*(?:setUserData|addAccountExplicitly|setPassword|setAuthToken)\s*\(|\b(?:setUserData|addAccountExplicitly|setAuthToken)\s*\(\s*(?:account|mAccount|newAccount)\b
+    - (?:^|[^A-Za-z0-9_])[A-Za-z0-9_$]{0,32}\s*\.\s*(?:addAccountExplicitly|setAuthToken)\s*\(|(?:^|[^A-Za-z0-9_])[A-Za-z0-9_$]{0,24}(?:[Aa]ccount|ACCOUNT)[A-Za-z0-9_$]{0,16}\s*\.\s*setUserData\s*\(
+    - <account-authenticator\b
+    - \bShortcutManagerCompat\s*\.|\bShortcutManager\b|\bShortcutInfo(?:Compat)?\s*\.\s*Builder\b|\b(?:pushDynamicShortcut|setDynamicShortcuts|addDynamicShortcuts|updateShortcuts)\s*\(
+    - \.\s*notify\s*\([^\n]{0,120}(?&personal_payload_words)
+    - \b[A-Za-z0-9_]*[Nn]otification[A-Za-z0-9_]*\s*\.\s*notify\s*\(|\bNotificationManagerCompat\s*\.\s*from\s*\(
+    - \bAppWidgetManager\b|\bRemoteViews\s*\(|\bComplicationData\b|\bComplicationRequest\b|\bPutDataMapRequest\b|\bWearable\s*\.\s*get(?:Data|Message)Client\s*\(|\bDataClient\b
+    - \bandroid\.provider\.(?:CalendarContract|ContactsContract|MediaStore|CallLog|Telephony|UserDictionary|Browser)\b|\b(?:CalendarContract|ContactsContract|MediaStore|CallLog|Telephony|UserDictionary|Browser)\s*\.\s*[A-Z][A-Za-z0-9_]*\s*\.
+    - \b(?:[Ss]et|[Ww]rite|[Cc]opy|[Pp]ut|[Yy]ank|[Ss]tore)(?:[_-]?[Tt]o)?[_-]?(?:[Cc]lipboard|[Cc]lip_board|[Pp]asteboard|[Pp]aste_board|[Pp]rimaryClip|[Pp]rimary_clip)[A-Za-z0-9_]*\s*\(|\b[A-Za-z0-9_]*[Cc]lip[Bb]oard[A-Za-z0-9_]*\s*(?:\(\s*\))?\s*\.\s*(?:setText|set_text|setContents|set_contents|setContent|set_content|setStringForType|writeText|write_text|setPrimaryClip|setPlainText|setImage|set_image|setHtml|set_html|setData|set_data|copy|write)\s*\(|\b(?:arboard|copypasta|cli_clipboard|clipboard_win|wl_clipboard_rs|terminal_clipboard|pyperclip|clipboardy|xerox)\b[^\n]{0,80}\b(?:set_text|set_contents|set_html|set_image|set_primary|copy|write|writeSync)\s*\(
+    - org\.freedesktop\.Notifications\b|/org/freedesktop/Notifications\b|\bnotify_(?:notification_(?:new|show|update|close|set_(?:hint|urgency|timeout))|init)\s*\(|\bNotify\s*\.\s*(?:init\s*\(|Notification\s*(?:\.\s*new\s*)?\()|\bnotify2\s*\.\s*(?:init|Notification)\s*\(|\bnotify-send\b|\b(?:call|call_sync|call_method|callWithCallback|asyncCall|method_call|MethodCall)\b[^\n]{0,60}["']Notify["']
+context_questions:
+  - "WHICH STORE IS THIS, AND WHO ELSE ON THE DEVICE CAN READ IT? Name the store from the matched
+    line - system dictionary, platform credential index, shared contacts or calendar database,
+    pasteboard, launcher shortcut list, notification shade, home-screen widget, watch complication -
+    and say what the platform's own documentation says about its readership. This is the question
+    the detector cannot answer and it is the one that sizes the finding: a value in the launcher's
+    shortcut list is visible on a home screen, a value in the platform credential index is offered
+    by the OS autofill UI inside other applications, and a value in the system dictionary is offered
+    as a completion everywhere the person types."
+  - "IS THERE A REMOVAL COUNTERPART FOR THIS PARTICULAR STORE, AND IS IT ON THE ACCOUNT-DELETION
+    PATH? Search for the store's own removal call - an unlearn, a remove-identities, a delete on the
+    same content URI, a shortcut removal, a cancel - and then check whether anything on the log-out
+    or delete-account path calls it. A codebase may implement removal for one platform store and
+    none for the next, so a removal found elsewhere in the tree is not an answer about this line.
+    Where the removal exists but nothing on the erasure path calls it, say so: that is a different
+    finding from there being no removal at all."
+  - WHAT IS ACTUALLY WRITTEN - open the value, do not infer it from the call. The constructs this
+    rule matches carry anything from a custom-emoji shortcode with no person in it, through an
+    account handle, a login username and a calendar entry's title and description, to a
+    blood-glucose reading. Quote the field. Where the value is a health measurement, a biometric
+    identifier or any other Art. 9(1) category, say so explicitly, because that changes both the
+    severity and the lawful basis the operator needs.
+  - DOES THE APPLICATION'S OWN ERASURE ROUTE REACH THIS AT ALL? Read the delete-account and log-out
+    paths and list what they clear. The finding this rule exists for is the case where those paths
+    are complete about the application's own database and silent about the platform store, so that a
+    person who deletes their account is told the deletion succeeded while the value remains on the
+    device in a store the application no longer has any reason to touch.
+evidence_template: "{file}:{line} matched a call that writes into a store the operating system owns
+  rather than into the application's own storage - one of eleven clause groups covering the system
+  spelling dictionary, the platform credential index, the shared contacts, calendar and reminder
+  databases, the pasteboard, handoff, system search and Siri donations, Android's content resolver
+  and its platform providers, the account database, the launcher's shortcut list, the notification
+  shade, home-screen widgets and wearable complications. WHAT THIS ESTABLISHES is that a destination
+  outside the application's own storage exists at this line. It does NOT establish which store:
+  three of the eleven clauses match a platform store's CLASS NAME, which a read of that store is
+  written with as readily as a write, so the direction of the call must be read from the surrounding
+  lines. It does NOT establish what is written: the same call shape carries a custom-emoji
+  shortcode, an account handle, a login username, a calendar title and description, and a
+  blood-glucose reading, and only opening the value distinguishes them. It does NOT establish that
+  no removal counterpart exists - this detector deliberately carries no whole-scope guard for one,
+  because a removal implemented for one store would otherwise silence the rule for every other store
+  in the same repository, and one of the codebases this rule was built from is exactly that case.
+  Whether the application's own erasure route reaches this store is context_questions[1] and[3], and
+  it is answered by reading the deletion path, not by this line. ADDED 2026-09-09, TWO STORES THE
+  SENTENCE ABOVE DOES NOT NAME: the operating system's CLIPBOARD in the spellings outside Apple's
+  pasteboard - the desktop Linux, Android, browser and Rust ones - and the FREEDESKTOP NOTIFICATION
+  DAEMON, the separate operating-system process a desktop Linux application hands a notification
+  summary and body to over D-Bus. Both are DESTINATIONS OUTSIDE THE APPLICATION'S OWN STORAGE, which
+  is what makes them this rule's construct: what is put on the clipboard belongs to the session and
+  stays until something else overwrites it, and what the notification daemon is handed is held by
+  that daemon in its own shade and history, so a route that empties the application's own database
+  does not reach into either. That is a statement about where these two stores live and NOT a claim
+  that this codebase has no removal counterpart - a clipboard can be cleared and a notification can
+  be closed, and whether this codebase does either, on the log-out and delete-account path, is
+  context_questions[1] and [3]. The two clauses added for these stores are bound to DIFFERENT
+  THINGS, and which one a match came from changes what it means: the CLIPBOARD clause is bound to a
+  WRITE VERB, so unlike the three class-name clauses named above it does not match a read of the
+  same store; the NOTIFICATION-DAEMON clause is bound to the daemon's own bus name, its object path,
+  and its initialisation and close calls, so a match there establishes that this file addresses that
+  daemon and NOT that this line hands a notification over - and because a close call is the removal
+  counterpart rather than the hand-off, a match may be the removal, which is settled by reading the
+  line. Which value is written is still context_questions[2]. The 'eleven clause groups' in the
+  first sentence is the count as first written and is left standing: this rule carries SEVENTEEN
+  match clauses as of 2026-09-09."
+remediation_template: |
+  Name the store and its readership first: what a platform store changes is who else on the device
+  can read the value and how long it outlives the application, and neither is visible at the call
+  site.
+  Then check the counterpart. For every platform store this codebase writes to, there should be a
+  removal call for that same store, and something on the log-out and delete-account path should call
+  it. The common shape is a codebase that implemented removal for the store it thought about and
+  none for the two it added later.
+  Where a store has no removal API at all - the system spelling dictionary is the case to know, as
+  a word taught to it cannot be untaught by the application - the fix is upstream of the call: do
+  not write a person's handle, name or address into it. A compose field that should not underline a
+  mention can be handled with a per-field text-checker exclusion instead of a system-wide dictionary
+  entry.
+  Where the value is a health measurement or another Art. 9(1) category, treat the widget,
+  complication or notification payload as a disclosure surface in its own right and write down which
+  lawful basis covers it, rather than treating it as a rendering detail of a value already held.
+data_categories:
+  - user.name
+  - user.contact.email
+  - user.unique_id
+  - user.behavior
+fingerprint_spec: file

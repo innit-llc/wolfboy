@@ -1,0 +1,598 @@
+id: eu-special-categories-004
+pack: eu-special-categories
+short_name: Genetic data named in the code
+problem_line:
+  text: Genetic data processed with no Art. 9 basis named
+fix_line: Name the Art. 9(2) point, such as explicit consent per purpose, or stop processing genetic
+  data of identifiable people.
+title: Genome, genotype, variant-call or genetic-test vocabulary - GDPR Art. 9(1) person link and
+  basis need review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(1): 'Processing of personal data revealing racial or
+      ethnic origin, political opinions, religious or philosophical beliefs, or trade union
+      membership, and the processing of genetic data, biometric data for the purpose of uniquely
+      identifying a natural person, data concerning health or data concerning a natural person's sex
+      life or sexual orientation shall be prohibited.' Quoted verbatim from the Official Journal
+      text (CELEX 32016R0679), retrieved 2026-07-30 from the Publications Office cellar
+      (publications.europa.eu/resource/celex/32016R0679, which needs BOTH an Accept:
+      application/xhtml+xml header AND an Accept-Language: eng header - with the Accept header alone
+      it returns HTTP 400 and a 205-byte body, which this file stated as sufficient until 2026-08-03
+      and which was re-tested that day, returning 400 without the language header and 200 with it;
+      the C-184/20 entry below already carried the correct pair, and eur-lex.europa.eu itself
+      returns an empty WAF challenge from this machine). Three structural points this rule rests on.
+      First, 'genetic data' is one of the four limbs introduced by 'the processing of', so no
+      purpose qualifier sits inside the prohibition for it: the qualifier 'for the purpose of
+      uniquely identifying a natural person' attaches to the biometric limb alone. Second, the
+      prohibited act is 'processing', which Art. 4(2) defines as 'any operation or set of operations
+      which is performed on personal data or on sets of personal data, whether or not by automated
+      means, such as collection, recording, organisation, structuring, storage, adaptation or
+      alteration, retrieval, consultation, use, disclosure by transmission, dissemination or
+      otherwise making available, alignment or combination, restriction, erasure or destruction' -
+      storing a genotype in a first-party table with no onward transmission is squarely inside it,
+      which is why this detector requires no sink. Third, the data must be personal data: Art. 4(1)
+      defines that as 'any information relating to an identified or identifiable natural person', an
+      identifiable person being 'one who can be identified, directly or indirectly, in particular by
+      reference to an identifier such as a name, an identification number, location data, an online
+      identifier or to one or more factors specific to the physical, physiological, genetic, mental,
+      economic, cultural or social identity of that natural person' - the word 'genetic' appears in
+      that list, so a genetic profile can itself be the identifier. Art. 9 has applied since
+      2018-05-25: Art. 99(2) reads 'It shall apply from 25 May 2018.'"
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(13): '‘genetic data’ means personal data relating to
+      the inherited or acquired genetic characteristics of a natural person which give unique
+      information about the physiology or the health of that natural person and which result, in
+      particular, from an analysis of a biological sample from the natural person in question;'.
+      Quoted verbatim from the same Official Journal text, retrieved 2026-07-30. Three cumulative
+      elements, none of which a line-level detector can settle: (i) the data relate to a NATURAL
+      PERSON's genetic characteristics, so a reference genome, a synthetic or simulated genome, a
+      non-human genome and a population-level allele-frequency table are outside it; (ii) the
+      characteristics may be inherited OR ACQUIRED, so a somatic tumour profile and an epigenetic
+      mark are inside it and not only inherited germline variants; (iii) the information is unique
+      to that person and concerns their physiology or health. Context question 2 asks the
+      adjudicating agent for exactly these three."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 34: 'Genetic data should be defined as personal data
+      relating to the inherited or acquired genetic characteristics of a natural person which result
+      from the analysis of a biological sample from the natural person in question, in particular
+      chromosomal, deoxyribonucleic acid (DNA) or ribonucleic acid (RNA) analysis, or from the
+      analysis of another element enabling equivalent information to be obtained.' Quoted verbatim
+      from the same Official Journal text, retrieved 2026-07-30. This recital is why the detector's
+      vocabulary is not limited to DNA sequence data: 'chromosomal' analysis puts a karyotype inside
+      the concept, 'ribonucleic acid (RNA) analysis' puts RNA sequencing inside it, and 'the
+      analysis of another element enabling equivalent information to be obtained' is open-ended - it
+      is the clause that covers a marker panel, an HLA type, a polygenic risk score derived from a
+      genotype array, and any future assay that yields the same information without sequencing
+      anything. Note also what the recital does NOT require: it says the data result from the
+      analysis of a biological sample, while Art. 4(13) says 'in particular' from such an analysis,
+      so a genotype imported from a consumer-genomics file the data subject uploaded is not outside
+      the concept merely because this controller never touched a sample."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 35, third limb of its second sentence: personal data
+      concerning health includes 'information derived from the testing or examination of a body part
+      or bodily substance, including from genetic data and biological samples'. The full sentence
+      reads: 'This includes information about the natural person collected in the course of the
+      registration for, or the provision of, health care services as referred to in Directive
+      2011/24/EU of the European Parliament and of the Council (9) to that natural person; a number,
+      symbol or particular assigned to a natural person to uniquely identify the natural person for
+      health purposes; information derived from the testing or examination of a body part or bodily
+      substance, including from genetic data and biological samples; and any information on, for
+      example, a disease, disability, disease risk, medical history, clinical treatment or the
+      physiological or biomedical state of the data subject independent of its source, for example
+      from a physician or other health professional, a hospital, a medical device or an in vitro
+      diagnostic test.' Quoted verbatim from the same Official Journal text, retrieved 2026-07-30.
+      The (9) that follows 'of the Council' is the Journal's own footnote reference to its citation
+      of Directive 2011/24/EU, and it is reproduced here exactly as the Journal prints it. This file
+      elided it until 2026-08-03, because the quotation check's HTML-to-text step then inserted
+      spaces inside the parentheses around the footnote number and no faithful transcription of the
+      printed text could match the result; that defect was fixed on 2026-08-03, so the plain
+      quotation is used and the elision is gone. Consequence for the reader of a finding from this
+      rule: a genetic test result is generally data concerning health as well as genetic data, so
+      the health limb of Art. 9(1) is engaged by the same line and 'disease risk' is named in the
+      recital expressly - a polygenic risk score is inside the concept. This entry is marked as not
+      supporting the rule condition because the condition this detector tests is the genetic limb;
+      the health overlap changes what else applies, not whether Art. 9(1) is engaged."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "CJEU, Case C-184/20, OT v Vyriausioji tarnybinės etikos komisija, judgment of the Grand
+      Chamber of 1 August 2022 (CELEX 62020CJ0184). Para. 127: 'Consequently, those provisions
+      cannot be interpreted as meaning that the processing of personal data that are liable
+      indirectly to reveal sensitive information concerning a natural person is excluded from the
+      strengthened protection regime prescribed by those provisions, if the effectiveness of that
+      regime and the protection of the fundamental rights and freedoms of natural persons that it is
+      intended to ensure are not to be compromised.' The Court reached that conclusion by REJECTING,
+      at para. 124, the reading on which the verb 'reveal' covers indirect deduction while the
+      preposition 'concerning' requires a more direct link: 'Such an interpretation, which would
+      result in a distinction being drawn according to the type of sensitive data at issue, would
+      not, however, be consistent with a contextual analysis of those provisions, in particular with
+      Article 4(15) of the GDPR, according to which ‘data concerning health’ are personal data
+      related to the physical or mental health of a natural person, including the provision of
+      health care services, which ‘reveal’ information about his or her health status, and with
+      recital 35 of that regulation, which states that personal data concerning health should
+      include all data pertaining to the health status of a data subject which ‘reveal’ information
+      relating to the past, current or future physical or mental health status of the data subject.'
+      Two consequences for THIS rule. First, there is no limb of Art. 9(1) for which indirect
+      revelation is a weaker test, so the fact that genetic data sits in the 'the processing of'
+      limb rather than the 'revealing' limb changes nothing: a value liable indirectly to reveal a
+      person's inherited or acquired genetic characteristics is inside Art. 9(1) even though it is
+      not itself a sequence. Second, the case is about a category the Court described as sensitive
+      by deduction from ordinary data - name-specific data about a spouse - which is exactly the
+      shape a family-history field, a lineage grouping or a relative-match list takes in a genomics
+      codebase. Quoted verbatim from the Publications Office cellar text (CELEX 62020CJ0184, fetched
+      2026-08-03 with Accept: application/xhtml+xml and Accept-Language: eng); the judgment's own
+      inner quotation marks are U+2018 and U+2019 and are reproduced as printed."
+    url: http://publications.europa.eu/resource/celex/62020CJ0184
+    checked_at: 2026-08-03
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(2) and 9(3), quoted verbatim from the same Official
+      Journal text, retrieved 2026-07-30. Art. 9(2): '2. Paragraph 1 shall not apply if one of the
+      following applies: (a) the data subject has given explicit consent to the processing of those
+      personal data for one or more specified purposes, except where Union or Member State law
+      provide that the prohibition referred to in paragraph 1 may not be lifted by the data subject;
+      (b) processing is necessary for the purposes of carrying out the obligations and exercising
+      specific rights of the controller or of the data subject in the field of employment and social
+      security and social protection law in so far as it is authorised by Union or Member State law
+      or a collective agreement pursuant to Member State law providing for appropriate safeguards
+      for the fundamental rights and the interests of the data subject; (c) processing is necessary
+      to protect the vital interests of the data subject or of another natural person where the data
+      subject is physically or legally incapable of giving consent; (d) processing is carried out in
+      the course of its legitimate activities with appropriate safeguards by a foundation,
+      association or any other not-for-profit body with a political, philosophical, religious or
+      trade union aim and on condition that the processing relates solely to the members or to
+      former members of the body or to persons who have regular contact with it in connection with
+      its purposes and that the personal data are not disclosed outside that body without the
+      consent of the data subjects; (e) processing relates to personal data which are manifestly
+      made public by the data subject; (f) processing is necessary for the establishment, exercise
+      or defence of legal claims or whenever courts are acting in their judicial capacity; (g)
+      processing is necessary for reasons of substantial public interest, on the basis of Union or
+      Member State law which shall be proportionate to the aim pursued, respect the essence of the
+      right to data protection and provide for suitable and specific measures to safeguard the
+      fundamental rights and the interests of the data subject; (h) processing is necessary for the
+      purposes of preventive or occupational medicine, for the assessment of the working capacity of
+      the employee, medical diagnosis, the provision of health or social care or treatment or the
+      management of health or social care systems and services on the basis of Union or Member State
+      law or pursuant to contract with a health professional and subject to the conditions and
+      safeguards referred to in paragraph 3; (i) processing is necessary for reasons of public
+      interest in the area of public health, such as protecting against serious cross-border threats
+      to health or ensuring high standards of quality and safety of health care and of medicinal
+      products or medical devices, on the basis of Union or Member State law which provides for
+      suitable and specific measures to safeguard the rights and freedoms of the data subject, in
+      particular professional secrecy; (j) processing is necessary for archiving purposes in the
+      public interest, scientific or historical research purposes or statistical purposes in
+      accordance with Article 89(1) based on Union or Member State law which shall be proportionate
+      to the aim pursued, respect the essence of the right to data protection and provide for
+      suitable and specific measures to safeguard the fundamental rights and the interests of the
+      data subject.' Art. 9(3): '3. Personal data referred to in paragraph 1 may be processed for
+      the purposes referred to in point (h) of paragraph 2 when those data are processed by or under
+      the responsibility of a professional subject to the obligation of professional secrecy under
+      Union or Member State law or rules established by national competent bodies or by another
+      person also subject to an obligation of secrecy under Union or Member State law or rules
+      established by national competent bodies.' The three points a genomics codebase most often
+      rests on are (a) explicit consent for one or more specified purposes, which is the
+      consumer-genomics answer; (j) scientific research under Art. 89(1) on the basis of Union or
+      Member State law, which is the research-cohort answer; and (h) read with (3), which is the
+      clinical-genetics answer and carries the professional-secrecy condition. Whether any of them
+      is made out turns on facts no detector can see - the wording of a consent flow, a national
+      research statute, an organisation's legal form."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(4): 'Member States may maintain or introduce further
+      conditions, including limitations, with regard to the processing of genetic data, biometric
+      data or data concerning health.' Quoted verbatim from the same Official Journal text,
+      retrieved 2026-07-30. Recital 53 says the same in its own words: 'Member States should be
+      allowed to maintain or introduce further conditions, including limitations, with regard to the
+      processing of genetic data, biometric data or data concerning health. However, this should not
+      hamper the free flow of personal data within the Union when those conditions apply to
+      cross-border processing of such data.' Genetic data is the first of the three categories
+      named, and note the limit of the paragraph: it reaches genetic, biometric and health data
+      ONLY, so it does not extend to the rest of the Art. 9(1) list. No count of the remaining
+      categories is given: this entry stated one until 2026-08-03 and the sibling rule -003 stated a
+      different one on the same day in the same pack, which cannot both be right, because the list
+      can be read as eight limbs or as nine depending on whether sex life and sexual orientation are
+      counted separately. Nothing in the Regulation settles that and no legal consequence turns on
+      it, so neither file states a number now. Whether any particular Member State has used the
+      power, and what it enacted, is NOT recorded here and was not checked: no national instrument
+      was fetched or read during authoring, and a statement about national law that rests on nothing
+      fetched has no place in a citation field. The consequence for this product's output is that a
+      review of an Art. 9(2) point under the Regulation is never the whole answer for a genomics
+      codebase; the national conditions of each Member State the product is deployed in are a
+      separate question, and this scan assesses none of them. This entry bounds the duty rather than
+      establishing it."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 83(5)(a): infringements of 'the basic principles for
+      processing, including conditions for consent, pursuant to Articles 5, 6, 7 and 9' are 'subject
+      to administrative fines up to 20 000 000 EUR, or in the case of an undertaking, up to 4 % of
+      the total worldwide annual turnover of the preceding financial year, whichever is higher'.
+      Article 9 is named in that list by number, so the special-categories prohibition carries the
+      upper band rather than the Art. 83(4) one. Quoted from the same Official Journal text,
+      retrieved 2026-07-30; the introductory line of Art. 83(5) reads in full '5. Infringements of
+      the following provisions shall, in accordance with paragraph 2, be subject to administrative
+      fines up to 20 000 000 EUR, or in the case of an undertaking, up to 4 % of the total worldwide
+      annual turnover of the preceding financial year, whichever is higher:'."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(2): '‘processing’ means any operation or set of
+      operations which is performed on personal data or on sets of personal data, whether or not by
+      automated means, such as collection, recording, organisation, structuring, storage, adaptation
+      or alteration, retrieval, consultation, use, disclosure by transmission, dissemination or
+      otherwise making available, alignment or combination, restriction, erasure or destruction;'.
+      Quoted verbatim from the Regulation's text (CELEX 32016R0679, checked on 2026-11-07 against
+      the consolidated text 02016R0679-20160504, which the receipt names); the Journal wraps the
+      defined term in U+2018/U+2019 curly quotation marks, preserved here. CONSEQUENCE: Art. 9(1)
+      prohibits processing, and Art. 4(2) makes collection, recording, structuring, storage, use and
+      disclosure each an operation of processing in its own right; 'disclosure by transmission' is
+      one item in that list, not a precondition for the others. A genotype written to a first-party
+      table and sent nowhere is therefore inside the prohibition, and stopping storage alone, while
+      the code still collects, derives or forwards the values, does not take a path out of it."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-11-07
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  match:
+    - "[Gg]enome(?!n)|GENOME(?!N)|[Gg]enomic|GENOMIC|[Gg]enotyp|GENOTYP|[Kk]aryotyp|KARYOTYP|[Hh]ap\
+      lotype|HAPLOTYPE|[Hh]aplogroup|HAPLOGROUP|[Cc]hromosom|CHROMOSOM|[Nn]ucleotide|NUCLEOTIDE|[Ee\
+      ]xome|EXOME|[Ee]pigenetic|EPIGENETIC|[Pp]olygenic|POLYGENIC|[Pp]harmacogenom|PHARMACOGENOM|[Z\
+      z]ygosity|ZYGOSITY|[Hh]omozygous|HOMOZYGOUS|[Hh]eterozygous|HETEROZYGOUS|(?<![A-Za-z\\u00C0-\
+      \\u024F])[Aa]llele|(?<=[a-z])Allele|(?<![A-Z])ALLELE|[Gg]erm[_\\-]?[Ll]ine|GERMLINE|[Bb][Rr][\
+      Cc][Aa][12]|[Bb]iological[_\\- ]?[Ss]ample|BIOLOGICAL[_\\- ]?SAMPLE"
+    - "[Gg]enetic[_\\-
+      ]?(?:[Dd]ata|[Tt]est|[Rr]esult|[Rr]eport|[Mm]arker|[Vv]ariant|[Pp]rofile|[Ss]creen|[Cc]ounsel\
+      |[Rr]isk|[Aa]ncestry|[Ii]nformation|[Ss]ample)|GENETIC[_\\-
+      ]?(?:DATA|TEST|RESULT|REPORT|MARKER|VARIANT|PROFILE|SCREEN|COUNSEL|RISK|ANCESTRY|INFORMATION|\
+      SAMPLE)|[Gg]ene[_\\- ]?(?:[Ee]xpression|[Ss]ymbol|[Pp]anel|[Ff]usion|[Vv]ariant)|GENE[_\\-
+      ]?(?:EXPRESSION|SYMBOL|PANEL|FUSION|VARIANT)|(?:[Ss]omatic|[Pp]athogenic|[Bb]enign|[Nn]ovel)[_\
+      \\- ]?(?:[Vv]ariant|[Mm]utation)|(?:SOMATIC|PATHOGENIC|BENIGN|NOVEL)[_\\-
+      ]?(?:VARIANT|MUTATION)|[Vv]ariant[_\\-
+      ]?(?:[Cc]all|[Cc]alling|[Ii]nterpret|[Cc]lassification|[Aa]nnotation)|VARIANT[_\\-
+      ]?(?:CALL|CALLING|INTERPRET|CLASSIFICATION|ANNOTATION)|[Cc]all[_\\- ]?[Vv]ariant|CALL[_\\-
+      ]?VARIANT|[Ss]equencing[_\\-
+      ]?(?:[Rr]un|[Dd]ata|[Rr]esult|[Pp]ipeline|[Dd]epth|[Cc]overage|[Bb]atch|[Ll]ibrary|[Pp]latfor\
+      m|[Ff]acility)|SEQUENCING[_\\-
+      ]?(?:RUN|DATA|RESULT|PIPELINE|DEPTH|COVERAGE|BATCH|LIBRARY|PLATFORM|FACILITY)|[Nn]ext[_\\-
+      ]?[Gg]eneration[_\\- ]?[Ss]equencing|NEXT[_\\- ]?GENERATION[_\\-
+      ]?SEQUENCING|(?<![A-Za-z\\u00C0-\\u024F])[Nn][Gg][Ss](?![A-Za-z\\u00C0-\\u024F])|(?<![A-Za-z0\
+      -9\\u00C0-\\u024F])[a-z][A-Za-z]{1,20}(?:NGS|Ngs)(?![a-z])"
+    - (?<![A-Za-z0-9])rs\d{4,}(?![0-9])|(?<![A-Za-z\u00C0-\u024F])[Rr][Ss][_\-]?[Ii][Dd][Ss]?(?![A-Za-z])|(?<=[a-z])(?:RSID|RsID|RsId|Rsid)[Ss]?(?![A-Za-z])|(?<![A-Z])SNPs?(?![A-Za-z])|(?<![A-Za-z])snps(?![A-Za-z])|[Ss]np[_\-
+      ]?(?:[Ii]d|[Aa]rray|ARRAY|[Cc]hip|CHIP|[Cc]all|CALL|[Ll]ist|LIST)|[Dd][Bb][_\-]?[Ss][Nn][Pp](?![A-Za-z])|[Cc]lin[Vv]ar|CLINVAR|gnomAD|[Gg]nomad|GNOMAD|[Ee]nsembl(?![Ee])|ENSEMBL(?![E])|[Rr]ef[Ss]eq|REFSEQ|[Gg][Rr][Cc][Hh]3[78]|[Hh][Gg](?:19|38)(?![0-9])|[Hh][Ll][Aa][_\-
+      ]?(?:[Tt]yping|TYPING|[Tt]ype|TYPE|[Aa]llele|ALLELE|[Mm]atch|MATCH|[Aa]ntigen|ANTIGEN)|[Hh][Ll][Aa][_\-](?:[Dd][Rr][Bb]1|[Dd][Qq][Bb]1|[ABCabc])(?![A-Za-z0-9])|(?<![A-Za-z])(?:ACMG|OMIM|HGVS)(?![A-Za-z])
+    - \.vcf(?![A-Za-z])|(?<![A-Za-z0-9])VCF(?![a-z])|(?<=[a-z])VCF(?![A-Za-z0-9])|[Vv][Cc][Ff][_\-
+      ]?(?:[Ff]ile|FILE|[Pp]ath|PATH|[Rr]ecord|RECORD|[Rr]eader|READER|[Ww]riter|WRITER|[Hh]eader|HEADER)|(?:[Rr]ead|[Ww]rite|[Pp]arse|[Ll]oad)[_]?[Vv]cf(?![A-Za-z])|(?<![A-Za-z\u00C0-\u024F])[Ff]astq|(?<=[a-z])Fastq|(?<![A-Z])FASTQ|(?<![A-Za-z\u00C0-\u024F])[Ff]asta(?![A-Za-z\u00C0-\u024F])|(?<=[a-z])Fasta(?![A-Za-z])|(?<![A-Z])FASTA(?![A-Za-z])|\.bam(?![A-Za-z])|\.cram(?![A-Za-z])|(?<![A-Za-z])[Bb][Aa][Mm][_\-
+      ]?(?:[Ff]ile|FILE|[Ii]ndex|INDEX)|(?<=[a-z])BAM[_\-
+      ]?(?:[Ff]ile|FILE|[Ii]ndex|INDEX)|(?<![A-Za-z])[Ss][Aa][Mm][_\-
+      ]?(?:[Ff]ile|FILE|[Hh]eader|HEADER|[Ff]lag|FLAG)|(?<=[a-z])SAM[_\-
+      ]?(?:[Ff]ile|FILE|[Hh]eader|HEADER|[Ff]lag|FLAG)|\.bim(?![A-Za-z])|\.fam(?![A-Za-z])|(?<![A-Za-z\u00C0-\u024F])[Pp][Ll][Ii][Nn][Kk](?![A-Za-z\u00C0-\u024F])|(?<=[a-z])(?:PLINK|Plink)(?![A-Za-z])|[Ss]amtools|SAMTOOLS|[Bb]cftools|BCFTOOLS|[Vv]cftools|VCFTOOLS|[Bb]edtools|BEDTOOLS|(?<![A-Za-z\u00C0-\u024F])[Gg][Aa][Tt][Kk](?![A-Za-z\u00C0-\u024F])|(?<=[a-z])(?:GATK|Gatk)(?![A-Za-z])|[Pp]ysam|PYSAM|[Bb]iopython|BIOPYTHON|Bio\.SeqIO|scikit[_\-]?allel|[Bb]owtie2|BOWTIE2|[Mm]inimap2|MINIMAP2|[Bb]wa[_\-
+      ]?[Mm]em|BWA[_\- ]?MEM|[Cc]utadapt|CUTADAPT|[Hh]tslib|HTSLIB
+    - "[Dd][Nn][Aa][_\\-
+      ]?(?:[Ss]equenc|SEQUENC|[Ss]ample|SAMPLE|[Tt]est|TEST|[Kk]it|KIT|[Pp]rofile|PROFILE|[Rr]esult\
+      |RESULT|[Ee]xtract|EXTRACT|[Mm]ethylation|METHYLATION|[Bb]arcode|BARCODE|[Ff]ile|FILE|[Dd]ata\
+      |DATA)|[Rr]aw[_\\- ]?[Dd][Nn][Aa]|RAW[_\\- ]?DNA|[Rr][Nn][Aa][_\\-
+      ]?(?:[Ss]eq|SEQ|[Ee]xpression|EXPRESSION|[Ss]ample|SAMPLE|[Ee]xtract|EXTRACT)|[Nn]ucleic[_\\-
+      ]?[Aa]cid|NUCLEIC[_\\- ]?ACID"
+    - 23[aA]nd[Mm]e|(?<![A-Za-z])23andme|23ANDME|[Aa]ncestry[_\- ]?[Dd][Nn][Aa]|ANCESTRY[_\-
+      ]?DNA|[Mm]y[Hh]eritage|MYHERITAGE|[Ff]amily[_\- ]?[Tt]ree[_\- ]?[Dd][Nn][Aa]|FAMILY[_\-
+      ]?TREE[_\- ]?DNA|[Nn]ebula[_\- ]?[Gg]enomics|NEBULA[_\-
+      ]?GENOMICS|GEDmatch|[Gg]edmatch|GEDMATCH|[Dd][Nn][Aa][_\- ]?(?:[Rr]elatives|RELATIVES)
+    - (?:patient|Patient|PATIENT|[Ss]ubject|SUBJECT|[Pp]articipant|PARTICIPANT|[Dd]onor|DONOR|[Uu]ser|USER|[Pp]rofile|PROFILE|[Pp]erson|PERSON|[Ss]pecimen|SPECIMEN)\s*(?:\.|\[\s*["'])\s*(?:(?:dna|Dna|DNA|snps?|Snps?|SNPs?|markers?|Markers?|MARKERS?|zygosity|Zygosity|ZYGOSITY|calls|Calls|CALLS)(?![A-Za-z])|(?:seq|Seq|SEQ|sequence|Sequence|SEQUENCE)(?![A-Za-z_]))
+    - (?:[Ss]pecimen|SPECIMEN|[Bb]iospecimen|BIOSPECIMEN|[Bb]io[_\-]?[Ss]ample|BIOSAMPLE|[Aa]liquot|ALIQUOT|[Bb]iobank|BIOBANK|[Ss]aliva|SALIVA|[Bb]uccal|BUCCAL|[Cc]heek[_\-
+      ]?[Ss]wab|CHEEK[_\-
+      ]?SWAB)[^\n]{0,80}(?:[Pp]atient|PATIENT|[Ss]ubject|SUBJECT|[Dd]onor|DONOR|[Pp]articipant|PARTICIPANT|[Pp]erson|PERSON)[_\-
+      ]?(?:[Ii][Dd]|[Uu][Uu][Ii][Dd]|[Nn]ame|NAME|[Kk]ey|KEY)
+    - (?:[Pp]atient|PATIENT|[Ss]ubject|SUBJECT|[Dd]onor|DONOR|[Pp]articipant|PARTICIPANT|[Pp]erson|PERSON)[_\-
+      ]?(?:[Ii][Dd]|[Uu][Uu][Ii][Dd]|[Nn]ame|NAME|[Kk]ey|KEY)[^\n]{0,80}(?:[Ss]pecimen|SPECIMEN|[Bb]iospecimen|BIOSPECIMEN|[Bb]io[_\-]?[Ss]ample|BIOSAMPLE|[Aa]liquot|ALIQUOT|[Bb]iobank|BIOBANK|[Ss]aliva|SALIVA|[Bb]uccal|BUCCAL|[Cc]heek[_\-
+      ]?[Ss]wab|CHEEK[_\- ]?SWAB)
+    - (?:(?:[Cc][Rr][Ee][Aa][Tt][Ee][_
+      ][Tt][Aa][Bb][Ll][Ee]|[Cc]reate[Tt]able|Schema::create|@Entity|@Table)|^\s*(?:(?:export|public|private|protected|internal|static|final|abstract|sealed|partial|open|declare|data|const)\s+){0,3}(?:class|model|struct|interface|type)\b)\s*[^\n]{0,30}(?:[Ss]pecimen|SPECIMEN|[Bb]iospecimen|BIOSPECIMEN|[Bb]io[_\-]?[Ss]ample|BIOSAMPLE|[Aa]liquot|ALIQUOT|[Bb]iobank|BIOBANK)
+    - (?<![A-Za-z])[Cc][Hh][Rr][Oo][Mm](?![A-Za-z])|(?<![A-Za-z\u00C0-\u024F])[Aa]llelic|(?<=[a-z])Allelic|(?<![A-Z])ALLELIC|(?<![A-Za-z])[Ff]low[_\-
+      ]?[Cc]ell(?![A-Za-z])|(?<![A-Za-z])FLOW[_\-
+      ]?CELL(?![A-Za-z])|(?<![A-Za-z])[Ss][Nn][Vv](?![A-Za-z])|(?<![A-Za-z])(?:[Ww][Ee][Ss]|[Ww][Gg][Ss])[_\-
+      ]?(?:[Kk]it|KIT|[Pp]anel|PANEL|[Bb]ait|BAIT|[Tt]arget|TARGET|[Rr]un|RUN|[Bb]ed|BED)|[Vv][Cc][Ff][_\-
+      ]?(?:[Uu][Rr][Ii]|URI|[Uu][Rr][Ll]|URL|[Kk]ey|KEY|[Bb]lob|BLOB|[Oo]bject|OBJECT|[Ll]ocation|LOCATION|[Bb]ucket|BUCKET)|[Gg]enetic[_\-
+      ]?(?:[Ss]ummary|[Oo]verview|[Ss]tatus|[Ff]inding|[Rr]ecord|[Ss]core|[Cc]all|[Aa]ssay|[Aa]nalysis|[Ss]equence|[Pp]anel)|GENETIC[_\-
+      ]?(?:SUMMARY|OVERVIEW|STATUS|FINDING|RECORD|SCORE|CALL|ASSAY|ANALYSIS|SEQUENCE|PANEL)
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|--\s)
+    - "[Gg]enetic[_\\s\\-]?[Aa]lgorithm|GENETIC_ALGORITHM|[Ee]volutionary[_\\s\\-]?(?:[Aa]lgorithm|\
+      [Cc]omputation|[Ss]trateg)|[Ff]itness[_\\s\\-]?[Ff]unction|[Tt]ournament[_\\s\\-]?[Ss]electio\
+      n|[Cc]rossover[_\\s\\-]?(?:[Pp]oint|[Rr]ate|[Pp]robabilit)|(?<![A-Za-z])DEAP(?![A-Za-z])|[Pp]\
+      ygad"
+    - "[Vv][Cc]ard|VCARD|[Cc]ontacts?\\.vcf|[Aa]ddress[_\\- ]?[Bb]ook"
+    - plink\.exe|PLINK\.EXE|[Pp]u[Tt][Tt][Yy]
+context_questions:
+  - "Does the sequence, genotype or marker relate to an identified or identifiable natural person?
+    GDPR Art. 4(1) is the gate for the whole of Art. 9, and Art. 4(13) requires the data to relate
+    to 'the inherited or acquired genetic characteristics of a natural person'. Five shapes reach
+    this detector and are outside that: a REFERENCE genome or reference panel (GRCh38, hg38, a
+    RefSeq or Ensembl transcript set) which is a coordinate system rather than anybody's data; a
+    NON-HUMAN genome - plant, animal, microbial, viral - where a pathogen assembly from a patient
+    sample is the one case that can still be personal data of the patient; a SYNTHETIC or simulated
+    dataset generated by the code itself; a POPULATION-LEVEL summary such as an allele-frequency
+    table, a gnomAD lookup or a cohort count with no person key; and a bioinformatics LIBRARY or
+    format parser that defines the data structures and ships no data. Quote the schema, the file
+    header or the loader that shows what the record is keyed on, and say whether a person
+    identifier, a pseudonymous sample identifier that the project can re-link, or nothing at all
+    sits next to the sequence. Note that a pseudonymous sample identifier plus a separate linking
+    table is still personal data: Art. 4(1) covers identification 'directly or indirectly'."
+  - "Is it genetic data within Art. 4(13), and by which route? The definition has three cumulative
+    elements: the data relate to inherited OR ACQUIRED genetic characteristics of a natural person,
+    they give unique information about that person's physiology or health, and they result in
+    particular from the analysis of a biological sample from that person. Recital 34 opens the third
+    element wide: 'in particular chromosomal, deoxyribonucleic acid (DNA) or ribonucleic acid (RNA)
+    analysis, or from the analysis of another element enabling equivalent information to be
+    obtained'. So a karyotype, an RNA-seq profile, a genotype array, an HLA type, a polygenic risk
+    score computed from that array, and a marker panel are all inside the concept, and 'acquired'
+    brings in a somatic tumour variant profile and epigenetic marks. Two things that are not:
+    gene-expression counts of a cell line rather than of a person, and a value that only borrows the
+    vocabulary - a genetic ALGORITHM's chromosome and alleles, a 'genome' used as a metaphor for a
+    configuration set, or a `.vcf` file that is an address-book export. Quote the field and map it
+    to the element it satisfies."
+  - Does the code also compute or store something derived from the genetic data that carries the
+    same information? Art. 4(13) covers data that 'give unique information about the physiology or
+    the health' of the person, and Recital 34 covers 'another element enabling equivalent
+    information'. So a polygenic risk score, a carrier-status flag, a predicted-trait field, an
+    ancestry-composition breakdown, a relative-match list and a pharmacogenomic dosing
+    recommendation are inside the same prohibition as the raw genotype they came from, and they are
+    frequently stored in a different table from it, under names this detector may not have reached.
+    Trace the derived values and quote them, because remediation that protects the VCF and leaves
+    the derived scores in an ordinary user profile has not addressed the finding.
+  - "Which Art. 9(2) point is being relied on, and can you name it and the law it rests on? Nine of
+    the ten are invisible to a detector, so this is the question the scanner cannot answer at all.
+    Walk them in the order a real genomics codebase turns on them. (a) EXPLICIT CONSENT to one or
+    more specified purposes - the consumer-genomics answer, and the bar is higher than an ordinary
+    consent: it must be explicit and the purposes must be specified, so a signup checkbox covering
+    'improving our services' is a lead rather than an answer, and research re-use, relative matching
+    and any onward sharing are separate specified purposes. (j) SCIENTIFIC RESEARCH, archiving in
+    the public interest or statistics under Art. 89(1), on the basis of Union or Member State law
+    with proportionate safeguards - the research-cohort answer. (h) preventive or occupational
+    medicine, medical diagnosis, or the provision of health or social care, on the basis of Union or
+    Member State law or a contract with a health professional - the clinical-genetics answer, and it
+    is conditional on Art. 9(3), which requires the data to be processed by or under the
+    responsibility of a person bound by an obligation of professional secrecy: an organisational
+    fact, so say whether the repository shows it or not. Then (b) employment and social security
+    law; (c) vital interests where the data subject is incapable of giving consent; (d) a
+    not-for-profit body processing only its members' data; (e) data manifestly made public by the
+    data subject - which is the one that can be visible in code, where a project ingests openly
+    published genomes, and it is narrow; (f) legal claims, which is where paternity and forensic
+    testing usually sits; (g) substantial public interest under a named Union or Member State law;
+    (i) public health. Quote what you find, or record explicitly that you looked and the code shows
+    nothing either way."
+  - "Where does the value go, and who receives it? A sink is not required for this rule to be right
+    - Art. 9(1) prohibits processing, and Art. 4(2) includes collection, recording, structuring and
+    storage - but each hop adds a separate duty. Trace it and quote every hop: a first-party
+    database or object store; a console, structured log or crash report; an analytics or
+    product-telemetry call; an LLM or hosted-inference provider, which is the fastest-growing route
+    for a genomic payload to leave the machine; a third-party variant-interpretation or annotation
+    API; a session-replay recorder. Two consequences worth naming: a recipient outside the EEA
+    raises Arts 44-49 on top of Art. 9, and a genotype in an application log raises Art. 5(1)(f) and
+    is rarely intended by anyone. Say which sinks you found and quote the call."
+  - "Who is the controller for this processing, and is that the party whose repository this is? Note
+    first what Art. 9(1) does and does not say, because this file said the wrong thing until
+    2026-08-03 and contradicted its sibling -001 in doing so. Art. 9(1) is written in the passive -
+    processing of genetic data 'shall be prohibited' - and it names no addressee at all, so the
+    prohibition binds whoever carries out the operation, controller and processor alike. Art. 4(8)
+    defines a processor as a body 'which processes personal data on behalf of the controller', and
+    that activity is itself processing within Art. 4(2). What is controller-shaped is most of Art.
+    9(2): the exceptions turn on purposes, consent and legal bases that only a controller
+    determines, and Art. 4(7) defines the controller as the body 'which, alone or jointly with
+    others, determines the purposes and means of the processing of personal data'. The contrast that
+    settles it is Art. 5(2), where the Regulation names an addressee when it means to: 'The
+    controller shall be responsible for, and be able to demonstrate compliance with, paragraph 1'.
+    Art. 9(1) contains no such sentence. So the question to answer is not 'is this repository the
+    controller' but two questions: who processes here, and who determines the purposes and means. A
+    format parser, a bioinformatics library, a workflow module or an integration connector that
+    carries a VCF record or an rsID through to its caller does not determine the purposes and means,
+    so it is not the controller - though a deployment of it that stores real genotypes is still
+    processing. Where the repository is a component rather than a deployed service, record the
+    finding against the integrating application and say so, rather than reporting the library as the
+    addressee."
+  - "Does Art. 9(4) change the answer for the Member States this product is deployed in? For genetic
+    data, biometric data and data concerning health, Art. 9(4) lets a Member State 'maintain or
+    introduce further conditions, including limitations', so a national condition on genetic data
+    may exist on top of the Regulation. Note the limit of the paragraph as well: it reaches only
+    these three categories. Neither this scan nor the authoring of this rule assessed any national
+    instrument - no Member State law was fetched or read - so treat this question as open rather
+    than as answered in either direction. Name the Member States the repository shows the product
+    operating in, and record that national conditions on genetic data were not assessed, so that a
+    reader does not treat an identified Art. 9(2) point as the end of the question."
+  - "Is anything here liable INDIRECTLY to reveal a person's genetic characteristics, even though it
+    is not itself a sequence, a genotype or a marker? CJEU C-184/20, quoted in this rule's
+    legal_basis, holds that personal data liable indirectly to reveal a special category are inside
+    Art. 9(1), and it reached that holding by refusing to make the test weaker for the categories
+    Art. 9(1) introduces with 'data concerning' than for those it introduces with 'revealing'.
+    Genetic data sits in neither of those two groups - it is in the 'the processing of' limb - and
+    nothing in the judgment gives that limb a narrower test either. Shapes to look for, none of
+    which this detector can reach on its own: a family or pedigree structure, which reveals
+    inherited characteristics of relatives who never used the product; a 'family history of X' or
+    'first-degree relative affected' flag; a carrier-status or disease-risk field stored away from
+    the genotype it came from; an ancestry-composition or haplogroup-derived lineage grouping; a
+    relative-match or DNA-relatives list; and a pseudonymous sample identifier held next to anything
+    that re-links it. Quote what you find and say what could be deduced from it about a specific
+    person, or record that you looked and nothing is deducible. Note also that this question is not
+    answered by deleting the sequence: the derived value is inside Art. 9(1) on its own."
+  - "WHO ANSWERS WHICH ART. 9(2) CONDITION THE ORGANISATION RELIES ON? Whether the organisation that
+    runs this product has a condition under Art. 9(2) for the special-category data it keeps, and
+    has it written down, is a fact about that organisation: the person running the scan is asked it
+    as the Art 9 condition question, ScanProfile.operator.special_category_condition, and the code
+    never decides it. Where the matched value is special-category data about an identifiable person
+    and what remains open is that condition - the Art. 9(2) question above - write the finding as
+    waiting on operator.special_category_condition, whether or not it has been answered, and let the
+    program apply the answer. The leads the Art. 9(2) question asks you to quote from the repository
+    corroborate or contradict the answer; where they contradict it, say so in the reasoning. The
+    answer settles that condition and nothing else: whether the value is special-category data at
+    all and whom it concerns, any further condition Member State law adds under Art. 9(4), and
+    whether the condition covers the use this finding is about, stay yours, so where one of those
+    decides the finding, answer it instead of waiting. An answer that the organisation has a
+    condition never says that it covers a particular use: each condition is tied to its purpose
+    (Art. 9(2)(a) consent is given for one or more specified purposes), so each onward use the code
+    shows - the value sent to a log or an error tracker, an analytics, marketing or session-replay
+    SDK or another tracker, a language model or another third-party API, or an export - is yours to
+    judge on its own line, with the transfer, minimisation and integrity questions it raises, and is
+    never written as waiting on this answer."
+evidence_template: "{file}:{line} carries a string from this rule's genomic and genetic-test
+  vocabulary - a genome, exome, genotype, allele, karyotype, variant call, marker identifier,
+  sequencing artifact, consumer-genomics import, HLA type, or a biological specimen joined to a
+  person identifier. THAT STRING IS THE WHOLE OF WHAT WAS MATCHED, and several of these tokens are
+  short or are also ordinary words, so read the line before treating it as genomic material. Six
+  look-alike classes have been met on real code and every one of them satisfied a clause. A VALUE
+  THAT ONLY BORROWS THE VOCABULARY, which context question 2 sets out: a genetic ALGORITHM's
+  chromosome and alleles, a genome used as a metaphor for a configuration set, a .vcf file that is
+  an address-book export. AN rsID SPELLING THAT IS AN INDEX RATHER THAN A VARIANT: `rs2320` and
+  `rs2321` are serial-port channels 0 and 1 in a hardware protocol decoder, and the four-digit
+  requirement that keeps out the JOSE algorithm names RS256 and RS512 does not keep out a four-digit
+  channel number. A PERSON-PREFIXED ACCESSOR WHOSE FIELD IS NOT GENOMIC: a `markers` collection read
+  off a user object can be timeline read-position markers, and the person prefix is exactly what
+  makes such a match look strongest while being furthest from genomic material. A DATA TABLE THAT
+  HAPPENS TO SPELL ONE OF THESE WORDS: a subword entry in an embedding model's tokenizer vocabulary,
+  or a cryptocurrency ticker table whose asset names contain genome. A TOKEN MATCHED INSIDE A LONGER
+  WORD OF ANOTHER LANGUAGE: in a translation catalogue the sequencing token NGS sits inside a
+  Swedish word whose accented letter is written as a JSON unicode escape, and the digit that ends
+  that escape defeats the letter guard that would otherwise require a word boundary. AND THE NAME OF
+  THE LEGAL CATEGORY ITSELF: a bullet reading `genetic data` in an article or a documentation page
+  listing the Art. 9(1) special categories names the category rather than anybody's material. Say
+  which of these the line is, or that it is none of them, and then check whether the matched value
+  relates to an identified or identifiable natural person (Art. 4(1), Art. 4(13)) and which Art.
+  9(2) point is relied on"
+remediation_template: >
+  This is a candidate for review against the GDPR Art. 9(1) prohibition on processing genetic data,
+
+  not a determination about this code. Art. 9 has applied since 2018-05-25 and sits in the
+
+  Art. 83(5)(a) tier, which names Article 9 expressly: up to EUR 20 000 000 or 4% of total worldwide
+
+  annual turnover, whichever is higher.
+
+  Establish two facts first, because most candidates are decided by them:
+
+  1. Does the material relate to an identified or identifiable natural person (Art. 4(1))? A
+  reference
+     genome, a non-human genome, a synthetic dataset, a population-level allele-frequency table and a
+     format parser with no data are outside Art. 9 entirely. A pseudonymous sample identifier that
+     this project can re-link to a person is not: Art. 4(1) covers indirect identification.
+  2. Is it genetic data within Art. 4(13) - inherited or acquired genetic characteristics of a
+  natural
+     person, giving unique information about their physiology or health? Recital 34 makes this wide:
+     chromosomal analysis, DNA or RNA analysis, "or from the analysis of another element enabling
+     equivalent information to be obtained". A genotype array, an HLA type and a risk score derived
+     from either are inside it. A genetic algorithm's chromosomes and alleles are not.
+  If both hold, the question is which Art. 9(2) point applies, and the engineering work follows from
+
+  which one it is rather than preceding it:
+
+  - Relying on (a) explicit consent, which is the consumer-genomics case: Art. 9(2)(a) itself
+    carries only two of the four things engineers are usually told to build. It requires consent to
+    be "explicit" and given "for one or more specified purposes"; separability and withdrawability
+    come from elsewhere and are quoted here so that this file does not assert a test it has not
+    shown. Art. 4(11) defines consent as "any freely given, specific, informed and unambiguous
+    indication of the data subject's wishes by which he or she, by a statement or by a clear
+    affirmative action, signifies agreement to the processing of personal data relating to him or
+    her", and Art. 7(3) provides that "The data subject shall have the right to withdraw his or her
+    consent at any time. The withdrawal of consent shall not affect the lawfulness of processing
+    based on consent before its withdrawal. Prior to giving consent, the data subject shall be
+    informed thereof. It shall be as easy to withdraw as to give consent." Art. 7(1) is what
+    requires the record: "Where processing is based on consent, the controller shall be able to
+    demonstrate that the data subject has consented to processing of his or her personal data." So:
+    separate the purposes the code actually pursues - storage, interpretation, relative matching,
+    research re-use, onward sharing - make each one separately grantable and as easy to withdraw as
+    to give, and keep on the controller's side the record of what was shown and agreed to.
+  - Relying on (j) research under Art. 89(1): read what that provision actually requires, because
+    the two halves of it are not the same strength. Art. 89(1): "Processing for archiving purposes
+    in the public interest, scientific or historical research purposes or statistical purposes,
+    shall be subject to appropriate safeguards, in accordance with this Regulation, for the rights
+    and freedoms of the data subject. Those safeguards shall ensure that technical and
+    organisational measures are in place in particular in order to ensure respect for the principle
+    of data minimisation. Those measures may include pseudonymisation provided that those purposes
+    can be fulfilled in that manner. Where those purposes can be fulfilled by further processing
+    which does not permit or no longer permits the identification of data subjects, those purposes
+    shall be fulfilled in that manner." So data minimisation is required of the measures, whereas
+    pseudonymisation is permitted rather than required and is conditional on the research purposes
+    still being achievable with it - and the last sentence goes further than either: where the
+    purposes can be met without identifying anybody, they must be. The Union or Member State law
+    requirement is not in Art. 89(1) at all; it comes from Art. 9(2)(j), which conditions the
+    exception on processing being "on the basis of Union or Member State law".
+  - Relying on (h) clinical care: Art. 9(3) additionally requires the processing to be by or under
+  the
+    responsibility of a person bound by professional secrecy, which is an access-control and
+    contractual fact as much as a code one.
+  - Relying on none of them: if no Art. 9(2) point applies, nothing further down takes the case
+    out, because Art. 9(1) prohibits the processing itself and Art. 4(2) counts collection,
+    recording, structuring, storage, use and disclosure as processing - so stopping storage alone,
+    while the code still collects, derives or forwards the values, is not the change. The change is
+    to stop processing genetic data of identifiable persons on this path: stop collecting it, stop
+    deriving values from it, stop sending it on, and delete what is held; or to change the path so
+    that what it handles no longer relates to an identifiable person (a population-level table, for
+    example), which for a genome takes more than removing the name, as the last paragraph but one says.
+  The changes that reduce exposure whichever point applies, in the order they usually pay off:
+
+  keep the person identifier out of the genomic payload and hold the specimen-to-person link in one
+
+  place under its own access control, so that a leak of a VCF store is not a leak of identified
+
+  genetic data; keep genotypes, rsIDs and derived risk scores out of application logs, crash
+  reports,
+
+  analytics events and prompts sent to hosted inference providers - a genomic value in a log is
+  almost
+
+  never intended and it is the cheapest of these to fix; give the genomic store and its derived
+  tables
+
+  a retention rule and an erasure path - storage limitation under Art. 5(1)(e) and erasure under
+
+  Art. 17 are separate duties that this rule neither quotes nor assesses, and they are named here
+
+  only so that the engineering work is done once - remembering that genetic data cannot be
+
+  de-identified by removing the name, because the sequence is itself an identifier under Art. 4(1);
+  and hold the
+
+  derived values - risk scores, carrier flags, ancestry breakdowns, relative matches - to the same
+
+  standard as the raw data, since they carry equivalent information.
+
+  Two things a reviewer should refuse as an answer. Deleting the person's name while keeping the
+
+  genotype does not take the record outside Art. 9, because Art. 4(1) covers indirect identification
+
+  and a genome is unique to one person. And a statement that the Regulation has been satisfied is
+  not
+
+  the whole answer for this category at all: Art. 9(4) lets each Member State add further conditions
+
+  on genetic data, and those were not assessed by this scan.
+
+  Where the same line is also a health record - Recital 35 puts "information derived from the
+  testing
+
+  or examination of a body part or bodily substance, including from genetic data and biological
+
+  samples" inside data concerning health - the health limb of Art. 9(1) is engaged by it too, with
+  the
+
+  same exceptions and the same national-conditions caveat.
+data_categories:
+  - user.genetic
+  - user.health
+fingerprint_spec: file

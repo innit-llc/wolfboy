@@ -1,0 +1,317 @@
+id: eu-dsr-005
+pack: eu-dsr
+short_name: People's names and e-mails written into public Git history
+problem_line:
+  text: People's names and e-mails written into shared Git history
+  template: "{data} written into shared Git history"
+fix_line: Default commits to a private address, tell people before their first commit, and record
+  what erasure reaches.
+title: Contributor name and e-mail written into version-control history and pushed to public hosting
+  - GDPR Art. 17(2)
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 17(2) - the duty that
+      arises where the controller has made the personal data public, which is what pushing an
+      authored commit to public hosting does. 'Where the controller has made the personal data
+      public and is obliged pursuant to paragraph 1 to erase the personal data, the controller,
+      taking account of available technology and the cost of implementation, shall take reasonable
+      steps, including technical measures, to inform controllers which are processing the personal
+      data that the data subject has requested the erasure by such controllers of any links to, or
+      copy or replication of, those personal data.' The words 'copy or replication' are the whole of
+      why this construct is separate from an ordinary outbound disclosure: a distributed
+      version-control history is replicated by design, into every clone, every fork and every
+      mirror, and the controller's erasure route reaches none of them. Applies since 2018-05-25,
+      Art. 99(2)."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: General Data Protection Regulation, Regulation (EU) 2016/679, Art. 17(1) - the erasure duty
+      Art. 17(2) is conditional on. 'The data subject shall have the right to obtain from the
+      controller the erasure of personal data concerning him or her without undue delay and the
+      controller shall have the obligation to erase personal data without undue delay where one of
+      the following grounds applies'. A product whose account-removal routine rewrites the database
+      row and leaves the person's name and address in every commit they authored has answered this
+      duty for one store and not for the other; whether that is enough is the reader's question and
+      turns on what the code can reach.
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 19 with Art. 4(9) - the
+      duty to tell each recipient, which is what a hosting service is. Art. 19: 'The controller
+      shall communicate any rectification or erasure of personal data or restriction of processing
+      carried out in accordance with Article 16, Article 17(1) and Article 18 to each recipient to
+      whom the personal data have been disclosed, unless this proves impossible or involves
+      disproportionate effort. The controller shall inform the data subject about those recipients
+      if the data subject requests it.' Art. 4(9) defines a recipient as 'a natural or legal person,
+      public authority, agency or another body, to which the personal data are disclosed, whether a
+      third party or not', which reaches the hosting service a repository is pushed to. The second
+      sentence is the one most often missed: the person may ask WHICH services hold their commits,
+      and a product that cannot enumerate its configured push targets cannot answer."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: General Data Protection Regulation, Regulation (EU) 2016/679, Art. 5(1)(e) - storage
+      limitation, which an append-only public history engages by construction. Personal data shall
+      be 'kept in a form which permits identification of data subjects for no longer than is
+      necessary for the purposes for which the personal data are processed; personal data may be
+      stored for longer periods insofar as the personal data will be processed solely for archiving
+      purposes in the public interest, scientific or historical research purposes or statistical
+      purposes in accordance with Article 89(1) subject to implementation of the appropriate
+      technical and organisational measures required by this Regulation in order to safeguard the
+      rights and freedoms of the data subject ('storage limitation')'. Attribution of authorship is
+      a purpose a controller may hold; the provision asks how long identification has to be possible
+      FOR that purpose, which is a question a product can answer at the point the identity is chosen
+      - which is what a per-user commit-address setting is.
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 44 - the transfer
+      question, which arises when the hosting service is outside the EEA and which this detector
+      cannot answer. 'Any transfer of personal data which are undergoing processing or are intended
+      for processing after transfer to a third country or to an international organisation shall
+      take place only if, subject to the other provisions of this Regulation, the conditions laid
+      down in this Chapter are complied with by the controller and processor, including for onward
+      transfers of personal data from the third country or an international organisation to another
+      third country or to another international organisation. All provisions in this Chapter shall
+      be applied in order to ensure that the level of protection of natural persons guaranteed by
+      this Regulation is not undermined.' WHERE THE REPOSITORY IS PUSHED IS DEPLOYMENT CONFIGURATION
+      AND IS NOT IN THE SOURCE: the code names a backend class, the operator names a URL. Reference
+      only, and it is context_questions[2]."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.37
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    vcs_identity_markers:
+      - git_author_name
+      - git_author_email
+      - git_committer_name
+      - git_committer_email
+      - committer_email
+      - committer_name
+      - commit_email
+      - commit_author
+      - author_email
+      - last_translator
+      - signed_off_by
+      - git.actor
+    generic_author_fields:
+      - author_name
+      - author
+      - contributor
+      - translator
+    vcs_push_markers:
+      - git-receive-pack
+      - receive_pack
+      - push_to_remote
+      - pushToRemote
+      - push_url
+      - pushurl
+      - force_push
+      - git_push
+      - push_branch
+      - push_changes
+    vcs_serve_markers:
+      - git-upload-pack
+      - upload_pack
+      - git-http-backend
+      - git_http_backend
+      - http_export_all
+      - git_export
+      - gitexport
+      - info/refs
+    code_hosting_names:
+      - github
+      - gitlab
+      - gitea
+      - forgejo
+      - bitbucket
+      - azure_devops
+      - azuredevops
+      - visualstudio.com
+      - pagure
+      - sourcehut
+      - sr.ht
+      - codeberg
+      - gerrit
+      - savannah
+      - launchpad
+  vocabulary_matching:
+    vcs_identity_markers:
+      case_insensitive: true
+      separator_insensitive: true
+    generic_author_fields:
+      case_insensitive: true
+      separator_insensitive: true
+    vcs_push_markers:
+      case_insensitive: true
+      separator_insensitive: true
+    vcs_serve_markers:
+      case_insensitive: true
+      separator_insensitive: true
+    code_hosting_names:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?&vcs_identity_markers)
+    - --author(?![a-z])|--committer(?![a-z])|GIT_AUTHOR_|GIT_COMMITTER_|user\.email[
+      "'=]|user\.name[ "'=]|[Gg][Ii][Tt][
+      _-]?[Cc][Oo][Nn][Ff][Ii][Gg][^\n]{0,60}user\.(?:email|name)
+    - (?:commit|revision|changeset|pull_request|merge_request)[^\n]{0,70}(?&generic_author_fields)(?![a-z])
+    - (?&generic_author_fields)(?![a-z])[^\n]{0,70}(?:commit|revision|changeset|pull_request|merge_request)
+    - update_?contributor|updateContributor|set_?committer|add_?contributor
+    - (?&vcs_push_markers)
+    - (?:[Pp][Uu][Ss][Hh]|[Rr][Ee][Mm][Oo][Tt][Ee]|[Cc][Ll][Oo][Nn][Ee]|[Oo][Rr][Ii][Gg][Ii][Nn]|[Uu][Pp][Ss][Tt][Rr][Ee][Aa][Mm]|(?<![/])[Rr][Ee][Pp][Oo][Ss][Ii][Tt][Oo][Rr][Yy](?:[Uu][Rr][Ll])?(?!(?:"[
+      \t]*:|[ \t]*:[
+      \t]*["']?(?:https?://|git@|\.)))|[Rr][Ee][Pp][Oo][_.][Uu][Rr][Ll]|[Mm][Ii][Rr][Rr][Oo][Rr])[^\n]{0,70}(?&code_hosting_names)(?![a-z])(?!\.(?:event|event_name|event_path|ref|ref_name|ref_type|ref_protected|sha|actor|actor_id|workspace|server_url|api_url|graphql_url|token|repository|repository_id|repository_owner|repository_owner_id|run_id|run_number|run_attempt|job|job_workflow_sha|workflow|workflow_ref|workflow_sha|action|action_path|action_ref|action_repository|action_status|head_ref|base_ref|triggering_actor|retention_days|path|env|secret_source|rest|graphql|context|payload)(?![A-Za-z0-9_]))(?!_(?:REPOSITORY|REPOSITORY_OWNER|REPOSITORY_ID|WORKSPACE|SERVER_URL|API_URL|GRAPHQL_URL|ACTOR|ACTOR_ID|REF|REF_NAME|REF_TYPE|SHA|TOKEN|RUN_ID|RUN_NUMBER|RUN_ATTEMPT|JOB|EVENT_NAME|EVENT_PATH|HEAD_REF|BASE_REF|OUTPUT|ENV|STATE|PATH|STEP_SUMMARY|WORKFLOW|ACTION|ACTIONS|RETENTION_DAYS)(?![A-Za-z0-9_]))
+    - (?&code_hosting_names)(?![a-z])(?!\.(?:event|event_name|event_path|ref|ref_name|ref_type|ref_protected|sha|actor|actor_id|workspace|server_url|api_url|graphql_url|token|repository|repository_id|repository_owner|repository_owner_id|run_id|run_number|run_attempt|job|job_workflow_sha|workflow|workflow_ref|workflow_sha|action|action_path|action_ref|action_repository|action_status|head_ref|base_ref|triggering_actor|retention_days|path|env|secret_source|rest|graphql|context|payload)(?![A-Za-z0-9_]))(?!_(?:REPOSITORY|REPOSITORY_OWNER|REPOSITORY_ID|WORKSPACE|SERVER_URL|API_URL|GRAPHQL_URL|ACTOR|ACTOR_ID|REF|REF_NAME|REF_TYPE|SHA|TOKEN|RUN_ID|RUN_NUMBER|RUN_ATTEMPT|JOB|EVENT_NAME|EVENT_PATH|HEAD_REF|BASE_REF|OUTPUT|ENV|STATE|PATH|STEP_SUMMARY|WORKFLOW|ACTION|ACTIONS|RETENTION_DAYS)(?![A-Za-z0-9_]))[^\n]{0,70}(?:[Pp][Uu][Ss][Hh]|[Rr][Ee][Mm][Oo][Tt][Ee]|[Cc][Ll][Oo][Nn][Ee]|[Oo][Rr][Ii][Gg][Ii][Nn]|[Uu][Pp][Ss][Tt][Rr][Ee][Aa][Mm]|(?<![/])[Rr][Ee][Pp][Oo][Ss][Ii][Tt][Oo][Rr][Yy](?:[Uu][Rr][Ll])?(?!(?:"[
+      \t]*:|[ \t]*:[
+      \t]*["']?(?:https?://|git@|\.)))|[Rr][Ee][Pp][Oo][_.][Uu][Rr][Ll]|[Mm][Ii][Rr][Rr][Oo][Rr])
+    - (?&vcs_serve_markers)
+    - "[Cc][Mm][Dd][-_]{0,1}[Pp][Uu][Ss][Hh]|[Pp][Uu][Ss][Hh][-_.]{0,1}[Cc][Oo][Mm][Mm][Aa][Nn][Dd]\
+      (?![A-Za-z0-9_])"
+    - "[Cc][Oo][Mm][Mm][Ii][Tt][-_]{0,1}[Nn][Aa][Mm][Ee]"
+    - (?:^|[^A-Za-z0-9_])git[ \t]+(?:-[cC][ \t]+[^ \t\n]+[ \t]+)*(?:push|commit|remote[
+      \t]+(?:add|set-url))(?![A-Za-z0-9_])
+    - api\.github\.com/repos/[^\n]{0,80}/(?:git/refs|git/commits|git/trees|contents|merges)|/api/v4/projects/[^\n]{0,60}/repository/(?:commits|branches|files)
+    - (?:^|[^A-Za-z0-9_])(?:gh[ \t]+repo[ \t]+(?:create|clone|sync|fork)|hub[
+      \t]+(?:create|push)|glab[ \t]+repo[ \t]+(?:create|clone))(?![A-Za-z0-9_])
+    - (?:git(?:@|\{'@'\})|ssh://(?:[^\s/@]+@)?|git://|https?://(?:[^\s/@]+@)?)[A-Za-z0-9._-]*(?&code_hosting_names)[A-Za-z0-9._-]*[:/][A-Za-z0-9._~-]+/[A-Za-z0-9._~-]+\.git(?![A-Za-z0-9])
+  shared_path_exclusions:
+    - attribution_documents
+context_questions:
+  - "MANDATORY, and the detector did not check it: WHOSE IDENTITY GOES INTO THE AUTHOR LINE, AND
+    WHERE DOES IT COME FROM? Three answers are common and they are very different facts. A FIXED
+    MACHINE IDENTITY - one address for every commit the product makes - carries no data subject at
+    all and the finding should say so. THE SIGNED-IN PERSON'S ACCOUNT ADDRESS is the construct this
+    rule is named for. A PER-USER SETTING is the interesting middle: find the setting, and report
+    its SHIPPED DEFAULT, because a privacy-preserving commit address that is opt-in behaves as the
+    account address for everybody who never opened the settings page. In the tree this rule was
+    built against, the fallback chain is: the profile's own commit address if set; otherwise a
+    site-generated private address IF an opt-in setting is off and the account is not a bot;
+    otherwise the real account address. Quote the chain you find and say which branch a new account
+    takes."
+  - WHAT DOES THE PRODUCT'S OWN ERASURE ROUTE REACH, AND DOES IT REACH THE HISTORY? Find the
+    account-removal or data-subject-request path and enumerate what it touches. The declaring
+    evidence for this construct is a removal routine that rewrites the account row - username,
+    address, name, credentials, group membership - and touches no repository at all, so the commits
+    keep the address they were written with. Say whether the route rewrites, redacts or removes
+    anything in version control; whether it can; and what the product tells the person about the
+    parts it cannot reach. If there is a documented process for a contributor asking to have their
+    address removed from history, quote it.
+  - "WHERE IS THE HISTORY PUSHED, AND WHO ELSE HAS IT NOW? This is deployment configuration and is
+    not in the source: the code names a backend class and the operator names a URL. Ask for the
+    configured push targets, or read them from the deployment's own configuration if it is in scope,
+    and list them. Then ask the replication question, which is the one Art. 17(2) turns on: is the
+    repository public, does it have forks or mirrors, is it served over smart HTTP or a web archive
+    by this product itself, and is it included in any dataset or backup that leaves the machine.
+    Art. 19 also gives the person the right to be told WHICH recipients hold their data, so report
+    whether the product can enumerate its own push targets. Where the hosting is outside the EEA,
+    record it as an Art. 44 question and do not decide it."
+  - IS THE IDENTITY IN CONTENT AS WELL AS IN METADATA? A commit author line is metadata; a
+    translation-file header, a changelog entry, an AUTHORS file, a code comment and a generated
+    attribution page are CONTENT, and they travel with the file into every export, every package and
+    every downstream fork - including ones that never see the git history. Check the file formats
+    this product writes and say which of them carry contributor identity, and whether the same
+    setting that controls the commit address controls those too. In the tree this rule was built
+    against, the contributor name and address are written into gettext PO headers by an add-on, on a
+    path separate from the commit path.
+  - "IS THIS A PRODUCT THAT COMMITS ON BEHALF OF PEOPLE, OR A PRODUCT THAT READS SOMEBODY ELSE'S
+    COMMITS? Several matches here belong to the second kind: a code-review tool, a changelog
+    generator, a repository browser and a CI dashboard all read author lines that another system
+    wrote, and the identities in them are not this product's to erase. Read what the matched line
+    does. Say whether the product WRITES authorship - and if so, from whose identity - or merely
+    displays it, and if it merely displays it, say whether it stores a copy."
+evidence_template: "{file}:{line} names a version-control AUTHORSHIP IDENTITY, the machinery that
+  pushes a history to hosting, or the machinery that serves one publicly. THE CONCERN IS AN ARTEFACT
+  THE PRODUCT'S ERASURE ROUTE CANNOT REACH: a commit that has been pushed is replicated into every
+  clone, fork and mirror, and rewriting it changes every downstream copy's identifiers, which is why
+  GDPR Art. 17(2) speaks of taking reasonable steps to INFORM other controllers rather than of
+  deleting. THIS IS NOT A DETERMINATION THAT ANY DUTY WAS BREACHED. WHAT WAS ESTABLISHED, and which
+  of the four it is has to be read off the line. AN AUTHORSHIP IDENTITY MARKER - `--author`,
+  `GIT_AUTHOR_EMAIL`, `committer_email`, `get_commit_email`, `Last-Translator` - establishes that
+  this product binds an identity to a revision or to a file header. A COMMIT CALL JOINED TO AN
+  AUTHOR FIELD establishes the call site where the identity and the revision meet. THE PUSH
+  MACHINERY, or a hosting service named beside a repository word, establishes that the history is
+  published somewhere - never WHERE, which is configuration. THE PUBLIC RE-SERVE -
+  `git-upload-pack`, `git-http-backend`, `GIT_HTTP_EXPORT_ALL` - establishes that this product
+  itself hands the history to anyone who asks. WHAT WAS NOT ESTABLISHED, and each is a question
+  rather than a caveat. FIRST, WHOSE IDENTITY WAS NOT READ. The author line may carry a fixed
+  machine account, a shared team address, a site-generated private address or the person's real one,
+  and which of those it is comes from a settings chain and a per-user preference, not from this
+  line. SECOND, THE DEFAULT WAS NOT READ. Where a privacy-preserving commit address exists as an
+  opt-in, everybody who never opened the settings page is committing under their account address,
+  and the shipped default is what decides that. THIRD, THE DESTINATION IS NOT IN THE SOURCE. Which
+  hosting service, in which country, under whose terms, is deployment configuration; Art. 44 is
+  engaged only if the answer is outside the EEA and nothing here answers it. FOURTH, THE ERASURE
+  ROUTE WAS NOT FOLLOWED. Whether this product's own account-removal path touches version control at
+  all is a fact about another file, and in the tree this rule was built against it does not. FIFTH,
+  THE DIRECTION WAS NOT ESTABLISHED: a tool that READS other people's commits - a review UI, a
+  changelog generator, a repository browser - matches the same words and is not this construct. AND
+  ONE LIMIT OF THE PATTERNS THEMSELVES: matching is per physical line, so a commit call whose
+  `author=` argument sits on a continuation line is not reached by any clause here."
+remediation_template: >
+  WHAT WAS FOUND. Machinery that writes a contributor's identity into version-control history,
+  pushes
+
+  such a history to hosting, or serves one publicly. The reason this is worth a look is narrow and
+
+  specific: of everything a product stores about a person, an author line in a pushed commit is the
+
+  hardest to remove, because rewriting it changes every downstream commit identifier and every
+  clone,
+
+  fork and mirror already holds the old one.
+
+
+  1. DECIDE WHAT ADDRESS PEOPLE COMMIT UNDER, AND MAKE THE SAFE ANSWER THE DEFAULT. A
+  per-installation
+     or per-user private commit address - one that does not route to the person and cannot be looked
+     up - keeps attribution working while keeping the account address out of the artefact. Where such
+     a setting already exists as an opt-in, the change worth making is the default: everybody who
+     never opened the settings page is committing under their real address today.
+  2. TELL PEOPLE BEFORE THE FIRST COMMIT, NOT IN THE PRIVACY POLICY. The moment to say "your name
+  and
+     address will be written into a public history that cannot be edited afterwards" is the moment
+     the person is about to cause one. A line beside the first contribution, and in the account
+     settings, does more than a paragraph elsewhere.
+  3. WRITE DOWN WHAT ERASURE CAN AND CANNOT REACH. GDPR Art. 12(3) requires the person to be told
+     what was done. If the account-removal route rewrites the database row and leaves the commits,
+     say that, name it in the deletion flow, and say what the person can ask for instead - which is
+     usually Art. 17(2)'s remedy: informing the hosting services and mirrors that erasure was
+     requested.
+  4. BE ABLE TO LIST THE RECIPIENTS. Art. 19's second sentence gives the person the right to be told
+     which recipients hold their data. A product that pushes to operator-configured targets should be
+     able to enumerate those targets on request; if it cannot, that is worth fixing before it is
+     asked.
+
+  IF SOMETHING DOES NEED TO CHANGE, the changes that are usually right, in order:
+
+
+  - USE A NON-ROUTABLE PER-USER ADDRESS BY DEFAULT for machine-generated commits, keeping the
+  display
+    name if attribution matters.
+  - KEEP IDENTITY OUT OF FILE CONTENT unless it is asked for. A translation-file header, a changelog
+    entry or a generated AUTHORS list travels further than the git history does, into exports and
+    packages that never carry the repository.
+  - SEPARATE THE ATTRIBUTION FROM THE CONTACT DETAIL. A stable pseudonymous handle attributes work;
+    an e-mail address is a contact detail and is rarely what attribution needs.
+  - DOCUMENT THE HISTORY-REWRITE PATH IF YOU HAVE ONE, including what breaks - commit identifiers,
+    signatures, open forks - so that a request can be answered with a real assessment of
+    proportionality rather than with a refusal that has never been costed.
+data_categories:
+  - user.contact.email
+  - user.name
+  - user.account
+  - user.unique_id
+fingerprint_spec: directory

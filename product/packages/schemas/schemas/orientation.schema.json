@@ -1,0 +1,443 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/orientation.schema.json",
+  "title": "Orientation sheet (one repository, one run)",
+  "description": "What every layer-2 child used to derive for itself about the repository, computed once by the scanner with no model involved, and handed to each child in place of its own orientation reads. Written beside the findings document as .legal/orientation.json, with .legal/orientation.md rendered from it in the same call. IT CONTAINS NO FACT ABOUT THE PRODUCT: not what it does, not who it serves, not where it is established, not whether a consent mechanism exists. Those are asked of the person running the scan or read from their declared documents, and a scanner that established one from source vocabulary would be doing the thing this project measured and discarded. Every member below is a path, a count of paths, a verbatim value out of a manifest with its file and line, or a text match with the pattern that produced it. IT CARRIES NO CLOCK, NO SCAN ID AND NO RANDOM VALUE, so two runs of one tree at different --jobs values produce byte-identical documents; the run it belongs to is the findings.json beside it. The LLM half of the sheet \u2014 the orchestrator's once-per-run paragraph about the repository \u2014 is a SEPARATE file (orientation-notes.md) and is never merged into this one, because the refuter receives this document and must never receive another agent's reasoning.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "read_this_first",
+    "bundle_version",
+    "target",
+    "counts",
+    "path_classes",
+    "languages",
+    "languages_not_listed",
+    "manifests",
+    "entry_points",
+    "build_and_deploy_files",
+    "dependencies",
+    "consent_vocabulary",
+    "truncated"
+  ],
+  "properties": {
+    "version": {
+      "const": 1,
+      "description": "Schema version of this document."
+    },
+    "read_this_first": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      },
+      "description": "What this document is, what it is not, and how a child is to use it."
+    },
+    "bundle_version": {
+      "type": "string",
+      "description": "The rule bundle this run used."
+    },
+    "target": {
+      "type": "string",
+      "description": "The scan root as the command was given it."
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "files_in_scan",
+        "files_held_back",
+        "directories_held_back"
+      ],
+      "properties": {
+        "files_in_scan": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Files this scan read. Every count in this document is over these files and no others."
+        },
+        "files_held_back": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Files the walker declined on a read-scope class's account, summed. `null` where any class was declined without its tree being enumerated, because a total that quietly dropped an uncounted tree would read as a complete count of what this run did not read. Per-class numbers are in path_classes."
+        },
+        "directories_held_back": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "path_classes": {
+      "type": "array",
+      "description": "Where the tree's files sit, by the path sets rules/path-exclusions/ already declares. A path class is where a file sits and never what it is for: this project has measured docs/ and examples/ directories mounted live into production sites, and measured files outside any sample directory that were dead.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "source",
+          "files_in_scan",
+          "examples"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The read-scope class id, or the set name as documents.yaml declares it."
+          },
+          "kind": {
+            "enum": [
+              "read-scope",
+              "informational"
+            ],
+            "description": "\"read-scope\": one of the three classes a run can be told to read with --read, and the only kind that ever holds a file back. \"informational\": a set of documents.yaml, carried so that a reader can be told which paths are prose or translation catalogues. An informational set declines nothing and no --read value names one."
+          },
+          "source": {
+            "type": "string",
+            "description": "The rules/path-exclusions/ file the patterns come from."
+          },
+          "question": {
+            "type": "string",
+            "description": "The set's own authored question, verbatim. Present on informational sets."
+          },
+          "read": {
+            "type": "boolean",
+            "description": "Present on a read-scope class only: whether THIS run was told to read it."
+          },
+          "files_in_scan": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Files this scan read whose path the class matches."
+          },
+          "files_held_back": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Files the walker declined on this class's account; null where a tree was skipped without being enumerated, which is 'not counted' and never 'none'."
+          },
+          "directories_held_back": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "examples": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "A few paths, so a reader can judge the row without re-running the scan."
+          }
+        }
+      }
+    },
+    "languages": {
+      "type": "array",
+      "description": "The file-extension census over the files this scan read, most files first. An extension is what a file is named, not what a framework is.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "extension",
+          "files"
+        ],
+        "properties": {
+          "extension": {
+            "type": "string"
+          },
+          "files": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "languages_not_listed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "extensions",
+        "files"
+      ],
+      "description": "What the extension list left off, so a short list never reads as the whole tree.",
+      "properties": {
+        "extensions": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "files": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "manifests": {
+      "type": "array",
+      "description": "Dependency manifests present, shallowest first. Only the npm ones are parsed by anything \u2014 findings.json's dependency_inventory reads package.json and nothing else \u2014 so a go.mod listed here beside an empty inventory is a tree that declares dependencies the inventory cannot see.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "file",
+          "ecosystem"
+        ],
+        "properties": {
+          "file": {
+            "type": "string"
+          },
+          "ecosystem": {
+            "type": "string",
+            "description": "The ecosystem the filename belongs to. Read off the filename, never off the file's contents."
+          }
+        }
+      }
+    },
+    "entry_points": {
+      "type": "array",
+      "description": "Values read verbatim out of the npm manifests, with the line each was read from. A quote from a manifest, in the same form the dependency inventory quotes one.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "file",
+          "line",
+          "field",
+          "value"
+        ],
+        "properties": {
+          "file": {
+            "type": "string"
+          },
+          "line": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "1-based line the key was found on. 0 means the value is this and the line could not be located \u2014 never a line that is wrong."
+          },
+          "field": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string",
+            "description": "The manifest's own value, shortened to 120 characters with an ellipsis where it is longer."
+          }
+        }
+      }
+    },
+    "build_and_deploy_files": {
+      "type": "array",
+      "description": "Build, deploy and framework configuration files present, named by their own filename. The row says a file with this name is at this path. IT DOES NOT SAY WHAT THE PRODUCT IS: a next.config.ts is evidence about a product and never the answer, and it does not say that any file ships.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "marker",
+          "files",
+          "total"
+        ],
+        "properties": {
+          "marker": {
+            "type": "string"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "How many files matched, which may be more than the paths listed."
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packages",
+        "declarations",
+        "declared_only",
+        "ranked_by_call_sites",
+        "full_list_lives_in",
+        "truncated"
+      ],
+      "description": "A VIEW of findings.json's dependency_inventory, taken from that array in the same run, never a second copy of it: the whole inventory is where full_list_lives_in says, and the three limits its own schema states hold here unchanged \u2014 a declaration is not a transfer, the absence of a call site is not the absence of use, and only package.json is parsed.",
+      "properties": {
+        "packages": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "declarations": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Declaration rows, which exceeds `packages` where a package is declared in two blocks or two manifests."
+        },
+        "declared_only": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Packages declared and imported from nowhere the census could see. Not a finding that they are unused."
+        },
+        "declared_only_not_read": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Of declared_only, those carrying call_sites_not_read: lines that could hold their imports were not read, so whether they are imported is not known. Absent at 0."
+        },
+        "ranked_by_call_sites": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "package",
+              "call_sites",
+              "declared_in",
+              "declarations_not_listed"
+            ],
+            "properties": {
+              "package": {
+                "type": "string"
+              },
+              "call_sites": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Call sites the census could see. Zero is kept and says zero."
+              },
+              "call_sites_not_read": {
+                "const": true,
+                "description": "No call site found and lines that could hold one not read: call_sites is a count of what was read. Absent otherwise."
+              },
+              "declared_in": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "file",
+                    "line",
+                    "field",
+                    "version"
+                  ],
+                  "properties": {
+                    "file": {
+                      "type": "string"
+                    },
+                    "line": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "field": {
+                      "type": "string",
+                      "description": "The manifest block the declaration was read from. A fact about the manifest and never a verdict about the package."
+                    },
+                    "version": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "declarations_not_listed": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Declaration rows this view left off for this package. A monorepo declares one package in many manifests; the count is kept so a shortened list never reads as the whole of it."
+              }
+            }
+          }
+        },
+        "full_list_lives_in": {
+          "type": "string"
+        },
+        "truncated": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Packages this view left off."
+        }
+      }
+    },
+    "consent_vocabulary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "files_searched",
+        "note",
+        "terms"
+      ],
+      "description": "The search 25 of 82 measured adjudicators each ran for themselves, run once. A hit is the term occurring in a file's text \u2014 in code, in a comment, in a string, in a dependency name, in prose \u2014 and it is a place to look, never a finding that a consent mechanism exists. A ZERO IS NEVER A FINDING THAT ONE DOES NOT EXIST: the scanner searched for that spelling and found it nowhere, and a repository that writes the same thing differently produces the identical zero. The term list is written into this document rather than into any brief, so that no prose file has to carry a second copy of it.",
+      "properties": {
+        "files_searched": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "note": {
+          "type": "string"
+        },
+        "terms": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "term",
+              "pattern",
+              "files",
+              "first_paths"
+            ],
+            "properties": {
+              "term": {
+                "type": "string",
+                "description": "The label this sheet prints."
+              },
+              "pattern": {
+                "type": "string",
+                "description": "The regular expression that was actually run, so the count can be reproduced by hand."
+              },
+              "files": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "first_paths": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "truncated": {
+      "type": "array",
+      "description": "Every list this document shortened, with what it kept and what it dropped. A cap that hides what it removed is the silence this product exists to refuse, so a shortened section always says so here.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "section",
+          "kept",
+          "dropped"
+        ],
+        "properties": {
+          "section": {
+            "type": "string"
+          },
+          "kept": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "dropped": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "over_cap": {
+      "type": "boolean",
+      "description": "Present and true where the document is still over its byte ceiling after every reduction. It is never shortened past the point where it can say what it left out."
+    }
+  }
+}

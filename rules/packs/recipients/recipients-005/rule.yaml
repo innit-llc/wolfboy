@@ -1,0 +1,405 @@
+id: recipients-005
+pack: recipients
+short_name: E-mail or chat company that may receive data
+problem_line:
+  text: Personal data sent to an e-mail or chat service
+  template: "{data} sent to {recipient}"
+fix_line: "Unless you publish and host this service, record it as a recipient: what it receives and
+  the company you contract with."
+title: Email or team-chat vendor named in the tree - candidate recipient for the record of
+  processing activities
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - the controller's record of processing
+      activities "shall contain all of the following information", including "the categories of
+      recipients to whom the personal data have been or will be disclosed including recipients in
+      third countries or international organisations". A vendor named in the code is a candidate for
+      that field
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+  - cite: 'GDPR (Regulation (EU) 2016/679), Art. 4(9) - "recipient" means "a natural or legal person,
+      public authority, agency or another body, to which the personal data are disclosed, whether a
+      third party or not". An email service provider or a chat webhook endpoint is therefore a
+      recipient for the purposes of Art. 30(1)(d) whether or not it is a third party. Reference
+      only: a definition establishes no duty of its own'
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose "The
+      categories of third parties to whom the business discloses personal information." Sec.
+      1798.130(a)(5)(B) requires the same categories in the privacy policy
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-08-25
+    jurisdiction: US
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.2
+detector:
+  engine: builtin-regex
+  shared_vocabulary:
+    - email_delivery_recipients
+    - team_chat_recipients
+  resolve_import_aliases: true
+  match:
+    - (?:^|[^A-Za-z0-9])(?&email_delivery_recipients)
+    - (?:^|[^A-Za-z0-9])(?&team_chat_recipients)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:|https?://(?:[A-Za-z0-9-]{1,63}\.){0,4})(?&email_delivery_recipients)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:|https?://(?:[A-Za-z0-9-]{1,63}\.){0,4})(?&team_chat_recipients)
+context_questions:
+  - "WHICH DIRECTION IS THIS, and answer it before anything else, because the two lists this rule
+    imports are two different disclosures. OUTWARD: an email service provider - Resend, Twilio
+    SendGrid, Mailgun, Mailjet, Postmark, Amazon SES, Mailchimp Transactional, Mailchimp Marketing -
+    relays a message ADDRESSED TO the person the data is about, and for MAILCHIMP MARKETING what it
+    relays is BULK MARKETING MAIL out of an audience list the platform holds, which raises an
+    ePrivacy Art. 13 consent question on top of this rule's record question and is why that vendor
+    has its own entry beside the transactional one. INWARD: a Slack, Discord, Microsoft Teams or
+    Telegram webhook or bot relays a message ABOUT a person - where the event concerns one; a build
+    failure, a deployment or an uptime alert may name nobody at all, and the message the code builds
+    is where that is read - into a channel the operator's own colleagues read, and the audience is
+    the vendor PLUS everyone in that channel - for a public Discord guild or a public Slack channel
+    that is unbounded, so a record row naming only the vendor has understated who received the data.
+    One candidate can carry both, because this rule groups per repository: say which locations are
+    which. And note the arrow can point the other way entirely - `@slack/bolt` is a framework for
+    RECEIVING events FROM Slack at an endpoint the product exposes, which is not a disclosure by the
+    operator at all, and `@microsoft/teams-js` is the SDK a tab running INSIDE the Teams client
+    uses. Read the call site."
+  - "WHICH ANCHOR DID YOU ACTUALLY MEET, and is it one of the known collisions? Every anchor named
+    here is KEPT in the vocabulary on purpose, so you will meet them. NO CORPUS SWEEP WAS RUN FOR
+    THIS RULE - the ordering below is by what the spelling IS, not by measured volume, and the one
+    measurement quoted below was taken by an earlier survey over 98 real open-source repositories,
+    which counted CLASS SEEDS rather than these anchors. TEST `resend` FIRST AND TREAT IT AS
+    NON-EVIDENTIARY UNTIL YOU HAVE READ THE LINE: it is overwhelmingly the ENGLISH VERB, measured
+    over 98 repositories at 71 repositories and 5,502 lines for the bare word against 17 for
+    `resend.com` and 5 for `api.resend.com`, and its sampled hits were a 3D-printer firmware's
+    G-code `flush_and_request_resend` protocol, an identity server's
+    `/users/me/phone/_resend_verification` path, all ~15 of a password manager's \"resend the
+    invite\" UI strings in a product that uses raw SMTP, and a SaaS starter kit's account-lock
+    module. The shape that makes it the vendor is a manifest dependency or an import - `\"resend\":
+    \"^3.5.0\"`, `import { Resend } from \"resend\"`, `from resend import Resend`. If the matched
+    word is the verb but the method it names or sits in calls the vendor inside the window
+    (`Resend::Emails.send`), the place is that call: answer is_the_construct, quote the call line,
+    and list what it sends. The verb with no vendor call in the window or reached by a call it
+    shows, quoted in `beyond`, is shape (g). THEN THE REST, and none of these has been measured:
+    `discord` is in the README, badge row and CONTRIBUTING file of a large share of open-source
+    repositories as \"join our Discord\", which sends nothing anywhere; `slack` is an ordinary
+    English word, the first half of Slackware, and most often a logo or channel link in an
+    integrations list; `postmark` is an ordinary English noun for the mark a postal service prints,
+    and the survey did not sample it; `serenity` and `nostrum` are ordinary English nouns that are
+    also the Rust and Elixir Discord libraries, and only a Cargo key or an Elixir deps tuple tells
+    them apart; `sendgrid` and `mailgun` were each sampled once as an ICON-LIBRARY entry in an
+    integrations-logo list in a workflow-automation platform. THREE ANCHORS NAME A PLATFORM RATHER
+    THAN THIS RULE'S PRODUCT: `boto3` and `aws-sdk` cover every AWS service, and
+    `graph.microsoft.com` / `Microsoft.Graph` / `com.microsoft.graph` cover mail, calendar, files
+    and directory as well as Teams chat. The `@aws-sdk/` npm scope was an anchor of this list until
+    2026-09-16, when the owner withdrew the nine umbrella scopes across the bundle; it is not one
+    now, and nothing changed about what this rule reaches, because `aws-sdk` is a substring of every
+    package under it. THE ONES MOST LIKELY TO BE GENUINE are the hostnames and the full coordinates:
+    `api.resend.com`, `api.sendgrid.com`, `api.postmarkapp.com`, `hooks.slack.com`,
+    `discord.com/api/webhooks`, `webhook.office.com`, `@sendgrid/mail`, `@aws-sdk/client-ses`,
+    `com.slack.api:slack-api-client`."
+  - "What SHAPE is the matched line? Name it before treating it as a disclosure. The same anchor
+    reaches a tree in at least eight shapes and only two of them put data in the vendor's hands: (a)
+    a dependency declaration or an import that the product's own code uses; (b) a request to the
+    vendor's API, a webhook URL the product posts to, or an SMTP host it hands a message to; (c) a
+    VENDORED SDK or generated client that no first-party code calls; (d) a documentation link, a
+    comparison table or a migration guide - and note that a guide about migrating AWAY from a vendor
+    matches exactly like a guide about adopting one; (e) a Content-Security-Policy or allow-list
+    entry naming the host without calling it; (f) test, fixture, seed or demo data, or a
+    logo/integration list; (g) THE ANCHOR IS NOT THE VENDOR AT ALL. (h) A SUPPORTING LINE of a
+    first-party integration with this vendor - a setup-screen entry, a kind list, a renderer or
+    formatter for the vendor's message format, a branch or setting that selects the vendor, a vendor
+    key served to the client. It names the recipient though it sends nothing itself: answer
+    is_the_construct, name in `why` the send to this vendor in the tree (file and line), the one
+    this line serves where the tree shows which, and list in `data` what that send carries. A
+    first-party line of this kind that nothing in the tree is found to read is still this shape and
+    still is_the_construct: say in `why` that no reader was found, because a search that finds none
+    does not show that the line never runs, and whether it runs is for the person running the scan.
+    The same holds where no send to this vendor is found in the tree: the send can happen outside it
+    - in another service the setting selects, or in an SDK loaded at run time with the key - so the
+    line is still this shape and still is_the_construct; say in `why` that no send was found in the
+    tree, and list in `data` what the line itself shows is sent, which may be nothing. Whether a
+    line is documentation or demo data ((d), (f)) is decided by what the line itself is - a README
+    or guide, a sample or example file, a comment, a test fixture or seed - and never by the absence
+    of a send elsewhere in the tree. Quote the line and say which of the eight it is. Shape (g) is
+    the FIRST thing to test for the anchors named in question 2. A lockfile entry is NOT one of the
+    shapes you can meet: the walker drops every lockfile by name before any rule runs."
+  - "WHAT DOES THE VENDOR RECEIVE ON THE PATH THIS CODE USES - and do not answer it from the
+    vendor's name. The authority is the VENDOR'S OWN API REFERENCE for the call this code makes, and
+    it is the thing to read: THIS BUNDLE CARRIES THE SPELLINGS AND NOTHING ELSE - no per-vendor
+    field list travels with it, and no file in the scanner's own repository is available to you. The
+    named send calls are Resend's POST /emails, SendGrid's POST /v3/mail/send, Mailgun's POST
+    /v3/{domain}/messages, Mailjet's POST /v3/send and POST /v3.1/send, Postmark's POST /email,
+    Amazon SES's SendEmail, Mandrill's /messages/send, Mailchimp Marketing's PUT
+    /3.0/lists/{list_id}/members/{subscriber_hash} and its hosted signup form's POST to a
+    list-manage.com address, Slack's incoming-webhook POST and chat.postMessage, Discord's Execute
+    Webhook POST, a Microsoft Teams incoming-webhook or Workflows POST, and Telegram's POST
+    /bot<token>/sendMessage. THE METADATA IS A DISCLOSURE EVEN WHEN THE BODY IS UNINTERESTING, and
+    for this class that is the point rather than a footnote: an email relay necessarily learns THE
+    ENVELOPE RECIPIENT ADDRESS - which is the data subject's own email address - and THE SUBJECT
+    LINE, on every single send, whatever the body says; it learns the caller's IP address on every
+    API call; and where the operator has switched on open or click tracking it learns that the
+    person opened the message, when, from which IP, on which device and which link they followed. A
+    chat webhook learns the message text, the channel and the timing of every event the operator
+    notifies on. Quote the call, name the path, and list the fields it populates. THREE OF THESE
+    URLS ARE ALSO CREDENTIALS and their own vendors say so - Slack's documentation states \"Your
+    webhook URL contains a secret\", a Discord webhook carries its token in the URL path, and
+    Telegram's own Bot API reference requires every request to be presented as
+    https://api.telegram.org/bot<token>/METHOD_NAME, so the bot token is in the PATH of every call
+    and reaches any log that records request URLs - so a hardcoded one is a secrets finding as well
+    as a recipients finding, which this rule does not raise."
+  - "Is the vendor a PROCESSOR here or an independent controller for this data, and which is the
+    scanned product? This is one of the four things the record needs and the vendors answer it
+    differently in their own documents: Resend's DPA states \"Company is a processor\"; Slack's
+    privacy policy states that in general Slack is the processor of Customer Data and the CONTROLLER
+    of Other Information, which is two roles at once for one vendor; Discord's privacy policy names
+    Discord Netherlands BV and Discord Inc. as DATA CONTROLLERS of the personal information of the
+    people in the channel, which is a different answer again and the one that matters for a chat
+    webhook; Telegram's privacy policy gives that same answer, naming Telegram as the data
+    controller for the people who use the service, so the members of a chat a bot posts into are
+    Telegram's own data subjects; the Sinch group's data processing agreement, which covers Mailjet
+    as well as Mailgun, states that the Customer is the controller and Sinch the processor; and
+    Mailchimp's data processing addendum states that Mailchimp processes Customer Data as a
+    processor acting on behalf of Customer. Read the contract the product actually signed and the
+    subprocessor list it actually publishes, not the vendor's marketing page. If the product's own
+    position is not established, say so rather than choosing one."
+  - "WHICH LEGAL ENTITY does this deployment contract with? This is an operator fact and is never
+    inferred from source code: it is read from the order form, the DPA or the vendor dashboard. THE
+    BRAND IS NOT THE ENTITY for five of these nine vendors, and a record row naming the brand has
+    not identified the recipient: Resend is Plus Five Five, Inc.; SendGrid is Twilio (Twilio Inc.,
+    with Twilio Ireland Limited as EEA headquarters); Mailgun is Sinch (the notice names Sinch AB
+    (publ) \"or any of its subsidiaries ... with which you or your employer have contracted\", and
+    Mailgun Technologies, Inc. as the group's US company); Postmark is AC PM LLC in the
+    ActiveCampaign group; Mailchimp Transactional and Mailchimp Marketing are both The Rocket
+    Science Group LLC d/b/a Mailchimp, in the Intuit group, whose EEA and UK names (Intuit Ireland
+    Software Limited, Intuit Limited) are Art. 27 REPRESENTATIVES and not parties anybody contracts
+    with; and Mailjet is a second Sinch Email brand whose own terms name FIVE alternative
+    contracting parties and choose the governing law from whichever one signed - Mailjet SAS or
+    Mailjet GmbH (France, Paris), Mailjet SaaS Ltd (England and Wales, London), Mailjet Emailing SL
+    (Spain, Madrid), Mailgun Technologies, Inc. (Texas, San Antonio). TELEGRAM IS THE ONE VENDOR IN
+    EITHER LIST WHOSE OPERATOR-FACING ENTITY IS ESTABLISHED: its Bot Platform Developer Terms name
+    Telegram Messenger Inc. as the party the developer contracts with, and no document read states
+    that company's country - the same documents place its parent, Telegram Group Inc, in the British
+    Virgin Islands and Telegram FZ-LLC in Dubai, and say Telegram is located outside the EEA. ONE
+    VENDOR'S JURISDICTION IS NOT ESTABLISHED FOR THIS RELATIONSHIP AND YOU ARE TOLD SO HERE BECAUSE
+    NOTHING ELSE IN THIS BUNDLE CAN TELL YOU: for DISCORD, the research behind this rule read the
+    two entities out of Discord's END-USER privacy policy - Discord Netherlands BV for people in the
+    EEA, Discord Inc. for everyone else - while the agreement governing an OPERATOR posting to a
+    webhook is Discord's Developer Terms of Service, which could not be retrieved. Treat Discord's
+    jurisdiction as UNCONFIRMED for this relationship. YOU MAY NOT FILL ONE IN - return needs_human
+    for that field rather than substituting a headquarters, a billing country or a plausible guess.
+    NO VENDOR IN THESE LISTS HAS ONE ANSWER FOR YOU TO COPY, and two of them say so in their own
+    words: MAILGUN's notice names Sinch AB (publ) OR ANY OF ITS SUBSIDIARIES with which the customer
+    or the customer's employer have contracted, and AMAZON SES contracts through a different entity
+    per the customer's declared AWS Account Country - Amazon Web Services EMEA SARL in Luxembourg
+    for Europe, the Middle East and Africa excluding South Africa, and Amazon Web Services, Inc. in
+    Seattle otherwise. That is the general shape rather than the exception: a vendor of this kind
+    names several entities and picks between them by a property of the CUSTOMER - the account
+    country, the region the workspace was opened in, which product was bought - so the entity is a
+    fact about THIS OPERATOR'S CONTRACT and not an attribute of the vendor. WHAT THE VENDORS' OWN
+    DOCUMENTS NAMED, all read on 2026-08-25, and NONE of it decides which one applies here: Resend -
+    PLUS FIVE FIVE, INC., San Francisco, named as Data Importer and Processor, with no entity in the
+    European Economic Area named at all; SendGrid - TWILIO IRELAND LIMITED, Dublin, named as EEA
+    Headquarters, and TWILIO INC., named as complying with the EU-U.S. Data Privacy Framework;
+    Postmark - AC PM LLC, named as data controller for Postmark clients, inside a group whose stated
+    address is Chicago, Illinois and which names ACTIVECAMPAIGN, LLC and four related bodies
+    corporate including ACTIVECAMPAIGN IRELAND LIMITED, none of which the page says contracts for
+    Postmark; Mailchimp Transactional - THE ROCKET SCIENCE GROUP LLC D/B/A MAILCHIMP with INTUIT
+    INC., named together in one certification sentence, and no entity for the transactional product
+    specifically; Slack - SLACK TECHNOLOGIES LIMITED, Dublin, for workspaces established for
+    customers OUTSIDE the United States and Canada, and SLACK TECHNOLOGIES, LLC, San Francisco, for
+    United States and Canadian ones, which splits by where the WORKSPACE was established and is
+    therefore a property of the operator's own workspace; Microsoft Teams - MICROSOFT IRELAND
+    OPERATIONS LIMITED and MICROSOFT CORPORATION, named together in the definition of Microsoft's
+    standard contractual clauses. EVERY ONE OF THOSE DOCUMENTS WAS READ ON THAT DATE AND NOTHING
+    RE-READS IT, so this is an incomplete list of candidates and never a closed one. IF THE OPERATOR
+    CANNOT PRODUCE THE CONTRACT, RETURN needs_human FOR THIS FIELD rather than choosing the
+    candidate that looks likeliest."
+  - Is this vendor already IN the record of processing activities, the privacy policy and the
+    published subprocessor list? That is the gap this rule exists to find, and it is answered by
+    reading the operator's own declared documents against the code - not by reading more code. A
+    vendor present in the code and absent from all three is the finding; present in all three is not
+    a finding at all; present in some is a finding about the documents that omit it. FOR THE INWARD
+    DIRECTION THE GAP IS USUALLY WORSE, because an ops-notification webhook is added by an engineer
+    in an afternoon and nobody thinks of it as a vendor relationship at all. Say which of the three
+    documents you read and which named the vendor.
+evidence_template: "{file}:{line} carries a string from one of the two vendor lists this rule
+  matches on: 95 spellings owned by 8 transactional-email and email-service-provider vendors, and 73
+  spellings owned by 4 team-chat and ops-notification webhook vendors. THE TWO LISTS ARE TWO
+  DIRECTIONS and separating them is the first thing to do: an email service provider relays a
+  message OUTWARD, addressed to the person the data is about, so it necessarily learns that person's
+  email address and the subject line on every send; a Slack, Discord or Teams webhook relays a
+  message INWARD, about a person where the event concerns one - a build failure, a deployment or an
+  uptime alert may name nobody at all, which is read off the message the code builds - into a
+  channel the operator's own staff read, and the audience is the vendor plus everyone in that
+  channel. MANY of these spellings are self-identifying - a scoped npm package, a Maven or NuGet
+  coordinate, a Go module path, an API hostname - but SEVERAL ARE BARE TOKENS THAT ARE ALSO ORDINARY
+  WORDS, and you must decide which kind you are holding before reading any further. `resend` is the
+  worst and it is the only one measured: over 98 real repositories the bare word reached 71 of them
+  with 5,502 lines while `resend.com` reached 17 and `api.resend.com` reached 5, because the token
+  is overwhelmingly the ENGLISH VERB - a 3D-printer firmware's G-code resend protocol, an API path
+  fragment, and \"resend the invite\" UI vocabulary in a product that sends its mail through raw
+  SMTP. `discord` is in the README and badge row of a large share of open-source repositories as
+  \"join our Discord\"; `slack` is an ordinary English word and most often a logo entry in an
+  integrations list; `postmark` is an ordinary English noun for a postal cancellation mark;
+  `serenity` and `nostrum` are ordinary English nouns that happen to be the Rust and Elixir Discord
+  libraries. Three more were added on 2026-09-04: `telegram` is an ordinary English noun for a
+  message sent by wire, is a newspaper name, and sits in the README badge row and integrations menu
+  of a large share of repositories; `telegraf` is ALSO InfluxData's metrics agent, which is a
+  different vendor entirely and by far the likelier meaning in an infrastructure repository; and
+  `grammy` is an ordinary word and a music award. None of the first four was sampled by any
+  measurement available to this rule. `mailjet`, added the same day, is the one bare word here that
+  this research knows of no collision for. Two further families are genuinely vendor-owned and still
+  do not name this rule's subject: `boto3` and `aws-sdk` cover every AWS service rather than SES,
+  and `graph.microsoft.com`, `Microsoft.Graph` and `com.microsoft.graph` cover mail, calendar, files
+  and directory as well as Teams chat. The `@aws-sdk/` npm scope was an anchor of this list until
+  2026-09-16, when the owner withdrew the nine umbrella scopes across the bundle; it is not one now,
+  and nothing changed about what this rule reaches, because `aws-sdk` is a substring of every
+  package under it. THIS DETECTOR RAN NO CORPUS SWEEP, so the repository counts quoted above come
+  from the class survey rather than from these anchors; the three added on 2026-09-04 were
+  separately measured over eight pinned trees (1,337,410 lines) and reached telegram 31 lines,
+  grammy 1 and telegraf 0, which is a COST figure and never a precision one. So what this detector
+  established is ONLY that a listed string occurs at this location. It does NOT establish that the
+  string names the vendor at all, that any personal data was disclosed, that the integration is
+  live, that the line is first-party code rather than a vendored SDK, or which integration path is
+  in use - and for a chat spelling it does not establish which way the arrow points, because
+  `@slack/bolt` is a framework for RECEIVING events from Slack. What each vendor receives on each
+  named path is read from the vendor's own API reference for the call this code makes: THIS BUNDLE
+  CARRIES THE SPELLINGS AND NOTHING ELSE, and no file in the scanner's own repository is available
+  to you. Seven of the twelve vendors trade under a name that is not their contracting party, and a
+  record row naming the brand has not identified the recipient: Resend is Plus Five Five, Inc.;
+  SendGrid is Twilio; Mailgun is Sinch; Mailjet is Sinch as well - the same group as Mailgun, and
+  its own terms name Mailjet SAS, Mailjet GmbH, Mailjet SaaS Ltd, Mailjet Emailing SL and Mailgun
+  Technologies, Inc. as five alternative parties to one agreement; Postmark is AC PM LLC in the
+  ActiveCampaign group; and both Mailchimp Transactional and Mailchimp Marketing are The Rocket
+  Science Group LLC d/b/a Mailchimp, in the Intuit group. For DISCORD the jurisdiction is
+  UNCONFIRMED for this relationship - the entities that were read are the ones in Discord's end-user
+  privacy policy, while the agreement governing an operator posting to a webhook could not be
+  retrieved - and you may not supply one. TELEGRAM is the counter-example and the two are easy to
+  confuse because they are otherwise the same shape: its Bot Platform Developer Terms WERE retrieved
+  and name Telegram Messenger Inc. as the party an operator building on the Bot API contracts with,
+  so for Telegram the entity is established and only its country is not. Whether the vendor is
+  already in the operator's record of processing activities, privacy policy and subprocessor list is
+  not decided by the detector and cannot be: see the context questions"
+remediation_template: >
+  Read the matched line first and decide what it is, because this rule matches a spelling the vendor
+
+  owns and that spelling reaches a tree in eight shapes of which two put data in the vendor's hands.
+
+  A dependency declaration or import that first-party code calls, and a request to the vendor's API
+
+  or a webhook URL the product posts to, are the two. A vendored SDK nothing calls, a documentation
+
+  or migration-guide link, a Content-Security-Policy allow-list entry, test or seed data or a logo
+
+  list, and a string that is not the vendor at all are the other five. A supporting line of a
+
+  first-party integration whose send exists in the tree - a setup-screen entry, a kind list, a
+
+  renderer for the vendor's message format, a setting that selects the vendor - is the eighth: it
+
+  sends nothing itself, and it names the recipient of the send it serves. Several anchors in these
+  two
+
+  lists are ordinary words - `resend`, `slack`, `discord`, `postmark`, `serenity`, `nostrum` - and
+
+  for those the last shape is the likeliest one: over 98 real repositories, bare `resend` reached 71
+
+  of them while the vendor's own hostname reached 17.
+
+  Then say WHICH DIRECTION the disclosure runs, because one candidate from this rule can carry both
+
+  and they are different rows. Outward, an email service provider receives the data subject's own
+
+  address on the envelope and the subject line on every send, whether or not the body carries
+
+  anything about them, plus whatever open and click tracking the operator switched on. Inward, a
+
+  chat webhook receives a message about a person where the event concerns one - a build or uptime
+
+  notification may name nobody - and the audience is the vendor plus everyone in the channel it
+
+  posts into.
+
+  Write the recipient into the record. Where the product is a controller, that is field (d) of its
+
+  Art. 30(1) record, the categories of third parties in its California disclosures under
+
+  Sec. 1798.110(a)(4) and Sec. 1798.130(a)(5)(B). Where the product is a processor rather than a
+
+  controller, its own record is the Art. 30(2) one, which has no categories-of-recipients field, and
+  the recipient
+
+  category belongs in the customer-controller's record instead; settle which of the two the product
+
+  is before writing anything, and if it is not established, say so and stop.
+
+  Name the ENTITY and not the brand. Five of these nine vendors trade under a name that is not their
+
+  contracting party: Resend is Plus Five Five, Inc., SendGrid is Twilio, Mailgun and Mailjet are
+
+  both Sinch, Postmark is AC PM LLC, and Mailchimp Transactional and Mailchimp Marketing are both
+
+  The Rocket Science Group LLC. Which entity a given
+
+  deployment contracts with is read from the order form or the DPA, not from the vendor's homepage,
+
+  and THE VENDOR HAS NO SINGLE ANSWER TO COPY: these vendors name several entities each and pick
+
+  between them by a property of the CUSTOMER - the account country, the region the workspace was
+
+  opened in, which product was bought - so the entity is a fact about THIS OPERATOR'S CONTRACT and
+
+  not an attribute of the vendor. Context question 6 lists the candidates each vendor's own
+
+  documents named and the date each was read; that is an incomplete list of candidates and never
+
+  the answer, because nothing re-reads those documents. Where the operator cannot produce the
+
+  contract, return needs_human for that field rather than choosing the candidate that looks
+
+  likeliest.
+
+  For Discord the jurisdiction is unconfirmed for this relationship: leave that field unanswered and
+
+  say why, rather than substituting a headquarters or a billing country.
+
+  Add the vendor to the published subprocessor list as well, which for the inward direction is the
+
+  document that most often lacks it, because an ops-notification webhook is added by an engineer and
+
+  is rarely thought of as a vendor relationship at all.
+
+  If the vendor is already named in the record, in the privacy policy and in the subprocessor list,
+
+  dismiss the candidate and say which of the three documents you read.
+
+  Do not delete the mail or notification integration in order to close the finding. The obligation
+  is
+
+  to record the recipient, not to have no recipients.
+data_categories:
+  - user.behavior
+  - user.contact.email
+  - user.content
+  - user.device
+  - user.device.ip_address
+  - user.name
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: enumeration
+  item: vendor per direction
+  item_source: token

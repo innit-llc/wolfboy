@@ -1,0 +1,598 @@
+checklist_id: cra-product-information-13-8
+title: CRA Article 13(8) and Annex II - information and instructions accompanying the product
+law: Regulation (EU) 2024/2847 (Cyber Resilience Act)
+source_url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+checked_at: 2026-09-07
+scope_note: "**Scope declaration.** This checklist covers one question and no other: whether the
+  information Annex II requires accompanies the product - in a README, the documentation, a store
+  listing or a SECURITY file - whether the support period is stated, and whether the period that is
+  stated meets the floor Article 13(8) sets. **How the applicability date reaches an item: by the
+  object travelling whole, not by a field on the item.** Nine of the ten items carry the date in no
+  field of their own; only `annex-ii-6-declaration-of-conformity` does, and the instruction to get
+  the date right in every finding - and so to word every finding here as preparation - is stated in
+  `applicability.when_unresolved` and on the timing limb
+  `placed-on-the-market-before-11-december-2027`, not repeated per item. The other nine reach a
+  reader because the build splices the whole shared Article 2 applicability gate into this checklist
+  before validation, so those fields ship in the same object as `items` and travel with them; the
+  timing limb is `closes_gate_when: never` and is walked on every run. Not copying the date onto
+  each item is deliberate - nine copies of one fact that must then agree is a defect class this
+  repository has paid for three times. **So the dependency is on the object staying whole, and
+  nothing in the data enforces it**: an item carries no `applicability_ref` or equivalent pointing
+  at the timing limb. Any renderer, export or consumer that presents an item without the
+  `applicability` block beside it drops the date silently and has to carry it itself. Recorded on
+  2026-08-05, after a check found the guarantee resting on a convention that no field stated. **The
+  duty to state it is not in Article 13(8), and this declaration said it was until 2026-07-29.**
+  Article 13(8) requires a manufacturer to determine a support period and fixes its five-year floor;
+  it contains no duty to state the support period **to the user**. **This sentence said \"it
+  contains no duty to state anything\" until 2026-08-05, and that universal negative is refuted by
+  the paragraph's own fifth subparagraph** - which is a duty to record the inputs to the decision in
+  the technical documentation, and not a duty to tell a user the period, so it does not disturb the
+  sentence above it. The supporting quote on Article 13(19) in `rules/gates/cra-scope.yaml` states
+  the same boundary from the other side, and the two named no object until 2026-08-05, which left
+  them reading as a contradiction they were not. Article 13(8) has six subparagraphs and three of
+  them are duties no item here covers, declared rather than left silent: the **first** requires
+  manufacturers to ensure, when placing the product on the market and for the support period, that
+  vulnerabilities of the product including its components are handled effectively in accordance with
+  Part II of Annex I; the **fifth** requires them to \"include the information that was taken into
+  account to determine the support period of a product with digital elements in the technical
+  documentation as set out in Annex VII\", which Annex VII point 4 receives; and the **sixth**
+  requires appropriate policies and procedures, including coordinated vulnerability disclosure
+  policies referred to in Part II, point (5), of Annex I, to process and remediate potential
+  vulnerabilities **in the product with digital elements** reported from internal or external
+  sources - the four-word object was dropped here until 2026-08-05, which stated the duty wider than
+  the subparagraph does. Each is another row. The duty to state the end date is Article 13(19) -
+  \"clearly and understandably specified at the time of purchase\" - and the duty to include the
+  type of technical security support and the end date in the accompanying information is Annex II
+  point 7. Both are cited and quoted - Article 13(19) in the applicability gate
+  `rules/gates/cra-scope.yaml`, Annex II point 7 in the items of `cra-product-information-13-8`; a
+  citation with no duty behind it is a citation a lawyer rejects, and that checklist's own standard
+  is that the provision must be carried. **What the gate in `rules/gates/cra-scope.yaml` covers, and
+  what it still does not - restated 2026-08-04, because the previous version of this sentence
+  omitted the largest thing the gate did not do.** Until that date the gate tested Article 2(1) -
+  the whole of the Regulation's positive scope test - and none of Article 2(2) to 2(8), which only
+  subtract; the omission was recorded in a YAML comment, and the parser strips comments, so no field
+  a reader can see said it. The gate now puts all seven of Article 2's other paragraphs, as ten
+  limbs. **Five of those paragraphs exclude, and Article 2(2) has three points asked separately, so
+  seven limbs take the product out of the Regulation when answered yes**: Article 2(2)(a), (b) and
+  (c), then 2(3), 2(4), 2(6) and 2(7). **Article 2(5) excludes nothing by itself and gets two limbs,
+  not one.** It is an empowerment: it says the application of this Regulation \"may be limited or
+  excluded\" and empowers the Commission to do either by delegated act. Only the exclusion branch
+  takes a product out, so the exclusion branch is one limb that closes the gate and the limitation
+  branch is a second limb that records the act and does not. **A single limb reading \"limits or
+  excludes\" and closing the gate on either was shipped on 2026-08-04 and corrected the same day**:
+  it answered yes for a product whose application a delegated act merely limits, returned
+  `does-not-apply`, and dropped all ten of this checklist's items - nine Annex II points and Article
+  13(8)'s support-period floor - for a product the Regulation still reaches. **Article 2(8) is the
+  tenth limb, and it takes no product out** - it limits what the Regulation's obligations entail by
+  way of supplying information. So eight of the ten limbs close the gate when answered yes: the
+  seven exclusion limbs and the Article 2(5) exclusion branch. The other two - the Article 2(5)
+  limitation branch and Article 2(8) - annotate. **It still says nothing about these.** It does not
+  read any of the instruments Article 2 points at - Regulation (EU) 2017/745, Regulation (EU)
+  2017/746, Regulation (EU) 2019/2144, Regulation (EU) 2018/1139 and Directive 2014/90/EU are cited
+  and quoted only as the Cyber Resilience Act itself cites them, none of them was fetched, and
+  nothing in the gate states what any of them covers, so every one of those limbs is a question put
+  to the person and not a test the gate can run. The gate carries no record of any delegated act
+  adopted under Article 2(5), and has no field in which one could be recorded, so that limb degrades
+  as delegated acts are adopted rather than being answered there. It cannot express the strictly
+  offline product that Article 2(1)'s connection test would put outside, because no census fact says
+  a collector looked and found nothing. And it says nothing about the essential requirements in
+  Annex I, about conformity assessment, or about the technical documentation; those are other rows,
+  and two of them are documented as having no code signal at all. It does not decide whether the
+  product is in conformity with anything. **What the applicability gate `rules/gates/cra-scope.yaml`
+  actually produces, stated first because an earlier version of this declaration overstated it.** It
+  said the gate \"decides whether the Regulation's scope reaches a project of this kind\". It does
+  not decide that, and it cannot. What it does is decompose Article 2's test into 37 named limbs,
+  settle from the census and from the person's own scan profile the ones they answer, and return one
+  of three verdicts: `applies`, where every required limb is settled; `likely-applies`, where at
+  least one is settled and at least one is not; and `does-not-apply`, which has exactly one route,
+  described next. `unresolved` cannot occur, because the Union-market limb is settled by the pack's
+  premise, so at least one required limb is always settled. **The count was 26 and the test was
+  Article 2(1) alone until 2026-08-04**, when Article 2's other seven paragraphs and Recital 15's
+  donation negative were added as limbs - ten limbs for the seven paragraphs, because Article 2(2)
+  has three points asked separately and Article 2(5)'s two branches are two questions. Of the 37,
+  five are required conditions of Article 2(1), eleven are exemptions that take the product out of
+  the Regulation when answered yes - three from Recital 16 and Recital 18, eight from Article 2
+  itself, being its five excluding paragraphs across seven limbs plus the exclusion branch of an
+  Article 2(5) delegated act - and twenty-one annotate without deciding. **Article 2(5) itself is
+  not among the exclusions**: it excludes nothing by itself, and what it empowers the Commission to
+  adopt may limit rather than exclude, so its limitation branch is one of the twenty-one that
+  annotate. **The exemptions were twelve and the annotating limbs twenty until 2026-08-05**, when
+  `not-for-profit-development` was demoted from the first group to the second. Recital 18's sentence
+  about not-for-profit organisations speaks of the **development** of free and open-source software,
+  and it draws the development/supply distinction expressly - \"to ensure that there is a clear
+  distinction between the development and supply phases\" - while Article 3(22) makes the **supply**
+  the thing that has to be in the course of a commercial activity. A not-for-profit constituted as
+  the Recital's proviso requires that develops free and open-source software and then sells it, or
+  sells support above cost, answered that limb truthfully \"yes\" and the gate returned
+  `does-not-apply`, dropping all ten of the items below for a product the Regulation still reaches.
+  As an annotating limb a \"yes\" now removes one ground for calling the supply commercial and
+  leaves the others standing, which is how the gate already treats the two other recital negatives
+  of that shape. **Not one of the eleven exemptions is an input the evaluator reads, and that has to
+  be said in the same breath as the count.** `assessScope` treats an exemption as claimed only where
+  the tree supports it, and no exemption in this gate declares any `code_evidence` - deliberately,
+  because a route out of a Regulation must not be claimed by a collector. So the eleven are
+  questions put to the person or the adjudicating agent, and their answers are acted on by that
+  reader and never by the verdict. A scan can therefore return `applies` with all eleven unanswered;
+  the verdict sentence says so as of 2026-08-04, and it did not before. **No route to
+  `does-not-apply` runs through the code, and since 2026-11-11 none runs through the scan profile
+  either.** No limb in this gate carries counter-evidence from code and no exemption can be claimed
+  from code, so nothing a collector finds - or fails to find - can switch the instrument off. The
+  one profile field wired to a limb is `features.payments.present`, which
+  `in-the-course-of-a-commercial-activity` names in `declared_by` with `declared_answers: [true]`.
+  Declared **true**: the limb is settled by the declaration, toward the duty. Declared **false**:
+  that is no answer to the limb, because Article 3(22) reaches a supply made \"whether in return for
+  payment or free of charge\" - a company's free tool or app can still be supplied in the course of
+  a commercial activity (Recital 15) - so the limb stays open and is asked, and where the tree
+  carries commercial facts the disagreement with the declared no is printed first. **No
+  declaration**: the limb is open, and since 2026-11-10 the code's facts, a billing call site
+  included, are printed as what the code suggests and never as the answer. Until 2026-11-11 a
+  declared false over a tree with no commercial fact printed `does-not-apply`, which told a company
+  that gives its product away that the Regulation does not reach it (checker L, 2026-11-11, D1). The
+  routes out are a person's answer to the limb's own question and a claimed exemption; this version
+  prints both as questions and cannot yet record the answers. **A declaration of \"no\" cannot make
+  a verdict stronger than the same tree produces with no profile at all. A declaration of \"yes\"
+  can - deliberately.** The two directions are not symmetrical: `features.payments.present = true`
+  settles the commercial limb from the person's own statement about their own business, which is
+  movement toward the duty applying and never away from it. It moved thirteen of twenty-four
+  measured trees from `likely-applies` to `applies` while the code settled the other product limbs;
+  since 2026-11-10 those limbs stay open, so the verdict it gives is `likely-applies` with the
+  commercial limb answered. The rule the evaluator runs is stated once, in the scanner's own
+  applicability module; the cases above are what that rule means for Article 2(1). **The
+  contradiction test (a declared no over a tree carrying commercial facts) turned on the wrong test
+  until 2026-07-30, and the owner corrected it.** The test for \"does the tree contradict the
+  declaration\" read the same narrow kind list that settles the limb, so a tree holding commercial
+  facts of the annotating kinds - an identifier name, a licence-key check, a bare price - counted as
+  a tree holding nothing. Measured on a commercial open-core product: with no profile the verdict
+  was `likely-applies`; adding the single field `features.payments.present = false` made it
+  `does-not-apply`, and the report printed *\"nothing in the repository contradicts it\"* two lines
+  above a `licence_key_check` fact with hundreds more behind it, then carried that sentence verbatim
+  into twelve candidates. Settling a limb and contradicting a declaration are two different
+  questions, and the evaluator now runs them separately: the first reads `code_evidence.supports`,
+  the second reads everything in the limb's `evidence_categories`. **This paragraph said
+  `does-not-apply` could not occur and that \"no answer a person gives re-enters this computation\"
+  until the declaration was wired on 2026-07-29**, which was true of the evaluator as it then stood
+  and is false of it now: `assessScope` takes the profile as an argument and reads it. What has not
+  changed is that a declaration cannot delete evidence - saying no over any commercial fact produces
+  a printed disagreement, never a removal. **What the gate's verdict turns on.** Article 2(1) sets
+  three conditions, and each is a limb the verdict turns on: **is what this repository contains a
+  product with digital elements** (Article 3(1), read with Article 3(4) and Article 3(6), and
+  including the manufacturer's own remote data processing solutions); **does its intended purpose or
+  reasonably foreseeable use include a data connection to a device or network**; and **is it made
+  available on the market** (Article 3(22)), which decomposes further into supply for distribution
+  or use, supply on the Union market, and supply in the course of a commercial activity, **whether
+  in return for payment or free of charge** - the last clause was missing here until 2026-08-05, and
+  it is the clause that stops a maintainer who gives the product away from reading \"commercial
+  activity\" and answering no. Of those, only the Union-market condition is settled with no inquiry
+  of any kind: the pack's standing premise supplies it. The other four are facts about the product,
+  and since 2026-11-10 none of them is settled from the tree: what the code shows is printed beside
+  each question as what the code suggests, and the person answers - the product limb is suggested by
+  a dependency, a call site, a URL or host literal or any distribution artefact, the data-connection
+  limb by a call site or a dependency, the supply limb by a distribution artefact, and the
+  commercial-activity limb **only by a billing call site** (`subscription_route`), which until
+  2026-11-10 settled it. **That last list named a price identifier until 2026-07-29, then a payment
+  vendor and a hosted checkout link until 2026-07-30, and now names one kind**: an identifier NAME
+  is not a payment route, and neither is a filename, a vendor's API host or a security header - the
+  reasons are measured and are recorded on the limb itself. All seven other commercial kinds are
+  still collected and still shown, on limbs that annotate. This declaration said \"only the
+  Union-market condition is settled without asking\" until 2026-07-29, which understated what the
+  instrument then did unasked on every tree it had been run over; since 2026-11-10 it is true again.
+  **A separate question - who the duty is addressed to - annotates findings and never removes one.**
+  Whether the party being scanned is a manufacturer under Article 3(13), deemed one under Article 21
+  or Article 22, an open-source software steward under Article 3(14), a person contributing source
+  code to a product with digital elements **qualifying as free and open-source software** that is
+  not under their responsibility, or an importer under Article 3(16) or a distributor under Article
+  3(17), changes what a finding says and never whether it exists. **The contributor role was
+  compressed to \"a contributor to software not under their responsibility\" here until
+  2026-08-05**; Recital 18's last sentence puts two conditions on that route out and this named one,
+  which widened it to a contributor to proprietary software. The same words were restored to two
+  fields of `rules/gates/cra-scope.yaml` earlier the same day, and this was the field they were not
+  restored to. That rule is written into the data as `closes_gate_when: never` on every limb about
+  the addressee. **It is a rule about this scanner and not a statement of what each role owes, and
+  the two differ.** Annex II and Article 13(18) are addressed to manufacturers and to the parties
+  deemed to be manufacturers under Articles 21 and 22; an open-source software steward's obligations
+  are Article 24 and, of Article 14, only the paragraphs Article 24(3) applies to it and only to the
+  extent stated there; and Recital 18's final sentence says the Regulation does not apply at all to
+  a person contributing source code to products with digital elements qualifying as free and
+  open-source software that are not under their responsibility. So annotating rather than removing
+  is a deliberate over-inclusion in the tolerated direction, and a finding must be worded as the
+  gate's `open-source-software-steward` and `contributor-to-software-not-under-their-responsibility`
+  limbs require - naming the role and what it may mean, never asserting that the item is owed by
+  that party. **The importer and distributor alternative was absent from this declaration for the
+  whole of the day the limb was added, 2026-07-29, and was put in later the same day.** The gate has
+  asked the question since `importer-or-distributor-verification-duty` was created; a declaration
+  that omits a question the artefact puts is the exact failure a scope declaration exists to
+  prevent, and the omission was the more serious for being on the limb that was added because its
+  absence under-included. What that limb records is a **checking** duty and not the manufacturer's
+  drafting duty: an importer must ensure under Article 19(2)(c) that the Annex II information
+  accompanies the product, and a distributor must verify under Article 20(2)(b) that the
+  manufacturer and the importer complied with Article 13(18) among others. Neither of them authors
+  that information. **Article 13(18) carries five requirements this list does not ask about**, and
+  they are declared here rather than left silent: that the information be in a language which can be
+  easily understood by users and market surveillance authorities; that it be clear, understandable,
+  intelligible and legible; that it allow for the secure installation, operation and use of the
+  product; that the manufacturer keep it at the disposal of users and market surveillance
+  authorities for at least ten years after the product is placed on the market, or for the support
+  period, whichever is longer; and that where it is provided online it be accessible, user-friendly
+  and available online for that same period. This sentence said \"three requirements\" until
+  2026-07-29 and stopped at the third sentence of the paragraph, which dropped the
+  secure-installation requirement and the online-accessibility requirement without a word - the
+  failure a scope declaration exists to prevent. The first three are judgements about a document a
+  reader can make; the last two are about conduct over time and no document shows them. **Two
+  earlier versions of this note were wrong in recorded ways.** One listed a different three limbs -
+  a decomposition of Article 3(22) alone - and so omitted the data-connection limb entirely, which
+  is the one limb that speaks to a strictly offline utility. Another said the opposite of what the
+  gate does (\"it does not decide whether the product is in scope of the Regulation ... the gate
+  asks that question of the person running the scan\"), which contradicted the gate itself - at the
+  time two hundred lines further down this same file, and since 2026-08-04
+  `rules/gates/cra-scope.yaml`."
+applicability_ref: cra-scope
+items:
+  - id: annex-ii-1-manufacturer-contact
+    article: Annex II, point 1
+    quote: the name, registered trade name or registered trademark of the manufacturer, and the postal
+      address, the email address or other digital contact as well as, where available, the website
+      at which the manufacturer can be contacted;
+    cite: CRA Annex II, point 1
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-28
+    question: Do the accompanying documents give the manufacturer's name, registered trade name or
+      registered trademark, a postal address, an email address or other digital contact, and, where
+      available, the website at which the manufacturer can be contacted?
+    applicability_note: A GitHub organisation name is a name; it is rarely a registered trade name, and
+      it is never a postal address. Record what is there and what is missing separately - the postal
+      address is the element most often absent from a repository that otherwise identifies its
+      author fully, **and its absence is not by itself a shortfall**. Point 1 asks for "the postal
+      address, the email address or other digital contact", a three-way disjunction exactly like the
+      name trio, so any one of the three answers that element and a project giving an email address
+      alone is complete on it. **This note told a reader to score a missing postal address as a
+      shortfall until 2026-08-05**, which contradicted this item's own question - rewritten the same
+      day to read "a postal address, an email address or other digital contact" - and created a
+      shortfall the Annex does not. Say which of the three is given. **The question omitted point
+      1's website element until 2026-08-05, and no field of this item declared the omission.** The
+      point requires "the postal address, the email address or other digital contact **as well as,
+      where available, the website at which the manufacturer can be contacted**", which is the
+      item's own `quote` verbatim; Article 19(4) puts the same element on importers in all but one
+      word - "as well as, where **applicable**, the website at which they can be contacted" - so the
+      drafter treats it as an operative element and not a flourish. While the question omitted it no
+      scan asked about it, and a product that supplies no website read in a report exactly like one
+      that supplies one - a skipped check is indistinguishable from a passed one. It is conditional
+      on availability, so a project with no website is `not-applicable` on that element rather than
+      short of it; say which. **The question also asked for "the manufacturer's name" alone until
+      the same date**, where the point allows the name, the registered trade name **or** the
+      registered trademark. A manufacturer identified by a registered trademark alone satisfies
+      point 1 and would have been reported short of it, and this note's opening sentence already
+      named the alternatives - one field of this item contradicted another. Any one of the three
+      answers the element; say which one is given.
+  - id: annex-ii-2-vulnerability-contact
+    article: Annex II, point 2
+    quote: the single point of contact where information about vulnerabilities of the product with
+      digital elements can be reported and received, and where the manufacturer’s policy on
+      coordinated vulnerability disclosure can be found;
+    cite: CRA Annex II, point 2
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-28
+    question: Do they give a single point of contact for reporting vulnerabilities - one point of
+      contact where information about vulnerabilities of the product with digital elements can be
+      reported and received and where the manufacturer's policy on coordinated vulnerability
+      disclosure can be found?
+    applicability_note: "**Both of point 2's \"where\" clauses attach to the one single point of
+      contact, and the question put them as two independent duties until 2026-08-05.** Annex II
+      point 2 asks for \"the single point of contact where information about vulnerabilities of the
+      product with digital elements can be reported and received, **and where** the manufacturer's
+      policy on coordinated vulnerability disclosure can be found\", so a document that gives an
+      address in one place and the policy somewhere unconnected does not meet it, and the question
+      as it stood would have scored that as complete. Article 13(17) is the same requirement from
+      the other side: the manufacturer designates a single point of contact, ensures it is easily
+      identifiable by users and includes it in the Annex II information. Two things, and a
+      `SECURITY.md` giving an address without a policy answers one of them. Note the precision
+      caveat this repository already recorded for the related rule: the policy may live in an
+      organisation-level `.github` repository, or at a `security.txt` on a separate website
+      repository, so **absence here is absence in what was scanned, not absence of a policy**. Say
+      that in the reasoning rather than reporting a bare absence."
+  - id: annex-ii-3-product-identification
+    article: Annex II, point 3
+    quote: name and type and any additional information enabling the unique identification of the
+      product with digital elements;
+    cite: CRA Annex II, point 3
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-28
+    question: Do they give a name and a type, and any additional information enabling the unique
+      identification of the product with digital elements?
+    applicability_note: "**The question asked for \"a name, a type, and enough else to tell one release
+      from another\" until 2026-08-05, and the point fixes no such level.** Annex II point 3 asks
+      for \"name and type and any additional information enabling the unique identification of the
+      product with digital elements\", and what makes a particular product uniquely identifiable is
+      left to the manufacturer; a release identifier is one way and not the test. The point's own
+      words are restored. Article 13(15) is the neighbouring duty a reader should not confuse with
+      this one, and it is a different row. **This note gave that duty as \"a type, batch or serial
+      number on the product\" until 2026-08-05, which is one branch of a two-branch provision and
+      not the branch that reaches software.** Article 13(15) requires manufacturers to ensure that
+      their products with digital elements \"bear a type, batch or serial number **or other element
+      allowing their identification**, **or, where that is not possible, that that information is
+      provided on their packaging or in a document accompanying the product with digital
+      elements**\". Marking the product itself is the first branch, and \"other element allowing
+      their identification\" is a fourth alternative within it; where marking is not possible, the
+      identifying information goes on the packaging or into the accompanying document, which is the
+      same vehicle Annex II governs. **This note called the second branch \"the ordinary case for
+      software supplied as a download or a package\" until 2026-08-05, and nothing in the Regulation
+      says that.** \"Where that is not possible\" is assessed for the particular product, not for a
+      class of products, and the first branch's own fourth alternative - \"other element allowing
+      their identification\" - is something a downloaded package plainly can bear, in a manifest, a
+      version string or a build identifier. Presuming the branch by delivery shape decides the
+      question the provision leaves open, in the direction of asking for less; the row that
+      implements Article 13(15) must ask it per product. So the two duties meet in one document and
+      stay distinct: point 3 asks for name, type and whatever else identifies the product uniquely,
+      and Article 13(15) asks for an identification element and fixes where it has to appear.
+      Neither answers the other, and the row that implements Article 13(15) has to carry both of its
+      branches. Say which of the three elements is present: a name, a type, and whatever else is
+      given for unique identification."
+  - id: annex-ii-4-intended-purpose
+    article: Annex II, point 4
+    quote: the intended purpose of the product with digital elements, including the security environment
+      provided by the manufacturer, as well as the product’s essential functionalities and
+      information about the security properties;
+    cite: CRA Annex II, point 4
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-28
+    question: Do they state the product's intended purpose, its essential functionalities, and its
+      security properties and environment?
+    applicability_note: A README ordinarily answers the purpose and the functionalities and says nothing
+      about the security environment or the security properties. Partial is the common honest status
+      here, and the reasoning should name which of the four elements is present.
+  - id: annex-ii-5-known-risks
+    article: Annex II, point 5
+    quote: any known or foreseeable circumstance, related to the use of the product with digital
+      elements in accordance with its intended purpose or under conditions of reasonably foreseeable
+      misuse, which may lead to significant cybersecurity risks;
+    cite: CRA Annex II, point 5
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-28
+    question: Do they describe any known or foreseeable circumstance, related to use of the product in
+      accordance with its intended purpose or under conditions of reasonably foreseeable misuse,
+      that may lead to significant cybersecurity risks?
+    applicability_note: "**The question compressed \"under conditions of reasonably foreseeable misuse\"
+      to \"misuse\" until 2026-08-05**, which dropped the qualifier the point carries and asked
+      about misuse of any kind. Annex II point 5 reaches a circumstance \"related to the use of the
+      product with digital elements in accordance with its intended purpose **or under conditions of
+      reasonably foreseeable misuse**, **which may lead to significant cybersecurity risks**\", and
+      the qualifier is a defined term: Article 3(25) defines reasonably foreseeable misuse as \"the
+      use of a product with digital elements in a way that is not in accordance with its intended
+      purpose, but which may result from reasonably foreseeable human behaviour or interaction with
+      other systems\". Deliberate abuse that no reasonable manufacturer would foresee is outside it.
+      The point's own words are restored. Both branches are asked, not one: a circumstance arising
+      from ordinary intended use counts as much as one arising from foreseeable misuse, and a
+      document that covers only the second is partial. **The threshold is the third element and this
+      note stopped before it until 2026-08-05.** The point does not reach every circumstance related
+      to either branch of use - only one \"which may lead to significant cybersecurity risks\". That
+      closing clause is the whole of what limits what has to be disclosed, it is in this item's own
+      `quote` and in its question, and quoting the point without it stated a wider duty than the
+      Annex creates. A circumstance that leads to no significant cybersecurity risk is outside point
+      5 however foreseeable it is."
+  - id: annex-ii-6-declaration-of-conformity
+    article: Annex II, point 6
+    quote: where applicable, the internet address at which the EU declaration of conformity can be
+      accessed;
+    cite: CRA Annex II, point 6
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-28
+    question: Do the accompanying documents give the internet address at which the EU declaration of
+      conformity can be accessed, in every case where that address is owed - which Article 13(20)
+      makes it wherever a simplified EU declaration of conformity is provided instead of a full
+      copy?
+    applicability_note: "Qualified by \"where applicable\", and the qualifier tracks Article 13(20)'s
+      two routes rather than whether the manufacturer has got round to the work. Article 13(20):
+      manufacturers \"shall either provide a copy of the EU declaration of conformity or a
+      simplified EU declaration of conformity with the product with digital elements\", and \"where
+      a simplified EU declaration of conformity is provided, it shall contain the exact internet
+      address at which the full EU declaration of conformity can be accessed\". So a full copy
+      travelling with the product needs no internet address and this point is `not-applicable`; a
+      simplified declaration must carry the exact address and this point is engaged. **This note
+      said the qualifier \"is about whether a declaration exists at all - a manufacturer that has
+      not yet carried out conformity assessment has nothing to give an address for\" until
+      2026-08-05, and the question asked \"Where a declaration of conformity exists\" until the same
+      date.** Drawing the declaration up is not optional for a product the Regulation reaches:
+      Article 13(12) says that where conformity has been demonstrated by the chosen conformity
+      assessment procedure \"manufacturers shall draw up the EU declaration of conformity in
+      accordance with Article 28\", and Article 13(20) requires one of the two forms to accompany
+      the product. The old reading let \"we have not carried out conformity assessment\" mark the
+      item `not-applicable` - a state of not having done the work asserted about oneself,
+      indefinitely, as an inapplicability - which is the understating direction, and Article 13(20)
+      is quoted nowhere else in this checklist. **State the reason, state that it is temporal, and
+      get the date right, because it is not one date.** The requirements apply from 11 December 2027
+      under **Article 71(2)** - the provision that fixes the date, quoted in this checklist's
+      applicability gate as of 2026-08-04 and asserted in this note without a provision behind it
+      until then - but under Article 69(2) a product already on the market before that date is
+      subject to them **only from a substantial modification made on or after it**. So for released
+      standalone software the sentence is *\"these requirements attach when this software is next
+      substantially modified on or after 11 December 2027, and to any new product or variant first
+      released from that date\"*, and only for software not on the market by then is it *\"from 11
+      December 2027\"*. For hardware, placing on the market is per unit (Recital 38), so the
+      sentence is *\"every unit placed on the market from 11 December 2027 must meet these
+      requirements\"*, whatever the model's age (corrected 2026-11-11, checker L, D4). This note
+      carried the second form alone until 2026-07-29 - the same error the `when_unresolved` now in
+      the applicability gate `rules/gates/cra-scope.yaml`, and in `cra-product-information-13-8` on
+      that date, was corrected for then - and compounded it by adding that the reason \"is true of
+      every item in this file\", the file being `cra-product-information-13-8`, which propagated the
+      wrong start date to all ten. What makes this item different is that its condition survives the
+      date: after 11 December 2027 it is still owed only where Article 13(20)'s simplified route is
+      taken. **This note said the others are unconditional until 2026-08-05, and three of them are
+      not**: `annex-ii-9-sbom-access` bites only where the manufacturer has decided to make the
+      software bill of materials available to the user, `annex-ii-8-instructions` sub-point (e) only
+      where Annex I Part I point (2)(c)'s automatic-update default setting applies and (f) only
+      where the product is intended for integration into other products with digital elements, and
+      point 1's website element only \"where available\". The conditions differ; being conditional
+      does not."
+  - id: annex-ii-7-support-period
+    article: Annex II, point 7
+    quote: the type of technical security support offered by the manufacturer and the end-date of the
+      support period during which users can expect vulnerabilities to be handled and to receive
+      security updates;
+    cite: CRA Annex II, point 7
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-28
+    question: Do they state what technical security support is offered and the end date of the support
+      period?
+    applicability_note: An **end date**, not a duration and not a policy. "We support the latest two
+      minor versions" is a policy; "security updates until 30 June 2030" is what the point asks for.
+      This is the element most often missing from otherwise complete documentation. **Point 7 has
+      two elements and this note guided only the second until 2026-08-05.** It asks for "the type of
+      technical security support offered by the manufacturer **and** the end-date of the support
+      period during which users can expect vulnerabilities to be handled and to receive security
+      updates", so a document that names an end date and says nothing about what support is offered
+      during the period answers half of it. The question above asks both; say which of the two is
+      present. **The end date's precision comes from a different provision, and no item of this
+      checklist carried it until 2026-08-05.** Article 13(19), quoted in the applicability gate
+      `rules/gates/cra-scope.yaml`, requires the end date "including at least the month and the
+      year" to be clearly and understandably specified at the time of purchase, so a bare year does
+      not meet it. Annex II point 7 fixes no precision of its own, and this note states the source
+      of each requirement rather than merging them.
+  - id: art-13-8-five-years
+    article: 13(8)
+    quote: Without prejudice to the second subparagraph, the support period shall be at least five
+      years. Where the product with digital elements is expected to be in use for less than five
+      years, the support period shall correspond to the expected use time.
+    cite: CRA Art. 13(8)
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-28
+    question: Where a support period is stated, does it reflect how long the product is expected to be
+      in use - and is it at least five years, unless the documentation explains that the expected
+      use time is shorter?
+    applicability_note: "**Five years is a floor, not a target, and a five-year period is not
+      automatically compliant.** The quote opens \"Without prejudice to the second subparagraph\",
+      and that subparagraph says: *\"Manufacturers shall determine the support period so that it
+      reflects the length of time during which the product is expected to be in use, taking into
+      account, in particular, reasonable user expectations, the nature of the product, including its
+      intended purpose, as well as relevant Union law determining the lifetime of products with
+      digital elements.\"* That subparagraph continues, and the sentence it ends with is a qualifier
+      on the duty this note hardens: *\"The matters to be taken into account in order to determine
+      the support period shall be considered in a manner that ensures proportionality.\"* So the
+      period has to match expected use first, proportionately, and then not fall below five years.
+      An earlier draft of this note offered \"two lawful answers: five years or more, or a shorter
+      period matching a shorter expected use time\" - which passes a five-year period on a product
+      expected to be in use for ten, and that is a silent pass on a real shortfall. Read it in this
+      order: (1) how long is this product expected to be in use, from its nature and intended
+      purpose? (2) does the stated period reflect that? (3) is it at least five years? A period
+      **below** five years is the finding unless the documentation explains a shorter expected use
+      time. A period **at** five years on something long-lived - an operating system, a library
+      other software builds on, a device's firmware - is worth reporting as arguable with the
+      expected-use question named, not as a pass. Where no period is stated at all, this item is
+      `unresolved` rather than a failure: there is nothing to measure. Nothing here can settle
+      expected use time on its own; say what the documentation shows and hand the judgement over.
+      **Two parts of Article 13(8) this note passed over until 2026-08-05, one in each direction.**
+      The second subparagraph's middle sentence is permissive and belongs to the manufacturer:
+      \"When determining the support period, manufacturers **may also** take into account the
+      support periods of products with digital elements offering a similar functionality placed on
+      the market by other manufacturers, the availability of the operating environment, the support
+      periods of integrated components that provide core functions and are sourced from third
+      parties as well as relevant guidance provided by the dedicated administrative cooperation
+      group (ADCO) established pursuant to Article 52(15) and the Commission.\" A short period
+      defended on any of those grounds is defended on grounds the paragraph names, and a reader
+      working from step (1) alone would not know that. In the other direction, the fourth
+      subparagraph lets the floor rise above five years: \"Taking into account ADCO recommendations
+      as referred to in Article 52(16), the Commission **may adopt delegated acts** in accordance
+      with Article 61 to supplement this Regulation by **specifying the minimum support period for
+      specific product categories** where the market surveillance data suggests inadequate support
+      periods.\" So five years is the floor the Regulation itself sets and not necessarily the floor
+      for a given category; this checklist records no delegated act and has no field in which one
+      could be recorded, so check whether one has been adopted for the product's category rather
+      than reading five years as the answer. **Recital 60 puts a second condition on the
+      short-period route that the operative text does not, and this item follows the operative
+      text.** The Recital says a manufacturer should be able to define a period of less than five
+      years \"only where this is **justified by the nature of the product** with digital elements
+      concerned **and** where that product is expected to be in use for less than five years\";
+      Article 13(8)'s third subparagraph carries only the second of those two. So a checklist that
+      asks about expected use time alone is asking what the article asks and is not understating the
+      duty. It is recorded here because the Recital would support a tighter reading, and because a
+      reader who finds it should be able to see that the difference was noticed rather than missed."
+  - id: annex-ii-8-instructions
+    article: Annex II, point 8
+    quote: "detailed instructions or an internet address referring to such detailed instructions and
+      information on:"
+    cite: CRA Annex II, point 8
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-28
+    question: Do they give detailed instructions, or an internet address referring to them, covering
+      secure commissioning and lifetime use, how changes affect data security, how security updates
+      are installed, secure decommissioning including removal of user data, how automatic updates
+      can be turned off, and - where the product with digital elements is intended for integration
+      into other products with digital elements - the information the integrator needs in order to
+      comply with the essential cybersecurity requirements set out in Annex I and the documentation
+      requirements set out in Annex VII?
+    applicability_note: "**Point 8 has six sub-points and this is one question**, so answer it element
+      by element rather than as a single yes. **The question walked (a) to (e) and never asked (f)
+      until 2026-08-05**, which is the same class as the point 1 website element repaired the same
+      day: while no scan asked about it, a product that gives an integrator nothing read in a report
+      exactly like one that gives it everything, and a skipped check is indistinguishable from a
+      passed one. In the Regulation's own order: (a) the necessary measures during initial
+      commissioning and throughout the lifetime, to ensure secure use; (b) how changes to the
+      product can affect the security of data; (c) how security-relevant updates can be installed;
+      (d) secure decommissioning, including how user data can be securely removed; (e) how the
+      default setting enabling the automatic installation of security updates, **as required by Part
+      I, point (2)(c), of Annex I**, can be turned off; and (f) **where the product with digital
+      elements is intended for integration into other products with digital elements**, the
+      information the integrator needs in order to comply with the essential cybersecurity
+      requirements set out in Annex I and the documentation requirements set out in Annex VII.
+      **Sub-point (e) was given without its cross-reference until 2026-08-05, so it had no route to
+      `not-applicable` while (f) had one.** The words \"as required by Part I, point (2)(c), of
+      Annex I\" are in the Official Journal, and that requirement is itself conditional: Annex I
+      Part I point (2)(c) asks manufacturers to ensure that vulnerabilities can be addressed through
+      security updates, \"including, **where applicable**, through automatic security updates that
+      are installed within an appropriate timeframe enabled as a default setting, with a clear and
+      easy-to-use opt-out mechanism, through the notification of available updates to users, and the
+      option to temporarily postpone them\" - the quotation closed at \"opt-out mechanism\" with no
+      mark of omission until 2026-08-05, and the point continues past it. A product that ships no
+      automatic-update default setting has no opt-out to document and is `not-applicable` on (e)
+      rather than short of it - say so, and say that (e) is engaged wherever such a default setting
+      is enabled. **Sub-point (f) read \"into other products\" and dropped \"with digital elements\"
+      until 2026-08-05, which stated the condition wider than Annex II does.** The words are in the
+      Official Journal - \"where the product with digital elements is intended for integration into
+      other products with digital elements\" - and this note is the only place in this repository
+      that carries (a) to (f) at all, because `quote` above is the chapeau alone and the question
+      walks (a) to (e); there is no quote beside it to catch the error. The note is also used to
+      decide applicability sub-point by sub-point, so the wider wording told a reader that (f) was
+      owed by a product intended for integration into a product **without** digital elements, which
+      the Annex does not owe. An earlier pass left it deliberately, reasoning that narrowing it
+      would weaken a check; that reasoning does not hold. This repository tolerates over-inclusion
+      in what a scanner **reads** and not in what it says a provision **says**, the applicability
+      gate `rules/gates/cra-scope.yaml` restored the identical six words to
+      `foss-component-for-integration-not-monetised` on the same date, and two files of one
+      coverage-map row cannot hold opposite rules for one phrase. Two things an earlier draft of
+      this note got wrong. **(f) points outward, not inward**: it is about this product being
+      supplied as a component to somebody else, and about what that downstream integrator is given —
+      not about the components inside this product. It is also conditional on the product being
+      intended for integration into other products with digital elements, so a standalone
+      application is `not-applicable` on that sub-point rather than short of it. And **reporting a
+      vulnerability is point 2, not point 8**; the question asked for it here until 2026-07-29,
+      which put an element in this item that the point does not contain. A README with an install
+      section and nothing about decommissioning or turning off automatic updates is partial, and
+      saying which of the six are covered is the useful output. Where the documents point at an
+      internet address instead, that satisfies the point on its face; say the address was not
+      followed, because nothing in a scan reads it."
+  - id: annex-ii-9-sbom-access
+    article: Annex II, point 9
+    quote: If the manufacturer decides to make available the software bill of materials to the user,
+      information on where the software bill of materials can be accessed.
+    cite: CRA Annex II, point 9
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-28
+    question: Where the manufacturer has decided to make a software bill of materials available to the
+      user, do the documents say where it can be accessed?
+    applicability_note: "**Conditional, not a must-ship item**, and the coverage map records this
+      specifically. The point bites only where the manufacturer has decided to make an SBOM
+      available **to the user** - two words the question dropped until 2026-08-05, which made the
+      trigger any decision to make it available to anybody where point 9 names the user; where
+      nothing shows that decision the item is `not-applicable`, and reporting it as `absent` states
+      an obligation the Regulation does not impose. **The trigger is the manufacturer's decision,
+      not the presence of a published SBOM, and this note ran the two together until 2026-08-05.**
+      Point 9 opens \"If the manufacturer decides to make available the software bill of materials
+      to the user\"; a decision is a fact about the product and the business, so it is confirmed
+      with the person running the scan and is never read off the tree. A repository that publishes
+      no SBOM has not thereby shown that no such decision was taken - the SBOM may go to customers
+      on request or through a channel no scan reads - so `not-applicable` here records a decision
+      that has not been shown, never a finding that none was made. Where the person confirms the
+      decision, the point is engaged and the question is whether the documents say where the
+      software bill of materials can be accessed. **Do not turn that into \"no SBOM is required\".**
+      Annex I Part II point 1 requires the manufacturer to *draw up* a software bill of materials
+      covering at least the top-level dependencies; what is optional is making it available to the
+      user. So the honest sentence is that this point is not engaged, not that the product owes no
+      SBOM - and drawing one up is a different row, outside this checklist."

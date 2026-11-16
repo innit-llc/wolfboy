@@ -1,0 +1,128 @@
+id: federation-002
+pack: federation
+short_name: Deletion timing promised for people on other servers
+problem_line:
+  text: Deletion timing promised for accounts on other servers
+fix_line: Enforce the promised timing in code, and add remote-account data to your retention
+  schedule and policy.
+title: Retention or erasure timing declared in-product for a data subject on another (remote) server
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(e) - personal data shall be 'kept in a form which
+      permits identification of data subjects for no longer than is necessary for the purposes for
+      which the personal data are processed; personal data may be stored for longer periods insofar
+      as the personal data will be processed solely for archiving purposes in the public interest,
+      scientific or historical research purposes or statistical purposes in accordance with Article
+      89(1)' ('storage limitation'). This is the duty a stated retention timing is a declaration
+      about, and the one an in-product promise is reconciled against
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 17(1) - 'The data subject shall have the right to
+      obtain from the controller the erasure of personal data concerning him or her without undue
+      delay and the controller shall have the obligation to erase personal data without undue delay
+      where one of the following grounds applies: (a) the personal data are no longer necessary in
+      relation to the purposes for which they were collected or otherwise processed;'. Reference
+      only: whether this installation is the controller for a person whose account lives on another
+      server is the question this rule opens and cannot answer"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 17(3)(e) - the erasure right and the paragraph 2
+      notification duty 'shall not apply to the extent that processing is necessary:' ... '(e) for
+      the establishment, exercise or defence of legal claims.' Reference only, and cited as a LIMIT
+      rather than a duty: a moderation record retained past its ordinary period because a dispute or
+      appeal is live may sit inside this exception, and treating such retention as an erasure
+      failure without checking it would be wrong"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(7) and Art. 4(8) - 'controller' means 'the natural or
+      legal person, public authority, agency or other body which, alone or jointly with others,
+      determines the purposes and means of the processing of personal data'; 'processor' means 'a
+      natural or legal person, public authority, agency or other body which processes personal data
+      on behalf of the controller'. Reference only: which of the two this installation is, for data
+      it cached or referenced from an account on another server, is unsettled by anything in the
+      tree and is context question 1"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.2
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  match:
+    - ^\s*[A-Za-z0-9_."']*remote_?[Ss]uspension\w*\s*(?:=>|[:=])
+    - (?:suspended|removed|deleted)\s+on\s+(?:their|its|the|another)(?:\s+own)?\s+(?:home\s+)?(?:server|instance|domain|host)[^\n]{0,200}(?:%\{date\}|\{\{\s*date|\{date\}|will
+      be (?:completely |fully |permanently )?(?:removed|deleted|erased)|(?:removed|deleted|erased)
+      (?:on|by|after))
+    - ^\s*[A-Za-z0-9_."']*remote_?(?:[Aa]ccount|[Uu]ser|[Dd]ata|[Pp]rofile)_?(?:[Dd]eletion|[Rr]emoval|[Rr]etention|[Pp]urge|[Ee]rasure)\w*\s*(?:=>|[:=])
+    - (?:remote|another|the
+      other)\s+(?:server|instance|host)[^\n]{0,80}(?:can|may|will)\s+(?:still\s+)?(?:restore|reinstate|un-?suspend|recover)
+context_questions:
+  - WHOSE DUTY IS THIS, IF ANYONE'S? The data subject named in this string has an account on ANOTHER
+    server, operated by someone else. Ask the operator directly whether they consider this
+    installation a controller for that person's data at all, given that the installation only caches
+    or references it as a side effect of federation - do not assume either way, and record
+    needs_human where the operator has not considered the question. Art. 4(7) and Art. 4(8) are the
+    two readings; neither is settled by anything in the tree.
+  - IS THIS STRING A DECLARATION OF WHAT THE CODE DOES, OR MERELY INTERFACE COPY? Read the code path
+    this string is rendered into. Where the timing it states - a date interpolation, a fixed number
+    of days - is not actually enforced by a scheduled job or a database constraint elsewhere in the
+    tree, the string overpromises, and the gap is between the declaration and the behaviour rather
+    than between the behaviour and the law. That is the pillar-2 question this rule exists to raise.
+  - DOES THE PRODUCT'S OWN PRIVACY POLICY OR RETENTION SCHEDULE MENTION CACHED OR REFERENCED
+    REMOTE-ACCOUNT DATA AT ALL? A retention section that covers this installation's own users and
+    says nothing about data belonging to accounts on other servers is incomplete in exactly the way
+    this string's existence shows the product itself is aware of.
+  - IS THE SAME TIMING PROMISE REPEATED CONSISTENTLY ACROSS EVERY LOCALE FILE? The key name is
+    stable across languages and the translated value is not. A translation that drifts from the
+    source-language promise - a different number of days, a missing qualifier, a dropped mention
+    that the remote server can restore the account - is its own, narrower finding, and it is worth
+    separating from the underlying retention question rather than folding into it.
+  - WHERE THE MATCH IS THE 'THE REMOTE SERVER CAN RESTORE THIS ACCOUNT' HALF OF THE SENTENCE, READ
+    IT AS EVIDENCE ABOUT AUTHORITY RATHER THAN ABOUT TIMING. It says the other server, not this one,
+    can reverse the state - which is the strongest thing in the string about who actually controls
+    the data, and it bears directly on question 1. It carries no timing at all, so do not read a
+    retention period out of it.
+evidence_template: "{file}:{line} matched either a catalogue key whose own name says it is about a
+  REMOTE account's suspension, deletion, purge or retention, or an English sentence stating that a
+  person's data on another server will be removed at a stated time, or that the other server can
+  restore it. This establishes only that THE PRODUCT ITSELF DECLARES SOMETHING ABOUT A REMOTE DATA
+  SUBJECT'S DATA in its own interface copy. It does NOT establish that this installation is a
+  controller, a processor, or neither for that person's data (context question 1); that the declared
+  timing is enforced anywhere in the code (context question 2); or that the same promise holds
+  across every translation of the string (context question 4). Four shapes reach this rule: a
+  catalogue key in a colon, equals or hash-rocket convention; the same key spelled camelCase or with
+  a dotted path in front of it; the sentence itself, written into a component rather than a
+  catalogue; and the clause naming the remote server as the party that can restore the account,
+  which carries no timing and is evidence about AUTHORITY rather than about retention. Say which of
+  the four is in front of you before reading a retention period out of it."
+remediation_template: |
+  Settle the controller question first (context question 1). It is an operator fact, not a code
+  fact, and everything else here is conditional on the answer.
+  Where the installation does treat itself as holding a retention or erasure duty for this data,
+  verify the string's promise against the actual code path: confirm that a scheduled job or an
+  equivalent enforces the stated timing, and that the timing is not silently skipped for held or
+  exempted data.
+  Add the category to the operator's retention schedule and privacy policy where it is not already
+  there - "data cached or referenced from accounts on other servers, retained until the remote
+  server's own removal instruction is honoured or the stated grace period elapses" - and say in it
+  which party can reverse the state, because the interface copy already tells the user that the
+  other server can.
+  Where a moderation record about this person is being retained past the stated period because a
+  dispute or an appeal is live, check Art. 17(3)(e)'s legal-claims ground before treating that
+  retention as an erasure failure.
+  Do not close this finding by deleting the locale string. The underlying retention behaviour, and
+  the question of who owes it, both survive the string's removal unchanged - and removing the
+  sentence removes the only place a user was told what happens to the data.
+data_categories:
+  - user.account
+fingerprint_spec: file

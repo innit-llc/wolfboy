@@ -1,0 +1,342 @@
+id: baseline-010
+pack: baseline
+short_name: Certificate checks off or replaced, or old TLS allowed
+problem_line:
+  text: TLS protection weakened on a connection
+  template: "{data} carried over weakened TLS"
+fix_line: Verify certificates and host names by default, trust or pin a private CA per connection,
+  and require TLS 1.2 or later.
+title: "TLS protection weakened: certificate or host-name verification turned off or replaced, or a
+  protocol version below TLS 1.2 allowed"
+jurisdiction:
+  - EU
+  - US
+  - JP
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 32(1) - 'Taking into account the state of the art, the
+      costs of implementation and the nature, scope, context and purposes of processing as well as
+      the risk of varying likelihood and severity for the rights and freedoms of natural persons,
+      the controller and the processor shall implement appropriate technical and organisational
+      measures to ensure a level of security appropriate to the risk, including inter alia as
+      appropriate: (a) the pseudonymisation and encryption of personal data; (b) the ability to
+      ensure the ongoing confidentiality, integrity, availability and resilience of processing
+      systems and services;'. A connection that encrypts to a peer it never authenticated, or that
+      allows a protocol version the state of the art has retired, is the measure this paragraph
+      names done in a way an on-path attacker can undo. Bites only where personal data travels on
+      the connection"
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-10-07
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 32(2) - 'In assessing the appropriate level of security
+      account shall be taken in particular of the risks that are presented by processing, in
+      particular from accidental or unlawful destruction, loss, alteration, unauthorised disclosure
+      of, or access to personal data transmitted, stored or otherwise processed.' The word
+      transmitted is the hook for this rule: a man-in-the-middle on a connection whose certificate
+      is not checked is unauthorised access to the data it transmits"
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-10-07
+    jurisdiction: EU
+  - cite: "EU Cyber Resilience Act (Regulation (EU) 2024/2847), Annex I, Part I, point (2)(e) and (f) -
+      products with digital elements shall '(e) protect the confidentiality of stored, transmitted
+      or otherwise processed data, personal or other, such as by encrypting relevant data at rest or
+      in transit by state of the art mechanisms, and by using other technical means;' and '(f)
+      protect the integrity of stored, transmitted or otherwise processed data, personal or other,
+      commands, programs and configuration against any manipulation or modification not authorised
+      by the user'. Point (2)(b), 'be made available on the market with a secure by default
+      configuration, unless otherwise agreed between manufacturer and business user in relation to a
+      tailor-made product with digital elements, including the possibility to reset the product to
+      its original state;', is the hook where verification off or an old protocol version is the
+      DEFAULT the product ships rather than an option an operator chooses. Points (2)(b), (e) and
+      (f) sit under the opening words of point (2), 'On the basis of the cybersecurity risk
+      assessment referred to in Article 13(2) and where applicable, products with digital elements
+      shall:', so they bind as the manufacturer's cybersecurity risk assessment makes them
+      applicable, and point (2)(b) gives way where manufacturer and business user have agreed
+      otherwise for a tailor-made product. Per Art. 71(2) the Regulation applies from 11 December
+      2027. Scope check: the CRA reaches products with digital elements made available on the EU
+      market (Art. 2(1), Art. 3(1)) and hosted software only as a remote data processing solution
+      within Art. 3(2). Recital 12 places websites that do not support the functionality of such a
+      product, and cloud services (SaaS, PaaS, IaaS) designed and developed outside a manufacturer's
+      responsibility, outside this Regulation and inside Directive (EU) 2022/2555 instead. For a
+      plain hosted web application this entry therefore does not reach the scanned artefact and GDPR
+      Art. 32 is the operative EU basis; it applies where the repository ships a distributed product
+      or the backend of one."
+    url: https://eur-lex.europa.eu/eli/reg/2024/2847/oj
+    checked_at: 2026-10-07
+    jurisdiction: EU
+  - cite: Japan APPI (Act on the Protection of Personal Information, Act No. 57 of 2003), Art. 23
+      (security control measures — a business handling personal information must take necessary and
+      appropriate measures for the security control of the personal data it handles). Bites only
+      where personal data is what travels over the plaintext connection
+    url: https://laws.e-gov.go.jp/law/415AC0000000057
+    checked_at: 2026-10-07
+    jurisdiction: JP
+  - cite: "Japan, Personal Information Protection Commission, Guidelines on the APPI (General Rules) Q&A
+      10-21, on methods for preventing leakage in the use of information systems under the Art. 23
+      security control measures. The Commission's own answer gives encryption of personal data on
+      networks that may be intercepted, naming SSL/TLS and S/MIME, as such a method — the most
+      directly on-point Japanese source in this pack for transport encryption. Guidance rather than
+      statute: the operative duty is APPI Art. 23"
+    url: https://www.ppc.go.jp/all_faq_index/faq1-q10-21/
+    checked_at: 2026-10-07
+    jurisdiction: JP
+  - cite: "United States, FTC Act Sec. 5 (15 U.S.C. Sec. 45(a)(1) and (n)) - unfair or deceptive acts or
+      practices in or affecting commerce. Transport security sits inside the Federal Trade
+      Commission's data-security line, which reaches a failure to employ reasonable security that
+      causes or is likely to cause substantial injury to consumers, not reasonably avoidable and not
+      outweighed by countervailing benefits. General basis: no federal statute requires certificate
+      validation for a given connection, and the theory reaches this finding only where personal
+      data or credentials travel on it"
+    url: https://www.govinfo.gov/content/pkg/USCODE-2023-title15/html/USCODE-2023-title15-chap2-subchapI-sec45.htm
+    checked_at: 2026-10-07
+    jurisdiction: US
+  - cite: "United States, Federal Trade Commission, Fandango and Credit Karma settlements of March 2014
+      (press release of 2014-03-28). The Commission charged that both companies misrepresented the
+      security of their mobile apps, which had SSL certificate validation turned off, leaving
+      consumers' sensitive data open to man-in-the-middle attacks; both settled under consent orders
+      requiring comprehensive security programs. The charge was misrepresentation (the deception
+      limb of Sec. 5), so these are records of security claims the code contradicted, not unfairness
+      precedent beside the entry above. An enforcement record, not a statute: the operative duty is
+      FTC Act Sec. 5, and it is on point only for a connection that carries consumers' personal
+      data"
+    url: https://www.ftc.gov/news-events/news/press-releases/2014/03/fandango-credit-karma-settle-ftc-charges-they-deceived-consumers-failing-securely-transmit-sensitive
+    checked_at: 2026-10-07
+    jurisdiction: US
+severity: medium
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    verify_key:
+      - verify_ssl
+      - ssl_verify
+      - verify_tls
+      - tls_verify
+      - verify_certs
+      - verify_cert
+      - verify_certificate
+      - verify_certificates
+      - verify_peer
+      - ssl_verify_peer
+      - tls_verify_peer
+      - verify_server_cert
+      - verify_server_certificate
+      - validate_certs
+      - validate_certificate
+      - validate_ssl
+      - ssl_validate
+      - check_certificate
+      - check_cert
+      - check_ssl
+      - ssl_check
+      - tls_check_certificate
+      - ssl_cert_verify
+      - tls_cert_verify
+      - cert_verify
+      - certificate_verification
+      - ssl_verification
+      - tls_verification
+      - verify_hostname
+      - ssl_verify_hostname
+      - tls_verify_hostname
+    skip_key:
+      - insecure_skip_verify
+      - insecure_skip_tls_verify
+      - skip_tls_verify
+      - skip_ssl_verify
+      - tls_skip_verify
+      - ssl_skip_verify
+      - skip_verify
+      - skip_cert_verify
+      - skip_certificate_verification
+      - skip_tls_verification
+      - skip_ssl_verification
+      - tls_insecure
+      - ssl_insecure
+      - insecure_ssl
+      - insecure_tls
+      - allow_insecure_ssl
+      - allow_insecure_tls
+      - allow_invalid_certs
+      - allow_invalid_certificates
+      - accept_invalid_certs
+      - accept_invalid_certificates
+      - accept_any_certificate
+      - accept_all_certs
+      - ignore_ssl_errors
+      - ignore_tls_errors
+      - ignore_certificate_errors
+      - ignore_cert_errors
+      - ignore_ssl
+      - trust_all_certs
+      - trust_all_certificates
+      - allow_self_signed
+      - accept_self_signed
+      - disable_ssl_verification
+      - disable_tls_verification
+      - disable_certificate_verification
+      - disable_ssl_verify
+      - disable_tls_verify
+      - no_verify_ssl
+      - no_ssl_verify
+    off_value:
+      - "false"
+      - no
+      - off
+      - "0"
+      - none
+      - disable
+      - disabled
+    on_value:
+      - "true"
+      - yes
+      - on
+      - "1"
+    reject_key:
+      - reject_unauthorized
+    tls_version_key:
+      - min_tls_version
+      - tls_min_version
+      - minimum_tls_version
+      - tls_minimum_version
+      - min_tls_protocol
+      - tls_min_protocol
+      - min_protocol_version
+      - ssl_min_protocol_version
+      - tls_min_protocol_version
+      - min_ssl_version
+      - ssl_min_version
+      - max_tls_version
+      - tls_max_version
+      - tls_version
+      - ssl_version
+      - tls_protocol
+      - ssl_protocol
+      - tls_protocols
+      - ssl_protocols
+    weak_tls_value:
+      - TLSv1
+      - TLSv1.0
+      - TLSv1.1
+      - TLSv1_0
+      - TLSv1_1
+      - TLSv10
+      - TLSv11
+      - TLS1
+      - TLS1.0
+      - TLS1.1
+      - TLS1_0
+      - TLS1_1
+      - TLS10
+      - TLS11
+      - SSLv3
+      - SSLv2
+      - SSL3
+      - SSL2
+      - "1.0"
+      - "1.1"
+  vocabulary_matching:
+    verify_key:
+      case_insensitive: true
+      separator_insensitive: true
+    skip_key:
+      case_insensitive: true
+      separator_insensitive: true
+    tls_version_key:
+      case_insensitive: true
+      separator_insensitive: true
+    off_value:
+      case_insensitive: true
+    on_value:
+      case_insensitive: true
+    reject_key:
+      case_insensitive: true
+      separator_insensitive: true
+    weak_tls_value:
+      case_insensitive: true
+  match:
+    - (?<![\w$])[\"'`]?rejectUnauthorized[\"'`]?\s*(?::|(?<![=!<>])=(?!=))\s*(?!true\b|(?:boolean|Boolean|bool)\b|undefined\b|null\b|[,;)}\]]|$|(?:z|Joi|yup|t|v|s)\.)\S
+    - (?<![\w$])NODE_TLS_REJECT_UNAUTHORIZED[\"'`]?\s*\]?(?:\s*(?::|(?<![=!<>])=(?!=))\s*|\s+)[\"'`]?0(?![\w.])
+    - (?<![\w$])[\"']?strictSSL[\"']?\s*:\s*false\b|(?<![\w$])[\"']?checkServerIdentity[\"']?\s*(?::|(?<![=!<>])=(?!=))\s*(?:(?:async\s*)?(?:\([^()]*\)|[\w$]+)\s*=>\s*(?:undefined|null|void\s+0|\{\s*(?:return\s*(?:undefined|null)?\s*;?\s*)?\})|function\s*[\w$]*\s*\([^()]*\)\s*\{\s*(?:return\s*(?:undefined|null)?\s*;?\s*)?\})
+    - (?<![\w$])InsecureSkipVerify\s*(?::|(?<![=!<>])=(?!=))\s*(?!false\b)[\w!(&*]
+    - "[(,]\\s*verify\\s*=\\s*False\\b|\\.verify\\s*=\\s*False\\b|(?<![\\w.])verify_ssl\\s*=\\s*Fal\
+      se\\b|\\bTCPConnector\\s*\\([^)]*\\bssl\\s*=\\s*False\\b|\\b_create_unverified_context\\b|(?:\
+      [(,:]|(?<![=!<>])=(?!=))\\s*(?:ssl\\.)?CERT_NONE\\b|[\\\"']CERT_NONE[\\\"']|\\bcheck_hostname\
+      \\s*=\\s*False\\b"
+    - \bOpenSSL::SSL::VERIFY_NONE\b|(?<![\w])verify_mode\s*(?::|=>|(?<![=!<>])=(?!=))\s*(?::none\b|[\"']none[\"'])|\bssl\s*(?::|=>)\s*\{[^}]*\bverify\s*(?::|=>)\s*false\b
+    - (?<![\w])verify:\s*:verify_none\b|\{\s*verify\s*,\s*verify_none\s*\}
+    - \bCURLOPT_SSL_VERIFY(?:PEER|HOST)\s*(?:=>|,)\s*(?:false|FALSE|False|0L?)\b|\bpycurl\.SSL_VERIFY(?:PEER|HOST)\s*,\s*(?:0|False)\b|[\"']verify_peer(?:_name)?[\"']\s*\]?\s*(?:=>|(?<![=!<>])=(?!=))\s*(?:false|FALSE|0)\b|[\"']allow_self_signed[\"']\s*=>\s*(?:true|TRUE|1)\b|(?:[\"']verify[\"']|RequestOptions::VERIFY)\s*=>\s*(?:false|FALSE)\b
+    - \b(?:void|fun)\s+checkServerTrusted\s*\(|\b(?:hostnameVerifier|setHostnameVerifier|setDefaultHostnameVerifier|HostnameVerifier)\s*[({]\s*(?:\(\s*[\w$]+\s*(?::\s*[\w.?]+\s*)?,\s*[\w$]+\s*(?::\s*[\w.?]+\s*)?\)|[\w$]+\s*,\s*[\w$]+)\s*->\s*true\b|\bboolean\s+verify\s*\(\s*(?:final\s+)?String\s+\w+\s*,\s*(?:final\s+)?SSLSession\s+\w+\s*\)|\bfun\s+verify\s*\(\s*\w+\s*:\s*String\??\s*,\s*\w+\s*:\s*SSLSession\??\s*\)|\b(?:NoopHostnameVerifier|AllowAllHostnameVerifier|ALLOW_ALL_HOSTNAME_VERIFIER|TrustAllStrategy|TrustSelfSignedStrategy|InsecureTrustManagerFactory)\b
+    - \b(?:void|fun)\s+onReceivedSslError\s*\(|\b\w*[Hh]andler\s*\??\.\s*proceed\s*\(\s*\)
+    - \b(?:ServerCertificateCustomValidationCallback|ServerCertificateValidationCallback|RemoteCertificateValidationCallback)\s*\+?=(?!=)|\bDangerousAcceptAnyServerCertificateValidator\b
+    - \.danger_accept_invalid_(?:certs|hostnames)\s*\(\s*(?!false\b)\S|\.dangerous\s*\(\s*\)\s*\.\s*set_certificate_verifier\b|\bNoCertificateVerification\b|\bServerCertVerified::assertion\s*\(|\bSslVerifyMode::NONE\b
+    - (?:[(,]|(?<![=!<>])=(?!=))\s*(?:SSL_VERIFY_NONE|MBEDTLS_SSL_VERIFY_(?:NONE|OPTIONAL))\b|\.setInsecure\s*\(\s*\)|\bQSslSocket::(?:VerifyNone|QueryPeer)\b|\bignoreSslErrors\s*\(\s*\)
+    - "\\bURLCredential\\s*\\(\\s*trust\\s*:|\\bDisabled(?:Trust)?Evaluator\\s*\\(|\\.disableEvalua\
+      tion\\b|\\bbadCertificateCallback\\s*=(?!=)|\\bonBadCertificate\\s*:"
+    - (?<![\w-])[\"']?(?:(?&verify_key)[\"']?\s*(?:=>|:=|(?<![=!<>])=(?!=)|:)\s*[\"']?(?&off_value)|(?&skip_key)[\"']?\s*(?:=>|:=|(?<![=!<>])=(?!=)|:)\s*[\"']?(?&on_value))(?![\w.-])
+    - \b(?:MinVersion|MaxVersion)\s*(?::|(?<![=!<>])=(?!=))\s*tls\.Version(?:SSL30|TLS10|TLS11)\b
+    - \b(?:minVersion|maxVersion)[\"']?\s*(?::|(?<![=!<>])=(?!=))\s*[\"'`](?:TLSv1(?:\.1)?|SSLv3)[\"'`]|\bsecureProtocol[\"']?\s*(?::|(?<![=!<>])=(?!=))\s*[\"'`](?:SSLv2|SSLv3|TLSv1|TLSv1_1)_(?:client_|server_)?method[\"'`]|--tls-min-v1\.[01](?![\d.])
+    - \bPROTOCOL_(?:SSLv2|SSLv3|TLSv1(?:_1)?)(?![\w])|\bTLSVersion\.(?:SSLv3|TLSv1(?:_1)?)(?![\w])
+    - \bSSLContext\.getInstance\s*\(\s*\"(?:SSLv3|TLSv1(?:\.1)?)\"|\bsetEnabledProtocols\s*\([^)]*[\"'](?:SSLv3|TLSv1(?:\.1)?)[\"']|\bTlsVersion\.(?:TLS_1_0|TLS_1_1|SSL_3_0)\b|\bConnectionSpec\.COMPATIBLE_TLS\b|\b(?:jdk\.tls\.(?:client|server)\.protocols|https\.protocols)[\"']?\s*[=,:]\s*[^\n]*?(?<![-!\w.])(?:SSLv3|TLSv1(?:\.1)?)(?![\w.])
+    - \bSslProtocols\.(?:Ssl2|Ssl3|Tls|Tls11)\b|\bSecurityProtocolType\.(?:Ssl3|Tls|Tls11)\b
+    - \bssl_version\s*(?:=>|:|(?<![=!<>])=(?!=))\s*[:\"']?(?:SSLv2|SSLv3|TLSv1|TLSv1_1)(?![\w.])|\b(?:min|max)_version\s*(?:=>|:|(?<![=!<>])=(?!=))\s*(?:OpenSSL::SSL::(?:SSL2|SSL3|TLS1|TLS1_1)_VERSION|:(?:SSL2|SSL3|TLS1|TLS1_1)\b)|\bSTREAM_CRYPTO_METHOD_(?:SSLv2|SSLv3|TLSv1_0|TLSv1_1)_(?:CLIENT|SERVER)\b|\bCURL_SSLVERSION_(?:MAX_)?(?:SSLv2|SSLv3|TLSv1|TLSv1_0|TLSv1_1)\b|\b(?:SSLv2|SSLv3|TLSv1|TLSv1_1)_(?:client_|server_)?method\s*\(|(?<![A-Za-z0-9])set_(?:min|max)_proto_version\s*\([^)]*\b(?:SSL3_VERSION|TLS1_VERSION|TLS1_1_VERSION)\b|\bSslVersion::(?:SSL3|TLS1|TLS1_1)\b|\bProtocol::(?:Sslv3|Tlsv10|Tlsv11)\b
+    - \bversions\s*(?::|,)\s*\[[^\]]*?(?:(?<![\w.'\"]):?(?:sslv3|tlsv1)(?![\w.'\"])|:?[\"']tlsv1\.1[\"'])|\btlsMinimumSupportedProtocol(?:Version)?\s*=\s*\.?(?:tlsProtocol1|tlsProtocol11|sslProtocol3|TLSv10|TLSv11)\b|\bsec_protocol_options_set_min_tls_protocol_version\s*\([^,]+,\s*\.?(?:TLSv10|TLSv11|tlsProtocol1|tlsProtocol11)\b|\bssl_protocols\s+[^;#\n]*?(?<![-!\w.])(?:SSLv2|SSLv3|TLSv1(?:\.1)?)(?![\w.])|\bSSL(?:Proxy)?Protocol\s+[^#\n]*?(?<![-!\w.])\+?(?:SSLv2|SSLv3|TLSv1(?:\.1)?)(?![\w.])|\bSSL(?:Proxy)?Protocol\s+(?=[^#\n]*(?<![-!\w])\+?all\b)(?![^#\n]*-TLSv1(?![\w.])[^#\n]*-TLSv1\.1(?![\w.])|[^#\n]*-TLSv1\.1(?![\w.])[^#\n]*-TLSv1(?![\w.]))|\bssl-min-ver\s+(?:SSLv3|TLSv1\.[01])(?![\w.])|<string>TLSv1\.[01]</string>
+    - (?<![\w-])[\"']?(?&tls_version_key)[\"']?\s*(?:=>|:=|(?<![=!<>])=(?!=)|:)\s*[\"'\[]?\s*[\"']?(?&weak_tls_value)(?![\w.])
+    - (?<![\w-])["']?(?:[A-Za-z0-9]+[_.-])+(?<!(?:^|[^A-Za-z0-9])(?:skip|SKIP|Skip|disable|DISABLE|Disable|disabled|DISABLED|Disabled|no|NO|No|not|NOT|Not|dont|DONT|Dont|ignore|IGNORE|Ignore|never|NEVER|Never|without|WITHOUT|Without)[_.-])(?:(?&verify_key)["']?\s*(?:=>|:=|(?<![=!<>])=(?!=)|:)\s*["']?(?&off_value)|(?<![Nn][Oo][Dd][Ee][_.-][Tt][Ll][Ss][_.-])(?!rejectUnauthorized)(?&reject_key)["']?\s*(?:=>|:=|(?<![=!<>])=(?!=)|:)\s*["']?(?&off_value)|(?&skip_key)["']?\s*(?:=>|:=|(?<![=!<>])=(?!=)|:)\s*["']?(?&on_value))(?![\w.-])
+    - \.(?:get|post|put|patch|delete|head|options|request|ws_connect)\s*\((?:[^()]|\([^()]*\))*?(?<![\w.])ssl\s*=\s*False\b
+    - \bnew\s+SslStream\s*\(\s*(?:[^(),]|\([^()]*\))+,\s*(?:[^(),]|\([^()]*\))+,\s*(?!null\b)[^\s,)]
+    - \.with_custom_certificate_verifier\s*\(
+    - \bwithoutVerifying\s*\(\s*\)|\bHTTParty\b.*?(?<![\w:])(?::verify\s*=>|verify:)\s*false\b|\.(?:get|post|put|patch|delete|head|options)\s*\((?:[^()]|\([^()]*\))*?(?<![\w:])(?::verify\s*=>|verify:)\s*false\b|\bdefault_options\.update\s*\(\s*(?::verify\s*=>|verify:)\s*false\b
+  match_without:
+    - ^\s*(?:import|using)\s+(?:static\s+)?[\w.*]+\s*;?\s*$
+    - \b(?:jwt|jws|jose|jwk)\.(?:decode|verify|loads)\s*\(|\bverify_signature\b
+context_questions:
+  - Which connection does this setting or verifier serve? Name the client, the host it reaches and
+    what travels over it (credentials, session tokens, personal data, webhooks carrying records). A
+    line with no connection behind it - a type declaration, a form label, a schema, documentation -
+    is not the construct.
+  - Is the protection off unconditionally, or only under a condition - a setting, an environment
+    variable, a development or self-signed flag? If under a condition, what does the code ship as
+    the default, and is turning it off an explicit operator choice that is documented?
+  - Where verification is replaced rather than switched off - a trust manager's checkServerTrusted,
+    a host-name verifier, a validation callback, a rustls verifier, a challenge handler - does the
+    replacement check the chain and the host name, or pin a certificate or CA, or does it accept
+    every certificate?
+  - "For a protocol version: which connection or listener does it apply to, is it the minimum the
+    code accepts or a version it is pinned to, and is there a stated reason (a named legacy peer)?
+    Could that peer be required to speak TLS 1.2?"
+evidence_template: "{file}:{line} carries a setting or construct that weakens TLS protection, in one
+  of the positions this rule reads: certificate or host-name verification switched off
+  (rejectUnauthorized, NODE_TLS_REJECT_UNAUTHORIZED, InsecureSkipVerify, verify=False, VERIFY_NONE,
+  CURLOPT_SSL_VERIFYPEER, verify_none, setInsecure, danger_accept_invalid_certs, a verification key
+  set off) or replaced by the code's own verifier (a trust manager, host-name verifier, validation
+  callback or challenge handler), or a protocol version below TLS 1.2 enabled or set as the minimum
+  (SSL 3.0, TLS 1.0, TLS 1.1). That is text in a file. The detector did not establish which
+  connection uses it, whether the deployment reaches the setting, what a replacement verifier's body
+  does, or that the line is deployed code rather than documentation or an example. Context questions
+  1 to 4 are where this is settled."
+remediation_template: >
+  This is a candidate for review against GDPR Art. 32 (security of processing), not a determination
+  about this
+
+  code. The changes below apply where the review confirms it.
+
+  Leave certificate and host-name verification on. Where a peer uses a private or self-signed
+  certificate,
+
+  trust that CA or pin that certificate for that one connection (a CA bundle option, a custom trust
+  store)
+
+  instead of turning verification off, and make a replacement verifier check the chain and the host
+  name.
+
+  Where verification is a setting, ship it on by default and make turning it off an explicit
+  operator choice.
+
+  Set the minimum protocol version to TLS 1.2 (TLS 1.3 where every peer supports it), and remove SSL
+  3.0,
+
+  TLS 1.0 and TLS 1.1 from enabled protocol lists.
+data_categories: []
+fingerprint_spec: file

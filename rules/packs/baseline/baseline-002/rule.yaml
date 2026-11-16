@@ -1,0 +1,395 @@
+id: baseline-002
+pack: baseline
+short_name: Secret in the code, secret-named setting, or keychain use
+problem_line:
+  text: Credential stored where others may read it
+fix_line: Rotate a key found in code or history, move it to an env variable or secret manager;
+  narrow keychain item access.
+title: A live-credential literal, a secret-named configuration key, or a platform-keychain call, key
+  or type
+jurisdiction:
+  - EU
+  - US
+  - JP
+legal_basis:
+  - cite: GDPR Art. 32 (security of processing)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "EU Cyber Resilience Act (Regulation (EU) 2024/2847), Annex I, Part I, points (2)(a), (2)(b)
+      and (2)(d) (essential cybersecurity requirements: no known exploitable vulnerabilities,
+      secure-by-default configuration, protection from unauthorised access by appropriate control
+      mechanisms). Per Art. 71(2) the Regulation applies from 11 December 2027; Art. 14 applies from
+      11 September 2026 and Chapter IV from 11 June 2026. Scope check: the CRA reaches products with
+      digital elements made available on the EU market (Art. 2(1), Art. 3(1)) and hosted software
+      only as a remote data processing solution within Art. 3(2) — software whose absence would stop
+      the product performing one of its functions. Recital 12 places websites that do not support
+      the functionality of such a product, and cloud services (SaaS, PaaS, IaaS) designed and
+      developed outside a manufacturer's responsibility, outside this Regulation and inside
+      Directive (EU) 2022/2555 instead. For a plain hosted web application this entry therefore does
+      not reach the scanned artefact and GDPR Art. 32 is the operative EU basis; it applies where
+      the repository ships a distributed product or the backend of one"
+    url: https://eur-lex.europa.eu/eli/reg/2024/2847/oj
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "Japan APPI (Act on the Protection of Personal Information, Act No. 57 of 2003), Art. 23
+      (security control measures). The PPC Guidelines (General Rules), Annex on the security control
+      measures to be taken, place identification and authentication of those who access an
+      information system handling personal data under this duty. General basis, and an indirect one:
+      Art. 23 protects personal data, whereas the value this rule looks for is a service credential.
+      It reaches the finding through the system the credential unlocks, so it bites only where that
+      system handles personal data"
+    url: https://laws.e-gov.go.jp/law/415AC0000000057
+    checked_at: 2026-07-22
+    jurisdiction: JP
+  - cite: "United States, FTC Act Sec. 5 (15 U.S.C. Sec. 45(a)(1) and (n)) — unfair acts or practices in
+      or affecting commerce, the authority behind the Federal Trade Commission's data-security cases
+      (failure to employ reasonable security causing or likely to cause substantial injury to
+      consumers, not reasonably avoidable and not outweighed by countervailing benefits). General
+      basis: no federal statute names credential management as a requirement, and the unfairness
+      test turns on injury to consumers, so it reaches an exposed service credential only through
+      the consumer data that credential unlocks"
+    url: https://www.govinfo.gov/content/pkg/USCODE-2023-title15/html/USCODE-2023-title15-chap2-subchapI-sec45.htm
+    checked_at: 2026-07-22
+    jurisdiction: US
+severity: high
+rule_confidence: 0.9
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  match:
+    - sk_(?:live|test)_[0-9a-zA-Z]{10,}|sk_org_[0-9a-zA-Z_]{10,}
+    - (?:AKIA|ASIA)[0-9A-Z]{16}
+    - ghp_[0-9a-zA-Z]{30,}
+    - -----BEGIN( RSA| EC| DSA| OPENSSH| PGP| ENCRYPTED)? PRIVATE KEY-----
+    - (?:gho_|ghu_|ghs_|ghr_)[0-9a-zA-Z]{30,}
+    - github_pat_[0-9a-zA-Z_]{60,}
+    - (?:rk_(?:live|test)_|whsec_)[0-9a-zA-Z]{10,}
+    - (?:xox[baprse]|xapp)-[0-9A-Za-z-]{10,}
+    - AIza[0-9A-Za-z_-]{35}
+    - (?:sk-ant-|sk-admin-|sk-proj-|sk-svcacct-)[0-9A-Za-z_-]{20,}
+    - SG\.[0-9A-Za-z_-]{20,}\.[0-9A-Za-z_-]{20,}
+    - (?:npm_[0-9A-Za-z]{36}|phx_[0-9A-Za-z]{20,})
+    - glpat-[0-9A-Za-z_-]{20,}
+    - shp(?:at|ss|ca|pa)_[0-9a-fA-F]{32}
+    - dop_v1_[0-9a-f]{64}
+    - "[\"'`](?:Bearer\\s+)?eyJ[A-Za-z0-9_-]{8,}\\.eyJ[A-Za-z0-9_-]{8,}\\.[A-Za-z0-9_-]{8,}"
+    - ^(?!\s*(?://|#|\*|/\*|<!--|--\s|;))(?!.*(?:[Ee][Xx][Aa][Mm][Pp][Ll][Ee]|[Ss][Aa][Mm][Pp][Ll][Ee]|[Dd][Uu][Mm][Mm][Yy]|[Pp][Ll][Aa][Cc][Ee][Hh][Oo][Ll][Dd][Ee][Rr]|[Cc][Hh][Aa][Nn][Gg][Ee][-_]?[Mm][Ee]|[Yy][Oo][Uu][Rr][-_]|xxxx|XXXX|\*\*\*|[Ff][Aa][Kk][Ee]|[Mm][Oo][Cc][Kk]|[Rr][Ee][Pp][Ll][Aa][Cc][Ee]|<[A-Za-z_-]+>|\$\{|\{\{|%[sd]|[Ll][Oo][Rr][Ee][Mm]|[Ii][Nn][Ss][Ee][Rr][Tt][-_]|[Tt][Oo][Dd][Oo]))(?=.*["'`=:]\s*(?:https?|ftp|mysql|postgres|postgresql|mongodb|redis|amqp|smtp|ldaps?)(?:\+srv)?://[A-Za-z0-9._~%+-]+:[A-Za-z0-9._~%+-]{6,}@(?!localhost|127\.|0\.0\.0\.0|\[::1\]|host\.docker\.internal|[A-Za-z0-9-]+(?::[0-9]+)?[/"'`\s]|[A-Za-z0-9.-]*\.local\b))
+    - ^(?!\s*(?://|#|\*|/\*|<!--|--\s|;))(?!.*(?:[Ee][Xx][Aa][Mm][Pp][Ll][Ee]|[Ss][Aa][Mm][Pp][Ll][Ee]|[Dd][Uu][Mm][Mm][Yy]|[Pp][Ll][Aa][Cc][Ee][Hh][Oo][Ll][Dd][Ee][Rr]|[Cc][Hh][Aa][Nn][Gg][Ee][-_]?[Mm][Ee]|[Yy][Oo][Uu][Rr][-_]|xxxx|XXXX|\*\*\*|[Ff][Aa][Kk][Ee]|[Mm][Oo][Cc][Kk]|[Rr][Ee][Pp][Ll][Aa][Cc][Ee]|<[A-Za-z_-]+>|\$\{|\{\{|%[sd]|[Ll][Oo][Rr][Ee][Mm]|[Ii][Nn][Ss][Ee][Rr][Tt][-_]|[Tt][Oo][Dd][Oo]))(?=.*(?<![A-Za-z0-9_.-])(?=[A-Za-z0-9_.-]*?(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh]))(?=([A-Za-z0-9_.-]*))\1["']?\s*(?:=>|[:=]|,)\s*(?:["'](?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+["'])(?=[^"']*[0-9])(?=[^"']*[A-Za-z])[A-Za-z0-9+/=_.~-]{16,}["']|(?<!(?<![A-Za-z0-9_.-])[A-Za-z0-9_.-]*(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]*["']?\s*(?:=>|[:=]|,)\s*[A-Za-z0-9+/=_.~-]+?)(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+\s*$)(?=[A-Za-z0-9+/=_.~-]*[0-9])(?=[A-Za-z0-9+/=_.~-]*[A-Za-z])[A-Za-z0-9+/=_.~-]{16,}\s*$))
+    - ^(?!\s*(?://|#|\*|/\*|<!--|--\s|;))(?!.*(?:[Ee][Xx][Aa][Mm][Pp][Ll][Ee]|[Ss][Aa][Mm][Pp][Ll][Ee]|[Dd][Uu][Mm][Mm][Yy]|[Pp][Ll][Aa][Cc][Ee][Hh][Oo][Ll][Dd][Ee][Rr]|[Cc][Hh][Aa][Nn][Gg][Ee][-_]?[Mm][Ee]|[Yy][Oo][Uu][Rr][-_]|xxxx|XXXX|\*\*\*|[Ff][Aa][Kk][Ee]|[Mm][Oo][Cc][Kk]|[Rr][Ee][Pp][Ll][Aa][Cc][Ee]|<[A-Za-z_-]+>|\$\{|\{\{|%[sd]|[Ll][Oo][Rr][Ee][Mm]|[Ii][Nn][Ss][Ee][Rr][Tt][-_]|[Tt][Oo][Dd][Oo]))(?=.*(?<![\w-])[A-Za-z_][A-Za-z0-9_.-]{1,40}["']?\s*(?:=>|[:=]|,)\s*(?:["'](?:[0-9a-fA-F]{32,}|(?=[A-Za-z0-9+/]*[0-9])(?=[A-Za-z0-9+/]*[a-z])(?=[A-Za-z0-9+/]*[A-Z])[A-Za-z0-9+/]{32,}={0,2})["']|(?:[0-9a-fA-F]{32,}|(?=[A-Za-z0-9+/]*[0-9])(?=[A-Za-z0-9+/]*[a-z])(?=[A-Za-z0-9+/]*[A-Z])[A-Za-z0-9+/]{32,}={0,2})\s*$))
+    - ^\uFEFF?(?!\s*(?://|#|\*|/\*|<!--|--\s|;))[ \t]*(?:-[ \t]+)?(?:(?:export|ENV|ARG)[
+      \t]+)?[\"']?[A-Z][A-Za-z0-9]*_(?=([A-Za-z0-9_]*(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Pp][Aa][Ss][Ss][Ww][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Pp][Aa][Ss][Ss][Cc][Oo][Dd][Ee]|[Pp][Ww][Dd]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh](?![A-Za-z]))[A-Za-z0-9_]*))\1[\"']?[
+      \t]*(?:=>|[:=])(?![ \t]*[\"']?\$\{\{)
+    - \bSecItem(?:Add|Update|CopyMatching|Delete)\s*\(|\bSecKeychain(?:AddGenericPassword|FindGenericPassword|AddInternetPassword)\s*\(
+    - \bkSec(?:Class|ValueData|AttrAccessible[A-Za-z]*|AttrAccount|AttrService|AttrAccessGroup|AttrSynchronizable|ClassGenericPassword|ClassInternetPassword|ClassKey|ClassIdentity|ClassCertificate)\b
+    - \bKeychainSwift\b|\bKeychainAccess\b|\bKeychainWrapper\b|\bSAMKeychain\b|\bSSKeychain\b|\bValet\b|\bLocksmith\b|\bKeychainItem\b
+    - "\\b(?=[A-Za-z_]*?[Kk]eychain)(?=([A-Za-z_]*))\\1\\s*\\.\\s*(?:set|get|store|save|remove|dele\
+      te|removeAll|synchronizable)\\s*\\(|\\bKeychain\\s*\\(\\s*service\\s*:"
+    - \b(?:import|@testable\s+import|#import|using)\s+(?:<)?(?:KeychainSwift|KeychainAccess|KeychainWrapper|SAMKeychain|SSKeychain|Valet|Locksmith|KeychainItem)\b|\b(?:KeychainSwift|KeychainAccess|KeychainWrapper|SAMKeychain|SSKeychain|Valet|Locksmith|KeychainItem)\s*[.(]
+    - (?<=[ \t"'`=:>-])(?:(?!\s)(?<=["'`:=>][ \t]{0,64})(?:(?<="[
+      \t]{0,64})(?<=(?:(?:(?<![\w-])[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}(?:(?:\\{0,8}["'`])?[
+      \t]{0,4}\]|\[[ \t]{0,4}[0-9]{1,4}[ \t]{0,4}\]|\*{1,2}|\\{0,8}["'`])?[
+      \t]{0,8}(?:=>|::=|:=|\?\?=|\?=|\+=|\|\|=|:-|[:=])[
+      \t]{0,8}|(?<![\w-])-{1,2}[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}[
+      \t]{1,8}|(?<![\w-])(?:ENV|setx|SETX)[ \t]{1,8}(?:/[Mm][
+      \t]{1,8})?[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}[
+      \t]{1,8})(?:@|[rRbBuUfF]{1,2})?\\{0,8}"|(?<![\w-])[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}(?:(?:\\{0,8}["'`])?[
+      \t]{0,4}\]|\[[ \t]{0,4}[0-9]{1,4}[ \t]{0,4}\]|\*{1,2}|\\{0,8}["'`])?[ \t]{0,8},[
+      \t]{0,8}(?:@|[rRbBuUfF]{1,2})?\\{0,8}")[ \t]{0,64})(?:(?<!\\"[
+      \t]{0,64})(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+[
+      \t]*\\{0,8}")(?=(?:\\[^\n]|""|[^"\\\n]){0,255}?[0-9])(?=(?:\\[^\n]|""|[^"\\\n]){0,255}?[A-Za-z])(?!(?:\\[^\n]|""|[^"\\\n]){0,255}?(?:\$[({]|\{\{|\{%|#\{|%\(|<%))(?!\$(?:(?:_?[a-z][a-z0-9]*(?:_[a-z0-9]+)+|_?[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)|[A-Z][A-Z0-9]*)(?:[/.]|[
+      \t]*\\{0,8}"))(?!%[A-Za-z_][A-Za-z0-9_]*%[
+      \t]*\\{0,8}")(?![A-Za-z][A-Za-z0-9+.-]{0,30}://)(?!(?:\\[^\n]|""|[^"\\\n]){0,255}?\\u(?!00[2-7][0-9A-Fa-f])[0-9A-Fa-f]{4})(?![0-9]{4}-[0-9]{2}-[0-9]{2}[T
+      ][0-9]{2}:[0-9]{2})(?!(?:\\[^\n]|""|[^"\\\n]){1,255}?\{[A-Za-z_@.$][^{}\s"'`]{0,64}\})(?!\{[A-Za-z_@.$][^{}\s"'`]{0,64}\}(?:[/.:{-]|[
+      \t]*\\{0,8}"))(?!\^(?=(?:\\[^\n]|""|[^"\\\n]){0,255}?(?:\\{1,2}[dDwWsSbB.]|\[\^?(?:\\[^\n]|""|[^"\\\n]){0,30}?[A-Za-z0-9]-[A-Za-z0-9]|\{[0-9]{1,4}(?:,[0-9]{0,4})?\}|\.[*+]|\$[
+      \t]*\\{0,8}")))(?!(?:\\[^\n]|""|[^"\\\n]){0,255}?(?:\(\?[=!:<]|\[\^))(?!(?:\\[^\n]|""|[^"\\\n]){0,255}?::)(?!(?:urn|file|data|mailto|tel):)(?!\$[({.])(?!\$[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*\()(?![a-z_]{1,40}(?::[^|]{0,64})?(?:\|[a-z_]{1,40}(?::[^|]{0,64})?)+[
+      \t]*\\{0,8}")(?![^@\s"'`]{1,64}@[A-Za-z0-9.-]{1,64}\.[A-Za-z]{2,24}[
+      \t]*\\{0,8}")(?![a-z][a-z0-9_.]{0,20}\([A-Za-z_][A-Za-z0-9_.:]{0,64}\)[
+      \t]*\\{0,8}")(?=((?:[^"\\\s\u0080-\uffff]|\\[^\s\u0080-\uffff]|""){8,256}))\1(?=[
+      \t]*"(?!"))|(?<=\\"[ \t]{0,64})(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+[
+      \t]*\\{0,8}")(?=(?:\\[^\n]|""|[^"\\\n]){0,255}?[0-9])(?=(?:\\[^\n]|""|[^"\\\n]){0,255}?[A-Za-z])(?!(?:\\[^\n]|""|[^"\\\n]){0,255}?(?:\$[({]|\{\{|\{%|#\{|%\(|<%))(?!\$(?:(?:_?[a-z][a-z0-9]*(?:_[a-z0-9]+)+|_?[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)|[A-Z][A-Z0-9]*)(?:[/.]|[
+      \t]*\\{0,8}"))(?!%[A-Za-z_][A-Za-z0-9_]*%[
+      \t]*\\{0,8}")(?![A-Za-z][A-Za-z0-9+.-]{0,30}://)(?!(?:\\[^\n]|""|[^"\\\n]){0,255}?\\u(?!00[2-7][0-9A-Fa-f])[0-9A-Fa-f]{4})(?![0-9]{4}-[0-9]{2}-[0-9]{2}[T
+      ][0-9]{2}:[0-9]{2})(?!(?:\\[^\n]|""|[^"\\\n]){1,255}?\{[A-Za-z_@.$][^{}\s"'`]{0,64}\})(?!\{[A-Za-z_@.$][^{}\s"'`]{0,64}\}(?:[/.:{-]|[
+      \t]*\\{0,8}"))(?!\^(?=(?:\\[^\n]|""|[^"\\\n]){0,255}?(?:\\{1,2}[dDwWsSbB.]|\[\^?(?:\\[^\n]|""|[^"\\\n]){0,30}?[A-Za-z0-9]-[A-Za-z0-9]|\{[0-9]{1,4}(?:,[0-9]{0,4})?\}|\.[*+]|\$[
+      \t]*\\{0,8}")))(?!(?:\\[^\n]|""|[^"\\\n]){0,255}?(?:\(\?[=!:<]|\[\^))(?!(?:\\[^\n]|""|[^"\\\n]){0,255}?::)(?!(?:urn|file|data|mailto|tel):)(?!\$[({.])(?!\$[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*\()(?![a-z_]{1,40}(?::[^|]{0,64})?(?:\|[a-z_]{1,40}(?::[^|]{0,64})?)+[
+      \t]*\\{0,8}")(?![^@\s"'`]{1,64}@[A-Za-z0-9.-]{1,64}\.[A-Za-z]{2,24}[
+      \t]*\\{0,8}")(?![a-z][a-z0-9_.]{0,20}\([A-Za-z_][A-Za-z0-9_.:]{0,64}\)[
+      \t]*\\{0,8}")(?=([^"\\\s\u0080-\uffff]{8,256}))\2(?=[ \t]*\\{1,8}"))|(?<='[
+      \t]{0,64})(?<=(?:(?:(?<![\w-])[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}(?:(?:\\{0,8}["'`])?[
+      \t]{0,4}\]|\[[ \t]{0,4}[0-9]{1,4}[ \t]{0,4}\]|\*{1,2}|\\{0,8}["'`])?[
+      \t]{0,8}(?:=>|::=|:=|\?\?=|\?=|\+=|\|\|=|:-|[:=])[
+      \t]{0,8}|(?<![\w-])-{1,2}[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}[
+      \t]{1,8}|(?<![\w-])(?:ENV|setx|SETX)[ \t]{1,8}(?:/[Mm][
+      \t]{1,8})?[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}[
+      \t]{1,8})(?:@|[rRbBuUfF]{1,2})?\\{0,8}'|(?<![\w-])[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}(?:(?:\\{0,8}["'`])?[
+      \t]{0,4}\]|\[[ \t]{0,4}[0-9]{1,4}[ \t]{0,4}\]|\*{1,2}|\\{0,8}["'`])?[ \t]{0,8},[
+      \t]{0,8}(?:@|[rRbBuUfF]{1,2})?\\{0,8}')[ \t]{0,64})(?:(?<!\\'[
+      \t]{0,64})(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+[
+      \t]*\\{0,8}')(?=(?:\\[^\n]|''|[^'\\\n]){0,255}?[0-9])(?=(?:\\[^\n]|''|[^'\\\n]){0,255}?[A-Za-z])(?!(?:\\[^\n]|''|[^'\\\n]){0,255}?(?:\$[({]|\{\{|\{%|#\{|%\(|<%))(?!%[A-Za-z_][A-Za-z0-9_]*%[
+      \t]*\\{0,8}')(?![A-Za-z][A-Za-z0-9+.-]{0,30}://)(?!(?:\\[^\n]|''|[^'\\\n]){0,255}?\\u(?!00[2-7][0-9A-Fa-f])[0-9A-Fa-f]{4})(?![0-9]{4}-[0-9]{2}-[0-9]{2}[T
+      ][0-9]{2}:[0-9]{2})(?!(?:\\[^\n]|''|[^'\\\n]){1,255}?\{[A-Za-z_@.$][^{}\s"'`]{0,64}\})(?!\{[A-Za-z_@.$][^{}\s"'`]{0,64}\}(?:[/.:{-]|[
+      \t]*\\{0,8}'))(?!\^(?=(?:\\[^\n]|''|[^'\\\n]){0,255}?(?:\\{1,2}[dDwWsSbB.]|\[\^?(?:\\[^\n]|''|[^'\\\n]){0,30}?[A-Za-z0-9]-[A-Za-z0-9]|\{[0-9]{1,4}(?:,[0-9]{0,4})?\}|\.[*+]|\$[
+      \t]*\\{0,8}')))(?!(?:\\[^\n]|''|[^'\\\n]){0,255}?(?:\(\?[=!:<]|\[\^))(?!(?:\\[^\n]|''|[^'\\\n]){0,255}?::)(?!(?:urn|file|data|mailto|tel):)(?!\$[({.])(?!\$[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*\()(?![a-z_]{1,40}(?::[^|]{0,64})?(?:\|[a-z_]{1,40}(?::[^|]{0,64})?)+[
+      \t]*\\{0,8}')(?![^@\s"'`]{1,64}@[A-Za-z0-9.-]{1,64}\.[A-Za-z]{2,24}[
+      \t]*\\{0,8}')(?![a-z][a-z0-9_.]{0,20}\([A-Za-z_][A-Za-z0-9_.:]{0,64}\)[
+      \t]*\\{0,8}')(?=((?:[^'\\\s\u0080-\uffff]|\\[^\s\u0080-\uffff]|''){8,256}))\3(?=[
+      \t]*'(?!'))|(?<=\\'[ \t]{0,64})(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+[
+      \t]*\\{0,8}')(?=(?:\\[^\n]|''|[^'\\\n]){0,255}?[0-9])(?=(?:\\[^\n]|''|[^'\\\n]){0,255}?[A-Za-z])(?!(?:\\[^\n]|''|[^'\\\n]){0,255}?(?:\$[({]|\{\{|\{%|#\{|%\(|<%))(?!%[A-Za-z_][A-Za-z0-9_]*%[
+      \t]*\\{0,8}')(?![A-Za-z][A-Za-z0-9+.-]{0,30}://)(?!(?:\\[^\n]|''|[^'\\\n]){0,255}?\\u(?!00[2-7][0-9A-Fa-f])[0-9A-Fa-f]{4})(?![0-9]{4}-[0-9]{2}-[0-9]{2}[T
+      ][0-9]{2}:[0-9]{2})(?!(?:\\[^\n]|''|[^'\\\n]){1,255}?\{[A-Za-z_@.$][^{}\s"'`]{0,64}\})(?!\{[A-Za-z_@.$][^{}\s"'`]{0,64}\}(?:[/.:{-]|[
+      \t]*\\{0,8}'))(?!\^(?=(?:\\[^\n]|''|[^'\\\n]){0,255}?(?:\\{1,2}[dDwWsSbB.]|\[\^?(?:\\[^\n]|''|[^'\\\n]){0,30}?[A-Za-z0-9]-[A-Za-z0-9]|\{[0-9]{1,4}(?:,[0-9]{0,4})?\}|\.[*+]|\$[
+      \t]*\\{0,8}')))(?!(?:\\[^\n]|''|[^'\\\n]){0,255}?(?:\(\?[=!:<]|\[\^))(?!(?:\\[^\n]|''|[^'\\\n]){0,255}?::)(?!(?:urn|file|data|mailto|tel):)(?!\$[({.])(?!\$[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*\()(?![a-z_]{1,40}(?::[^|]{0,64})?(?:\|[a-z_]{1,40}(?::[^|]{0,64})?)+[
+      \t]*\\{0,8}')(?![^@\s"'`]{1,64}@[A-Za-z0-9.-]{1,64}\.[A-Za-z]{2,24}[
+      \t]*\\{0,8}')(?![a-z][a-z0-9_.]{0,20}\([A-Za-z_][A-Za-z0-9_.:]{0,64}\)[
+      \t]*\\{0,8}')(?=([^'\\\s\u0080-\uffff]{8,256}))\4(?=[ \t]*\\{1,8}'))|(?<=`[
+      \t]{0,64})(?<=(?:(?:(?<![\w-])[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}(?:(?:\\{0,8}["'`])?[
+      \t]{0,4}\]|\[[ \t]{0,4}[0-9]{1,4}[ \t]{0,4}\]|\*{1,2}|\\{0,8}["'`])?[
+      \t]{0,8}(?:=>|::=|:=|\?\?=|\?=|\+=|\|\|=|:-|[:=])[
+      \t]{0,8}|(?<![\w-])-{1,2}[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}[
+      \t]{1,8}|(?<![\w-])(?:ENV|setx|SETX)[ \t]{1,8}(?:/[Mm][
+      \t]{1,8})?[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}[
+      \t]{1,8})(?:@|[rRbBuUfF]{1,2})?\\{0,8}`)[ \t]{0,64})(?:(?<!\\`[
+      \t]{0,64})(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+[
+      \t]*\\{0,8}`)(?=(?:\\[^\n]|``|[^`\\\n]){0,255}?[0-9])(?=(?:\\[^\n]|``|[^`\\\n]){0,255}?[A-Za-z])(?!(?:\\[^\n]|``|[^`\\\n]){0,255}?(?:\$[({]|\{\{|\{%|#\{|%\(|<%))(?!\$(?:(?:_?[a-z][a-z0-9]*(?:_[a-z0-9]+)+|_?[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)|[A-Z][A-Z0-9]*)(?:[/.]|[
+      \t]*\\{0,8}`))(?!%[A-Za-z_][A-Za-z0-9_]*%[
+      \t]*\\{0,8}`)(?![A-Za-z][A-Za-z0-9+.-]{0,30}://)(?!(?:\\[^\n]|``|[^`\\\n]){0,255}?\\u(?!00[2-7][0-9A-Fa-f])[0-9A-Fa-f]{4})(?![0-9]{4}-[0-9]{2}-[0-9]{2}[T
+      ][0-9]{2}:[0-9]{2})(?!(?:\\[^\n]|``|[^`\\\n]){1,255}?\{[A-Za-z_@.$][^{}\s"'`]{0,64}\})(?!\{[A-Za-z_@.$][^{}\s"'`]{0,64}\}(?:[/.:{-]|[
+      \t]*\\{0,8}`))(?!\^(?=(?:\\[^\n]|``|[^`\\\n]){0,255}?(?:\\{1,2}[dDwWsSbB.]|\[\^?(?:\\[^\n]|``|[^`\\\n]){0,30}?[A-Za-z0-9]-[A-Za-z0-9]|\{[0-9]{1,4}(?:,[0-9]{0,4})?\}|\.[*+]|\$[
+      \t]*\\{0,8}`)))(?!(?:\\[^\n]|``|[^`\\\n]){0,255}?(?:\(\?[=!:<]|\[\^))(?!(?:\\[^\n]|``|[^`\\\n]){0,255}?::)(?!(?:urn|file|data|mailto|tel):)(?!\$[({.])(?!\$[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*\()(?![a-z_]{1,40}(?::[^|]{0,64})?(?:\|[a-z_]{1,40}(?::[^|]{0,64})?)+[
+      \t]*\\{0,8}`)(?![^@\s"'`]{1,64}@[A-Za-z0-9.-]{1,64}\.[A-Za-z]{2,24}[
+      \t]*\\{0,8}`)(?![a-z][a-z0-9_.]{0,20}\([A-Za-z_][A-Za-z0-9_.:]{0,64}\)[
+      \t]*\\{0,8}`)(?=((?:[^`\\\s\u0080-\uffff]|\\[^\s\u0080-\uffff]|``){8,256}))\5(?=[
+      \t]*`(?!`))|(?<=\\`[ \t]{0,64})(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+[
+      \t]*\\{0,8}`)(?=(?:\\[^\n]|``|[^`\\\n]){0,255}?[0-9])(?=(?:\\[^\n]|``|[^`\\\n]){0,255}?[A-Za-z])(?!(?:\\[^\n]|``|[^`\\\n]){0,255}?(?:\$[({]|\{\{|\{%|#\{|%\(|<%))(?!\$(?:(?:_?[a-z][a-z0-9]*(?:_[a-z0-9]+)+|_?[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)|[A-Z][A-Z0-9]*)(?:[/.]|[
+      \t]*\\{0,8}`))(?!%[A-Za-z_][A-Za-z0-9_]*%[
+      \t]*\\{0,8}`)(?![A-Za-z][A-Za-z0-9+.-]{0,30}://)(?!(?:\\[^\n]|``|[^`\\\n]){0,255}?\\u(?!00[2-7][0-9A-Fa-f])[0-9A-Fa-f]{4})(?![0-9]{4}-[0-9]{2}-[0-9]{2}[T
+      ][0-9]{2}:[0-9]{2})(?!(?:\\[^\n]|``|[^`\\\n]){1,255}?\{[A-Za-z_@.$][^{}\s"'`]{0,64}\})(?!\{[A-Za-z_@.$][^{}\s"'`]{0,64}\}(?:[/.:{-]|[
+      \t]*\\{0,8}`))(?!\^(?=(?:\\[^\n]|``|[^`\\\n]){0,255}?(?:\\{1,2}[dDwWsSbB.]|\[\^?(?:\\[^\n]|``|[^`\\\n]){0,30}?[A-Za-z0-9]-[A-Za-z0-9]|\{[0-9]{1,4}(?:,[0-9]{0,4})?\}|\.[*+]|\$[
+      \t]*\\{0,8}`)))(?!(?:\\[^\n]|``|[^`\\\n]){0,255}?(?:\(\?[=!:<]|\[\^))(?!(?:\\[^\n]|``|[^`\\\n]){0,255}?::)(?!(?:urn|file|data|mailto|tel):)(?!\$[({.])(?!\$[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*\()(?![a-z_]{1,40}(?::[^|]{0,64})?(?:\|[a-z_]{1,40}(?::[^|]{0,64})?)+[
+      \t]*\\{0,8}`)(?![^@\s"'`]{1,64}@[A-Za-z0-9.-]{1,64}\.[A-Za-z]{2,24}[
+      \t]*\\{0,8}`)(?![a-z][a-z0-9_.]{0,20}\([A-Za-z_][A-Za-z0-9_.:]{0,64}\)[
+      \t]*\\{0,8}`)(?=([^`\\\s\u0080-\uffff]{8,256}))\6(?=[ \t]*\\{1,8}`))|(?<=(?:=>|[:=])[
+      \t]{0,8})(?<=^\uFEFF?[ \t]{0,40}(?:-[ \t]{1,8})?(?:(?:export|ENV|ARG|set|SET)[
+      \t]{1,8})?[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}[
+      \t]{0,8}(?:=>|[:=])[ \t]{0,8})(?:(?!(?<=:[
+      \t]{1,8})[!&*|>])(?!&[A-Za-z_][A-Za-z0-9_.]{0,80}\{[^\s]{0,200}\}[ \t]*(?:[
+      \t][#;].*)?\r?$)(?!@(?:_?[a-z][a-z0-9]*(?:_[a-z0-9]+)+|_?[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)[
+      \t]*(?:[
+      \t][#;].*)?\r?$)(?![A-Za-z_$][\w$]{0,23}(?:\.[A-Za-z_$][\w$]{0,23})+(?![A-Za-z0-9+/=_.~-]))(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+[
+      \t]*(?:[ \t][#;].*)?\r?$)(?=[^ \n]{0,255}?[0-9])(?=[^ \n]{0,255}?[A-Za-z])(?![^
+      \n]{0,255}?(?:\$[({]|\{\{|\{%|#\{|%\(|<%))(?!\$(?:(?:_?[a-z][a-z0-9]*(?:_[a-z0-9]+)+|_?[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)|[A-Z][A-Z0-9]*)(?:[/.]|[
+      \t]*(?:[ \t][#;].*)?\r?$))(?!%[A-Za-z_][A-Za-z0-9_]*%[ \t]*(?:[
+      \t][#;].*)?\r?$)(?![A-Za-z][A-Za-z0-9+.-]{0,30}://)(?![^
+      \n]{0,255}?\\u(?!00[2-7][0-9A-Fa-f])[0-9A-Fa-f]{4})(?![0-9]{4}-[0-9]{2}-[0-9]{2}[T
+      ][0-9]{2}:[0-9]{2})(?![^
+      \n]{1,255}?\{[A-Za-z_@.$][^{}\s"'`]{0,64}\})(?!\{[A-Za-z_@.$][^{}\s"'`]{0,64}\}(?:[/.:{-]|[
+      \t]*(?:[ \t][#;].*)?\r?$))(?!\^(?=[^ \n]{0,255}?(?:\\{1,2}[dDwWsSbB.]|\[\^?[^
+      \n]{0,30}?[A-Za-z0-9]-[A-Za-z0-9]|\{[0-9]{1,4}(?:,[0-9]{0,4})?\}|\.[*+]|\$[ \t]*(?:[
+      \t][#;].*)?\r?$)))(?![^ \n]{0,255}?(?:\(\?[=!:<]|\[\^))(?![^
+      \n]{0,255}?::)(?!(?:urn|file|data|mailto|tel):)(?!\$[({.])(?!\$[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*\()(?![a-z_]{1,40}(?::[^|]{0,64})?(?:\|[a-z_]{1,40}(?::[^|]{0,64})?)+[
+      \t]*(?:[ \t][#;].*)?\r?$)(?![^@\s"'`]{1,64}@[A-Za-z0-9.-]{1,64}\.[A-Za-z]{2,24}[ \t]*(?:[
+      \t][#;].*)?\r?$)(?![a-z][a-z0-9_.]{0,20}\([A-Za-z_][A-Za-z0-9_.:]{0,64}\)[ \t]*(?:[
+      \t][#;].*)?\r?$)(?=((?:[^\s"'`()[\]<>\u0080-\uffff]|(?<=[:= \t])>){8,256}))\7(?=(?<![;,{])[
+      \t]*(?:[
+      \t][#;].*)?\r?$))|(?<=>)(?<=<(?:[A-Za-z_][\w.-]{0,30}:)?[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}(?:[
+      \t][^<>\n]{0,120})?>)(?:(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+[
+      \t]*</)(?=[^<\n]{0,255}?[0-9])(?=[^<\n]{0,255}?[A-Za-z])(?![^<\n]{0,255}?(?:\$[({]|\{\{|\{%|#\{|%\(|<%))(?!\$(?:(?:_?[a-z][a-z0-9]*(?:_[a-z0-9]+)+|_?[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)+)|[A-Z][A-Z0-9]*)(?:[/.]|[
+      \t]*</))(?!%[A-Za-z_][A-Za-z0-9_]*%[
+      \t]*</)(?![A-Za-z][A-Za-z0-9+.-]{0,30}://)(?![^<\n]{0,255}?\\u(?!00[2-7][0-9A-Fa-f])[0-9A-Fa-f]{4})(?![0-9]{4}-[0-9]{2}-[0-9]{2}[T
+      ][0-9]{2}:[0-9]{2})(?![^<\n]{1,255}?\{[A-Za-z_@.$][^{}\s"'`]{0,64}\})(?!\{[A-Za-z_@.$][^{}\s"'`]{0,64}\}(?:[/.:{-]|[
+      \t]*</))(?!\^(?=[^<\n]{0,255}?(?:\\{1,2}[dDwWsSbB.]|\[\^?[^<\n]{0,30}?[A-Za-z0-9]-[A-Za-z0-9]|\{[0-9]{1,4}(?:,[0-9]{0,4})?\}|\.[*+]|\$[
+      \t]*</)))(?![^<\n]{0,255}?(?:\(\?[=!:<]|\[\^))(?![^<\n]{0,255}?::)(?!(?:urn|file|data|mailto|tel):)(?!\$[({.])(?!\$[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*\()(?![a-z_]{1,40}(?::[^|]{0,64})?(?:\|[a-z_]{1,40}(?::[^|]{0,64})?)+[
+      \t]*</)(?![^@\s"'`]{1,64}@[A-Za-z0-9.-]{1,64}\.[A-Za-z]{2,24}[
+      \t]*</)(?![a-z][a-z0-9_.]{0,20}\([A-Za-z_][A-Za-z0-9_.:]{0,64}\)[
+      \t]*</)(?=([^<\s\u0080-\uffff]{8,256}))\8(?=[
+      \t]*</)))|(?=[A-Za-z0-9+/=_.~-]{16})(?:(?<=(?:(?:(?<![\w-])[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}(?:(?:\\{0,8}["'`])?[
+      \t]{0,4}\]|\[[ \t]{0,4}[0-9]{1,4}[ \t]{0,4}\]|\*{1,2}|\\{0,8}["'`])?[
+      \t]{0,8}(?:=>|::=|:=|\?\?=|\?=|\+=|\|\|=|:-|[:=])[
+      \t]{0,8}|(?<![\w-])-{1,2}[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}[
+      \t]{1,8}|(?<![\w-])(?:ENV|setx|SETX)[ \t]{1,8}(?:/[Mm][
+      \t]{1,8})?[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}[
+      \t]{1,8})(?:@|[rRbBuUfF]{1,2})?(?:["'`](?:[^"'`\\\s$({]{1,64}[
+      \t]{1,8}(?:\\{0,8}["'`])?|[^"'`\\\s$({]{0,64}(?:\\{1,8}["'`]|\\{0,8}"\\{0,8}"|\\{0,8}'\\{0,8}')){0,4}|\\{1,8}["'`](?:[^"'`\\\s$({]{1,64}[
+      \t]{1,8}(?:\\{0,8}["'`])?|[^"'`\\\s$({]{0,64}(?:\\{2,8}["'`]|\\{0,8}"\\{0,8}"|\\{0,8}'\\{0,8}')){0,4})|(?<![\w-])[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}(?:(?:\\{0,8}["'`])?[
+      \t]{0,4}\]|\[[ \t]{0,4}[0-9]{1,4}[ \t]{0,4}\]|\*{1,2}|\\{0,8}["'`])?[ \t]{0,8},[
+      \t]{0,8}(?:@|[rRbBuUfF]{1,2})?(?:["'](?:[^"'`\\\s$({]{1,64}[
+      \t]{1,8}(?:\\{0,8}["'`])?|[^"'`\\\s$({]{0,64}(?:\\{1,8}["'`]|\\{0,8}"\\{0,8}"|\\{0,8}'\\{0,8}')){0,4}|\\{1,8}["'](?:[^"'`\\\s$({]{1,64}[
+      \t]{1,8}(?:\\{0,8}["'`])?|[^"'`\\\s$({]{0,64}(?:\\{2,8}["'`]|\\{0,8}"\\{0,8}"|\\{0,8}'\\{0,8}')){0,4})))(?!(?<=:)-)(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+(?![A-Za-z0-9+/=_.~-]))(?=[A-Za-z0-9+/=_.~-]{0,255}[0-9])(?=[A-Za-z0-9+/=_.~-]{0,255}[A-Za-z])(?=([A-Za-z0-9+/=_.~-]{16,}))\9(?![\u00C0-\uFFFF])(?![(\[{])(?!::)(?![
+      \t])|(?<=(?<![\w-])[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}(?:\\{0,8}["'`][
+      \t]{0,4}\]|\[[ \t]{0,4}[0-9]{1,4}[
+      \t]{0,4}\]|\*{1,2}|\\{0,8}["'`])?(?:=>|::=|:=|\?\?=|\?=|\+=|\|\|=|:-|=))(?!(?<=:)-)(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+(?![A-Za-z0-9+/=_.~-]))(?=[A-Za-z0-9+/=_.~-]{0,255}[0-9])(?=[A-Za-z0-9+/=_.~-]{0,255}[A-Za-z])(?![A-Za-z_$][\w$]{0,23}(?:\.[A-Za-z_$][\w$]{0,23})+(?![A-Za-z0-9+/=_.~-]))(?<!(?![A-Za-z_$][\w$]{0,23}(?:\.[A-Za-z_$][\w$]{0,23})+(?![A-Za-z0-9+/=_.~-]))(?!(?<=:)-)(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+(?![A-Za-z0-9+/=_.~-]))(?=[A-Za-z0-9+/=_.~-]{0,255}[0-9])(?=[A-Za-z0-9+/=_.~-]{0,255}[A-Za-z])(?<=(?<![\w-])[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}(?:\\{0,8}["'`][
+      \t]{0,4}\]|\[[ \t]{0,4}[0-9]{1,4}[
+      \t]{0,4}\]|\*{1,2}|\\{0,8}["'`])?(?:=>|::=|:=|\?\?=|\?=|\+=|\|\|=|:-|=))(?=[A-Za-z0-9+/=_.~-]{16})(?<=[
+      \t"'`=:>-])[A-Za-z0-9+/=_.~-]+?)(?=([A-Za-z0-9+/=_.~-]{16,}))\10(?![\u00C0-\uFFFF])(?![(\[{])(?!::)|(?<=(?<![\w-])[A-Z][A-Za-z0-9]{0,40}_[A-Za-z0-9_]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_]{0,40}(?:\\{0,8}["'`][
+      \t]{0,4}\]|\[[ \t]{0,4}[0-9]{1,4}[ \t]{0,4}\]|\*{1,2}|\\{0,8}["'`])?[
+      \t]{0,8}(?:=>|::=|:=|\?\?=|\?=|\+=|\|\|=|:-|[:=])[
+      \t]{0,8})(?!(?<=:)-)(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+(?![A-Za-z0-9+/=_.~-]))(?=[A-Za-z0-9+/=_.~-]{0,255}[0-9])(?=[A-Za-z0-9+/=_.~-]{0,255}[A-Za-z])(?![A-Za-z_$][\w$]{0,23}(?:\.[A-Za-z_$][\w$]{0,23})+(?![A-Za-z0-9+/=_.~-]))(?<!(?:(?![A-Za-z_$][\w$]{0,23}(?:\.[A-Za-z_$][\w$]{0,23})+(?![A-Za-z0-9+/=_.~-]))(?!(?<=:)-)(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+(?![A-Za-z0-9+/=_.~-]))(?=[A-Za-z0-9+/=_.~-]{0,255}[0-9])(?=[A-Za-z0-9+/=_.~-]{0,255}[A-Za-z])(?<=(?<![\w-])[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}(?:\\{0,8}["'`][
+      \t]{0,4}\]|\[[ \t]{0,4}[0-9]{1,4}[
+      \t]{0,4}\]|\*{1,2}|\\{0,8}["'`])?(?:=>|::=|:=|\?\?=|\?=|\+=|\|\|=|:-|=))(?=[A-Za-z0-9+/=_.~-]{16})(?<=[
+      \t"'`=:>-])|(?![A-Za-z_$][\w$]{0,23}(?:\.[A-Za-z_$][\w$]{0,23})+(?![A-Za-z0-9+/=_.~-]))(?!(?<=:)-)(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+(?![A-Za-z0-9+/=_.~-]))(?=[A-Za-z0-9+/=_.~-]{0,255}[0-9])(?=[A-Za-z0-9+/=_.~-]{0,255}[A-Za-z])(?<=(?<![\w-])[A-Z][A-Za-z0-9]{0,40}_[A-Za-z0-9_]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_]{0,40}(?:\\{0,8}["'`][
+      \t]{0,4}\]|\[[ \t]{0,4}[0-9]{1,4}[ \t]{0,4}\]|\*{1,2}|\\{0,8}["'`])?[
+      \t]{0,8}(?:=>|::=|:=|\?\?=|\?=|\+=|\|\|=|:-|[:=])[ \t]{0,8})(?=[A-Za-z0-9+/=_.~-]{16})(?<=[
+      \t"'`=:>-]))[A-Za-z0-9+/=_.~-]+?)(?=([A-Za-z0-9+/=_.~-]{16,}))\11(?![\u00C0-\uFFFF])(?![(\[{])(?!::)(?![
+      \t]*=)|(?<=(?<![\w-])[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}(?:\\{0,8}["'`][
+      \t]{0,4}\]|\[[ \t]{0,4}[0-9]{1,4}[ \t]{0,4}\]|\*{1,2}|\\{0,8}["'`])?[ \t]{0,8}:[
+      \t]{1,8})(?!(?<=:)-)(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+(?![A-Za-z0-9+/=_.~-]))(?=[A-Za-z0-9+/=_.~-]{0,255}[0-9])(?=[A-Za-z0-9+/=_.~-]{0,255}[A-Za-z])(?![A-Za-z_$][\w$]{0,23}(?:\.[A-Za-z_$][\w$]{0,23})+(?![A-Za-z0-9+/=_.~-]))(?=([A-Za-z0-9+/=_.~-]{16,}))\12(?![\u00C0-\uFFFF])(?=[
+      \t]+[^ \t|&=?{})\r]|[
+      \t]*\r?$)|(?<=(?:(?<![\w-])-{1,2}[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}[
+      \t]{1,8}|(?<![\w-])(?:ENV|setx|SETX)[ \t]{1,8}(?:/[Mm][
+      \t]{1,8})?[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}[
+      \t]{1,8}))(?!(?<=:)-)(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+(?![A-Za-z0-9+/=_.~-]))(?=[A-Za-z0-9+/=_.~-]{0,255}[0-9])(?=[A-Za-z0-9+/=_.~-]{0,255}[A-Za-z])(?![A-Za-z_$][\w$]{0,23}(?:\.[A-Za-z_$][\w$]{0,23})+(?![A-Za-z0-9+/=_.~-]))(?=([A-Za-z0-9+/=_.~-]{16,}))\13(?![\u00C0-\uFFFF])(?![(\[{])(?!::)|(?<=<(?:[A-Za-z_][\w.-]{0,30}:)?[A-Za-z0-9_.-]{0,40}(?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh])[A-Za-z0-9_.-]{0,40}(?:[
+      \t][^<>\n]{0,120})?>)(?!(?<=:)-)(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+(?![A-Za-z0-9+/=_.~-]))(?=[A-Za-z0-9+/=_.~-]{0,255}[0-9])(?=[A-Za-z0-9+/=_.~-]{0,255}[A-Za-z])(?=([A-Za-z0-9+/=_.~-]{16,}))\14(?![\u00C0-\uFFFF])(?=[
+      \t]*(?:<|\r?$))))
+    - (?<=:)(?<=(?<![A-Za-z0-9+.-])[A-Za-z][A-Za-z0-9+.-]{0,30}://[A-Za-z0-9._~%+-]{0,64}:)(?!%[A-Za-z]@)[A-Za-z0-9._~%+-]{1,128}(?=@[A-Za-z0-9\[])
+context_questions:
+  - "Does the literal have a credential shape at all, or is only the identifier secret-named? Answer
+    that first: on the name-based clause the value can be a colour token, a dotted configuration
+    path or an asset hash, and where it is one of those, record that and close the candidate. Where
+    the literal does have a credential shape: is this a live credential rather than a test key,
+    sample or placeholder? Check the key prefix, the surrounding identifiers and any nearby
+    example/dummy markers. There are now THREE name-based clauses. The third reads the first one's
+    value shape wherever the assignment stands - inside a sentence, after a compound operator, a
+    subscript, an option flag or an XML element name - and its unquoted value can be a bare
+    identifier rather than a literal; where it is one, say so and close the candidate as a
+    reference. The second reads no value at all, so on that one there may be no literal in front of
+    you: an environment-variable-shaped key at the start of a line, followed by an equals sign or a
+    colon, matches whether the value is a dictionary word, an empty string, a value the operator
+    supplies through the environment, or nothing at all. One shape is declined and it is worth
+    knowing which: a GitHub Actions expression in the value position, such as a secrets or github
+    reference in a workflow file, is a reference to a store this scan can never see and is not a
+    literal, so the clause skips it deliberately. A single-brace interpolation is NOT skipped,
+    because the file it draws from can be in this tree. Where the value is empty or is an
+    interpolation, say so and close the candidate as a configuration key rather than a disclosure;
+    where it is a short literal such as root, dev or password, the shape clauses would never have
+    raised it and the question is whether the deployment that ships with that default is reachable."
+  - Has the value already been committed to git? If so, the work spans history rewriting and key
+    rotation, not just the working tree.
+  - "IF THIS IS A PLATFORM-KEYCHAIN CLAUSE, THE QUESTION IS NOT WHETHER SOMETHING LEAKED. Four of
+    this rule's clauses match a keychain call site or one of its attribute keys, and they behave
+    differently from every other clause here: a keychain is the CORRECT place for a credential on
+    that platform, so a match is usually good news and the finding should say so rather than reading
+    as a leak. What is worth answering is where the item actually sits. First, the accessibility
+    attribute: quote it, and say whether the item is readable while the device is locked and whether
+    it is included in a device backup - the always-accessible and after-first-unlock spellings
+    behave very differently from the this-device-only ones, and an item that follows a backup is
+    reachable from wherever that backup went. Second, the access group and the synchronisation flag:
+    an item in a shared access group is readable by every application signed by the same team, and a
+    synchronisable item is copied to the person's other devices through their platform account.
+    Third, whether a credential is ALSO written somewhere else in the same codebase - a preference
+    store, a log line, a crash report - because the keychain call is then not the whole story. Where
+    all three answers are unremarkable, close the candidate and record that the credential is held
+    correctly."
+evidence_template: "{file}:{line} matched one of this rule's twenty-seven clauses, and they do not
+  all make the same kind of claim. Sixteen are claims about the shape of the literal itself -
+  fourteen vendor token prefixes (Stripe's secret and restricted keys in test mode as well as live:
+  a test-mode key, sk_test_ or rk_test_, reaches the account's test data and settings and never real
+  payments; Stripe's webhook signing secret, AWS's temporary access key id, Slack's app-level token,
+  OpenAI's admin key and PostHog's personal key are among them too, and so are Stripe's organization
+  key, sk_org_, and OpenAI's project and service-account keys, sk-proj- and sk-svcacct-, whose
+  prefixes OpenAI's own pages do not document), a `-----BEGIN ... PRIVATE KEY-----` header, and a
+  three-segment `eyJ...` JWT - and a seventeenth matches a connection URI carrying an embedded
+  password, which is also a shape. The eighteenth is a claim about a NAME: an identifier spelled
+  password, secret, token, api-key, access-key, private-key, credential, passphrase, write-key or
+  auth, assigned any literal of sixteen or more characters drawn from the letters, the digits and
+  the seven characters plus, slash, equals, underscore, dot, tilde and hyphen, carrying at least one
+  digit and one letter. On that clause the detector established only that a secret-named identifier
+  holds a long mixed string; the lowercase kebab and snake spellings are declined and a dotted one
+  is not, and the known look-alikes are a design-system colour or theme token path (a token key in a
+  theme table whose value is the dotted path of a background surface colour, immediately above the
+  surface1 and surface2 entries), a dotted configuration or resource path, and a build or asset
+  hash. None of those has a credential shape at all. The private-key clause has a weak case of its
+  own: it matches the envelope and never the key body, so a test fixture that wraps the word SECRET
+  in a PEM header matches on the header alone. Decide which clause you are holding, and whether the
+  literal has a credential shape at all, before weighing whether it is live. THE NINETEENTH CLAUSE,
+  added 2026-08-28, is the one that reads NOTHING after the assignment operator, and the count in
+  the first sentence of this template said eighteen until it was added. It matches an
+  environment-variable-shaped key - beginning with a capital, carrying at least one underscore, and
+  spelled password, passwd, pwd, secret, token, api-key, access-key, private-key, credential,
+  passphrase, passcode, write-key or the whole segment auth - standing at the start of its own line,
+  after at most a YAML sequence dash and an export, ENV or ARG keyword, and followed by an equals
+  sign or a colon. On that clause the detector established the NAME and the POSITION and nothing
+  else whatever: the value may be a four-character dictionary word, an empty string, an
+  interpolation the operator fills in from their own environment, or an opening brace with no
+  literal on the line at all, and every one of those matches. ONE VALUE SHAPE IS DECLINED, added
+  2026-08-28: a GitHub Actions expression, the secrets or github reference a workflow file uses,
+  because it is a reference to an encrypted store rather than a literal and nothing about it is
+  disclosed here. So the question of whether anything here is a credential is otherwise entirely
+  yours, and the look-alike classes measured on the corpus are an example file's truncated value, a
+  module constant that reads a secret from the environment, a language-model output budget where the
+  word token means a unit of text, a documentation placeholder written in angle brackets, a feature
+  flag whose name ends in a secret word, a framework's list of password validators, and an
+  authentication-method selector. What the clause is for is the opposite case, which the shape
+  clauses cannot see: a shipped default such as a database password left at the product's own name
+  or at the word root in a compose file, which is a real credential for whoever runs the compose
+  file unchanged. THE TWENTIETH TO TWENTY-THIRD CLAUSES, added 2026-09-01, are the first patterns in
+  this pack that read Swift and Objective-C, and they make a DIFFERENT KIND OF CLAIM from every
+  clause above: not that a credential is exposed, but where a credential is kept. They match the
+  platform keychain - the four item operations, the older keychain functions, the attribute keys
+  that configure an item, and the published wrapper libraries with their set, get, store, save and
+  remove methods bounded to a receiver spelled keychain. A match on one of these is not a leak and
+  should not be reported as one: the keychain is the correct place for a credential on that
+  platform, and the ordinary outcome of reading such a candidate is that the credential is held
+  correctly and the candidate closes. What a match establishes is a location, which is what this
+  pack previously could not establish at all on Apple platforms, because until this date the bundle
+  carried no Swift patterns of any kind and an application that hands its credentials to the
+  operating system rather than writing them as literals was invisible to every clause here. What it
+  does not establish is the two things that decide whether the location is a good one - the
+  accessibility attribute, which governs whether the item is readable while the device is locked and
+  whether it follows a device backup, and the access group and synchronisation flag, which govern
+  which other applications and which other devices can read it. Both are asked in the last context
+  question, and the wrapper-library branches are reach items rather than observations: no repository
+  was read for this family, and the names are the published wrappers for that platform. THE
+  TWENTY-SIXTH AND TWENTY-SEVENTH CLAUSES, added 2026-10-19, are the eighteenth's and the
+  seventeenth's constructs read wherever they stand. The twenty-sixth matches the same secret words
+  and the same value shape as the eighteenth, but the assignment may sit inside a sentence or be
+  followed by more text, the operator may be a compound one such as := ?= += ||= or :-, the key may
+  be closed by a subscript or markup, be a command-line option or follow a Dockerfile ENV or a
+  Windows setx with a space as the separator, or be the name of an XML element, and a quoted value
+  may follow a space or an escaped quote inside its literal. A quoted value is also read WHOLE, to
+  its closing quote, holding any printable character but a space - signs and escaped or doubled
+  quotes included - and so are an unquoted value standing alone after a secret-named key at the
+  start of its line (to the line's end, a carriage return or a # or ; comment after a space) and the
+  text of an element named with a secret word. These whole-value forms read a value of eight or more
+  characters, a digit and a letter among them, where the older forms need sixteen, and they do not
+  read every printable value: they decline a value with a space inside it, a non-ASCII character or
+  an escape of one or of a control character, a template or interpolation (${, $(, {{, {%, #{, %(,
+  <%) or a template's method call ($x.get(...)), a variable's name after $ (a name holding an
+  underscore, or one all in capitals) in double quotes, backticks or an unquoted value (never in
+  single quotes, where $ is text), %NAME%, a URL, a date and time, a {name} placeholder, a regular
+  expression (a value holding (?= or [^, or opening with ^ and also holding an escape class, a
+  bracket range, a counted repeat, .* or .+, or ending in $), a :: path or a urn:-style URI, a
+  validation rule list, an e-mail address and a configuration call; an unquoted value is not read
+  where it holds a quote, a parenthesis or a bracket, ends in ; or ,, is a variable name holding an
+  underscore after @ or Go's &Type{...}, or, after a colon and a space, opens with ! & * | or >
+  (YAML's tag, anchor, alias and block marks); element text is read only where its closing tag
+  follows on the line. Where they decline a value, an older form may still read its first sixteen
+  characters, and the location is then that head; the redaction hides the whole value either way. It
+  does not decline the placeholder words, so a sample or placeholder of credential shape reaches you
+  on this clause; and its unquoted value can be a bare identifier carrying a digit, which is a
+  reference and not a literal. The twenty-seventh matches a password in any URI's authority,
+  whatever the scheme, wherever the URI stands and whatever its host, including a single-label, a
+  .internal, a .local and a loopback host: whether a local default unlocks anything is yours to
+  weigh. On both, the location is the value itself. The count also holds two clauses this template
+  did not count before: a configuration value of thirty-two or more hexadecimal characters, or of
+  thirty-two or more base64 characters with a digit and both cases, under any key, and the import of
+  a keychain wrapper library."
+remediation_template: |
+  This is a candidate for review against GDPR Art. 32 (security of processing), not a determination
+  about this code. The changes below apply where the review confirms it.
+  Rotate the key first, then move the value to an environment variable or a secret manager.
+  If the value is present in git history, treat it as disclosed: rotate before anything else,
+  and consider rewriting history so the literal stops being fetchable from old commits.
+  Where the match is a platform keychain call (context question 3) and the review marks it to fix,
+  the value is already out of the code, so rotating and moving it is not the change; where the item
+  sits is. Give it an accessibility class that keeps it on this device, so that it does not follow
+  a device backup, and that keeps it unreadable while the device is locked unless a feature that
+  runs in the background needs it; keep it out of a shared access group unless another of the
+  team's applications has to read it; and leave the synchronisation flag off unless the person is
+  meant to carry the credential to their other devices. Where the same credential is also written
+  to a preference store, a log line or a crash report, remove that copy, and rotate the credential
+  if the copy can have left the device.
+data_categories:
+  - system.credentials
+fingerprint_spec: file

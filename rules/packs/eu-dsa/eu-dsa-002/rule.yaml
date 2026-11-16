@@ -1,0 +1,328 @@
+id: eu-dsa-002
+pack: eu-dsa
+short_name: "Moderation or account restriction: reasons to the person"
+problem_line:
+  text: "Restriction: full statement of reasons or filing not found"
+fix_line: "Send the restricted person a statement of reasons: what was restricted, scope, duration,
+  grounds and how to contest."
+title: Moderation or account-restriction path - statement of reasons to the recipient needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "Digital Services Act, Regulation (EU) 2022/2065, Art. 17(1)-(4) — addressed to providers of
+      hosting services, i.e. the intermediary-service sub-category defined in Art. 3(g)(iii) as the
+      storage of information provided by, and at the request of, a recipient of the service. Art. 17
+      sits in Chapter III Section 2 (Arts. 16-18, 'Additional provisions applicable to providers of
+      hosting services, including online platforms'), so it binds every hosting provider and not
+      only the online platforms of Art. 3(i). A clear and specific statement of reasons is owed to
+      any affected recipient for a restriction imposed on the ground that the information provided
+      by that recipient constitutes content within Art. 3(h) or is incompatible with the provider's
+      terms and conditions. Art. 17(1) lists the restrictions: (a) any restrictions of the
+      visibility of specific items of information, including removal of content, disabling access to
+      content, or demoting content; (b) suspension, termination or other restriction of monetary
+      payments; (c) suspension or termination of the provision of the service in whole or in part;
+      (d) suspension or termination of the recipient of the service's account. Art. 17(2) first
+      subparagraph limits paragraph 1 to cases where the relevant electronic contact details are
+      known to the provider and makes it bite at the latest from the date the restriction is imposed
+      and regardless of why or how it was imposed; Art. 17(2) second subparagraph excludes deceptive
+      high-volume commercial content. Art. 17(3)(a)-(f) fix the contents of the statement: (a)
+      whether the decision entails removal, disabling of access, demotion, restriction of
+      visibility, suspension or termination of monetary payments or another measure under paragraph
+      1, and where relevant its territorial scope and duration; (b) the facts and circumstances
+      relied on, including whether the decision followed an Art. 16 notice or a voluntary
+      own-initiative investigation and, where strictly necessary, the identity of the notifier; (c)
+      where applicable, the use made of automated means; (d) where the decision concerns content
+      allegedly within Art. 3(h), the legal ground and why the information is considered to fall
+      under it; (e) where the decision rests on incompatibility with the terms and conditions, the
+      contractual ground and why the information is considered incompatible with it; (f) clear and
+      user-friendly information on the redress possibilities, in particular internal complaint
+      handling, out-of-court dispute settlement and judicial redress. Art. 17(4) requires the
+      information to be clear, easily comprehensible and as precise and specific as reasonably
+      possible, such as to reasonably allow the recipient to exercise the point (f) redress. Art.
+      17(5) takes orders referred to in Art. 9 outside the Article altogether. Applicable since 17
+      February 2024."
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32022R2065
+    checked_at: 2026-07-28
+    jurisdiction: EU
+  - cite: "Regulation (EU) 2022/2065, Art. 3(g) (intermediary service: (i) mere conduit, (ii) caching,
+      (iii) hosting), Art. 3(i) (online platform: a hosting service that, at the request of a
+      recipient, also stores and disseminates information to the public, subject to the
+      minor-and-ancillary-feature carve-out) and Art. 3(b) (recipient of the service). An online
+      platform is a sub-category of hosting service, so an online platform carries Art. 17 as well;
+      the reverse does not hold, and a hosting service that does not disseminate to the public still
+      carries Art. 17."
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32022R2065
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Regulation (EU) 2022/2065, Art. 19(1) ('Exclusion for micro and small enterprises') excludes
+      providers of online platforms that qualify as micro or small enterprises within the meaning of
+      Recommendation 2003/361/EC from Chapter III Section 3 (Arts. 19-28, the online-platform
+      section), with the sole exception of Art. 24(3), and extends that exclusion for 12 months
+      after loss of the status; Art. 19(2) derogates for platforms designated as very large online
+      platforms under Art. 33. Art. 17 sits in Section 2, not Section 3, so the Art. 19 exclusion
+      does not reach it: the statement-of-reasons duty applies to a micro or small hosting provider
+      on the same terms as to any other."
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32022R2065
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Regulation (EU) 2022/2065, Art. 24(5) — a separate duty, addressed to providers of online
+      platforms only (Art. 3(i)) and sitting in Section 3: the decisions and the statements of
+      reasons referred to in Art. 17(1) must be submitted to the Commission without undue delay for
+      inclusion in a publicly accessible machine-readable database. Because Art. 24(5) is in Section
+      3, the Art. 19(1) exclusion does reach it, so a micro or small online platform owes Art. 17
+      but not the Art. 24(5) database submission."
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32022R2065
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: Regulation (EU) 2022/2065, Art. 2(1) — the Regulation applies to intermediary services offered
+      to recipients of the service that have their place of establishment or are located in the
+      Union, irrespective of where the provider has its place of establishment. A provider
+      established outside the EU is therefore in scope on the strength of its EU-located recipients
+      alone.
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32022R2065
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2024-02-17
+severity: medium
+rule_confidence: 0.25
+applicability_preconditions:
+  - features.ugc
+detector:
+  engine: builtin-regex
+  match:
+    - (?:\b|[a-z0-9_])(?:[Hh]ide|[Uu]npublish|[Dd]epublish|[Tt]akedown|[Dd]emote|[Dd]ownrank|[Dd]eboost|[Qq]uarantine|[Dd]elist|[Rr]emove|[Dd]elete|[Pp]urge|[Cc]ensor|[Rr]edact|[Ss]uppress|[Ww]ithdraw|[Ll]ock|[Bb]lock|[Rr]estrict)(?!(?:TableOf|Cached|CallbacksAnd|Xml|Html|Css|Data)(?![a-z]))(?:[A-Z][a-z]{1,12}){0,2}(?:Post|Comment|Content|Listing|Review|Video|Photo|Image|Upload|Media|Thread|Reply|Submission|Answer|Message|Document|Topic|Note|Attachment|Story|Clip|Stream|Snippet|Article|Product)s?\s*[(=]
+    - \b\w*?(?:hide|unpublish|depublish|takedown|take_down|demote|downrank|deboost|quarantine|delist|remove|delete|purge|censor|redact|suppress|withdraw|lock|block|restrict)_(?!(?:table_of|cached|callbacks_and|xml|html|css|data)_)(?:\w{1,14}_)?(?:post|comment|content|listing|review|video|photo|image|upload|media|thread|reply|submission|answer|message|document|topic|note|attachment|story|clip|stream|snippet|article|product)s?\w*
+    - (?:\b|[a-z0-9_])(?:[Bb]an|[Ss]uspend|[Tt]erminate|[Dd]isable|[Rr]estrict|[Dd]eactivate|[Bb]lock|[Ll]ock|[Ss]ilence|[Mm]ute|[Kk]ick|[Rr]evoke|[Bb]lacklist|[Dd]enylist|[Pp]urge|[Dd]elete|[Rr]emove|[Cc]lose|[Ff]reeze)(?!(?:TableOf|Cached|CallbacksAnd|Xml|Html|Css|Data)(?![a-z]))(?:[A-Z][a-z]{1,12}){0,2}(?:User|Account|Member|Seller|Vendor|Creator|Publisher|Author|Profile|Channel|Shop|Store|Recipient|Subscriber|Tenant|Workspace|Organisation|Organization)s?\s*[(=]
+    - \b\w*?(?:ban|suspend|terminate|disable|restrict|deactivate|block|lock|silence|mute|kick|revoke|blacklist|denylist|purge|delete|remove|close|freeze)_(?!(?:table_of|cached|callbacks_and|xml|html|css|data)_)(?:\w{1,14}_)?(?:user|account|member|seller|vendor|creator|publisher|author|profile|channel|shop|store|recipient|subscriber|tenant|workspace|organisation|organization)s?\w*
+    - (?:\b|[a-z0-9_])(?:User|Account|Post|Topic|Comment|Message|Reply|Member|Seller|Vendor|Creator|Channel|Content|Media|Upload|Listing|Review|Thread|Document|Group|Team)(?:Suspender|Destroyer|Silencer|Remover|Deleter|Blocker|Hider|Terminator|Suspension|Deletion|Removal|Takedown|Restriction)\w*
+    - (?:\b|[a-z0-9_])(?:User|Account|Member|Seller|Channel|Group|Post|Content)Ban(?:s|ned|ning)?\b
+    - \b\w*?(?:user|account|member|post|topic|comment|content|seller|channel|message)_(?:suspend|silence|ban|blocked|blocking|delete|destroy|remove|hide|hidden|quarantine|restrict|terminate|deactivate|lock|mute|takedown)\w*
+    - \b(?:suspended|silenced|banned|blocked|restricted|quarantined|shadowbanned|shadow_banned|deactivated|terminated|demoted|delisted|hidden|removed|takendown|taken_down)_(?:at|till|until|by|by_id|reason|reasons|user_id)\b\s*(?:=>|[:=])
+    - \b(?:suspended|silenced|banned|blocked|restricted|quarantined|shadowBanned|deactivated|terminated|demoted|delisted|hidden|removed)(?:At|Till|Until|By|ById|Reason|Reasons)\b\s*(?:=>|[:=])
+    - \b(?:suspended|banned|silenced|quarantined|shadowbanned|shadow_banned|deactivated|demoted|delisted|takendown|taken_down)\s*(?:[:=]|=>)\s*(?:true|True|1)\b
+    - \b(?:moderationStatus|moderation_status|moderationState|moderation_state|contentStatus|content_status|reviewStatus|review_status)['"]?\s*(?:[:=]|=>)\s*['":]?\w*(?:removed|rejected|hidden|banned|suspended|taken_?down|shadow_?banned|quarantined|delisted|blocked|REMOVED|REJECTED|HIDDEN|BANNED|SUSPENDED|QUARANTINED|DELISTED|BLOCKED)
+    - \b(?:status|state|visibility)['"]?\s*(?:[:=]|=>)\s*['":]?(?:REMOVED|BANNED|SUSPENDED|SHADOWBANNED|SHADOW_BANNED|TAKEN_DOWN|TAKENDOWN|TAKEDOWN|QUARANTINED|DELISTED|removed|banned|suspended|shadowbanned|shadow_banned|taken_down|takedown|quarantined|delisted)\b
+    - \b(?:[sS]hadow[_-]?[bB]an|shadowban|shadow_ban)\w*
+    - \b[aA]uto[-_]?[mM]od(?:erat\w*|[-_]\w+|s?\b)
+    - (?:\b|[a-z0-9_])[Mm]oderate(?:[A-Z][a-z]{1,12}){0,2}s?\s*[(=]|\bmoderate_\w+|(?:\b|[a-z0-9_])[Mm]oderation[A-Za-z_]*\s*[(=]|\bMODERATION_[A-Z_]+\s*[(=]
+    - \b(?:UpdateActive|updateActive|update_active|[Dd]eactivate)\s*\(|\bis_active\s*=\s*False\b|^(?=[^\x00]*(?:[Uu]ser|USER|[Aa]ccount|ACCOUNT|[Mm]ember|MEMBER|[Ss]eller|[Vv]endor|[Cc]reator|[Pp]ublisher|[Aa]uthor|[Pp]rofile|[Cc]hannel|[Ss]hop|[Ss]tore|[Rr]ecipient|[Ss]ubscriber|[Tt]enant|[Ww]orkspace|[Oo]rganisation|[Oo]rganization|[Pp]ermission))[^\x00]*\b(?:SetActive|setActive|set_active)\s*\(
+    - (?:\b|[a-z0-9_])(?:[Ff]reeze|[Ss]uspend|[Ww]ithhold|[Bb]lock|[Dd]isable|[Pp]ause|[Rr]estrict|[Hh]old|[Rr]evoke|[Tt]erminate|[Ss]top|[Cc]law)(?!(?:TableOf|Cached|CallbacksAnd|Xml|Html|Css|Data)(?![a-z]))(?:[A-Z][a-z]{1,12}){0,2}(?:Payout|Payment|Monetization|Monetisation|Earning|Transfer|Balance|Funds|Wallet|Revenue|Withdrawal)s?\s*[(=]
+    - \b\w*?(?:freeze|suspend|withhold|block|disable|pause|restrict|hold|revoke|terminate|stop|claw)_(?!(?:table_of|cached|callbacks_and|xml|html|css|data)_)(?:\w{1,14}_)?(?:payout|payment|monetization|monetisation|earning|transfer|balance|funds|wallet|revenue|withdrawal)s?\w*
+    - \b[Dd]emoneti[sz]\w*
+  match_without:
+    - ^\s*(?:\*|//|#|<!--|--)
+    - ^\s*(?:import|from|use|require|include)\s|^\s*export\s*(?:\{|\*)|\bfrom\s+['"]|\brequire\s*\(\s*['"]
+    - ^\s*(?:declare|abstract|interface|type)\s
+    - \b(?:[dD]elete|[rR]emove|[uU]npublish|[hH]ide|[cC]lose)(?:My|Own)\w*|\b(?:delete|remove|unpublish|hide|close)_(?:my|own)_\w*
+    - \b(?:closeMyAccount|deleteMyAccount|accountDeletionRequest|account_deletion_request)\b
+    - \b(?:pageSlug|page_slug|cmsPage|cms_page|staticPage|static_page|landingPage|landing_page|CmsPage|CmsEntry)\b
+    - \b(?:describe|it|test|expect|beforeEach|afterEach)\s*\(|\b(?:jest|vi|sinon)\.|\b(?:assert_|self\.assert)
+    - ^\s*(?:console|logger|log|metrics|analytics|track)\s*\.\w+\s*\(
+  shared_path_exclusions:
+    - localisation_directories
+  path_without:
+    - (^|/)[^/]*_generated\.[a-z]+$
+    - (^|/)[^/]*\.gen\.[a-z]+$
+    - (^|/)(?:generated|__generated__|autogen|codegen)/
+    - (^|/)(?:storetest|searchtest|apitest|dbtest|testlib|testutil|testutils|testhelper|testhelpers|testdata)/
+    - \.min\.[cm]?jsx?$
+    - "[-_.](?:mock|mocks|stub|stubs|fake|fakes|dummy)\\.[cm]?[jt]sx?$"
+    - (^|/)(?:seeds?|seeders?|factories)/
+    - (^|/)[^/]*[-_]test\.[cm]?[jt]sx?$
+    - (^|/)[^/]*_test\.(?:go|py|rb|php|exs?)$
+    - (^|/)[^/]*_spec\.(?:rb|php|exs?)$
+    - (^|/)[^/]*(?:Test|Tests|Spec)\.(?:java|kt|kts|cs|scala|swift)$
+context_questions:
+  - Is this repository a hosting service in the Art. 3(g)(iii) sense - does it store information
+    provided by, and at the request of, a recipient of the service - or is it a single-tenant
+    application in which the operator publishes and moderates only its own content? Quote the
+    persistence path for third-party submissions. If no third-party content is stored, Art. 17 has
+    no addressee here and the candidate closes.
+  - "Is this code path a restriction the provider imposes on a recipient within the meaning of Art.
+    17(1), or an ordinary user-initiated action? A recipient deleting their own post, closing their
+    own account or withdrawing their own listing is not a restriction and must not be treated as
+    one. The detector cannot separate the two and deliberately raises both, so this question is
+    yours alone: it tests one line at a time, and the thing that settles ownership is never on that
+    line. It is the scoping clause inside the query (`where: { id, authorId: session.user.id }`),
+    the authorisation call above it (`requireModerator`, `authorize! :destroy, @post`,
+    `@admin.action`), a decorator on the handler, or a middleware on the route. Read the whole
+    function and the route that reaches it, quote the clause you found, and say who may call this
+    and whose content or account it acts on. If you find no such clause, say so - an unguarded
+    enforcement entry point is itself the answer to a different question."
+  - Which of the locations attached to this finding did you actually read, and why those? This rule
+    reports one finding per repository with every matched line attached, and on a large codebase
+    that list runs to four figures because the enforcement vocabulary (delete, remove, suspend,
+    block) is also ordinary CRUD vocabulary. Do not read them all and do not treat the count as a
+    measure of anything. Pick the locations that look like enforcement entry points - a service
+    object, an admin controller, a moderation or review handler, a staff-action log write - and name
+    them. Say plainly which parts of the list you did not read.
+  - Which of the four Art. 17(1) restrictions does the path impose - (a) a visibility restriction
+    such as removal, disabling of access or demotion, (b) suspension, termination or other
+    restriction of monetary payments, (c) suspension or termination of the service in whole or in
+    part, or (d) suspension or termination of the account? Name the one that fits, or record that
+    none does.
+  - On what ground is the restriction imposed? Art. 17(1) reaches restrictions imposed on the ground
+    that the recipient's information amounts to illegal content or is incompatible with the terms
+    and conditions. A purely technical action - a failed payment, a data-retention purge, a
+    deduplication job - is outside that ground. Quote the ground the code records, if it records
+    one.
+  - "Does the recipient whose content, account or payments this path restricts actually RECEIVE a
+    statement of reasons, and is what they receive the Art. 17(1) statement rather than a
+    notification of some other kind? The question is about a message that reaches the affected
+    recipient, not about whether a symbol called statementOfReasons exists somewhere in the tree: a
+    term-of-art string can sit in a policy document, a translation catalogue, a type on an unused
+    scaffold or a compliance backlog note while the enforcement path it is meant to serve calls
+    nothing. This question carries the whole absence half of the rule, because as of 2026-07-28 the
+    detector searches for no notification machinery and no statement of reasons at all - its silence
+    on the point is not evidence of anything. Follow the call path yourself from the restriction to
+    a delivery surface: a queue worker, an event-bus subscriber, a database trigger, a webhook
+    consumer, a scheduled digest, an in-app inbox row. The terms worth searching are the ones the
+    deleted guard used - 'statement of reasons', statementOfReasons, statement_of_reasons,
+    STATEMENT_OF_REASONS - plus the ground and delivery vocabulary around them (ban_reason,
+    suspension_reason, moderation.notice, notifyUser, sendModerationEmail); measured over 27
+    repositories, the term of art fired zero times and the delivery vocabulary fired on an SMTP
+    dependency entry, a third-party licence file and a README tagline, so treat every hit as the
+    start of a call-path read. Recording why in a column is not telling the recipient why. Quote
+    what you find, and if you find nothing, say which paths you followed."
+  - Where a notification does exist, does it carry the Art. 17(3)(a)-(f) contents - what the
+    restriction does plus its territorial scope and duration; the facts relied on and whether it
+    followed an Art. 16 notice or an own-initiative review; whether automated means were used; the
+    legal ground where the decision rests on the illegal-content ground; the contractual ground
+    where it rests on the terms and conditions; and the redress routes? A one-line message saying
+    the post was taken down does not carry them.
+  - "Is the service offered to recipients that have their place of establishment or are located in
+    the Union (Art. 2(1))? The provider's own location does not settle this. Check
+    ScanProfile.distribution_regions and any EU-facing signals in the repository. A region that is
+    not in the list may not have been asked: that question is open, not answered no."
+  - Do the Art. 17(2) limits apply? Paragraph 1 bites only where the relevant electronic contact
+    details of the recipient are known to the provider, and it does not reach deceptive high-volume
+    commercial content - so an anti-spam or bot-abuse pipeline acting on that class of content may
+    sit outside it. Does this path act on that class, and does the account carry a contact channel?
+  - Is this path executing an order from a judicial or administrative authority under Art. 9? Art.
+    17(5) takes such orders outside the Article altogether, and Art. 9(5) carries its own separate
+    information duty instead.
+  - "Does the repository qualify as an online platform under Art. 3(i), that is, does it also
+    disseminate the stored information to the public? If so, and if the operator is not a micro or
+    small enterprise, Art. 24(5) adds a duty to submit the statement of reasons to the Commission
+    database. Note the asymmetry: Art. 19(1) excludes micro and small online platforms from Art.
+    24(5) but not from Art. 17, so size does not close this candidate."
+evidence_template: "{file}:{line} carries one of this rule's enforcement spellings: an enforcement
+  verb - hide, remove, delete, purge, suspend, ban, block, lock, deactivate, restrict, freeze,
+  demonetise and their siblings - bound to a content, account or payment noun; a moderation-status,
+  suspended-at or banned-reason field; or moderation vocabulary itself. That vocabulary is where the
+  four Art. 17(1) restrictions are usually written, and it is also ordinary CRUD, lifecycle and
+  text-processing vocabulary, so the spelling is all the detector established. Shapes already met in
+  real code: `loader.deactivate()`, the extension-host lifecycle call of a VS Code extension, inside
+  a smoke-test loader script; and `removeXmlComments(sanitized)`, one step of a string-sanitisation
+  chain, which reaches the remove-plus-Comments spelling with no user comment and no recipient in
+  it. Read the matched line and name which of the four Art. 17(1) restrictions it imposes - that is
+  context question 4, and recording that none of them fits is an answer it accepts. Whether the path
+  is provider-imposed rather than the recipient's own action, and whether the affected recipient
+  receives a statement of reasons carrying the Art. 17(3)(a)-(f) contents, are both for the
+  adjudicator: since 2026-07-28 the detector searches for no statement of reasons and no
+  notification machinery, so it is not asserting that none exists"
+remediation_template: >
+  Treat this as a candidate for review, not a determination.
+
+  Check first whether the duty is already discharged, because this rule no longer checks for you: as
+  of
+
+  2026-07-28 it carries no suppression for a discharged duty, so it fires on a service that delivers
+  a
+
+  full Art. 17(3) statement exactly as it fires on one that delivers nothing. Search for the term of
+  art
+
+  the deleted guard used - "statement of reasons", statementOfReasons, statement_of_reasons,
+
+  STATEMENT_OF_REASONS - and then read the call path rather than the string: measured over 27
+
+  repositories that term fired zero times, while the notification vocabulary that used to sit beside
+  it
+
+  (mailer, inbox, push channel, event bus, ban_reason, suspension_reason) fired on an SMTP
+  dependency
+
+  entry, a third-party licence file, a README tagline and a lint-rule message. A stored ground is
+  not a
+
+  delivered statement, and a mailer elsewhere in the repository is not evidence that this branch
+  uses it.
+
+  If the path is a restriction the provider imposes under DSA Art. 17(1) - a visibility restriction
+
+  on a recipient's content (removal, disabling of access, demotion), a suspension, termination or
+
+  other restriction of monetary payments, a suspension or termination of the service in whole or in
+
+  part, or a suspension or termination of the account - then the same path owes the affected
+
+  recipient a statement of reasons.
+
+  Engineering shape: make the statement a required step of the enforcement transaction rather than a
+
+  follow-up someone remembers. Write a decision record at the moment the restriction is persisted -
+
+  target, restriction type, ground, the facts relied on, whether it followed an Art. 16 notice or an
+
+  own-initiative review, whether automated means were used, territorial scope, duration - and have a
+
+  single notifier read that record. Restriction and record in one transaction; delivery may be
+
+  asynchronous.
+
+  The statement needs the Art. 17(3)(a)-(f) contents: (a) what the decision does, with territorial
+
+  scope and duration where relevant; (b) the facts and circumstances relied on, including the notice
+
+  or own-initiative origin; (c) the use made of automated means; (d) the legal ground, where the
+
+  decision rests on the information being within Art. 3(h); (e) the contractual ground, where it
+  rests on the
+
+  terms and conditions; (f) the redress routes, including internal complaint handling, out-of-court
+
+  dispute settlement and judicial redress. A one-line "your post was removed" carries none of them.
+
+  Two boundaries worth encoding rather than assuming: Art. 17(2) makes the duty bite only where the
+
+  recipient's electronic contact details are known, and takes deceptive high-volume commercial
+
+  content out of scope; Art. 17(5) takes orders under Art. 9 out of the Article entirely.
+
+  Size does not help here. The Art. 19(1) exclusion for micro and small enterprises covers the
+
+  online-platform section (Arts. 19-28) only, and Art. 17 sits outside it. Where the service also
+
+  disseminates content to the public, an operator above the micro/small threshold additionally owes
+
+  the Art. 24(5) submission of the statement to the Commission database.
+data_categories: []
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 1
+      class: existence
+    - question: 4
+      class: enumeration
+      item: enforcement entry point
+      item_source: reading
+    - question: 5
+      class: enumeration
+      item: enforcement entry point
+      item_source: reading
+    - question: 6
+      class: enumeration
+      item: enforcement entry point
+      item_source: reading
+    - question: 7
+      class: enumeration
+      item: enforcement entry point
+      item_source: reading
+    - question: 8
+      class: existence

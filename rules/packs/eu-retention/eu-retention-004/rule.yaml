@@ -1,0 +1,399 @@
+id: eu-retention-004
+pack: eu-retention
+short_name: Retention period written into the code
+problem_line:
+  text: "Retention in code: notice or reader not found, or mismatched"
+fix_line: State the period where people read it, make stated and coded periods agree, and make sure
+  something applies it.
+title: Retention period stated as a constant, a configuration key or a cleanup argument
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(e), the storage-limitation principle, quoted from
+      the Official Journal text at CELEX 32016R0679. Art. 5(1) opens 'Personal data shall be:' and
+      point (e) reads: 'kept in a form which permits identification of data subjects for no longer
+      than is necessary for the purposes for which the personal data are processed'. FOR NO LONGER
+      THAN IS NECESSARY - the limit is set by the purpose and never by a number of days, so no
+      detector can compute the permitted period and NOTHING THIS RULE FINDS IS A NUMBER THAT IS TOO
+      LARGE. What this rule finds is almost always a product stating a bounded period, which is the
+      principle being answered rather than breached. What a candidate here is about is that the
+      period is STATED IN CODE, what it applies to, and whether it is the period anyone outside the
+      repository was told about. Art. 5(2) is the paragraph that makes the location of a stated
+      period worth reporting: 'The controller shall be responsible for, and be able to demonstrate
+      compliance with, paragraph 1'. A period compiled into a constant is the period that is
+      enforced, whether or not it appears anywhere a reviewer, an operator or a data subject would
+      look. Applies since 2018-05-25, Art. 99(2): 'It shall apply from 25 May 2018.'"
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 39, from the same Official Journal text: 'In order
+      to ensure that the personal data are not kept longer than necessary, time limits should be
+      established by the controller for erasure or for a periodic review.' Both limbs of that
+      sentence are things a TIME LIMIT is established FOR, so the choice it offers is between two
+      ways of enforcing a limit and never between having one and not having one. A named constant
+      carrying a number of days IS a time limit established for erasure, provided something reads
+      it. What is left for a reader to check is therefore not whether a limit exists but three other
+      things, and the context questions ask them in order: what store the period governs, whether
+      anything actually applies it, and whether it is the period the product tells people about. A
+      recital does not enact a duty; it colours Art. 5(1)(e), which is what this rule cites as its
+      test."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1), from the same Official Journal text. The record
+      of processing activities 'shall contain all of the following information', and point (f) is
+      'where possible, the envisaged time limits for erasure of the different categories of data'. A
+      constant named for a retention period in days IS an envisaged time limit for erasure, it is
+      the one the product enforces, and Art. 30(1)(f) asks for it to be written into the record as
+      well as into the source. Two limits on how far that can be taken, and both are in the text.
+      The words 'where possible' are in the provision and are not a formality. And Art. 30(5)
+      exempts smaller organisations, but only conditionally: 'The obligations referred to in
+      paragraphs 1 and 2 shall not apply to an enterprise or an organisation employing fewer than
+      250 persons unless the processing it carries out is likely to result in a risk to the rights
+      and freedoms of data subjects, the processing is not occasional, or the processing includes
+      special categories of data as referred to in Article 9(1) or personal data relating to
+      criminal convictions and offences referred to in Article 10.' Those three unless-limbs are
+      disjunctive, so the exemption cannot be assumed. Reference only. Whether this controller keeps
+      such a record, and what is in it, is not something a scan of source code can see; it is asked
+      of the person running the scan."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1), from the same Official Journal text. Personal
+      data 'means any information relating to an identified or identifiable natural person', and the
+      paragraph continues: 'an identifiable natural person is one who can be identified, directly or
+      indirectly, in particular by reference to an identifier such as a name, an identification
+      number, location data, an online identifier or to one or more factors specific to the
+      physical, physiological, genetic, mental, economic, cultural or social identity of that
+      natural person'. Reference only, and carried for a specific reason: this rule matches a NAMED
+      QUANTITY and never a determination that whatever the quantity governs is within this
+      definition. A constant called `LogFileRetentionDays` governs log files; whether those log
+      files hold personal data is a question for the adjudicating agent or for the person running
+      the scan, and no pattern in this rule tests it."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 83(5)(a): infringements of 'the basic principles for
+      processing, including conditions for consent, pursuant to Articles 5, 6, 7 and 9' are 'subject
+      to administrative fines up to 20 000 000 EUR, or in the case of an undertaking, up to 4 % of
+      the total worldwide annual turnover of the preceding financial year, whichever is higher'.
+      Quoted from the same Official Journal text. Article 5 is listed expressly by number, so the
+      storage-limitation principle sits in the upper fining band rather than the Art. 83(4) one. The
+      Journal prints no-break spaces inside '20 000 000'; they are rendered as ordinary spaces here,
+      as in eu-retention-001, eu-retention-002 and eu-retention-003. This entry fixes the exposure
+      if a candidate turns out to be a real gap; it says nothing about how likely that is, which is
+      rule_confidence."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.38
+detector:
+  engine: builtin-regex
+  shared_vocabulary:
+    - retention_time_columns
+  vocabulary:
+    retention_words:
+      - retention
+      - retain
+      - expir
+      - purge
+      - prune
+      - cleanup
+      - keep
+      - max_age
+      - lifetime
+    ttl_words:
+      - ttl
+    time_unit_words:
+      - days
+      - hours
+      - minutes
+      - seconds
+      - weeks
+      - months
+      - years
+      - day
+      - hour
+      - minute
+      - second
+      - week
+      - month
+      - year
+    moment_words:
+      - date
+      - datetime
+      - timestamp
+      - until
+      - deadline
+      - cutoff
+    retention_only_words:
+      - retention
+      - retain
+    cleanup_verbs:
+      - delete
+      - remove
+      - purge
+      - prune
+      - cleanup
+      - expire
+      - evict
+      - vacuum
+      - discard
+      - destroy
+      - drop
+    duration_call_prefixes:
+      - from
+      - of
+      - add
+      - sub
+      - plus
+      - minus
+      - before
+      - after
+  vocabulary_matching:
+    retention_words:
+      case_insensitive: true
+      separator_insensitive: true
+    retention_only_words:
+      case_insensitive: true
+      separator_insensitive: true
+    ttl_words:
+      case_insensitive: true
+    time_unit_words:
+      case_insensitive: true
+    moment_words:
+      case_insensitive: true
+    cleanup_verbs:
+      case_insensitive: true
+      separator_insensitive: true
+    duration_call_prefixes:
+      case_insensitive: true
+  match:
+    - (?:(?&retention_words)|(?&ttl_words)(?![a-z]))[A-Za-z_]{0,10}(?&time_unit_words)(?![a-z])
+    - (?&retention_only_words)[A-Za-z_]{0,3}(?&moment_words)(?![a-z])
+    - (?&cleanup_verbs)(?![A-Za-z])[^\n]{0,120}?(?:[1-9][0-9_]*[ \t]*\*[
+      \t]*time\.(?:Hour|Minute|Second)|time\.Duration\([
+      \t]*[1-9][0-9_]*\)|[1-9][0-9_]*\.(?&time_unit_words)(?![A-Za-z_])|timedelta\([^)\n]{0,40}(?&time_unit_words)[
+      \t]*=[ \t]*[1-9]|(?&duration_call_prefixes)(?&time_unit_words)\([
+      \t]*-?[1-9]|(?&time_unit_words)[ \t]*(?:=>|[:=])[ \t]*[1-9])
+    - (?:[1-9][0-9_]*[ \t]*\*[ \t]*time\.(?:Hour|Minute|Second)|time\.Duration\([
+      \t]*[1-9][0-9_]*\)|[1-9][0-9_]*\.(?&time_unit_words)(?![A-Za-z_])|timedelta\([^)\n]{0,40}(?&time_unit_words)[
+      \t]*=[ \t]*[1-9]|(?&duration_call_prefixes)(?&time_unit_words)\([
+      \t]*-?[1-9]|(?&time_unit_words)[ \t]*(?:=>|[:=])[
+      \t]*[1-9])[^\n]{0,120}?(?&cleanup_verbs)(?![A-Za-z])
+    - (?:(?&retention_words)|(?&ttl_words)(?![a-z]))[A-Za-z_]{0,12}['"]?[ \t]*(?::=|=>|[:=]|,)[
+      \t]*(?:[1-9][0-9_]*[ \t]*\*[ \t]*time\.(?:Hour|Minute|Second)|time\.Duration\([
+      \t]*[1-9][0-9_]*\)|[1-9][0-9_]*\.(?&time_unit_words)(?![A-Za-z_])|timedelta\([^)\n]{0,40}(?&time_unit_words)[
+      \t]*=[ \t]*[1-9]|(?&duration_call_prefixes)(?&time_unit_words)\([
+      \t]*-?[1-9]|(?&time_unit_words)[ \t]*(?:=>|[:=])[ \t]*[1-9])
+    - (?:(?&retention_words)|(?&ttl_words)(?![a-z]))[A-Za-z_]{0,12}['"]?[ \t]*(?::=|=>|[:=]|,)[
+      \t]*['"]?[1-9][0-9_]*(?:\.[0-9]+)?[ \t]*(?:ns|us|ms|s|m|h|d|w|y)(?![A-Za-z0-9_])
+    - ^[ \t]*(?:(?:public|private|protected|internal|static|final|async|export|def|fn|sub)[
+      \t]+){0,4}(?:func|function|def|fn|void|Task|Promise|[A-Za-z_$][\w$<>\[\], ]{0,40})?[
+      \t]*(?:\([^\n)]{0,60}\)[
+      \t]*)?(?<![\w$.])(?=[\w$]{0,30}(?:[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]lean[_-]?[Uu]p|CLEAN[_-]?UP|[Pp]rune|PRUNE|[Ss]weep|SWEEP|[Rr]eap|REAP))(?=[\w$]{0,40}(?:[Ee]xpir|EXPIR|(?&retention_time_columns))[\w$]{0,20}(?![\w$]))[A-Za-z_$][\w$]{2,50}[
+      \t]*\(
+    - (?<![\w$.])(?=[\w$]{0,30}(?:[Dd]elete|DELETE|[Pp]urge|PURGE|[Cc]lean[_-]?[Uu]p|CLEAN[_-]?UP|[Pp]rune|PRUNE|[Ee]xpire|EXPIRE|[Ss]weep|SWEEP|[Rr]eap|REAP|[Ee]vict|EVICT)[\w$]{0,30}(?![\w$]))[A-Za-z_$][\w$]{2,40}(?![\w$])[^\n]{0,100}(?:@every[
+      \t]+[0-9]|@daily|@hourly|@midnight|@weekly|@monthly|['"`][0-9*][0-9*/,
+      \t-]{4,30}['"`]|(?<![\w$])(?:spec|cron|schedule|interval|every|period)['"]?[ \t]*(?:=>|[:=])[
+      \t]*['"`]?[@0-9])
+    - (?:(?<![\w$])(?:[Cc]lean|CLEAN|[Pp]urge|PURGE|[Pp]rune|PRUNE|[Ee]xpir|EXPIR|[Rr]etention|RETENTION|[Rr]etain|RETAIN|[Ee]vict|EVICT|[Ss]weep|SWEEP|[Rr]eap|REAP|[Hh]ousekeep|HOUSEKEEP)[A-Za-z_]{0,12}(?:->|\.|::|_)[A-Za-z_]{0,12}(?:duration|interval|max_age|period|dur|(?<![a-z])age|ttl)(?![a-z])[A-Za-z_]{0,10}[
+      \t]*(?::=|=>|[:=])[
+      \t]*(?:['\"`](?:ns|us|ms|s|m|h|d|w|y|sec|secs|second|seconds|min|mins|minute|minutes|hour|hours|day|days|week|weeks|month|months|year|years)['\"`]|[1-9][0-9_]{0,6})(?![\w.])|(?<![\w$])(?=[\w$]{0,20}(?:duration|interval|max_age|period|dur|(?<![a-z])age|ttl)(?![a-z]))[A-Za-z_$][\w$]{0,30}['\"]?[
+      \t]*(?::=|=>|[:=])[
+      \t]*['\"`](?:ns|us|ms|s|m|h|d|w|y|sec|secs|second|seconds|min|mins|minute|minutes|hour|hours|day|days|week|weeks|month|months|year|years)['\"`][^\n]{0,200}?(?<![\w$])(?=[\w$]{0,20}(?:duration|interval|max_age|period|dur|(?<![a-z])age|ttl)(?![a-z]))[A-Za-z_$][\w$]{0,30}['\"]?[
+      \t]*(?::=|=>|[:=])[
+      \t]*[1-9][0-9_]{0,6}(?![\w.])|(?<![\w$])(?=[\w$]{0,20}(?:duration|interval|max_age|period|dur|(?<![a-z])age|ttl)(?![a-z]))[A-Za-z_$][\w$]{0,30}['\"]?[
+      \t]*(?::=|=>|[:=])[
+      \t]*[1-9][0-9_]{0,6}(?![\w.])[^\n]{0,200}?(?<![\w$])(?=[\w$]{0,20}(?:duration|interval|max_age|period|dur|(?<![a-z])age|ttl)(?![a-z]))[A-Za-z_$][\w$]{0,30}['\"]?[
+      \t]*(?::=|=>|[:=])[
+      \t]*['\"`](?:ns|us|ms|s|m|h|d|w|y|sec|secs|second|seconds|min|mins|minute|minutes|hour|hours|day|days|week|weeks|month|months|year|years)['\"`]|['\"](?=[\w$.-]{0,30}(?:duration|interval|max_age|period|dur|(?<![a-z])age|ttl)(?![a-z]))[A-Za-z_$][\w$.-]{0,40}['\"][^\n]{0,160}?['\"]?(?:value|Value|VALUE|default|Default|DEFAULT)['\"]?[
+      \t]*(?::=|=>|[:=])[ \t]*['\"]?[1-9][0-9_]{0,6}(?![\w.])|^[
+      \t]*\.(?=[\w$]{0,24}(?:duration|interval|max_age|period|ttl|dur)(?![a-z]))[A-Za-z_$][\w$]{0,30}[
+      \t]*=[ \t]*[1-9][0-9_]{0,6}(?:[ \t]*\*[ \t]*[1-9][0-9_]{0,6}){0,3}[ \t]*[,}])
+    - (?<![\w$.])(?:System\.getProperty|System\.getenv|os\.environ\.get|os\.getenv|process\.env\.get|getenv|GetEnvDefault|getOrDefault|GetIntDefault|GetStringDefault|GetDurationDefault|GetInt64Default|config\.get|conf\.get|cfg\.get|settings\.get|env\.get|getConfig|getProperty|getSetting)[A-Za-z_]{0,14}[
+      \t]*\([
+      \t]*['"`][\w.$/-]{0,60}(?:(?&retention_words)|(?&ttl_words)(?![a-z])|[Cc]lean|CLEAN)[\w.$/-]{0,60}['"`][
+      \t]*,[ \t]*['"`]?[0-9]{1,9}(?:\.[0-9]{1,6})?['"`]?[ \t]*[,)]
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|<%#|--)
+  join_bracketed_constructs: true
+  shared_path_exclusions:
+    - prose_documents
+context_questions:
+  - "MANDATORY, and the detector did not check it: WHAT DOES THIS PERIOD GOVERN, and does that thing
+    hold personal data? The clause was matched as a NAME, and a name says what a quantity means,
+    never what it applies to. Work outwards. Find every read of this constant, property or
+    configuration key and quote the statement that uses it - the deletion, the sweep, the
+    comparison, the index. Then say what store that statement touches and quote its columns or
+    fields. Where the ScanProfile or the operator's declared documents answer whether that store
+    holds personal data within GDPR Art. 4(1), say which one you used and quote it; where nothing
+    answers it, return needs_human rather than deciding it from a name. If the period governs build
+    artefacts, transcoding buffers, cache files or somebody else's records, dismiss the candidate
+    here and say what it governs instead."
+  - 'Is the period actually applied, and what is its value? Three separate questions and they are
+    answered separately. (a) IS A VALUE ON THIS LINE? A declaration such as `public int
+    LogFileRetentionDays { get; set; }` states the quantity and no number; a plan-catalogue entry
+    such as `"data_retention_in_years": 3` states the number and no mechanism. Say which you have.
+    (b) WHERE DOES THE VALUE COME FROM if it is not here - a default in another file, an environment
+    variable, a function argument every caller overrides, a per-plan catalogue with several
+    different numbers? Resolve it and quote the resolved value, or report that you could not and say
+    so. (c) DOES ANYTHING READ IT? A stated period nothing applies is a number, not a retention
+    practice, and a reader must not report it as one. Search for the name and quote the reader, or
+    report that there is none.'
+  - "Does this period appear anywhere the product tells anyone about it, and is it the same number?
+    This is the question this rule is best placed to raise, because a constant is what the code does
+    rather than what a settings page, a README or a privacy policy says. Look in three places and
+    report each separately: the product's own settings surface, its user-facing documentation and
+    privacy policy, and its record of processing activities if the operator supplies one. GDPR Art.
+    30(1)(f) asks for the envisaged time limits for erasure of the different categories of data to
+    be in that record, where possible, and Art. 30(5) exempts smaller organisations only
+    conditionally - so do not assume the exemption. Where the enforced period and a stated period
+    differ, that difference is the finding and it should be reported with both numbers and both
+    sources. Where nothing states a period at all, say so; that is an observation about
+    documentation."
+  - "Is this a cache, a buffer, a working copy or a credential window rather than a record-retention
+    period? The criterion is not the name of the constant: it is what expiry LOSES. If the same fact
+    survives elsewhere and what expires is a copy, a rendered segment, a thumbnail or a signed link,
+    this is not record retention and the candidate should be dismissed - name the durable copy and
+    quote where it is written. Four look-alike classes are known to reach this rule and each is a
+    real line in the pinned corpus: a transcoding or segment buffer named with the word `keep`; a
+    consent-banner cookie lifetime, which is a cookie duration and belongs to the cookie-attribute
+    row rather than to storage limitation; a password-reset, two-factor or e-mail-verification token
+    window; and a presigned object-storage URL expiry, where the object is kept and only the link
+    expires. Say which of the four this is, or say it is none of them."
+  - "Who sets this period, and can they? A self-hosted product's deployer is usually the controller,
+    and the purpose - which is what Art. 5(1)(e) measures the period against - is theirs to set.
+    Report where this period can be changed from: a settings screen, an environment variable, a
+    configuration file the deployer edits, or only by editing source and rebuilding. A period that
+    can only be changed by a code change is a period the controller cannot set for their own
+    purpose, and that is worth reporting even when the number itself is unremarkable."
+  - Does the exception in Art. 5(1)(e) apply, and is the condition attached to it met? The point
+    permits storage for longer periods where the data will be processed solely for archiving
+    purposes in the public interest, scientific or historical research purposes or statistical
+    purposes, and only subject to the safeguards in Art. 89(1). Two questions follow and they are
+    separate. First, is this store within one of those purposes on the face of the code and of the
+    product's own description - an audit trail kept for accountability is not automatically an
+    archiving purpose in the public interest, and a product analytics store is not automatically a
+    statistical purpose. Second, if it is, are the technical and organisational measures required by
+    Art. 89(1) in place? Where a separate legal retention duty applies instead, quote the instrument
+    and the period rather than naming it.
+evidence_template: "{file}:{line} states a retention, expiry or cleanup PERIOD in ordinary
+  application code or configuration, rather than in a schema, a migration or an infrastructure
+  artefact. WHAT WAS ESTABLISHED, and it depends on which clause matched, so read the line first. A
+  NAME CARRYING A RETENTION WORD AND A TIME UNIT - `ActivityLogRetentionDays`,
+  `data_retention_in_years`, `EXCEPTIONS_TTL_DAYS`, `expiresAfterDays` - establishes that this
+  product names a period after which something is removed, and, where a positive number stands
+  beside the name on the same line, establishes that number as the stated period. WHERE NO NUMBER
+  STANDS ON THE LINE THE VALUE WAS NOT SEEN: a property declaration, a schema field or a read of the
+  name states the quantity and nothing else, and the value may be a default in another file, an
+  environment variable or a per-plan catalogue entry that differs by tier. A RETENTION-NAMED MOMENT
+  PROPERTY - `RetentionDate` and its column, migration and snapshot spellings - establishes that
+  rows carry an individual moment at which they become removable, and establishes NO PERIOD AT ALL:
+  how far ahead that moment is set is computed somewhere else. A CLEANUP VERB BESIDE A DURATION
+  LITERAL establishes two facts that share a line, with up to 120 characters between them and
+  nothing binding them beyond adjacency; read the statement and say whether the duration is the
+  argument of the deletion or something else on the same line. A RETENTION-NAMED BINDING WHOSE VALUE
+  IS A DURATION LITERAL - `passwordResetTTL = 30 * time.Minute` - establishes the most: the name,
+  the number and the unit in one expression. WHAT WAS NOT ESTABLISHED, and each of these is a
+  question rather than a caveat. FIRST, AND MOST IMPORTANTLY, NOTHING HERE SAYS THE PERIOD IS WRONG.
+  GDPR Art. 5(1)(e) sets the limit by the purpose and not by a number of days, so no detector can
+  compute the permitted period, and most of what this rule finds is a product stating a bounded
+  retention period rather than failing to. SECOND, WHAT THE PERIOD GOVERNS WAS NOT READ. The
+  detector matched a name; it did not follow the name to a store and it read no column. A
+  transcoding buffer, a cache file lifetime, a consent-cookie duration and a token validity window
+  are all written exactly like a record-retention constant, and all four occur in the corpus this
+  rule was built against. THIRD, NOTHING ESTABLISHES THAT ANYTHING APPLIES THE PERIOD; a declared
+  property whose reader is in another file states a number and no behaviour. FOURTH, THIS RULE NEVER
+  REPORTS AN ABSENCE: it says nothing about data whose retention period is stated nowhere, and
+  silence from it is not a statement that anything is kept forever. ADDED 2026-09-04: THIS RULE ALSO
+  REPORTS THE ENFORCEMENT HALF, AND THOSE TWO CLAUSES STATE NO PERIOD AT ALL - read the cited line
+  before applying the opening sentence to it. A ROUTINE DECLARATION whose name compounds a removal
+  verb with an expiry word or a retention column name establishes that a sweep keyed to expiry
+  exists in this file, and nothing else: not what period it applies, not what it removes, and not
+  that anything ever calls it. A SCHEDULER REGISTRATION binding such a name to an interval or a cron
+  expression establishes that the removal is timed rather than merely present, and the interval on
+  that line is THE SWEEP'S FREQUENCY AND NEVER THE RETENTION PERIOD. Neither clause reads a deletion
+  statement: a bare removal call names no period, no subject and no schedule, and none is matched.
+  ADDED 2026-09-08: TWO MORE THINGS THE CITED LINE MAY BE. FIRST, THE CITED LINE MAY BE THE OPENING
+  LINE OF A CONSTRUCT WRITTEN OVER SEVERAL LINES, AND ITS OWN TEXT MAY SHOW NOTHING OF WHAT MATCHED.
+  This rule now declares the joined view, so every clause is also tested against the whole of a
+  bracket-balanced construct that opens on a line, folded onto one string. A struct-literal
+  initialiser or a settings tuple may put the period's NAME on the first line and its VALUE on the
+  second, and the finding then cites the line the construct opens on and carries the folded span in
+  locations[].joined_from. READ THAT WHOLE SPAN BEFORE SAYING WHAT THE STATED PERIOD IS: the name,
+  the number and the unit may each be on a different line of it, and the file's own text is what an
+  adjudication has to be able to quote. What is still not read, and no answer may assume otherwise:
+  a continuation written with a trailing operator and no bracket, and a backslash continuation, are
+  not folded; and a construct of more than forty lines, one folding past four thousand characters,
+  or one whose brackets never close is refused. Where a product splits a duration into a VALUE and a
+  UNIT held in two separate statements - a number on one line and the letter d, h or m on another -
+  the fold does not reach them either, and each half is reported on its own line; the period is the
+  two together and neither line states it alone, so find the other half before naming a number of
+  days. SECOND, A PERIOD MAY BE A LOOKUP'S DEFAULT ARGUMENT RATHER THAN A SETTING'S VALUE. A
+  defaulted property or environment lookup - getProperty(key, fallback), getenv(key, fallback),
+  getOrDefault, config.get(key, n) - states the period in its SECOND argument, and that number is
+  what runs ONLY WHEN THE DEPLOYMENT HAS NOT SET THE KEY. So the finding establishes that this
+  product reads a period from a named key and ships a fallback for it, and it establishes NOTHING
+  ABOUT WHAT ANY DEPLOYMENT RUNS. WHICH OF THE TWO IS IN FORCE IS THE OPERATOR'S FACT TO STATE, not
+  the code's and not this detector's: report the key by name, report the fallback as the fallback,
+  and ask the person running the scan whether the key is set in their deployment and to what. Where
+  a second literal stands in the same expression - a floor, a ceiling, a clamp - say which of the
+  two the product actually applies."
+remediation_template: |
+  WHAT WAS FOUND. A retention, expiry or cleanup period stated as a value in ordinary application
+  code or configuration - a named constant, a configuration property, a plan-catalogue field or a
+  cleanup routine's argument. In most cases this is a product doing the right thing: a bounded
+  period is written down and something applies it. Read the three questions below before changing
+  any code, because for a well-built product the answer to all three may be that nothing needs to
+  change in the code at all.
+
+  1. DOES THIS PERIOD GOVERN PERSONAL DATA? A constant named for a number of days says what it
+     means and not what it applies to. Follow the name to the statement that reads it, and follow
+     that statement to the store. A transcoding buffer, a cache lifetime, a signed-URL expiry and a
+     password-reset window all look identical on the line. If it turns out to govern nothing that
+     identifies a person, there is nothing here to change.
+  2. IS THIS PERIOD WRITTEN DOWN ANYWHERE A HUMAN READS? Check the privacy policy, the user-facing
+     documentation and the record of processing activities. Art. 5(2) puts the burden of being able
+     to demonstrate the retention position on the controller, and Art. 30(1)(f) asks, where
+     possible, for the envisaged time limits for erasure of the different categories of data to
+     appear in that record. A period that exists only inside a constant is undocumented wherever a
+     reviewer would look, whatever it turns out to enforce.
+  3. DOES ANYTHING APPLY IT? Find the reader. A declared property with no reader, a function default
+     every caller overrides, or a catalogue field no query selects is a number and not a retention
+     practice - and a number that reads as a policy is worse than none, because a reviewer will
+     believe it.
+
+  IF SOMETHING DOES NEED TO CHANGE, the useful changes are these, in order of how often they are the
+  right one.
+
+  - PUT THE PERIOD WHERE IT CAN BE READ. A one-line comment beside the constant naming what the
+    store holds, how long it is kept and why that length is necessary for the purpose costs nothing
+    and is the difference between an enforced period and a demonstrable one.
+  - MAKE THE PERIOD REACHABLE BY THE OPERATOR IF THEY ARE THE CONTROLLER. Where the product is
+    self-hosted, the deployer usually sets the purpose, so a period they can only change by editing
+    source and rebuilding is a period they cannot set.
+  - CHECK THAT EVERY STORE HOLDING THE SAME CATEGORY OF DATA HAS THE SAME PERIOD. A period written
+    per constant drifts: an export bucket, an aggregate table, a search index or a replica can
+    outlive the store the constant was written for.
+  - RECONCILE THE NUMBER WITH THE ONE PUBLISHED. Where the policy says ninety days and the constant
+    says three years, one of the two is wrong and the code is the one that is running. Fix
+    whichever is wrong, and say which you changed.
+
+  DO NOT read this as a request to shorten the period. Nothing in this finding says the period is
+  too long, and shortening a retention window without knowing the purpose can destroy records the
+  product or its users are separately required to keep.
+data_categories:
+  - user.behavior
+  - user.account
+  - user.authorization.credentials
+  - user.unique_id
+fingerprint_spec: directory

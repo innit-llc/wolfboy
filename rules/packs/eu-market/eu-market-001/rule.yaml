@@ -1,0 +1,426 @@
+id: eu-market-001
+pack: eu-market
+short_name: "Country or locale checks: access and payment conditions"
+problem_line:
+  text: Access, redirect or payment set by the customer's country
+fix_line: Stop blocking, redirecting without consent or varying payment by country, unless a stated
+  legal requirement needs it.
+title: Country or locale test, list, picker or geo lookup - access, rerouting or payment conditions
+  need review (EU 2018/302)
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "Geo-blocking Regulation (Regulation (EU) 2018/302), Arts. 3, 4 and 5 - addressed to the
+      TRADER, defined in Art. 2(18) as 'any natural person or any legal person, irrespective of
+      whether privately or publicly owned, who is acting, including through any other person acting
+      in the name or on behalf of the trader, for purposes relating to the trade, business, craft or
+      profession of the trader'. Art. 3(1): 'A trader shall not, through the use of technological
+      measures or otherwise, block or limit a customer's access to the trader's online interface for
+      reasons related to the customer's nationality, place of residence or place of establishment.'
+      Art. 3(2): 'A trader shall not, for reasons related to a customer's nationality, place of
+      residence or place of establishment, redirect that customer to a version of the trader's
+      online interface that is different from the online interface to which the customer initially
+      sought access, by virtue of its layout, use of language or other characteristics that make it
+      specific to customers with a particular nationality, place of residence or place of
+      establishment, unless the customer has explicitly consented to such redirection. In the event
+      of redirection with the customer's explicit consent, the version of the trader's online
+      interface to which the customer initially sought access shall remain easily accessible to that
+      customer.' Art. 4(1): 'A trader shall not apply different general conditions of access to
+      goods or services, for reasons related to a customer's nationality, place of residence or
+      place of establishment, where the customer seeks to: (a) buy goods from a trader and either
+      those goods are delivered to a location in a Member State to which the trader offers delivery
+      in the general conditions of access or those goods are collected at a location agreed upon
+      between the trader and the customer in a Member State in which the trader offers such an
+      option in the general conditions of access; (b) receive electronically supplied services from
+      the trader, other than services the main feature of which is the provision of access to and
+      use of copyright protected works or other protected subject matter, including the selling of
+      copyright protected works or protected subject matter in an intangible form; (c) receive
+      services from a trader, other than electronically supplied services, in a physical location
+      within the territory of a Member State where the trader operates.' Art. 5(1): 'A trader shall
+      not, within the range of means of payment accepted by the trader, apply, for reasons related
+      to a customer's nationality, place of residence or place of establishment, the location of the
+      payment account, the place of establishment of the payment service provider or the place of
+      issue of the payment instrument within the Union, different conditions for a payment
+      transaction, where: (a) the payment transaction is made through an electronic transaction by
+      credit transfer, direct debit or a card-based payment instrument within the same payment brand
+      and category; (b) authentication requirements are fulfilled pursuant to Directive (EU)
+      2015/2366; and (c) the payment transactions are in a currency that the trader accepts.'
+      'Online interface' is defined in Art. 2(16) as 'any software, including a website or a part
+      thereof and applications, including mobile applications, operated by or on behalf of a trader,
+      which serves to give customers access to the trader's goods or services'; 'general conditions
+      of access' in Art. 2(14) includes net sale prices. Art. 11(1): 'It shall apply from 3 December
+      2018.' Quoted from the Official Journal text (CELEX 32018R0302, OJ L 60 I, 2.3.2018, p. 1),
+      retrieved 2026-07-27 from the Publications Office cellar. There is NO micro or small
+      enterprise carve-out anywhere in this Regulation - unusual among the wider-acquis obligations
+      in this map, where size thresholds normally do the work."
+    url: http://publications.europa.eu/resource/celex/32018R0302
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "Geo-blocking Regulation (Regulation (EU) 2018/302), Art. 1(2) and Art. 1(3). Art. 1(2): 'This
+      Regulation does not apply to purely internal situations, where all the relevant elements of
+      the transaction are confined within one single Member State.' Art. 1(3): 'This Regulation does
+      not apply to the activities referred to in Article 2(2) of Directive 2006/123/EC.' THE COUNT
+      IS TWELVE, NOT ONE. An earlier brief to this rule's author described Art. 1(3) as excluding
+      audiovisual services; that is one limb of twelve, and the eleven it omits - gambling,
+      financial services, healthcare, transport and electronic communications among them - remove
+      most of the industries that geo-block hardest. Art. 1(3) imports points (a) to (l) of Art.
+      2(2) in full, reproduced verbatim below and re-verified word for word against the Official
+      Journal text on 2026-07-27. Directive 2006/123/EC (Services Directive), Art. 2(2), OJ L 376,
+      27.12.2006: 'This Directive shall not apply to the following activities: (a) non-economic
+      services of general interest; (b) financial services, such as banking, credit, insurance and
+      re-insurance, occupational or personal pensions, securities, investment funds, payment and
+      investment advice, including the services listed in Annex I to Directive 2006/48/EC; (c)
+      electronic communications services and networks, and associated facilities and services, with
+      respect to matters covered by Directives 2002/19/EC, 2002/20/EC, 2002/21/EC, 2002/22/EC and
+      2002/58/EC; (d) services in the field of transport, including port services, falling within
+      the scope of Title V of the Treaty; (e) services of temporary work agencies; (f) healthcare
+      services whether or not they are provided via healthcare facilities, and regardless of the
+      ways in which they are organised and financed at national level or whether they are public or
+      private; (g) audiovisual services, including cinematographic services, whatever their mode of
+      production, distribution and transmission, and radio broadcasting; (h) gambling activities
+      which involve wagering a stake with pecuniary value in games of chance, including lotteries,
+      gambling in casinos and betting transactions; (i) activities which are connected with the
+      exercise of official authority as set out in Article 45 of the Treaty; (j) social services
+      relating to social housing, childcare and support of families and persons permanently or
+      temporarily in need which are provided by the State, by providers mandated by the State or by
+      charities recognised as such by the State; (k) private security services; (l) services
+      provided by notaries and bailiffs, who are appointed by an official act of government.' Both
+      texts retrieved 2026-07-27 from the Publications Office cellar (CELEX 32018R0302 and
+      32006L0123)."
+    url: http://publications.europa.eu/resource/celex/32006L0123
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Geo-blocking Regulation (Regulation (EU) 2018/302), the carve-outs that decide most
+      candidates. Art. 3(3): 'The prohibitions set out in paragraphs 1 and 2 shall not apply where
+      the blocking or limitation of access, or the redirection is necessary in order to ensure
+      compliance with a legal requirement laid down in Union law, or in the laws of a Member State
+      in accordance with Union law, to which the trader's activities are subject. In such instances,
+      the trader shall provide a clear and specific explanation to customers regarding the reasons
+      why the blocking or limitation of access, or the redirection is necessary in order to ensure
+      such compliance. That explanation shall be given in the language of the online interface that
+      the customer initially sought to access.' Art. 4(1)(b) excludes 'services the main feature of
+      which is the provision of access to and use of copyright protected works or other protected
+      subject matter, including the selling of copyright protected works or protected subject matter
+      in an intangible form' - Art. 9(2) records that whether to delete this exclusion was the first
+      review question. Art. 4(2): 'The prohibition set out in paragraph 1 shall not prevent traders
+      from offering general conditions of access, including net sale prices, which differ between
+      Member States or within a Member State and which are offered to customers on a specific
+      territory or to specific groups of customers on a non-discriminatory basis.' Art. 4(4)
+      disapplies point (b) for 'traders that are exempted from VAT on the basis of the provisions of
+      Chapter 1 of Title XII of Directive 2006/112/EC'. Art. 4(5) disapplies the Art. 4(1)
+      prohibition 'in so far as a specific provision laid down in Union law, or in the laws of
+      Member States in accordance with Union law, prevents the trader from selling the goods or
+      providing the services to certain customers or to customers in certain territories'. Art. 5(2)
+      preserves withholding delivery until the payment transaction is confirmed as properly
+      initiated, where justified by objective reasons, and Art. 5(3) preserves non-discriminatory
+      surcharges on unregulated card instruments. Art. 4(1)(a) itself limits the goods duty to
+      Member States 'to which the trader offers delivery in the general conditions of access', so
+      the Regulation does not oblige a trader to deliver outside its stated delivery area. Retrieved
+      2026-07-27 from the Publications Office cellar (CELEX 32018R0302)."
+    url: http://publications.europa.eu/resource/celex/32018R0302
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Geo-blocking Regulation (Regulation (EU) 2018/302), Art. 7 and Art. 6(2). Art. 7(1)-(2):
+      'Each Member State shall designate a body or bodies responsible for adequate and effective
+      enforcement of this Regulation.' 'Member States shall lay down the rules setting out the
+      measures applicable to infringements of the provisions of this Regulation and shall ensure
+      that they are implemented. The measures provided for shall be effective, proportionate and
+      dissuasive.' There is therefore no EU-level fine ceiling; the penalty is set nationally, and
+      Art. 8 additionally requires each Member State to designate a body giving consumers practical
+      assistance in disputes. Art. 6(2): 'Provisions of agreements imposing obligations on traders,
+      in respect of passive sales within the meaning of Regulation (EU) No 330/2010, to act in
+      violation of the prohibitions laid down in Articles 3, 4 and 5 of this Regulation shall be
+      automatically void.' Art. 10 adds the Regulation to the Annexes of Regulation (EC) No
+      2006/2004 and Regulation (EU) 2017/2394 (CPC cross-border enforcement cooperation) and to
+      Annex I of Directive 2009/22/EC (injunctions), in the first two cases 'only when the customer
+      is a consumer as defined in point (12) of Article 2 of that Regulation'. Retrieved 2026-07-27
+      from the Publications Office cellar (CELEX 32018R0302)."
+    url: http://publications.europa.eu/resource/celex/32018R0302
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-12-03
+sunset: null
+superseded_by: null
+severity: medium
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  resolve_local_values: true
+  join_bracketed_constructs: true
+  match:
+    - (?:[Bb]lock|BLOCK|[Dd]en(?:y|ies|ied|ial)|DEN(?:Y|IED|IAL)|[Bb]lacklist|BLACKLIST|[Bb]locklist|BLOCKLIST|[Dd]eny[_\-]?[Ll]ist|[Rr]estrict|RESTRICT|[Ff]orbid|FORBID|[Pp]rohibit|PROHIBIT|[Dd]isallow|DISALLOW|[Ww]hitelist|WHITELIST|[Aa]llowlist|ALLOWLIST|[Ss]anction|SANCTION|[Ee]mbargo|EMBARGO|(?<![A-Za-z])[Oo][Ff][Aa][Cc](?![A-Za-z])|(?<![A-Za-z])[Bb]an(?:ned|s)?(?![a-z])|(?<![A-Za-z])BAN(?:NED|S)?(?![A-Z])|451|403)[^\n]{0,60}(?:[Cc]ountr(?:y|ies)|COUNTR(?:Y|IES)|[Tt]erritor(?:y|ies)|TERRITOR|[Nn]ationalit|NATIONALIT|[Mm]ember[_\-
+      ]?[Ss]tate|MEMBER[_\- ]?STATE|MARKETS?(?![A-Z]))
+    - (?:[Cc]ountr(?:y|ies)|COUNTR(?:Y|IES)|[Tt]erritor(?:y|ies)|TERRITOR|[Nn]ationalit|NATIONALIT|[Mm]ember[_\-
+      ]?[Ss]tate|MEMBER[_\-
+      ]?STATE|MARKETS?(?![A-Z]))[^\n]{0,60}(?:[Bb]lock|BLOCK|[Dd]en(?:y|ies|ied|ial)|DEN(?:Y|IED|IAL)|[Bb]lacklist|BLACKLIST|[Bb]locklist|BLOCKLIST|[Dd]eny[_\-]?[Ll]ist|[Rr]estrict|RESTRICT|[Ff]orbid|FORBID|[Pp]rohibit|PROHIBIT|[Dd]isallow|DISALLOW|[Ww]hitelist|WHITELIST|[Aa]llowlist|ALLOWLIST|[Ss]anction|SANCTION|[Ee]mbargo|EMBARGO|(?<![A-Za-z])[Oo][Ff][Aa][Cc](?![A-Za-z])|(?<![A-Za-z])[Bb]an(?:ned|s)?(?![a-z])|(?<![A-Za-z])BAN(?:NED|S)?(?![A-Z])|451|403)
+    - (?:[Bb]lock|BLOCK|[Dd]en(?:y|ies|ied|ial)|DEN(?:Y|IED|IAL)|[Bb]lacklist|BLACKLIST|[Bb]locklist|BLOCKLIST|[Dd]eny[_\-]?[Ll]ist|[Rr]estrict|RESTRICT|[Ff]orbid|FORBID|[Pp]rohibit|PROHIBIT|[Dd]isallow|DISALLOW|[Ww]hitelist|WHITELIST|[Aa]llowlist|ALLOWLIST|[Ss]anction|SANCTION|[Ee]mbargo|EMBARGO|(?<![A-Za-z])[Oo][Ff][Aa][Cc](?![A-Za-z])|(?<![A-Za-z])[Bb]an(?:ned|s)?(?![a-z])|(?<![A-Za-z])BAN(?:NED|S)?(?![A-Z])|451|403)\w{0,16}[_\-]?(?:[Cc]ountr(?:y|ies)|COUNTR(?:Y|IES)|[Rr]egions?|REGIONS?|[Tt]erritor(?:y|ies)|TERRITOR|[Ll]ocales?|LOCALES?|[Nn]ationalit|NATIONALIT|[Jj]urisdiction|JURISDICTION|[Gg]eos?(?![a-z])|GEOS?(?![A-Za-z])|MARKETS?(?![A-Z]))
+    - (?:[Aa]llow|ALLOW|[Pp]ermit|PERMIT|[Ee]ligib|ELIGIB|[Ss]upport|SUPPORT|[Aa]vailab|AVAILAB|[Ee]xclud|EXCLUD|[Ss]erviceab|SERVICEAB|[Ee]nabl|ENABL|[Ll]imit|LIMIT|[Gg]at(?:e|ing)|GAT(?:E|ING)|[Ff]enc|FENC|[Ll]ock|LOCK)\w{0,16}[_\-]?(?:[Cc]ountr(?:y|ies)|COUNTR(?:Y|IES)|[Tt]erritor(?:y|ies)|TERRITOR|[Nn]ationalit|NATIONALIT|[Mm]ember[_\-
+      ]?[Ss]tate|MEMBER[_\- ]?STATE|MARKETS?(?![A-Z]))
+    - (?:[Cc]ountr(?:y|ies)|COUNTR(?:Y|IES)|[Rr]egions?|REGIONS?|[Tt]erritor(?:y|ies)|TERRITOR|[Ll]ocales?|LOCALES?|[Nn]ationalit|NATIONALIT|[Jj]urisdiction|JURISDICTION|[Gg]eos?(?![a-z])|GEOS?(?![A-Za-z])|MARKETS?(?![A-Z]))\w{0,16}[_\-]?(?:[Bb]lock|BLOCK|[Bb]lacklist|BLACKLIST|[Bb]locklist|BLOCKLIST|[Ww]hitelist|WHITELIST|[Aa]llowlist|ALLOWLIST|[Dd]enylist|DENYLIST|[Rr]estrict|RESTRICT|[Ss]anction|SANCTION|[Ee]mbargo|EMBARGO|(?<![A-Za-z])[Bb]an(?![a-z])|[Bb]anned|BANNED|[Gg]at(?:e|ing)|GAT(?:E|ING)|[Ff]enc|FENC|[Ll]ock|LOCK|[Ee]xclu|EXCLU|[Aa]llow|ALLOW)
+    - "[Gg]eo[_\\-]?(?:[Bb]lock|BLOCK|[Rr]estrict|RESTRICT|[Ll]ock|[Gg]at(?:e|ing))|GEO[_\\-]?(?:BL\
+      OCK|RESTRICT|LOCK)|[Rr]egion[_\\-]?[Ll]ock|REGION_LOCK|[Mm]arket[_\\-]?[Ll]imit|MARKET[_\\-]?\
+      LIMIT|(?:[Gg]eo[_\\-]?[Ff]enc|GEO[_\\-]?FENC)[^\\n]{0,60}(?:[Cc]ountr(?:y|ies)|COUNTR(?:Y|IES\
+      )|[Tt]erritor(?:y|ies)|TERRITOR|[Nn]ationalit|NATIONALIT|[Mm]ember[_\\- ]?[Ss]tate|MEMBER[_\\-
+      ]?STATE|MARKETS?(?![A-Z])|[Cc]itizenship|CITIZENSHIP)|(?:[Cc]ountr(?:y|ies)|COUNTR(?:Y|IES)|[\
+      Tt]erritor(?:y|ies)|TERRITOR|[Nn]ationalit|NATIONALIT|[Mm]ember[_\\- ]?[Ss]tate|MEMBER[_\\-
+      ]?STATE|MARKETS?(?![A-Z])|[Cc]itizenship|CITIZENSHIP)[^\\n]{0,60}(?:[Gg]eo[_\\-]?[Ff]enc|GEO[_\
+      \\-]?FENC)"
+    - (?:CF-IPCountry|cf-ipcountry|CF_IPCOUNTRY|[Xx]-[Vv]ercel-[Ii][Pp]-[Cc]ountry|x-vercel-ip-country|[Cc]loud[Ff]ront-[Vv]iewer-[Cc]ountry|cloudfront-viewer-country|[Xx]-[Aa]pp[Ee]ngine-[Cc]ountry|[Xx]-[Cc]ountry-[Cc]ode|[Xx]-[Gg]eo-[Cc]ountry|[Xx]-[Nn][Ff]-[Gg]eo|[Xx]-[Rr]eal-[Cc]ountry|geoip2?_data_country_code|geoip_country_code|GEOIP_COUNTRY_CODE|[Gg]eo[Ii][Pp]2|GEOIP2|[Mm]ax[Mm]ind|MAXMIND|[Gg]eo[Ll]ite2|geolite2|geoip-lite|geoip_lite|maxminddb|[Gg]eo[Ii][Pp]\s*[.(]|\.mmdb|(?:req|request|ctx|context|event|input|r)\s*\.\s*(?:cf|geo|geolocation)\s*[.?\[]|geolocation\(\s*(?:req|request))[^\n]{0,80}(?:[Rr]edirect|REDIRECT|[Rr]eroute|[Rr]ewrite|location\s*\.\s*(?:href|replace|assign)|window\s*\.\s*location|[Hh]eader\(\s*["']Location|send[Rr]edirect|redirect_to|RedirectResponse|http\.Redirect|StatusFound|StatusMovedPermanently)
+    - (?:[Rr]edirect|REDIRECT|[Rr]eroute|[Rr]ewrite|location\s*\.\s*(?:href|replace|assign)|window\s*\.\s*location|[Hh]eader\(\s*["']Location|send[Rr]edirect|redirect_to|RedirectResponse|http\.Redirect|StatusFound|StatusMovedPermanently)[^\n]{0,80}(?:CF-IPCountry|cf-ipcountry|CF_IPCOUNTRY|[Xx]-[Vv]ercel-[Ii][Pp]-[Cc]ountry|x-vercel-ip-country|[Cc]loud[Ff]ront-[Vv]iewer-[Cc]ountry|cloudfront-viewer-country|[Xx]-[Aa]pp[Ee]ngine-[Cc]ountry|[Xx]-[Cc]ountry-[Cc]ode|[Xx]-[Gg]eo-[Cc]ountry|[Xx]-[Nn][Ff]-[Gg]eo|[Xx]-[Rr]eal-[Cc]ountry|geoip2?_data_country_code|geoip_country_code|GEOIP_COUNTRY_CODE|[Gg]eo[Ii][Pp]2|GEOIP2|[Mm]ax[Mm]ind|MAXMIND|[Gg]eo[Ll]ite2|geolite2|geoip-lite|geoip_lite|maxminddb|[Gg]eo[Ii][Pp]\s*[.(]|\.mmdb|(?:req|request|ctx|context|event|input|r)\s*\.\s*(?:cf|geo|geolocation)\s*[.?\[]|geolocation\(\s*(?:req|request))
+    - (?:CF-IPCountry|cf-ipcountry|CF_IPCOUNTRY|[Xx]-[Vv]ercel-[Ii][Pp]-[Cc]ountry|x-vercel-ip-country|[Cc]loud[Ff]ront-[Vv]iewer-[Cc]ountry|cloudfront-viewer-country|[Xx]-[Aa]pp[Ee]ngine-[Cc]ountry|[Xx]-[Cc]ountry-[Cc]ode|[Xx]-[Gg]eo-[Cc]ountry|[Xx]-[Nn][Ff]-[Gg]eo|[Xx]-[Rr]eal-[Cc]ountry|geoip2?_data_country_code|geoip_country_code|GEOIP_COUNTRY_CODE|[Gg]eo[Ii][Pp]2|GEOIP2|[Mm]ax[Mm]ind|MAXMIND|[Gg]eo[Ll]ite2|geolite2|geoip-lite|geoip_lite|maxminddb|[Gg]eo[Ii][Pp]\s*[.(]|\.mmdb|(?:req|request|ctx|context|event|input|r)\s*\.\s*(?:cf|geo|geolocation)\s*[.?\[]|geolocation\(\s*(?:req|request))[^\n]{0,80}(?:[Bb]lock|BLOCK|[Dd]en(?:y|ies|ied|ial)|DEN(?:Y|IED|IAL)|[Bb]lacklist|BLACKLIST|[Bb]locklist|BLOCKLIST|[Dd]eny[_\-]?[Ll]ist|[Rr]estrict|RESTRICT|[Ff]orbid|FORBID|[Pp]rohibit|PROHIBIT|[Dd]isallow|DISALLOW|[Ww]hitelist|WHITELIST|[Aa]llowlist|ALLOWLIST|[Ss]anction|SANCTION|[Ee]mbargo|EMBARGO|(?<![A-Za-z])[Oo][Ff][Aa][Cc](?![A-Za-z])|(?<![A-Za-z])[Bb]an(?:ned|s)?(?![a-z])|(?<![A-Za-z])BAN(?:NED|S)?(?![A-Z])|451|403)
+    - (?:[Bb]lock|BLOCK|[Dd]en(?:y|ies|ied|ial)|DEN(?:Y|IED|IAL)|[Bb]lacklist|BLACKLIST|[Bb]locklist|BLOCKLIST|[Dd]eny[_\-]?[Ll]ist|[Rr]estrict|RESTRICT|[Ff]orbid|FORBID|[Pp]rohibit|PROHIBIT|[Dd]isallow|DISALLOW|[Ww]hitelist|WHITELIST|[Aa]llowlist|ALLOWLIST|[Ss]anction|SANCTION|[Ee]mbargo|EMBARGO|(?<![A-Za-z])[Oo][Ff][Aa][Cc](?![A-Za-z])|(?<![A-Za-z])[Bb]an(?:ned|s)?(?![a-z])|(?<![A-Za-z])BAN(?:NED|S)?(?![A-Z])|451|403)[^\n]{0,80}(?:CF-IPCountry|cf-ipcountry|CF_IPCOUNTRY|[Xx]-[Vv]ercel-[Ii][Pp]-[Cc]ountry|x-vercel-ip-country|[Cc]loud[Ff]ront-[Vv]iewer-[Cc]ountry|cloudfront-viewer-country|[Xx]-[Aa]pp[Ee]ngine-[Cc]ountry|[Xx]-[Cc]ountry-[Cc]ode|[Xx]-[Gg]eo-[Cc]ountry|[Xx]-[Nn][Ff]-[Gg]eo|[Xx]-[Rr]eal-[Cc]ountry|geoip2?_data_country_code|geoip_country_code|GEOIP_COUNTRY_CODE|[Gg]eo[Ii][Pp]2|GEOIP2|[Mm]ax[Mm]ind|MAXMIND|[Gg]eo[Ll]ite2|geolite2|geoip-lite|geoip_lite|maxminddb|[Gg]eo[Ii][Pp]\s*[.(]|\.mmdb|(?:req|request|ctx|context|event|input|r)\s*\.\s*(?:cf|geo|geolocation)\s*[.?\[]|geolocation\(\s*(?:req|request))
+    - (?:[Rr]edirect|REDIRECT|[Rr]eroute|[Rr]ewrite|location\s*\.\s*(?:href|replace|assign)|window\s*\.\s*location|[Hh]eader\(\s*["']Location|send[Rr]edirect|redirect_to|RedirectResponse|http\.Redirect|StatusFound|StatusMovedPermanently)[^\n]{0,80}(?:[Aa]ccept-[Ll]anguage|accept_language|acceptLanguage|ACCEPT_LANGUAGE|navigator\s*\.\s*language|[Dd]etect\w{0,8}[_\-]?[Ll]ocale|[Ll]ocale[_\-]?[Dd]etect|[Bb]rowser[_\-]?[Ll]ocale|[Pp]referred[_\-]?[Ll]ocale|[Ll]ocales?(?![A-Za-z]))
+    - (?:[Aa]ccept-[Ll]anguage|accept_language|acceptLanguage|ACCEPT_LANGUAGE|navigator\s*\.\s*language|[Dd]etect\w{0,8}[_\-]?[Ll]ocale|[Ll]ocale[_\-]?[Dd]etect|[Bb]rowser[_\-]?[Ll]ocale|[Pp]referred[_\-]?[Ll]ocale|[Ll]ocales?(?![A-Za-z]))[^\n]{0,80}(?:[Rr]edirect|REDIRECT|[Rr]eroute|[Rr]ewrite|location\s*\.\s*(?:href|replace|assign)|window\s*\.\s*location|[Hh]eader\(\s*["']Location|send[Rr]edirect|redirect_to|RedirectResponse|http\.Redirect|StatusFound|StatusMovedPermanently)
+    - "[\"'](?:AT|BE|BG|HR|CY|CZ|DK|EE|FI|FR|DE|GR|EL|HU|IE|IT|LV|LT|LU|MT|NL|PL|PT|RO|SK|SI|ES|SE)[\
+      \"']\\s*,\\s*[\"'](?:AT|BE|BG|HR|CY|CZ|DK|EE|FI|FR|DE|GR|EL|HU|IE|IT|LV|LT|LU|MT|NL|PL|PT|RO|\
+      SK|SI|ES|SE)[\"']"
+    - (?:(?<![A-Za-z])[Bb]in|(?<![A-Z])BIN)[_\-]?(?:[Cc]ountry|COUNTRY)|[Cc]ard[_\-]?(?:[Cc]ountry|COUNTRY)|CARD_COUNTRY|[Ii]ssuer[_\-]?(?:[Cc]ountry|COUNTRY)|[Ii]ssuing[_\-]?[Cc]ountry|\.card\.country|["']card["']\s*\]\s*\[\s*["']country|[Ii][Bb][Aa][Nn][_\-]?(?:[Cc]ountry|COUNTRY|[Pp]refix|PREFIX)
+    - "[Ii][Bb][Aa][Nn][^\\n]{0,50}(?:substring|substr|slice|startsWith|starts_with|StartsWith|star\
+      tswith|HasPrefix|hasPrefix|\\[0(?:\\s*,\\s*|:)2\\]|\\[:2\\]|\\[\\s*[01]\\s*\\])"
+    - (?:substring|substr|slice|startsWith|starts_with|StartsWith|startswith|HasPrefix|hasPrefix)\s*\(\s*[^\n]{0,24}[Ii][Bb][Aa][Nn]
+    - (?:===|!==|==|!=|<>|\.equals\(|\.eq\(|=~|\bis|(?:in_array|includes|contains|has|indexOf|include\?)\s*\([^\n]{0,40}?|(?<![A-Za-z])in(?![A-Za-z]))\s*[\[({]?\s*["'](?:AT|BE|BG|HR|CY|CZ|DK|EE|FI|FR|DE|GR|EL|HU|IE|IT|LV|LT|LU|MT|NL|PL|PT|RO|SK|SI|ES|SE)["']
+    - "[\"'](?:AT|BE|BG|HR|CY|CZ|DK|EE|FI|FR|DE|GR|EL|HU|IE|IT|LV|LT|LU|MT|NL|PL|PT|RO|SK|SI|ES|SE)[\
+      \"']\\s*(?:===|!==|==|!=|<>|\\.equals\\(|\\.equalsIgnoreCase\\(|\\.eq\\(|(?<![A-Za-z])in(?![A\
+      -Za-z])|\\]?\\s*\\.\\s*(?:includes|contains|has|include\\?)\\s*\\()"
+    - <\s*(?:[A-Za-z][A-Za-z0-9]*-)?(?:[Ss]elect|SELECT|[Dd]atalist|DATALIST)\b[^\n]{0,240}(?:[Cc]ountr(?:y|ies)|COUNTR(?:Y|IES)|[Rr]egion[_\-]?[Cc]ode|REGION_CODE|[Ss]hip[_\-]?[Tt]o|[Nn]ationalit|NATIONALIT|[Tt]erritor(?:y|ies)|TERRITOR|[Cc]itizenship|CITIZENSHIP|[Ii]so(?![a-z])|ISO(?![A-Z])|[Mm]arkets?(?![a-z])|MARKETS?(?![A-Z])|[Ss]erviceable[_\-]?[Aa]rea|SERVICEABLE[_\-]?AREA)
+    - (?:[Cc]ountr(?:y|ies)|COUNTR(?:Y|IES)|[Nn]ationalit|NATIONALIT|[Mm]arkets?(?![a-z])|MARKETS?(?![A-Z])|[Cc]itizenship|CITIZENSHIP)\w{0,16}[_\-]?(?:[Ss]elect|SELECT|[Dd]ropdown|DROPDOWN|[Pp]icker|PICKER|[Cc]hooser)
+    - (?:[Ss]hip(?:ping)?|SHIP(?:PING)?|[Dd]eliver(?:y|ies)?|DELIVER(?:Y|IES)?|[Ff]ulfil{1,2}(?:ment)?|[Ss]ales?|SALES?|[Ss]ell|SELL)[_\-]?(?:[Tt][Oo][_\-]?)?(?:[Cc]ountries|COUNTRIES|[Zz]ones?|ZONES?|[Tt]erritor(?:y|ies)|TERRITOR|[Mm]arkets?(?![a-z])|MARKETS?(?![A-Z])|[Ff]ootprints?|FOOTPRINTS?|[Dd]estinations?)
+    - (?:[Ss]tatus(?:[_
+      ]?[Cc]ode)?["']?\s*(?:=>|[:=])\s*|WriteHeader\(\s*|http_response_code\(\s*|send[Ss]tatus\(\s*|[Ss]tatus\(\s*)451(?![0-9])
+    - \b(?:[Gg]et|GET|[Ll]ist|LIST|[Ff]etch|FETCH|[Ll]oad|LOAD|[Aa]vailable|AVAILABLE|[Ss]upported|SUPPORTED|[Aa]ll|ALL|[Ee]numerate|[Ii]ndex)[_\-]?(?:[Cc]ountries|COUNTRIES|[Cc]ultures|CULTURES|[Ll]ocales|LOCALES|[Tt]erritories|TERRITORIES|[Nn]ationalities|NATIONALITIES)(?![A-Za-z])
+    - (?:\bHttp(?:Get|Post)\(|\bRoute\(|\b(?:get|post|delete|put|patch|GET|POST)\s*[("'`]|\brouter\s*\.\s*[a-z]{3,6}\s*\(|\bpath\(|\burl\(|\bpath:\s*)[^\n]{0,40}['"`/](?:[Cc]ountries|COUNTRIES|[Cc]ultures|CULTURES|[Ll]ocales|LOCALES|[Tt]erritories|TERRITORIES|[Nn]ationalities|NATIONALITIES)['"`/]|\bresources?\s+:(?:[Cc]ountries|COUNTRIES|[Cc]ultures|CULTURES|[Ll]ocales|LOCALES|[Tt]erritories|TERRITORIES|[Nn]ationalities|NATIONALITIES)(?![A-Za-z])
+    - (?:[Ss]hip(?:ping)?|SHIP(?:PING)?|[Dd]eliver(?:y|ies)?|DELIVER(?:Y|IES)?|[Ff]ulfil{1,2}(?:ment)?|FULFIL{1,2}(?:MENT)?|[Ss]ales?|SALES?|[Ss]ell|SELL)[_\-]?(?:[Tt][Oo][_\-]?|TO[_\-]?)?(?:[Rr]egions?|REGIONS?|[Cc]overage|COVERAGE)
+    - (?:[Ss]hip[_\-]?[Tt]o|SHIP[_\-]?TO|[Tt]erritor(?:y|ies)|TERRITOR)\w{0,16}[_\-]?(?:[Ss]elect|SELECT|[Dd]ropdown|DROPDOWN|[Pp]icker|PICKER|[Cc]hooser|CHOOSER)
+    - (?:[Cc]ard|CARD|[Ii]ssuer|ISSUER|[Ii]ssuing|ISSUING)[_\-]?(?:[Oo]rigin|ORIGIN)|(?:[Pp]ayment[_\-]?[Mm]ethod|PAYMENT[_\-]?METHOD|[Pp]ayment|PAYMENT|[Cc]ard|CARD|[Ii]nstrument|INSTRUMENT)\w{0,8}\s*(?:\[|->|\.|\?\.)\s*["']?(?:bin|BIN|Bin)["']?(?![A-Za-z0-9_])
+    - "[\"'](?:AT|BE|BG|HR|CY|CZ|DK|EE|FI|FR|DE|GR|EL|HU|IE|IT|LV|LT|LU|MT|NL|PL|PT|RO|SK|SI|ES|SE)[\
+      \"']\\s*(?:=>|:)\\s*[^\\n]{0,60}?[\"'](?:AT|BE|BG|HR|CY|CZ|DK|EE|FI|FR|DE|GR|EL|HU|IE|IT|LV|L\
+      T|LU|MT|NL|PL|PT|RO|SK|SI|ES|SE)[\"']\\s*(?:=>|:)"
+    - (?<![A-Za-z])(?:[Nn]ot|NOT|[Uu]navailable|UNAVAILABLE|[Cc]annot|CANNOT|[Uu]nable|UNABLE|[Rr]efused|REFUSED)[^\n]{0,40}?\s(?:in|to|for|In|To|For)\s+(?:your|YOUR|Your)\s+(?:[Ll]ocation|LOCATION|[Cc]ountry|COUNTRY|[Rr]egion|REGION|[Aa]rea|AREA|[Tt]erritory|TERRITORY|[Mm]arket|MARKET)(?![A-Za-z])
+  match_without:
+    - (?:us|eu|ap|sa|ca|me|af|il|cn)-(?:east|west|central|north|south|northeast|northwest|southeast|southwest)-?\d|[Aa]vailability[_\-
+      ]?[Zz]one|AVAILABILITY_ZONE|[Rr]egion[_\-
+      ]?[Ii][Dd]\s*(?:=>|[:=])\s*["']?(?:us|eu|ap|sa|ca|me|af)-
+  path_without:
+    - (^|/)(?:i18n|locales?|translations?|lang|messages)/(?:[^/]+/)*[^/]+\.(?:json|ya?ml|po|pot|properties|ini|xml|csv)$
+context_questions:
+  - "Is the scanned party a trader, and is this an online interface? Art. 2(18) defines a trader as
+    any natural or legal person 'acting, including through any other person acting in the name or on
+    behalf of the trader, for purposes relating to the trade, business, craft or profession of the
+    trader', and Art. 2(16) defines an online interface as any software, including a website or part
+    of one and including mobile applications, operated by or on behalf of a trader, which serves to
+    give customers access to the trader's goods or services with a view to a transaction. Two
+    consequences the reviewer should check before anything else. First, a library, SDK, connector or
+    low-code building block that merely EXPOSES a country restriction as a configurable option is
+    not itself the trader applying it - the trader is whoever configures it downstream - so quote
+    whether this repository operates the interface or ships a capability to others. Second, Art.
+    1(2) removes purely internal situations 'where all the relevant elements of the transaction are
+    confined within one single Member State', and the Regulation reaches only customers within the
+    meaning of Art. 2(13), that is consumers who are nationals or residents of a Member State and
+    undertakings established in a Member State receiving a service or purchasing a good for the sole
+    purpose of end use. Note that there is no micro or small enterprise carve-out in this
+    Regulation: size does not answer this question."
+  - "Does Art. 1(3) take the whole activity outside the Regulation? Art. 1(3) states that the
+    Regulation 'does not apply to the activities referred to in Article 2(2) of Directive
+    2006/123/EC', and that is TWELVE separate limbs, not the single audiovisual exclusion the
+    provision is usually summarised as. All twelve, in the Directive's own order: (a) non-economic
+    services of general interest; (b) financial services such as banking, credit, insurance and
+    re-insurance, occupational or personal pensions, securities, investment funds, payment and
+    investment advice; (c) electronic communications services and networks and associated facilities
+    and services; (d) services in the field of transport, including port services; (e) services of
+    temporary work agencies; (f) healthcare services, whether or not provided via healthcare
+    facilities and however organised or financed; (g) audiovisual services, including
+    cinematographic services, whatever their mode of production, distribution and transmission, and
+    radio broadcasting; (h) gambling activities involving a stake of pecuniary value in games of
+    chance, including lotteries, casino gambling and betting; (i) activities connected with the
+    exercise of official authority under Art. 45 of the Treaty; (j) social services relating to
+    social housing, childcare and support of families and persons in need provided by the State, by
+    providers mandated by the State or by charities recognised as such; (k) private security
+    services; (l) services provided by notaries and bailiffs appointed by an official act of
+    government. Streaming platforms, betting sites, banks, brokers, telecom operators, airlines and
+    clinics are the most prolific geo-blockers in the wild and every one of them sits in this list,
+    so this question decides more candidates than any other in this rule. Identify what the product
+    actually sells and say which limb applies, or say that none does - and note that the answer is
+    about the ACTIVITY, so a general-purpose SaaS product used by a bank is not itself a financial
+    service."
+  - "Is the code a country restriction at all, or a country lookup put to a purpose that treats no
+    one differently? This is the most common outcome for a candidate under this rule and it should
+    be resolved first. The same geo-IP APIs - MaxMind GeoIP2 in Python, Ruby, PHP, Go, Java or Node,
+    Cloudflare's CF-IPCountry, X-Vercel-IP-Country, CloudFront-Viewer-Country, X-AppEngine-Country,
+    a Netlify or Vercel edge geo object, an nginx GeoIP module variable - are used overwhelmingly
+    for currency defaulting, VAT or sales-tax rate selection, pre-selecting a language, choosing a
+    CDN edge or storage region, fraud and abuse scoring, and analytics reporting. None of those
+    varies access, rerouting or payment conditions by nationality, residence or establishment. Quote
+    the line where the resolved country is CONSUMED and say what changes as a result: if the answer
+    is a currency symbol, a tax rate, a default form value, a log field or a chart, record that and
+    stop."
+  - Which of the three articles is engaged, and is a customer's nationality, place of residence or
+    place of establishment the reason? Art. 3(1) covers blocking or limiting access to the online
+    interface through technological measures or otherwise; Art. 3(2) covers rerouting to a different
+    version; Art. 4(1) covers different general conditions of access to goods or services, which
+    Art. 2(14) defines to include net sale prices; Art. 5(1) covers different conditions for a
+    payment transaction. Quote the specific behaviour and map it to one of the four. Where the
+    differentiating input is something else entirely - a subscription tier, a device type, an A/B
+    bucket, an age check, an authenticated account attribute - the provision is not engaged and the
+    candidate resolves there.
+  - "Is the restriction necessary to comply with a legal requirement, and is the required
+    explanation present? Art. 3(3) provides that the Art. 3(1) and 3(2) prohibitions 'shall not
+    apply where the blocking or limitation of access, or the redirection is necessary in order to
+    ensure compliance with a legal requirement laid down in Union law, or in the laws of a Member
+    State in accordance with Union law, to which the trader's activities are subject', and Art. 4(5)
+    gives the equivalent for Art. 4(1). Two things to check rather than one. First, is the
+    requirement one of Union law or the law of a Member State - a restriction taken from a non-Union
+    sanctions or export-control regime, a licensing condition imposed by a commercial counterparty,
+    or a decision to avoid a foreign regulator does not fit the wording as it reads. Second, Art.
+    3(3) attaches a positive duty where it does apply: the trader must give customers 'a clear and
+    specific explanation' of why the blocking, limitation or redirection is necessary, 'in the
+    language of the online interface that the customer initially sought to access'. Quote the
+    explanation if one is rendered, and record its absence if not. Where to look, and what would NOT
+    settle it: a rendered notice component, a message catalogue entry shown on the refusal path, the
+    body of the 403 or 451 response, a terms page linked from it. This vocabulary is given to you as
+    evidence to weigh and not as a test to pass - the same words appear in every repository that has
+    a cookie banner or a documentation tree, which is exactly why this rule carries no detector-side
+    guard on them and why the question reaches you instead. Four things have to hold together and
+    each is a reading rather than a string match: the explanation exists on the path the refused
+    customer actually reaches; it is specific to this restriction rather than generic boilerplate;
+    it is rendered in the language of the interface the customer originally requested rather than
+    the language of the country they were resolved to; and the requirement it cites is one of Union
+    law or a Member State law made in accordance with it. Say which of the four fail."
+  - "If the code is a delivery, shipping or service-area limitation, note what the Regulation does
+    and does not require. Art. 4(1)(a) reaches the sale of goods only where they are 'delivered to a
+    location in a Member State to which the trader offers delivery in the general conditions of
+    access' or collected at an agreed location in a Member State where the trader offers collection.
+    A trader is therefore under no obligation to ship outside its stated delivery area, and a
+    shipping-zone list that omits Member States is not on its own differential treatment - the
+    customer may still buy and arrange collection or onward delivery themselves. Art. 4(2) likewise
+    preserves conditions, including net sale prices, 'which differ between Member States or within a
+    Member State and which are offered to customers on a specific territory or to specific groups of
+    customers on a non-discriminatory basis'. What would engage Art. 4(1) is a customer inside the
+    stated delivery area being offered different conditions because of where they live or hold
+    nationality - for example being refused an order to a Member State address the trader does
+    serve, or being shown different prices at the same delivery address depending on the country
+    resolved from their IP address. Quote the delivery area as declared and say which side of that
+    line the code falls. READ THE LIST, DO NOT SAMPLE IT. Where this candidate was raised on a
+    `<select>`, a `<datalist>`, a country picker component or a ship-to configuration key, the
+    detector matched only the line that OPENS the list, because no single entry in a one-per-line
+    list carries the fact that decides anything - a 240-line selector and a 3-line selector look
+    identical entry by entry, and what matters is which of the 27 Member States are absent. So
+    enumerate the entries, name the Member States the list omits, and state whether the omission is
+    the declared delivery area under Art. 4(1)(a) (permitted, and the customer may still collect or
+    arrange onward delivery) or a refusal to sell to a customer inside an area the trader does serve
+    (Art. 4(1) engaged). If the list is built at runtime from a database, a CMS or an environment
+    variable rather than written in the file, say so and stop there rather than guessing its
+    contents: an unreadable list is an unresolved candidate, not a clean one."
+  - If this is a redirect, was there explicit consent, and does the originally requested version
+    remain reachable? Art. 3(2) permits rerouting to a different version of the online interface
+    only where 'the customer has explicitly consented to such redirection', and adds that in that
+    event 'the version of the trader's online interface to which the customer initially sought
+    access shall remain easily accessible to that customer'. Both limbs have to hold. Quote the
+    consent step - an automatic redirect on first load, a modal that offers no way to decline, or a
+    cookie set without an affirmative choice do not meet the first limb - and quote the mechanism
+    that lets the customer return to and stay on the version they asked for. A country or language
+    switcher that is itself overridden on the next request does not satisfy the second limb.
+  - "If this is a payment condition, does Art. 5(1) reach it? The prohibition operates 'within the
+    range of means of payment accepted by the trader': a trader remains free to choose which brands
+    and categories it accepts at all, and Art. 5(1) bites only once the choice is made, forbidding
+    different conditions for reasons related to the customer's nationality, residence or
+    establishment, the location of the payment account, the place of establishment of the payment
+    service provider, or the place of issue of the payment instrument within the Union. Its three
+    cumulative conditions are that the transaction is an electronic credit transfer, direct debit or
+    card-based instrument within the same payment brand and category, that authentication
+    requirements under Directive (EU) 2015/2366 are fulfilled, and that the transaction is in a
+    currency the trader accepts. Two express preservations matter here: Art. 5(2) allows the trader
+    to withhold delivery of the goods or provision of the service, where justified by objective
+    reasons, until the payment transaction is confirmed as properly initiated, and Art. 5(3) allows
+    non-discriminatory charges for the use of card instruments whose interchange fees are
+    unregulated. Say which cumulative condition fails, or which preservation applies, or that the
+    gate stands."
+  - "If the service is electronically supplied, does the Art. 4(1)(b) copyright carve-out or the
+    Art. 4(4) VAT exemption apply? Art. 4(1)(b) reaches electronically supplied services 'other than
+    services the main feature of which is the provision of access to and use of copyright protected
+    works or other protected subject matter, including the selling of copyright protected works or
+    protected subject matter in an intangible form'. E-books, downloadable or streamed music, films
+    and games, stock photography and similar catalogues therefore sit outside Art. 4(1), which is
+    why territorial catalogues persist; Art. 9(2) records that whether to delete this exclusion was
+    the first question the Commission's review had to address. The test is the MAIN FEATURE of the
+    service, so a SaaS product that incidentally serves copyrighted assets is not carved out. Art.
+    4(4) separately disapplies point (b) for traders exempt from VAT under Chapter 1 of Title XII of
+    Directive 2006/112/EC. Note that neither carve-out touches Art. 3: a copyright-licensed
+    catalogue still may not block or reroute access to its online interface by country."
+  - "Does this code path run in the shipped product, and is the list actually applied? Quote the
+    call site. A country list that is declared and never read, a feature flag that is off, a
+    middleware not registered on any route, an example under a documentation tree, or a connector
+    option exposed to end users but not set by this repository each mean something different for the
+    reviewer, and the difference should be stated rather than assumed. Where the finding rests on a
+    comment, a README or generated article prose rather than executable code, say so plainly: prose
+    describing a restriction is not the restriction."
+evidence_template: "{file}:{line} matched one of this rule's country, locale or
+  geographic-restriction patterns - which may be an access, rerouting or payment condition, and may
+  equally be a form control, a shipping zone or a currency lookup that treats no one differently.
+  BEFORE THE PURPOSE QUESTION COMES A PRIOR ONE: is a country or a locale on the line at all?
+  Several clauses match on fragments and on adjacency, and three shapes were found in real
+  repositories where nothing geographic is read. The IBAN clause treats a bare index within 50
+  characters of the word IBAN as a country-code prefix slice, and matched a line where the index
+  belonged to a different variable - findByIbanNull($data['iban'], [$types[0]]) - so no country is
+  read anywhere on it. The control-name clause matched the words Market and Select across the two
+  halves of a generated database type name, Prisma.MarketDataSelectScalar, in a market-data query
+  signature that has no customer and no country in it. The geofence clause matched Geofence inside a
+  screenshot identifier in a screenshot-automation helper - let whiteListedIdentifiers =
+  ['GeofenceLocationTrackingOn', 'StandardLocationTrackingOn'] - and this is the misdirection to
+  watch for, because whiteListed and Geofence sitting on one line make a geographic allow-list an
+  easy reading and a wrong one. A line may also read nothing while its file does: a CSS background
+  colour inside a country-picker component is a location of this rule. Quote the country or locale
+  the line reads, or say there is none and record that. Since 2026-09-13 the match may also come
+  from a CONSTRUCT rather than from that line alone: this rule reads the bracket-balanced construct
+  a line opens on as one folded text as well, so a country-code list written one code per line, a
+  redirect whose argument a formatter wrapped onto the next line, or a route attribute broken the
+  same way is matched as a whole, and where that is what happened the finding is reported on the
+  line the construct opens on and carries the span it was folded from in locations[].joined_from.
+  Read those lines together, not the opening line alone. Then check against Geo-blocking Regulation
+  (EU) 2018/302 Arts. 3, 4 and 5, and check whether the country is being used to restrict anything
+  at all rather than to pick a currency, tax rate, language or edge region"
+remediation_template: |
+  This is a candidate for review against Regulation (EU) 2018/302 (geo-blocking), not a
+  determination about this code. The Regulation has applied since 3 December 2018, it binds any
+  trader within the meaning of Art. 2(18), and it has no micro or small enterprise carve-out -
+  which makes it unusual among the wider-acquis obligations this pack covers. Enforcement is
+  national under Art. 7, and under Art. 6(2) any passive-sales clause obliging a trader to act
+  against Arts. 3, 4 or 5 is automatically void.
+  Two questions decide most candidates, so answer them before changing anything:
+  1. Is the country being used to RESTRICT, or only to choose a currency, a tax rate, a language,
+     a CDN edge or a fraud score? The second group varies nothing about access, rerouting or
+     payment conditions and is outside all three articles.
+  2. Is the activity inside the Regulation at all? Art. 1(3) routes through Art. 2(2) of Directive
+     2006/123/EC, which removes audiovisual services, gambling, financial services, healthcare,
+     transport, electronic communications and several others. Art. 4(1)(b) additionally removes
+     electronically supplied services whose main feature is access to copyright-protected works.
+  Where the restriction stands, the engineering shape of the fix follows the article engaged:
+  - Art. 3(1): serve the online interface to customers from every Member State. Where blocking is
+     necessary to meet a requirement of Union or Member State law, Art. 3(3) preserves it but
+     attaches a duty - render a clear and specific explanation of why, in the language of the
+     interface the customer originally requested, rather than a bare 403 or 451.
+  - Art. 3(2): make locale and country rerouting opt-in. Ask before redirecting, record the answer,
+     and keep the originally requested version easily accessible afterwards - a persistent switcher
+     that survives the next request, not a redirect that reasserts itself.
+  - Art. 4(1): let a customer inside your stated delivery area buy on the same general conditions,
+     including net sale prices, whatever country their address, IP address or account resolves to.
+     Art. 4(1)(a) does not require shipping outside that stated area, and Art. 4(2) still permits
+     genuinely territorial offers made on a non-discriminatory basis.
+  - Art. 5(1): within the payment brands and categories already accepted, stop branching on the
+     issuing country, the card BIN country, the IBAN country prefix or the location of the payment
+     account. Art. 5(2) still allows waiting for confirmation that the payment was properly
+     initiated, and Art. 5(3) still allows non-discriminatory surcharges on unregulated card
+     instruments.
+  If the list exists for sanctions or export-control screening, record which Union or Member State
+  instrument it implements and keep the list scoped to it; a list carried over from a non-Union
+  regime does not fit the Art. 3(3) wording as it reads, and that gap is worth surfacing to whoever
+  owns the decision.
+data_categories:
+  - user.device.ip_address
+  - user.location.imprecise
+  - user.contact.address.country
+  - user.financial.bank_account
+  - user.financial.credit_card
+fingerprint_spec: directory

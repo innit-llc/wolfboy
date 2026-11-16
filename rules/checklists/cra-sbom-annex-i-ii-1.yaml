@@ -1,0 +1,302 @@
+checklist_id: cra-sbom-annex-i-ii-1
+title: CRA Annex I Part II point (1) - drawing up a software bill of materials
+law: Regulation (EU) 2024/2847 (Cyber Resilience Act)
+source_url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+checked_at: 2026-09-07
+scope_note: "**Scope declaration.** This checklist covers one question and no other: whether a
+  software bill of materials is **drawn up and held** for the product, in a commonly used and
+  machine-readable format, covering at the very least the product's top-level dependencies, and
+  whether it is kept up to date for the support period rather than produced once at first release.
+  **The duty is to draw one up, not to publish one, and getting that backwards is the single
+  likeliest error on this row.** Annex I Part II point (1)'s own verbs are \"identify and document\"
+  - the record is named as a means of discharging that duty, in the words \"including by drawing up
+  a software bill of materials\" - and **the only verb attached to the software bill of materials is
+  \"drawing up\"**: the point carries no publish, supply, transmit, provide or accompany verb at
+  all. **This passage read \"the only verb in Annex I Part II point (1) is 'drawing up'\" until
+  2026-08-05**, which reads the identify-and-document limb out of the point and contradicted this
+  file's own `applicability_note` on the first item, `annex-i-ii-1-sbom-drawn-up`. The correction
+  narrows the claim to what the text supports rather than dropping it: the absence of any disclosure
+  verb is what the rest of this paragraph rests on, and that absence is real. Recital 77 closes with
+  \"Manufacturers should not be obliged to make the SBOM public\", Annex II point 9 makes
+  user-facing disclosure conditional on the manufacturer's own decision, and Annex VII names the
+  record twice in two registers that must not be run together: point 2(b) lists it among the
+  information and specifications of the vulnerability handling processes the technical documentation
+  is to contain - subject, like every point of that Annex, to the chapeau's \"as applicable to the
+  relevant product with digital elements\" - and point 8 lists it again \"where applicable\" and
+  further to a reasoned request from a market surveillance authority where that is necessary to
+  check compliance. So a finding on this checklist must never be worded as a duty to publish a
+  software bill of materials. What the Regulation requires is that one exists, is current, and can
+  be produced when it is properly asked for. **Boundary against `cra-product-information-13-8`,
+  which must not be confused with this checklist.** That checklist's item `annex-ii-9-sbom-access`
+  asks a different question about a different provision: Annex II point 9 asks, **where the
+  manufacturer has already decided** to make a software bill of materials available to the user,
+  whether the accompanying documents say where it can be accessed. It is conditional on a disclosure
+  decision and it is about the accompanying text. This checklist asks whether the underlying record
+  was drawn up at all, which is unconditional once the Regulation reaches the product and the actor
+  is a manufacturer or is deemed one under Article 21 or Article 22 - the addressee paragraph below
+  is where that is set out. A product may satisfy this checklist while `annex-ii-9-sbom-access`
+  stays `not-applicable`, because a manufacturer who draws up a bill of materials and shows it to
+  nobody has done what Annex I Part II point (1) asks. The two are never answered from each other.
+  **The application date is 11 December 2027**, from Article 71(2) first subparagraph, and every
+  finding this checklist produces must be worded as **preparation** and never as a present
+  shortfall. Article 71(2)'s two carve-outs do not reach this duty: Article 14 applies from 11
+  September 2026 and Chapter IV from 11 June 2026, and the duty here sits in Annex I, reached by
+  Article 6 and Article 13(8), which is in neither. The date is stated again in the
+  `applicability_note` of each of the three items. **That repetition is deliberate and is not the
+  copy-of-a-fact defect this repository has paid for**: there are three items, the date is the
+  condition on which every one of them applies, and the alternative - carrying the date once and
+  relying on the checklist object reaching a reader whole - is the fragility
+  `cra-product-information-13-8` records in its own `scope_note` after a check found the guarantee
+  resting on a convention no field stated. **What this checklist does NOT cover.** It does not ask
+  whether any bill of materials has been published, supplied to a user, or filed with an authority,
+  because no provision requires any of those. It does not ask what format the record is in beyond
+  the two words the Annex uses, \"commonly used and machine-readable\": the Regulation names **no**
+  SBOM format anywhere - SPDX, CycloneDX and SWID appear in it zero times - and Article 13(24) is a
+  discretionary implementing power (\"The Commission **may**\", by implementing act under the
+  Article 62(2) examination procedure) to specify the format and elements later. Whether such an
+  implementing act has been adopted was **not** checked when this checklist was written on
+  2026-08-05 and stands as an open question; until it is answered, no item, note or finding here may
+  require a named format. It does not define \"top-level dependencies\", which Article 3 does not
+  define either: whether that means the direct manifest declarations or the resolved first tier is
+  not settled by the text, and a reader must not read a definition into it that the Regulation does
+  not supply. It does not cover Annex I Part II's other seven points - the vulnerability handling
+  duties in points (2) to (8) are other rows of the coverage map - nor the technical-documentation
+  duties of Article 31 and Annex VII beyond noting where the bill of materials lands in them.
+  **Article 13(25) is context here and is deliberately not an item.** That paragraph lets ADCO
+  decide to run a Union-wide dependency assessment for a category of products, after which market
+  surveillance authorities may request the manufacturers of that category to provide their bills of
+  materials; Recital 22 states that the onward flow to ADCO **should** be anonymised and aggregated,
+  and Article 13(25) makes that flow permissive in the operative text - the authorities \"may
+  provide ADCO with anonymised and aggregated information about software dependencies\". **This
+  sentence said Recital 22 \"requires\" the anonymisation until 2026-08-05**, which put an
+  obligation in a recital, where obligations do not live, and in an operative paragraph that is
+  drafted with \"may\". The confidentiality purpose the recital states is real and is why the
+  sentence stays; what changed is that it is no longer described as a requirement. It is doubly
+  conditional, and it is drafted permissively on the authority's side - authorities \"may request\"
+  - without stating the manufacturer's answering obligation. **Where that obligation comes from is
+  an open question and is recorded as one**, not answered here: the general reasoned-request duty in
+  Article 13(22) appears to supply it, and the research behind this checklist left the point
+  unresolved rather than settling it. Article 13(25) is therefore recorded as the reason the record
+  has to exist and be producible, and it is asked of no document, because no document a scanner
+  reads can show whether such a request was made or answered. **What the code can and cannot say on
+  this row, which is the part most easily overstated.** The census categories named on these items
+  are `distribution`, and the facts behind them are two: a committed bill-of-materials artefact in
+  the tree, and a build or CI step that generates one. **Both are corroboration only, and only in
+  one direction.** Their presence is evidence that a record is being produced, and a reader may open
+  the line and confirm it. Their **absence is not evidence that no record exists**, because the
+  Regulation does not require the record to be public and does not require it to be committed to the
+  repository being scanned: a manufacturer may generate it in a release pipeline this scan cannot
+  see, hold it in an artefact store, or draw it up outside the repository entirely. This is the same
+  asymmetry the coverage map records for the SECURITY.md row - absence in the scanned repository is
+  not absence of the practice - and it must be handled before any precision claim is made about this
+  row. **One code signal the coverage map names for this row cannot be collected at all today**, and
+  saying so here is the point of a scope declaration. The \"lockfile present = generatable in one
+  step\" signal is unreachable: the scanner's walker denylists all fourteen common lockfiles, the
+  census only ever sees files the walker hands it, and the one bypass that reports a skipped file
+  individually is used for store declarations. So no collector can see a lockfile, and no item here
+  rests on one. Making lockfiles visible is a change to the walker and a separate piece of work. **A
+  lockfile would not answer these items anyway** - the coverage map draws that distinction itself,
+  and the second item below is where it is asked - but the signal is named in the map and a reader
+  is entitled to know it is not being collected rather than to infer it from silence. What a
+  lockfile does and does not carry against Article 3(39) is set out in that item's note, and it is
+  not \"nothing\": the common lockfiles do carry the dependency graph, and what they lack is
+  component origin, the product's whole software elements, and the character of a formal record.
+  **The coverage map classes this row CFG, and this checklist was authored as DECL with code
+  corroboration, which is a proposal to the owner and not a change made here.** The Class column is
+  tested rather than taken as given, and testing it is what produced these three items: every
+  question asks what the **declared documents state**, because whether a manufacturer draws up a
+  bill of materials is a fact about the product's practice, which is asked of the person running the
+  scan or read from their documents and is never inferred from source vocabulary. CFG means the
+  obligation's facts live in deployment or infrastructure configuration. Two things stated above are
+  why that does not describe this row: the record need not be public or committed, so its absence
+  from any configuration this scan reads settles nothing; and the one configuration signal the map
+  names, a lockfile, is not collectable today and would not answer these items if it were. The
+  `distribution` facts - a committed bill-of-materials artefact, a build or CI step that generates
+  one - are configuration-shaped and they corroborate in one direction only. **What the shared
+  Article 2 scope gate decides for this checklist, and what it does not.** The gate is the whole of
+  Article 2 - the positive scope test of Article 2(1) and the seven other paragraphs 2(2) to 2(8),
+  which take a product back out or limit what the obligations entail by way of supplying information
+  - authored once and shared, and the build splices it in as a full `applicability` object before
+  this checklist is validated. It answers whether the Regulation reaches this product at all. It
+  does **not** answer anything about the bill of materials: no limb of it turns on one, and no fact
+  kind about one is wired to any limb. **Who the duty is addressed to is the gate's question, and
+  this checklist does not re-litigate it.** Annex I Part II's chapeau names **manufacturers**, and
+  the gate puts the rest of that question on two limbs spliced into this same object.
+  `who-the-duty-is-addressed-to` asks whether the party is a manufacturer under Article 3(13) **or
+  is deemed one under Article 21 or Article 22**. `importer-or-distributor-verification-duty` asks
+  whether the party is instead a plain importer within Article 3(16) or a plain distributor within
+  Article 3(17) - one that Article 21 does **not** deem a manufacturer - and it records that such a
+  party carries a checking duty under Articles 19(2)(c) and 20(2)(b) and not the manufacturer's
+  drafting duty. Answer the addressee question from those limbs and the quotes beneath them, not
+  from this paragraph. **So an importer or a distributor is not categorically outside point (1), and
+  this declaration said it was until 2026-08-05.** Article 21 provides that an importer or
+  distributor \"shall be considered to be a manufacturer for the purposes of this Regulation and
+  shall be subject to Articles 13 and 14\" where that importer or distributor places the product on
+  the market under its own name or trademark **or** carries out a substantial modification of a
+  product already placed on the market - and Article 13 is the route this checklist itself uses to
+  reach Annex I Part II, so a party deemed a manufacturer there is an addressee of point (1).
+  Article 22(1) is a third route, for any other person who substantially modifies a product **and
+  makes that product available on the market**, and Article 22(2) limits that route to the part of
+  the product affected by the substantial modification, or to the entire product where the
+  modification has an impact on the cybersecurity of the product as a whole. The quotes for all
+  three - `CRA Art. 21`, `CRA Art. 22(1)` and `CRA Art. 22(2)` - are carried in the spliced
+  `applicability.supporting_quotes` of this same object, so **the sentence that has been corrected
+  stood beside the three provisions that refute it**. Its direction was under-inclusion, against the
+  two shapes the gate itself calls ordinary in the audience of the checklists that name it: a
+  rebranded redistribution and a substantially modified fork. **Open-source software stewards are
+  the one role that is genuinely outside, and that half of the sentence corrected above survives
+  unchanged.** Article 24 addresses stewards separately - a documented cybersecurity policy,
+  cooperation with market surveillance authorities, and only those paragraphs of Article 14 that
+  Article 24(3) applies to them, to the extent stated there - and it routes them into neither
+  Article 13 nor Annex I Part II. Meeting Article 3(13) or either deeming rule forecloses the
+  steward route in any event, because Article 3(14) defines a steward as a legal person \"other than
+  a manufacturer\". **Every addressee limb is annotation-only** - `closes_gate_when: never` on each
+  - so none of these answers removes this checklist. A reader who concludes the actor is not an
+  addressee must say so in the finding rather than expect the gate to have dropped the checklist.
+  **The duty is unconditional once the gate is passed, which is worth stating because the
+  neighbouring Part of the same Annex is not.** Annex I Part II's chapeau reads \"Manufacturers of
+  products with digital elements shall:\" with no \"where applicable\" and no risk-assessment
+  precondition, unlike Part I point (2), whose own chapeau reads \"On the basis of the cybersecurity
+  risk assessment referred to in Article 13(2) and where applicable\". Nothing makes the bill of
+  materials contingent on the outcome of a risk assessment. The only \"where applicable\" attached
+  to a bill of materials anywhere in the instrument is in Annex VII point 8, and it qualifies the
+  technical-documentation production step rather than the duty to draw the record up. **That is a
+  claim about one exact phrase and it must not be read as saying point 2(b) is unqualified**, which
+  is how this declaration read until 2026-08-05: Annex VII's chapeau governs its whole list with a
+  different phrase - \"The technical documentation referred to in Article 31 shall contain at least
+  the following information, **as applicable to the relevant product with digital elements**\" - so
+  point 2(b) carries that qualifier even though it carries none of its own. Both qualifiers sit on
+  the technical-documentation register. Neither reaches Annex I Part II point (1), whose chapeau
+  carries no qualifier at all, which is the distinction this paragraph exists to draw."
+applicability_ref: cra-scope
+items:
+  - id: annex-i-ii-1-sbom-drawn-up
+    article: Annex I, Part II, point (1)
+    quote: identify and document vulnerabilities and components contained in products with digital
+      elements, including by drawing up a software bill of materials in a commonly used and
+      machine-readable format covering at the very least the top-level dependencies of the products;
+    cite: CRA Annex I, Part II, point (1)
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    census_categories:
+      - distribution
+    question: Do the documents state that a software bill of materials is drawn up for this product, in
+      a commonly used and machine-readable format, and that it covers at the very least the
+      top-level dependencies?
+    applicability_note: "**Applies from 11 December 2027** (Article 71(2)), so every answer here
+      describes preparation and not a present shortfall. **Read the point as it is drafted: one duty
+      with two limbs joined by \"including\".** The primary duty is to identify and document
+      vulnerabilities and components contained in the product, and drawing up a software bill of
+      materials is named as the means of discharging it rather than as a stand-alone deliverable.
+      Three later provisions are drafted on the footing that the record exists: Article 13(24)
+      empowers the Commission to specify the format of \"the software bill of materials referred to
+      in Part II, point (1), of Annex I\", Article 13(25) lets market surveillance authorities
+      request it, and Recital 22 speaks of the bills of materials manufacturers \"have generated
+      pursuant to this Regulation\". A reading on which the record is optional is therefore hard to
+      sustain. A reader should still record which limb the evidence speaks to: a project that
+      documents its components and produces no record has answered part of the point and not the
+      whole of it. **The depth is a floor and not a ceiling.** The statutory words are \"covering at
+      the very least the top-level dependencies of the products\". Note \"at the very least\", which
+      is the quotable string; \"at least\" is the coverage map's paraphrase and is not what the
+      Annex says. A record that reaches transitive dependencies exceeds the floor and is not a
+      shortfall, and \"top-level dependencies\" is undefined in Article 3, so a record whose depth
+      is arguable is a matter to describe rather than to score. **No format may be required of the
+      answer.** \"Commonly used and machine-readable\" is the whole of the format test in the Annex.
+      The Regulation names no format, and Article 13(24)'s power to specify one is discretionary
+      and, as at this item's `checked_at` date, unverified as to whether it has been exercised. A
+      document naming CycloneDX, SPDX or SWID is answering the question, and a document naming a
+      different machine-readable format is answering it too. **Absence in the scanned repository is
+      not absence of the record.** The Regulation requires no publication, so a manufacturer may
+      draw the record up in a pipeline or a store this scan cannot see. A `distribution` fact - a
+      committed bill-of-materials file, or a build step that generates one - corroborates a
+      statement that the record exists; the lack of one settles nothing."
+  - id: art-3-39-formal-record-of-components
+    article: Art. 3, point (39)
+    quote: "'software bill of materials' means a formal record containing details and supply chain
+      relationships of components included in the software elements of a product with digital
+      elements;"
+    cite: CRA Art. 3(39)
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    census_categories:
+      - distribution
+    question: Where the documents describe a bill of materials, do they show it is a formal record of
+      the components in the product's software elements and of their supply chain relationships,
+      rather than a list of package names?
+    applicability_note: "**Applies from 11 December 2027** (Article 71(2)), so every answer here
+      describes preparation and not a present shortfall. **This item is the one that tells a bill of
+      materials apart from a lockfile**, which is the distinction the coverage map row draws in its
+      own notes. Article 3(39) fixes what the record is: a **formal record**, of **components
+      included in the software elements** of the product, carrying their **details and supply chain
+      relationships**. **Do not tell a reader that a lockfile carries no supply chain relationships,
+      because the common ones do.** A `package-lock.json` at lockfile version 2 or 3 records, per
+      installed package, its `dependencies` and `peerDependencies` beside the resolved version, the
+      registry URL it was fetched from and an integrity hash; `Cargo.lock` and `pnpm-lock.yaml`
+      record the same per-package dependency lists. Those lists are the edges of the dependency
+      graph, which is what \"supply chain relationships\" names. **This note said a lockfile \"pins
+      resolved versions and says nothing about supply chain relationships\" until 2026-08-05**, and
+      an adjudicator holding that as a general truth would score a lockfile-derived record `absent`
+      on an element it may actually carry, and tell a user something false about their own artefact.
+      It was never sound as a general claim. The exception is a pure checksum manifest: `go.sum`
+      lists module, version and hash and carries no edges at all, because Go keeps the dependency
+      graph in `go.mod`. `yarn.lock` v1 is **not** an exception - each of its entries carries its
+      own `dependencies` block - so do not reach for it as one. **What a lockfile genuinely lacks
+      against Article 3(39) is what the reasoning must name instead, and it is three things.** It
+      carries no origin for a component beyond the registry it was fetched from, so the supplier
+      half of \"details\" is missing. Its scope is one package manager's resolution of one manifest
+      rather than the components included in the **software elements of the product**, so vendored
+      source, system packages and anything else the product ships that no package manager resolved
+      sit outside it by construction. And it is not a **formal record** of the product: it is a
+      build input a tool maintains for reproducible installs, and it states neither which product
+      and version it describes nor that it is that product's bill of materials. A printed dependency
+      list fails the same formal-record element. Neither is disqualified from being an input to one
+      - a lockfile is the usual input a generator reads - and what this item asks is whether the
+      **documents describe a record with those properties**, never whether a lockfile is present in
+      the tree. **Conditional in one direction, and say which.** Where nothing in the documents
+      describes a bill of materials at all, this item is `not-applicable` and the first item carries
+      the answer; recording it `absent` would state a shortfall this definition does not create,
+      since Article 3(39) defines a term rather than imposing a duty. Where something
+      dependency-shaped **is** described and does not meet the definition, that is `absent` and the
+      reasoning must name what was described and which element of the definition it lacks. **The
+      line between the two branches is what the document claims, not how much it says.** A sentence
+      naming a dependency tree, an integrity hash or a resolved-package list has described something
+      dependency-shaped and lands on the `absent` branch even at one line and even without the words
+      \"bill of materials\" - only a document that never gestures at dependency data at all reaches
+      `not-applicable`. This is why the fixture's near-miss line (\"a dependency tree we built from,
+      down to the integrity hash of each package\") is scored `absent`, not `not-applicable`: it
+      names a dependency-shaped artefact and fails the formal-record and supply-chain-relationships
+      elements, which is a description that falls short, not a silent document. **The definition
+      sets no depth.** Article 3(39) is silent on how far the record reaches; the floor of top-level
+      dependencies comes from Annex I Part II point (1) and is the first item's question, not this
+      one's. The scope of the record is limited to \"the software elements of a product with digital
+      elements\", which is this definition's own wording."
+  - id: art-13-8-sbom-for-the-support-period
+    article: Art. 13(8), first subparagraph
+    quote: Manufacturers shall ensure, when placing a product with digital elements on the market, and
+      for the support period, that vulnerabilities of that product, including its components, are
+      handled effectively and in accordance with the essential cybersecurity requirements set out in
+      Part II of Annex I.
+    cite: CRA Art. 13(8)
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    census_categories:
+      - distribution
+    question: Do the documents state that the software bill of materials is kept up to date for the
+      support period, rather than drawn up once when the product is first released?
+    applicability_note: "**Applies from 11 December 2027** (Article 71(2)), so every answer here
+      describes preparation and not a present shortfall. **This is the timing hook for the whole of
+      Annex I Part II, and it is why the record is not a release-time snapshot.** There is no
+      free-standing article imposing the bill-of-materials duty: it reaches the manufacturer through
+      this subparagraph, which requires vulnerability handling in accordance with Part II of Annex I
+      both **when placing the product on the market** and **for the support period**, reinforced by
+      Article 6(b) as a condition of making the product available at all. Article 31(2) sets the
+      matching timing for the technical documentation the record sits in - drawn up before the
+      product is placed on the market and continuously updated, where appropriate, at least during
+      the support period. **The support period is the manufacturer's own declared period**, and
+      where it is not stated this item is `unresolved` rather than `absent`: there is no period to
+      measure the record's currency against. That declaration is `cra-product-information-13-8`'s
+      row, not this one, and the two must not be answered from each other. **A statement of practice
+      is what this item asks for.** No scan reads a release pipeline's history, so a build step that
+      generates a bill of materials on every release corroborates a statement that the record is
+      regenerated; it does not by itself show the record was kept current across a period that has
+      not happened yet."

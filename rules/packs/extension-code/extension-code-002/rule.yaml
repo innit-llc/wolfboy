@@ -1,0 +1,277 @@
+id: extension-code-002
+pack: extension-code
+short_name: User-written scripts run with access to secrets
+problem_line:
+  text: User scripts run in-process with secrets or personal data
+fix_line: Mask secrets unless a script needs them, allowlist or opt-in script requests, and make
+  stored scripts listable.
+title: User-authored script stored as data, run in-process with resolved secrets and its own fetch
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(2) - 'The controller shall be responsible for, and be
+      able to demonstrate compliance with, paragraph 1'. Cited for the same reason as the sibling
+      rule and by a different route: the code that runs is a row rather than a repository artefact,
+      so a controller cannot describe the processing it performs without reading the rows, and the
+      rows are user data"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 32(1)(b) - the measures a controller and processor
+      implement include, inter alia as appropriate, 'the ability to ensure the ongoing
+      confidentiality, integrity, availability and resilience of processing systems and services'.
+      This is the provision the credential limb is hardest against: where the environment handed
+      into the sandbox is resolved rather than masked, every script in scope holds the plaintext of
+      the active environment's secrets"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(f) - personal data shall be 'processed in a manner
+      that ensures appropriate security of the personal data, including protection against
+      unauthorised or unlawful processing and against accidental loss, destruction or damage, using
+      appropriate technical or organisational measures'. Cited because a script that arrives by
+      import or by a shared collection is code the person running it did not write, executing with
+      whatever the sandbox hands it
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 25(1) - the controller shall, 'both at the time of the
+      determination of the means for processing and at the time of the processing itself, implement
+      appropriate technical and organisational measures, such as pseudonymisation, which are
+      designed to implement data-protection principles, such as data minimisation, in an effective
+      manner and to integrate the necessary safeguards into the processing'. Cited because what the
+      sandbox is handed - a resolved environment or a masked one, a fetch function or none - is a
+      design decision made once, in the sandbox construction, and it decides what every script can
+      reach
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 28(3) - 'Processing by a processor shall be governed by
+      a contract or other legal act under Union or Member State law, that is binding on the
+      processor with regard to the controller and that sets out the subject-matter and duration of
+      the processing, the nature and purpose of the processing, the type of personal data and
+      categories of data subjects and the obligations and rights of the controller.' Reference only,
+      and cited as the QUESTION rather than the answer: a script written by one user and executed
+      inside a workspace shared with others raises the question of whose processing it is, which no
+      line this detector matches can settle"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.4
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  resolve_import_aliases: true
+  vocabulary:
+    stored_script_fields:
+      - preRequestScript
+      - pre_request_script
+      - prerequestScript
+      - testScript
+      - test_script
+      - postRequestScript
+      - post_request_script
+      - userScript
+      - user_script
+      - customScript
+      - custom_script
+      - scriptBody
+      - script_body
+      - onBeforeRequestScript
+      - custom_scripts
+      - customScripts
+      - custom_javascript
+      - customJavascript
+      - custom_js
+      - custom_head_script
+      - user_scripts
+      - userScripts
+    script_sandbox_runtime:
+      - isolated-vm
+      - isolatedVm
+      - faraday-cage
+      - defineCageModule
+      - defineSandboxFn
+      - quickjs
+      - quickjs-emscripten
+      - getQuickJS
+      - runInNewContext
+      - runInContext
+      - vm2
+    sandbox_context_constructors:
+      - createContext
+    script_run_entrypoints:
+      - runPreRequestScript
+      - runTestScript
+      - runPostRequestScript
+      - runUserScript
+      - executeScript
+      - execute_script
+      - evalScript
+      - eval_script
+    resolved_secret_environment:
+      - secretEnvironmentService
+      - getSecretEnvironmentVariable
+      - secretEnvironment
+      - secret_environment
+      - resolvedSecrets
+      - withSecrets
+      - unwrapEnvironments
+      - unWrapEnvironments
+      - secretVariables
+      - secret_variables
+    sandbox_egress_primitive:
+      - hopp.fetch
+      - pm.sendRequest
+      - customFetchModule
+      - fetchImpl
+      - sandboxFetch
+      - scriptFetch
+    script_engine_apis:
+      - ScriptEngine
+      - getScriptEngine
+      - getEngineByName
+      - getEngineByExtension
+      - createBindings
+      - CompiledScript
+      - SimpleBindings
+      - ScriptContext
+      - JexlEngine
+      - JexlScript
+      - SpelExpressionParser
+      - VelocityEngine
+      - VelocityContext
+      - Nashorn
+      - GraalJS
+      - Rhino
+    script_binding_container_keys:
+      - applicationContext
+      - servletContext
+      - beanFactory
+      - configuration
+      - environment
+      - connection
+      - container
+      - dataSource
+      - database
+      - injector
+      - registry
+      - request
+      - session
+      - settings
+      - config
+      - context
+      - conn
+      - env
+      - db
+    script_binding_reach_keys:
+      - componentRegistry
+      - applicationContext
+      - servletContext
+      - serviceLocator
+      - beanFactory
+      - container
+      - injector
+  vocabulary_matching:
+    script_sandbox_runtime:
+      case_insensitive: true
+      separator_insensitive: true
+    stored_script_fields:
+      separator_insensitive: true
+  match:
+    - (?:^|[^A-Za-z0-9_])(?&stored_script_fields)\b
+    - (?:(?:^|[^A-Za-z0-9_])(?&script_sandbox_runtime)(?:\b|_)|(?:^|[^A-Za-z0-9_])(?&script_run_entrypoints)\b|(?:^|[^A-Za-z0-9_])new\s+Function\s*\()
+    - (?:^|[^A-Za-z0-9_])vm\s*\.\s*(?&sandbox_context_constructors)\s*\(
+    - (?:^|[^A-Za-z0-9_])(?&resolved_secret_environment)\b
+    - (?:(?:^|[^A-Za-z0-9_])(?&sandbox_egress_primitive)|globalThis\s*\.\s*fetch\b)
+    - (?:^|[^A-Za-z0-9_])[A-Za-z0-9_]{0,16}(?:Gist|gist|Import|import)[A-Za-z0-9_]{0,16}(?:Source|Step|Strategy|Handler)\s*[=({<:]
+    - (?:(?:^|[^A-Za-z0-9_])(?&script_engine_apis)|(?:^|[^A-Za-z0-9_])(?:bindings|Bindings|binding|scriptContext|engineScope|globalScope|scope|context|ctx|vars|jexlContext|velocityContext)\s*\.\s*(?:putAll|put|setAttribute|setVariable|set|define)\s*\(\s*["'](?&script_binding_container_keys)|(?:^|[^A-Za-z0-9_])[A-Za-z0-9_$]{1,32}\s*\.\s*(?:putAll|put|setAttribute|setVariable|set|define)\s*\(\s*["'](?&script_binding_reach_keys)|(?:^|[^A-Za-z0-9_])[A-Za-z0-9_]{0,24}\s*\.\s*eval(?:uate)?\s*\(\s*(?:bindings|scriptContext|engineBindings|scope|ctx|context)\b)
+context_questions:
+  - WHERE DO THE SCRIPTS LIVE, AND CAN ANYONE READ THEM? This is the question no pattern can answer
+    and the reason the finding exists. Trace the stored field to its store - a database column, a
+    synced collection document, an exported file - and say whether the operator can enumerate the
+    scripts that exist in a deployment. Where they can, that enumeration is the only way to know
+    what processing happens here; where they cannot, record THAT, because it is the finding.
+  - IS THE SCRIPT ALWAYS WRITTEN BY THE PERSON WHO RUNS IT? Follow the import and sync routes. A
+    script that arrives inside an imported collection, a shared workspace, or a document fetched
+    from a public paste is code its runner did not write and may not have read. Quote the import
+    path if one exists, and say whether anything reviews or restricts a script before it runs.
+  - WHAT DOES THE SANDBOX HAND THE SCRIPT - THE MASKED ENVIRONMENT OR THE RESOLVED ONE? Open the
+    function that builds the sandbox's inputs and quote it. On the tree this rule was modelled on
+    the values a user marked secret are substituted before the script runs, which means every script
+    in scope holds the plaintext of the active environment's credentials. A masked environment and a
+    resolved one are materially different postures with the same sandbox construction, and only this
+    function decides which it is.
+  - CAN A SCRIPT MAKE AN OUTBOUND REQUEST, AND TO WHERE? Quote the sandbox module list and say
+    whether a fetch or request function is among the capabilities exposed. Where one is, say whether
+    any destination allowlist bounds it. A sandbox that isolates memory but exposes an unrestricted
+    request function does not bound what leaves; that is the specific gap, and it is different from
+    a sandbox escape.
+  - WHAT PERSONAL DATA IS IN SCOPE WHEN A SCRIPT RUNS? Quote what else is handed in besides the
+    environment - the request being sent, the response that came back, cookies. A script that can
+    read a response body can read whatever that response contained, which on an API client is
+    frequently a person record from the system under test.
+  - "WHAT DO THE BINDINGS EXPOSE - NAME EVERY ENTRY AND SAY WHAT ITS VALUE ACTUALLY IS? Open the
+    function that builds the script's scope and list what is put into it, key by key. The names are
+    the easy half and they can mislead: a binding is a string key and an object value, so a key
+    called container, context or config may hold a plain map, and a key with an unremarkable name
+    may hold the application's own component registry. Follow each value to what constructs it. The
+    reason this matters more than the count of entries is reach: where one binding is the product's
+    dependency-injection container, service locator or bean factory, a stored script is not limited
+    to the data it was handed - it can look up any component the application has, including the ones
+    that read and write person records and the ones that open outbound connections, and no allowlist
+    in the sandbox bounds that. Say plainly which entries are values and which are doors."
+evidence_template: "{file}:{line} matched a construct for executing code that is stored as user
+  data: a script field on a stored entity, a sandbox runtime or a script-runner entry point, the
+  environment resolution that decides what the script can see, an outbound request function exposed
+  inside the sandbox, or an import route by which a script can arrive from outside. This establishes
+  only that THE EXTENSION POINT EXISTS, WHAT IS HANDED TO IT, AND THAT IT HAS ITS OWN EGRESS. It
+  establishes NOTHING ABOUT WHAT ANY STORED SCRIPT DOES, and no clause of this rule attempts to: the
+  scripts are rows and documents, not repository artefacts, so their behaviour cannot be recovered
+  by reading further here. It does not establish that the environment handed in is the resolved one
+  rather than a masked one - that is context question 3 and is decided in the function that builds
+  the sandbox's inputs, not at this line. And a match on an import route does not establish that any
+  script has in fact arrived from outside. ADDED 2026-09-09, THE SCRIPT-ENGINE SHAPE AND WHAT IT
+  LEAVES OPEN. A match may now be a named script-engine surface - an engine, a compiled script, a
+  bindings or script-context object, an expression engine - or the moment a scope is handed a
+  container, context or configuration object, or an evaluation whose argument is that scope. THIS
+  RULE'S OWN TEST HAS THREE PARTS - a script held as data, run in-process, with the resolved secrets
+  and its own fetch - AND AT THE CONSTRUCT THIS SHAPE WAS READ FROM ONLY THE FIRST TWO WERE
+  CONFIRMED. Stored script text existed and it was executed inside the product's own process;
+  whether the scope it runs in carries resolved credentials was NOT established there and is not
+  established by any line this clause matches. THE BINDINGS ARE WHERE THAT IS DECIDED AND THEY ARE
+  WHERE TO LOOK: the scope's construction is the one place that says what a script can reach, and a
+  single entry can change the answer completely, because a binding holding the application's own
+  component container is not one more value handed in but a way to reach every component the product
+  has - the ones that read person records and the ones that open outbound connections included. That
+  is context question 6, and it is asked rather than answered here. A key's name is also not its
+  value: a binding called container, config or context may hold an ordinary map, so the name in the
+  matched line is a place to start reading and not a finding in itself."
+remediation_template: |
+  Decide first whether scripts can be enumerated in a deployment. Everything else depends on it: a
+  controller who cannot list the stored scripts cannot describe the processing they perform, and
+  that is the gap this finding names.
+  Mask the environment unless the script needs the real value. Handing a sandbox the resolved
+  secrets of the active environment gives every script the plaintext of every credential in it. A
+  masked environment, or an explicit per-script grant of the variables it needs, is the change
+  that bounds this - and it is made once, where the sandbox's inputs are built.
+  Bound the sandbox's outbound requests. Where a fetch or request function is exposed, put a
+  destination allowlist in front of it, or make the capability opt-in per script. Isolating memory
+  does not bound egress, and the two are separate decisions.
+  Treat an imported script as untrusted input. A collection pulled from a public paste or shared
+  by another user carries code; surface it to the person before it runs, and consider requiring a
+  deliberate action to enable scripts on an imported document.
+  Where scripts run server-side rather than in the user's own browser, say so explicitly in the
+  record: the process holding the resolved secrets is then the operator's, not the user's, and the
+  set of people affected by one script is larger.
+data_categories:
+  - user.authorization.credentials
+  - user.behavior
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: existence

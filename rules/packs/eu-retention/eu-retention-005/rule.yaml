@@ -1,0 +1,180 @@
+id: eu-retention-005
+pack: eu-retention
+short_name: Storage lock that can stop data being deleted
+problem_line:
+  text: Storage lock can stop personal data being erased in time
+fix_line: Record the lock mode and who can bypass it, make lock length and stated retention agree,
+  and plan the erasure answer.
+title: "Vendor-side retention lock on storage holding personal data: object lock, blob immutability
+  or file retention"
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 17(1) - 'The data subject shall have the right to obtain
+      from the controller the erasure of personal data concerning him or her without undue delay and
+      the controller shall have the obligation to erase personal data without undue delay where one
+      of the following grounds applies'. A storage-level retention lock is the one construct that
+      can make this obligation impossible to perform rather than merely unperformed, and in
+      compliance mode it does so for everyone including the controller
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(e) - personal data shall be 'kept in a form which
+      permits identification of data subjects for no longer than is necessary for the purposes for
+      which the personal data are processed'. A lock sets a floor under the retention period rather
+      than a ceiling over it, so a product can satisfy every retention setting it exposes and still
+      keep the data for the duration of the lock
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 17(3) - 'Paragraphs 1 and 2 shall not apply to the
+      extent that processing is necessary:', including '(b) for compliance with a legal obligation
+      which requires processing by Union or Member State law to which the controller is subject or
+      for the performance of a task carried out in the public interest or in the exercise of
+      official authority vested in the controller' and '(e) for the establishment, exercise or
+      defence of legal claims'. Reference only: these are the grounds on which an immutability lock
+      is ordinarily defended, and the point of citing them is that the defence must name the
+      obligation or the claim and must match the lock's duration - which is a controller statement,
+      not a code fact"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 32(1)(c) - among the measures appropriate to the risk,
+      'the ability to restore the availability and access to personal data in a timely manner in the
+      event of a physical or technical incident'. Reference only, and cited because it is the reason
+      these locks exist at all: immutable backups are a ransomware control, which is a legitimate
+      and often necessary security measure. The finding here is never that the lock is wrong, only
+      that its interaction with the erasure duty has to be worked out rather than discovered during
+      a request"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  match:
+    - (?:^|[^A-Za-z0-9_])(?:PutObjectRetention|GetObjectRetention|SetObjectRetention|PutObjectRetentionRequest|GetObjectRetentionRequest|SetObjectRetentionRequest|PutObjectRetentionAsync|GetObjectRetentionAsync|SetObjectRetentionAsync|SetObjectRetentionArgs|GetObjectRetentionArgs|ObjectRetentionMode|ParseRetentionMode|WithRetentionMode|WithRetentionUntilDate|PutObjectLockConfiguration|GetObjectLockConfiguration|SetObjectLockConfiguration|PutObjectLockConfigurationAsync|GetObjectLockConfigurationAsync|SetObjectLockConfigurationAsync|SetObjectLockConfigurationArgs|GetObjectLockConfigurationArgs|put_object_retention|get_object_retention|set_object_retention|ObjectLockRetention|ObjectLockRetentionMode|ObjectLockConfiguration|ObjectLockConfigurationRequest|ObjectLockMode|ObjectLockEnabled|ObjectLockLegalHold|ObjectLockRetainUntilDate|BypassGovernanceRetention|put_object_lock_configuration|get_object_lock_configuration|set_object_lock_configuration|object_lock_configuration|object_lock_enabled|object_lock_mode|object_lock_retain_until_date|bypass_governance_retention)(?![A-Za-z0-9_])
+    - "[A-Za-z0-9_]*(?:ObjectLockConfiguration|ObjectLockRetention|ObjectRetention|ObjectLockLegalH\
+      old)(?:Async|Args|Request)?(?![A-Za-z0-9_])"
+    - (?:^|[^A-Za-z0-9_])(?:BlobImmutabilityPolicy|BlobImmutabilityPolicyMode|ImmutabilityPolicy|ImmutabilityPolicyMode|SetImmutabilityPolicy|SetImmutabilityPolicyAsync|DeleteImmutabilityPolicy|DeleteImmutabilityPolicyAsync|set_immutability_policy|delete_immutability_policy|immutability_policy|SetLegalHold|SetLegalHoldAsync|set_legal_hold|LegalHold|legal_hold|has_legal_hold)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:b2_update_file_retention|b2_get_file_info|UpdateFileRetention|UpdateFileRetentionRequest|UpdateFileRetentionResponse|FileRetention|fileRetention|file_retention|RetainUntilTimestamp|retain_until_timestamp|BypassGovernance|bypass_governance)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:SetObjectLockUntil|SetObjectLockUntilAsync|GetObjectLockUntil|GetObjectLockUntilAsync|SupportsObjectLocking|supports_object_locking|object_locking|ObjectLocking|SetLocks|SetLocksAsync|RemoteFileLockDuration|remote_file_lock_duration|LockExpirationTime|lock_expiration_time|LockExpiration|lock_expiration|UpdateRemoteVolumeLockExpiration|UpdateRemoteVolumeLockExpirationAsync|RetainUntilDate|retain_until_date|retain_until|retainUntil|WORM)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:aws_s3_bucket_object_lock_configuration|ObjectLockConfiguration|object_lock|ObjectLockEnabledForBucket|object_lock_enabled_for_bucket|DefaultRetention|default_retention)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:GOVERNANCE|COMPLIANCE|Governance|Compliance|governance|compliance)(?![A-Za-z0-9_])[^\n]{0,120}?(?:[Ll]ock|LOCK|[Rr]etention|RETENTION|[Ii]mmutab|IMMUTAB|WORM|[Rr]etain|RETAIN)
+    - (?:[Ll]ock|LOCK|[Rr]etention|RETENTION|[Ii]mmutab|IMMUTAB|WORM|[Rr]etain|RETAIN)[A-Za-z0-9_]*[^\n]{0,120}?(?:^|[^A-Za-z0-9_])(?:GOVERNANCE|COMPLIANCE|Governance|Compliance|governance|compliance)(?![A-Za-z0-9_])
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|<%#|--)
+context_questions:
+  - "MANDATORY, AND THE DETECTOR ESTABLISHES NONE OF IT: IS A LOCK ACTUALLY SET IN THIS DEPLOYMENT,
+    AND ON WHAT? A product that implements object locking is not a product that uses it. Separate
+    three things and answer each. (a) Is the lock code reachable in a default configuration, or only
+    when an operator sets an option? Quote the option and its default. (b) Which buckets, containers
+    or prefixes does it apply to? (c) Does the locked storage hold personal data - which is a
+    question about what is backed up, not about the backup tool. Where the answers are deployment
+    facts the code does not carry, say so and put them to the operator rather than guessing from a
+    matched line."
+  - "WHICH MODE, AND WHO CAN SHORTEN IT? This decides what kind of finding you have and the two are
+    not the same. GOVERNANCE mode: a caller holding the bypass permission can shorten or remove the
+    lock, so an erasure request is answerable - name the permission, say who holds it, and say
+    whether any documented process connects a data-subject request to somebody who can act on it.
+    COMPLIANCE mode: nobody can, including the account root and including the controller, until the
+    retain-until date passes. Quote the mode from the code AND from the deployment's configuration,
+    and note where the code's default differs from what an operator has set."
+  - HOW LONG IS THE FLOOR, AND HOW DOES IT COMPARE WITH THE PRODUCT'S OWN RETENTION POLICY? Find the
+    lock duration and the retain-until computation, and put them beside whatever the product tells
+    users about how long data is kept. A lock longer than the stated retention period is a silent
+    minimum that contradicts the product's own statement, and that contradiction is the finding -
+    report both numbers and both sources. Note also whether the lock is refreshed or extended on
+    each run, because a lock that is renewed periodically has no end at all.
+  - "IS THERE A LEGAL-HOLD PATH, AND IS IT BOUNDED? A legal hold is a lock with no expiry date: it
+    lasts until somebody removes it. Where the code sets one, ask who can set it, who can clear it,
+    whether any record is kept of why it was set, and whether anything reviews open holds. An
+    indefinite hold nobody reviews is an indefinite retention nobody decided on."
+  - "WHAT IS THE CONTROLLER'S ANSWER WHEN AN ERASURE REQUEST ARRIVES FOR LOCKED DATA? Work this out
+    before it happens rather than during. The defensible positions are named in Art. 17(3): a legal
+    obligation requiring retention under point (b), or the establishment, exercise or defence of
+    legal claims under point (e). Both require the controller to name the obligation or the claim
+    and to show that the lock's duration matches it - a lock set for ransomware resilience is a
+    security measure under Art. 32(1)(c) and is NOT by itself an Art. 17(3) ground. Where no ground
+    applies, the honest answer is that the data will be erased when the lock expires, that the
+    subject must be told this, and that the delay has to be justified against 'without undue
+    delay'."
+  - IF THE MATCH IS A CAPABILITY PROBE, A METHOD SIGNATURE OR A VENDOR SDK, SAY SO. An interface
+    declaring `SetObjectLockUntilAsync`, a capability flag being tested, and a bundled SDK's own API
+    surface are evidence that this product CAN lock, not that it does. Group these separately from
+    the call sites that actually set a lock, and do not report a vendored dependency's API as this
+    product's behaviour.
+evidence_template: "{file}:{line} matched a vendor-side retention-lock API, the product's own lock
+  surface, an infrastructure declaration enabling object lock, or a retention MODE word standing
+  beside a lock token. THAT IS THE WHOLE OF WHAT IS ESTABLISHED: this product knows how to set or
+  read a storage-level retention lock. IT DOES NOT ESTABLISH THAT ANY LOCK IS SET, on which storage,
+  in which mode, for how long, or over personal data - every one of those is a deployment fact
+  belonging to the operator questionnaire (context question 1). WHY THIS MATTERS DIFFERENTLY FROM
+  EVERY OTHER RULE IN THIS PACK: the rest of `eu-retention` asks whether data is kept too long; this
+  asks whether it can be removed at all. A retention lock is a MINIMUM-RETENTION FLOOR underneath
+  whatever the product's own policy says, and it is invisible on the settings screen. THE MODE
+  CHANGES THE FINDING AND MUST BE REPORTED: in governance mode a caller with the bypass permission
+  can shorten the lock, so the erasure duty is dischargeable and the question is who holds that
+  permission; in compliance mode nobody can, including the controller, until the retain-until date
+  passes. A LEGAL HOLD IS THE STRONGEST FORM - a lock with no expiry, lasting until somebody clears
+  it. Locks of this kind exist for good reasons, ransomware resilience among them (Art. 32(1)(c)),
+  so the finding is never that the lock is wrong; it is that its interaction with Art. 17(1) has to
+  be worked out in advance rather than discovered when a request arrives. Distinguish a call site
+  that SETS a lock from an interface signature, a capability probe or a vendored SDK's own API
+  surface (context question 6)."
+remediation_template: >
+  Establish first whether any lock is actually set in this deployment, on which storage, and whether
+
+  that storage holds personal data (context question 1). A product that merely implements object
+
+  locking has nothing to answer for yet.
+
+  Where locks are set, record the mode, because it decides everything else. In governance mode,
+
+  identify the principal holding the bypass permission and connect it to the data-subject-request
+
+  process in writing, so an erasure request has somewhere to go. In compliance mode, accept that no
+
+  one can delete before expiry and plan around that fact rather than around the hope of an
+  exception.
+
+  Put the lock duration beside the retention period the product states to its users. Where the lock
+
+  is longer, the stated period is not what happens; correct the statement or shorten the lock. Where
+
+  the lock is refreshed on every run, note that it has no end date at all and decide whether that
+  was
+
+  intended.
+
+  Treat legal holds separately: record who may set and clear one, why each open hold exists, and
+
+  what reviews them. An indefinite hold that nobody reviews is an indefinite retention that nobody
+
+  decided on.
+
+  Write the erasure answer down before a request arrives. If a lock is justified, name the ground -
+
+  Art. 17(3)(b) for a statutory retention obligation, Art. 17(3)(e) for legal claims - together with
+
+  the instrument or the claim and the period it requires, and check that the lock's duration matches
+
+  it. Ransomware resilience is a security measure under Art. 32(1)(c) and is not by itself an
+
+  Art. 17(3) ground.
+
+  Where no ground applies, tell the requester the truth: the data cannot be deleted until the lock
+
+  expires, on a stated date, and it will be deleted then. Record that delay and its justification
+
+  against the 'without undue delay' requirement rather than letting the request sit unanswered.
+data_categories:
+  - user.account
+  - user.content
+fingerprint_spec: directory

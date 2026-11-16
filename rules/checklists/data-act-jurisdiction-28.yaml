@@ -1,0 +1,382 @@
+checklist_id: data-act-jurisdiction-28
+title: Data Act Article 28 - published jurisdiction and safeguards against international
+  governmental access
+law: Regulation (EU) 2023/2854 (Data Act)
+source_url: http://publications.europa.eu/resource/celex/32023R2854
+checked_at: 2026-07-28
+scope_note: "This checklist records whether the two things Article 28(1) requires to be published
+  are on the project's own pages, and whether the contract lists them as Article 28(2) requires.
+  **Article 28 is a contractual-transparency duty and not the duty to take the measures.** The
+  obligation to adopt technical, organisational and legal measures against international
+  governmental access is Article 32(1), which sits in Chapter VII and is a separate coverage row;
+  this checklist walks none of it. So `absent` on the measures item below records that no
+  description of measures was found on the published pages, and it never records that a provider has
+  no safeguards - a finding has to be worded that way, or a developer reads a publication gap as a
+  security gap. This checklist also does not decide whether the measures described are adequate, or
+  whether the jurisdiction stated is the right one: the first is a judgement about security and the
+  second a question of fact about hosting arrangements, and neither is visible in a document. **It
+  does not attempt a general judgement on whether the published information is kept up to date**,
+  which is the chapeau's second duty and is conduct over time. That exclusion is about the general
+  judgement and not about every currency signal: an explicit review or update date on the page, and
+  a stated region or provider that the census contradicts, are both readable from a document, and
+  the items below say what to do with each."
+applicability:
+  question: "Two limbs, and the second only arises if the first is met. First, is the project a data
+    processing service - a digital service provided to a customer, giving that customer ubiquitous
+    and on-demand network access to a shared pool of configurable, scalable and elastic computing
+    resources, of a centralised, distributed or highly distributed nature, that can be rapidly
+    provisioned and released with minimal management effort or service provider interaction? Second,
+    if it is, does Article 31(2) reach it - is the service provided as a non-production version,
+    **and** for testing and evaluation purposes, **and** for a limited period of time, all three
+    together, which disapplies the whole of Chapter VI and with it Article 28? **Both limbs are
+    facts about the service as it is offered, not about its source.** They are asked of the person
+    running the scan, or read from the provider's own service description and its Article 31(3)
+    pre-contract statement, and neither may be inferred from what the tree deploys, imports or
+    names. So, in the words the person running the scan can answer: who has entered into a contract
+    with you for this service, and what does that customer get - which computing resources do they
+    provision and release for themselves, and which do you allocate to them flexibly as their demand
+    rises and falls? And is what you supply them a non-production version given for testing and
+    evaluation for a limited time?"
+  quote: ‘data processing service’ means a digital service that is provided to a customer and that
+    enables ubiquitous and on-demand network access to a shared pool of configurable, scalable and
+    elastic computing resources of a centralised, distributed or highly distributed nature that can
+    be rapidly provisioned and released with minimal management effort or service provider
+    interaction;
+  cite: Data Act Art. 2(8)
+  url: http://publications.europa.eu/resource/celex/32023R2854
+  checked_at: 2026-07-28
+  ask_the_user: true
+  supporting_quotes:
+    - quote: As commonly understood by providers and users and in line with broadly used standards, data
+        processing services fall into one or more of the following three data processing service
+        delivery models, namely Infrastructure as a Service (IaaS), Platform as a service (PaaS) and
+        Software as a Service (SaaS).
+      cite: Data Act Recital 81
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-28
+      why: "**What this recital does and does not settle.** It says every data processing service falls
+        into one or more of three delivery models, so Software as a Service is not excluded as a
+        category - a hosted application is not outside Article 2(8) merely because it is sold as a
+        subscription. It does **not** say the converse. \"All data processing services are IaaS,
+        PaaS or SaaS\" is not \"all SaaS is a data processing service\", and Article 2(8)'s own test
+        - a shared pool of configurable, scalable and elastic computing resources - still has to be
+        met. This file asserted the converse between 2026-07-28 and 2026-07-29, which was an
+        over-correction of the opposite error, and the coverage map's position (an open scope call)
+        was the defensible one all along."
+    - quote: ‘customer’ means a natural or legal person that has entered into a contractual relationship
+        with a provider of data processing services with the objective of using one or more data
+        processing services;
+      cite: Data Act Art. 2(30)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-09-01
+      why: "**The gate's primary quote opens \"a digital service that is provided to a customer\", and
+        \"customer\" is a defined term.** Its defining element is a **contractual relationship**
+        entered into with the objective of using one or more data processing services. For this
+        product's audience that is the element most likely to decide the first limb: a project that
+        is downloaded and self-hosted, where nobody has contracted with its authors for the service,
+        has no customer in this sense and therefore no data processing service, however elastic the
+        software would be if somebody ran it as one. Added 2026-09-01; the gate used \"customer\" as
+        an ordinary English word six times and never as the defined term."
+    - quote: The capability of the customer of the data processing service to unilaterally self-provision
+        computing capabilities, such as server time or network storage, without any human
+        interaction by the provider of data processing services could be described as requiring
+        minimal management effort and as entailing minimal interaction between provider and
+        customer.
+      cite: Data Act Recital 80
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-29
+      why: The Regulation's own gloss on the last clause of Article 2(8), and it points the other way from
+        the reading this file carried on 2026-07-28. The definition says "with minimal management
+        effort **or** service provider interaction"; the recital describes the paradigm as the
+        customer self-provisioning **without any human interaction by the provider**, and calls that
+        requiring minimal management effort **and** entailing minimal interaction. So a service the
+        provider provisions and administers on the customer's behalf is not comfortably inside on
+        the strength of the disjunction alone. Quoted because the argument turns on two conjunctions
+        and a reader is entitled to check them.
+    - quote: The term ‘scalable’ refers to computing resources that are flexibly allocated by the provider
+        of data processing services, irrespective of the geographical location of the resources, in
+        order to handle fluctuations in demand.
+      cite: Data Act Recital 80
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-09-01
+      why: "**The same recital, on a different element of Article 2(8), and it points the other way from
+        the sentence above it.** \"Scalable\" is defined from the **provider's** side: resources the
+        provider allocates flexibly, wherever they sit, to handle fluctuations in demand. So a
+        managed service whose capacity the provider moves on the customer's behalf is not outside
+        Article 2(8) merely because the customer provisions nothing itself, and a gate that asks
+        only whether customers self-provision leans toward `unresolved` or `does-not-apply` on a
+        duty that has applied since 12 September 2025 - the false-negative direction, where a
+        skipped check prints the same as a passed one. Quoted 2026-09-01 so both sides of the
+        argument are in front of the reader; the self-provisioning sentence was quoted alone from
+        2026-07-29."
+    - quote: "Providers of data processing services shall make the following information available on
+        their websites, and keep that information up to date:"
+      cite: Data Act Art. 28(1)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-28
+      why: The duty itself, and its addressee. Quoted here rather than as the gate's primary quote because
+        the gate decides who is a provider of data processing services, which is the definition
+        above, not this sentence.
+    - quote: providers of data processing services, irrespective of their place of establishment,
+        providing such services to customers in the Union;
+      cite: Data Act Art. 1(3)(f)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-29
+      why: "Why the territorial question is not asked: the Regulation reaches a provider wherever it is
+        established, and only in respect of customers in the Union — and **running the EU pack is
+        treated as the statement that the project is offered into the Union**, so the gate treats
+        this limb as settled by the premise and asks about it in no variant. Quoted so a reader can
+        see what the premise is standing in for. What the premise does not settle — is this a data
+        processing service, is this the source provider, is Article 31 in play — the gate still
+        asks."
+    - quote: The obligations laid down in this Chapter shall not apply to data processing services
+        provided as a non-production version for testing and evaluation purposes and for a limited
+        period of time.
+      cite: Data Act Art. 31(2)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-29
+      why: '**This switches Article 28 off, and it was missing from this file entirely until 2026-07-29.**
+        Article 28 sits in Chapter VI, which is Articles 23 to 31, so "the obligations laid down in
+        this Chapter" takes Article 28 with it exactly as it takes Article 25. This is the same
+        error class the 2026-07-28 correction round was convened to fix, left unrepaired in the
+        third Data Act file because the round only looked at the two the finding named. All three
+        conditions are cumulative: a non-production version, for testing and evaluation, and for a
+        limited period of time.'
+    - quote: Prior to the conclusion of a contract on the provision of the data processing services
+        referred to in this Article, the provider of data processing services shall inform the
+        prospective customer of the obligations of this Chapter that do not apply.
+      cite: Data Act Art. 31(3)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-07-29
+      why: 'Where Article 31 is relied on, this is the statement a set of terms either makes or does not,
+        so it is the one thing still worth looking for after the gate closes. Note the tension the
+        Regulation does not resolve: Article 31(3) is itself inside the Chapter that 31(2)
+        disapplies. The drafter plainly intended it to survive - it speaks of "the services referred
+        to in this Article" - but say that it is a reading rather than a settled point.'
+    - quote: Providers of data processing services shall take all adequate technical, organisational and
+        legal measures, including contracts, in order to prevent international and third-country
+        governmental access and transfer of non-personal data held in the Union where such transfer
+        or access would create a conflict with Union law or with the national law of the relevant
+        Member State, without prejudice to paragraph 2 or 3.
+      cite: Data Act Art. 32(1)
+      url: http://publications.europa.eu/resource/celex/32023R2854
+      checked_at: 2026-09-01
+      why: "**Quoted so that three propositions this file used to assert flatly are readable instead.**
+        First, the boundary: this paragraph is the duty to **take** the measures and it sits in
+        Chapter VII, while Article 28(1)(b) is the duty to **publish a general description** of them
+        and sits in Chapter VI. They are separate duties on separate coverage rows, so an `absent`
+        under Article 28(1)(b) is a publication finding and never a statement that a provider has no
+        safeguards. Second, the word: this paragraph pairs \"international\" with \"third-country\"
+        in one breath, and the heading of Chapter VII, where it sits, speaks of unlawful
+        international governmental access and transfer of non-personal data and names no third
+        country at all - which is what carries Article 28(1)(b)'s \"international\" as wider than
+        third-country. That reading is argued rather than settled, because Recitals 101 and 102
+        speak only of third countries and third-country authorities. Third, and smaller: the
+        expectation that a provider has technical **and** organisational **and** contractual
+        measures to describe comes from this paragraph's own list, and not from Article 28(1)(b),
+        which asks for a description of the measures **adopted**. Added 2026-09-01; all three
+        propositions stood in this file's prose with no provision behind them."
+  when_unresolved: "Apply Article 2(8)'s own test rather than a category. Infrastructure and platform
+    offerings are plainly inside; **Software as a Service is not excluded as a category** - Recital
+    81 names it as one of three delivery models - but \"every data processing service is IaaS, PaaS
+    or SaaS\" is not \"every SaaS is a data processing service\", and this file asserted the
+    converse until 2026-07-29. The question is whether the customer gets a shared pool of
+    configurable, **scalable** and **elastic** computing resources, and Recital 80 - quoted above -
+    describes the paradigm as the customer self-provisioning without any human interaction by the
+    provider. **Read that sentence beside the same recital's gloss on \"scalable\", which is quoted
+    above too and runs the other way**: resources the **provider** allocates flexibly, wherever they
+    sit, to handle fluctuations in demand. So the question is how computing resources are allocated
+    and released, and by whom - not only whether the customer does it itself. A service the provider
+    scales on the customer's behalf is not outside Article 2(8) on the strength of the
+    self-provisioning sentence alone. **And there is a customer only where somebody has entered into
+    a contractual relationship for the service.** Article 2(30) - quoted above - defines the term
+    Article 2(8) turns on, so a project that is downloaded and self-hosted, with nobody contracting
+    with its authors for the service, has no customer within the definition and the first limb
+    closes on that ground: `does-not-apply`, with the reasoning naming the missing contractual
+    relationship. That is a statement about who has contracted for what, and never a statement about
+    how elastic the software would be if somebody ran it as a service. A hosted application whose
+    customers get accounts, storage and compute they provision for themselves is inside; an ordinary
+    business application with fixed functionality is the arguable case, and `unresolved` naming the
+    limb you could not settle is the honest record for it. What is plainly outside is a digital
+    service that is not a pool of computing resources at all: a content site, a shop, a booking
+    page, a newsletter - record `does-not-apply` and say so. **Ask the person running the scan
+    whether their customers provision and release computing resources for themselves**, and read the
+    provider's own service description beside the answer; neither a cloud SDK in the dependency list
+    nor its absence settles Article 2(8). **Do not resolve the gate from the census.** Region
+    constants and outbound hosts tell you where a service runs; they say nothing about whether it is
+    the kind of service this Chapter binds. They belong to the items, where they are the facts a
+    published jurisdiction can be read against. A region constant, an outbound host or an object
+    storage client **may corroborate or contradict what the provider says its service is, and may
+    never decide either limb**; **a tree carrying none of them is silent about both limbs, and
+    silence here is `unresolved`, never `does-not-apply`.** A declared document is not in that
+    relation: the provider's own service description and its Article 31(3) pre-contract statement
+    are the second place either limb can be read from, and where one of them states that what is
+    supplied is a non-production version given for testing and evaluation for a limited time, that
+    statement is an answer rather than corroboration. A document that does not state it has not
+    answered it - a service description that never mentions Article 31 is not a statement that
+    Article 31(2) does not reach the service. **Where the two rules above meet, this is how they are
+    reconciled, written down rather than left to be worked out.** The `does-not-apply` on the
+    plainly-outside branch rests on a service description that says what the service is - a content
+    site, a shop, a booking page, a newsletter - and it never rests on a tree that happens to carry
+    no region constant, no outbound host and no object storage client. A content site is precisely
+    the tree least likely to carry any of them, so the empty tree is the case where the two
+    sentences read as pointing opposite ways: the empty tree settles nothing and leaves the limb
+    `unresolved`, and only the description or the person running the scan can close it. **The
+    territorial limb is settled by the pack's standing premise** - running the EU pack is treated as
+    the statement that the project is offered into the Union - so do not ask about Union customers;
+    Article 1(3)(f) is quoted above so a reader can see what the premise stands in for. **Then ask
+    the remaining limb.** *Is Article 31 in play?* Article 28 is inside Chapter VI, so 31(2)
+    disapplies it: ask the person running the scan whether what is shipped is a non-production
+    version supplied for testing and evaluation for a limited period, and if all three hold, record
+    `does-not-apply` and look instead for the Article 31(3) pre-contract statement. **Article 31(1)
+    is NOT a route out of this checklist, and the gate's own question said it was between two edits
+    on 2026-07-29.** Paragraph (1) — the bespoke or custom-built exemption — disapplies only
+    \"Article 23, point (d), Article 29 and Article 30(1) and (3)\". **Article 28 is not in that
+    list.** So a service built to one customer's specification and kept off the catalogue still owes
+    Article 28 in full, and recording `does-not-apply` on that ground is a false negative on a duty
+    that has applied since 12 September 2025 - the Regulation's date of application under Article
+    50, which is not its date of entry into force, 11 January 2024, and the difference is live in
+    this pack because Article 29(2)'s reduced-charge window opens from that earlier date. **Where
+    the bespoke branch does belong, it does not belong evenly, and this field said until 2026-08-08
+    that it did.** Paragraph (1)'s list is \"Article 23, point (d), Article 29 and Article 30(1) and
+    (3)\". It reaches the Article 29 checklist `data-act-switching-charges-29` on the Article that
+    checklist walks; of the Article 23/25 checklist `data-act-switching-terms-23-25` it reaches
+    Article 23, point (d) alone, and **Article 25 is not in that list**, which is what that file
+    says of itself, twice. So a bespoke finding may not be carried across to either sibling as a
+    reason to stop without first checking which of that checklist's Articles paragraph (1) actually
+    names. **Article 24 does not narrow this one**: its source-provider limit names Articles 23, 25,
+    29, 30 and 34, and Article 28 is not among them, so a destination provider owes these duties
+    too. Chapter VI carries no exemption for micro or small enterprises: size is not a way out of
+    this checklist. Where any limb is genuinely unsettled, record `unresolved` and name which one
+    rather than guessing in either direction. **What becomes of the four items below on each branch,
+    which this field did not say until 2026-09-01.** Where the gate is `does-not-apply` - because
+    the project is not a data processing service at all, or because there is no customer within
+    Article 2(30), or because Article 31(2) reaches what is shipped - walk no item, because Article
+    28 is not owed at all; emit the four items carrying the gate's own reasoning, and on the Article
+    31(2) branch look for the Article 31(3) pre-contract statement instead. Where the gate is
+    `unresolved`, walk every item below and record each of them `unresolved` as well, conditional on
+    the gate, naming the limb that was not settled. Neither of the two other outputs is available:
+    marking the four items `absent` on an unsettled gate tells a provider that a duty was checked
+    and not met when nobody has established that the duty is owed, and emitting no item at all makes
+    a check that was skipped print exactly like a check that passed."
+items:
+  - id: art-28-1-a-jurisdiction
+    article: 28(1)(a)
+    quote: the jurisdiction to which the ICT infrastructure deployed for data processing of their
+      individual services is subject;
+    cite: Data Act Art. 28(1)(a)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Do the published pages state, for each of the provider's individual services, which
+      jurisdiction the ICT infrastructure deployed for data processing of that service is subject
+      to?
+    census_categories:
+      - transfers
+      - recipients
+    applicability_note: "The duty is about the jurisdiction the infrastructure is *subject to*, which is
+      not the same question as which region it runs in. A page naming a hosting region is worth
+      quoting and is not by itself an answer: infrastructure in an EU region operated by a company
+      under another country's law is exactly the case this paragraph is written about. **The
+      paragraph asks it of the provider's individual services**, and this item asked it of \"the
+      service\" until 2026-09-01. A single blanket statement covering one offering among several is
+      `partial`, and the reasoning names which services it covers and which it leaves out; a
+      provider with one service answers the whole of it in one sentence. **Which document answers
+      this item.** A trust page, a security page, a data-residency or sub-processor page, or a legal
+      or documentation route on the site is a candidate of the kind, and so is a privacy policy: its
+      hosting or international-transfer section is where a provider usually writes this down, and it
+      usually turns out to state a region rather than a jurisdiction, which is `partial` or `absent`
+      with a quotable reason rather than a document of the wrong kind. Where no document of any of
+      those kinds was found, the item is `unresolved` and the reasoning says which kinds were looked
+      for. Where the census carries region constants or the hosts a service calls out to, compare
+      them with what the page says and report a difference as a finding rather than deciding which
+      is right - the category the bearing fact arrives in is `transfers` on some trees and
+      `recipients` on others, and this item declared only the first until 2026-09-01. A page whose
+      stated region the tree contradicts, and a page carrying an explicit review or update date, are
+      the two currency signals a document does carry; report each as what it is rather than as a
+      judgement on whether the information is kept up to date."
+  - id: art-28-1-b-measures
+    article: 28(1)(b)
+    quote: a general description of the technical, organisational and contractual measures adopted by
+      the provider of data processing services in order to prevent international governmental access
+      to or transfer of non-personal data held in the Union where such access or transfer would
+      create a conflict with Union law or the national law of the relevant Member State.
+    cite: Data Act Art. 28(1)(b)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Do the published pages describe the technical, organisational and contractual measures
+      taken against international governmental access to, or transfer of, non-personal data held in
+      the Union, where such access or transfer would create a conflict with Union law or the
+      national law of the relevant Member State?
+    census_categories:
+      - transfers
+      - recipients
+    applicability_note: "**The paragraph's closing condition is part of the question, and this item
+      asked without it from 2026-07-28 until 2026-09-01.** What Article 28(1)(b) requires described
+      is the measures adopted to prevent international governmental access to, or transfer of,
+      non-personal data held in the Union **where such access or transfer would create a conflict
+      with Union law or the national law of the relevant Member State** - not measures against every
+      international governmental request there is. The item's own quote three lines above carries
+      the condition; an `absent` or `partial` recorded without it rests on the absence of a
+      description the Article never asked for. The paragraph says **international**, not
+      third-country, and the difference is not cosmetic: on this reading an access request routed
+      through another Member State's authorities is international and is inside this wording. **That
+      reading is argued, not settled, and the argument is on the gate rather than asserted here**:
+      Article 32(1) is quoted there and pairs \"international\" with \"third-country\" in one
+      breath, and Chapter VII's heading uses \"international\" alone - while Recitals 101 and 102
+      speak only of third countries. A finding that turns on the intra-Union case says which reading
+      it rests on. Do not narrow the question to third countries as an earlier draft of this file
+      did. Three kinds of measure are named - technical, organisational and contractual - so say
+      which kinds are described. Where fewer than three are, `partial` naming the kinds is the
+      useful record rather than a rule: on Article 28(1)(b) alone the duty is to describe the
+      measures **adopted**, so a provider that has adopted technical measures only and describes
+      them has arguably answered it, and the expectation that all three exist comes from Article
+      32(1)'s own list, quoted on the gate. This is not the GDPR transfer story: the data in
+      question is **non-personal**, so a privacy policy's international-transfer section is a
+      candidate that usually turns out not to answer it. A page that says only \"we comply with
+      applicable law\" describes no measure at all. And an `absent` here is a finding about what was
+      published, never about whether the provider has safeguards - taking the measures is Article
+      32(1), a different Chapter and a different duty."
+  - id: art-28-1-published
+    article: 28(1)
+    quote: "shall make the following information available on their websites, and keep that information
+      up to date:"
+    cite: Data Act Art. 28(1)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Is that information on the provider's own website, rather than supplied only on request or
+      inside a contract?
+    applicability_note: "The obligation is to publish. Information available only under a signed
+      agreement, or only in a document sent to customers who ask, does not satisfy it however
+      complete it is. **Where the answer to this item comes from, which this note did not say until
+      2026-09-01.** Two sources, in this order: the repository's own routing where the project ships
+      the site - a page component, a route file or a document loader that serves the file, and any
+      statement in the tree that a copy is a mirror, a draft or a document kept for internal use -
+      and otherwise the person running the scan. Discovery hands over documents and not the fact
+      that a document is served, so two copies of one text can both be found and only one of them
+      published, and the dated served copy and the placeholder mirror look identical in a document
+      list. Where the routing does not settle which copy is the published one, record `unresolved`
+      and say that what is missing is whether the document is served, rather than recording `absent`
+      against a page that may well be public. Where the page is published on the website but not in
+      the tree, the run's `--policy` option takes a URL and is the way to put it in front of the
+      agent; name it as what would settle the question. **On currency**: the chapeau's second duty
+      is to keep the information up to date, and that is conduct over time, so this item does not
+      attempt a general judgement on it and no status here is one. The exclusion is about the
+      general judgement, not about every signal: an explicit review or update date on the page, and
+      a stated region or provider the census contradicts, are both readable from a document, and the
+      jurisdiction item above says what to do with each."
+  - id: art-28-2-listed-in-contracts
+    article: 28(2)
+    quote: The websites referred to in paragraph 1 shall be listed in contracts for all data processing
+      services offered by providers of data processing services.
+    cite: Data Act Art. 28(2)
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-07-28
+    question: Are the Article 28(1) websites listed in the contracts for all data processing services
+      offered - do the terms or contract point the customer at those pages by naming where they are?
+    applicability_note: "A separate duty from publishing, and one a set of terms answers directly: the
+      contract has to **list** the websites, which is a stronger word than gesturing at them, and
+      Article 28(2) says it of the contracts **for all data processing services offered** by the
+      provider. Both were missing from this item until 2026-09-01. Terms that list the pages for
+      some services and not others are `partial`, and the reasoning names which services are
+      covered; so are terms that describe the safeguards themselves but never name where the Article
+      28(1) information lives, and both are worth quoting."

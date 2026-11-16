@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/ropa-input.schema.json",
+  "title": "RopaInput (the layer-2 result the RoPA emitter renders)",
+  "description": "What the adjudicating agent hands `wolfboy ropa`. Layer 1 is a hypothesis generator and this document is where the hypotheses have been read in context and settled; the emitter downstream of it renders and checks, and decides nothing. Nothing here asserts that anything is unlawful, and nothing here may assert that anything is compliant: the absence of a finding is `unknown`, never `clean`.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["format", "scan_id", "as_of", "verdicts", "activities", "open_questions", "silent_rules"],
+  "properties": {
+    "format": { "const": "ropa-input/1" },
+    "scan_id": {
+      "type": "string",
+      "description": "The scan these verdicts belong to. The emitter refuses to run when it does not match the findings file, because emitting a RoPA across two scans attaches one run's verdicts to another run's evidence."
+    },
+    "layer1_findings": { "type": "string", "description": "Relative path to the findings JSON this was adjudicated from. Informational; the emitter is passed the file directly." },
+    "target_label": { "type": "string", "description": "Human-readable identity of what was scanned, e.g. `owner/repo at commit <sha>`. Written into the emitted README." },
+    "as_of": {
+      "type": "string",
+      "description": "The date the adjudication was performed. Used to decide whether a duty's effective date is in the past, so that a question blocking a duty which has not started renders as preparation rather than as in force."
+    },
+    "adjudication": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Provenance of the adjudication itself: when, by how many agents, on which model, and where the prose record lives. The model matters because the reliability of every verdict below depends on it and the user's own agent supplies it.",
+      "properties": {
+        "date": { "type": "string" },
+        "agents": { "type": "integer" },
+        "model": { "type": "string" },
+        "unit": { "enum": ["candidate", "location"], "description": "What a verdict below is about. Nine agents adjudicating the same run in different units is how the 2026-08-20 record came to carry location figures that do not reconcile with its candidate figures." },
+        "record": { "type": "string" },
+        "rendered_record": { "type": "string" }
+      }
+    },
+    "reconstruction": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Present only on a document assembled after the fact from a record rather than written by the agents that ran. It states what is recorded, what is inferred and what could not be recovered at all. A reconstruction without this block is indistinguishable from a first-hand result, which is the failure it exists to prevent."
+    },
+    "verdicts": {
+      "type": "array",
+      "description": "One entry per candidate in the scan. The emitter refuses a partial adjudication: a RoPA built over one cannot say which of its rows were judged.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["finding_id", "rule_id", "verdict"],
+        "properties": {
+          "finding_id": { "type": "string" },
+          "rule_id": { "type": "string" },
+          "verdict": {
+            "enum": ["real", "dismissed"],
+            "description": "Whether the candidate survived reading in context. DELIBERATELY NOT verdict.schema.json's enum: that schema separates `violation_candidate` from `needs_human` and requires a verbatim quote on every verdict in both directions, and a document that cannot supply those must not borrow its vocabulary. A full EvidenceLog is the richer record; this is the minimum a RoPA row rests on."
+          },
+          "basis": { "enum": ["recorded", "forced"], "description": "On a reconstruction: whether the record states this verdict, or whether it is the only value consistent with the recorded totals." },
+          "recorded_in": { "type": "string", "description": "Where the verdict comes from, precisely enough to check." }
+        }
+      }
+    },
+    "activities": {
+      "type": "array",
+      "description": "The processing activities. One becomes one row of processing-activities.csv.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "data_subjects", "personal_data", "recipients", "proposed_by", "evidence"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string", "description": "Art. 30(1) has no field for this; a compliance platform requires one, and it is the first of Vanta's two required fields." },
+          "purpose_note": {
+            "type": "string",
+            "description": "A reason clause appended INSIDE the operator marker, after a colon. THERE IS NO FIELD HERE FOR A PURPOSE, and that is the point: Art. 30(1)(b) is a fact about what the organisation does, not about what its code contains, and it is never inferred from source vocabulary. The emitter composes the cell itself on every row."
+          },
+          "data_subjects": { "type": "string", "description": "Art. 30(1)(c), first limb: the categories of data subject, as layer 2 read them out of the code." },
+          "personal_data": { "type": "string", "description": "Art. 30(1)(c), second limb. Observed in the matched code, NOT copied from the rule's declared data_categories — those are the rule author's hypothesis and the fit test's correction is binding on this point." },
+          "special_category": { "$ref": "#/$defs/observation", "description": "Art. 9 data. `null` renders as `None observed`, never as `none`." },
+          "recipients": { "$ref": "#/$defs/recipients", "description": "Art. 30(1)(d)." },
+          "international_transfer": { "$ref": "#/$defs/observation", "description": "Art. 30(1)(e)." },
+          "retention": { "$ref": "#/$defs/observation", "description": "Art. 30(1)(f)." },
+          "security_measures": { "$ref": "#/$defs/observation", "description": "Art. 30(1)(g)." },
+          "proposed_by": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" },
+            "description": "The layer-1 rules that proposed this activity. Every one must carry at least one `real` verdict above, and every rule named in an evidence backing must appear here — otherwise the row's provenance cell credits a rule that produced none of its evidence."
+          },
+          "evidence": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/evidenceRef" } },
+          "provenance_qualifier": {
+            "enum": ["inventory", "location_count", null],
+            "description": "What the provenance cell says in parentheses. `inventory` where the rule was adjudicated as a store inventory rather than pass/fail; `location_count` asks the emitter to count locations and how many were ruled real; `null` for no qualifier."
+          },
+          "declared_purpose_claims": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "description": "Claim ids from the pillar-2 declaration report (declarations.schema.json $defs.claim.claim_id) whose quotations bear on what this activity is FOR. IDS, NEVER TEXT: the emitter resolves each one and renders the report's own verbatim quotation with the document, the line and the verification state `reconcile-verify` reached, so a paraphrase cannot arrive wearing a quotation's authority. An id the report does not carry makes the emitter refuse the export, on the same discipline as an evidence backing the scan does not contain. THIS IS NOT A PURPOSE FIELD AND DOES NOT BECOME ONE: `purpose_of_processing` stays the operator marker on every row, and a declared quotation sits beside it as something a person confirms. Only meaningful on a `ropa` run given `--reconcile`; naming ids without one is refused rather than dropped."
+          },
+          "declaration_finding_ids": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "description": "Finding ids from the same report (declarations.schema.json $defs.declarationFinding.finding_id) that bear on this activity — places where the published documents and this activity's code did not appear to match. Resolved and checked exactly as the claim ids are."
+          }
+        }
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "description": "The facts the code cannot settle. This is the part a compliance platform routes to a human, and it is produced rather than assumed.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "blocks", "question", "why_code_cannot_answer", "rule_ids"],
+        "properties": {
+          "id": { "type": "string" },
+          "blocks": { "type": "array", "items": { "type": "string" }, "description": "What cannot be completed until this is answered: activity names, or the name of an obligation family." },
+          "question": { "type": "string" },
+          "why_code_cannot_answer": { "type": "string", "description": "Required. A question with no reason attached reads as something the tool failed to do rather than something no scan can do." },
+          "rule_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" },
+            "description": "The rules whose obligation this question blocks."
+          },
+          "date_style": { "const": "since", "description": "Show the date on a duty already in force, as `in force since <date>`." },
+          "date_note": { "type": "string", "description": "Parenthesised after a not-yet-in-force date, e.g. `preparation only`." },
+          "source_evidence": { "type": ["string", "null"], "description": "Where in the tree the question arises. `null` renders as `n/a` — some questions arise from the absence of any signal at all." }
+        }
+      }
+    },
+    "silent_rules": {
+      "type": "array",
+      "description": "One entry per rule in `rules_without_candidates`. A rule the emitter is not given a row for is a rule the export would quietly drop.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rule_id", "outcome"],
+        "properties": {
+          "rule_id": { "type": "string" },
+          "outcome": {
+            "enum": ["not_checked", "construct_found", "apparently_absent", "not_evaluated", "out_of_jurisdiction"],
+            "description": "The same vocabulary as evidence-log.schema.json's `unknown_rules[].outcome`, so that a RoPA export and an audit log say the same word about the same rule."
+          },
+          "searched": { "type": "array", "items": { "type": "string" }, "description": "Every search run, INCLUDING the ones that returned nothing. The emitter refuses `apparently_absent` and `construct_found` without it: a claim about what a search established, with no search behind it, is an assertion." },
+          "evidence": {
+            "type": "array",
+            "description": "For `construct_found`: where the construct layer 1 missed actually is, with file, line and quote, and required there. The most valuable record this pipeline produces — a located layer-1 miss. It is emitted in the `layer2_evidence` column of `unknown-rules.csv`, so an importing auditor gets it without the layer-2 record.",
+            "items": {
+              "type": "object",
+              "required": ["file", "lines", "quote"],
+              "properties": { "file": { "type": "string" }, "lines": { "type": "string" }, "quote": { "type": "string" } }
+            }
+          },
+          "note": { "type": "string" }
+        },
+        "allOf": [
+          {
+            "$comment": "The two outcomes that claim a search was run must carry it.",
+            "if": { "properties": { "outcome": { "const": "apparently_absent" } }, "required": ["outcome"] },
+            "then": { "required": ["searched"], "properties": { "searched": { "minItems": 1 } } }
+          },
+          {
+            "$comment": "A gap nobody can locate is not a reportable fact.",
+            "if": { "properties": { "outcome": { "const": "construct_found" } }, "required": ["outcome"] },
+            "then": {
+              "required": ["searched", "evidence"],
+              "properties": { "searched": { "minItems": 1 }, "evidence": { "minItems": 1 } }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "observation": {
+      "description": "A field layer 2 either observed, observed the absence of, or could not assess. THERE IS NO WAY TO WRITE AN ABSENCE PHRASE HERE — the caller picks the scope and the emitter picks the words, from a closed vocabulary that contains no statement that a duty is met.",
+      "oneOf": [
+        { "type": "string", "description": "What was observed." },
+        { "type": "null", "description": "Nothing observed. Renders as the column's default absence phrase." },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["observed"],
+          "properties": {
+            "observed": { "const": false },
+            "scope": { "enum": ["activity", "path", "source"], "description": "How wide the looking was: this activity, this code path, or the scan as a whole." }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["not_assessed"],
+          "properties": { "not_assessed": { "type": "string", "description": "Why the question could not be answered either way. Different from an absence and never merged with one." } }
+        }
+      ]
+    },
+    "recipients": {
+      "description": "Art. 30(1)(d). THERE IS NO `in_use` STATUS, and there will not be one: a source scan sees the recipient a codebase OFFERS, and which one an operator switched on is not a fact in the repository. The emitter also rejects free text that says it anyway, on BOTH emitted cells — the status cell built from `status_text`/`confirm`, and the recipients cell built from `vendors[]` and `list_note`. Those are every free-text path into either, and until 2026-08-24 only the first was checked while this sentence already claimed all of them.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status"],
+          "properties": { "status": { "const": "none_observed" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "vendors", "confirm"],
+          "properties": {
+            "status": { "const": "offered" },
+            "vendors": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+            "list_note": { "type": "string", "description": "Appended after the vendor list, following an em dash." },
+            "confirm": { "type": "string", "description": "What the operator has to confirm. Rendered after `Offered by the codebase — `." }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "vendors", "status_text"],
+          "properties": {
+            "status": { "const": "shipped" },
+            "vendors": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+            "list_note": { "type": "string" },
+            "status_text": { "type": "string", "description": "The status cell verbatim, for a vendor compiled into an artefact with no operator switch found. Still may not say the recipient is in use." }
+          }
+        }
+      ]
+    },
+    "evidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "backed_by"],
+      "description": "One entry in the row's source_evidence cell. `backed_by` is what makes the cell audit evidence rather than a claim, and the emitter checks every entry against the scan.",
+      "properties": {
+        "ref": { "type": "string", "description": "Display text: a path, a path with a line, or a brace or glob shorthand for a set of them." },
+        "note": { "type": "string", "description": "Parenthesised after `ref`." },
+        "note_from_backing": { "const": "location_count", "description": "Compute the note instead: renders `(N locations)` from the length of `backed_by`." },
+        "backed_by": {
+          "type": "array",
+          "description": "The layer-1 candidate locations behind this reference. The emitter labels such a reference in the provenance cell rather than letting it read as a detector result.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["rule_id", "file"],
+            "properties": {
+              "rule_id": { "type": "string" },
+              "file": { "type": "string", "description": "Must be a location of a candidate of that rule in the scan, or the emitter refuses the whole export." }
+            }
+          }
+        }
+      }
+    }
+  }
+}

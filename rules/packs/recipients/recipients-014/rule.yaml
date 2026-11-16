@@ -1,0 +1,344 @@
+id: recipients-014
+pack: recipients
+short_name: Visitor IDs shared and matched with another company
+problem_line:
+  text: Visitor identifiers synced with other companies
+  template: "{data} synced with {recipient}"
+fix_line: Ask consent before the first sync, show people every counterpart, and record the table and
+  its lifetime.
+title: Cross-party identifier sync - a minted redirect with a placeholder for the counterpart's
+  identifier, a per-counterpart pseudonym table on the terminal equipment, or its callback
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "ePrivacy Directive 2002/58/EC, Art. 5(3) as amended by Directive 2009/136/EC, quoted from the
+      consolidated Official Journal text at CELEX 02002L0058-20091219: \"Member States shall ensure
+      that the storing of information, or the gaining of access to information already stored, in
+      the terminal equipment of a subscriber or user is only allowed on condition that the
+      subscriber or user concerned has given his or her consent, having been provided with clear and
+      comprehensive information, in accordance with Directive 95/46/EC, inter alia, about the
+      purposes of the processing\". Cited because the correspondence table this construct builds is
+      kept in the subject's own browser, and every callback both stores into it and gains access to
+      what is already there. Which national transposition applies, and whether any exemption in the
+      second subparagraph is in play, are questions this detector does not reach"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-09-10
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - the controller's record of processing
+      activities "shall contain all of the following information", including "the categories of
+      recipients to whom the personal data have been or will be disclosed including recipients in
+      third countries or international organisations". Cited because each counterpart the product
+      mints a redirect for is a recipient of the subject's pseudonym at the moment the browser
+      follows that redirect, and the number of counterparts is usually the number of configuration
+      files rather than a number anyone has written into a record
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-10
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 13(1)(e) - where personal data are collected from the
+      data subject, the controller shall, at the time when personal data are obtained, provide the
+      data subject with "the recipients or categories of recipients of the personal data, if any".
+      Cited because the disclosure happens in the subject's own browser at sync time, which is the
+      moment the information duty attaches to
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-10
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 14(1)(e) - where the personal data have not been
+      obtained from the data subject, the controller shall provide the data subject with \"the
+      recipients or categories of recipients of the personal data, if any\". Cited beside Art.
+      13(1)(e) because the identifier a counterpart returns was not obtained from the subject at
+      all: it is the counterpart's own pseudonym for this browser, written into the subject's device
+      by the product"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-10
+    jurisdiction: EU
+  - cite: 'GDPR (Regulation (EU) 2016/679), Art. 26(1) - "Where two or more controllers jointly
+      determine the purposes and means of processing, they shall be joint controllers", and they
+      "shall in a transparent manner determine their respective responsibilities for compliance with
+      the obligations under this Regulation". Reference only, and cited AS A QUESTION rather than as
+      an answer: whether the product and each counterpart jointly determine the purposes and means
+      of the linkage is a fact about an arrangement, decided by reading the contracts and the
+      deployment, and no line this detector matches decides it. Context question 5 is where it is
+      asked'
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-10
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: 'GDPR (Regulation (EU) 2016/679), Art. 5(1)(c) - personal data shall be "adequate, relevant
+      and limited to what is necessary in relation to the purposes for which they are processed".
+      Reference only: this detector establishes no purpose and cannot. It is cited because the table
+      grows one entry per counterpart the product is configured for, whether or not that counterpart
+      is ever used for the subject in question, and the size of the table is a design choice that
+      the minimisation question is asked of'
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-10
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.45
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    counterpart_id_macro_keys:
+      - uid-macro
+      - uids-macro
+      - user-macro
+      - userid-macro
+      - user-id-macro
+      - buyeruid-macro
+      - sync-macro
+      - macro-uid
+      - uid-placeholder
+      - user-id-placeholder
+      - userid-placeholder
+    pseudonym_param_names:
+      - uid
+      - uids
+      - buyeruid
+      - buyer-uid
+      - userid
+      - user-id
+      - visitorid
+      - visitor-id
+      - partneruid
+      - partner-uid
+      - bidderuid
+      - bidder-uid
+      - sspuid
+      - ssp-uid
+      - syncuid
+      - sync-uid
+      - puid
+      - tuid
+    redirect_url_macros:
+      - "{redirect_url}"
+      - "{{redirect_url}}"
+      - ${redirect_url}
+      - "%%redirect_url%%"
+      - "[redirect_url]"
+      - <redirect_url>
+      - "{callback_url}"
+      - "{{callback_url}}"
+      - ${callback_url}
+      - "[callback_url]"
+      - "{return_url}"
+      - ${return_url}
+      - "{sync_url}"
+      - ${sync_url}
+    pseudonym_type_terms:
+      - uid
+      - uids
+      - user-uid
+      - buyer-uid
+      - partner-uid
+      - bidder-uid
+      - vendor-uid
+      - sync-uid
+      - synced-uid
+      - pseudonym
+      - sync-id
+      - match-id
+      - cookie-id
+    pseudonym_table_terms:
+      - uids
+      - user-uids
+      - partner-uids
+      - bidder-uids
+      - vendor-uids
+      - ssp-uids
+      - buyer-uids
+      - synced-uids
+      - sync-uids
+      - pseudonyms
+      - sync-ids
+      - match-ids
+    terminal_store_terms:
+      - cookie
+      - cookies
+      - localstorage
+      - local-storage
+      - sessionstorage
+      - session-storage
+      - webstorage
+      - web-storage
+    terminal_store_writes:
+      - document.cookie
+      - set-cookie
+      - add-cookie
+      - cookie.cookie
+      - setrawcookie
+      - put-resp-cookie
+      - write-cookie
+      - store-cookie
+      - localstorage.setitem
+      - sessionstorage.setitem
+    sync_endpoint_names:
+      - set-uid
+      - get-uid
+      - user-sync
+      - cookie-sync
+      - id-sync
+      - uid-sync
+      - sync-user
+      - sync-cookie
+      - sync-uid
+      - user-match
+      - cookie-match
+      - id-match
+      - match-user
+      - pixel-sync
+      - partner-sync
+      - bidder-sync
+      - vendor-sync
+    counterpart_name_terms:
+      - cookie-family
+      - sync-family
+      - bidder-name
+      - bidder-code
+      - partner-name
+      - partner-code
+      - vendor-name
+      - vendor-code
+      - ssp-name
+      - dsp-name
+      - syncer-name
+      - buyer-name
+      - network-name
+  vocabulary_matching:
+    counterpart_id_macro_keys:
+      case_insensitive: true
+      separator_insensitive: true
+    pseudonym_param_names:
+      case_insensitive: true
+      separator_insensitive: true
+    redirect_url_macros:
+      case_insensitive: true
+      separator_insensitive: true
+    pseudonym_type_terms:
+      case_insensitive: true
+      separator_insensitive: true
+    pseudonym_table_terms:
+      case_insensitive: true
+      separator_insensitive: true
+    terminal_store_terms:
+      case_insensitive: true
+      separator_insensitive: true
+    terminal_store_writes:
+      case_insensitive: true
+      separator_insensitive: true
+    sync_endpoint_names:
+      case_insensitive: true
+      separator_insensitive: true
+    counterpart_name_terms:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?:^|[^A-Za-z0-9_])[A-Za-z0-9_]{0,12}(?&counterpart_id_macro_keys)
+    - "[?&](?&pseudonym_param_names)\\s*=\\s*[\"'`]?(?:%%[A-Za-z0-9_.]{1,40}%%|%[A-Za-z0-9_.]{1,40}\
+      %|\\$\\$[A-Za-z0-9_.]{1,40}\\$\\$|\\$\\{[A-Za-z0-9_.]{1,40}\\}|\\$[A-Za-z][A-Za-z0-9_]{1,39}|\
+      \\{\\{[A-Za-z0-9_.]{1,40}\\}\\}|\\{[A-Za-z0-9_.]{1,40}\\}|\\[[A-Za-z0-9_.]{1,40}\\]|<[A-Za-z]\
+      [A-Za-z0-9_.]{0,39}>|@[A-Za-z0-9_.]{1,40}@|#\\{[A-Za-z0-9_.]{1,40}\\})"
+    - "[?&][A-Za-z0-9_.\\-]{1,32}\\s*=\\s*(?&redirect_url_macros)"
+    - (?:^|[^A-Za-z0-9_])(?:(?:Map|HashMap|LinkedHashMap|TreeMap|ConcurrentHashMap|ImmutableMap|BTreeMap|Dictionary|Dict|Record)\s*[<\[(]\s*(?:String|string|str|&str|Text|CharSequence)\s*,\s*|map\s*\[\s*(?:string|str|String)\s*\]\s*)(?&pseudonym_type_terms)[A-Za-z0-9_]{0,32}
+    - (?:^|[^A-Za-z0-9_])[A-Za-z0-9_]{0,20}(?&pseudonym_table_terms)[A-Za-z0-9_]{0,8}(?&terminal_store_terms)
+    - (?:^|[^A-Za-z0-9_])(?&terminal_store_writes)[^\n]{0,100}(?&pseudonym_table_terms)
+    - /(?&sync_endpoint_names)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])[A-Za-z0-9_]{0,16}(?&counterpart_name_terms)[A-Za-z0-9_]{0,12}\s*,\s*(?&pseudonym_param_names)[A-Za-z0-9_]{0,8}\s*[,)]
+context_questions:
+  - "WHO ARE THE COUNTERPARTS, AND IS EACH ONE NAMED WHERE THE SUBJECT CAN SEE IT? List them from
+    the configuration rather than from the notice: in the anchor implementation of this construct
+    the counterpart list is one file per party in a configuration directory, and the number of
+    parties is whatever that directory holds. Then compare that list with the privacy notice, the
+    cookie banner's vendor list and the record of processing activities, and say which parties
+    appear in the code and in none of them. A count that differs between the two places is the
+    answer to this question, not a detail of it."
+  - "CAN THE SUBJECT REFUSE BEFORE THE FIRST REDIRECT IS FOLLOWED, AND WHAT DOES THE PRODUCT DO IF
+    THEY DO NOTHING? Quote the code path that decides whether the sync runs: is it reached only
+    after a positive signal is recorded, or does it run on first contact and stop later if a signal
+    says so? Quote the default. This detector reads the mechanism and never the gate in front of it,
+    so where the gate is and whether it is passed are read here and nowhere else."
+  - "HOW LONG DOES THE TABLE LIVE, AND WHAT HAPPENS WHEN IT IS DELETED? Quote the cookie's max-age
+    or expiry, any per-entry expiry the value carries, and any sweep that removes stale entries.
+    Then say what deleting it undoes: an entry that has already been returned to a counterpart was
+    disclosed when the redirect was followed, and removing the local copy does not reach the copy
+    the counterpart kept. Say which of the two the product's own deletion path addresses."
+  - ARE THE IDENTIFIERS STABLE ACROSS SITES AND ACROSS SESSIONS, AND WHOSE IDENTIFIER IS EACH ONE?
+    For each side of the table say whether the value is fixed for this browser wherever it appears,
+    rotated per site, or derived per session; and say which values the product minted itself and
+    which a counterpart returned. A table whose entries are stable across sites is a linkage between
+    whatever those sites know about the person, which is a different fact from any single entry in
+    it.
+  - "IS THIS ARRANGEMENT ONE THE PRODUCT DETERMINES ALONE, OR JOINTLY WITH EACH COUNTERPART? This is
+    a question about an arrangement and not about any line of code, and no match here answers it:
+    read the contracts, the terms each counterpart is onboarded under, and who decides that a sync
+    happens and what the identifier is then used for. Say what you find and say plainly where the
+    documents do not settle it. Where the determination turns out to be joint, the transparency and
+    responsibility-allocation duties attach to the arrangement rather than to either party alone."
+  - "WHICH SIDE OF THE ARRANGEMENT IS THE SCANNED REPOSITORY? The same construct is written from
+    both ends: the hub that mints callbacks and keeps the table, and a counterpart that receives a
+    redirect and answers with its own identifier. Say which side each matched file is on, because
+    the recipients, the storage and the erasure questions all land differently depending on the
+    answer."
+evidence_template: "{file}:{line} matched a construct this rule reads as CROSS-PARTY IDENTIFIER
+  SYNC: a redirect the product mints with a placeholder for a counterpart's own identifier, a table
+  of many counterparts' pseudonyms held in the subject's terminal equipment, or the callback
+  endpoint that fills that table. The limb is readable from the matched line. WHAT EACH LIMB
+  ESTABLISHES, AND WHAT IT DOES NOT. A PLACEHOLDER REDIRECT establishes that a counterpart is
+  invited to return its own identifier for this browser; it does not establish that any counterpart
+  does, that the redirect is ever followed, or that this counterpart is configured in the deployment
+  being scanned - which counterparts are live is read from the configuration and the deployment, and
+  that is context question 1. AND IT ESTABLISHES THAT ONLY WHERE THE BRACES ARE A COUNTERPART'S
+  MACRO SLOT: a placeholder in query-parameter position is also the shape a host language's own
+  string interpolation takes - a Python f-string or a JavaScript template literal writing
+  `?return_url={return_url}` or `?user_id={target_id}`, or a documentation line writing
+  `?user_id=<id>` - and on those lines there is no counterpart at all, so the match establishes only
+  that a URL is being assembled. Which of the two this is cannot be read off the matched line: open
+  the file and say WHO FILLS THE PLACEHOLDER - the product itself, at run time, from its own
+  variable, or another party, after the browser reaches it. This is disclosed as a cost of reading
+  widely and NOT repaired by narrowing the clause: no spelling has been removed, because a
+  subtraction is the only operation that can create a miss. A PSEUDONYM TABLE establishes that a
+  table of counterpart-keyed pseudonyms is declared, and - where the matched line pairs that table
+  with a cookie or a client-side store - that the store it lives in is the subject's own terminal
+  equipment. A DECLARATION READ ALONE DOES NOT ESTABLISH THE STORAGE LOCATION: a map from
+  counterpart to pseudonym is the same shape whether it is written into a cookie or kept in server
+  memory, and which one this is here is read from the file rather than from this line. It does not
+  establish the lawful basis for storing it, whether a consent gate stands in front of the first
+  write, or what the table's lifetime is, which are context questions 2 and 3. THE CALLBACK
+  establishes that a value arriving from a counterpart is written into that table; it does not
+  establish that consent was obtained, that the value is a person's identifier rather than a
+  placeholder or a null, or that the write ever happens for a given subject. NOTHING HERE
+  ESTABLISHES WHO THE RECIPIENTS ARE: the counterpart list is a configuration fact, not a fact this
+  detector reads. NOTHING HERE DECIDES WHETHER THE ARRANGEMENT IS JOINT, which is context question 5
+  and is answered from contracts rather than from code. AND NOTHING HERE SAYS WHICH SIDE OF THE
+  ARRANGEMENT THIS REPOSITORY IS ON - hub or counterpart - which is context question 6 and changes
+  what every other answer means. REACH: every anchor behind this rule is in one repository in one
+  framework; a second implementation's spelling of the same construct is untested, so a silence from
+  this rule is weaker evidence than a silence from a rule read across many trees."
+remediation_template: |
+  Put the consent decision in front of the first sync, not after it. The first redirect is the
+  disclosure: once the browser has followed it, the counterpart has the subject's pseudonym and
+  removing the local table afterwards does not reach it. Name the code path that decides, and say
+  what happens when the subject has expressed nothing at all.
+  Write the counterpart list where the subject can read it, and keep it beside the configuration
+  that generates it. Where the parties are one configuration file each, the notice and the record of
+  processing activities are stale the moment a file is added; a list built from the configuration is
+  the only one that stays true.
+  Describe the table for what it is in the record of processing activities: a store on the subject's
+  terminal equipment holding one pseudonym per counterpart, with its lifetime and its per-entry
+  expiry. Naming the cookie is not describing the table.
+  Say what deletion does and does not undo. A deletion path that clears the local table should say
+  so in those words, rather than in words that read as though the identifiers already disclosed were
+  recalled.
+  Where the determination is joint, record the allocation of responsibilities and make its essence
+  available to the subject. Where it is not joint, write down why not, because that conclusion is
+  the one everything else rests on.
+data_categories:
+  - user.behavior
+  - user.device
+  - user.device.cookie_id
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: existence

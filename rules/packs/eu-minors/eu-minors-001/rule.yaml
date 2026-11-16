@@ -1,0 +1,731 @@
+id: eu-minors-001
+pack: eu-minors
+short_name: "Sign-up: age check and parental consent"
+problem_line:
+  text: "Sign-up: age check or parental consent not found or weak"
+fix_line: Check age per country's limit; below it, get parental consent, reasonably verified, before
+  consent-based processing.
+title: Age assurance and parental authorisation at the account-creation surface (GDPR Art. 8)
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 8 'Conditions applicable to child's consent in relation
+      to information society services', quoted in full from the Official Journal text (CELEX
+      32016R0679, English), retrieved 2026-07-27 from the Publications Office cellar. Art. 8(1):
+      'Where point (a) of Article 6(1) applies, in relation to the offer of information society
+      services directly to a child, the processing of the personal data of a child shall be lawful
+      where the child is at least 16 years old. Where the child is below the age of 16 years, such
+      processing shall be lawful only if and to the extent that consent is given or authorised by
+      the holder of parental responsibility over the child.' Second subparagraph of Art. 8(1):
+      'Member States may provide by law for a lower age for those purposes provided that such lower
+      age is not below 13 years.' Art. 8(2): 'The controller shall make reasonable efforts to verify
+      in such cases that consent is given or authorised by the holder of parental responsibility
+      over the child, taking into consideration available technology.' Art. 8(3): 'Paragraph 1 shall
+      not affect the general contract law of Member States such as the rules on the validity,
+      formation or effect of a contract in relation to a child.' ADDRESSEE: the controller, defined
+      by Art. 4(7) as 'the natural or legal person, public authority, agency or other body which,
+      alone or jointly with others, determines the purposes and means of the processing of personal
+      data'. Art. 8(2) names the controller expressly; there is no processor-side duty in this
+      Article. THE AGE THRESHOLD IS NOT 16 EVERYWHERE, AND THIS RULE CARRIES THE NATIONAL AGES
+      RATHER THAN ASKING THE ADJUDICATING AGENT TO RECALL THEM: 16 is the default in the first
+      subparagraph, and the second subparagraph lets each Member State legislate a lower age down to
+      a floor of 13, so the age that binds a given service is the one in the national implementing
+      law of each Member State whose users it reaches, anywhere in the closed range 13 to 16. A
+      service available across the Union faces several different thresholds at once. CORRECTION,
+      2026-07-27, recorded rather than quietly applied: an earlier version of this entry stated that
+      published compilations of the national ages contradict each other and concluded that no table
+      could be carried. The contradictions are real and the conclusion drawn from them was wrong.
+      They are staleness, not legal doubt. Denmark circulates as both 13 and 15 because both are
+      correct for different periods - Lov nr. 1783 af 28. december 2023 replaced 13 with 15 in
+      databeskyttelsesloven s. 6(2)-(3) with effect from 1 January 2024 - and Slovenia moved the
+      same way under ZVOP-2. Resolving a stale secondary source against a dated primary instrument
+      is the problem this product exists to solve, so the national ages follow as one legal_basis
+      entry per Member State, each carrying three things the compilations omit: the IN-FORCE DATE of
+      the instrument that set the age (not its adoption date, and not a compilation's publication
+      date), the NATIONAL PROVISION that sets it, and whether the state DEROGATED from the GDPR
+      default at all or simply left 16 in place. HOW TO READ A ROW: each entry's checked_at is the
+      date the entry was last reviewed, and its url is the source that was actually retrieved on
+      that date and grepped for the words quoted in the entry - not a source that looked plausible.
+      Twenty-two rows are an official gazette or official consolidated-law service. Two (FR, HU)
+      carry official text whose live service blocks automated requests, and say so; their url is the
+      live copy that did answer. Three (CZ, GR, RO) open with NOT VERIFIED AGAINST A PRIMARY SOURCE
+      or NOT VERIFIED AGAINST THE NATIONAL ACT, and their url is the secondary source the number
+      actually rests on, named so that it can be judged rather than laundered. Those three are the
+      rows to re-check first. Two more (BG, CY) have a verified age and a commencement date that
+      could not be pinned to an express provision, and say so in place. A row that says nothing
+      about its limits has none that were found."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "GDPR Art. 4(25): \"'information society service' means a service as defined in point (b) of
+      Article 1(1) of Directive (EU) 2015/1535 of the European Parliament and of the Council\". That
+      definition, quoted from the Official Journal text of Directive (EU) 2015/1535 (CELEX
+      32015L1535, English), retrieved 2026-07-27: \"'service' means any Information Society service,
+      that is to say, any service normally provided for remuneration, at a distance, by electronic
+      means and at the individual request of a recipient of services\", where 'at a distance' means
+      'the service is provided without the parties being simultaneously present', 'by electronic
+      means' means 'sent initially and received at its destination by means of electronic equipment
+      for the processing (including digital compression) and storage of data, and entirely
+      transmitted, conveyed and received by wire, by radio, by optical means or by other
+      electromagnetic means', and 'at the individual request of a recipient of services' means
+      'provided through the transmission of data on individual request'. Directive (EU) 2015/1535
+      Annex I carries an indicative list of services outside the definition. An ordinary hosted web
+      or mobile application is an information society service on this definition; 'normally provided
+      for remuneration' describes the class of service, not this instance, so a product free at the
+      point of use is not thereby outside it."
+    url: http://publications.europa.eu/resource/celex/32015L1535
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR Art. 6(1)(a): 'Processing shall be lawful only if and to the extent that at least one of
+      the following applies: (a) the data subject has given consent to the processing of his or her
+      personal data for one or more specific purposes'. Quoted from CELEX 32016R0679, retrieved
+      2026-07-27. CORRECTION 2026-08-03: this entry read 'specified purposes' until the
+      quote-verification gate was extended to rule cites and found it. Art. 6(1)(a) reads 'specific
+      purposes'; 'specified purposes' is Art. 9(2)(a), the explicit-consent provision for special
+      categories, which this rule does not cite. Do not restore the other word. Art. 8(1) opens with
+      'Where point (a) of Article 6(1) applies', so Art. 8 is engaged only for the processing whose
+      basis is consent. Processing of the same child's data on another Art. 6(1) basis - performance
+      of a contract under (b), legal obligation under (c), legitimate interests under (f) - does not
+      engage Art. 8, although Art. 8(3) preserves the Member States' general contract law on the
+      validity of a contract with a child, so basis (b) is not a way round the question. Which basis
+      a sign-up flow actually runs on is not visible to a detector and is asked as a context
+      question."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR Recital 38: 'Children merit specific protection with regard to their personal data, as
+      they may be less aware of the risks, consequences and safeguards concerned and their rights in
+      relation to the processing of personal data. Such specific protection should, in particular,
+      apply to the use of personal data of children for the purposes of marketing or creating
+      personality or user profiles and the collection of personal data with regard to children when
+      using services offered directly to a child. The consent of the holder of parental
+      responsibility should not be necessary in the context of preventive or counselling services
+      offered directly to a child.' Recital 58, last sentence: 'Given that children merit specific
+      protection, any information and communication, where processing is addressed to a child,
+      should be in such a clear and plain language that the child can easily understand.' Both
+      quoted from CELEX 32016R0679, retrieved 2026-07-27. Recital 38 carries the only express
+      carve-out in this area - preventive or counselling services offered directly to a child - and
+      it is the interpretive anchor for the marketing and profiling case."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR Art. 83(4)(a): 'Infringements of the following provisions shall, in accordance with
+      paragraph 2, be subject to administrative fines up to 10 000 000 EUR, or in the case of an
+      undertaking, up to 2 % of the total worldwide annual turnover of the preceding financial year,
+      whichever is higher: (a) the obligations of the controller and the processor pursuant to
+      Articles 8, 11, 25 to 39 and 42 and 43'. Quoted from CELEX 32016R0679, retrieved 2026-07-27.
+      Article 8 is named expressly in the lower of the two tiers, not in Art. 83(5). The distinction
+      matters and is easy to get wrong: Art. 83(5)(a) covers 'the basic principles for processing,
+      including conditions for consent, pursuant to Articles 5, 6, 7 and 9' at 20 000 000 EUR or 4
+      %, and Art. 8 is absent from that list. The higher tier can still be reached indirectly,
+      because consent that does not satisfy Art. 8 leaves the processing without the Art. 6(1)(a)
+      basis it was relying on, which is an Art. 6 question - but that is a separate finding, on a
+      separate provision."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - AT 14. Derogation: YES. Provision: Datenschutzgesetz (DSG), BGBl. I Nr.
+      165/1999, § 4 Abs. 4 in the wording of the Datenschutz-Anpassungsgesetz 2018 (BGBl. I Nr.
+      120/2017): 'Bei einem Angebot von Diensten der Informationsgesellschaft, das einem Kind direkt
+      gemacht wird, ist die Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO zur Verarbeitung der
+      personenbezogenen Daten des Kindes rechtmäßig, wenn das Kind das vierzehnte Lebensjahr
+      vollendet hat.' IN FORCE 2018-05-25 (§ 70 Abs. 1 of BGBl. I Nr. 120/2017: the 1. Hauptstück,
+      which contains § 4, 'treten mit 25. Mai 2018 in Kraft'). PRIMARY: the authentic
+      Bundesgesetzblatt PDF on RIS, fetched and the text extracted and grepped."
+    url: https://www.ris.bka.gv.at/Dokumente/BgblAuth/BGBLA_2017_I_120/BGBLA_2017_I_120.pdf
+    checked_at: 2026-07-27
+    jurisdiction: AT
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - BE 13. Derogation: YES, at the floor. Provision: loi du 30 juillet 2018
+      relative à la protection des personnes physiques à l'égard des traitements de données à
+      caractère personnel, article 7: 'le traitement des données à caractère personnel relatif aux
+      enfants en ce qui concerne l'offre directe de services de la société de l'information aux
+      enfants, est licite lorsque le consentement a été donné par des enfants âgés de 13 ans ou
+      plus', with the legal representative below 13. IN FORCE 2018-09-05, the date of publication in
+      the Moniteur belge (article 281: 'La présente loi entre en vigueur le jour de sa publication
+      au Moniteur belge'). Note the gap: Belgium legislated after the GDPR applied, so between
+      2018-05-25 and 2018-09-04 the default of 16 was the operative age. PRIMARY: the Justel
+      consolidated text of the Moniteur belge, fetched and grepped."
+    url: https://www.ejustice.just.fgov.be/eli/loi/2018/07/30/2018040581/justel
+    checked_at: 2026-07-27
+    jurisdiction: BE
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - BG 14. Derogation: YES. Provision: Закон за защита на личните данни, чл. 25в,
+      inserted by § 26 of the amending act promulgated in Държавен вестник бр. 17 от 26.02.2019:
+      processing based on consent of a data subject 'ненавършило 14 години', including a direct
+      offer of information society services, is lawful only with the consent of the parent
+      exercising parental rights or the guardian. PROMULGATED 2019-02-26 (primary-confirmed). IN
+      FORCE: NOT ESTABLISHED PRECISELY - the amending act sets later dates only for two other
+      paragraphs and is silent for § 26, which under the Bulgarian default would put it three days
+      after promulgation (2019-03-01); that default rule was not read from a primary source. Before
+      it, the GDPR default of 16 applied. PRIMARY for the text: the State Gazette issue page,
+      fetched and grepped."
+    url: https://dv.parliament.bg/DVWeb/showMaterialDV.jsp?idMat=135056
+    checked_at: 2026-07-27
+    jurisdiction: BG
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - CY 14. Derogation: YES. Provision: Ν. 125(Ι)/2018, άρθρο 8(1)-(2): 'Όταν η
+      προσφορά υπηρεσιών της κοινωνίας των πληροφοριών απευθείας σε παιδί βασίζεται στη συγκατάθεση
+      του παιδιού η επεξεργασία ... είναι σύννομη, εάν το παιδί είναι τουλάχιστον δεκατεσσάρων (14)
+      ετών', with the holder of parental responsibility below 14. PUBLISHED 2018-07-31 (Official
+      Gazette, Annex I, No. 4670). IN FORCE: the Act carries no separate commencement article, so
+      publication is the operative date on the Cypriot default; that default was not read from a
+      primary source. PRIMARY: the government portal's copy of the gazette text, fetched and the
+      text extracted and grepped."
+    url: https://www.gov.cy/media/sites/24/2024/03/%CE%9D%CF%8C%CE%BC%CE%BF%CF%82-125%CE%99_2018.pdf
+    checked_at: 2026-07-27
+    jurisdiction: CY
+    supports_rule_condition: false
+  - cite: "NOT VERIFIED AGAINST A PRIMARY SOURCE. NATIONAL AGE - CZ 15. Derogation: YES. Provision:
+      zákon č. 110/2019 Sb., o zpracování osobních údajů, § 7: 'Dítě nabývá způsobilosti k udělení
+      souhlasu se zpracováním osobních údajů v souvislosti s nabídkou služeb informační společnosti
+      přímo jemu dovršením patnáctého roku věku.' IN FORCE 2019-04-24 per the same source; before
+      that the GDPR default of 16 applied, because the Czech implementing act arrived almost a year
+      late. SECONDARY SOURCE ONLY: zakonyprolidi.cz, a private Czech legal database, fetched and
+      grepped. Three official routes were tried and none served the text to an unauthenticated
+      request: e-sbirka.gov.cz is an Angular application whose backend rejects every guessed path,
+      aplikace.mvcr.cz is postback-driven, and the government's own linked-data service returns
+      structure without operative text. That service does report the Act's latest consolidated
+      wording as dated 2025-08-01, and WHETHER THAT TOUCHED § 7 WAS NOT ESTABLISHED. Re-check this
+      row before relying on it."
+    url: https://www.zakonyprolidi.cz/cs/2019-110
+    checked_at: 2026-07-27
+    jurisdiction: CZ
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - DE 16. Derogation: NO - Germany legislated no lower age, so the GDPR default
+      applies unchanged. This is a negative proof rather than silence copied from a compilation: the
+      Bundesdatenschutzgesetz carries its consent provision at § 51 BDSG, whose five subsections
+      cover proof, form, withdrawal, voluntariness and special categories and mention neither age
+      nor minors nor information society services; a full-text search of the BDSG for
+      'Minderjährig', 'Informationsgesellschaft', 'Altersgrenze' and '16 Jahre' returns nothing. §
+      20 TDDDG does regulate minors' data in digital services, but it restricts commercial re-use of
+      data collected for youth protection and sets no consent age. IN FORCE 2018-05-25, the date the
+      GDPR applied. PRIMARY: gesetze-im-internet.de, the federal official consolidation, § 51 and §
+      20 TDDDG both fetched and grepped."
+    url: https://www.gesetze-im-internet.de/bdsg_2018/__51.html
+    checked_at: 2026-07-27
+    jurisdiction: DE
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - DK 15. Derogation: YES (16 to 13 in 2018, then 13 to 15). Provision:
+      databeskyttelsesloven (lov nr. 502 af 23. maj 2018) § 6, stk. 2 og 3, amended by lov nr. 1783
+      af 28. december 2023 § 1 nr. 1 ('I § 6, stk. 2 og 3, ændres »13 år« til: »15 år«') and
+      consolidated as LBK nr. 289 af 08/03/2024: 'er behandling af personoplysninger om et barn
+      lovlig, hvis barnet er mindst 15 år'. IN FORCE 2024-01-01 (amending act § 2, stk. 1: 'Loven
+      træder i kraft den 1. januar 2024'). 13 applied from 2018-05-25 to 2023-12-31, and § 2, stk. 2
+      leaves consent given before the change under the previous rules. THIS IS THE ROW THAT BREAKS
+      COMPILATIONS: sources published well after 2024 still carry 13, and both numbers are correct
+      for their own period. PRIMARY: Retsinformation, the official Danish consolidated-law service;
+      amending act and consolidated act both fetched and grepped."
+    url: https://www.retsinformation.dk/eli/lta/2024/289
+    checked_at: 2026-07-27
+    jurisdiction: DK
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - EE 13. Derogation: YES, at the floor Art. 8(1) permits. Provision:
+      isikuandmete kaitse seadus § 8 lõige 1: 'on lapse isikuandmete töötlemine lubatud ainult
+      juhul, kui laps on vähemalt 13-aastane', with the legal representative's consent required
+      below 13 (§ 8(2)). IN FORCE 2019-01-15 (RT I, 04.01.2019, 11); the GDPR default of 16 applied
+      in Estonia from 2018-05-25 until then. Riigi Teataja's own paragraph-level amendment history
+      shows § 8 has never been amended. PRIMARY: Riigi Teataja, the official Estonian gazette and
+      consolidated-law service, current redaction fetched and grepped."
+    url: https://www.riigiteataja.ee/public-api/api/v1/akt/106032026010/blob-html
+    checked_at: 2026-07-27
+    jurisdiction: EE
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - ES 14. Derogation: YES. Provision: Ley Orgánica 3/2018 (LOPDGDD) artículo 7.1:
+      'El tratamiento de los datos personales de un menor de edad únicamente podrá fundarse en su
+      consentimiento cuando sea mayor de catorce años', with the holder of parental authority below
+      14 (art. 7.2). IN FORCE 2018-12-07. Article 7 is unamended: the BOE consolidated text current
+      to 2025-12-27 carries it verbatim, and the most recent amending act (Ley 10/2025 de 26 de
+      diciembre, disposición final 4) modifies a different article of the same law. PRIMARY: BOE,
+      the official Spanish gazette; the consolidated text was fetched, article 7 read in place and
+      the amendment list checked."
+    url: https://www.boe.es/buscar/act.php?id=BOE-A-2018-16673
+    checked_at: 2026-07-27
+    jurisdiction: ES
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - FI 13. Derogation: YES, at the floor. Provision: tietosuojalaki (1050/2018) 5
+      §: 'lapsen henkilötietojen käsittely on lainmukaista, jos lapsi on vähintään 13-vuotias'. IN
+      FORCE 2019-01-01; the GDPR default applied from 2018-05-25 until then. 5 § carries no
+      amendment citation, and act 380/2026 (in force 2026-09-01) amends 4, 6, 7 and 14 § and adds 36
+      a § without touching it. Two traps that produce wrong compilations: 8 § of the same act is the
+      Data Protection Ombudsman provision rather than the age, and the 2026 amendment moves the
+      sections either side of 5 § while leaving 5 § alone. PRIMARY: Finlex, the official Finnish
+      consolidated-law service, fetched and grepped."
+    url: https://www.finlex.fi/fi/lainsaadanto/2018/1050
+    checked_at: 2026-07-27
+    jurisdiction: FI
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - FR 15. Derogation: YES. Provision: loi n° 78-17 du 6 janvier 1978, article 45
+      (the numbering after the recast by ordonnance n° 2018-1125 du 12 décembre 2018; the same rule
+      was article 7-1, created by loi n° 2018-493 du 20 juin 2018 art. 20): 'un mineur peut
+      consentir seul à un traitement de données à caractère personnel en ce qui concerne l'offre
+      directe de services de la société de l'information à compter de l'âge de quinze ans', and
+      below 15 the consent must be given jointly by the minor and the holder of parental authority -
+      a joint-consent construction, not a pure parental one. IN FORCE 2019-06-01 for article 45 in
+      its current numbering; the age of 15 itself dates from the 2018 act. OFFICIAL TEXT, LIVE
+      SOURCE BLOCKED: Légifrance answers automated requests with a Cloudflare bot challenge, so the
+      wording was taken from an archived Légifrance capture and independently confirmed on the
+      CNIL's own live publication of the consolidated Act; both fetched and grepped."
+    url: https://www.cnil.fr/fr/loi-78-17-du-6-janvier-1978-modifiee
+    checked_at: 2026-07-27
+    jurisdiction: FR
+    supports_rule_condition: false
+  - cite: "NOT VERIFIED AGAINST A PRIMARY SOURCE. NATIONAL AGE - GR 15. Derogation: YES. Provision:
+      νόμος 4624/2019 (ΦΕΚ Α' 137/29.08.2019) άρθρο 21 'Συγκατάθεση ανηλίκου', paragraphs 1-2: the
+      processing is lawful where the minor 'έχει συμπληρώσει το 15ο έτος της ηλικίας του', and below
+      15 only after the legal representative's consent. IN FORCE 2019-08-29 under άρθρο 87, the
+      Act's general commencement rule; the GDPR default of 16 applied in Greece until then.
+      SECONDARY SOURCE ONLY: taxheaven.gr, a commercial Greek legal portal, fetched and grepped.
+      Every Greek government source was tried and none answered: et.gr returns 403 and its own
+      search back-end does not resolve in DNS, dpa.gr and hellenicparliament.gr return 403. The
+      secondary text is internally consistent and carries no amendment marker on άρθρο 21, but no
+      gazette confirmed it. Re-check this row before relying on it."
+    url: https://www.taxheaven.gr/law/4624/2019/arthro/21
+    checked_at: 2026-07-27
+    jurisdiction: GR
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - HR 16. Derogation: NO, and by express enactment rather than by silence: Zakon
+      o provedbi Opće uredbe o zaštiti podataka (Narodne novine 42/2018) članak 19. stavak 1.:
+      'obrada osobnih podataka djeteta zakonita je ako dijete ima najmanje 16 godina'. IN FORCE
+      2018-05-25 (the Act's closing formula: 'stupa na snagu 25. svibnja 2018'). The single later
+      amendment concerns the supervisory authority's salary coefficients and does not touch članak
+      19. PRIMARY: Narodne novine, the official Croatian gazette, fetched and grepped."
+    url: https://narodne-novine.nn.hr/clanci/sluzbeni/2018_05_42_805.html
+    checked_at: 2026-07-27
+    jurisdiction: HR
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - HU 16. Derogation: NO - Hungary legislated no lower age, so the GDPR default
+      applies unchanged. Negative proof: the Infotv (2011. évi CXII. törvény) defines consent at 3.
+      § 7. pont with no age dimension, and a full-text search finds no age threshold, no reference
+      to GDPR Art. 8 and no information-society-service consent rule; the GDPR alignment act (2018.
+      évi XXXVIII. törvény) contains no occurrence of 'gyermek', 'hozzájárulás' or '8. cikk'. IN
+      FORCE 2018-05-25, the date the GDPR applied. OFFICIAL TEXT, LIVE SOURCE BLOCKED: njt.hu, the
+      National Legislation Database, refuses connections from this machine; the text was confirmed
+      on an archived njt.hu snapshot of 2026-04-17 and live on the Wolters Kluwer consolidated
+      mirror, both fetched and grepped."
+    url: https://net.jogtar.hu/jogszabaly?docid=a1100112.tv
+    checked_at: 2026-07-27
+    jurisdiction: HU
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - IE 16. Derogation: NO, but by express enactment rather than by silence, and
+      the distinction is worth carrying: Data Protection Act 2018 (No. 7 of 2018) section 31(1) -
+      'The age of a child specified for the purposes of Article 8 is 16 years of age.' Section 31(2)
+      narrows information society services for Irish purposes to exclude preventive or counselling
+      services, tracking Recital 38, and section 31(3) required a review of subsection (1) within
+      three to four years of commencement; the Act's official amendments table shows no subsequent
+      amendment to section 31, so the review did not move the figure. IN FORCE 2018-05-25 (Data
+      Protection Act 2018 (Commencement) Order 2018, S.I. No. 174 of 2018). PRIMARY: the electronic
+      Irish Statute Book, fetched and grepped."
+    url: https://www.irishstatutebook.ie/eli/2018/act/7/section/31/enacted/en/html
+    checked_at: 2026-07-27
+    jurisdiction: IE
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - IT 14. Derogation: YES. Provision: Codice in materia di protezione dei dati
+      personali (d.lgs. 196/2003) art. 2-quinquies, comma 1, inserted by d.lgs. 101/2018: 'il minore
+      che ha compiuto i quattordici anni può esprimere il consenso al trattamento dei propri dati
+      personali in relazione all'offerta diretta di servizi della società dell'informazione', and
+      below 14 the consent must be given by the holder of parental responsibility. IN FORCE
+      2018-09-19 (Normattiva shows 'Testo in vigore dal: 19-9-2018' on the article itself); the GDPR
+      default applied in Italy from 2018-05-25 until then. PRIMARY: Normattiva, the official Italian
+      consolidated-law service; the article was fetched and grepped, which needs a session cookie
+      from the act's URN URL first."
+    url: https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2003-06-30;196
+    checked_at: 2026-07-27
+    jurisdiction: IT
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - LT 14. Derogation: YES. Provision: Lietuvos Respublikos asmens duomenų
+      teisinės apsaugos įstatymas (as recast by įstatymas Nr. XIII-1426 of 2018-06-30) 6 straipsnis,
+      'Vaiko, kuriam siūlomos informacinės visuomenės paslaugos, amžius sutikimui duoti': 'vaiko
+      asmens duomenų tvarkymas yra teisėtas, jei sutikimą pagal Reglamento (ES) 2016/679 6
+      straipsnio 1 dalies a punktą duoda ne jaunesnis negu 14 metų vaikas'. IN FORCE 2018-07-16
+      (recast act art. 2(1): 'Šis įstatymas ... įsigalioja 2018 m. liepos 16 d.'). The 2024 recast
+      act Nr. XIV-2626 was read in full and does not touch 6 straipsnis, and the current
+      consolidated table of contents still carries it under the same heading. PRIMARY:
+      e-seimas.lrs.lt, the official Lithuanian legal acts register; the recast act PDF and the
+      current consolidated redaction were both fetched and grepped."
+    url: https://e-seimas.lrs.lt/portal/legalAct/lt/TAD/TAIS.29193/asr
+    checked_at: 2026-07-27
+    jurisdiction: LT
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - LU 16. Derogation: NO - Luxembourg legislated no lower age, so the GDPR
+      default applies unchanged. Negative proof read from the instrument itself rather than
+      inferred: the loi du 1er août 2018 portant organisation de la Commission nationale pour la
+      protection des données et mise en oeuvre du règlement (UE) 2016/679 (Mémorial A n° 686) was
+      fetched in full as the official Journal officiel PDF and contains no occurrence of 'mineur',
+      'enfant', 'société de l'information', 'seize ans', 'quinze ans', 'quatorze ans' or 'treize
+      ans'; its four references to 'article 8' are to its own article 8 on the CNPD's missions. IN
+      FORCE 2018-05-25, the date the GDPR applied. PRIMARY: data.legilux.public.lu, the official
+      gazette's file service, fetched and the text extracted and searched."
+    url: https://data.legilux.public.lu/file/eli-etat-leg-loi-2018-08-01-a686-jo-fr-pdf.pdf
+    checked_at: 2026-07-27
+    jurisdiction: LU
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - LV 13. Derogation: YES, at the floor. Provision: Fizisko personu datu
+      apstrādes likums 33. pants: the processing is lawful 'ja bērns ir vismaz 13 gadus vecs', or
+      where a parent or legal guardian has consented for a child below 13. IN FORCE 2018-07-05
+      (adopted 2018-06-21). 33. pants carries no amendment note, unlike other articles of the same
+      act which carry theirs explicitly. PRIMARY: likumi.lv, the official Latvian consolidated-law
+      service, fetched and grepped."
+    url: https://likumi.lv/ta/id/300099-fizisko-personu-datu-apstrades-likums
+    checked_at: 2026-07-27
+    jurisdiction: LV
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - MT 13. Derogation: YES, at the floor. Provision: NOT the Data Protection Act
+      itself, which is why a search of Chapter 586 finds nothing - Subsidiary Legislation 586.11,
+      the Processing of Child's Personal Data in relation to the Offer of Information Society
+      Services Regulations (Legal Notice 179 of 2018), regulation 4: 'The processing of personal
+      data of a child in relation to information society services shall be lawful where the child is
+      thirteen years of age.' IN FORCE 2018-06-01 per the instrument's own commencement line;
+      legislation.mt dates the single published version 2018-06-04 and records no later version.
+      PRIMARY: legislation.mt, the official Maltese legislation service, the regulations' PDF
+      fetched and the text extracted and grepped."
+    url: https://legislation.mt/eli/sl/586.11/eng
+    checked_at: 2026-07-27
+    jurisdiction: MT
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - NL 16. Derogation: NO - the Netherlands legislated no lower age, so the GDPR
+      default applies unchanged. The trap here is that the UAVG does have a children's-consent
+      article and it is not a derogation: artikel 5 opens 'Indien artikel 8 van de verordening niet
+      van toepassing is', i.e. it governs parental consent for processing OUTSIDE Art. 8, and sets
+      16 there too ('indien de betrokkene de leeftijd van zestien jaren nog niet heeft bereikt').
+      Reading it as the Art. 8(1) age is the mistake to avoid; where Art. 8 applies, it applies at
+      16 by direct effect. IN FORCE 2018-05-25. A further amendment to artikel 5 enters into force
+      2026-09-01 and adds a threshold of 12 for exercising rights, not for the Art. 8 consent age.
+      PRIMARY: wetten.overheid.nl, the official Dutch consolidated-law service, fetched and
+      grepped."
+    url: https://wetten.overheid.nl/BWBR0040940/2018-05-25/0/Hoofdstuk1/Artikel5
+    checked_at: 2026-07-27
+    jurisdiction: NL
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - PL 16. Derogation: NO - Poland legislated no lower age, so the GDPR default
+      applies unchanged. Negative proof read from the act itself: the ustawa z dnia 10 maja 2018 r.
+      o ochronie danych osobowych (Dz.U. 2018 poz. 1000) was fetched in full as the official Sejm
+      ELI PDF and contains no occurrence of 'społeczeństwa informacyjnego', 'dziecka', '13 lat' or
+      '16 lat' anywhere in its 176 articles. IN FORCE 2018-05-25, confirmed from the Act's own art.
+      176 ('Ustawa wchodzi w życie z dniem 25 maja 2018 r.') rather than from the no-derogation
+      convention. PRIMARY: api.sejm.gov.pl, the Sejm's official ELI service, fetched and the text
+      extracted and searched."
+    url: https://api.sejm.gov.pl/eli/acts/DU/2018/1000/text.pdf
+    checked_at: 2026-07-27
+    jurisdiction: PL
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - PT 13. Derogation: YES, at the floor. Provision: Lei n.º 58/2019, de 8 de
+      agosto, artigo 16.º 'Consentimento de menores': personal data of children may be processed on
+      consent for a direct offer of information society services 'quando as mesmas já tenham
+      completado 13 anos de idade', and below 13 only with the legal representatives' consent, 'de
+      preferência com recurso a meios de autenticação segura'. IN FORCE 2019-08-09 (artigo 68.º: the
+      law enters into force the day after publication); the GDPR default of 16 applied in Portugal
+      until then. PRIMARY: Diário da República, the official Portuguese gazette, fetched and grepped
+      - the site serves its rendered text only to a crawler user-agent, which is how it was read.
+      NOT ESTABLISHED: whether artigo 16.º has been amended since 2019; the gazette's amendments tab
+      did not render for any user-agent tried, and the article text carries no amendment marker."
+    url: https://diariodarepublica.pt/dr/detalhe/lei/58-2019-123815982
+    checked_at: 2026-07-27
+    jurisdiction: PT
+    supports_rule_condition: false
+  - cite: "NOT VERIFIED AGAINST THE NATIONAL ACT. NATIONAL AGE - RO 16. Derogation: NO, on the evidence
+      available. Legea nr. 190/2018 could not be read: legislatie.just.ro, the Ministry of Justice's
+      official consolidated-law service, closes the connection on every request from this machine
+      over HTTP/1.1 and HTTP/2 alike, and Monitorul Oficial publishes no free full-text archive of
+      2018 issues. What was read instead, and what it says: the Romanian supervisory authority's own
+      published guide answers the information-society-services question for children by quoting the
+      GDPR figure of 16 and citing it to 'art. 8 din Regulamentul (UE) 2016/679' alone, breaking the
+      same document's consistent habit of citing '(art. X din Legea nr. 190/2018)' wherever a rule
+      is national; and its itemisation of everything Law 190/2018 adds contains no
+      children's-consent provision. That is an official body's statement of the position, not the
+      statute. IN FORCE 2018-05-25 on that reading, NOT confirmed from the Act's own commencement
+      clause. Re-check this row before relying on it."
+    url: https://www.dataprotection.ro/servlet/ViewDocument?id=1650
+    checked_at: 2026-07-27
+    jurisdiction: RO
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - SE 13. Derogation: YES, at the floor. Provision: lag (2018:218) med
+      kompletterande bestämmelser till EU:s dataskyddsförordning, 2 kap. 4 §: 'Vid erbjudande av
+      informationssamhällets tjänster direkt till ett barn som bor i Sverige ska behandling av
+      personuppgifter vara tillåten med stöd av barnets samtycke, om barnet är minst 13 år.' Note
+      the express territorial limb - the Swedish rule is written for a child resident in Sweden,
+      which matters for a service that reaches several Member States. IN FORCE 2018-05-25. The Act
+      has been amended up to SFS 2025:256 and the official amendment register lists no amendment to
+      2 kap. 4 §. PRIMARY: Sveriges riksdag's publication of Svensk författningssamling, fetched and
+      grepped."
+    url: https://www.riksdagen.se/sv/dokument-och-lagar/dokument/svensk-forfattningssamling/lag-2018218-med-kompletterande-bestammelser_sfs-2018-218/
+    checked_at: 2026-07-27
+    jurisdiction: SE
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - SI 15. Derogation: YES. Provision: Zakon o varstvu osebnih podatkov (ZVOP-2),
+      Uradni list RS št. 163/22, 8. člen (1): 'Privolitev otroka za uporabo storitev informacijske
+      družbe ... je veljavna, če je otrok star 15 let ali več', with a parent, guardian or holder of
+      parental responsibility below 15 and, for a service offered free of charge, a foster parent or
+      institution representative. IN FORCE 2023-01-26 (127. člen: the Act enters into force on the
+      thirtieth day after publication; published 2022-12-27). SLOVENIA IS THE SECOND ROW THAT BREAKS
+      COMPILATIONS: it had no GDPR implementing act at all between 2018-05-25 and ZVOP-2, so the
+      default of 16 applied directly in that period and 15 is recent, not long-standing. PRIMARY:
+      Uradni list RS, the official gazette; the issue PDF was fetched and the text extracted and
+      grepped. NOT ESTABLISHED: whether ZVOP-2 has been amended since 2023 - the consolidated
+      service pisrs.si requires an API token this machine does not have."
+    url: https://www.uradni-list.si/_pdf/2022/Ur/u2022163.pdf
+    checked_at: 2026-07-27
+    jurisdiction: SI
+    supports_rule_condition: false
+  - cite: "NATIONAL AGE - SK 16. Derogation: NO, and by express enactment rather than by silence: zákon
+      č. 18/2018 Z. z. o ochrane osobných údajov § 15 ods. 1 restates the GDPR figure -
+      'Prevádzkovateľ v súvislosti s ponukou služieb informačnej spoločnosti spracuva osobné údaje
+      na základe súhlasu dotknutej osoby zákonne, ak dotknutá osoba dovršila 16 rokov veku' - with
+      the legal representative's consent below 16. IN FORCE 2018-05-25 (the Act's own final clause:
+      'Tento zákon nadobúda účinnosť 25. mája 2018'). The consolidated snapshot valid from
+      2024-07-01 carries § 15 unchanged. PRIMARY: slov-lex.sk, the official Slovak legal information
+      portal, fetched and grepped."
+    url: https://static.slov-lex.sk/static/SK/ZZ/2018/18/20240701.html
+    checked_at: 2026-07-27
+    jurisdiction: SK
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.3
+detector:
+  engine: builtin-regex
+  match:
+    - (?:[Dd]ate|DATE)[_\-]?(?:[Oo]f|OF)[_\-]?(?:[Bb]irth|BIRTH)|dateOfBirth|[Bb]irth[_\-]?[Dd]ate|BIRTH[_\-]?DATE|birthdate|BIRTHDATE|[Bb]irth[_\-]?[Dd]ay|BIRTH[_\-]?DAY|birthday|BIRTHDAY|[Bb]irth[_\-]?[Yy]ear|BIRTH[_\-]?YEAR|(?<![A-Za-z0-9\u00C0-\u024F])(?:dob|DOB|Dob)(?![A-Za-z0-9\u00C0-\u024F])|[Bb]orn[_\-]?(?:[Oo]n|[Aa]t)|[Gg]eburtsdatum|GEBURTSDATUM|[Dd]ate[_\-
+      ]?(?:de[_\- ])?[Nn]aissance|[Ff]echa[_\- ]?(?:de[_\-
+      ])?[Nn]acimiento|[Gg]eboortedatum|[Dd]ata[_\- ]?di[_\- ][Nn]ascita|[Dd]ata[_\- ]?(?:de[_\-
+      ])?[Nn]ascimento|[Dd]ata[_\-
+      ]?[Uu]rodzenia|[Ff][oö]delsedatum|[Ff][oø]dselsdato|[Ss]yntym[aä](?:aika|p[aä]iv[aä])|[Dd]atum[_\-
+      ]?narozen[ií]|[Dd]ata[_\- ]?na[sșş]terii|[Ss]z[uü]let[eé]si[_\- ]?d[aá]tum|[Gg]imimo[_\-
+      ]?data|[Dd]zim[sš]anas[_\- ]?datums|[Ss][uü]nni(?:aeg|kuup[aä]ev)|[Dd]atum[_\-
+      ]?ro[dđ]enja|[Dd]atum[_\- ]?rojstva|[Dd]ata[_\- ]?tat[_\- ]?twelid|[Ηη]μερομην[ίι]α[_\-
+      ]?γ[έε]ννησης|[Дд]ата[_\- ]?на[_\- ]?раждане
+    - (?:(?<![A-Za-z0-9])(?:age|Age|AGE)\w{0,14}|\w{0,14}(?:Age|_age|_AGE))\s*(?:>=|<=|===|!==|==|!=|>|<)\s*(?:1[2-9]|2[01])(?![0-9])
+    - (?<![0-9.])(?:1[2-9]|2[01])(?![0-9])\s*(?:>=|<=|>|<)\s*(?:(?<![A-Za-z0-9])(?:age|Age|AGE)|\w{0,14}(?:Age|_age|_AGE))(?![a-z]{2})
+    - (?:(?<![A-Za-z0-9])(?:[Aa]ge|AGE)|\w{0,14}Age)[_\-]?(?:[Ll]imit|LIMIT|[Tt]hreshold|THRESHOLD|[Rr]equirement|REQUIREMENT|[Rr]estrict|RESTRICT|[Gg]ate|GATE|[Gg]ating|[Cc]heck|CHECK|[Vv]erif|VERIF|[Aa]ssur|ASSUR|[Cc]onsent|CONSENT|[Cc]onfirm|CONFIRM|[Ee]ligib|ELIGIB|[Mm]in(?![A-Za-z])|MIN(?![A-Za-z])|[Bb]racket|[Bb]and(?![A-Za-z])|[Oo]f[_\-]?[Cc]onsent|OF[_\-]?CONSENT)|(?<![A-Za-z0-9])(?:[Mm]in|MIN|[Mm]inimum|MINIMUM|[Ll]egal|LEGAL|[Aa]dult|ADULT|[Cc]onsent|CONSENT|[Rr]equired|REQUIRED|[Aa]llowed|ALLOWED|[Vv]erified|VERIFIED|[Vv]erification|VERIFICATION|[Cc]hecked|CHECKED|[Cc]onfirmed|CONFIRMED|[Aa]ssured|ASSURED|[Aa]ssurance|ASSURANCE)[_\-]?(?:[Aa]ge|AGE)(?![a-z]{2})|(?<![A-Za-z0-9])(?:[Ii]s|IS)[_\-]?(?:[Aa]dult|ADULT|[Mm]inor|MINOR|[Uu]nder[_\-]?[Aa]ge|[Oo]ver[_\-]?[Aa]ge)(?![A-Za-z])|(?<![A-Za-z0-9])(?:[Uu]nderage|UNDERAGE|[Uu]nder[_\-][Aa]ge|UNDER[_\-]AGE)|(?<![A-Za-z0-9])(?:[Cc]alculate|[Cc]ompute|[Gg]et|[Dd]erive|[Cc]heck)[_\-]?(?:[Aa]ge|AGE)(?![a-z]{2})|(?<![A-Za-z0-9])(?:[Oo]ver|OVER|[Uu]nder|UNDER)[_\-]?(?:1[2-9]|2[01])(?![0-9])|\w{0,14}(?:Consent|Minimum|Min|Legal|Adult|Digital)Age(?![a-z]{2})|(?<![A-Za-z0-9])(?:COPPA|[Cc]oppa)(?![A-Za-z])
+    - (?:(?<![A-Za-z0-9])(?:[Pp]arental|PARENTAL)|\w{0,14}Parental)[_\-]?(?:[Cc]onsent|CONSENT|[Aa]pproval|APPROVAL|[Aa]uthori|AUTHORI|[Pp]ermission|PERMISSION|[Cc]ontrol|CONTROL|[Vv]erif|VERIF|[Rr]esponsib|RESPONSIB|[Ss]ignature)|(?:(?<![A-Za-z0-9])(?:[Gg]uardian|GUARDIAN)|\w{0,14}Guardian)[_\-]?(?:[Cc]onsent|CONSENT|[Aa]pproval|[Ee]mail|EMAIL|[Aa]uthori|[Vv]erif|[Ss]ignature|[Nn]ame)|(?:(?<![A-Za-z0-9])(?:[Pp]arent|PARENT)|\w{0,14}Parent)[_\-]?(?:[Cc]onsent|CONSENT|[Aa]pproval|[Ee]mail|EMAIL|[Vv]erif|[Ss]ignature|[Aa]uthori)|(?<![A-Za-z0-9])[Vv]erifiable[_\-
+      ]?[Pp]arental|(?:(?<![A-Za-z0-9])(?:[Kk]ids?|KIDS)|\w{0,14}Kids?)[_\-]?(?:[Mm]ode(?![Ll])|MODE(?![Ll])|[Aa]ccount|ACCOUNT|[Ss]afe|[Pp]rofile)|(?:(?<![A-Za-z0-9])(?:[Cc]hild|CHILD)|\w{0,14}Child)[_\-]?(?:[Aa]ccount|ACCOUNT|[Mm]ode(?![Ll])|MODE(?![Ll])|[Cc]onsent|CONSENT|[Ss]afety|SAFETY|[Pp]rofile|PROFILE|[Uu]ser|USER|[Dd]irected|DIRECTED)(?![a-z]{2})|(?:(?<![A-Za-z0-9])(?:[Mm]inor|MINOR)|\w{0,14}Minor)[_\-]?(?:[Cc]onsent|CONSENT|[Aa]ccount|ACCOUNT|[Mm]ode(?![Ll])|MODE(?![Ll])|[Pp]rofile|PROFILE|[Ff]lag|FLAG|[Ss]tatus|STATUS|[Pp]rotection|PROTECTION)(?![a-z]{2})|(?:(?<![A-Za-z0-9])(?:[Tt]een|TEEN)|\w{0,14}Teen)[_\-]?(?:[Aa]ccount|ACCOUNT|[Mm]ode(?![Ll])|MODE(?![Ll])|[Pp]rofile|PROFILE|[Ss]afe|SAFE|[Uu]ser|USER)(?![a-z]{2})
+    - (?<![A-Za-z0-9])(?:[Ss]ign[_\-]?[Uu]p|SIGN[_\-]?UP)(?![a-z]{2})|(?<![A-Za-z0-9])(?:[Cc]reate|CREATE|[Nn]ew|NEW)[_\-]?(?:[Aa]ccount|ACCOUNT)(?![a-z]{2})|(?<!(?:un|Un|UN|de|De|DE|pre|Pre|PRE))(?:[Rr]egister|REGISTER|[Rr]egistration|REGISTRATION)[_\-]?(?:[Uu]ser|USER|[Aa]ccount|ACCOUNT|[Ff]orm|FORM|[Cc]ontroller|CONTROLLER|[Pp]age|PAGE|[Rr]equest|REQUEST|[Pp]arams|PARAMS|[Dd]to|DTO|[Mm]ember|MEMBER)(?![a-z]{2})|(?<![A-Za-z0-9])(?:[Uu]ser|USER|[Mm]ember|MEMBER|[Aa]ccount|ACCOUNT|[Cc]ustomer|CUSTOMER)[_\-]?[Rr]egistration(?![a-z]{2})|[Uu]serCreationForm|[Cc]reateUserForm|createUserWithEmailAndPassword|:registerable|["'`][^"'`]{0,32}/(?:sign[_\-]?up|signup|register|registration|create[_\-]account)(?![A-Za-z])|["'`>](?:[Ss]ign
+      [Uu]p|SIGN UP|[Cc]reate (?:an |a )?[Aa]ccount|CREATE ACCOUNT|[Cc]reate (?:your )?[Pp]rofile)
+    - (?<![A-Za-z0-9])["']?(?:AD|AE|AF|AG|AI|AL|AM|AO|AQ|AR|AS|AT|AU|AW|AX|AZ|BA|BB|BD|BE|BF|BG|BH|BI|BJ|BL|BM|BN|BO|BQ|BR|BS|BT|BV|BW|BY|BZ|CA|CC|CD|CF|CG|CH|CI|CK|CL|CM|CN|CO|CR|CU|CV|CW|CX|CY|CZ|DE|DJ|DK|DM|DO|DZ|EC|EE|EG|EH|ER|ES|ET|FI|FJ|FK|FM|FO|FR|GA|GB|GD|GE|GF|GG|GH|GI|GL|GM|GN|GP|GQ|GR|GS|GT|GU|GW|GY|HK|HM|HN|HR|HT|HU|ID|IE|IL|IM|IN|IO|IQ|IR|IS|IT|JE|JM|JO|JP|KE|KG|KH|KI|KM|KN|KP|KR|KW|KY|KZ|LA|LB|LC|LI|LK|LR|LS|LT|LU|LV|LY|MA|MC|MD|ME|MF|MG|MH|MK|ML|MM|MN|MO|MP|MQ|MR|MS|MT|MU|MV|MW|MX|MY|MZ|NA|NC|NE|NF|NG|NI|NL|NO|NP|NR|NU|NZ|OM|PA|PE|PF|PG|PH|PK|PL|PM|PN|PR|PS|PT|PW|PY|QA|RE|RO|RS|RU|RW|SA|SB|SC|SD|SE|SG|SH|SI|SJ|SK|SL|SM|SN|SO|SR|SS|ST|SV|SX|SY|SZ|TC|TD|TF|TG|TH|TJ|TK|TL|TM|TN|TO|TR|TT|TV|TW|TZ|UA|UG|UM|US|UY|UZ|VA|VC|VE|VG|VI|VN|VU|WF|WS|YE|YT|ZA|ZM|ZW)["']?\s*:\s*1[3-6](?![0-9])
+    - (?:add_column|add_field|AddColumn|ADD\s+COLUMN|ALTER\s+TABLE|create_table|CreateModel|[Tt]\.(?:datetime|date|boolean|string|integer)|models\.(?:DateTimeField|DateField|BooleanField|CharField)|@Column|\bcolumn\()[^\n]{0,70}(?:(?<![A-Za-z0-9])(?:[Aa]ge|AGE)[_\-]?(?:[Vv]erif|VERIF|[Aa]ssur|ASSUR|[Cc]heck|CHECK|[Cc]onfirm|CONFIRM|[Gg]ate|GATE)|(?:[Dd]ate|DATE)[_\-]?(?:[Oo]f|OF)[_\-]?(?:[Bb]irth|BIRTH)|dateOfBirth|[Bb]irth[_\-]?[Dd]ate|birthdate|(?<![A-Za-z0-9])(?:dob|DOB|Dob)(?![A-Za-z0-9]))
+    - (?:(?<![A-Za-z0-9])(?:[Aa]ge|AGE)[_\-]?(?:[Vv]erif|VERIF|[Aa]ssur|ASSUR|[Cc]heck|CHECK|[Cc]onfirm|CONFIRM|[Gg]ate|GATE)|(?:[Dd]ate|DATE)[_\-]?(?:[Oo]f|OF)[_\-]?(?:[Bb]irth|BIRTH)|dateOfBirth|[Bb]irth[_\-]?[Dd]ate|birthdate|(?<![A-Za-z0-9])(?:dob|DOB|Dob)(?![A-Za-z0-9]))[A-Za-z_]{0,20}[^\n]{0,50}(?:add_column|add_field|:datetime|:date|:boolean|DATETIME|TIMESTAMP|BOOLEAN|models\.(?:DateTimeField|DateField|BooleanField|CharField)|@Column|[Tt]\.(?:datetime|date|boolean))
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|--|<%#)
+    - "[Mm]ax[_\\-]?[Aa]ge|MAX[_\\-]?AGE|max-age|Max-Age|s-maxage|[Cc]ache[_\\-]?[Aa]ge|[Cc]ache[_\
+      \\-]?[Cc]ontrol|[Ss]tale[_\\-]?[Ww]hile|[Tt]okenAge|token_age"
+    - \b(?:describe|it|test|context|expect|beforeEach|afterEach|beforeAll)\s*\(|\b(?:jest|vi|sinon|chai)\.|[Ff]aker[.:]|FactoryBot|factory_bot|factory
+      :|@pytest|def test_|assert_|self\.assert|[Mm]ock[A-Z]
+    - ^\s*(?:import|from|require|use|using|#include|package|gem
+      |go:generate)\b|^\s*[A-Za-z0-9_$]+\s*=\s*require\(|^\s*"[@A-Za-z0-9._/\-]+"\s*:\s*"[\^~>=<*0-9]|node_modules/
+    - "[Rr]egistration[_\\-]?[Ee]ndpoint|registration_endpoint|REGISTRATION_ENDPOINT|[Rr]egistratio\
+      n[_\\-]?[Cc]lient|[Cc]lient[_\\-]?[Rr]egistration|[Dd]ynamic[_\\- ][Cc]lient[_\\-
+      ][Rr]egistration|/oauth[A-Za-z0-9_/\\-]*/register|[Oo][Aa]uth[_\\-]?[Rr]egist|[Rr]egister[_\\\
+      -]?[Oo][Aa]uth|[Rr]egister[_\\-]?[Ww]ebhook|[Rr]egister[_\\-]?[Ff]acebook|[Pp]lugin[_\\-]?[Rr\
+      ]egistr|[Rr]egistry[.\\[]|(?<![A-Za-z0-9])use[Rr]egister|[Rr]egister\\w{0,24}(?:[Ss]erviceWor\
+      ker|[Hh]andler|_handler|_service_worker|[Cc]ustomField|_custom_field|_field_type|[Ff]ieldType\
+      |[Pp]rovider|_provider|[Mm]iddleware|[Ll]istener|[Pp]lugin|_plugin|[Ee]xtension|[Hh]ook|_hook\
+      |[Hh]elper|_helper|[Cc]allback|[Cc]omponent|[Bb]lock|[Ff]ilter|[Ss]erializer|[Ss]hortcut|[Cc]\
+      ommand|_api_key|[Aa]piKey|_scope|[Ss]cope|_mapping|[Mm]apping|[Mm]odifier)"
+    - (?::[a-z0-9_+\-]{2,}:[
+      ,"']*){3,}|(?:no_one_under|under_eighteen|underage)[a-z0-9_]*(?:prohibited|emoji|symbol)
+    - :birthday:|[Bb]irthday[_\-
+      ]?(?:[Cc]ake|[Cc]elebrat|[Ii]con|[Bb]adge|[Ee]moji|[Gg]reeting|[Ww]ish|[Cc]ard|[Pp]arty)|[Hh]appy[_\-
+      ][Bb]irthday|[Cc]ake[_\-]?[Dd]ay|cakeday
+    - (?:queue|Queue|content|Content|record|Record|file|File|data|Data|session|Session|entry|Entry|cache|Cache|token|Token|message|Message|post|Post|topic|Topic|summary|Summary|snapshot|Snapshot|backup|Backup|log|Log|job|Job|build|Build|commit|Commit|branch|Branch|index|Index|lock|Lock|item|Item|request|Request|response|Response|connection|Connection|pool|Pool|thread|Thread|link|Link|key|Key)[_\-]?(?:[Aa]ge|AGE)(?![A-Za-z])
+  path_without:
+    - (^|/)(?:__generated__|generated|codegen)/
+    - \.gen\.[cm]?[jt]sx?$
+    - (^|/)emojis?(/|\.)
+    - \.(?:md|mdx|markdown|rst|adoc|txt)$
+    - \.(?:css|scss|sass|less|styl)$
+    - (^|/)(?:seeds?|factories|testdata|test-data|sample[-_]?data)(/|$)
+    - (^|/)seed(?:s|-data)?\.[a-z]+$
+context_questions:
+  - "THE APPLICABILITY QUESTION, and the one to answer first, because a negative answer ends the
+    review. Is this service offered DIRECTLY TO A CHILD, in the sense of GDPR Art. 8(1)? No detector
+    can answer this and none of the code below decides it - it is a judgement about audience, and it
+    is the reason this candidate was raised rather than resolved. Look for and quote the evidence,
+    naming the file or artifact each piece came from: a store listing age rating or content rating
+    (Play Data safety, App Store age rating, PEGI, ESRB, IARC); an existing COPPA,
+    children's-privacy or age-rating declaration anywhere in the repository or its policy documents;
+    the marketing and landing copy - who is it addressed to, and does it name schools, parents,
+    kids, teens, students or a school year; the actual content and its subject matter; the visual
+    register of the product; any age-rating or minimum-age field in a manifest, app store config or
+    ToS; whether the product is sold to schools or families. Then say plainly which way the evidence
+    points. A general-purpose product with an adult or mixed audience is outside Art. 8, and where
+    the evidence says so, record that, dismiss the candidate and stop - do not carry on through the
+    remaining questions. Note that 'we do not intend children to use it' is not the same answer as
+    'it is not offered directly to children', and a product that is in fact used by children while
+    addressing adults raises different duties (Art. 5(1)(a) fairness, Art. 25 by-design defaults)
+    rather than this one."
+  - Is consent the lawful basis for the processing at this collection point? Art. 8(1) opens with
+    'Where point (a) of Article 6(1) applies', so this Article reaches only the processing whose
+    basis is consent. Most account sign-ups run on performance of a contract (Art. 6(1)(b)) for the
+    account itself and on consent only for specific extras - marketing email, analytics,
+    personalisation, profile visibility. Identify what is collected at this surface, split it by
+    purpose, and say which purposes rest on consent; quote the consent record, the checkbox, the
+    consent store write, or the privacy notice statement of basis. Where nothing at this surface
+    rests on consent, say so - and note Art. 8(3), which preserves Member State general contract law
+    on the validity, formation and effect of a contract with a child, so choosing basis (b) does not
+    settle the underlying question of whether a child can bind themselves.
+  - "Does this sign-up flow establish the user's age before any consent-based processing begins, and
+    where the user is below the age applicable in their Member State, does it obtain and verify
+    authorisation from the holder of parental responsibility? This is the question a suppression
+    would have answered from a keyword, and it is asked here instead so that the answer is visible
+    and can be disagreed with. Search the whole project and quote what is found with its file and
+    line: an age or date-of-birth field at each entry point; a threshold constant (MIN_AGE,
+    ageLimit, AGE_OF_CONSENT, digitalConsentAge, minimumAge) and whether any branch reads it; an
+    age-verification or age-assurance call, including a third-party vendor SDK; a parental or
+    guardian consent field, screen, token or email address; a child, kids, teen or minor account
+    mode. Then say which shape this project is in: (a) a date of birth is collected and no branch
+    reads it, (b) an account is created with no age step at all, (c) an age is collected and
+    compared but nothing behind it reaches a parental authorisation, (d) a threshold exists and is
+    applied, (e) a per-country table exists and one or more of its rows is out of date. Finding the
+    vocabulary is the start of the answer and not the answer: a gate on one entry point says nothing
+    about a second one, and a parental-consent screen that records an unverified self-declaration
+    satisfies the search and not Art. 8(2)."
+  - "What actually happens to the age or date-of-birth value this code collects? Trace it from the
+    input to every read. Three outcomes need distinguishing, and only reading the code separates
+    them: (i) it is stored and never read by any branch, so nothing is gated on it; (ii) it is read
+    but only for display, personalisation, birthday email or analytics segmentation; (iii) it is
+    read by a decision that changes what the account can do or what data is collected. Quote the
+    write and every read. Where the answer is (i) or (ii), the value is being collected without the
+    purpose that would justify it, which is a data-minimisation question under Art. 5(1)(c) as well
+    as this one."
+  - "Where the code applies an age threshold, what number is it, which Member States' users does the
+    service reach, and does that number hold in each of them? Art. 8(1) sets 16 as the default and
+    its second subparagraph lets each Member State legislate a lower age with a floor of 13, so a
+    service reaching several Member States faces several thresholds at once. THE NATIONAL AGES, as
+    carried by this rule and sourced row by row in legal_basis (each row there gives the provision,
+    the in-force date of the instrument that set it, and the source that was retrieved): AT 14, BE
+    13, BG 14, CY 14, CZ 15*, DE 16=, DK 15, EE 13, ES 14, FI 13, FR 15, GR 15*, HR 16=, HU 16=, IE
+    16=, IT 14, LT 14, LU 16=, LV 13, MT 13, NL 16=, PL 16=, PT 13, RO 16=*, SE 13, SI 15, SK 16=. A
+    trailing '=' marks a Member State that legislated no lower age at all, so the GDPR default of 16
+    is what applies there; a trailing '*' marks a row that was NOT verified against a primary source
+    - CZ, GR and RO - and those three rows say so in their own words in legal_basis, which is where
+    to look before relying on them. TWO ROWS HAVE MOVED SINCE 2018 and are the ones a compilation
+    gets wrong: Denmark is 15 only from 2024-01-01 (13 before that, and consent given before the
+    change stays under the old rule), and Slovenia is 15 only from 2023-01-26 (before ZVOP-2 it had
+    no implementing act at all, so 16 applied directly). Compare the code's number against the
+    states the service actually reaches, and quote the constant and the comparison. Three shapes to
+    name explicitly: a single hard-coded number, which cannot hold across the Union unless the code
+    treats it as a floor for everyone; a hard-coded 18, which is not a GDPR figure and usually
+    arrives from a COPPA-shaped design or an alcohol, gambling or adult-content gate; and a
+    per-country table whose rows have gone stale, which is why every row above is worth checking one
+    by one rather than at a glance. Say which row you are relying on. Where the country is unknown
+    at the point of decision, the only number that is safe everywhere is the highest one that can
+    apply, which is 16."
+  - "Where a child is below the applicable age, is there a path to consent given or authorised by
+    the holder of parental responsibility, and what does the code do to verify that authorisation?
+    Art. 8(2) requires the controller to make 'reasonable efforts to verify in such cases that
+    consent is given or authorised by the holder of parental responsibility over the child, taking
+    into consideration available technology' - so the existence of a parental-consent screen is the
+    start of the answer, not the end of it. Quote the verification step and describe what it
+    actually establishes: an unchecked 'I am this child's parent' checkbox, a self-entered parent
+    email with no confirmation, a confirmed email round trip, a payment-instrument check, a signed
+    form, a third-party age-assurance or verifiable-parental-consent service. Say what happens to
+    the account between the request and any confirmation, and whether processing starts before
+    authorisation arrives. Where there is no such path at all, say so and quote the branch that lets
+    the under-age case through."
+  - "Does Recital 38's carve-out apply - is this a preventive or counselling service offered
+    directly to a child, for which 'the consent of the holder of parental responsibility should not
+    be necessary'? This is narrow: a helpline, a mental-health or safeguarding service, a
+    child-protection reporting channel. It is not a general social, gaming, educational or content
+    product that happens to carry safety features. Where it applies, requiring a parent's
+    involvement may itself be the wrong design, and say so."
+  - Which party in this repository is the controller for the processing at this surface, in the Art.
+    4(7) sense of determining the purposes and means? Art. 8(2) addresses the controller and no one
+    else; there is no processor-side limb in this Article. Where the repository is a self-hosted or
+    white-label product that other organisations deploy for their own users, the operator of each
+    deployment is generally the controller and this codebase supplies the mechanism - in that case
+    describe what the code makes possible or impossible for a deploying operator rather than
+    reporting a duty against the authors. Quote the deployment model from the README, the licence,
+    the installation instructions or the hosting configuration.
+  - Is there an account-creation path other than the one this candidate points at, and does it
+    behave the same way? Social and federated sign-in (Google, Apple, GitHub, SAML, magic link),
+    invitation flows, API-key or CLI account creation, admin-created accounts, and importers all
+    create users without passing through the form the detector found. List every entry point you can
+    find and say whether each one reaches the same age handling, or bypasses it. A gate on one path
+    and none on the others is the commonest way this obligation is missed in practice.
+evidence_template: "{file}:{line} carries vocabulary from one of this rule's seven patterns: a
+  date-of-birth field name in one of the Member State languages, an age compared against a literal
+  between 12 and 21 in either word order, an age-limit, age-threshold, minimum-age, underage or
+  COPPA identifier, parental-consent, guardian, child-, minor- or teen-account wording, sign-up or
+  account-creation wording, or a two-letter country code mapped to an age between 13 and 16. That is
+  vocabulary, not location: the detector did not establish that the matched line is part of an
+  account-creation, age-assurance or parental-authorisation surface, because a date of birth on a
+  clinical or personnel record and an age comparison inside a content filter are written in the same
+  words. Read the surrounding code and say which surface, if any, this line belongs to - that
+  surface is where GDPR Art. 8 has to be answered. It is also not evidence that the service is
+  offered directly to a child; determine the audience first (context question 1), and only then
+  decide whether an age is collected without gating anything, whether an account can be created with
+  no age step, whether an age is asked for with no parental-authorisation path behind it, or whether
+  a hard-coded threshold has been applied across Member States with different ages."
+remediation_template: |
+  This is a candidate for review against GDPR Art. 8, not a determination about this code. Art. 8
+  addresses the controller (Art. 4(7)) and is engaged only where two things hold together: an
+  information society service is offered directly to a child, and consent under Art. 6(1)(a) is the
+  basis for the processing. Settle those two before changing anything - for a product with an adult
+  or mixed audience, or for processing that runs on contract rather than consent, there is nothing
+  here to fix, and the right outcome is a recorded note of why.
+  Where both do hold, the engineering questions are these.
+  1. Which age applies. Art. 8(1) sets 16 as the default and its second subparagraph lets each
+     Member State legislate a lower age down to a floor of 13, so the binding threshold sits
+     somewhere in 13 to 16 and is fixed by the national implementing law of each Member State whose
+     users the service reaches - a service available across the Union faces several at once. The
+     age of every Member State is carried in this rule: the working list is in the context question
+     about thresholds, and each row is sourced in legal_basis with its national provision, the
+     in-force date of the instrument that set it, and whether that state derogated from 16 at all.
+     A single hard-coded number is the shape to look at hardest: 18 is not a GDPR figure and usually
+     arrives from a COPPA-shaped or adult-content design, and 13 is the floor of the range rather
+     than a safe default. Making the threshold a per-country value, sourced from the national law
+     and defaulting to 16 where the country is unknown, is the change that removes the assumption.
+     A per-country table is not the end of the work, because the numbers move: Denmark went from 13
+     to 15 on 2024-01-01 and Slovenia from 16 to 15 on 2023-01-26, so a table written before those
+     dates is now below the national floor in two states. Whatever holds the numbers - a constant,
+     a config file, a remote table - needs a date on it and a review that outlives the developer
+     who wrote it.
+  2. Whether the age is used. A date of birth that is stored and never read by a gating branch buys
+     nothing and costs a data-minimisation question under Art. 5(1)(c). Either connect it to a
+     decision or stop collecting it.
+  3. What happens below the threshold. Art. 8(1) permits the processing where consent is given or
+     authorised by the holder of parental responsibility, and Art. 8(2) requires the controller to
+     make reasonable efforts to verify that authorisation, taking available technology into account.
+     An unverified self-declaration is the weak point: a parent email that is never confirmed
+     establishes nothing. Holding the account in a state that collects no consent-based data until
+     authorisation is confirmed is what makes the verification step load-bearing rather than
+     decorative.
+  4. Every entry point, not one. Social sign-in, invitations, API and admin account creation, and
+     importers routinely bypass the form that carries the age step.
+  Two adjacent obligations are commonly confused with this one and are not covered by it: whether
+  the interface and privacy information are in language a child can understand (Arts. 12-14 and
+  Recital 58), and whether the shipped defaults are the most protective ones for a child's account
+  (Art. 25). Both are separate rows with their own rules.
+data_categories:
+  - user.childrens
+  - user.demographic.date_of_birth
+  - user.demographic.age_range
+  - user.account
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 1
+      class: existence
+    - question: 3
+      class: per-location
+    - question: 4
+      class: enumeration
+      item: read of the age value
+      item_source: reading
+    - question: 5
+      class: enumeration
+      item: Member State age threshold
+      item_source: reading
+    - question: 6
+      class: per-location
+    - question: 9
+      class: enumeration
+      item: account-creation path
+      item_source: reading

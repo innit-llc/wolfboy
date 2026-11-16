@@ -1,0 +1,115 @@
+id: eu-consent-005
+pack: eu-consent
+short_name: Session recording tool may run before consent
+problem_line:
+  text: "Session recording: consent gate or full masking not found"
+fix_line: Load the replay SDK only after recorded consent, and mask every input and every region
+  that shows personal data.
+title: Session-replay SDK referenced, initialised or configured (Hotjar, FullStory, Clarity,
+  LogRocket, Datadog RUM and peers)
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC) (prior consent
+      for storing or accessing information on terminal equipment)
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) (replaces Art. 5(3) of Directive 2002/58/EC: the 2002
+      wording offered only a right to refuse, the replacement wording requires prior consent) and
+      Art. 4 (Member State transposition deadline 25 May 2011)"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: GDPR Art. 5(1)(c) (data minimisation) and Art. 25 (data protection by design and by default) —
+      session replay tends to over-collect
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-21
+    jurisdiction: EU
+effective_date: 2011-05-25
+severity: high
+rule_confidence: 0.6
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  shared_vocabulary:
+    - session_replay_recipients
+  match:
+    - static\.hotjar\.com
+    - Hotjar\.init\(
+    - _hjSettings
+    - "@hotjar/browser"
+    - fullstory\.com/s/fs\.js
+    - edge\.fullstory\.com
+    - _fs_(org|script|namespace)
+    - FS\.init\(
+    - "@fullstory/browser"
+    - init\(\s*\{\s*orgId
+    - clarity\.ms/tag
+    - Clarity\.init\(
+    - "@microsoft/clarity"
+    - sessionReplayPlugin\(
+    - sessionReplaySampleRate\s*(?:=>|[:=])\s*[0-9]
+    - (?:@sentry/replay|\breplayIntegration\s*\(|\bSentryReplay\b|\bSentryReplayIntegration\b)
+    - replays(?:Session|OnError)SampleRate\s*(?:=>|[:=])\s*[0-9]
+    - (?&session_replay_recipients)
+context_questions:
+  - Is the replay SDK initialised only after consent has been recorded? Quote the loading path.
+  - Are masking settings applied to input fields and to regions that render personal data (each
+    SDK's own privacy configuration)?
+  - Does session replay run on pages where personal data (names, email addresses, payment details)
+    is on screen?
+  - If this is a server-rendered layout, is the snippet emitted for every request, or only when a
+    stored consent decision permits it? Quote the surrounding template condition.
+evidence_template: "{file}:{line} references, initialises or configures a session-replay SDK. Most
+  branches are a load or an init call; one is a bare sample-rate value, which is a configuration and
+  not a load, and a rate of 0 means replay is switched off. TWO SAMPLE-RATE KEYS REACH THIS RULE AND
+  THEY BELONG TO DIFFERENT VENDORS: sessionReplaySampleRate is the one this rule has always carried,
+  and replaysSessionSampleRate and replaysOnErrorSampleRate are Sentry's, which is the same three
+  words in the other order - read which one the line carries before answering which SDK is
+  configured. ONE BRANCH IS A SHARED VENDOR LIST rather than a construct, and it establishes less
+  than the others: it says that a spelling OWNED BY a session-replay vendor occurs on this line, not
+  that the vendor's replay product is the one in use. That distinction is real for the vendors whose
+  replay product sits beside other products under one name - a Datadog browser-logs import and a
+  Datadog RUM session replay are the same vendor and different subjects - so read the matched
+  spelling and say which product it names before treating the line as a recording integration"
+remediation_template: >
+  Read the matched line first: most of this rule's branches are an SDK load or an init call, but one
+
+  is a bare configuration value (a sessionReplaySampleRate assignment) that is not a load at all.
+
+  Where the line is a load or an init call, switch to loading the SDK dynamically once the CMP
+
+  records consent, and apply the SDK's masking configuration (Hotjar's suppress, Clarity's masking,
+
+  Smartlook's and Mouseflow's equivalents) to every input.
+
+  Mask the regions that render personal data as well as the inputs - a name in a header, an e-mail
+
+  address in an account panel, an order summary - with the SDK's element-level masking (a class, an
+
+  attribute or a selector list), or mask all text by default and unmask only the elements that carry
+
+  none, which is the sturdier default where the pages are many. Data minimisation (GDPR Art.
+  5(1)(c))
+
+  limits what a recording takes to what its purpose needs, and Art. 25 asks for that by default, not
+
+  only where someone remembered to add a mask.
+
+  Where the line is only a sample-rate value, the load is elsewhere in the project - find it and
+
+  answer for that line; and read the value itself, because a rate of 0 means replay is switched off
+
+  and the candidate closes there.
+
+  In a server-rendered layout, wrap the snippet in a condition on the stored consent decision rather
+
+  than emitting it on every render.
+
+  In addition, disable session replay on sensitive screens (health, biometric, payment).
+data_categories:
+  - user.behavior
+  - user.contact
+fingerprint_spec: default

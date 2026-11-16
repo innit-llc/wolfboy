@@ -1,0 +1,430 @@
+id: recipients-010
+pack: recipients
+short_name: Personal data sent over sockets, queues or in media URLs
+problem_line:
+  text: Personal data sent by a non-HTTP route or in a media URL
+  template: "{data} sent by a non-HTTP route or in a media URL"
+fix_line: Scope what each channel carries to its receiver, keep identifiers out of URLs where you
+  can, and record the channel.
+title: Personal data crossing a process boundary over a non-HTTP transport or in a media URL
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - the controller's record of processing
+      activities "shall contain all of the following information", including "the categories of
+      recipients to whom the personal data have been or will be disclosed including recipients in
+      third countries or international organisations". A push to a client over a socket, a datagram
+      broadcast on a local network and an identifier placed in a URL a device fetches are each a
+      disclosure to whoever is on the other end, and the category is what the record owes
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(9) - \"recipient\" means \"a natural or legal person,
+      public authority, agency or another body, to which the personal data are disclosed, whether a
+      third party or not\". Reference only: a definition establishes no duty of its own. It is cited
+      because the ordinary reading of a push to the product's own client is that nothing left the
+      controller - and the answer turns on who operates the client and on whose behalf, not on the
+      transport"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(f) - personal data shall be \"processed in a
+      manner that ensures appropriate security of the personal data, including protection against
+      unauthorised or unlawful processing and against accidental loss, destruction or damage, using
+      appropriate technical or organisational measures ('integrity and confidentiality')\".
+      Reference only: this detector establishes no security failure and cannot. It is cited because
+      a datagram BROADCAST reaches every host on the segment rather than a party the controller
+      chose, and because an identifier placed in a URL travels in request lines, proxy logs and
+      browser history - both of which are integrity-and-confidentiality questions rather than record
+      questions"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 4(1) - "personal data" means "any information relating
+      to an identified or identifiable natural person ('data subject'); an identifiable natural
+      person is one who can be identified, directly or indirectly, in particular by reference to an
+      identifier such as a name, an identification number, location data, an online identifier or to
+      one or more factors specific to the physical, physiological, genetic, mental, economic,
+      cultural or social identity of that natural person". Reference only. It is cited because a
+      device identifier or a play-session identifier in a media URL is an online identifier within
+      that definition even though it is neither a name nor a credential
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose "The
+      categories of third parties to whom the business discloses personal information." Sec.
+      1798.130(a)(5)(B) requires the same categories in the privacy policy
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-08-28
+    jurisdiction: US
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: medium
+rule_confidence: 0.57
+detector:
+  engine: builtin-regex
+  match:
+    - (?::[
+      \t]*(?:Outbound|Inbound)?WebSocketMessage|IOutboundWebSocketMessage|IWebSocketMessage|SessionMessageType[
+      \t]*\.)
+    - (?:SendMessage(?:ToUserSessions|ToUserDeviceSessions|ToAdminSessions|ToSession)?[
+      \t]*[(<]|socket[ \t]*\.[ \t]*emit[ \t]*\(|\.[ \t]*broadcast(?:_from|_to|_message)?[
+      \t]*\(|WriteJSON[ \t]*\(|WriteMessage[ \t]*\()
+    - (?:UdpClient|EnableBroadcast|IPAddress[ \t]*\.[ \t]*Broadcast|SendToAsync[ \t]*\(|sendto[
+      \t]*\(|DatagramSocket|MulticastSocket|SOCK_DGRAM|BroadcastAddress|[Uu]dp[_-]?[Bb]roadcast|[Bb]roadcast[_-]?[Ss]ocket)
+    - "[\"'&?](?:DeviceId|device_id|PlaySessionId|MediaSourceId|LiveStreamId|AudioStreamIndex|Subti\
+      tleStreamIndex|api_key|ApiKey|token|access_token|session_id|SessionId|user_id|UserId|subscrib\
+      er_uuid)="
+    - (?:[Pp]roducer[ \t]*(?:\.|->|::)[
+      \t]*(?:[Ss]end|send_and_wait|sendAsync|[Pp]roduce|produce_sync|produce_async|producev)[
+      \t]*\(|(?:[Cc]hannel|[Ee]xchange|[Tt]opic|[Ss]tream|[Jj]et[Ss]tream|[Bb]roker|[Qq]ueue|[Pp]ublisher|nc|js)[
+      \t]*(?:\.|->|::)[
+      \t]*(?:[Pp]ublish|publish_message|publishMessage|basic_publish|basicPublish|sendToQueue|send_to_queue|[Pp]roduce)[
+      \t]*\(|basic_publish[ \t]*\(|basicPublish[ \t]*\(|sendToQueue[ \t]*\(|WriteMessages[
+      \t]*\(|rd_kafka_produce|PutRecords?(?:Command|Request)[ \t]*[({]|[Pp]utRecords?[
+      \t]*\(|[Xx][Aa][Dd][Dd][ \t]*\(|["'`][Xx][Aa][Dd][Dd]["'`])
+    - (?:KafkaProducer|ProducerRecord|kafkajs|node-rdkafka|RdKafka|confluent[_-]kafka|aiokafka|kafka-python|kafka-go|\b[Ss]arama\b|[Kk]arafka|\b[Ww]ater[Dd]rop\b(?![
+      \t]*\.(?:png|jpe?g|gif|svg|webp|ico|bmp|css|scss|sass|less|woff2?|ttf|mp[34]|wav|pdf)\b)|amqplib|amqp[
+      \t]*\.[ \t]*[Cc]onnect|pika[ \t]*\.[ \t]*[A-Z]|BlockingConnection|RabbitTemplate|\b[Nn]ats[
+      \t]*\.[
+      \t]*[Cc]onnect|nats-io|PulsarClient|pulsar-client|KinesisClient|PutRecordCommand|[Ee]vent[Hh]ub[Pp]roducer[Cc]lient|ServiceBusClient)
+    - (?:KAFKA_URL|KAFKA_BROKERS?|KAFKA_BOOTSTRAP[_A-Z]*|BOOTSTRAP_SERVERS|bootstrap[._]servers|AMQP_UR[LI]|RABBITMQ_UR[LI]|RABBITMQ_HOST|NATS_UR[LI]|NATS_SERVERS?|PULSAR_SERVICE_URL|PULSAR_UR[LI]|KINESIS_STREAM[_A-Z]*|MQTT_UR[LI]|MQTT_BROKER[_A-Z]*|REDIS_STREAM[_A-Z]*|SERVICEBUS_CONNECTION[_A-Z]*|EVENTHUB_CONNECTION[_A-Z]*|brokers[
+      \t]*(?:=>|[:=])[ \t]*\[)
+    - (?:^|[^A-Za-z0-9])(?:git-)?(?:upload|receive)[_\-](?:pack|archive)(?![A-Za-z0-9])
+    - (?:^|[^A-Za-z0-9])(?:exec\.Command(?:Context)?|Runtime\.getRuntime\(\)\.exec|subprocess\.(?:run|call|check_output|check_call|Popen)|child_process\.(?:spawn|exec|execFile)|spawn|spawnSync|execFile|proc_open|popen|ProcessBuilder|Process\.Start)[
+      \t]*\([ \t]*(?:[A-Za-z_][A-Za-z0-9_.]{0,30}[ \t]*,[ \t]*)?[\[{]?[ \t]*["'`]git["'`]
+    - (?:^|[^A-Za-z0-9])(?:[A-Za-z0-9_]*(?:ssh|SSH|Ssh)\.ServerConfig|[A-Za-z0-9_]*(?:ssh|SSH|Ssh)\.NewServerConn|NewServerConn|gliderlabs/ssh|golang\.org/x/crypto/ssh|org\.apache\.sshd|SshServer|SSHServer|paramiko\.ServerInterface|ssh2\.Server|AcceptNewChannel|PublicKeyCallback)
+    - (?:(?<![A-Za-z0-9_$])(?&job_dispatch_verbs)[
+      \t]*\(.{0,240}(?&personal_data_field_names)|(?<![A-Za-z0-9_$])(?!Task[ \t]*\.[ \t]*Delay[
+      \t]*\([
+      \t]*(?:[0-9]|TimeSpan))[A-Za-z0-9_$]{0,40}(?:[Qq]ueue|[Jj]ob|[Tt]ask)[A-Za-z0-9_$]{0,24}[
+      \t]*(?:\.|->|::)[
+      \t]*(?:(?&job_dispatch_verbs)|addBulk|add|push|put|submit|schedule|perform|insert|publish|send)[
+      \t]*\()
+    - (?<![A-Za-z0-9_$])(?&process_launch_apis)[
+      \t]*\(.{0,200}?(?:(?&personal_data_field_names)|passwd|secret|credential|passphrase|api[_-]?key|apikey|private[_-]?key|access[_-]?token|token|\$\{?[A-Za-z_]|%[A-Za-z]|(?<![A-Za-z0-9_])(?:[a-z0-9]{1,20}_)*(?:command(?![
+      \t]+-)|cmd|argv|args|argument|parm|param|script|program|shell|executable|binary)[A-Za-z0-9_]*|(?<![A-Za-z0-9_])[a-z][A-Za-z0-9]{0,20}(?:Command|Cmd|Argv|Args|Argument|Parm|Param|Script|Program|Shell|Executable|Binary)[A-Za-z0-9_]*)
+    - (?:(?<![A-Za-z0-9_$])(?:talloc_asprintf|talloc_vasprintf|vasprintf|asprintf|vsnprintf|snprintf|sprintf|swprintf|fmt\.Sprintf|fmt\.Fprintf|String\.format|MessageFormat\.format|strlcat|strncat|strcat)[
+      \t]*\(|(?<![A-Za-z0-9_$])f["'](?=[^\n]{0,200}\{))(?:[^"'\n]|["']){0,200}?(?:(?&personal_data_field_names)|imsi|msisdn|imei|iccid|subscriber|user_?id|account_?id|session_?id|customer_?id|member_?id|principal|uuid|(?:->|\.)[
+      \t]*id(?![A-Za-z0-9_]))
+    - (?:^[ \t]*(?:optional[ \t]+|repeated[ \t]+|required[
+      \t]+)?(?:string|bytes|bool|double|float|u?int32|u?int64|sint32|sint64|fixed32|fixed64|sfixed32|sfixed64|[A-Za-z_][A-Za-z0-9_.]{0,40})[
+      \t]+(?:(?&personal_data_field_names)|hostname|host_name|author|username|user_name|user_id|session|session_id|subscriber|imsi|msisdn|account_id|customer_id|member_id|principal|actor|owner|recipient|sender|contact)[
+      \t]*=[ \t]*[0-9]+[ \t]*;|(?:pub[
+      \t]+)?(?:(?&personal_data_field_names)|hostname|host_name|author|username|user_name|user_id|session|session_id|subscriber|imsi|msisdn|principal|owner|sender|recipient)[
+      \t]*:[ \t]*(?:::)?prost)
+    - (?:(?:^|[^A-Za-z0-9_])Transport[ \t]*\.[ \t]*send[
+      \t]*\(|(?:^|[^A-Za-z0-9_])SMTPTransport(?![A-Za-z0-9_])|(?:^|[^A-Za-z0-9_])smtplib[ \t]*\.[
+      \t]*SMTP(?:_SSL)?[ \t]*\(|(?:^|[^A-Za-z0-9_])smtp[ \t]*\.[
+      \t]*(?:SendMail|Dial|NewClient|PlainAuth)[ \t]*\(|net/smtp|(?:^|[^A-Za-z0-9_])send_?[Mm]ail[
+      \t]*\(|(?:^|[^A-Za-z0-9_])sendmail[
+      \t]*\(|(?:^|[^A-Za-z0-9_])deliver_(?:now|later)(?![A-Za-z0-9_]))[^\n]{0,100}(?:[Rr]ecipients?|RECIPIENTS?|[Aa]ddress(?:es)?|ADDRESS(?:ES)?|[Ee]mail|EMAIL|[Mm]ailbox|MAILBOX|[Rr]cpt|RCPT|[Tt]o[_\-]?[Ll]ist)
+    - (?:(?:^|[^A-Za-z0-9_])(?:smtp|Smtp|SMTP)|(?<=[a-z0-9])(?:Smtp|SMTP))[A-Za-z0-9_.\-]{0,32}(?:[Hh]ost|HOST|[Pp]ort|PORT|[Ss]erver|SERVER|[Rr]elay|RELAY|[Cc]onnection|CONNECTION|[Ee]ndpoint|ENDPOINT)
+    - (?:^|[^A-Za-z0-9_])(?:addTo|setTo|addRecipients?|setRecipients?|addBcc|setBcc|addBCC|addCc|setCc|addCC|addReplyTo|addAddress)[
+      \t]*\([
+      \t]*[^\n]{0,60}(?:[Aa]ddress|ADDRESS|[Ee]mail|EMAIL|[Rr]ecipient|RECIPIENT|[Mm]ailbox|MAILBOX|[Rr]cpt|RCPT)
+  shared_vocabulary:
+    - job_dispatch_verbs
+    - process_launch_apis
+    - personal_data_field_names
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|<%#|--)
+context_questions:
+  - "MANDATORY: WHAT ACTUALLY CROSSES, AND IS ANY OF IT ABOUT A PERSON? The transport is on the
+    matched line and the payload usually is not. For a MESSAGE CLASS, read its type parameter and
+    follow it to its definition - `OutboundWebSocketMessage<UserDto>` names the DTO on the line and
+    `UserDto` is a whole object worth enumerating field by field. For a SEND, read the argument
+    list: the corpus case passes a user id, a message type and an info object. For a DATAGRAM, read
+    what is serialised into the bytes - the corpus case broadcasts a server identifier, a local URL
+    and a friendly name, which is about a MACHINE and may say nothing about a person. Report the
+    fields, and say plainly where the answer is that nothing personal crosses."
+  - "WHO IS ON THE OTHER END, AND IN WHAT CAPACITY? Three answers occur and they are different
+    findings. (a) THE PRODUCT'S OWN CLIENT, authenticated as a particular user, receiving that
+    user's own data - which is not a disclosure to a third party and often not a disclosure at all;
+    say so plainly. (b) THE PRODUCT'S OWN CLIENT RECEIVING SOMEBODY ELSE'S DATA - a SyncPlay update
+    carrying another member's user name, an administrative session receiving every session's state -
+    which is a disclosure between data subjects and is the case worth looking for. (c) ANY HOST ON
+    THE NETWORK SEGMENT, for a broadcast, where nobody selected the recipient at all. THE JUDGEMENT
+    ABOUT WHETHER THE RECIPIENT IS A THIRD PARTY BELONGS TO YOU AND NOT TO THE DETECTOR: the
+    transport says a process boundary is crossed and says nothing about who is beyond it."
+  - "FOR A BROADCAST: WHAT IS ANNOUNCED, TO WHOM, AND CAN IT BE TURNED OFF? A datagram broadcast
+    reaches every host on the segment - in a household, in an office, on a hotel or campus network.
+    Read the response body and list what it announces; a server identifier and a friendly name may
+    name a person (\"Anna's Media Server\") without any field being called a name. Then say whether
+    the announcement is on by default, whether it can be disabled, and whether it is sent
+    unsolicited or only in reply to a discovery request. Art. 5(1)(f) is the provision this question
+    serves and it is a security-of-processing question rather than a record one."
+  - "FOR AN IDENTIFIER IN A URL: WHERE DOES THAT URL END UP? A query string is not a body. It
+    appears in the request line, in reverse-proxy and CDN access logs, in browser and player
+    history, and in the Referer header sent to whatever the page links to next. Say which of those
+    apply to this URL, and whether the identifier is stable across sessions - a device identifier
+    that never changes is a persistent identifier for the person using that device. IF THE PARAMETER
+    IS A CREDENTIAL rather than an identifier, this is not the right finding: baseline-002 and
+    baseline-006 are the rules for a secret in source or in a request, and the finding should be
+    re-labelled."
+  - "IS THE CHANNEL AUTHENTICATED AND SCOPED? For a socket, say what the connection is authenticated
+    with and whether the server checks, per message, that the receiving session is entitled to the
+    payload - the difference between a push scoped to one user's sessions and a broadcast to every
+    connected client is the whole of the exposure. For an in-process event bus that never reaches a
+    socket, say so: `broadcast(` and `emit(` are written about both, and a bus that stays inside the
+    process crosses no boundary and is not this rule's subject."
+  - "FOR A MESSAGE BROKER: WHO OPERATES IT, AND WHAT IS PUT ON THE TOPIC? THIS IS THE ONE LIMB THIS
+    DETECTOR DOES NOT REACH AND MUST NOT BE READ AS ANSWERING. A broker address is an
+    operator-supplied connection string, so the source can show that a broker transport exists and
+    cannot show where it points. Ask the person running the scan, or read their deployment
+    configuration: is the broker the same operator's own infrastructure, a managed service another
+    company runs, or a partner's? Those are three different recipients and three different findings,
+    and no line of source decides between them. Then answer the payload half, which is
+    context_questions[0]'s question in this transport's spelling: read the object handed to the
+    producer call and follow it back to where it is assembled, because the assembly is routinely in
+    another file from the send. The observed case is instructive - one product's event message
+    carries a session identifier, a distinct identifier, a geolocated country, region and city,
+    browser, operating system and device fields and the referrer; a second message on a different
+    topic carries whatever fields the product's own client-side identify call captured; and a third
+    carries entire recorded replay streams of a rendered session. Say which topics carry what, and
+    where the answer is that a topic carries a build number or a task-progress update, say that too
+    and close the row."
+  - "FOR A LOCAL PROCESS: DOES THE LAUNCHED PROGRAM RUN UNDER THE SAME CONTROLLER, AND IS IT NAMED
+    IN THE RECORD OF PROCESSING ACTIVITIES? A program on the same machine is not automatically a
+    recipient. The ordinary answer is that it is the controller's own binary, run by the controller
+    on the controller's own host, and nothing is disclosed to anybody; say so plainly and close the
+    row where that is the answer. The cases that are different are readable and are what to look
+    for. (a) THE PROGRAM IS CHOSEN BY WHOEVER DEPLOYS THE PRODUCT - a configured event script, a
+    hook, a plug-in binary named in a settings key - so what it does with the arguments handed to it
+    is outside this source entirely; say who chooses it and what the product's own documentation
+    tells them it will receive. (b) THE PROGRAM IS A THIRD PARTY'S, packaged as a local agent or a
+    sidecar that forwards onward. (c) THE PEER ON A LOCAL SOCKET IS ANOTHER PERSON'S SESSION rather
+    than the same user's. Then answer the payload half, which is context_questions[0]'s question in
+    this transport's spelling: read the argument vector, the command template's substitution tokens
+    or the message field list and say which elements are about a person - an argument vector
+    carrying a user name, a password or a client address is a payload whatever the program on the
+    other end turns out to be. WHO THE RECIPIENT IS UNDER ART. 4(9) IS YOUR QUESTION AND NOT THE
+    DETECTOR'S: it turns on who operates the program and on whose behalf, which no line of source
+    decides."
+evidence_template: "{file}:{line} MATCHED A CONSTRUCT IN WHICH SOMETHING CROSSES THIS PROCESS
+  BOUNDARY BY A ROUTE THAT IS NOT AN HTTP REQUEST TO A NAMED OR CONFIGURED DESTINATION - ORDINARILY
+  OUTWARD, AND FOR THE MESSAGE-CLASS CLAUSE NOT ALWAYS: SEE THE SIXTH PARAGRAPH OF WHAT IS NOT
+  ESTABLISHED BEFORE YOU RECORD A DISCLOSURE. No rule in this bundle recognised such a route before
+  this one, and that is why the finding exists. What was established depends on the clause. A
+  MESSAGE CLASS OR MESSAGE-TYPE ENUM BOUND TO A SOCKET establishes that a payload type is declared
+  for transmission over that socket - and the type parameter on the line names WHAT is transmitted,
+  which is the most informative thing this rule can show you. A SEND TO A SESSION, A USER OR A
+  CHANNEL establishes the act of transmission and often carries the recipient's identifier on the
+  line. A DATAGRAM OR BROADCAST SOCKET establishes that bytes go to a network address rather than to
+  a connection, and where the address is a broadcast one, to every host on the segment. AN
+  IDENTIFIER IN A QUERY PARAMETER establishes that the identifier travels in the URL rather than in
+  a body. A BROKER PRODUCER OR PUBLISH CALL establishes that a message is handed to a message
+  broker, which is a transport of the same kind as the socket the four older clauses read: not an
+  HTTP request to a named destination, and out of this process. A BROKER CLIENT TYPE OR LIBRARY NAME
+  establishes only that the transport is linked in, which a declared but unused dependency also
+  satisfies. THE BROKER PUBLISH CLAUSE CARRIES THE SAME IN-PROCESS COLLISION THE SOCKET CLAUSES DO,
+  AND THIS SENTENCE WAS ADDED ON 2026-09-02 AFTER INDEPENDENT VERIFICATION FOUND THE RULE CLAIMING
+  OTHERWISE. Its receiver enumeration includes `publisher` and `topic`, which are Google Cloud
+  Pub/Sub's and Pulsar's own documented spellings and are therefore kept - but they are also what an
+  in-process queue is called, and `tts_publisher.publish(...)`, a text-to-speech queue that never
+  leaves the process, matches exactly as a broker send does. So for this clause, as for `broadcast(`
+  and `emit(` above: READ WHAT THE RECEIVER IS BEFORE RECORDING A DISCLOSURE. A receiver constructed
+  from a broker client is a cross-process send; a receiver that is a field of the same service, an
+  application-level publisher or an event bus is not, and the correct disposition there is to
+  dismiss the row as position-correct and transport-wrong. A CONFIGURED BROKER DESTINATION - an
+  environment variable or a bootstrap-servers key - establishes that a broker address is
+  configurable in this deployment and NAMES NOBODY: the value is supplied by whoever deploys the
+  product. THREE CLAUSES ADDED 2026-09-04 READ A FOURTH TRANSPORT, THE GIT WIRE PROTOCOL OVER SSH,
+  and each establishes a different part of it. A GIT WIRE-PROTOCOL SERVICE VERB - `upload-pack`,
+  `receive-pack`, `upload-archive`, in the bare, `git-`prefixed and underscored spellings -
+  establishes that this product serves whole repositories over the wire protocol, and NOT which
+  transport carries them: the same three verbs are what git-over-HTTP speaks, so read the lines
+  around the match before treating it as a non-HTTP route. THE `git` BINARY RUN AS A SUBPROCESS
+  establishes an act - a process boundary crossed - and nothing about a network peer: a repository
+  tool spawns `git` for local work constantly, and `exec.Command` on a temporary directory with `git
+  add` as its arguments is a candidate under this clause and is not a disclosure to anybody. AN
+  EMBEDDED SSH SERVER CONSTRUCT - a server configuration, a server-connection constructor, a
+  public-key callback, a channel acceptor - establishes that this product runs its own SSH listener,
+  which is a transport this rule's title names and HTTP is not; it establishes nothing about what
+  crosses it, nor that the listener is reachable from outside the host. WHY THESE THREE ARE WORTH
+  READING TOGETHER RATHER THAN ONE AT A TIME: the construct they describe is one server, and its
+  personal-data content is ordinarily in the METADATA rather than in a payload the code hands over -
+  a git commit carries an author name and an email address, so a clone of a public repository
+  discloses the identities of everyone who ever committed to it, to anybody who asks. Nothing on any
+  of the three matched lines says that; read the identity the product writes into what it serves,
+  and say where you read it. WHAT IS NOT ESTABLISHED. FIRST AND MOST IMPORTANTLY, WHETHER PERSONAL
+  DATA CROSSES AT ALL: the transport is on the line and the payload usually is not, and the corpus's
+  own broadcast announces a server identifier and a friendly name, which is about a machine. Read
+  the payload type before treating this as a data flow. SECOND, WHO RECEIVES IT. The ordinary answer
+  is the product's own client, authenticated as the user whose data it is, which is not a disclosure
+  to a third party; the cases worth finding are a client receiving ANOTHER person's data and a
+  broadcast that nobody selected the recipients of. THE JUDGEMENT ABOUT WHETHER THE RECIPIENT IS A
+  THIRD PARTY BELONGS TO LAYER 2, and context_questions[1] names the three answers. THIRD, WHETHER
+  THE CHANNEL IS AUTHENTICATED OR SCOPED - the detector does not look. FOURTH, WHETHER THE MATCHED
+  CALL IS A SOCKET AT ALL: `broadcast(` and `emit(` are written about in-process event buses that
+  cross no boundary, and the channel-push idiom spelled as a dot, the word push, an opening bracket
+  and a quotation mark was measured at 106 corpus lines of ordinary array appends and is
+  deliberately NOT matched. FIFTH, FOR A QUERY PARAMETER, WHETHER IT IS AN IDENTIFIER OR A
+  CREDENTIAL: `token`, `api_key` and `access_token` are in the enumeration because they are how the
+  corpus spells a session identifier in a media URL, and where the value is a secret the finding
+  belongs to baseline-002 or baseline-006 instead. SIXTH, AND FOR THE MESSAGE-CLASS CLAUSE THIS IS
+  THE ONE TO READ FIRST, WHICH DIRECTION THE MESSAGE TRAVELS. The message-class clause reads the
+  family in BOTH directions on purpose: it spells the type name with the direction word optional, so
+  `: OutboundWebSocketMessage`, `: InboundWebSocketMessage` and a bare `: WebSocketMessage` all
+  match, and the corpus that motivated the clause declares its inbound and outbound classes in the
+  same shape in sibling directories. A line reading `public class ScheduledTasksInfoStopMessage :
+  InboundWebSocketMessage` is a payload type this process RECEIVES, not one it sends, and nothing on
+  the matched line says so beyond the word `Inbound` itself. Measured 2026-08-28 over the eight
+  pinned corpus trees: 24 of this rule's 212 locations, about one in nine, are inbound message
+  declarations - 21 of them in one directory of one repository
+  (`MediaBrowser.Controller/Net/WebSocketMessages/Inbound/`) and 3 in the files one level up that
+  declare the inbound base class itself and the type that carries it. READ THE TYPE NAME, THE
+  DIRECTORY AND THE SURROUNDING LINES BEFORE TREATING A MESSAGE-CLASS MATCH AS AN EGRESS; where the
+  direction is inward, the finding is not a disclosure at all and the correct disposition is to
+  dismiss it as position-correct and direction-wrong. The clause is not narrowed to the outbound
+  spelling, because the bare `: WebSocketMessage` and `: IWebSocketMessage` renderings carry no
+  direction word to narrow on and are genuine sends. SEVENTH, AND FOR THE THREE BROKER CLAUSES ADDED
+  ON 2026-09-02 THIS IS THE ONE TO READ FIRST, WHO IS ON THE OTHER END OF THE BROKER. A broker
+  address is an operator-supplied connection string, so nothing in the source says whether the topic
+  is consumed by the same operator's own infrastructure, by a managed service another company runs,
+  or by a partner. THAT LIMB IS ASKED, NOT INFERRED: context_questions[5] puts it to the person
+  running the scan, and no clause here reads a host, a brand or a region. The clauses establish a
+  transport and, for the producer clause, an act of transmission; a finding that reads them as
+  naming a recipient is reading something the detector did not say. The payload half is equally
+  outside them - the object handed to a producer call is routinely assembled in another file - so
+  context_questions[0]'s mandatory question applies to a broker send exactly as it applies to a
+  socket send, and a topic carrying a build number or a task-progress update is a row to close
+  rather than a disclosure. A broker client type or library NAME is weaker still: a dependency can
+  be declared and never called. FOUR CLAUSES ADDED 2026-09-08 READ THREE MORE ROUTES AND ONE
+  INTERFACE DESCRIPTION, and each establishes a different thing. A JOB-QUEUE DISPATCH VERB
+  establishes that a payload was handed to a background job or task queue, which is a transport of
+  the same kind as the socket and the broker: the process that writes the job is not the process
+  that runs it, and the job's arguments are serialised and stored in between. A QUEUE LIBRARY IS A
+  TRANSPORT AND THE LIBRARY'S BRAND IS NOT THE QUESTION - the clause reads the act of enqueueing and
+  never the product name, so the eleventh queue library is read exactly as the first, and no finding
+  here says anything about which broker or which vendor. What it does NOT establish is that the
+  queue leaves the process at all: `dispatch`, `enqueue`, `delay` and `.trigger` are also what an
+  in-process event bus is written with, a receiver whose name ends in `queue` may be an in-memory
+  list, and that collision is the same one the broker publish clause carries. READ WHAT THE RECEIVER
+  IS AND WHERE THE WORKER LIVES BEFORE RECORDING A DISCLOSURE; where the bus stays inside the
+  process, the correct disposition is to dismiss the row as position-correct and transport-wrong. A
+  PROCESS-LAUNCH API establishes that this product hands an argument vector or a command string to a
+  program on the same machine, and that the arguments are not literals - a personal-data or
+  credential-named value, a substitution placeholder, or an identifier named for a command or an
+  argument list. A LOCAL PROCESS IS NOT AUTOMATICALLY A RECIPIENT AND THIS FINDING DOES NOT SAY THAT
+  IT IS: it may be the same controller's own binary, run by the controller on the controller's own
+  host, in which case nothing has been disclosed to anybody at all. Whether it is a recipient under
+  Art. 4(9) turns on who operates the program and on whose behalf, and that is LAYER 2's question -
+  context_questions[6] puts it to the reader, and the cases worth finding are the program chosen by
+  whoever deploys the product, the third party's local agent, and the substitution template that
+  names a person-shaped token. A STRING-FORMATTING CALL CARRYING A SUBJECT IDENTIFIER establishes
+  that an identifier is written INTO a string - a subscriber number into a name, a user identifier
+  into a message - and establishes NOTHING about where that string then goes; the transport, if
+  there is one, is on other lines and often in another file, so read the callers before treating it
+  as an egress. The design for this clause asked additionally that the same file construct a
+  datagram or a raw socket, and that half is NOT shipped: the only field that could express it is a
+  whole-rule corroboration gate, which would withhold lines the ten older clauses produce today, and
+  a subtraction is the one operation that can create a miss. A MESSAGE FIELD DECLARED WITH A
+  PERSON-NAMING NAME - in a protobuf interface description or in the code generated from one -
+  establishes what a service's messages CARRY, field by field, which is the most informative thing
+  this rule can show you; it establishes neither the transport nor that the message is ever sent,
+  and a locally served interface may be reached only by the same user's own shell on the same
+  machine. THAT CLAUSE ALSO REACHES AN ORDINARY VARIABLE DECLARATION OF THE SAME SHAPE, and this
+  sentence is here because protobuf borrowed C's declaration syntax and the two are
+  indistinguishable on one line: a type token, a person-named identifier, `=`, an integer and a
+  semicolon is a protobuf field AND it is `int author = 6;` in C or `String author = 6;` in Java.
+  Measured over the 28 pinned trees: of nine locations, eight are genuine `.proto` field
+  declarations and one is an ordinary Java local. CONFIRM THE FILE IS AN INTERFACE DESCRIPTION
+  before treating a match here as a declaration of what crosses; where it is an ordinary declaration
+  the correct disposition is to dismiss the row as position-correct and file-wrong. EIGHTH, AND FOR
+  THE FOUR CLAUSES ADDED ON 2026-09-08 THIS IS THE ONE TO READ FIRST: NONE OF THEM READS A
+  RECIPIENT. A queue's consumer, a launched program's operator and a local socket's peer are
+  deployment facts, and the source cannot say whether any of them is a third party, the same
+  operator's own infrastructure, or the very same process. The clauses establish a route and, for
+  the dispatch and launch clauses, an act; a finding that reads them as naming a recipient is
+  reading something the detector did not say. A FIFTEENTH CLAUSE GROUP WAS ADDED 2026-09-09 FOR
+  OUTBOUND ELECTRONIC MAIL OVER AN OPERATOR-CONFIGURED SMTP RELAY, in three branches, and what each
+  branch establishes differs. (15a) is the send verb beside a recipient-address argument -
+  `Transport.send(`, `SMTPTransport`, `smtplib.SMTP(`, Go's `net/smtp`, a `sendMail(` call,
+  `deliver_now`/`deliver_later` - and it is the strongest of the three: a message is being handed to
+  a relay and an address is on the line. (15b) is the relay's own setting name - an SMTP word joined
+  to a host, port, server, relay, connection or endpoint word - and it establishes WHERE messages go
+  and not that any message was sent. (15c) is the addressing site: a message builder's
+  recipient-registration call, `addTo(`, `setRecipients(`, `addBcc(` and their siblings, whose
+  argument is address-, e-mail- or recipient-named. It is here because some mail frameworks write
+  the send in a metaphor - one anchor drops a postcard into a postbox - in which neither `smtp` nor
+  `send` appears on the line at all. Like clause 13, it establishes THE PAYLOAD SITE AND NOT THE
+  TRANSPORT: the relay is registered in another file, and the reader is asked to open it. THE PARTY
+  QUESTION FOR THIS GROUP IS DIFFERENT FROM THE REST OF THE RULE AND IS THE MAIN THING TO GET RIGHT.
+  There is no vendor in a generic SMTP send - the relay is a host and a port the operator typed into
+  a settings file - so the recipient question is not \"which mail vendor is this\" but two other
+  questions: WHO OPERATES THE RELAY (the operator's own mail server, their hosting provider's, or a
+  third party's, which the source cannot say and which is asked of the person running the scan), and
+  WHO THE MESSAGE IS ADDRESSED TO, which is the person whose address is on the line. Where the relay
+  is the operator's own, there may be no third-party recipient here at all and the finding is about
+  the addressee rather than about a vendor; where it is somebody else's, that party receives the
+  whole message, including whatever the body was built from. And read the body, not only the
+  address: on the anchor this group was written from, a comment-notification message carries the
+  commenter's own name, e-mail address and comment text, none of which is visible on the send line.
+  A vendor-named mail service is a different rule's subject and this group deliberately carries no
+  vendor spelling."
+remediation_template: |
+  This is a candidate for review against GDPR Art. 30(1)(d), and - for a broadcast or an identifier
+  in a URL - against Art. 5(1)(f). It is not a determination about this code. For a large share of
+  what this rule finds, the correct outcome is a line in the record and no code change: a server
+  pushing a user's own data to that user's own authenticated client is doing what it exists to do.
+
+  READ THE PAYLOAD FIRST. A message class names its payload type on the same line; follow it and
+  enumerate the fields. Where the answer is that nothing about a person crosses - a task-progress
+  update, a server-shutdown notice, a machine identifier on a discovery response - record that and
+  close the row.
+
+  WHERE PERSONAL DATA DOES CROSS, the changes worth considering, in order:
+
+  1. SCOPE THE PUSH TO THE PERSON IT IS ABOUT. The exposure worth finding is a client receiving
+     somebody else's data: a synchronised-playback update carrying another member's user name, an
+     administrative session receiving every session's state. Send the identifier the receiving
+     client already has, not the one it does not.
+  2. FOR A BROADCAST, ANNOUNCE AS LITTLE AS WILL DO. A discovery response needs an address and a
+     port; a human-chosen server name often carries a person's name and belongs behind a setting
+     that is off by default, or behind a response to an authenticated request rather than an
+     unsolicited announcement.
+  3. MOVE AN IDENTIFIER OUT OF THE QUERY STRING where the transport allows it. A header or a signed
+     short-lived path keeps it out of proxy logs, browser history and the Referer header. Where the
+     media player cannot send headers - which is the usual reason it is in the URL - say so, and
+     bound the identifier's lifetime instead.
+  4. WRITE THE CHANNEL INTO THE RECORD. "Real-time updates pushed to the user's own devices over a
+     WebSocket" is a processing activity with a category of recipients, and a record that lists the
+     HTTP API and omits the socket is incomplete on a fact this finding establishes.
+  5. DO NOT ANSWER THIS BY REMOVING THE TRANSPORT. A socket is not a defect; an unscoped payload on
+     one is.
+data_categories:
+  - user.behavior
+  - user.contact
+  - user.device
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 3
+      class: enumeration
+      item: route kind
+      item_source: clause
+    - question: 4
+      class: enumeration
+      item: route kind
+      item_source: clause
+    - question: 5
+      class: enumeration
+      item: route kind
+      item_source: clause
+    - question: 6
+      class: enumeration
+      item: route kind
+      item_source: clause
+    - question: 7
+      class: enumeration
+      item: route kind
+      item_source: clause

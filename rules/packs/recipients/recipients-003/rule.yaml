@@ -1,0 +1,663 @@
+id: recipients-003
+pack: recipients
+short_name: Object storage, webhook or asset host that may receive data
+problem_line:
+  text: Personal data sent to an external destination
+  template: "{data} sent to {recipient}"
+fix_line: Find out who runs this destination and what is sent there, and record that party as a
+  recipient of personal data.
+title: Object store, webhook or asset host outside the code, a destination held in it, or one a
+  saved or stored value supplies - candidate recipient, Art. 30(1)(d)
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - Art. 30(1) requires each controller to
+      maintain a record of processing activities, and 'That record shall contain all of the
+      following information', including 'the categories of recipients to whom the personal data have
+      been or will be disclosed including recipients in third countries or international
+      organisations'. The field asks for CATEGORIES, which is what makes it answerable for a
+      destination the code does not name: the category is established by what the recipient does
+      with the data, and the identity is supplied by the operator"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(2) - \"Each processor and, where applicable, the
+      processor's representative shall maintain a record of all categories of processing activities
+      carried out on behalf of a controller, containing: (a) the name and contact details of the
+      processor or processors and of each controller on behalf of which the processor is acting,
+      and, where applicable, of the controller's or the processor's representative, and the data
+      protection officer; (b) the categories of processing carried out on behalf of each controller;
+      (c) where applicable, transfers of personal data to a third country or an international
+      organisation, including the identification of that third country or international organisation
+      and, in the case of transfers referred to in the second subparagraph of Article 49(1), the
+      documentation of suitable safeguards; (d) where possible, a general description of the
+      technical and organisational security measures referred to in Article 32(1).\" Reference only:
+      it is cited to mark what the processor's record does NOT contain, so that the record
+      instruction can fork on which of the two the scanned product is instead of naming a field that
+      may not exist"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(9) - 'recipient' means 'a natural or legal person,
+      public authority, agency or another body, to which the personal data are disclosed, whether a
+      third party or not'. A hosting provider, an object-storage service, the operator of a webhook
+      endpoint and a content-delivery network are therefore each recipients for the purposes of Art.
+      30(1)(d), whether or not any of them is a third party and whether or not the operator regards
+      them as a vendor. Reference only: a definition establishes no duty of its own"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 28(1) and Art. 28(3) - where processing is carried out
+      on a controller's behalf, 'the controller shall use only processors providing sufficient
+      guarantees to implement appropriate technical and organisational measures in such a manner
+      that processing will meet the requirements of this Regulation and ensure the protection of the
+      rights of the data subject', and under Art. 28(3) processing by a processor 'shall be governed
+      by a contract or other legal act under Union or Member State law' 'that sets out the
+      subject-matter and duration of the processing, the nature and purpose of the processing, the
+      type of personal data and categories of data subjects and the obligations and rights of the
+      controller'. Reference only, and cited to show why the operator question in the context
+      questions is load-bearing rather than administrative: neither duty can be discharged towards a
+      party nobody has identified"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(5) - 'The obligations referred to in paragraphs 1
+      and 2 shall not apply to an enterprise or an organisation employing fewer than 250 persons
+      unless the processing it carries out is likely to result in a risk to the rights and freedoms
+      of data subjects, the processing is not occasional, or the processing includes special
+      categories of data as referred to in Article 9(1) or personal data relating to criminal
+      convictions and offences referred to in Article 10.' Reference only: this provision removes a
+      duty rather than creating one, and every fact it turns on is an operator fact"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 44 - 'Any transfer of personal data which are
+      undergoing processing or are intended for processing after transfer to a third country or to
+      an international organisation shall take place only if, subject to the other provisions of
+      this Regulation, the conditions laid down in this Chapter are complied with by the controller
+      and processor, including for onward transfers of personal data from the third country or an
+      international organisation to another third country or to another international organisation.'
+      Reference only: field (d) is owed whether or not a transfer is involved, the record's separate
+      transfer field is Art. 30(1)(e) for a controller and Art. 30(2)(c) for a processor, and this
+      detector establishes neither - it cannot, because the destination is a configuration value"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose "The
+      categories of third parties to whom the business discloses personal information." The
+      obligation is owed on a verifiable consumer request under Sec. 1798.110(b), and Sec.
+      1798.130(a)(5)(B) requires the same categories in the privacy policy
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-08-25
+    jurisdiction: US
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.45
+detector:
+  engine: builtin-regex
+  vocabulary:
+    object_storage_endpoint:
+      - forcePathStyle
+      - force_path_style
+      - ForcePathStyle
+      - use_path_style_endpoint
+      - usePathStyleEndpoint
+      - UsePathStyleEndpoint
+      - path_style_endpoint
+      - AWS_USE_PATH_STYLE_ENDPOINT
+      - S3_USE_PATH_STYLE
+      - pathStyleAccess
+      - path_style_access
+      - enable_virtual_host_style
+      - virtual_hosted_style
+      - addressing_style
+      - endpointOverride
+      - S3_ENDPOINT
+      - AWS_ENDPOINT
+      - MINIO_URL
+      - MINIO_ENDPOINT
+      - MINIO_HOST
+      - AmazonS3Endpoint
+      - STORAGE_ENDPOINT
+      - s3Endpoint
+      - s3_endpoint
+      - S3Endpoint
+      - S3Config::from_uri
+      - OBJECT_STORAGE_ENDPOINT
+      - objectStorageEndpoint
+      - object_storage_endpoint
+      - bucketEndpoint
+      - S3_HOST
+      - storage_endpoint
+      - s3CustomEndpoint
+      - S3_COMPATIBLE
+    outbound_webhook_target:
+      - subscriberUrl
+      - subscriber_url
+      - payload_url
+      - payloadUrl
+      - CallbackURLs
+      - webhook_url
+      - webhookUrl
+      - WebhookUrl
+      - WEBHOOK_URL
+      - webhookURL
+      - WebhookURL
+      - webhook.url
+      - outgoing_webhook
+      - OutgoingWebhook
+      - outgoingWebhook
+    asset_host:
+      - CDN_URL
+      - cdn_url
+      - cdnUrl
+      - CdnUrl
+      - CDN_HOST
+      - cdn_host
+      - cdnHost
+      - CDN_ORIGIN
+      - cdn_origin
+      - CDN_PREFIX
+      - CDN_JSCSS_PREFIX
+      - asset_host
+      - assetHost
+      - ASSET_HOST
+      - AssetHost
+      - assetPrefix
+      - asset_prefix
+      - ASSET_PREFIX
+      - assetsPrefix
+      - ASSETS_URL
+      - ASSET_URL
+      - IMAGE_CDN
+      - imageCDN
+      - imageCdn
+    object_storage_client:
+      - S3Client
+      - AmazonS3
+      - MinioClient
+      - Minio.Client
+      - minio.New
+      - boto3.client
+      - S3ClientBuilder
+      - S3FileSystem
+      - S3Config
+      - opendal
+      - PutObjectCommand
+      - GetObjectCommand
+      - getSignedUrl
+      - createPresignedPost
+      - Storage::disk
+      - s3.NewFromConfig
+      - Aws\S3
+  resolve_import_aliases: true
+  join_bracketed_constructs: true
+  match:
+    - (?:^|[^A-Za-z0-9])(?&object_storage_endpoint)
+    - (?:^|[^A-Za-z0-9])(?&object_storage_client)[^\n]{0,160}(?:[Ee]ndpoint|ENDPOINT|[Hh]ost|HOST|[Bb]ase[_\-]?[Uu]rl|BASE_URL)
+    - (?:[Ee]ndpoint|ENDPOINT|[Hh]ost|HOST|[Bb]ase[_\-]?[Uu]rl)[^\n]{0,160}[^A-Za-z0-9](?&object_storage_client)
+    - (?:^|[^A-Za-z0-9])(?&outbound_webhook_target)
+    - (?:^|[^A-Za-z0-9])(?:[Ww]eb[_]?[Hh]ook|WEBHOOK|WEB_HOOK|[Hh]ook)s?\s*(?:->|\.(?![
+      \t])|\[)[^\n]{0,60}(?:[Uu]rl|URL|[Uu]ri|URI|[Ee]ndpoint|ENDPOINT|(?:[Tt]argets?|TARGETS?)(?![a-z]))
+    - (?:^|[^A-Za-z0-9])(?&asset_host)
+    - (?:^|[^A-Za-z0-9])(?:[Cc][Dd][Nn]|CDN)[^A-Za-z0-9\n]{0,3}(?:[Hh]ost|HOST|[Uu]rl|URL|[Oo]rigin|ORIGIN|[Dd]omain|DOMAIN|[Pp]refix|PREFIX|[Ee]ndpoint|ENDPOINT|[Bb]ase|BASE|[Rr]oot|ROOT)
+    - (?:^|[^A-Za-z0-9])(?:[Aa]ssets?|ASSETS?)[^A-Za-z0-9\n]{0,3}(?:[Hh]ost|HOST|[Dd]omain|DOMAIN|[Oo]rigin|ORIGIN|[Pp]refix|PREFIX|[Cc][Dd][Nn]|CDN)
+    - (?<=[a-z0-9])(?:Cdn|CDN)[_\-]?(?:Host|HOST|Url|URL|Origin|ORIGIN|Domain|DOMAIN|Prefix|PREFIX|Endpoint|ENDPOINT|Base|BASE|Root|ROOT)
+    - (?<=[a-z0-9])(?:Asset|ASSET)s?[_\-]?(?:Host|HOST|Origin|ORIGIN|Domain|DOMAIN|Prefix|PREFIX|Cdn|CDN)
+    - (?:(?:^|[^A-Za-z0-9])(?:[Ss]3|[Mm]inio|MINIO|[Bb]ucket|BUCKET|[Ss]torage|STORAGE|[Aa]ws|AWS)|(?<=[a-z0-9])(?:S3|Minio|Bucket|Storage|Aws))[^A-Za-z0-9\n]{0,3}(?:[Ee]ndpoint|ENDPOINT|[Hh]ost|HOST|[Uu]rl|URL|[Uu]ri|URI)
+    - (?:^|[^A-Za-z0-9<{])(?:(?:[Pp]ath|PATH|[Aa]ddressing|ADDRESSING)[_\-
+      ]?(?:[Ss]tyle|STYLE)|(?:[Vv]irtual|VIRTUAL)[_\- ]?(?:[Hh]ost(?:ed)?|HOST(?:ED)?)[_\-
+      ]?(?:[Ss]tyle|STYLE))
+    - (?:(?:^|[^A-Za-z0-9])(?:[Ww]eb[^A-Za-z0-9\n]{0,1}[Hh]ook|WEB[^A-Za-z0-9\n]{0,1}HOOK|[Ss]ubscriber|SUBSCRIBER|[Pp]ayload|PAYLOAD)|(?<=[a-z0-9])(?:Web[Hh]ook|Webhook|Subscriber|Payload))[^A-Za-z0-9\n]{0,3}(?:[Uu]rls?|URLs?|[Uu]ris?|URIs?|(?:[Tt]argets?|TARGETS?)(?![a-z])|[Ee]ndpoints?|ENDPOINTS?)
+    - (?:^|[^A-Za-z0-9])(?:[Oo]utgoing|OUTGOING)[^A-Za-z0-9\n]{0,3}(?:[Ww]eb[^A-Za-z0-9\n]{0,1}[Hh]ooks?|WEB[^A-Za-z0-9\n]{0,1}HOOKS?)
+    - https?://[A-Za-z0-9][A-Za-z0-9.\-]*\.[A-Za-z]{2,}[^\s"'`]*(?:\$\{|\{[A-Za-z_$]|\{[0-9]|%[sdvq]|\{\}|["'`][
+      \t]*(?:\+|\.[ \t]*[\$'"]|<>|\.\.))
+    - (?:(?<=[a-z0-9])(?:Url|URL|Uri|URI|Host|HOST|Server|SERVER|Domain|DOMAIN|Address|ADDRESS)|(?<=[_\-])(?:[Uu]rl|URL|[Uu]ri|URI|[Hh]ost|HOST|[Ss]erver|SERVER|[Dd]omain|DOMAIN|[Aa]ddress|ADDRESS)|(?:^|[^A-Za-z0-9])(?:[Ee]ndpoint|ENDPOINT|[Hh]ostname|HOSTNAME|[Bb]ase[_\-]?[Uu]rl|BASE_?URL))[^\n]{0,60}["'`]https?://[A-Za-z0-9][A-Za-z0-9.\-]*\.[A-Za-z]{2,}
+    - (?:^|[^A-Za-z0-9])(?:const|static|final|readonly|private|public|internal|protected|var|let|val|def|my|our|string|String|str)[^\n]{0,60}(?:[Uu]rl|URL|[Uu]ri|URI|[Hh]ost|HOST|[Ss]erver|SERVER)[^\n]{0,40}["'`]https?://[A-Za-z0-9][A-Za-z0-9.\-]*\.[A-Za-z]{2,}
+    - (?:^|[^A-Za-z0-9])(?:[Hh]ost|HOST|[Hh]ostname|HOSTNAME|[Ss]erver|SERVER)[ \t]*(?:=>|[:=]|['"][
+      \t]*(?:,|=>))[ \t]*['"](?:[A-Za-z0-9][A-Za-z0-9\-]*\.){1,}[A-Za-z]{2,}['"]
+    - (?:[Bb]ase|BASE|[Aa]pi|API|[Ss]ervice|SERVICE|[Rr]oot|ROOT)[_\-]?(?:[Uu]rl|URL|[Uu]ri|URI|[Hh]ost|HOST|[Ee]ndpoint|ENDPOINT)[
+      \t]*(?:\+|\.|<>|\.\.|,)[ \t]*["'`][/?]
+    - "[\\$#]?[\"'`]?(?<!%)\\{[
+      \\t]*[A-Za-z_$.]{0,40}(?:[Bb]ase|BASE|[Aa]pi|API|[Ss]ervice|SERVICE|[Rr]oot|ROOT)[_\\-]?(?:[U\
+      u]rl|URL|[Uu]ri|URI|[Hh]ost|HOST|[Ee]ndpoint|ENDPOINT)[ \\t]*\\}[/?]"
+    - "[\"'][A-Za-z0-9][A-Za-z0-9\\-]*(?:\\.[A-Za-z0-9\\-]+)*\\.[A-Za-z]{2,}[\"'][ \\t]*,[
+      \\t]*(?:[0-9]{2,5}[ \\t]*[,)]|[\"'`]/)"
+    - (?:^|[^A-Za-z0-9])(?:fetch|axios|request|requests|get|post|put|patch|head|Get|Post|Put|Patch|GetAsync|PostAsync|GetStringAsync|GetStreamAsync|urlopen|curl_init|file_get_contents|open|NewRequest|Head)[
+      \t]*\([ \t]*[@fbru]?["'`]https?://[A-Za-z0-9][A-Za-z0-9.\-]*\.[A-Za-z]{2,}
+    - (?:^|[^A-Za-z0-9])(?:[Ww]ayback[A-Za-z0-9_]{0,20}[Ss]ave[A-Za-z0-9_]{0,8}|[Ss]ave[_\-]?[Pp]age[_\-]?[Nn]ow|SAVE[_\-]?PAGE[_\-]?NOW|savepagenow|waybackpy|[Aa]rchive[_\-]?[Bb]ox|ARCHIVEBOX)
+    - (?:^|[^A-Za-z0-9])(?:[Ww]ayback|WAYBACK|[Aa]rchiver?|ARCHIVER?|[Ss]napshot|SNAPSHOT|[Ww]eb[_]?[Aa]rchive|WEB_?ARCHIVE|[Cc]apture|CAPTURE)[A-Za-z0-9_]{0,20}[
+      \t]*(?:\.|->|::)[
+      \t]*(?:save|Save|SAVE|submit|Submit|SUBMIT|capture|Capture|snapshot|Snapshot|archive|Archive|store|Store)[
+      \t]*\(
+    - (?:^|[^A-Za-z0-9])(?:(?:[Ss]ingle[_\-]?[Ff]ile|SINGLE[_\-]?FILE|[Mm]onolith|MONOLITH|[Pp]uppeteer|PUPPETEER|[Pp]laywright|PLAYWRIGHT)[_\-]?(?:[Pp]ath|PATH|[Bb]in|BIN|[Cc]md|CMD|[Ee]xe|EXE|[Cc]ommand|COMMAND|[Cc]li|CLI|[Bb]inary|BINARY)|(?:[Pp]uppeteer|PUPPETEER|[Pp]laywright|PLAYWRIGHT|[Cc]hromium|CHROMIUM)[
+      \t]*(?:\.|->|::)[
+      \t]*(?:launch|Launch|connect|Connect|newPage|new_page)|wkhtmltopdf|wkhtmltoimage|[Hh]eadless[_\-]?[Cc]hrom(?:e|ium)|[Cc]hrom(?:e|ium)[_\-]?[Hh]eadless|[Ww]easy[Pp]rint|WEASYPRINT|-headless(?![A-Za-z0-9]))
+    - (?:^|[^A-Za-z0-9])(?:requests|request|axios|httpx|http|Http|HTTP|client|Client|session|Session|urllib|fetch|got|superagent|reqwest|RestClient|HttpClient|WebClient|Guzzle|guzzle|curl)[
+      \t]*(?:\.|->|::)?[
+      \t]*(?:get|Get|GET|post|Post|POST|put|Put|PUT|head|Head|open|request|Request|fetch|send|Send)[
+      \t]*\([
+      \t]*(?:[A-Za-z_$][A-Za-z0-9_$.\[\]]{0,40})?(?:[Uu]rl|URL|[Uu]ri|URI|[Ee]ndpoint|ENDPOINT|[Hh]ref|HREF)[
+      \t]*(?:,|\))
+    - https?://[A-Za-z0-9][A-Za-z0-9.\-]*\.[A-Za-z]{2,}[^\s"'`]*\$[A-Za-z_][A-Za-z0-9_]*
+    - (?:^|[^A-Za-z0-9])(?:[A-Za-z_$][A-Za-z0-9_$.]{0,60})?(?:(?:[Uu]rl|URL|[Uu]ri|URI|[Hh]ost|HOST|[Aa]pi|API|[Ll]ink|LINK|[Ii]con|ICON|[Aa]vatar|AVATAR|[Ff]avicon|FAVICON)[_\-]?(?:[Tt]emplate|TEMPLATE|[Pp]attern|PATTERN)|[Pp]rovider|PROVIDER|[Ee]ndpoint|ENDPOINT)[
+      \t]*(?:\.|->|::)[
+      \t]*(?:format|Format|replace|Replace|replaceAll|sub|subst|substitute|interpolate|render|expand|Sprintf|sprintf|printf|fill)[
+      \t]*\(
+    - (?:^|[^A-Za-z0-9])[A-Za-z0-9_$]{0,24}(?:[Pp]reference|PREFERENCE|[Ss]etting|SETTING|[Ss]torage|STORAGE|[Ii]tem|ITEM|[Cc]onfig|CONFIG)[A-Za-z0-9_$]{0,16}[
+      \t]*\([
+      \t]*["'`][A-Za-z0-9_.\-]{0,40}(?:[Ii]nstance|INSTANCE|[Uu]rl|URL|[Uu]ri|URI|[Hh]ost|HOST|[Ee]ndpoint|ENDPOINT|[Ss]erver|SERVER|[Aa]pi|API|[Dd]omain|DOMAIN|[Bb]ackend|BACKEND)["'`]
+    - (?:(?:^|[^A-Za-z0-9])(?:[Bb]ackup|BACKUP|[Ss]ync|SYNC|[Mm]irror|MIRROR)|(?<=[a-z0-9])(?:Backup|BACKUP|Sync|SYNC|Mirror))[_\-]?(?:[Ee]ndpoints?|ENDPOINTS?|[Uu]rls?|URLs?|[Uu]ri|URI|[Hh]ost|HOST|[Ss]erver|SERVER|[Tt]arget|TARGET|[Dd]estination|DESTINATION|[Ss]ervice|SERVICE)
+    - (?:(?:^|[^A-Za-z0-9])(?:default|DEFAULT|Default)|(?<=[a-z0-9])(?:Default|DEFAULT))[_\-]?[A-Za-z0-9_]{0,24}?(?:[Uu]rl|URL|[Uu]ri|URI|[Ee]ndpoints?|ENDPOINTS?|[Hh]ostname|HOSTNAME|[Hh]ost|HOST|[Bb]ase[_\-]?[Uu]rl|BASE[_\-]?URL|[Bb]ucket|BUCKET)(?![A-Za-z0-9_])
+    - ^(?=[^\n]*(?:(?:^|[^A-Za-z0-9])(?:default|DEFAULT|Default)|(?<=[a-z0-9])(?:Default|DEFAULT))[_\-]?[A-Za-z0-9_]{0,24}?(?:[Rr]egistry|REGISTRY)(?![A-Za-z0-9_]))[^\n]*(?:[a-z][a-z0-9+.\-]{1,15}://|["'`/][A-Za-z0-9][A-Za-z0-9\-]{0,62}(?:\.[A-Za-z0-9\-]{1,62}){0,4}\.[A-Za-z]{2,24}(?=[/:"'`\s,)\]}]|$))
+    - (?:(?:^|[^A-Za-z0-9_])(?:Url|Uri|URL|URI)[ \t]*::[
+      \t]*(?:parse|from_static|try_from|new)|(?:^|[^A-Za-z0-9_])(?:URI|URL|Uri|HttpUrl|URLComponents)[
+      \t]*\.[ \t]*(?:create|parse|of)|(?:^|[^A-Za-z0-9_])new[
+      \t]+(?:URL|URI|Uri|Url)|(?:^|[^A-Za-z0-9_])(?:url|net/url)[ \t]*\.[
+      \t]*(?:Parse|ParseRequestURI|MustParse)|(?:^|[^A-Za-z0-9_])(?:urlparse|urlsplit)|(?:^|[^A-Za-z0-9_])(?:URL|NSURL)[
+      \t]*\([ \t]*string[ \t]*:)[ \t]*\(?[
+      \t]*["'`]https?://[A-Za-z0-9][A-Za-z0-9._~\-]*\.[A-Za-z]{2,}
+    - ^(?=[^\n]*(?:^|[^A-Za-z0-9])(?:(?:[Pp]ath|PATH|[Aa]ddressing|ADDRESSING)[^A-Za-z0-9\n]{0,3}(?:[Ss]tyle|STYLE)|(?:[Vv]irtual|VIRTUAL)[^A-Za-z0-9\n]{0,3}(?:[Hh]ost(?:ed)?|HOST(?:ED)?)[^A-Za-z0-9\n]{0,3}(?:[Ss]tyle|STYLE)))(?=[^\n]*(?:[Ss]3|S3|[Mm]in[Ii][Oo]|MINIO|[Bb]ucket|BUCKET|[Ss]torage|STORAGE|[Aa]ws|AWS|[Oo]bject[^A-Za-z0-9\n]{0,3}[Ss]tores?|[Aa]ddressing|ADDRESSING))
+context_questions:
+  - "ASK THE PERSON RUNNING THE SCAN, do not infer it from the code: \"Which object-storage service
+    does this deployment actually write to - Amazon S3, another cloud's S3-compatible service, or a
+    MinIO or Ceph cluster you run yourself - and in which region does it sit?\" The endpoint is a
+    configuration value, so the same source line sends bytes to a machine in the operator's own rack
+    in one deployment and to a service in another jurisdiction in the next. If the answer is not in
+    something the operator holds - a deployment manifest, a values file, an environment - return
+    needs_human rather than guessing, and never read the answer out of a default written in the
+    source."
+  - "ASK THE PERSON RUNNING THE SCAN: \"Do your customers register their own webhook URLs, and if
+    so, do you know which systems those URLs point to today?\" The set of recipients here is chosen
+    after the software shipped, lives in the product's own database, and differs per tenant - so it
+    cannot be enumerated from the tree at any level of effort. What the record can state truthfully
+    is the CATEGORY defined by its rule (\"the operator of any endpoint a customer administrator has
+    registered on this product\") together with the controls that bound it, and whether the product
+    validates the destination before posting to it is readable in the code and worth quoting."
+  - "ASK THE PERSON RUNNING THE SCAN: \"Do you serve assets and uploads through a CDN, and if so,
+    which one - and is it configured to log or process visitor IP addresses?\" A CDN host receives
+    the visitor's IP address, user agent, Referer and the URL of every asset requested, which for
+    user-uploaded content means the object path and for a per-user avatar means an identifier. This
+    is the same disclosure shape `eu-consent-006` already treats as material for remotely loaded
+    Google Fonts, with the difference that here the host has no name in the code."
+  - WHICH WAY DOES THE ARROW POINT? A spelling like `webhookUrl` names two opposite things and only
+    one of them is a recipient. (a) The product POSTs its own event payload to a URL somebody
+    registered with it - that is a disclosure and this rule's subject; the tell is a send at the
+    call site (`fetch(subscriberUrl`, `curl_init($webhook->getAttribute('url'))`,
+    `Request.new(:post, @webhook.url`) and a URL read out of the product's own storage. (b) The
+    product publishes an inbound URL for a third party to call, or registers its own endpoint with a
+    vendor's API - that is a third party sending data TO the product, it is not a recipient at all,
+    and the tell is a URL BUILT from the product's own base
+    (`${WEBAPP_URL}/api/integrations/.../webhook`) or a call to a vendor's subscription API. Quote
+    the line and say which it is before anything else. Sampled on the corpus, five of eight
+    `webhookUrl` lines were shape (b) and two were shape (a).
+  - "WHAT SHAPE IS THE MATCHED LINE? Name it before treating it as a disclosure. EIGHT shapes reach
+    this rule and five of them are the thing (it was six and three until 2026-08-28, when clauses 15
+    to 22 added a fourth construct and with it shape (g); it was seven and four until 2026-09-04,
+    when clauses 23 to 30 added a fifth construct and with it shape (h)): (a) a configuration key
+    read at run time (`env('AWS_ENDPOINT')`, `ENV.fetch('STORAGE_ENDPOINT')`,
+    `settings.get('CDN_PREFIX')`); (b) a client or request constructed from such a value (`new
+    S3Client({ endpoint })`, `fetch(subscriberUrl`); (c) a schema, migration or model field that
+    stores such a value per tenant (`payload_url`, `subscriberUrl` on a webhook table). The other
+    three are not: (d) a sample or documentation file recording that the knob exists (`.env.sample`,
+    a helm values table) - which is evidence about the product and NOT evidence that this deployment
+    set it; (e) an SDK's own internals or a generated API model (a vendored `lib/aws-sdk/`
+    directory, a `manifest.json` fixture); (f) an interface label or a translation string for a
+    settings screen. AND THE SEVENTH, WHICH IS THE THING: (g) a destination the code HOLDS ITSELF -
+    an absolute URL or a bare host literal standing in a destination-naming position, or a request
+    path appended to a destination-named symbol (`private const string ApiUrl =
+    https://www.omdbapi.com?apikey=`, `define('LDAP_HOST', 'ldap.forumsys.com')`, `BaseUrl +
+    '/album-mb.php?i='`). That is the fourth construct, clauses 15 to 22, and it is the OPPOSITE of
+    (a) to (c): the recipient is chosen IN the code rather than outside it, so no operator setting
+    decides it and question 8 rather than question 1, 2 or 3 is the one to ask. It is also the shape
+    whose other two facts are least settled by the line - whether a request is actually made, and
+    who is on the other end - so read the evidence template's own four-way split before recording
+    it. THAT SPLIT USES THE LETTERS (a) TO (d) FOR SOMETHING ELSE: it divides shape (g) alone into
+    an assembled URL, a destination constant, a client call and a mere LINK, and its (d) is the one
+    to dismiss. The two lettered lists are separate and neither renumbers the other. AND THE EIGHTH,
+    WHICH IS ALSO THE THING: (h) A DESTINATION, OR SOMETHING HANDED TO ONE, THAT IS DECIDED AT RUN
+    TIME OUT OF A VALUE A PERSON SAVED OR A PREFERENCE THIS PRODUCT STORED - an archive submission
+    of an address a person bookmarked (`archive.save()` on a wayback client), a capture binary or
+    headless browser run over a URL that person supplied (`singlefile_path` in an argument list,
+    `--headless`), a picture endpoint carrying a placeholder the product fills in
+    (`https://vendor/icon/$URL`, `PROVIDER.format(...)`, `endpoint.replace('$URL', host)`), an
+    outbound host read back out of a persisted preference (`getPreferenceString(\"instance\",
+    ...)`), a backup or sync destination, and an HTTP client call whose destination argument is a
+    SYMBOL rather than a literal (`requests.get(favicon_url`, `request.post(ENDPOINT`). That is the
+    fifth construct, clauses 23 to 30, and it is neither (a) to (c) - no operator setting decides it
+    - nor (g) - the source does not contain the destination. Question 9 rather than question 1, 2, 3
+    or 8 is the one to ask, and the fact it turns on is WHOSE value is substituted, which no line of
+    source says. Quote the line and say which of the eight it is."
+  - "IS THE PARTY BEHIND THIS DESTINATION A PROCESSOR, AND IS THERE A CONTRACT WITH IT? For the
+    first three constructs - the object store, the tenant-registered webhook target and the CDN -
+    the ordinary answer is that whoever runs the destination is a processor under Art. 4(8) and
+    therefore a recipient under Art. 4(9), but that is the ordinary answer and not the only one. FOR
+    THE FOURTH CONSTRUCT (shape (g), clauses 15 to 22) THAT PRESUMPTION IS EXPRESSLY WITHDRAWN AND
+    WAS AMENDED HERE ON 2026-08-28: a host written into the source may be a vendor, another service
+    of the same operator, the product's own update endpoint, or a machine in the operator's own
+    rack, and the line does not say which. Starting from processor there would put a party into an
+    Art. 28(3) contract obligation that may not exist and into a record row that may have no
+    recipient in it at all. Settle who runs the destination first - question 8 - and only then ask
+    this question of the answer. An object store the operator runs on their own hardware has no
+    external recipient at all and the honest record row says so. A customer-registered webhook
+    endpoint is usually the customer's own system - and where it is, the customer is very often the
+    CONTROLLER and the scanned product its processor, which means the customer is not a recipient in
+    the product's own record at all: the product's record is then the Art. 30(2) one, which has no
+    recipients field. Nor is the customer a recipient in its OWN field (d), because a controller is
+    not a person \"to which the personal data are disclosed\" within Art. 4(9) when the data come
+    back to its own system - what the customer records in its own field (d) is the scanned product,
+    as its processor, and this leg produces no recipient row of its own. Where the registered
+    endpoint belongs to a THIRD party rather than to the customer, that third party is the recipient
+    and it is the customer-controller's field (d) that carries it. Settle which of the two the
+    scanned product is before writing anything. A CDN is ordinarily a processor, and not always one:
+    it may be a controller for its own security and telemetry processing, and here it is a party
+    whose identity is by construction unknown. Where the party IS external, Art. 28(1) requires the
+    controller to use only processors offering sufficient guarantees and Art. 28(3) requires a
+    contract that sets out the subject-matter, duration, nature and purpose of the processing -
+    neither of which can be true of a party nobody has identified, which is why question 1, 2 or 3
+    has to be answered before this one. FOR THE FIFTH CONSTRUCT (shape (h), clauses 23 to 30, added
+    2026-09-04) THE PRESUMPTION IS WITHDRAWN TOO, AND FOR A DIFFERENT REASON FROM THE FOURTH'S.
+    Several of its shapes reach a party who is not acting for this operator at all and has no
+    relationship with it: a public web archive asked to take a copy, and the operator of a site one
+    person happened to bookmark, are each a recipient under Art. 4(9) and neither is a processor
+    under Art. 4(8), so there is no Art. 28(3) contract to look for and asking for one produces a
+    finding that cannot be closed. A picture endpoint and a backup service usually ARE processors; a
+    host read out of a person's own preference may be a service the operator has never heard of.
+    Settle which of the five shapes you are holding - question 9 - before this question, and where
+    the party is not acting on the operator's behalf, say so and record the disclosure without a
+    contract row."
+  - "DOES THE ART. 30 RECORD DUTY APPLY TO THIS ORGANISATION AT ALL? Art. 30(5) switches it off for
+    an enterprise or organisation employing fewer than 250 persons UNLESS any one of three things is
+    true: the processing is likely to result in a risk to the rights and freedoms of data subjects,
+    the processing is not occasional, or it includes special categories of data under Art. 9(1) or
+    criminal-conviction data under Art. 10. Storing user uploads and serving assets on a continuing
+    basis is not occasional, so the exemption very often does not survive - but headcount and
+    regularity are facts the operator supplies, not facts in the tree. If the operator has not
+    supplied them, say so rather than assuming either way."
+  - "ASK THE PERSON RUNNING THE SCAN, and then read the payload rather than the host: \"This code
+    contacts a destination written into the source itself. Who runs it, what does this product send
+    there, and is that party in your record?\" THREE THINGS HAVE TO BE SETTLED AND THE CODE DECIDES
+    ONLY THE FIRST. (a) IS A REQUEST ACTUALLY MADE? A URL literal can be a destination this product
+    posts to, or a link it renders for the visitor to click - a media server's external-URL
+    providers build `https://www.imdb.com/` addresses that nothing in the server ever calls. Follow
+    the value to a client call, or say that you could not. (b) WHAT TRAVELS? Read the request body
+    and the query string and list the fields. `www.catsone.com` receives an installation identifier,
+    a version, a server software string, a user agent, a site name and an active-user count;
+    `nominatim.openstreetmap.org` receives a postal code, a country and a User-Agent built from this
+    installation's own host name; a metadata provider receives a title, an identifier and an API
+    key. A destination that receives nothing about a person is a recipient of no personal data and
+    the honest record row says so. (c) WHO IS ON THE OTHER END, AND IN WHAT CAPACITY? The party may
+    be a third-party service, another service the same operator runs, this product's own update or
+    telemetry endpoint, or a host the operator configured. That question is not answerable from a
+    hostname and must not be guessed from one: software like MinIO, Matomo, Nominatim or an LDAP
+    directory is named in the code and hosted by whoever the operator chose. Where the destination
+    is a shipped DEFAULT - the source names one host and the deployment may point elsewhere - say
+    which you are describing."
+  - "ASK THE PERSON RUNNING THE SCAN, and then read what is substituted rather than what is written
+    down: \"This code decides a destination, or what it hands to one, at run time - out of an
+    address one of your users saved, a host they picked in a settings screen, or a value this
+    product stored for them. Which destinations does that actually reach in your deployment, and are
+    they in your record?\" FIVE SHAPES REACH THIS CONSTRUCT AND THE FACT THEY SHARE IS THAT THE
+    SOURCE DOES NOT CONTAIN THE ANSWER. (a) AN ARCHIVE OR SNAPSHOT SUBMISSION - the product asks a
+    third-party archive to fetch and publish a copy of an address a person saved; what travels is
+    that address, and the third party's copy is outside this product's control from then on, which
+    is an Art. 5(1)(e) question this rule does not ask and a reader should not assume was asked
+    elsewhere. (b) A SERVER-SIDE FETCH OF A URL A PERSON SUPPLIED, ordinarily through a capture
+    binary or a headless browser; the recipient is whoever operates the address that person saved,
+    they receive a request from the operator's own machine rather than from the person's browser,
+    and the rendered copy comes to rest on the operator's disk. (c) A PICTURE ENDPOINT WITH A
+    PLACEHOLDER the product fills in - the third party receives the substituted value, which in the
+    corpus cases is the host of a page the person bookmarked or a key derived from their email
+    address, together with the ordinary request metadata every fetch carries. (d) A DESTINATION READ
+    OUT OF A PERSISTED PREFERENCE - the host is whatever that store holds today, so the same source
+    line reaches a different party for every person, and there may be no default in the code at all.
+    (e) A BACKUP OR SYNC DESTINATION receiving a copy of what the product holds. THREE THINGS TO
+    SETTLE, AND THE CODE SETTLES NONE OF THEM. Whose value is substituted, and is it about an
+    identified person? Does the request run in this deployment - several of these constructs sit
+    behind a per-person feature toggle, and a toggle that is off discloses nothing. And is the
+    substituted value itself the personal data, rather than merely the route to it? A saved bookmark
+    URL, a domain, and a hash of an email address are each an identifier or close to one, and each
+    is disclosed in full to the party at the other end. Where the answer is not in something the
+    operator holds, return needs_human rather than reading it out of a default in the source."
+  - IS THIS CATEGORY OF RECIPIENT ALREADY IN THE RECORD OF PROCESSING ACTIVITIES, THE PRIVACY POLICY
+    AND THE SUBPROCESSOR LIST? That is the gap this rule exists to find, and it is answered by
+    reading the operator's own declared documents against the code - not by reading more code. A
+    record that names a payment processor and a mail vendor and says nothing about where the uploads
+    are stored, where the events are delivered or which CDN serves the avatars is incomplete in
+    field (d). A record that carries the category and the operator's answer to question 1, 2 or 3 is
+    not a finding at all.
+evidence_template: "{file}:{line} matched one of the shapes this rule reads as a construct in which
+  THIS PRODUCT SENDS DATA TO A DESTINATION THAT IS CHOSEN OUTSIDE THE CODE. That is the whole of
+  what the detector established, and the sentence is written this way on purpose: the CAPABILITY is
+  a code fact, and the DESTINATION is not. TEST THAT SENTENCE AGAINST THE LINE BEFORE YOU USE IT,
+  because four shapes met on real code carry the spelling and not the construct, and on those even
+  the capability half of that sentence overstates what is in front of you: (i) a RELATIVE,
+  same-origin path written as a literal - an `assetPrefix` of `/demo-assets` - which names no
+  destination and hands nothing to anybody; (ii) a destination HARDCODED in the matched line itself
+  - a `const CDN_BASE_URL = ...` assignment holding a vendor's own hostname - which is chosen IN the
+  code and not outside it, and THIS DISMISSAL APPLIES TO THE FIRST THREE CONSTRUCTS ONLY: for the
+  fourth construct described below a hardcoded outbound host IS the thing the clause looks for, and
+  dismissing it on this ground would throw away the finding; (iii) documentation, changelog or
+  comment PROSE that names the construct without carrying it, including a sentence saying a webhook
+  URL is NOT needed, which this detector matches exactly as it matches a sentence saying one is;
+  (iv) an EMPTY key in a sample or template environment file - `AWS_ENDPOINT_URL=`,
+  `ASSET_CDN_HOST=` - where what the line establishes is that the product OFFERS the knob, not that
+  this deployment set it and not that anything has been sent. Say which of those four the matched
+  line is, or that it is none of them and none of the constructs below either, rather than arguing
+  the head sentence onto it. FIVE constructs reach this rule - an object-storage endpoint supplied
+  at deployment (recognised by an explicit endpoint override beside an S3 client, or by a path-style
+  addressing flag - which tells you the endpoint is a configuration knob and tells you NOTHING about
+  who the destination is: Amazon's own S3 User Guide says Amazon S3 supports both
+  virtual-hosted-style and path-style URL access in all AWS Regions, so the flag is a legal and used
+  configuration against Amazon S3 as well as against every S3-compatible implementation); an
+  outbound webhook target that a customer administrator registered and that lives in the product's
+  own database; and a CDN or asset host spliced into the product's own asset URLs. THE FOURTH
+  CONSTRUCT IS AN OUTBOUND DESTINATION THIS PRODUCT HOLDS IN ITS OWN CODE, and it is the one the
+  three above are not: an absolute URL or a bare host literal in a position where the program keeps
+  a destination, or a request path appended to a destination-named symbol whose base lives one hop
+  away. Say which of those the line is. It reaches four shapes and three of them are the thing: (a)
+  a URL or host literal being ASSEMBLED with a value - `BaseUrl + \"/album-mb.php?i=\" + id`,
+  `$\"https://search.worldcat.org/search?q=bn:{externalId}\"` - which is a request being built; (b)
+  a destination CONSTANT or configuration key - `private const string ApiUrl =
+  \"https://json.schedulesdirect.org/20141201\"`, `define('LDAP_HOST', 'ldap.forumsys.com')` - which
+  is where the destination is written down; (c) a client call carrying an absolute URL. The fourth
+  is NOT: (d) a URL literal that is a LINK RATHER THAN A DESTINATION - a documentation link, an
+  issue tracker, a repository URL, a licence or specification address, or a URL the product renders
+  for the visitor's own browser to follow, such as a media server's `https://www.imdb.com/`
+  external-link providers. The tell for (d) is that nothing in this product sends anything there;
+  the tell for (a) to (c) is a request. WHAT THE FOURTH CONSTRUCT DOES NOT ESTABLISH, and this is
+  the whole of the judgement it hands over: WHETHER THE PARTY ON THE OTHER END IS A THIRD PARTY AT
+  ALL. A host in the source may be a vendor, another service of the same operator, the product's own
+  update endpoint, or a machine in the operator's own rack; the detector reports that a destination
+  is written here and the question of who receives, and in what capacity, belongs to you and to
+  context question 8. It also does not establish that any personal data travels on that request -
+  read the payload and say what does - nor that the request runs in this deployment, nor whether the
+  destination is reachable, nor whether the line executes at build time rather than at run time.
+  What the detector did NOT establish, and cannot: WHO the recipient is, WHERE they are established,
+  whether any personal data has actually been sent, whether this deployment has the knob set at all,
+  or - for a webhook spelling - WHICH WAY THE ARROW POINTS, because the same identifier names both
+  the URL the product posts to and the inbound URL it exposes for someone else to call. Of eight
+  sampled corpus lines carrying `webhookUrl`, FIVE were the inbound kind, which is not a recipient
+  at all. The identity of the destination is asked of the person running the scan: context questions
+  1, 2 and 3 carry that question, one per construct, and an adjudication that answers everything
+  else and leaves them blank has produced a record row with a hole in the one field Art. 30(1)(d)
+  asks for. Do not try to read the destination out of a default value in the source - a default is
+  what the code proposes, not what the deployment does - and do not read a vendor's name near the
+  call as the answer, because software like MinIO, Matomo or Sentry is named in the code and hosted
+  by whoever the operator chose. THE FIFTH CONSTRUCT WAS ADDED ON 2026-09-04 (clauses 23 to 30) AND
+  IT IS NEITHER OF THE TWO ABOVE: THE DESTINATION, OR WHAT IS HANDED TO IT, IS ASSEMBLED AT RUN TIME
+  OUT OF A VALUE A PERSON SAVED OR A PREFERENCE THIS PRODUCT STORED. It reaches five shapes and all
+  five are the thing, because each of them ends in a party outside this deployment: (i) AN ARCHIVE
+  OR SNAPSHOT SUBMISSION - a wayback or save-page client, or a submission verb called on an
+  archive-named receiver (`archive.save()`) - which asks a third-party archive to fetch and publish
+  a copy of an address one person saved; (ii) A CAPTURE BINARY OR HEADLESS BROWSER this product runs
+  (`singlefile_path` spliced into an argument list, `wkhtmltopdf`, `puppeteer`, `--headless`), which
+  fetches and renders a URL a person supplied from the operator's own machine; (iii) A PICTURE OR
+  PROVIDER ENDPOINT WITH A PLACEHOLDER - an absolute URL literal carrying `$NAME`, or a
+  `provider`/`endpoint`/`template` symbol being `format`ed or `replace`d - where the substituted
+  value is the disclosure; (iv) A DESTINATION READ OUT OF A PERSISTED PREFERENCE, SETTING OR
+  CONFIGURATION STORE under a key that names a host, an instance, an endpoint or an API; (v) A
+  BACKUP, SYNC OR MIRROR DESTINATION, and an HTTP client call whose destination argument is a SYMBOL
+  rather than a URL literal. WHAT THE FIFTH CONSTRUCT DOES NOT ESTABLISH, and it is more than for
+  any of the four above. It does not establish WHOSE VALUE IS SUBSTITUTED, or that any value is: a
+  template with a hole in it, a preference key and a capture binary are each equally present in a
+  tree where the feature is switched off for everybody. It does not establish that the substituted
+  value is about an identified person - a bookmarked domain, a saved URL and a hash of an email
+  address are each an identifier or close to one, but a fixed internal address substituted into the
+  same template is not. It does not establish that a request is made: clauses 27, 28, 29 and 30 read
+  a template, a substitution, a stored key and a named destination, and only clauses 23, 24, 25 and
+  26 read anything that acts. It does not establish that the party at the other end is a processor -
+  for the archive and the fetched-site shapes it ordinarily is not, which is why context question 6
+  withdraws the presumption for this construct. And it does not establish the RETENTION half that
+  travels with the archive shape: that a copy taken by a third-party archive outlives the local row
+  and that no retraction call exists in the tree is an Art. 5(1)(e) fact, it is not this rule's
+  subject, and nothing here has looked for it. Context question 9 is the operator question for this
+  construct and it is the one to answer before the record row is written TWO CLAUSES WERE ADDED
+  2026-09-09 for a destination that is set before anybody configures anything, and they are numbered
+  (31a) and (31b) in the detector. (31a) matches a NAME - a `default` word joined to a destination
+  word by an underscore, a hyphen or a camelCase boundary, as in `default_api_url`,
+  `defaultEndpoint` or `DEFAULT_BASE_URL` - and (31b) matches a URL-building call whose argument
+  OPENS with a complete absolute literal, as in `Url::parse(\"https://example.invalid/api/\")` or
+  `new URL(\"https://…\")`. WHY BOTH, AND WHAT EACH ONE IS FOR: the two halves of this construct are
+  commonly two lines apart - the name on the function or the field, the literal in its body - and
+  this detector reads one line at a time, so each half is matched on its own and the reader joins
+  them. WHAT A MATCH ESTABLISHES is that a destination is written into the product's own source as
+  the value it uses when nothing overrides it. THAT IS THE STRONGEST REASON TO READ IT AND ALSO THE
+  LIMIT OF IT: most deployments never change a default, so a default is what the product actually
+  does in most installations - and it is still only a default, and this finding does NOT establish
+  that any particular deployment still points there. Read the deployment's own configuration before
+  writing the recipient row, exactly as context question 4 asks, and where the operator has
+  overridden it, the destination in the record is theirs and not this one. ONE WORD OF (31a)'s
+  DESTINATION ALTERNATION CARRIES A SEPARATE REQUIREMENT, AND IT IS DISCLOSED HERE BECAUSE IT IS THE
+  ONE PLACE THIS CLAUSE FAMILY WAS MEASURED TO BE LOOKING AT THE WRONG THING. `registry` names a
+  destination in some products - a package or container registry is one - and in others it names an
+  IN-PROCESS OBJECT: a dependency-injection registry, an object-store registry, a metrics collector
+  registry. Read over 28 real repositories before this clause shipped, every hit on the word was the
+  second kind and none was a destination. So the `registry` spelling is matched ONLY where a
+  destination LITERAL sits on the same line - a URI scheme, or a quoted or path-introduced dotted
+  host. WHAT THAT MEANS FOR YOU AS A READER: a match carrying `registry` has a destination on its
+  own line and you can read it there; a registry default whose name and whose literal are on two
+  different lines is reported at the literal by the URL-constructor clause rather than at the name,
+  so do not expect the name line; and a line that names a `Default...Registry` CLASS and no
+  destination is not matched by this rule at all. Note also what (31b) deliberately does not
+  require: the interpolation marker that clauses 14 and 26 both require after a URL. A URL followed
+  by a placeholder is being built into a request; a URL that is complete is a destination on its
+  own. The two are different facts and the new clause is placed beside those two rather than
+  loosening either of them. ADDED 2026-09-14: EVERY CLAUSE OF THIS RULE IS NOW READ AGAINST A JOINED
+  VIEW OF A BRACKETED CONSTRUCT AS WELL AS AGAINST ONE PHYSICAL LINE, AND NO NEW SHAPE WAS ADDED
+  WITH IT. The physical line is tested first and its result stands; where nothing on any single line
+  matched, the construct is folded onto the line it OPENS on and tested again, so a finding may name
+  a line whose own text does not carry what matched - a wrapped `boto3.client(` whose `endpoint_url`
+  is three lines below it is reported at the call. Where that is what happened the finding carries
+  the folded span in `locations[].joined_from`, so read those lines together rather than the cited
+  line alone before deciding what the construct is."
+remediation_template: |
+  Read the matched line first and decide what it is, because this rule matches a construct that
+  reaches a tree in eight shapes and five of them are a disclosure: a configuration key read at run
+  time, a client or request built from such a value, a schema field that stores one per tenant, a
+  destination the code holds itself - an absolute URL or a bare host literal in a
+  destination-naming position, or a request path appended to a destination-named symbol, which is
+  the fourth construct added on 2026-08-28 as clauses 15 to 22 - and a destination, or something
+  handed to one, that is assembled at run time out of a value a person saved or a preference this
+  product stored, which is the fifth construct added on 2026-09-04 as clauses 23 to 30.
+  A sample or documentation file recording that the knob exists, an SDK's own internals, and an
+  interface label are the other three, and none of them puts data anywhere by itself.
+  If it is one of the five, the fix is a question and then a record row, in that order.
+  Ask whoever deployed this product which object store it writes to, which webhook endpoints its
+  customers have registered, and which CDN serves its assets. Those answers are not in the
+  repository and cannot be put there: the same source line has a different recipient in every
+  deployment. Then settle which record the category belongs in, because the two are different
+  records with different fields. Where the scanned product is a CONTROLLER, the category goes in
+  field (d) of its own Art. 30(1) record. Where it is a PROCESSOR - which is the ordinary shape of a
+  multi-tenant product whose customers register their own webhook endpoints - its own record is the
+  Art. 30(2) record, which has NO categories-of-recipients field at all: its (d) is the
+  security-measures field, so writing a recipient there writes it in the wrong place. The RECIPIENT
+  CATEGORY then belongs in the customer-controller's record. The product's own record still carries
+  an entry about this destination whenever the destination sits in a third country: Art. 30(2)(c) is
+  the processor's own transfer field and requires the third country or international organisation to
+  be identified. The safeguards limb of Art. 30(2)(c) is conditional: it requires the documentation
+  of suitable safeguards only "in the case of transfers referred to in the second subparagraph of
+  Article 49(1)", the compelling-legitimate-interests derogation, so do not ask for that
+  documentation on a transfer resting on an adequacy decision or on standard contractual clauses.
+  Beside that entry, what the product owes on
+  its own account is Art. 28(2)'s authorisation and change-notification and Art. 28(4)'s flow-down.
+  If the product's own position in the chain is not established, say so rather than choosing one.
+  Write the category from what the destination receives rather than from a product name - an object
+  store receives the object bytes and the object key, which usually embeds a user or tenant
+  identifier; a webhook receiver receives the event payload, which is the personal data the event is
+  about where the event concerns a person and is nothing of the kind where it is a deploy or an
+  uptime notification; a CDN receives every visitor's IP address, user agent and the URL of each
+  asset requested.
+  Where the set of recipients cannot be listed because the customers choose it, write the category
+  by its rule rather than by its members - "the operator of any endpoint a customer administrator
+  has registered on this product" is a category in the ordinary sense of Art. 30(1)(d), and it is
+  honest in a way that an empty field is not. Record beside it the controls that bound the set:
+  whether the destination is validated before the request, and whether that validation can be
+  switched off.
+  Then settle the two things the category does not settle. Whoever runs the destination is usually a
+  processor, which needs an Art. 28(3) contract - and a contract cannot exist with a party nobody
+  has identified. And where the destination turns out to sit outside the EEA, Chapter V is a
+  separate question and the transfer has a separate record field of its own - Art. 30(1)(e) where
+  the product keeps a controller's Art. 30(1) record, Art. 30(2)(c) where it keeps a processor's
+  Art. 30(2) record.
+  Do not remove the configuration knob in order to close the finding. The obligation is to record
+  the recipient, not to have no recipients, and a hard-coded destination is a worse answer than a
+  configurable one.
+
+  WHERE THE MATCH IS THE FOURTH CONSTRUCT - a destination written into the source itself - the first
+  three paragraphs still apply, with two differences. The party is NAMEABLE, because the host is in
+  the code, so the record can carry a name and not only a category; and the operator question
+  becomes narrower, since what is unknown is not who the destination is but what is sent there and
+  in which deployments the call runs. Answer it by reading the request rather than the host name.
+  Write the record row from what travels: a media-metadata lookup that sends a title and an
+  identifier is a different row from an installation report that sends a site name, a server
+  software string and an active-user count, and the second is the one a reader will not expect to
+  find. Where the destination is reached only to fetch something - a database download, a package
+  index, an upstream version check that sends nothing about a person - say so and close the row;
+  a recipient of no personal data is not a recipient for field (d). Where the request DOES carry
+  personal data, three further things belong beside the row: whether the call can be switched off,
+  whether the destination is configurable, and whether the request travels over TLS. And do not
+  answer this finding by deleting the host from the source into a configuration value: that moves
+  the same disclosure into the first construct and out of the record's reach.
+
+  WHERE THE MATCH IS THE FIFTH CONSTRUCT - a destination, or something handed to one, decided at run
+  time from a value a person saved or a preference this product stored - the record is written from
+  the SUBSTITUTED VALUE rather than from the host, because the host is often the only half that is
+  visible and it is the wrong half. Name what is put into the template or the argument and who ends
+  up holding it: the address a person bookmarked, the domain of a page they saved, a key derived
+  from their email, the whole configuration they built. Then write the category by its rule, exactly
+  as the tenant-webhook case above does - "the operator of any site a user asks this product to
+  fetch or to archive" is a category in the ordinary sense of Art. 30(1)(d) and is the honest answer
+  where the members cannot be listed. FOUR THINGS BELONG BESIDE THAT ROW AND ONLY THE FIRST IS
+  ORDINARY. Whether the feature is on by default or a person has to turn it on, because a per-person
+  toggle is the difference between a disclosure everybody makes and one nobody has made yet. Whether
+  the substituted value is disclosed to a party that is not acting for this operator - a public
+  archive and the operator of a bookmarked site are recipients and are not processors, so there is
+  no Art. 28(3) contract to obtain and the record says so rather than leaving the field open.
+  Whether anything the product sends can be RETRACTED: where the third party takes and publishes its
+  own copy, deleting the local row does not reach it, and the honest record says the copy is outside
+  the operator's control - that is Art. 5(1)(e) rather than Art. 30, it is a separate finding, and
+  this rule has not looked for it. And where the destination is read out of a person's own
+  preference, the record cannot name a party at all: what it can state is the rule that selects one
+  and the default the product ships. Do not close any of these by hard-coding the destination or by
+  removing the person's ability to choose it - the obligation is to record the recipient, and a
+  narrower feature is not a better record.
+data_categories:
+  - user.behavior
+  - user.contact
+  - user.content
+  - user.device
+  - user.device.ip_address
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: enumeration
+  item: "construct: object store, webhook target, CDN, source-written destination, run-time substituted"
+  item_source: clause

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/silence-reply.schema.json",
+  "title": "Silence investigator reply",
+  "description": "What a legal-silence-investigator seat returns, as it returns it: a JSON array holding one object per rule it was handed (product/plugin/agents/legal-silence-investigator.md, section 'Output - the JSON array, and nothing else'). `verdict-capture` checks a reply against this schema before it writes the reply's bytes, unchanged, to .legal/verdicts/silence/. Before this file no schema described the reply: evidence-log.schema.json's `unknown_rules` row is the ASSEMBLED form, whose outcome words are the log's (not_checked, not_evaluated, out_of_jurisdiction, ...) and which has no `reasoning` or `confidence`. Fields refer to the existing definitions where one exists; the outcome words, `read_scope` and `contradicts_profile` are defined here from the Output section's template, because no schema defines them for this seat.",
+  "$comment": "Relay unit `capture`, 2026-09-24. `searched` is required and may be empty: the Output section calls `undetermined` with `searched: []` the honest record of a rule the seat did not get to. `evidence` is required, with at least one quotation, for `construct_found` only ('required for construct_found'); an `apparently_absent` row's evidence is its searches.",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["rule_id", "outcome", "searched", "reasoning", "confidence"],
+    "properties": {
+      "rule_id": { "$ref": "https://schemas.invalid/product/evidence-log.schema.json#/properties/unknown_rules/items/properties/rule_id" },
+      "outcome": { "enum": ["construct_found", "apparently_absent", "undetermined"] },
+      "read_scope": {
+        "description": "The read-scope class that held every location back, where one did. Omitted otherwise.",
+        "enum": ["tests", "vendored", "build"]
+      },
+      "searched": { "$ref": "https://schemas.invalid/product/evidence-log.schema.json#/properties/unknown_rules/items/properties/searched" },
+      "evidence": { "type": "array", "items": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/codeEvidence" } },
+      "contradicts_profile": { "type": "string", "minLength": 1 },
+      "reasoning": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/reasoning" },
+      "confidence": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/confidence" }
+    },
+    "if": { "required": ["outcome"], "properties": { "outcome": { "const": "construct_found" } } },
+    "then": { "required": ["evidence"], "properties": { "evidence": { "minItems": 1 } } }
+  }
+}

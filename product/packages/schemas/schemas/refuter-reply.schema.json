@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/refuter-reply.schema.json",
+  "title": "Refuter reply",
+  "description": "What a legal-refuter seat returns, as it returns it: a JSON array holding one object per candidate it was handed (product/plugin/agents/legal-refuter.md, section 'Output - the JSON array, and nothing else'). `verdict-capture` checks a reply against this schema before it writes the reply's bytes, unchanged, to .legal/verdicts/refutation/. Before this file no schema described the reply: verdict.schema.json's `refutation` object is the MERGED form, with no `finding_id` and no `confidence`, and `additionalProperties: false`, so the reply the refuter's own definition asks for failed it by construction. Every field here refers to the definition verdict.schema.json already gives it; the required list and the rule on `grounds` are the Output section's.",
+  "$comment": "Relay unit `capture`, 2026-09-24. `grounds`: the Output section says 'omit unless overturned', and SKILL.md step 5 keeps an overturn's grounds as the reason for the dismissal, so an overturn carries them and nothing else does. The `reading` block is verdict.schema.json's `$defs.refutationReading`, the node the log keeps it under: until then this file built its own copy of the rows from verdict.schema.json's row properties while the log held another, the two drifted apart when relay item 6 gave the refuter `disposition`, `cover_ground` and a covered row's `ground`, and live run 2's report was refused for it. Tightened the same day: an `overturned` outcome carries at least one `evidence` entry, which is a quotation (Rules, 1: 'Quote real source for every conclusion, in both directions. An overturn with no quote is an opinion'); a row's `disposition` is one of the seat's four words, not `not_read`, and a `searched` row is the seat's row without the replay's `hit_hash` (both now verdict.schema.json's `$defs`, `seatDisposition` and `seatSearchRow`).",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "type": "object",
+    "$comment": " (design-not-violations.md sections 2.4 and 2.5 item 5) An entry that carries `mode` is the second look's reply, `$defs.challengeItem`; every other entry is the ordinary pass's, the `else` branch, accepted or refused exactly as before. A reply in challenge mode carries no `decisions`, no `searched` and none of the seven ordinary grounds; an ordinary one carries no `mode`.",
+    "if": { "required": ["mode"] },
+    "then": { "$ref": "#/$defs/challengeItem" },
+    "else": {
+      "additionalProperties": false,
+      "required": ["finding_id", "outcome", "reasoning", "evidence", "confidence"],
+      "properties": {
+        "finding_id": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/finding_id" },
+        "outcome": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/refutation/properties/outcome" },
+        "grounds": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/refutation/properties/grounds" },
+        "reasoning": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/refutation/properties/reasoning" },
+        "evidence": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/refutation/properties/evidence" },
+        "confidence": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/confidence" },
+        "decisions": {
+          "description": "Present only where the candidate carried `kinds`, and optional there: the refuter's reading is a record, not a duty. One decision per unit or sub-shape it opened, keyed by the ids the census gives (adjudicator-reply.schema.json's `decision`: `unit`, `quote`, `ground`, and where they apply `disposition`, `also`, `rest`, `at`), or units it chose not to open under one note. `verdict-capture` writes the refutation's `reading` block from them (verdict.schema.json's `refutationReading`: `read`, `covered`, `not_read`), recording every unit the refuter did not name as not read by it; a reply carrying `reading` is refused naming this form.",
+          "type": "array",
+          "items": { "$ref": "https://schemas.invalid/product/adjudicator-reply.schema.json#/$defs/refuterDecision" }
+        },
+        "searched": {
+          "description": "Every project-wide search the refuter ran, as the refutation's `reading.searched[]` rows. Present only where the candidate carried `kinds`.",
+          "type": "array",
+          "items": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/$defs/seatSearchRow", "required": ["tool"] }
+        }
+      },
+      "if": { "required": ["outcome"], "properties": { "outcome": { "const": "overturned" } } },
+      "then": { "required": ["grounds"], "properties": { "evidence": { "minItems": 1 } } },
+      "else": { "not": { "required": ["grounds"] } }
+    }
+  },
+  "$defs": {
+    "challengeItem": {
+      "$comment": " THE SECOND LOOK'S REPLY, taken by `items` for an entry that carries `mode`. A challenge seat tries to show that a finding the report does not count is one to fix after all: the duty is not met, the exemption does not apply, the file ships, or (`applies-after-all`, a high finding the first review ruled out, in a run with the second check) the rule applies after all. The assembly applies its outcome to the finding's placement (`disposition.ts`), never to its verdict: `overturned` puts it back among those to fix, `needs_human` leaves it to the person, `upheld` keeps it where the first review put it.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["finding_id", "mode", "outcome", "reasoning", "evidence", "confidence"],
+      "properties": {
+        "finding_id": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/finding_id" },
+        "mode": { "const": "challenge" },
+        "outcome": { "enum": ["upheld", "overturned", "needs_human"] },
+        "grounds": { "enum": ["duty-not-met", "not-exempt", "ships-after-all", "duty-arises-there", "applies-after-all"] },
+        "reasoning": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/refutation/properties/reasoning" },
+        "evidence": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/refutation/properties/evidence" },
+        "confidence": { "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/confidence" }
+      },
+      "if": { "required": ["outcome"], "properties": { "outcome": { "const": "overturned" } } },
+      "then": { "required": ["grounds"], "properties": { "evidence": { "minItems": 1 } } },
+      "else": { "not": { "required": ["grounds"] } }
+    }
+  }
+}

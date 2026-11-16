@@ -1,0 +1,120 @@
+id: federation-003
+pack: federation
+short_name: Account signing keys stored encrypted
+problem_line:
+  text: Encryption key guarding account signing keys to confirm
+fix_line: Confirm how the encryption key is stored and rotated, and record it beside the signing
+  keys' encryption.
+title: Federation-signing private key held under attribute encryption on an actor or keypair model
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1) - 'personal data' means 'any information relating
+      to an identified or identifiable natural person ('data subject'); an identifiable natural
+      person is one who can be identified, directly or indirectly, in particular by reference to an
+      identifier such as a name, an identification number, location data, an online identifier or to
+      one or more factors specific to the physical, physiological, genetic, mental, economic,
+      cultural or social identity of that natural person'. Reference only: a definition establishes
+      no duty of its own, and the question this rule opens is whether the actor whose key this is
+      falls inside it"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 32(1) - 'Taking into account the state of the art, the
+      costs of implementation and the nature, scope, context and purposes of processing as well as
+      the risk of varying likelihood and severity for the rights and freedoms of natural persons,
+      the controller and the processor shall implement appropriate technical and organisational
+      measures to ensure a level of security appropriate to the risk, including inter alia as
+      appropriate: (a) the pseudonymisation and encryption of personal data; (b) the ability to
+      ensure the ongoing confidentiality, integrity, availability and resilience of processing
+      systems and services;'. An attribute-encryption declaration is one such measure, recorded here
+      as a fact about the deployment; whether the surrounding key management makes it appropriate to
+      the risk is not readable from the declaration"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+effective_date: 2018-05-25
+severity: low
+rule_confidence: 0.25
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    actor_context_marker:
+      - ActivityPub
+      - Keypair
+      - keypair
+      - actor
+      - Actor
+      - inbox_url
+      - federation
+      - Federation
+      - public_key
+      - WebFinger
+  match:
+    - \b(?:encrypts?|attr_encrypted|has_encrypted)\s+[:'"]?(?:private_key|server_private_key|signing_key|actor_private_key|private_key_pem|server_private_key_pem|signing_key_pem)\b
+    - \b(?:encrypts?|attr_encrypted|has_encrypted)\s+[:'"][A-Za-z_][A-Za-z0-9_]*["']?\s*,\s*[:'"]?(?:private_key|server_private_key|signing_key|actor_private_key|private_key_pem|server_private_key_pem|signing_key_pem)\b
+    - \b(?:encrypts?|attr_encrypted|has_encrypted)\s*\(\s*[:'"]?(?:private_key|server_private_key|signing_key|actor_private_key|private_key_pem|server_private_key_pem|signing_key_pem)\b
+    - \b(?:encrypts?|attr_encrypted|has_encrypted)\s*\(\s*[:'"][A-Za-z_][A-Za-z0-9_]*["']?\s*,\s*[:'"]?(?:private_key|server_private_key|signing_key|actor_private_key|private_key_pem|server_private_key_pem|signing_key_pem)\b
+  also_in_file:
+    - (?&actor_context_marker)
+context_questions:
+  - DOES THIS KEY SIGN TRAFFIC FOR A NATURAL PERSON'S ACCOUNT, OR FOR AN ORGANISATIONAL OR SERVICE
+    ACTOR - a relay, a bot account, the instance's own representative actor? Art. 4(1)'s 'identified
+    or identifiable natural person' test is not automatically met by every actor a federation
+    protocol can address. Quote which the matched model row actually represents before treating the
+    key material as personal data of a natural person at all.
+  - IS THIS EVIDENCE THAT `federation-001` ALSO APPLIES IN THIS TREE? This rule establishes key
+    CUSTODY, which is a control, not a data flow to a remote recipient. The two are often found
+    together in a federation-capable codebase and are logically separate constructs. Check whether
+    the sibling rule also fired; where it did not, say so rather than assuming a delivery mechanism
+    must exist just because signing key material does.
+  - WHAT KEY-MANAGEMENT PRACTICE SURROUNDS THIS DECLARATION? An attribute-encryption annotation is a
+    necessary fact under Art. 32(1), not a sufficient one. Ask the operator how the encryption key
+    ITSELF is stored, who or what can read it, and whether it is rotated. None of that is answerable
+    from the matched line, and all of it is what decides whether the measure is appropriate to the
+    risk.
+  - IS THIS WORTH A SEPARATE FINDING, OR A NOTE ON `federation-001`? Unlike every other rule in this
+    pack, the anchor here shows a protective control already in place rather than a disclosure. The
+    default disposition is to record it as an inventory entry - key material of this kind exists in
+    this product, encrypted at rest - and to attach it to the sibling's record row where that rule
+    also fired. Do not write it up as something to fix; there is nothing here to remove.
+  - DID THE MATCH LAND IN A MIGRATION OR A SEED RATHER THAN IN A MODEL? This rule deliberately reads
+    those paths, because that is where a key-custody declaration is written when key material is
+    being MOVED. A migration tells you what changed and when; the live model tells you what is true
+    now. Where the two disagree, read the model, and say which one the finding describes.
+evidence_template: "{file}:{line} matched an attribute-encryption declaration - `encrypts`,
+  `attr_encrypted` or `has_encrypted` - on a field named for a private or signing key, corroborated
+  by an actor, keypair or federation-protocol marker elsewhere in the same file. This establishes
+  that THE CODEBASE CUSTODIES KEY MATERIAL FOR AN ACTOR-SIGNING MECHANISM AND DECLARES IT ENCRYPTED
+  AT REST. It is a control that is present, not a gap: there is no plaintext secret here to remove,
+  and this is not a credential finding. It does NOT establish that the actor in question represents
+  a natural person rather than a service or organisational identity (context question 1), that a
+  data flow to a remote recipient exists in this tree at all (context question 2), or anything
+  whatsoever about how the encryption key itself is stored, who can read it, or whether it is
+  rotated (context question 3) - which is what decides whether the measure is appropriate to the
+  risk under Art. 32(1). A match in a migration describes a change rather than the current state
+  (context question 5)."
+remediation_template: |
+  This anchor shows a protective measure already in place - the key is declared encrypted, not
+  stored in plain text - so there is no plaintext-secret fix to apply and this must not be handled
+  like a live-credential finding.
+  Settle whether the signed actor represents a natural person (context question 1). Where it does
+  not - a relay, a bot, the instance's own representative actor - this finding carries little
+  independent weight under the GDPR and may be closed with a note saying so.
+  Where it does represent a natural person, confirm with the operator how the encryption key is
+  itself protected and rotated, and record that alongside this finding rather than treating the
+  presence of the annotation as the end of the Art. 32(1) analysis. The annotation is one of the
+  measures the provision names; whether the set of measures is appropriate to the risk is a
+  judgement about the whole arrangement.
+  Cross-reference `federation-001`. Where that rule also fired in this tree, keep this as a
+  corroborating note on the same record row rather than as a separate one; where it did not, this
+  stands alone as evidence of custody without evidence of the corresponding data flow, and it is
+  worth saying which.
+  Where the match is in a migration, read the live model before writing anything down: the
+  migration says what was moved and when, and the model says what is true now.
+data_categories:
+  - system.credentials
+fingerprint_spec: file

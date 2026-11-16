@@ -1,0 +1,473 @@
+id: eu-consent-016
+pack: eu-consent
+short_name: "Consent answers: record of who agreed, to what, and when"
+problem_line:
+  text: Consent record of who, what and when not found
+fix_line: Keep an append-only server-side consent record (subject, purposes, notice version, time,
+  method, outcome) or a CMP log.
+title: Consent decision read, gated on, signalled or declared - server-side record of who, what and
+  when needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 7(1): 'Where processing is based on consent, the
+      controller shall be able to demonstrate that the data subject has consented to processing of
+      his or her personal data.' Quoted verbatim from the Official Journal consolidated text (CELEX
+      32016R0679), retrieved 2026-07-27 from the Publications Office cellar
+      (publications.europa.eu/resource/celex/32016R0679; eur-lex.europa.eu itself returns an empty
+      WAF challenge). The duty is conditional on the first clause: where the processing rests on
+      another Art. 6(1) basis - contract, legal obligation, legitimate interests - Art. 7(1) does
+      not attach at all, which is context question 1. The addressee is the controller (Art. 4(7)),
+      and the burden is on it: 'shall be able to demonstrate' is an evidential requirement, not a
+      duty to obtain consent, which sits in Art. 6(1)(a). Art. 7(1) has applied since 2018-05-25
+      (Art. 99(2))."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(2): 'The controller shall be responsible for, and be
+      able to demonstrate compliance with, paragraph 1 ('accountability').' Quoted from the same
+      Official Journal text. The single quotation marks inside the parenthesis are the Journal's own
+      and are reproduced as part of the quotation; CORRECTION 2026-08-03, this entry printed the
+      word bare until the quote-verification gate was extended to rule cites and found it, so do not
+      remove them again. Read with Art. 7(1) this is why a consent decision that exists only in the
+      data subject's own browser is the thing this rule looks for: the controller, not the data
+      subject, holds the burden, and a value in localStorage or in a first-party cookie is held by
+      the data subject, can be cleared by them at any time, and cannot be produced by the controller
+      on request."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 42, first sentence: 'Where processing is based on
+      the data subject's consent, the controller should be able to demonstrate that the data subject
+      has given consent to the processing operation.' The same recital fixes what the demonstration
+      has to be about: 'For consent to be informed, the data subject should be aware at least of the
+      identity of the controller and the purposes of the processing for which the personal data are
+      intended', and a declaration of consent pre-formulated by the controller 'should be provided
+      in an intelligible and easily accessible form, using clear and plain language'. Read with Art.
+      4(11) - consent is a 'freely given, specific, informed and unambiguous indication' - a stored
+      value that names no purpose and no version of the text presented cannot show which processing
+      operation was agreed to, which is why the purpose and version limbs are in the context
+      questions rather than only the timestamp. Quoted from the same Official Journal text,
+      retrieved 2026-07-27."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1): 'Each controller and, where applicable, the
+      controller's representative, shall maintain a record of processing activities under its
+      responsibility. That record shall contain all of the following information: (a) the name and
+      contact details of the controller ...; (b) the purposes of the processing; (c) a description
+      of the categories of data subjects and of the categories of personal data; (d) the categories
+      of recipients ...; (f) where possible, the envisaged time limits for erasure of the different
+      categories of data ...'. Quoted from the same Official Journal text, retrieved 2026-07-27.
+      This is a register of processing activities, not a per-data-subject consent log; it is the
+      organisational half of the demonstrability duty and is out of this detector's reach by design
+      (EU coverage map Part A row 7: 'Split honestly: persistence-absence is SRC; proof adequacy is
+      ORG and must not be scored by the scanner')."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "CNIL, deliberation SAN-2023-009 of 15 June 2023 (published 22 June 2023), sanctioning CRITEO
+      with an administrative fine of EUR 40 000 000. The restricted committee found, among other
+      breaches, an infringement of GDPR Art. 7(1): the company could not demonstrate that the data
+      subjects whose data it processed had consented, because it relied on its partners to collect
+      consent and could not produce the proof. Verified as part of the EU coverage map's adversarial
+      fact-check (2026-07-22 verification record, Part A row 7). Cited as enforcement pressure, in a
+      national jurisdiction, not as the source of the obligation."
+    url: https://www.legifrance.gouv.fr/cnil/id/CNILTEXT000047678324
+    checked_at: 2026-07-27
+    jurisdiction: FR
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 83(5)(a): infringements of 'the basic principles for
+      processing, including conditions for consent, pursuant to Articles 5, 6, 7 and 9' are 'subject
+      to administrative fines up to 20 000 000 EUR, or in the case of an undertaking, up to 4 % of
+      the total worldwide annual turnover of the preceding financial year, whichever is higher'.
+      Both Art. 5 and Art. 7 are inside that tier, so the demonstrability duty carries the upper
+      band rather than the Art. 83(4) one. Quoted from the same Official Journal text, retrieved
+      2026-07-27."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.4
+detector:
+  engine: builtin-regex
+  resolve_local_values: true
+  join_bracketed_constructs: true
+  vocabulary:
+    consent_subject:
+      - cookie
+      - cookies
+      - tracking
+      - analytics
+      - metrics
+      - measurement
+      - telemetry
+      - marketing
+      - promo
+      - promos
+      - promotion
+      - promotions
+      - promotional
+      - newsletter
+      - mailing
+      - subscribe
+      - subscriber
+      - subscription
+      - privacy
+      - gdpr
+      - notice
+      - banner
+      - policy
+      - terms
+      - tos
+      - ads
+      - advertising
+      - profiling
+      - personalization
+      - personalisation
+    consent_decision:
+      - pref
+      - prefs
+      - preference
+      - preferences
+      - choice
+      - choices
+      - setting
+      - settings
+      - status
+      - decision
+      - decisions
+      - default
+      - defaults
+      - accept
+      - accepts
+      - accepted
+      - agree
+      - agrees
+      - agreed
+      - agreed-to
+      - allow
+      - allows
+      - allowed
+      - permitted
+      - granted
+      - signed
+      - signup
+      - confirmed
+      - acknowledged
+      - authorized
+      - authorised
+      - consent
+      - consented
+      - opt-in
+      - opted-in
+      - opt-out
+      - opted-out
+      - subscribed
+      - subscribed-to
+      - seen
+      - dismissed
+      - flag
+      - flags
+      - log
+      - logs
+      - record
+      - records
+      - recorded
+      - receipt
+      - receipts
+      - member
+      - list
+      - wants
+      - receives
+      - agreement
+      - promo
+      - promos
+      - promotion
+      - promotions
+      - promotional
+    processing_subject:
+      - tracking
+      - analytics
+      - metrics
+      - measurement
+      - telemetry
+      - marketing
+      - promo
+      - promos
+      - promotion
+      - promotions
+      - promotional
+      - newsletter
+      - mailing
+      - ads
+      - advertising
+      - profiling
+      - personalization
+      - personalisation
+    enable_word:
+      - enabled
+      - enable
+      - disabled
+      - disable
+    signable_document:
+      - doc
+      - docs
+      - document
+      - documents
+      - eula
+      - agreement
+      - contract
+    signature_word:
+      - signed
+      - accepted
+      - agreed
+      - confirmed
+      - acknowledged
+      - consented
+      - signature
+  vocabulary_matching:
+    consent_subject:
+      case_insensitive: true
+    consent_decision:
+      case_insensitive: true
+      separator_insensitive: true
+    processing_subject:
+      case_insensitive: true
+    enable_word:
+      case_insensitive: true
+    signable_document:
+      case_insensitive: true
+    signature_word:
+      case_insensitive: true
+  match:
+    - (?:[a-z_][Cc]onsent|[Cc]onsent[_A-Z]|[Cc]onsented[_A-Z]|CONSENT[_A-Z]|[A-Z_]CONSENT|[Cc]onsented\?)
+    - __tcfapi|__tcfapiLocator|__cmp\(|__gpp|[Tt]cString|(?<![A-Za-z])TCString|tcData|IABTCF|OptanonWrapper|Optanon|OneTrust|onetrust|Cookiebot|CookieBot|cookiebot|CookieYes|cookieyes|[Gg]et[Cc]ky[Cc]onsent|(?<![A-Za-z])[Oo]sano(?![a-z])|(?<![A-Za-z])[Kk]laro(?![a-z])|Didomi|didomi|Usercentrics|usercentrics|UC_UI|iubenda|_iub\.|(?<![A-Za-z])[Tt]ermly(?![a-z])|[Ss]ourcepoint|[Qq]uantcast|[Cc]ivic[Cc]ookie|[Cc]ookie[Ff]irst|[Cc]ookie[Hh]ub|[Cc]ookie[Pp]ro|TrustArc|[Bb]orlabs|gdprApplies
+    - (?:localStorage|sessionStorage|localForage|AsyncStorage|Cookies\.(?:get|set)|getCookie|setCookie|SetCookie\(|setcookie\(|addCookie\(|AddCookie\(|useCookie|cookieStore|document\.cookie|\$_COOKIE|request\.cookies|req\.cookies|res\.cookie|reply\.setCookie|cookies\.get|cookies\.set|cookies\[|\.Cookie\(|(?<![A-Za-z])Cookie\(|Cookie\.get|Cookie\.set|getCookies\()[^\n]{0,70}(?:[Cc]ookie[_\-]?(?:[Pp]ref|PREF|[Ss]etting|[Cc]hoice|[Aa]ccept|[Aa]greed|[Nn]otice|[Bb]anner|[Ss]tatus|[Pp]olicy|[Oo]pt[_\-]?[Ii]n(?![a-z]))|cookies[_\-]?[Aa]ccepted|[Aa]ccepted[_\-]?[Cc]ookies|gdpr|GDPR|IABTCF|euconsent|[Aa]llow[_\-]?[Tt]racking|[Tt]racking[_\-]?(?:[Aa]llowed|[Ee]nabled|[Oo]k|[Pp]ref)|[Aa]nalytics[_\-]?(?:[Aa]llowed|[Ee]nabled|[Oo]pt)|[Oo]pt[_\-][Ii]n|[Oo]pt[Ii]n(?![a-z]))
+    - (?:[Cc]ookie[_\-]?(?:[Pp]ref|PREF|[Ss]etting|[Cc]hoice|[Aa]ccept|[Aa]greed|[Nn]otice|[Bb]anner|[Ss]tatus|[Pp]olicy|[Oo]pt[_\-]?[Ii]n(?![a-z]))|cookies[_\-]?[Aa]ccepted|[Aa]ccepted[_\-]?[Cc]ookies|gdpr|GDPR|IABTCF|euconsent|[Aa]llow[_\-]?[Tt]racking|[Tt]racking[_\-]?(?:[Aa]llowed|[Ee]nabled|[Oo]k|[Pp]ref)|[Aa]nalytics[_\-]?(?:[Aa]llowed|[Ee]nabled|[Oo]pt)|[Oo]pt[_\-][Ii]n|[Oo]pt[Ii]n(?![a-z]))[^\n]{0,70}(?:localStorage|sessionStorage|Cookies\.(?:get|set)|getCookie|setCookie|setcookie\(|document\.cookie|\$_COOKIE|request\.cookies|req\.cookies|cookies\.get|cookies\.set|\.Cookie\()
+    - "gtag\\(\\s*[\"']consent[\"']|[\"']consent[\"']\\s*,\\s*[\"'](?:default|update)[\"']|dataLaye\
+      r[^\\n]{0,50}[\"']consent|[\"'](?:ad_storage|analytics_storage|ad_user_data|ad_personalizatio\
+      n|functionality_storage|personalization_storage|security_storage)[\"']\\s*:"
+    - (?:[Cc]onsent|CONSENT|[Oo]pt[_\-][Ii]n|[Oo]pt[Ii]n(?![a-z])|OPT_IN|[Oo]pted[_\-][Ii]n|[Oo]pted[Ii]n(?![a-z])|[Aa]ccepts?[_\-]?[Mm]arketing|[Aa]llow[_\-]?(?:[Mm]arketing|[Tt]racking)|[Tt]erms[_\-]?[Aa]ccepted|[Aa]ccepted[_\-]?[Tt]erms|[Tt]os[_\-]?[Aa]ccepted|[Aa]greed[_\-]?[Tt]o[_\-]?[Tt]erms|[Pp]rivacy[_\-]?[Aa]ccepted|[Ss]ubscribed[_\-]?[Tt]o[_\-]?[Mm]arketing)[^\n]{0,60}(?:[Bb]oolean|BOOLEAN|BooleanField|\bbool\b|\bBool\b|\bBOOL\b|tinyint|TINYINT|@default\(false\)|@default\(true\)|DataTypes\.BOOLEAN|types\.BOOLEAN|\btrue\b|\bTrue\b|\bTRUE\b|\bfalse\b|\bFalse\b|\bFALSE\b)
+    - (?:[Bb]oolean|BOOLEAN|BooleanField|\bbool\b|\bBool\b|\bBOOL\b|tinyint|TINYINT|\btrue\b|\bTrue\b|\bTRUE\b|\bfalse\b|\bFalse\b|\bFALSE\b|t\.boolean|->boolean\(|DataTypes\.BOOLEAN)[^\n]{0,60}(?:[Cc]onsent|CONSENT|[Oo]pt[_\-][Ii]n|[Oo]pt[Ii]n(?![a-z])|OPT_IN|[Oo]pted[_\-][Ii]n|[Aa]ccepts?[_\-]?[Mm]arketing|[Aa]llow[_\-]?(?:[Mm]arketing|[Tt]racking)|[Tt]erms[_\-]?[Aa]ccepted|[Aa]ccepted[_\-]?[Tt]erms|[Tt]os[_\-]?[Aa]ccepted|[Aa]greed[_\-]?[Tt]o[_\-]?[Tt]erms|[Pp]rivacy[_\-]?[Aa]ccepted)
+    - (?:[Cc]onsent|CONSENT|[Oo]pt[_\-][Ii]n|[Oo]pt[Ii]n(?![a-z])|OPT_IN|[Oo]pted[_\-][Ii]n|[Oo]pted[Ii]n(?![a-z])|[Aa]ccepts?[_\-]?[Mm]arketing|[Aa]llow[_\-]?(?:[Mm]arketing|[Tt]racking)|[Tt]erms[_\-]?[Aa]ccepted|[Aa]ccepted[_\-]?[Tt]erms|[Tt]os[_\-]?[Aa]ccepted|[Aa]greed[_\-]?[Tt]o[_\-]?[Tt]erms|[Pp]rivacy[_\-]?[Aa]ccepted|[Ss]ubscribed[_\-]?[Tt]o[_\-]?[Mm]arketing|[Ss]ubscription[_\-]?[Ss]tatus|SUBSCRIPTION_STATUS|[Ss]ubscriber[_\-]?[Ss]tatus|[Ss]ub[_\-]?[Ss]tatus|[Mm]ailing[_\-]?[Ss]tatus|[Nn]ewsletter[_\-]?[Ss]tatus)[^\n]{0,70}(?:ENUM|[Ee]num(?![a-z])|[Ee]numerated|TextChoices|IntegerChoices|ChoiceField|pgEnum|z\.enum\(|[Ll]iteral\[|CHECK[
+      \t]*\(|[Uu]nconfirmed|UNCONFIRMED|[Uu]nsubscribed|UNSUBSCRIBED|[Bb]locklisted|BLOCKLISTED|[Dd]ouble[_\-]?[Oo]pt(?:[_\-]?[Ii]ns?)?(?![a-z])|[Ss]ingle[_\-]?[Oo]pt(?:[_\-]?[Ii]ns?)?(?![a-z])|[Oo]pted[_\-]?[Oo]ut(?![a-z])|[Cc]onfirmed(?![a-z])|CONFIRMED)
+    - (?:ENUM|[Ee]num(?![a-z])|[Ee]numerated|TextChoices|IntegerChoices|ChoiceField|pgEnum|z\.enum\(|[Ll]iteral\[|CHECK[
+      \t]*\(|[Uu]nconfirmed|UNCONFIRMED|[Uu]nsubscribed|UNSUBSCRIBED|[Bb]locklisted|BLOCKLISTED|[Dd]ouble[_\-]?[Oo]pt(?:[_\-]?[Ii]ns?)?(?![a-z])|[Ss]ingle[_\-]?[Oo]pt(?:[_\-]?[Ii]ns?)?(?![a-z])|[Oo]pted[_\-]?[Oo]ut(?![a-z])|[Cc]onfirmed(?![a-z])|CONFIRMED)[^\n]{0,70}(?:[Cc]onsent|CONSENT|[Oo]pt[_\-][Ii]n|[Oo]pt[Ii]n(?![a-z])|OPT_IN|[Oo]pted[_\-][Ii]n|[Oo]pted[Ii]n(?![a-z])|[Aa]ccepts?[_\-]?[Mm]arketing|[Aa]llow[_\-]?(?:[Mm]arketing|[Tt]racking)|[Tt]erms[_\-]?[Aa]ccepted|[Aa]ccepted[_\-]?[Tt]erms|[Tt]os[_\-]?[Aa]ccepted|[Aa]greed[_\-]?[Tt]o[_\-]?[Tt]erms|[Pp]rivacy[_\-]?[Aa]ccepted|[Ss]ubscribed[_\-]?[Tt]o[_\-]?[Mm]arketing|[Ss]ubscription[_\-]?[Ss]tatus|SUBSCRIPTION_STATUS|[Ss]ubscriber[_\-]?[Ss]tatus|[Ss]ub[_\-]?[Ss]tatus|[Mm]ailing[_\-]?[Ss]tatus|[Nn]ewsletter[_\-]?[Ss]tatus)
+    - (?:[Uu]nconfirmed|UNCONFIRMED|[Uu]nsubscribed|UNSUBSCRIBED|[Bb]locklisted|BLOCKLISTED|[Oo]pted[_\-]?[Ii]n(?![a-z])|[Oo]pted[_\-]?[Oo]ut(?![a-z])|[Dd]ouble[_\-]?[Oo]pt(?:[_\-]?[Ii]ns?)?(?![a-z])|[Ss]ingle[_\-]?[Oo]pt(?:[_\-]?[Ii]ns?)?(?![a-z]))[^\n]{0,60}(?:[Cc]onfirmed|CONFIRMED|[Ss]ingle(?![a-z])|[Dd]ouble(?![a-z]))|(?:[Cc]onfirmed|CONFIRMED|[Ss]ingle(?![a-z])|[Dd]ouble(?![a-z]))[^\n]{0,60}(?:[Uu]nconfirmed|UNCONFIRMED|[Uu]nsubscribed|UNSUBSCRIBED|[Bb]locklisted|BLOCKLISTED|[Oo]pted[_\-]?[Ii]n(?![a-z])|[Oo]pted[_\-]?[Oo]ut(?![a-z])|[Dd]ouble[_\-]?[Oo]pt(?:[_\-]?[Ii]ns?)?(?![a-z])|[Ss]ingle[_\-]?[Oo]pt(?:[_\-]?[Ii]ns?)?(?![a-z]))|(?:[Uu]nconfirmed|UNCONFIRMED|[Uu]nsubscribed|UNSUBSCRIBED|[Bb]locklisted|BLOCKLISTED|[Oo]pted[_\-]?[Ii]n(?![a-z])|[Oo]pted[_\-]?[Oo]ut(?![a-z])|[Dd]ouble[_\-]?[Oo]pt(?:[_\-]?[Ii]ns?)?(?![a-z])|[Ss]ingle[_\-]?[Oo]pt(?:[_\-]?[Ii]ns?)?(?![a-z]))[^\n]{0,60}(?:[Uu]nconfirmed|UNCONFIRMED|[Uu]nsubscribed|UNSUBSCRIBED|[Bb]locklisted|BLOCKLISTED|[Oo]pted[_\-]?[Ii]n(?![a-z])|[Oo]pted[_\-]?[Oo]ut(?![a-z])|[Dd]ouble[_\-]?[Oo]pt(?:[_\-]?[Ii]ns?)?(?![a-z])|[Ss]ingle[_\-]?[Oo]pt(?:[_\-]?[Ii]ns?)?(?![a-z]))
+    - (?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&consent_subject)[_-]?(?&consent_decision)
+    - (?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&consent_decision)[_-]?(?&consent_subject)
+    - (?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&processing_subject)[_-]?(?&enable_word)
+    - (?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&enable_word)[_-]?(?&processing_subject)
+    - (?:[Cc]ookie|COOKIE|[Pp]rivacy|PRIVACY|[Tt]racking|TRACKING|[Cc]onsent|CONSENT|[Gg]dpr|GDPR)[_-]?(?:[Bb]anner|BANNER|[Nn]otice|NOTICE|[Tt]oast|TOAST|[Mm]odal|MODAL|[Dd]ialog|DIALOG|[Pp]opup|POPUP|[Pp]rompt|PROMPT)
+    - (?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&signable_document)[_-]?(?&signature_word)|(?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&signature_word)[_-]?(?&signable_document)
+    - (?<![A-Za-z0-9])(?<!@(?=OptIn\())(?:[Oo]pt|OPT)(?:ed|ED)?(?:[_-](?:[Ii]n|IN|[Oo]ut|OUT)|In|Out)(?![a-z])
+    - (?<![A-Za-z0-9_])(?:[Tt]cf|TCF|[Gg]pp|GPP)(?=[A-Z_])
+    - "[>\"'`]\\s*(?:[Ii] agree|[Ii] accept|[Ii] consent|[Ii] authorise|[Ii] authorize|[Aa]gree
+      to|[Cc]onsent to|[Aa]ccept to)[^\\n]{0,70}(?&consent_subject)"
+    - "[\"'`](?:gdpr|GDPR|Gdpr)[\"'`]"
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|--\s)
+    - "[Pp]rompt[\"']?\\s*(?:=>|[:=])\\s*[\"']?consent|prompt=consent|[Oo]auth[_\\-]?[Cc]onsent|OAU\
+      TH_CONSENT|[Cc]onsent[_\\-]?[Ss]creen|approval_prompt|access_type\\s*(?:=>|[:=])|[Aa]dmin[_\\\
+      -]?[Cc]onsent|ADMIN_CONSENT|adminconsent|[Gg]rant[_\\-]?[Aa]dmin|tenant[_\\-]?consent|[Cc]ons\
+      ent[_\\-]?[Uu]rl|[Cc]onsent[_\\-]?[Ee]ndpoint"
+  path_without:
+    - (^|/)(?:locales?|i18n|translations?|lang|langs)/(?:(?!(?:locales?|i18n|translations?|lang|langs)/)[^/]+/)*[^/]+\.(?:json|ya?ml|po|pot|mo|properties|xliff|xlf|arb|strings|resx|ftl|toml|csv|xml)$
+context_questions:
+  - Does any processing in this project rest on consent at all? Art. 7(1) opens with 'Where
+    processing is based on consent', so the duty attaches only to processing whose Art. 6(1) basis
+    is (a) consent -- and, through the national transpositions of ePrivacy Art. 5(3), to storing or
+    reading anything on the user's terminal equipment for non-essential purposes. Where the
+    processing runs on contract, legal obligation or legitimate interests, this rule's subject
+    matter does not arise and the finding should be recorded as inapplicable rather than as a gap.
+    Quote the code that shows what the consent decision actually gates -- an analytics or
+    advertising tag, a marketing send, a third-party SDK -- and say which basis that processing
+    rests on.
+  - "Trace the consent decision from where it is produced to where it comes to rest, and quote every
+    write on the path. The question is not whether consent is collected but whether anything durable
+    is written on the controller's side: a value in localStorage, sessionStorage or a first-party
+    cookie is held by the data subject, is cleared with the browser data, and cannot be produced by
+    the controller later. If the only writes you find are Web Storage or cookie writes, say so and
+    quote them; if you find a request to a server endpoint, follow it to the handler and quote what
+    the handler stores."
+  - "Could the controller, asked today about ONE named data subject, produce something showing that
+    this person consented and when? That is the whole of Art. 7(1), and it is the question a
+    detector cannot answer, so answer it here by reading the code. The standard to apply: a mention
+    is never enough, a declaration of a persisted record is. Until 2026-07-27 the following
+    vocabulary was a suppression clause in this rule -- any one hit deleted every candidate in the
+    repository unseen -- and it is now yours to weigh instead. (a) A consent timestamp declared as a
+    persisted column or written from the clock: consented_at, consented_on, consent_given_at,
+    consent_granted_at, consent_recorded_at, consent_logged_at, consent_timestamp, opted_in_at,
+    opt_in_at and their camelCase and SCREAMING_CASE spellings, declared with DateTimeField,
+    TimestampField, @CreateDateColumn, models.DateTime, @Column, db.Column, sa.Column, t.datetime,
+    t.timestamp, ->timestamp(), DataTypes.DATE, TIMESTAMPTZ, time.Time, LocalDateTime, Instant, or
+    assigned new Date(), Date.now(), Time.current, datetime.utcnow(), time.Now(), CURRENT_TIMESTAMP.
+    (b) A dedicated table created in a migration: create_table :consent_logs, CREATE TABLE
+    consent_records, Schema::create('user_consents'), knex createTable('consent_events'). (c) A
+    persisted entity rather than a view model: class UserConsent < ApplicationRecord, class
+    Consent(models.Model), a Mongoose Document, a Prisma model, a JPA @Entity or @Table. (d) An
+    association naming a per-subject record collection: has_many :consent_logs. (e) A write into
+    that store: INSERT INTO consent_logs, ConsentLog.create!, prisma.consentRecord.create,
+    db.consent_events.insert. Quote what you find, with the file and line."
+  - "Now weigh the same vocabulary against the four ways it lies, every one of which was measured on
+    real repositories and each of which used to silence this rule. A THIRD-PARTY PAYLOAD KEY is not
+    the controller's record: an automation platform spells consented_at, consent_updated_at and
+    consentDateTime more than twenty times and every one is a field of someone else's API (a Klaviyo
+    profile subscription, a Shopify customer payload, a testimonial service); `opted_in_at:
+    Property.DateTime({` is a form field in a MailerLite connector's schema. A CONSENT BANNER IS NOT
+    A CONSENT RECORD: `export class CookieConsentBanner {` is the user interface that asks the
+    question, not the store that keeps the answer. A CLIENT-SIDE WRITE IS NOT THE CONTROLLER'S:
+    `localStorage.setItem('gdpr', JSON.stringify({consentedAt: new Date()}))` names a timestamp and
+    stores it in the data subject's own browser, where the controller cannot produce it later and
+    the data subject can clear it. AN OAUTH CONSENT TABLE IS NOT GDPR CONSENT: a table such as
+    `oauth_consents` records that a user authorised a client application to call an API on their
+    behalf, which is an authorisation grant between two applications. And a comment recording that
+    the duty is unmet (`// TODO: persist consented_at server-side once the consent API exists`) is
+    evidence of the gap, not of the record. State which of these the code you found is, or state
+    that it is none of them."
+  - "If a record is written, does it carry the three facts the demonstration needs -- WHO (an
+    identifier for the data subject or their session), WHEN (a timestamp of the moment consent was
+    given, not merely a row-updated time), and TO WHAT (the purposes consented to, and the version
+    or hash of the notice and the wording that was on screen)? Quote the schema, model, migration or
+    struct. A single boolean such as marketing_opt_in = true answers only the first, which is the
+    shape this rule exists to raise: Recital 42 requires the data subject to have been aware of the
+    controller's identity and the purposes, and a bare flag records neither. A consent version with
+    no timestamp answers 'to what text' and not 'when', so it is half of the demonstration; a
+    timestamp with no purpose is the other half."
+  - "Is the matched value a consent within GDPR Art. 4(11) -- a freely given, specific, informed and
+    unambiguous indication of the data subject's wishes -- or something that only shares its
+    vocabulary? Four look-alikes recur and each is outside this rule: an OAuth authorisation
+    parameter (prompt=consent, which asks an authorisation server for its own screen); a field of a
+    third-party API payload the project merely forwards (a marketing platform's consented_at, a
+    commerce platform's marketing consent state); an application preference that gates no
+    personal-data processing (a UI toggle, a feature opt-in); and a moderation or terms acceptance
+    that rests on contract rather than consent. Quote the line and say which of these it is."
+  - Who is the controller for the processing this consent covers, and is that the party whose
+    repository this is? Art. 7(1) addresses the controller alone. A library, SDK, plugin or
+    integration connector that hands a consent value to a caller or to a third-party API is not
+    thereby the controller of that processing, and neither is a processor acting on documented
+    instructions. Where the repository is a component rather than a deployed service, say so and
+    record the finding against the integrating application instead.
+  - "Is the record kept somewhere this scan cannot see? Three routes are common and all of them are
+    real answers: a consent management platform that keeps its own server-side consent log or
+    consent receipts on the controller's behalf (Cookiebot, OneTrust, Didomi, Usercentrics and
+    Sourcepoint all offer one, and the code side of it is only the CMP snippet); a schema held in a
+    .sql or .prisma file, which this walker does not open; and a separate service or repository that
+    owns the consent table. Look for a migrations directory, an ORM schema, a data-platform client
+    or a documented CMP configuration before concluding that nothing is written, and quote what you
+    find or record explicitly that you looked and found none. This question carries more weight than
+    it used to: this rule no longer suppresses itself when it sees a consent-record declaration, so
+    the scanner is making no claim at all about whether a record exists, and the whole of that
+    finding is yours."
+  - "For a TCF integration specifically: the TC string is the portable, decodable record of which
+    purposes and which vendors the user agreed to, with the CMP id and the creation timestamp inside
+    it. Is the string retained anywhere on the controller's side, or is it read from __tcfapi, used
+    to gate a tag, and dropped? Quote the addEventListener or getTCData callback and say what
+    happens to tcData.tcString after the branch."
+  - Does the consent record, if one exists, survive the events that would otherwise erase the proof
+    -- account deletion cascades, table truncation in a data reset, a soft-delete that removes the
+    user row, or a retention job? A record that is deleted with the data subject's account cannot
+    demonstrate a past consent for the period the controller may still need to account for it. Quote
+    the cascade or retention configuration if you find one, and note that the reverse duty (storage
+    limitation, Art. 5(1)(e)) pulls the other way and is a separate question this rule does not
+    decide.
+evidence_template: "{file}:{line} reads, gates on, signals or declares a consent decision - check
+  whether a record of who consented, to what, and when is written on the controller's side. Those
+  four verbs enumerate what the clauses were written to catch; what the detector established is that
+  a listed spelling occurs at this location. Some of the spellings are a bare vocabulary fragment,
+  so a longer word that merely contains one matches on the same clause as a consent variable does -
+  a cryptocurrency ticker in a static asset table of coin names is the observed case - and one
+  clause pairs a consent or opt-in word with a boolean within 60 characters, which a package README
+  describing a developer-facing feature flag satisfies, the opt-in there switching on a
+  user-interface control rather than any processing of personal data. The question below that asks
+  whether the matched value is a consent within Art. 4(11) or something that only shares its
+  vocabulary is what settles that. Since 2026-09-12 the match may also come from a CONSTRUCT rather
+  than from that line alone: this rule reads the bracket-balanced construct a line opens on as one
+  folded text as well, so an accessor call or a struct literal a formatter wrote over several
+  physical lines - window.localStorage.setItem( with the key on a line below it, or
+  http.SetCookie(w, &http.Cookie{ with the Name field below it - is matched as a whole, and where
+  that is what happened the finding carries the span it was folded from in locations[].joined_from.
+  Read those lines together, not the opening line alone. THREE CLAUSES ADDED ON 2026-08-28 report a
+  fourth kind of declaration and are worth telling apart from the boolean one: a consent state
+  carried as an ENUM MEMBER rather than as a flag. Two of them pair a consent, opt-in or
+  subscription-status name with an enum declaration construct or with a member name from the opt-in
+  state set - unconfirmed, confirmed, unsubscribed, blocklisted, opted-out, single or double opt-in
+  - within seventy characters, in either order. The third requires no name at all and fires on TWO
+  of those member names on one line, which is what an enum declaration, a swagger enum list and a
+  two-way status comparison all look like. On any of the three the detector established that a small
+  named set of subscription states exists here and nothing more: not that this project wrote it
+  rather than quoting someone else's API, and not when or to what anybody consented, which is the
+  whole of the Art. 7(1) question. A documentation table listing the members of a status field
+  satisfies these clauses exactly as a schema does, and the corpus holds both in one repository, so
+  read the file before reading the finding as a schema fact. This scan asserts nothing either way:
+  the clause that used to add 'and no persisted consent record was declared anywhere in this
+  project' was a project-scoped suppression that deleted every candidate in a repository on one
+  matching line, and it was removed on 2026-07-27"
+remediation_template: |
+  This is a candidate for review against GDPR Art. 7(1), read with Art. 5(2), not a determination
+  about this code. The rule fires when a consent decision is read, gated on, signalled to a tag or
+  declared as a bare boolean. It fires whether or not the project keeps a consent record: since
+  2026-07-27 this detector no longer suppresses itself on seeing one, because the suppression
+  deleted every candidate in a repository on a single matching line and nobody could see that it
+  had. A project with a correct, timestamped, append-only consent log will therefore still appear
+  here, and the correct outcome in that case is a one-read dismissal naming the record.
+  Two facts decide most candidates, so establish them first:
+  1. Does the processing this decision gates actually rest on consent? Where the basis is
+     contract, legal obligation or legitimate interests, Art. 7(1) does not attach and there is
+     nothing here to answer.
+  2. Is anything durable written on the controller's side? A value in localStorage,
+     sessionStorage or a first-party cookie is held by the data subject and cleared with their
+     browser data, so it cannot be produced by the controller on request.
+  Where both point at a gap, the engineering change is a consent record written server-side at the
+  moment of the decision, holding at least: an identifier for the data subject or the session, the
+  purposes consented to, the version or hash of the notice and the wording shown, the timestamp,
+  the method (banner, checkbox, API), and the outcome including a refusal. Keeping it append-only,
+  so that a later change adds a row rather than overwriting one, is what lets the controller show
+  the state at any past date; a single mutable boolean on the user row cannot. Where a consent
+  management platform already keeps a server-side consent log or consent receipts on the
+  controller's behalf, the record may exist outside this repository - confirm that it is
+  retrievable and note where it lives, rather than duplicating it.
+  Where the surface is TCF, the TC string itself is the artifact worth storing: it decodes to the
+  purposes, the vendors, the CMP id and the creation time, so persisting it with the subject
+  identifier answers most of the question in one field.
+  What a reviewer should expect to see in the diff once this is done, and what a reviewer should
+  refuse: a migration creating the table (create_table :consent_logs, CREATE TABLE consent_records,
+  Schema::create('user_consents')), a persisted model rather than an interface (class UserConsent <
+  ApplicationRecord, class Consent(models.Model), a JPA @Entity, a Prisma model), a timestamp column
+  declared with a real column type (consented_at with DateTimeField, @CreateDateColumn, t.datetime,
+  TIMESTAMPTZ, time.Time, Instant) rather than assigned in the browser, an association such as
+  has_many :consent_logs, and a server-side write (INSERT INTO consent_logs, ConsentLog.create!,
+  prisma.consentRecord.create). Four things look like this change and are not it: a field named
+  consented_at inside a third-party API payload the project only forwards; a CookieConsentBanner
+  component, which asks the question rather than keeping the answer; a localStorage or cookie write
+  carrying a timestamp, which lives in the data subject's browser and cannot be produced by the
+  controller on request; and an OAuth consent table such as *_oauth_consents, which records that a
+  user authorised a client application to call an API and not that a data subject agreed to a
+  processing purpose.
+  Two neighbouring duties are deliberately out of scope here and are not answered by adding a
+  record: withdrawal must stay as easy as giving consent (Art. 7(3)), and the record itself is
+  personal data subject to storage limitation (Art. 5(1)(e)).
+data_categories:
+  - user.device.cookie_id
+  - user.behavior
+  - user.contact.email
+fingerprint_spec: project
+reading_class:
+  class: existence
+  elements:
+    - name: who
+      question: 5
+      text: WHO (an identifier for the data subject or their session)
+    - name: when
+      question: 5
+      text: WHEN (a timestamp of the moment consent was given, not merely a row-updated time)
+    - name: to_what
+      question: 5
+      text: TO WHAT (the purposes consented to, and the version or hash of the notice and the wording that
+        was on screen)

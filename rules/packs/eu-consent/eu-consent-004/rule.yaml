@@ -1,0 +1,108 @@
+id: eu-consent-004
+pack: eu-consent
+short_name: PostHog may start capturing before consent
+problem_line:
+  text: PostHog captures with no consent gate found
+fix_line: Start PostHog opted out and opt in on recorded consent, or go cookieless; on server SDKs,
+  check consent before capture.
+title: PostHog constructor or init call (browser or server SDK), or a snippet of one -
+  opt-out-by-default capture needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC): storing
+      information, or gaining access to information already stored, in a user's terminal equipment
+      \"is only allowed on condition that the subscriber or user concerned has given his or her
+      consent, having been provided with clear and comprehensive information\""
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-28
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) (replaces Art. 5(3) of Directive 2002/58/EC: the 2002
+      wording offered only a right to refuse, the replacement wording requires prior consent) and
+      Art. 4 (Member State transposition deadline 25 May 2011)"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: GDPR Art. 6 and Art. 7 (legal basis for processing; conditions for consent, applied to
+      analytics purposes)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-21
+    jurisdiction: EU
+effective_date: 2011-05-25
+severity: high
+rule_confidence: 0.7
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  vocabulary:
+    posthog_vendor_token:
+      - posthog
+  vocabulary_matching:
+    posthog_vendor_token:
+      case_insensitive: true
+  join_bracketed_constructs: true
+  match:
+    - posthog(?:-js|-node)?\.init\(
+    - "[^A-Za-z_]Posthog\\("
+    - posthog\.(project_)?api_key\s*=
+    - PostHog::Client\.new
+    - PostHog::init\(
+    - posthog\.New(WithConfig)?\(
+    - new (?:[\w@./-]+\.)?PostHog\(
+    - (PostHog\.Builder|PostHogConfig\.builder|PostHog\.with)\(
+    - (?:\.|::|->)\s*(?:init|Init|new|New|NewWithConfig|Client)\s*\([^\n]{0,240}(?&posthog_vendor_token)
+    - (?:^|[^A-Za-z0-9_.$])(?:init|Init|New|NewWithConfig|builder|Builder)\s*\([^\n]{0,240}(?&posthog_vendor_token)
+  shared_path_exclusions:
+    - markdown_documents
+  resolve_import_aliases: true
+context_questions:
+  - Is the PostHog client created only after consent has been recorded? Quote the call path.
+  - "Is capture off until the visitor acts? opt_out_capturing_by_default: true, a later
+    posthog.opt_in_capturing(), or cookieless_mode are the evidence, and since 2026-07-27 the
+    detector no longer searches for them, so finding one is a real contribution rather than a repeat
+    of the search that produced this candidate. None is sufficient on its own. Quote what you find,
+    then answer: (a) is it attached to THIS client — the three settings are posthog-js browser
+    options and do not exist on the posthog-node, Python, Ruby, PHP, Go or Java SDKs, so a browser
+    opt-in says nothing about a server capture; (b) if it is opt_in_capturing(), what condition
+    reaches it, and is that condition a recorded consent decision rather than a settings toggle the
+    operator ships enabled; (c) if it is cookieless_mode, what value is it set to — 'on_reject'
+    behaves differently from 'always', and a match on the word alone decides nothing."
+  - Is session_recording enabled? Session replay captures far more than event analytics, so quote
+    the configuration.
+  - If this is a server SDK (Python, Ruby, PHP, Go, Node, Java), what identifier is passed as
+    distinct_id, and does anything on that path check a stored consent decision? Server-side capture
+    bypasses the browser consent gate entirely.
+evidence_template: "{file}:{line} carries a PostHog constructor, init call or api-key assignment.
+  That is a string on a line, and it is not always a client that runs: the same text sits in a code
+  sample quoted inside a component or built by one, in a doc comment, and in a line of a diff hunk -
+  all three observed in the pinned corpus on 2026-08-13, and none of them initialises anything. .md
+  and .mdx files are excluded by path for the same reason, so a documentation page will not reach
+  you, but a snippet quoted in source still can. Read the matched line and name its shape before
+  treating it as a live client. Since 2026-09-14 the match may also come from a CONSTRUCT rather
+  than from that line alone: this rule reads the bracket-balanced construct a line opens on as one
+  folded text as well, so a constructor whose options are written one per line is matched as a
+  whole, and where that is what happened the finding carries the span it was folded from in
+  joined_from. Read those lines together. Whether capture is opted out by default, and whether any
+  opt-out setting found elsewhere applies to this client, is not decided by the detector: see the
+  context questions"
+remediation_template: |
+  Read the matched line first. Every change below assumes it is a client that runs, and three
+  shapes that match these patterns are not: a code sample held in a string and rendered by a
+  component, a doc comment naming the call, and a line inside a diff hunk. Where the matched line
+  is one of those, find the client this repository actually constructs and apply the rest of this
+  to that line; where none exists, this candidate closes with no change.
+  In the browser, initialise as posthog.init(KEY, { opt_out_capturing_by_default: true, ... }) and
+  call posthog.opt_in_capturing() once the CMP records consent; or enable cookieless mode for EU
+  traffic.
+  On a server SDK the browser options do not exist, so the gate has to be your own: read the
+  visitor's recorded consent decision before calling capture(), and pass no identifier that can be
+  tied to a person until that decision exists.
+  If one of those settings already exists somewhere in the repository, check that it is attached to
+  the client on this line rather than to another one. opt_out_capturing_by_default,
+  opt_in_capturing() and cookieless_mode are posthog-js options; a browser client configured
+  correctly leaves a posthog-node, Python, Ruby, PHP, Go or Java client next to it entirely
+  ungated.
+data_categories:
+  - user.behavior
+fingerprint_spec: default

@@ -1,0 +1,297 @@
+id: presence-001
+pack: presence
+short_name: Online status broadcast to others and stored
+problem_line:
+  text: Online status broadcast to others or stored offline
+fix_line: By default publish only needed status detail; on legitimate interests let people stop;
+  delete offline status in time.
+title: Live availability and behavioural state broadcast to a subscriber graph, and stored offline
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 6(1)(f) - processing is lawful to the extent that
+      'processing is necessary for the purposes of the legitimate interests pursued by the
+      controller or by a third party, except where such interests are overridden by the interests or
+      fundamental rights and freedoms of the data subject which require protection of personal data,
+      in particular where the data subject is a child.' This is the provision the construct turns
+      on, and the word that does the work is 'necessary'. Making a person reachable is a real
+      interest; whether it needs a continuously published idle timer, a last-activity stamp and a
+      typing indicator, rather than a plain reachable-or-not signal, is the balancing a finding here
+      should actually be about
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(c) - personal data shall be 'adequate, relevant
+      and limited to what is necessary in relation to the purposes for which they are processed'.
+      Minimisation applies to the GRANULARITY of a presence signal, which is where it is usually
+      decided without anyone noticing a decision was made: available-or-not, available with a status
+      word, available with an idle duration, and available with a last-activity timestamp are four
+      different disclosures serving the same stated purpose"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(e) - personal data shall be 'kept in a form which
+      permits identification of data subjects for no longer than is necessary for the purposes for
+      which the personal data are processed'. Carried as an operative provision, not a reference,
+      and specifically for the offline half of the construct: an offline-presence row and a
+      last-activity stamp are stored state about a person who is not connected, so they are retained
+      personal data rather than a transient signal, and two questions follow that ordinarily have no
+      answer anywhere in the product: for how long, and deleted by what"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 25(2) - 'The controller shall implement appropriate
+      technical and organisational measures for ensuring that, by default, only personal data which
+      are necessary for each specific purpose of the processing are processed. That obligation
+      applies to the amount of personal data collected, the extent of their processing, the period
+      of their storage and their accessibility. In particular, such measures shall ensure that by
+      default personal data are not made accessible without the individual's intervention to an
+      indefinite number of natural persons.' The last sentence is the one to read twice against this
+      construct: presence is accessible by default to everyone in the subscriber graph, and the
+      control that limits it is something the person has to go and find"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 21(1) - 'The data subject shall have the right to
+      object, on grounds relating to his or her particular situation, at any time to processing of
+      personal data concerning him or her which is based on point (e) or (f) of Article 6(1),
+      including profiling based on those provisions.' Reference only: this detector establishes
+      nothing about what a deployment does when somebody objects. It is carried because the
+      construct is ordinarily run on legitimate interests, and an objection right comes with that
+      basis - which in practice means the product needs a way for a person to stop publishing their
+      state without leaving the service"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.35
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    presence_machinery:
+      - presence_manager
+      - presence_update_handler
+      - presence_handler
+      - presence_router
+      - presence_service
+      - broadcast_presence
+      - set_presence
+      - probe_presence
+      - publish_presence
+      - directed_presence
+      - presence_subscription
+      - presence_tracker
+      - presence_state
+      - presence_diff
+      - presence_update
+    presence_store:
+      - ofpresence
+      - ofroster
+      - offline_presence
+      - presence_cache
+      - last_activity_cache
+      - roster_item
+      - roster_provider
+      - roster_entry
+      - roster_subscription
+      - presence_subscription_status
+      - subscription_ask
+      - presence_table
+      - presences_store
+    presence_framework:
+      - phoenix.presence
+      - presence.track
+      - presence.untrack
+      - track_presence
+      - untrack_presence
+      - use_presence
+      - presence_channel
+      - awareness.on
+      - awareness.getstates
+      - awareness_state
+      - awareness_update
+      - set_local_state_field
+      - yjs_awareness
+    presence_state_field:
+      - last_activity
+      - last_seen_at
+      - last_active_at
+      - last_online_at
+      - idle_time
+      - idle_since
+      - away_since
+      - do_not_disturb
+      - dnd_until
+      - is_typing
+      - typing_indicator
+      - availability_status
+      - online_status
+      - is_online
+      - last_seen
+    bare_state_word:
+      - away
+      - dnd
+      - idle
+      - typing
+      - online
+      - offline
+      - available
+      - unavailable
+      - invisible
+    subscriber_graph:
+      - roster
+      - presence
+      - subscriber
+      - roster_subscription
+      - presence_subscription
+      - subscriber_list
+      - buddy_list
+      - contact_list
+      - watcher_list
+      - follower_list
+      - occupants
+    broadcast_verb:
+      - broadcast
+      - fanout
+      - fan_out
+      - publish_to
+      - push_to_all
+      - notify_subscribers
+      - deliver_to
+      - send_to_all
+    visibility_control:
+      - privacy_list
+      - privacylists
+      - presence_privacy
+      - presence_visibility
+      - presence_visibility_setting
+      - status_visibility
+      - online_visibility
+      - last_seen_visibility
+      - invisible_mode
+      - appear_offline
+      - hide_last_seen
+      - hide_online_status
+      - presence_opt_out
+  vocabulary_matching:
+    presence_machinery:
+      case_insensitive: true
+      separator_insensitive: true
+    presence_store:
+      case_insensitive: true
+      separator_insensitive: true
+    presence_framework:
+      case_insensitive: true
+      separator_insensitive: true
+    presence_state_field:
+      case_insensitive: true
+      separator_insensitive: true
+    bare_state_word:
+      case_insensitive: true
+      separator_insensitive: true
+    subscriber_graph:
+      case_insensitive: true
+      separator_insensitive: true
+    broadcast_verb:
+      case_insensitive: true
+      separator_insensitive: true
+    visibility_control:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?&presence_machinery)
+    - (?&presence_store)
+    - (?&presence_framework)
+    - (?&presence_state_field)
+    - (?![Tt][Yy][Pp][Ii][Nn][Gg][Ss](?![A-Za-z0-9]))(?&bare_state_word)[^\n]{0,60}(?&subscriber_graph)|(?&subscriber_graph)[^\n]{0,60}(?![Tt][Yy][Pp][Ii][Nn][Gg][Ss](?![A-Za-z0-9]))(?&bare_state_word)
+    - (?&broadcast_verb)[^\n]{0,60}(?&subscriber_graph)|(?&subscriber_graph)[^\n]{0,60}(?&broadcast_verb)
+    - (?&visibility_control)
+context_questions:
+  - "WHAT EXACTLY IS PUBLISHED, AND AT WHAT GRANULARITY? List the fields that leave the person: a
+    reachable-or-not flag, a status word, a free-text status message, an idle duration, a
+    last-activity timestamp, a typing indicator, a device or client name. Each step up that list is
+    a larger disclosure serving the same stated purpose, and the granularity is where Art. 5(1)(c)
+    is decided. Quote the payload shape rather than the feature name."
+  - WHO RECEIVES IT IN THIS DEPLOYMENT? The code shows the broadcast; who is on the receiving end is
+    a runtime fact read from the roster, the channel authorisation or the room membership. Establish
+    whether the graph is mutual (both sides agreed), one-sided (anyone may subscribe), or open
+    (everyone in an installation sees everyone), because those are three different answers to Art.
+    25(2)'s last sentence about accessibility to an indefinite number of people without the
+    individual's intervention.
+  - WHAT IS THE DEFAULT, AND WHERE IS THE CONTROL? Two halves of one question. Find the shipped
+    default for presence visibility, and find the control that changes it - a privacy list, an
+    invisible mode, a hide-last-seen switch. Then say how a person would discover the control,
+    because a control that exists and is unreachable is the situation Art. 25(2) describes rather
+    than the answer to it.
+  - WHAT HAPPENS TO THE STATE WHEN THE PERSON DISCONNECTS? This is the half most often missed. Check
+    for an offline-presence row, a last-activity stamp, or a cached last-known state, and then find
+    what deletes it and when. A stored last-activity timestamp for an account that has not connected
+    in a year is retained personal data with no active purpose, which is Art. 5(1)(e), and the
+    deletion path is frequently only the account-deletion path.
+  - CAN A PERSON USE THE SERVICE WITHOUT PUBLISHING STATE AT ALL? Where the processing runs on
+    legitimate interests, Art. 21(1) gives a right to object on grounds relating to the person's
+    particular situation. In practice that means there has to be a way to stop publishing without
+    leaving the service. Record whether one exists, and whether using it degrades anything the
+    person needs - if the only way to be invisible is to be unreachable, say so.
+evidence_template: "{file}:{line} matched one of seven shapes: presence machinery, a presence or
+  roster store, a framework presence or awareness call, a compound behavioural-state field, a bare
+  state word beside a presence or subscriber noun, a broadcast verb beside a subscriber graph, or a
+  visibility control. This establishes only that THE CODE HAS A CONSTRUCT for publishing a person's
+  live availability and behavioural state to subscribers, and in some cases for storing it after
+  they disconnect. It does not establish who is in any subscriber graph at runtime - that is read
+  from the roster or channel authorisation by the adjudicating layer and is context question 2. It
+  does not establish what the shipped default visibility is, nor whether the person can find the
+  control that changes it. And where the match is a stored row, it does not establish how long that
+  row is kept or what deletes it."
+remediation_template: >
+  Write down the published payload field by field before anything else. Most of what this construct
+
+  discloses is decided by granularity rather than by whether the feature exists, and an idle
+  duration
+
+  or a last-activity timestamp is frequently carried for no reason anyone can now name.
+
+  Answer the default question explicitly: what a new account publishes, to whom, before the person
+
+  changes anything. Art. 25(2) is about that state of affairs and not about whether a control
+  exists.
+
+  Where the control exists but is hard to find, that is the finding - say where it lives.
+
+  Treat the offline half as storage, because it is. An offline-presence row and a last-activity
+  stamp
+
+  are retained personal data about somebody who is not connected; give them a deletion path of their
+
+  own rather than leaving them to the account-deletion path.
+
+  Where the processing runs on legitimate interests, make sure a person can stop publishing state
+
+  without leaving the service, and check that doing so does not disable something they need.
+
+  Where the construct arrived through a framework - a channel presence tracker, a collaborative
+
+  editing awareness protocol - read what the library publishes by default rather than what the
+
+  product's own code sets. An awareness protocol commonly carries a display name and a cursor
+
+  position to everyone in a document, and no line in the product says so.
+data_categories:
+  - user.behavior
+  - user.account
+  - user.unique_id
+  - user.device
+fingerprint_spec: project
+reading_class:
+  class: existence
+  elements:
+    - name: shipped_default
+      question: 3
+      text: the shipped default for presence visibility
+    - name: visibility_control
+      question: 3
+      text: the control that changes it - a privacy list, an invisible mode, a hide-last-seen switch

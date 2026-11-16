@@ -1,0 +1,173 @@
+id: ai-transparency-006
+pack: ai-transparency
+short_name: AI service key that may reach the browser
+problem_line:
+  text: AI service key reachable from the browser
+fix_line: Move the model call to the server, keep the key in a server-only variable, and rotate any
+  key already shipped.
+title: dangerouslyAllowBrowser flag or client-inlined model-provider key name - whether a key
+  reaches the browser needs review
+jurisdiction:
+  - EU
+  - US
+  - JP
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679) Art. 32(1) — 'the controller and the processor shall implement
+      appropriate technical and organisational measures to ensure a level of security appropriate to
+      the risk'; applies from 2018-05-25 (Art. 99(2)). An API key shipped to the browser is a route
+      to unauthorised access to the conversation data sent through it.
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: Japan APPI (個人情報の保護に関する法律, Act No. 57 of 2003), Art. 23 (安全管理措置 / security control measures) —
+      'a personal information handling business operator shall take necessary and appropriate
+      measures for the security control of personal data, including the prevention of leakage, loss
+      or damage of the personal data it handles'. This article number is the one in force since the
+      2021 consolidation (Act No. 37 of 2021, effective 2022-04-01); the same duty stood at Art. 20
+      before that.
+    url: https://laws.e-gov.go.jp/law/415AC0000000057
+    checked_at: 2026-07-22
+    jurisdiction: JP
+  - cite: "California Civil Code Sec. 1798.100(e) (CCPA as amended by Proposition 24, operative
+      2023-01-01) — the US limb, and a general reasonable-security duty rather than an instrument
+      addressed to credential handling: 'A business that collects a consumer's personal information
+      shall implement reasonable security procedures and practices appropriate to the nature of the
+      personal information to protect the personal information from unauthorized or illegal access,
+      destruction, use, modification, or disclosure in accordance with Section 1798.81.5.' No US
+      federal instrument addresses key handling; the FTC's data-security practice under Sec. 5 of
+      the FTC Act is case-law-derived and is not relied on here."
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=1798.100.&lawCode=CIV
+    checked_at: 2026-07-22
+    jurisdiction: US
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.95
+detector:
+  engine: builtin-regex
+  vocabulary:
+    model_provider_names:
+      - openai
+      - open_ai
+      - anthropic
+      - claude
+      - gemini
+      - googleai
+      - genai
+      - vertex
+      - mistral
+      - cohere
+      - groq
+      - grok
+      - together
+      - replicate
+      - huggingface
+      - openrouter
+      - deepseek
+      - perplexity
+      - fireworks
+      - bedrock
+      - ollama
+      - moonshot
+      - qwen
+      - dashscope
+      - zhipu
+      - minimax
+      - litellm
+      - vllm
+      - xai
+      - hf
+      - ai21
+      - stepfun
+      - siliconflow
+      - siliconcloud
+      - baichuan
+      - hunyuan
+      - wenxin
+      - upstage
+      - nvidia
+      - sambanova
+      - cerebras
+      - novita
+      - infiniai
+      - modelscope
+      - aihubmix
+      - volcengine
+      - spark
+  vocabulary_matching:
+    model_provider_names:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - dangerouslyAllowBrowser\s*:\s*true
+    - (?:NEXT_PUBLIC|VITE|NUXT_PUBLIC|REACT_APP|EXPO_PUBLIC|GATSBY|VUE_APP|NG_APP|STORYBOOK|\bPUBLIC)_[A-Z0-9_]*(?:OPENAI|OPEN_AI|ANTHROPIC|CLAUDE|GEMINI|GOOGLE_?AI|GENAI|VERTEX|MISTRAL|COHERE|GROQ|GROK|TOGETHER|REPLICATE|HUGGING_?FACE|OPENROUTER|DEEPSEEK|PERPLEXITY|FIREWORKS|BEDROCK|OLLAMA|MOONSHOT|QWEN|DASHSCOPE|ZHIPU|MINIMAX|BAICHUAN|STEPFUN|HUNYUAN|WENXIN|UPSTAGE|NVIDIA|SAMBANOVA|CEREBRAS|NOVITA|INFINIAI|MODELSCOPE|AIHUBMIX|SILICON_?(?:FLOW|CLOUD)|VOLCENGINE|SPARK_|LITELLM|VLLM|AI21)[A-Z0-9_]*(?:KEY|TOKEN|SECRET|CREDENTIALS?)
+    - (?:NEXT_PUBLIC|VITE|NUXT_PUBLIC|REACT_APP|EXPO_PUBLIC|GATSBY|VUE_APP|NG_APP|STORYBOOK|\bPUBLIC)_(?:[A-Z0-9]+_)*(?:HF|XAI)_[A-Z0-9_]*(?:KEY|TOKEN|SECRET|CREDENTIALS?)
+    - (?:(?:bind:value|v-model|:value|\bvalue)\s*=\s*[{"']|(?:\{#if|\{#each|v-if\s*=\s*["']|v-show\s*=\s*["'])\s*!?)[^}"'\n]{0,48}(?&model_provider_names)[A-Za-z0-9_]{0,28}(?:API_?KEY|APIKEY|api_?key|apiKey|ApiKey|_KEY|_TOKEN|_SECRET|_CREDENTIALS?|_key|_token|_secret|Key|Token|Secret)
+context_questions:
+  - "Does a key value exist on this line, or only the name of one? The environment-variable branches
+    match an identifier, and the commonest places that identifier appears carry no secret: a
+    .env.example or .env.template with an empty or placeholder value, a README or deployment guide,
+    a build-configuration file that lists which variables to expose (a next.config.js env block, a
+    nuxt.config runtimeConfig.public block, a turbo.json env list), a CI variable name, or a type
+    declaration for the environment object. Quote the assignment and its value. Where there is no
+    value, the candidate closes here - though a client-inlined name for a provider key is still
+    worth reporting as a design that will ship the key when the value is filled in."
+  - Is this a live key, or a restricted demo or proxy key (lower risk)? Quote where the key is
+    provisioned.
+  - Does user input that may contain personal data travel to the provider through this key? Quote
+    the call path.
+  - "THIS QUESTION IS FOR THE ENVIRONMENT-VARIABLE SHAPE ONLY, AND IT IS NOT THE COMMONEST ONE.
+    Where the match is a provider credential field bound into a component template -
+    `bind:value={...}`, `v-model`, `:value`, `value={...}`, or a template conditional on the same
+    field - there is NO prefix and NO build configuration to quote, and this question does not
+    apply: skip it and say so. That shape was 32 of the 35 locations this rule was read producing on
+    real repositories on 2026-09-12 and the prefix shape was 0 of them, so skipping is the ordinary
+    case rather than the exception. Where the match IS an environment-variable name: which prefix
+    did the identifier carry, and does this project build with the tool that inlines it?
+    NEXT_PUBLIC_ is Next.js, VITE_ is Vite and the frameworks built on it, NUXT_PUBLIC_ is Nuxt's
+    public runtime config, REACT_APP_ is Create React App, EXPO_PUBLIC_ is Expo, PUBLIC_ is
+    SvelteKit and Astro, GATSBY_ is Gatsby, VUE_APP_ is Vue CLI, NG_APP_ is the @ngx-env/builder
+    plugin for Angular, and STORYBOOK_ is Storybook's own build output. Two of them need this
+    question answered before anything follows from the name: a bare PUBLIC_ variable in a project
+    that uses neither SvelteKit nor Astro is a naming choice and not an inlining mechanism, and a
+    STORYBOOK_ variable reaches a Storybook build, which may or may not be a surface this project
+    publishes. Quote the build configuration that decides it."
+evidence_template: "{file}:{line} carries one of the three shapes this rule looks for. READ THE LINE
+  AND SAY WHICH, because the three establish different things and ask different follow-up questions.
+  (1) A MODEL PROVIDER'S CREDENTIAL FIELD BOUND INTO A COMPONENT TEMPLATE -
+  `bind:value={config.IMAGES_OPENAI_API_KEY}` in Svelte, `v-model` or `:value` in Vue, `value={...}`
+  in JSX, or a template conditional testing the same field. This shape carries NO build-tool prefix
+  and NO environment variable, and there is no build configuration to quote for it: the field is
+  rendered into a component that runs in the browser, so the route to the client is the template
+  itself. This is the shape the rule has actually been seen firing on - 32 of the 35 locations read
+  on real repositories on 2026-09-12, 91 per cent of its measured reach - and context question 4
+  does not apply to it. (2) The dangerouslyAllowBrowser option, which a browser-capable model SDK
+  requires before it will run outside a server. (3) An environment-variable name that puts a
+  provider's credential noun behind a prefix a front-end build tool inlines into the client bundle;
+  this is the shape context question 4 is for, and it produced 0 of the 35 locations in that
+  reading. What the detector established is the spelling on the line and nothing else - it did not
+  read a value, did not determine which build tool this project uses, and did not follow the
+  variable or the bound field to a call. Context question 1 asks whether a value is present, and
+  where only a name is present nothing has been exposed yet. CORRECTED 2026-09-12 by independent
+  verification: this field said `one of the two shapes` and described only (2) and (3), which left
+  the adjudicator handling 91 per cent of this rule's output looking for an inlining prefix that is
+  not there and may reasonably have dismissed the candidate as a mis-fire"
+remediation_template: >
+  Where a key value is present on a client-inlined path, move the model call to the server (a route
+
+  handler, an edge function, or a backend service) and hold the key in a server-side environment
+
+  variable whose name carries none of the client-inlining prefixes; and where the value has already
+
+  been built into a shipped bundle, rotate it, because a key in a client bundle is public from the
+
+  moment it deploys.
+
+  Where only the variable NAME is present - a .env.example entry, a build-configuration declaration,
+
+  a documentation line - nothing has leaked yet, and the change is to rename the variable so that
+  the
+
+  value cannot be exposed by a later edit.
+data_categories:
+  - user.content
+fingerprint_spec: default

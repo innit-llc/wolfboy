@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/gate.schema.json",
+  "title": "Shared applicability gate",
+  "description": "One instrument's scope test, authored once and named by more than one checklist. A gate is not a bundle asset: tools/build-bundle.mjs splices it into every checklist that names it, as a full `applicability` object, BEFORE the checklist is validated and before dist/bundle/checklists.json is written. The shipped bundle therefore carries gates inlined and no reference survives into it, which is why the bundle stays self-contained and hash-verified exactly as it was, and why product/packages/cli/src/scope.ts, bundle.ts, scan.ts and every bundle-side schema needed no change when gates were introduced. This file exists because the Cyber Resilience Act's Article 2(1) test is 37 limbs and 50 supporting quotes, and four CRA rows ask it identically; the alternative was four copies, which is the drifting-copy defect class that produced twenty-one gate defects in one day on 2026-07-29.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "gate_id",
+    "law",
+    "source_url",
+    "applicability"
+  ],
+  "properties": {
+    "gate_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Stable identifier for this gate, and the name checklists use in `applicability_ref`. The file must be named <gate_id>.yaml and its quote receipt is written as <gate_id>.quotes.json, both checked by the build. Never reuse it for a different scope test: a checklist that names it would silently start asking a different question."
+    },
+    "law": {
+      "type": "string",
+      "description": "The instrument whose scope this gate tests (e.g. \"Regulation (EU) 2024/2847 (Cyber Resilience Act)\"). Named here as well as on each referencing checklist BECAUSE tools/build-bundle.mjs COMPARES THE TWO AND FAILS THE BUILD WHEN THEY DISAGREE: a gate is one instrument's scope test and gates only that instrument's checklists. The comparison is normalised for case and punctuation but not for wording, and `source_url` is compared alongside it, so one instrument has one name and one source text across every file that names it. This field described that guarantee before any code kept it, and a checklist declaring the Digital Services Act shipped carrying this gate's Article 2(1) test on 2026-08-04 to prove the gap; the check was added the same day."
+    },
+    "source_url": {
+      "type": "string",
+      "description": "Link to the authoritative text the gate's quotes were taken from."
+    },
+    "applicability": {
+      "$ref": "https://schemas.invalid/product/checklist.schema.json#/$defs/applicability",
+      "description": "The gate itself, in exactly the shape a checklist's own inline `applicability` takes — because that is what it becomes. See the $comment below for why this is a reference and not a copy."
+    }
+  },
+  "$comment": "THE GATE BODY IS IMPORTED, NOT COPIED. `applicability` above is a cross-file $ref into checklist.schema.json's $defs/applicability, so there is exactly one definition of a gate in this repository and drift between the two files is structurally impossible rather than merely watched for. The direction of the arrow is deliberate: gate.schema.json depends on checklist.schema.json and never the reverse, so every existing loader of checklist.schema.json keeps working with no registration change. Any loader of THIS file must register checklist.schema.json in the same Ajv instance first, or compilation fails loudly — see tools/build-bundle.mjs, which also asserts that this property is still a $ref to that pointer, so replacing the import with an inline copy fails the build instead of quietly reintroducing the copy."
+}

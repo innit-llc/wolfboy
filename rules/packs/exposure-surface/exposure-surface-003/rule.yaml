@@ -1,0 +1,173 @@
+id: exposure-surface-003
+pack: exposure-surface
+short_name: Access decisions made inside the database
+problem_line:
+  text: Disclosure decided by policies in the customer's database
+fix_line: Record who writes the policies, list every bypass, and clear the assumed role before the
+  connection returns to the pool.
+title: Disclosure authorisation delegated to, and decided inside, the data owner's own database
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(7) - 'controller' means 'the natural or legal person,
+      public authority, agency or other body which, alone or jointly with others, determines the
+      purposes and means of the processing of personal data'. Reference only: a definition
+      establishes no duty of its own. Cited because this rule's construct is a division of that
+      determination in an unusual place - the customer writes the policy that decides each
+      disclosure, and the product supplies and executes the mechanism that asks it - and because
+      which party the definition lands on is an arrangement fact this detector settles none of"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(8) - 'processor' means 'a natural or legal person,
+      public authority, agency or other body which processes personal data on behalf of the
+      controller'. Reference only: whether the product is a processor here is a fact about the
+      arrangement between it and its customer, not about the code, and this detector settles none of
+      it"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 28(3)(a) - the contract governing processing by a
+      processor shall stipulate in particular that the processor 'processes the personal data only
+      on documented instructions from the controller, including with regard to transfers of personal
+      data to a third country or an international organisation, unless required to do so by Union or
+      Member State law'. Where the product is the processor, the customer's row-level-security
+      policies are the closest thing the arrangement has to an instruction that is actually
+      executed, and the question this raises is whether they are also DOCUMENTED as instructions
+      anywhere
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(2) - 'The controller shall be responsible for, and be
+      able to demonstrate compliance with, paragraph 1' ('accountability'). Demonstrating compliance
+      requires being able to say who could read what. Where the deciding rule is a policy in a
+      database the controller administers and the product executes, the two parties hold different
+      halves of that answer
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 32(1)(b) - the controller and the processor 'shall
+      implement appropriate technical and organisational measures to ensure a level of security
+      appropriate to the risk, including inter alia as appropriate' 'the ability to ensure the
+      ongoing confidentiality, integrity, availability and resilience of processing systems and
+      services'. The mechanism this rule reads IS such a measure, and its failure modes - a role
+      left assumed after a transaction, a flag that bypasses the check entirely - are properties of
+      the measure rather than of any policy
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 15(1)(c) - on a request for access the controller shall
+      provide 'the recipients or categories of recipient to whom the personal data have been or will
+      be disclosed, in particular recipients in third countries or international organisations'.
+      Reference only, and cited to mark the practical question rather than to assert a breach:
+      answering it requires enumerating the policies, and only the party who administers the
+      database can do that"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.45
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  match:
+    - "[Ss][Ee][Tt]_[Cc][Oo][Nn][Ff][Ii][Gg]\\s*\\(\\s*[\"'`][Rr][Oo][Ll][Ee][\"'`]"
+    - "[Ss][Ee][Tt]_[Cc][Oo][Nn][Ff][Ii][Gg]\\s*\\(\\s*[\"'`](?:[Rr][Ee][Qq][Uu][Ee][Ss][Tt]\\.[A-Z\
+      a-z_.]+|[Rr][Ee][Aa][Ll][Tt][Ii][Mm][Ee]\\.[A-Za-z_.]+)[\"'`]"
+    - \b[Ss][Ee][Tt]\s+(?:[Ll][Oo][Cc][Aa][Ll]\s+)?[Rr][Oo][Ll][Ee]\b|\b[Rr][Ee][Ss][Ee][Tt]\s+[Rr][Oo][Ll][Ee]\b|\b[Ss][Ee][Tt]\s+[Ss][Ee][Ss][Ss][Ii][Oo][Nn]\s+[Aa][Uu][Tt][Hh][Oo][Rr][Ii][Zz][Aa][Tt][Ii][Oo][Nn]\b
+    - \b[Cc][Uu][Rr][Rr][Ee][Nn][Tt]_[Ss][Ee][Tt][Tt][Ii][Nn][Gg]\s*\(\s*["'`][A-Za-z_]+\.[A-Za-z_.]+["'`]
+    - \bapply_rls\b|\bapplyRls\b|\bapply_row_level_security\b
+    - \b(?:[Ee][Nn][Aa][Bb][Ll][Ee]|[Ff][Oo][Rr][Cc][Ee]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee])\s+[Rr][Oo][Ww]\s+[Ll][Ee][Vv][Ee][Ll]\s+[Ss][Ee][Cc][Uu][Rr][Ii][Tt][Yy]\b|\brow_security\s*=|\b[Aa][Ll][Tt][Ee][Rr]\s+[Tt][Aa][Bb][Ll][Ee]\b[^\n]{0,80}[Rr][Oo][Ww]\s+[Ll][Ee][Vv][Ee][Ll]\s+[Ss][Ee][Cc][Uu][Rr][Ii][Tt][Yy]\b
+    - \b(?:[Cc][Rr][Ee][Aa][Tt][Ee]|[Aa][Ll][Tt][Ee][Rr]|[Dd][Rr][Oo][Pp])\s+[Pp][Oo][Ll][Ii][Cc][Yy]\b
+    - \b[Uu][Ss][Ii][Nn][Gg]\s*\([^\n]{0,120}(?:[Cc][Uu][Rr][Rr][Ee][Nn][Tt]_[Ss][Ee][Tt][Tt][Ii][Nn][Gg]|[Aa][Uu][Tt][Hh]\.[A-Za-z_]+\s*\(|[Rr][Ee][Qq][Uu][Ee][Ss][Tt]\.[Jj][Ww][Tt])
+    - \b[Bb][Yy][Pp][Aa][Ss][Ss][Rr][Ll][Ss]\b|\bbypass_rls\b|\bbypassRls\b|(?:^|[^A-Za-z0-9])super_[Uu]ser\b|(?:^|[^A-Za-z0-9_])super[Uu]ser\b|[Cc][Uu][Rr][Rr][Ee][Nn][Tt]_[Ss][Ee][Tt][Tt][Ii][Nn][Gg]\s*\(\s*["'`][Ii][Ss]_[Ss][Uu][Pp][Ee][Rr][Uu][Ss][Ee][Rr]|(?:^|[^A-Za-z0-9])service_role\b
+    - \b[Rr][Oo][Ll][Ll][Bb][Aa][Cc][Kk]\s+[Aa][Nn][Dd]\s+[Cc][Hh][Aa][Ii][Nn]\b
+    - \breturning:\s*false\b|\breturning\s*=>\s*false\b|\bmode:\s*:savepoint\b|\bRETURNING\s+NOTHING\b
+    - (?:^|[^A-Za-z0-9])(?:get|check|fetch|load)_(?:read_|write_)?(?:authorizations?|authorisations?|policies|policy)(?!_(?:code|url|uri|endpoint|server|header|token|page|request|flow|params?|response)\b)[A-Za-z0-9_]*|(?:^|[^A-Za-z0-9])authoriz(?:ation|er)_context[A-Za-z0-9_]*|\bAuthorizationContext\b
+    - (?:^|[^A-Za-z0-9])(?:tenant|customer|project|external)_(?:conn|connection|repo|db|database|pool)\b|\b(?:Tenant|Customer|Project|External)(?:Conn|Connection|Repo|Db|Database|Pool)\b|\b(?:Tenants?|Customers?|Projects?)\.(?:Connect|Connection|Repo|Pool)\b
+context_questions:
+  - WHOSE DATABASE IS THE TRANSACTION OPENED ON? This is the question the whole rule turns on. If
+    the product is assuming a role on ITS OWN database to scope a query, that is ordinary defence in
+    depth and not this construct. The construct is the product opening a transaction on a database
+    the CUSTOMER administers, and treating what the customer's policies return as the authorisation
+    answer. Read where the connection comes from before anything else; where it is the product's own
+    store, the finding closes here.
+  - "IS ANYONE ABLE TO ENUMERATE THE POLICIES? Ask the operator directly: who writes the
+    row-level-security policies on this database, is there a review before one is changed, and can
+    the current set be listed. The detector cannot see them and neither can the product. If the
+    answer is that nobody can list them, that is the finding, and it is a finding about
+    accountability rather than about any particular disclosure."
+  - "WHAT BYPASSES THE CHECK, AND WHO HOLDS IT? Look for a flag, a role attribute or a credential
+    that skips the authorisation transaction - a boolean threaded through a broadcast call, a
+    database role carrying BYPASSRLS, a service credential handed to server-side code. Then ask who
+    can present it: an internal service, a customer's own backend, or anything holding a shared key.
+    A mechanism with a bypass is two mechanisms and the record should describe both."
+  - DOES THE ASSUMED IDENTITY OUTLIVE ITS TRANSACTION? The construct's characteristic failure is a
+    role or a claim set on a pooled connection and not cleared, so the next borrower of that
+    connection inherits it. Check that every assumption is transaction-scoped, that there is a
+    clearing step on every exit path including the error paths, and that the connection is not
+    reused across principals before the clearing happens.
+  - WHERE IS THE DECISION ACTUALLY EXECUTED? Where the pooled connection lives on another node and
+    the check is performed there by a remote call, the personal data and the decision may sit on
+    different machines and, if the deployment spans regions, in different countries. That is a
+    question for the operator about their own topology; the code says only that the hop exists.
+  - IF THE MATCH IS A ROW-LEVEL-SECURITY MIGRATION, IS ANYTHING DELEGATED? Enabling row-level
+    security on a product's own tables is a good practice and is not this construct. So is a policy
+    written by the product's own authors over its own schema. Read who administers the database the
+    statement runs against; a migration shipped by the product that runs on the customer's database
+    is the interesting case and a migration that runs on the product's own is not.
+  - HOW IS THIS RECORDED BETWEEN THE TWO PARTIES? Where the product is a processor, Art. 28(3)(a)
+    speaks of documented instructions. A row-level-security policy is an instruction that executes,
+    which is stronger than most, and it is usually documented nowhere. Ask whether the arrangement
+    between the parties says anything about who is responsible for the policies and what happens
+    when one is wrong.
+evidence_template: "{file}:{line} matched a construct through which this product DELEGATES a
+  disclosure decision to a database it does not own: a subscriber's role or JSON Web Token claims
+  assumed on a connection, a row-level-security surface, a probe transaction that is rolled back, a
+  function that asks for an authorisation rather than making one, or a bypass flag. WHAT THIS
+  ESTABLISHES IS THE MECHANISM AND NOTHING ELSE. It does not establish who may read whose data, and
+  it cannot: the rule that decides that is a policy inside the data owner's database and is not
+  present in anything this scanner read. A finding here is not a statement that any disclosure
+  occurred, was wrong, or was right. Four shapes reach this rule and they are not equally strong.
+  (i) A role or claim assumed on a connection - close to decisive, because little else assumes
+  another principal's identity on a database session. (ii) The row-level-security surface, which
+  ALSO reaches a product enabling row-level security on its own tables, where nothing is delegated
+  to anybody (context questions 1 and 6). (iii) The probe-and-rollback shape, the most distinctive
+  string here. (iv) A bypass flag, which is the loosest group and the one that most changes what the
+  mechanism means. WHAT THIS DETECTOR DOES NOT ESTABLISH: whose database the transaction runs on
+  (context question 1); whether the policies can be enumerated by anybody (context question 2); who
+  holds the bypass (context question 3); or whether an assumed identity is cleared on every exit
+  path (context question 4)."
+remediation_template: |
+  Settle whose database the transaction opens on before treating this as the construct at all
+  (context question 1). A product scoping a query on its own store is not delegating anything and
+  the finding closes there.
+  Where the decision is genuinely delegated, record the arrangement as it is: the product supplies
+  and executes the mechanism, the customer writes the rule that decides each disclosure, and
+  neither party alone can say who could read what. Write that split into whatever document
+  describes the relationship, rather than leaving the record implying the product decides.
+  Ask the operator whether the current policies can be enumerated and reviewed, and record the
+  answer. Where they cannot be, that is the item to act on, and it is an accountability item under
+  Art. 5(2) rather than a security defect.
+  Enumerate every bypass - a flag on an internal call, a role carrying BYPASSRLS, a shared service
+  credential - and say who can present each one. Treat a path that skips the check as a second
+  disclosure route needing its own description.
+  Check that every assumed role and claim is scoped to its transaction and cleared on every exit
+  path, including error paths, before the connection returns to the pool. A pooled connection
+  carrying a previous borrower's identity is the failure this mechanism has, and it is a code
+  question with a code answer.
+  Where the product is a processor, check whether Art. 28(3)(a)'s documented instructions cover the
+  policies at all. A policy that executes is an instruction in substance; if it is written down
+  nowhere, say so plainly rather than treating the code as the documentation.
+data_categories:
+  - user.account
+  - user.content
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: existence

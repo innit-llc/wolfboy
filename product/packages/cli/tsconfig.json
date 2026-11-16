@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "paths": { "wolfboy-schemas": ["../schemas/dist/index.d.ts"] }
+  },
+  "include": ["src"]
+}

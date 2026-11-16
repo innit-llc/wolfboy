@@ -1,0 +1,97 @@
+id: eu-consent-010
+pack: eu-consent
+short_name: Tracking identifier stored in the browser
+problem_line:
+  text: Tracking identifier stored with no consent check found
+fix_line: Store the identifier only after recorded consent; where an SDK writes it, use that SDK's
+  consent or opt-out setting.
+title: Tracking identifier written directly to Web Storage (localStorage / sessionStorage), or set
+  by an SDK default
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC) (prior consent
+      for storing or accessing information on terminal equipment — the wording covers any storage,
+      not only cookies)
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) (replaces Art. 5(3) of Directive 2002/58/EC: the 2002
+      wording offered only a right to refuse, the replacement wording requires prior consent) and
+      Art. 4 (Member State transposition deadline 25 May 2011)"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: EDPB Guidelines 2/2023 on the technical scope of Art. 5(3) of the ePrivacy Directive, Version
+      2.0 (adopted 7 October 2024) — para. 44 (a web browser's local storage is information stored
+      in the terminal equipment, and Art. 5(3) applies once that information or a derivation of it
+      is accessed rather than kept on the device); section 3.5 and para. 63 (client-side code
+      instructing the browser to send a unique identifier is a 'gaining of access' within Art. 5(3))
+    url: https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-22023-technical-scope-art-53-eprivacy-directive_en
+    checked_at: 2026-07-22
+    jurisdiction: EU
+effective_date: 2011-05-25
+severity: medium
+rule_confidence: 0.7
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  shared_vocabulary:
+    - web_storage_writers
+  join_bracketed_constructs: true
+  match:
+    - \.setItem\(\s*["'`](ajs_|amplitude|_ga|ph_|mp_|_hj)
+    - (?:^|[^A-Za-z0-9_])(?:posthog\s*\.\s*init|mixpanel\s*\.\s*init|amplitude\s*\.\s*(?:init|getInstance\s*\(\s*\)\s*\.\s*init)|analytics\s*\.\s*load|AnalyticsBrowser\s*\.\s*load|heap\s*\.\s*load|rudderanalytics\s*\.\s*load)\s*\(
+    - (?<![A-Za-z0-9_$])(?&web_storage_writers)\s*\(\s*["'`](ajs_|amplitude|_ga|ph_|mp_|_hj)
+    - (?:^|[^A-Za-z0-9_])LogRocket\s*\.\s*init\s*\(
+context_questions:
+  - Does this write happen inside a consent check? Quote the call path.
+  - Is the stored identifier used for analytics or advertising, or is it strictly necessary to
+    deliver the service?
+  - "IF THE MATCH IS AN SDK INITIALISER RATHER THAN A WRITE (clause 2), READ THE OPTION OBJECT AND
+    THEN READ THE PACKAGE. The construct is an absence and the detector cannot see it: the anchor is
+    the init call, and what matters is which option is NOT set - `persistence` for PostHog and
+    Mixpanel, `storageProvider` or `identityStorage` for Amplitude, a `storage` override for
+    Segment. Quote the whole option object, which spans several lines, and say which of those keys
+    is present and which is missing. Then the limb that is NOT in this repository at all: WHAT THE
+    PINNED VERSION'S DEFAULT ACTUALLY IS. Name the package and the exact version from the manifest
+    or lock file, read that version's own documentation, and say what it does when the option is
+    unset. Do not assert the default from the SDK's name, and where the dependency is not vendored
+    into the checkout, say that you could not read it. A protective option set explicitly beside the
+    missing one - session recording disabled, autocapture off - is evidence that the option set was
+    considered, and is worth quoting either way."
+  - IS THE PERSISTED IDENTIFIER BOUND TO AN ACCOUNT ANYWHERE IN THIS FILE OR ITS CALLERS? An
+    `identify`, `setUserId`, `alias` or `people.set` call turns a per-browser identifier into a
+    record about a named person, which changes what the storage holds and, on the anchor for clause
+    2, happens unconditionally whenever a session exists. The detector deliberately does NOT gate on
+    this - a rule-level file gate would also bound the setItem clause, which needs no corroboration
+    - so it is asked here instead. Quote the call if there is one, and say whether it runs before or
+    after any consent decision is recorded.
+evidence_template: "{file}:{line} writes a value under a tracker-named key through a setItem call,
+  or initialises an analytics SDK whose own default persists an identifier. Where it is the setItem
+  call, the key prefix and the call are the whole of what the detector matched: the receiver is not
+  part of the pattern, so Web Storage is not established by the line by itself - a project-local
+  binding of window.localStorage satisfies it, and so would any other object carrying a setItem
+  method, such as a Map wrapper or a cache. Read the receiver, and settle whether what is stored is
+  a tracking identifier rather than something the key name only makes look like one. Since
+  2026-09-14 the key prefix and the call no longer have to be on one PHYSICAL line: this rule reads
+  the bracket-balanced construct a line opens on as one folded text as well, so a candidate may come
+  from a call a formatter spread over several lines, and where it did the finding carries the span
+  it was folded from in joined_from. Read those lines together, not the opening line alone. WHERE IT
+  IS THE INITIALISER - a second shape, added 2026-09-02 - what is established is only that the SDK
+  is initialised here, and the construct is an ABSENCE the detector cannot see: whether the option
+  that would turn identifier persistence off was omitted. Read the option object, which spans
+  several lines, and read the pinned version's own documentation for what its default is, because
+  that is a fact about the dependency and not about this repository. The corroboration is
+  deliberately not gated in the detector: an `identify`-family call in the same file is what turns a
+  per-browser identifier into a record about a named person, and context question 4 asks for it"
+remediation_template: |
+  This is a candidate for review against ePrivacy Directive 2002/58/EC Art. 5(3) as nationally
+  transposed, not a determination about this code. The changes below apply where the review
+  confirms it.
+  Store only once the CMP records consent.
+  If the write comes from an SDK, use that SDK's consent API or opt-out configuration.
+data_categories:
+  - user.unique_id
+fingerprint_spec: default

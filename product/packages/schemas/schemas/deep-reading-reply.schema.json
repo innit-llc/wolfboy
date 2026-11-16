@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/deep-reading-reply.schema.json",
+  "title": "Deeper check: the reading seat's reply",
+  "description": "What a legal-deep-checker seat returns for the reading of a deeper check of one finding (design rf13 3.9, step 7; product/plugin/agents/legal-deep-checker.md, 'The reading'): one JSON object, and nothing else. It is handed the history capture, the person's report as quoted data and the archive captures, and answers what each showed, the level it would give and why, and what it could not tell. The plugin's hook takes it while the check's marker stands for this session, checks it against this schema and writes it into the check's own folder (.legal/deep/<id>/<time>/capture/reading.json). Every quotation names the capture it comes from; the program then looks for each one in that capture, the way verdict-verify checks a verdict's quotations, and refuses a reading whose quotation is not found. The level moves no count.",
+  "$comment": "rf11 unit D1 (rf11-d1-2026-11-07.md). `source` names the kind of capture; `capture` names the file under the check's folder that the brief listed for it. `level.value` is null where the captures do not let the seat give one.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["finding_id", "sources", "level", "could_not_tell"],
+  "properties": {
+    "finding_id": {
+      "type": "string",
+      "description": "The finding the check is of, exactly as the launch brief names it.",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "sources": {
+      "type": "array",
+      "description": "One row per capture the brief handed the seat.",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source", "capture", "showed", "quotes"],
+        "properties": {
+          "source": { "enum": ["history", "report", "archive"] },
+          "capture": {
+            "type": "string",
+            "description": "The capture's file name as the brief lists it.",
+            "minLength": 1,
+            "maxLength": 200,
+            "pattern": "^[A-Za-z0-9._-]+$"
+          },
+          "showed": { "type": "string", "description": "What this capture shows about the finding, in plain sentences.", "minLength": 1, "maxLength": 1500 },
+          "quotes": {
+            "type": "array",
+            "description": "Lines quoted from this capture, each exactly as it stands there.",
+            "maxItems": 10,
+            "items": { "type": "string", "minLength": 1, "maxLength": 400 }
+          }
+        }
+      }
+    },
+    "level": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "why"],
+      "properties": {
+        "value": { "description": "The level the captures support, or null where they do not let the seat give one.", "oneOf": [{ "type": "null" }, { "enum": ["high", "medium", "low"] }] },
+        "why": { "type": "string", "description": "Why, naming the source of each fact it rests on (as reported from the test the person ran; in the archive's copies; in this folder's git history).", "minLength": 1, "maxLength": 1500 }
+      }
+    },
+    "could_not_tell": { "type": "string", "description": "What the captures could not tell.", "minLength": 1, "maxLength": 1500 }
+  }
+}

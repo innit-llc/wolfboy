@@ -1,0 +1,198 @@
+id: baseline-009
+pack: baseline
+short_name: Service connection or app setting that allows plain text
+problem_line:
+  text: Service or app traffic with no encryption found
+  template: "{data} sent to a service with no encryption found"
+fix_line: Turn TLS on for the connection and verify the server, or use a local socket; narrow any
+  cleartext app permission.
+title: "Service connection or platform setting without TLS: a database, cache, queue, search,
+  directory, gRPC or Docker API connection, or a mobile permission for plaintext traffic"
+jurisdiction:
+  - EU
+  - US
+  - JP
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 32(1) - 'the controller and the processor shall
+      implement appropriate technical and organisational measures to ensure a level of security
+      appropriate to the risk, including inter alia as appropriate: (a) the pseudonymisation and
+      encryption of personal data; (b) the ability to ensure the ongoing confidentiality, integrity,
+      availability and resilience of processing systems and services;'. Art. 32(2) - 'In assessing
+      the appropriate level of security account shall be taken in particular of the risks that are
+      presented by processing, in particular from accidental or unlawful destruction, loss,
+      alteration, unauthorised disclosure of, or access to personal data transmitted, stored or
+      otherwise processed.' The records a store holds, and the credentials that open it, are
+      transmitted over this connection; whether the measure is appropriate to the risk is a
+      judgement on the whole deployment, which this candidate opens and does not close"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-10-07
+    jurisdiction: EU
+  - cite: "EU Cyber Resilience Act (Regulation (EU) 2024/2847), Annex I, Part I, point (2)(e) - 'protect
+      the confidentiality of stored, transmitted or otherwise processed data, personal or other,
+      such as by encrypting relevant data at rest or in transit by state of the art mechanisms, and
+      by using other technical means'; and point (2)(b), the hook for a plaintext DEFAULT as
+      distinct from an option - 'be made available on the market with a secure by default
+      configuration, unless otherwise agreed between manufacturer and business user in relation to a
+      tailor-made product with digital elements, including the possibility to reset the product to
+      its original state;'. Both points sit under the opening words of point (2), 'On the basis of
+      the cybersecurity risk assessment referred to in Article 13(2) and where applicable, products
+      with digital elements shall:', so they bind as the manufacturer's cybersecurity risk
+      assessment makes them applicable, and point (2)(b) gives way where manufacturer and business
+      user have agreed otherwise for a tailor-made product. Per Art. 71(2) the Regulation applies
+      from 11 December 2027. Scope check: the CRA reaches products with digital elements made
+      available on the EU market (Art. 2(1), Art. 3(1)) and hosted software only as a remote data
+      processing solution within Art. 3(2). Recital 12 places websites that do not support the
+      functionality of such a product, and cloud services (SaaS, PaaS, IaaS) designed and developed
+      outside a manufacturer's responsibility, outside this Regulation and inside Directive (EU)
+      2022/2555 instead. For a plain hosted web application this entry therefore does not reach the
+      scanned artefact and GDPR Art. 32 is the operative EU basis; it applies where the repository
+      ships a distributed product (a mobile app, a self-hosted server) or the backend of one. Where
+      it does apply it is the only EU basis here that covers non-personal data"
+    url: https://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-10-07
+    jurisdiction: EU
+  - cite: Japan APPI (Act on the Protection of Personal Information, Act No. 57 of 2003), Art. 23
+      (security control measures - a business handling personal information must take necessary and
+      appropriate measures for the security control of the personal data it handles). Bites only
+      where personal data is what travels over the connection
+    url: https://laws.e-gov.go.jp/law/415AC0000000057
+    checked_at: 2026-10-07
+    jurisdiction: JP
+  - cite: Japan, Personal Information Protection Commission, Guidelines on the APPI (General Rules) Q&A
+      10-21, on methods for preventing leakage in the use of information systems under the Art. 23
+      security control measures. The Commission's own answer gives encryption of personal data on
+      networks that may be intercepted, naming SSL/TLS and S/MIME, as such a method. Guidance, not
+      statute
+    url: https://www.ppc.go.jp/all_faq_index/faq1-q10-21/
+    checked_at: 2026-10-07
+    jurisdiction: JP
+  - cite: United States, FTC Act Sec. 5 (15 U.S.C. Sec. 45(a)(1) and (n)) - unfair or deceptive acts or
+      practices in or affecting commerce. Transport security sits inside the Federal Trade
+      Commission's data-security line, which reaches a failure to employ reasonable security that
+      causes or is likely to cause substantial injury to consumers, not reasonably avoidable and not
+      outweighed by countervailing benefits. The Commission's business guidance Start with Security
+      names strong cryptography for confidential material during transmission; that guidance is not
+      statute
+    url: https://www.govinfo.gov/content/pkg/USCODE-2023-title15/html/USCODE-2023-title15-chap2-subchapI-sec45.htm
+    checked_at: 2026-10-07
+    jurisdiction: US
+severity: medium
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  join_bracketed_constructs: true
+  match:
+    - (?<![A-Za-z0-9$])(?:PG|pg)?[_-]?(?:ssl|SSL|Ssl)[_-]?(?:mode|Mode|MODE)["']?\s*(?:=>|[:=])\s*["':]?(?:disable|disabled|allow|prefer|preferred|DISABLE|DISABLED|ALLOW|PREFER|PREFERRED|Disable|Disabled|Allow|Prefer|Preferred)(?![\w-])
+    - (?:^|[?&;"'])(?:useSSL|requireSSL|useTLS|ssl|tls|SSL|TLS|encrypt|Encrypt|ENCRYPT)\s*=\s*(?:false|False|FALSE|0|no|No|off|optional|Optional)(?![\w])
+    - (?<![\w-])--skip-ssl(?![\w-])
+    - ^(?=.*(?<![\w$.-])["']?(?:ssl|tls|SSL|TLS|useSSL|useSsl|useTLS|useTls|use_ssl|use_tls|ssl_enabled|tls_enabled|sslEnabled|tlsEnabled|encrypt)["']?\s*(?:=>|[:=])\s*:?(?:false|False|FALSE)(?![\w$]))(?=.*(?:(?<![A-Za-z])(?:[Pp]ool|[Cc]lient|[Cc]onnection|createConnection|createPool|createClient|[Cc]onnect)\s*\(|[Rr]edis|IORedis|[Kk]nex|[Ss]equelize|[Mm]ongo|[Pp]ostgres|(?<![A-Za-z])[Pp]g(?![a-z])|[Mm]y[Ss][Qq][Ll]|[Mm]aria[Dd][Bb]|(?<![A-Za-z])Repo(?![a-z])|[Aa]mqp|AMQP|[Rr]abbit|[Kk]afka|KAFKA|(?<![A-Za-z])[Nn]ats(?![a-z])|NATS|[Ee]lastic|[Oo]pen[Ss]earch|[Cc]lick[Hh]ouse|[Cc]assandra|[Mm]emcache|[Dd]atabase|DATABASE|dialectOptions|[Ll]dap|LDAP|[Dd]ata[Ss]ource|[Tt]ype[Oo][Rr][Mm]|(?<![A-Za-z])(?:[Dd][Bb]|DB)(?![a-z])|[Ss]ql(?![a-z])|SQL|[Pp]risma|[Cc]hroma|[Qq]drant|[Ww]eaviate|[Mm]ilvus))
+    - (?:[\w$\])]\.|\[\s*["'])(?:ssl|tls|useSSL|useSsl|useTLS|useTls|use_ssl|use_tls|ssl_enabled|tls_enabled|sslEnabled|tlsEnabled)["']?\s*\]?\s*=(?!=)\s*(?:false|False|FALSE)(?![\w$])
+    - (?<![A-Za-z0-9$])(?:[A-Z0-9_]*?_)?(?:DB|DATABASE|POSTGRES|POSTGRESQL|PG|MYSQL|MARIADB|MONGO|MONGODB|REDIS|CACHE|AMQP|RABBITMQ|RABBIT|KAFKA|NATS|ELASTIC|ELASTICSEARCH|OPENSEARCH|CLICKHOUSE|LDAP|SQL|MSSQL|MEMCACHE|MEMCACHED|CASSANDRA|BROKER|QUEUE)_(?:[A-Z0-9_]*?_)?(?:SSL|TLS|USE_SSL|USE_TLS|SSL_ENABLED|TLS_ENABLED|ENABLE_SSL|ENABLE_TLS|SECURE|ENCRYPT)["']?\s*(?:=>|[:=])\s*["']?(?:false|False|FALSE|0|no|NO|off|OFF|disable|disabled|DISABLE|DISABLED|none|NONE)["']?(?=\s*(?:$|[,;#})\]]))
+    - (?<![A-Za-z0-9$])(?:[a-z0-9_.-]*?[_.-])?(?:db|database|postgres|postgresql|pg|mysql|mariadb|mongo|mongodb|redis|cache|amqp|rabbitmq|kafka|nats|elastic|elasticsearch|opensearch|clickhouse|ldap|mssql|memcache|memcached|cassandra|broker)(?:[_.-](?:[a-z0-9_.-]*?[_.-])?)?(?:ssl|tls|use_ssl|use_tls|ssl_enabled|tls_enabled|Ssl|Tls|UseSsl|UseTls|SslEnabled|TlsEnabled)["']?\s*(?:=>|[:=])\s*["']?(?:false|False|FALSE|0|no|off|disable|disabled|none)["']?(?=\s*(?:$|[,;#})\]]))
+    - xpack\.security(?:\.(?:http|transport))?(?:\.ssl)?\.enabled["']?\s*(?:=>|[:=])\s*["']?(?:false|False|FALSE)(?![\w])
+    - (?:plugins\.security\.disabled|DISABLE_SECURITY_PLUGIN)["']?\s*(?:=>|[:=])\s*["']?(?:true|True|TRUE)(?![\w])
+    - (?:security[._]?[Pp]rotocol|SECURITY_PROTOCOL)["']?\s*(?:=>|[:=,])\s*["']?(?:SASL_)?PLAINTEXT(?![\w])
+    - (?<![\w])(?:SASL_)?PLAINTEXT://[^\s"'`,]
+    - (?<![\w$])(?:insecure_channel|add_insecure_port)\s*\(
+    - (?<![\w$])insecure\.NewCredentials\s*\(
+    - (?<![\w$])WithInsecure\s*\(
+    - \.usePlaintext\s*\(
+    - (?<![\w$])(?:credentials|ServerCredentials)\.createInsecure\s*\(
+    - ChannelCredentials\.Insecure(?![\w$])
+    - (?<![\w$])(?:ldap_connect|ldap\.initialize|ldap\.DialURL|ldap\.Dial)\s*\((?![^)]*ldaps:)
+    - (?<![\w$.-])["':]?[\w$.-]*?(?:starttls|start_tls|startTLS|startTls|StartTls|StartTLS|STARTTLS|START_TLS|Starttls)(?:_auto|Auto|_AUTO)?["']?\]?\s*(?:=>|[:=])\s*["':]?(?:false|False|FALSE|never|no|off|0)["']?(?![\w$-])
+    - tcp://[^\s"'`/]*:2375(?![0-9])
+    - (?<![\w$])(?:android:)?usesCleartextTraffic["']?\s*(?:=\s*["']true["']|:\s*true(?![\w$]))
+    - (?<![\w$])cleartextTrafficPermitted\s*=\s*["']true["']
+    - <key>\s*NS(?:Temporary)?(?:Exception)?Allows(?:ArbitraryLoads(?:InWebContent|ForMedia)?|InsecureHTTPLoads)\s*</key>(?!\s*<false\s*/>)
+    - "[\"']NS(?:Temporary)?(?:Exception)?Allows(?:ArbitraryLoads(?:InWebContent|ForMedia)?|Insecur\
+      eHTTPLoads)[\"']\\s*(?:[:=]|=>)\\s*(?:true|True|YES|<true)"
+    - (?<![\w+.:-])(?:postgres(?:ql)?|mysql|mariadb|mongodb|nats|jdbc:(?:postgresql|mysql|mariadb))(?:\+(?!srv)[a-z0-9]+)?://(?![^\s"'`<>]*[?&;](?:sslmode|ssl|tls|useSSL|requireSSL|sslMode|ssl-mode|ssl_mode|sslca|ssl_ca|sslrootcert|sslcert|tlsCAFile|tlsCertificateKeyFile|tlsInsecure|tlsAllowInvalidCertificates|encrypt|sslaccept|verifyServerCertificate|trustServerCertificate)=)(?:[^\s/@"'`]*@|(?![^\s/@"'`]*@))(?!(?:localhost|127\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[::1\]|::1|0\.0\.0\.0)(?![A-Za-z0-9.-]))[A-Za-z0-9$_{\[<%]
+    - (?<![A-Za-z0-9$])(?:(?:ssl|SSL|Ssl)\s+(?:mode|Mode|MODE)\s*=\s*(?:disable|disabled|allow|prefer|preferred|none|DISABLE|DISABLED|ALLOW|PREFER|PREFERRED|NONE|Disable|Disabled|Allow|Prefer|Preferred|None)|(?<=[;"'`]\s*)(?:ssl|SSL|Ssl)[_-]?(?:mode|Mode|MODE)\s*=\s*(?:none|None|NONE)\s*(?=[;"'`]|$))(?![\w-])
+    - (?:(?<![=!<>])=(?!=)|[(,:]|=>)\s*(?:[\w.]+\.)?(?:Npgsql|MySql|Pg)?SslMode(?:\.|::)(?:Disable|Disabled|None|Allow|Prefer|Preferred)(?![\w-])
+    - (?<![\w$])TLSConfig\s*(?::|(?<![=!<>])=(?!=))\s*["'](?:false|preferred)["']
+    - (?<![\w$.-])["']?protocol["']?\s*(?:=>|[:=])\s*["']?(?:SASL_)?PLAINTEXT(?![\w-])
+    - (?<![\w$.-])["']?cleartext["']?\s*:\s*true(?![\w$])
+context_questions:
+  - "Which service does this connection reach, and does the hop leave the machine? A Unix socket or
+    a loopback address keeps it on the host; a service name on a container network (such as db,
+    redis or postgres), a private address or a public host name may cross a network the operator
+    does not control. Whether the deployment under review uses this configuration, and where the
+    store actually runs, are facts about the deployment: find them in its configuration or ask the
+    person running the scan, and do not decide them from a host name, a default value or a file
+    name. Where the finding carries locations[].joined_from, read the whole span it names first: the
+    cited line is only where the options object opens."
+  - "Is TLS switched on anywhere the line does not show: an environment variable such as PGSSLMODE,
+    the driver's own default (for PostgreSQL URLs: node pg uses no TLS, libpq and pgx prefer TLS
+    without verifying the certificate, Go lib/pq requires it), a StartTLS call made on the directory
+    connection after it opens, a sidecar, tunnel or service mesh that encrypts the hop? Quote it
+    with its file and line, or record that none was found."
+  - Is this the configuration a production deployment runs with, or one used only for local
+    development, continuous integration or tests (a development compose file, a CI service
+    container, a sample environment file)? Say which, from the file's own use in the repository;
+    where the same setting also reaches production through a default, say so.
+  - "What personal data cross this connection? A connection to a store carries what the store holds:
+    establish it from the code you can read - the store's schema, migrations or models (a users
+    table with an e-mail column is `email`, profiles with names `name`, messages, posts or uploads
+    `user_content`, sessions or records keyed by user `user_id`), and for a cache or queue what the
+    code writes to it - and record it as `data` at this place, quoting in `beyond` the one line it
+    rests on (the table or model definition, or the write). Where the store's schema or models are
+    not in the code you can read, or the code does not show which store this connection reaches,
+    record only what the window shows and say in `why` what you could not see. Record `data` as
+    established in every case: where the connection names a loopback address, a Unix socket, a
+    development value or a default, say so in `why` with the line it rests on, and never empty
+    `data` for it - whether a hop that stays on the machine changes the level is a fact only the
+    person running the scan can establish, and this question does not decide it. A connection used
+    only by continuous integration or tests carries test data, not the product's users': say so in
+    `why` and record `data` as `[]`. Decide it by what the file does, never by its name, its folder
+    or a host name, as question 1 asks: a CI job's service container or test step, a compose file
+    only test scripts start, or a test setup - each of which runs tests against a store thrown away
+    after them - is that. A workflow or file that deploys or configures a running environment (a
+    review app, staging or production) is deployment configuration, wherever it sits, and its
+    connection carries the product's data; so is the product's own runtime configuration, and a
+    default in it is the product's. Name the credentials that open the store in `why`. For a mobile
+    platform setting (Android cleartext permission, iOS App Transport Security exception), which
+    domains does it cover, what is the value written beside the key (read the next line in a
+    property list), and what does the app send to those domains?"
+evidence_template: "{file}:{line} matched one of the service-connection shapes this rule reads: a
+  PostgreSQL or MySQL TLS mode set to disable, allow or prefer; a TLS parameter switched off inside
+  a connection string (`useSSL=false`, `tls=false`, `ssl=false`, `Encrypt=False`) or the MySQL
+  client's `--skip-ssl`; `ssl`, `tls` or `encrypt` set false in a database, cache, queue, search or
+  directory client's options or on a configuration object; a store-named configuration key ending in
+  a TLS word set off; Elasticsearch or OpenSearch security off; a Kafka plaintext protocol or
+  listener; a gRPC channel or server with insecure credentials; an LDAP client opened without ldaps;
+  STARTTLS switched off; the Docker Engine API on port 2375; an Android cleartext permission; an iOS
+  App Transport Security exception; or a database or NATS URL to a host that is not loopback with no
+  TLS parameter on it. That is text in a file. The detector did not establish that the deployment
+  uses this configuration, that the hop leaves the machine, that nothing it did not read switches
+  TLS on (an environment variable, a driver default, a StartTLS call, a tunnel), or that the line is
+  deployed configuration rather than a development compose file, a test fixture, documentation or a
+  sample environment file. Where the finding carries locations[].joined_from, {line} is the line the
+  options object opens on and the setting may sit several lines below it: read the whole span. A
+  STARTTLS line that names mail is also read by baseline-008, which asks the mail question. In a
+  property list the value of an App Transport Security key is usually on the next line: read it
+  before treating the key as set. Context questions 1 and 3 settle where the hop goes and whether
+  this configuration is deployed; question 2 settles whether TLS is on elsewhere."
+remediation_template: >
+  This is a candidate for review against GDPR Art. 32 (security of processing), not a determination
+
+  about this code. The changes below apply where the review confirms it.
+
+  Turn TLS on for the connection and verify the server: `sslmode=verify-full` for PostgreSQL,
+
+  `ssl-mode=VERIFY_IDENTITY` for MySQL, `tls=true` for MongoDB, `Encrypt=True` for SQL Server, TLS
+
+  options on the cache, queue or search client, secure channel credentials for gRPC, ldaps or a
+
+  mandatory StartTLS for LDAP, port 2376 with client certificates for the Docker API. Where the
+  store
+
+  runs on the same host, connect over a Unix socket or loopback and say so in the configuration. For
+  a
+
+  mobile app, remove the cleartext permission or narrow it to the named domains that cannot serve
+  TLS.
+data_categories: []
+fingerprint_spec: directory

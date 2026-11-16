@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/deep-plan-reply.schema.json",
+  "title": "Deeper check: the plan seat's reply",
+  "description": "What a legal-deep-checker seat returns for the plan of a deeper check of one finding (design rf13 3.9, step 2; product/plugin/agents/legal-deep-checker.md, 'The plan'): one JSON object, and nothing else. The plugin's hook takes it at the seat's hand-back or stop while the check's marker (.legal/deep/active.json) stands for this session, checks it against this schema, and writes it into the check's own folder (.legal/deep/<id>/<time>/capture/plan.json). It holds what the folder's git history shows, the full text of one new test file or the reason none is proposed, and at most one path on the site worth looking at. It proposes no command, no argument and no existing test file: there is no field for any of them. The program, not this schema, holds the test's text to its limits (at most 80 lines, each at most 120 characters with a tab counted as 8, no invisible or reordering character); the bound here only keeps an oversized reply out.",
+  "$comment": "rf11 unit D1 (rf11-d1-2026-11-07.md). `test` and `no_test_reason` are exclusive: exactly one is non-null. `site_path` is a path only (no host, no query); the program holds it to the path's three limits (200 characters, no query string, no credential pattern) before any request.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["finding_id", "history", "test", "no_test_reason", "site_path"],
+  "properties": {
+    "finding_id": {
+      "type": "string",
+      "description": "The finding the check is of, exactly as the launch brief names it.",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "history": {
+      "type": "string",
+      "description": "What this folder's git history, as the program captured it, shows about the decisive place: since when, in plain sentences. It says 'this folder's git history says', never who wrote the code.",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "test": {
+      "description": "The one new test file, or null where none is proposed.",
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["text", "checks"],
+          "properties": {
+            "text": {
+              "type": "string",
+              "description": "The full text of the new test file, in the runner and under the test name the brief gives.",
+              "minLength": 1,
+              "maxLength": 9680
+            },
+            "checks": {
+              "type": "string",
+              "description": "One or two sentences: what the test checks, and what its passing and its failing would each mean for the finding.",
+              "minLength": 1,
+              "maxLength": 600
+            }
+          }
+        }
+      ]
+    },
+    "no_test_reason": {
+      "description": "Where `test` is null: why no test is proposed. Null where a test is proposed.",
+      "oneOf": [{ "type": "null" }, { "type": "string", "minLength": 1, "maxLength": 600 }]
+    },
+    "site_path": {
+      "description": "One path on the site worth looking at in the web archive (starting with /), or null.",
+      "oneOf": [{ "type": "null" }, { "type": "string", "minLength": 1, "maxLength": 200, "pattern": "^/[^?#\\s]*$" }]
+    }
+  }
+}

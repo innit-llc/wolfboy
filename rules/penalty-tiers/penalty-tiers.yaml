@@ -1,0 +1,1127 @@
+table_id: penalty-tiers
+reviewed_at: 2026-10-28
+regimes:
+  - id: gdpr
+    name: GDPR
+    match:
+      - \bGDPR\b
+      - Regulation \(EU\) 2016/679
+      - General Data Protection Regulation
+    tiered: true
+    penalty_cite: GDPR Art 83(4)-(6); Art 84(1)
+    source_url: https://publications.europa.eu/resource/celex/02016R0679-20160504
+    definitions:
+      - "4"
+    no_duty:
+      - provisions:
+          - "2"
+          - "3"
+        why: "material and territorial scope: say what and whom the Regulation reaches, lay down no duty"
+      - provisions:
+          - "94"
+          - "99"
+        why: "repeal of Directive 95/46/EC with the reading of references to it, and entry into force and
+          application: lay down no duty"
+    closed_lists:
+      - id: gdpr-83-4-list
+        paragraph: 83(4)
+        tier: not_top
+        opens: Infringements of the following provisions shall, in accordance with paragraph 2, be subject
+          to administrative fines up to 10 000 000 EUR
+      - id: gdpr-83-5-list
+        paragraph: 83(5)
+        tier: top
+        opens: Infringements of the following provisions shall, in accordance with paragraph 2, be subject
+          to administrative fines up to 20 000 000 EUR
+    tiers:
+      - id: gdpr-83-5-a
+        point: 83(5)(a)
+        tier: top
+        penalty_cite: GDPR Art 83(5)(a)
+        provisions:
+          - "5"
+          - "6"
+          - "7"
+          - "9"
+        quote: the basic principles for processing, including conditions for consent, pursuant to Articles
+          5, 6, 7 and 9
+      - id: gdpr-83-5-b
+        point: 83(5)(b)
+        tier: top
+        penalty_cite: GDPR Art 83(5)(b)
+        provisions:
+          - 12-22
+        quote: the data subjects' rights pursuant to Articles 12 to 22
+      - id: gdpr-83-5-c
+        point: 83(5)(c)
+        tier: top
+        penalty_cite: GDPR Art 83(5)(c)
+        provisions:
+          - 44-49
+        quote: the transfers of personal data to a recipient in a third country or an international
+          organisation pursuant to Articles 44 to 49
+      - id: gdpr-83-5-d
+        point: 83(5)(d)
+        tier: top
+        penalty_cite: GDPR Art 83(5)(d)
+        provisions:
+          - "88"
+        beyond_quote:
+          - "88"
+        why: Art 88 only enables Member State rules for the employment context (Chapter IX); a duty a rule
+          rests on it is one of the Member State law adopted under it, which point (d) names.
+        quote: any obligations pursuant to Member State law adopted under Chapter IX
+      - id: gdpr-83-5-e
+        point: 83(5)(e)
+        tier: top
+        penalty_cite: GDPR Art 83(5)(e)
+        provisions:
+          - 58(1)
+          - 58(2)
+        quote: non-compliance with an order or a temporary or definitive limitation on processing or the
+          suspension of data flows by the supervisory authority pursuant to Article 58(2) or failure
+          to provide access in violation of Article 58(1)
+      - id: gdpr-83-4-a
+        point: 83(4)(a)
+        tier: not_top
+        penalty_cite: GDPR Art 83(4)(a)
+        provisions:
+          - "8"
+          - "11"
+          - 25-39
+          - "42"
+          - "43"
+        quote: the obligations of the controller and the processor pursuant to Articles 8, 11, 25 to 39 and
+          42 and 43
+      - id: gdpr-83-4-b
+        point: 83(4)(b)
+        tier: not_top
+        penalty_cite: GDPR Art 83(4)(b)
+        provisions: []
+        quote: the obligations of the certification body pursuant to Articles 42 and 43
+        why: The certification body's obligations. A rule's cite of Art 42 or 43 concerns the controller or
+          processor and resolves through point (a), the same tier.
+      - id: gdpr-83-4-c
+        point: 83(4)(c)
+        tier: not_top
+        penalty_cite: GDPR Art 83(4)(c)
+        provisions:
+          - 41(4)
+        quote: the obligations of the monitoring body pursuant to Article 41(4)
+    penalty_paragraphs:
+      - id: gdpr-83-4
+        tier: not_top
+        penalty_cite: GDPR Art 83(4)
+        provisions:
+          - 83(4)
+        quote: Infringements of the following provisions shall, in accordance with paragraph 2, be subject
+          to administrative fines up to 10 000 000 EUR, or in the case of an undertaking, up to 2 %
+          of the total worldwide annual turnover of the preceding financial year, whichever is
+          higher
+      - id: gdpr-83-5
+        tier: top
+        penalty_cite: GDPR Art 83(5)
+        provisions:
+          - 83(5)
+        quote: Infringements of the following provisions shall, in accordance with paragraph 2, be subject
+          to administrative fines up to 20 000 000 EUR, or in the case of an undertaking, up to 4 %
+          of the total worldwide annual turnover of the preceding financial year, whichever is
+          higher
+      - id: gdpr-83-6
+        tier: top
+        penalty_cite: GDPR Art 83(6)
+        provisions:
+          - 83(6)
+        quote: Non-compliance with an order by the supervisory authority as referred to in Article 58(2)
+          shall, in accordance with paragraph 2 of this Article, be subject to administrative fines
+          up to 20 000 000 EUR
+    unlisted:
+      id: gdpr-84-1
+      tier: not_top
+      penalty_cite: GDPR Art 84(1)
+      provisions:
+        - 84(1)
+      quote: Member States shall lay down the rules on other penalties applicable to infringements of this
+        Regulation in particular for infringements which are not subject to administrative fines
+        pursuant to Article 83
+      member_states: true
+      why: A provision none of Art 83's lists names is left to national penalties with no Union ceiling;
+        it takes the regime's lower tier.
+  - id: ai-act
+    name: AI Act
+    match:
+      - \bAI Act\b
+      - Regulation \(EU\) 2024/1689
+      - Artificial Intelligence Act
+    tiered: true
+    penalty_cite: AI Act Art 99(1), (3)-(6a), as amended by Regulation (EU) 2026/1744 Art 1 point (38); Art 101
+    source_url: https://publications.europa.eu/resource/celex/02024R1689-20260727
+    definitions:
+      - "3"
+    no_duty:
+      - provisions:
+          - "2"
+        why: "scope: says whom and what the Regulation reaches, lays down no duty"
+      - id: ai-act-6-1
+        provisions:
+          - 6(1)
+          - 6(1a)
+          - 6(1b)
+          - 6(1c)
+        quote: that AI system shall be considered to be high-risk where both of the following conditions are
+          fulfilled
+        why: "classification: says when a system is high-risk (with what does and does not qualify as a
+          safety component), lays down no duty; the duties it switches on are the high-risk
+          requirements and obligations, which resolve on their own"
+      - id: ai-act-6-2
+        provisions:
+          - 6(2)
+        quote: In addition to the high-risk AI systems referred to in paragraph 1, AI systems referred to in
+          Annex III shall be considered to be high-risk
+        why: "classification: lays down no duty"
+      - id: ai-act-6-3
+        provisions:
+          - 6(3)
+        quote: By derogation from paragraph 2, an AI system referred to in Annex III shall not be considered
+          to be high-risk where it does not pose a significant risk of harm to the health, safety or
+          fundamental rights of natural persons
+        why: "classification (a derogation from paragraph 2 and its limit): lays down no duty. Art 6(4), the
+          provider's duty to document the assessment, is not here and takes the lower tier."
+      - provisions:
+          - "113"
+        why: "entry into force and application dates: say from when, lay down no duty. Art 111 is not here:
+          its paragraphs set transitional duties (111(4) carries Art 50(2), below; 111(1)-(3) take
+          the lower tier by the unlisted line), each with its own later date (application, below)"
+    closed_lists:
+      - id: ai-act-99-3-list
+        paragraph: 99(3)
+        tier: top
+        opens: Non-compliance with the prohibition of the AI practices referred to in Article 5 shall be
+          subject to administrative fines of up to EUR 35 000 000
+      - id: ai-act-99-4-list
+        paragraph: 99(4)
+        tier: not_top
+        opens: Non-compliance with any of the following provisions related to operators or notified bodies,
+          other than those laid down in Articles 5
+    carried_duties:
+      - id: ai-act-111-4
+        provisions:
+          - 111(4)
+        duty: 50(2)
+        cite: AI Act Art 111(4), added by Regulation (EU) 2026/1744 Art 1 point (39)(b)
+        quote: Providers of AI systems, including general-purpose AI systems, generating synthetic audio,
+          image, video or text content, that have been placed on the market before 2 August 2026
+          shall take the necessary steps in order to comply with Article 50(2) by 2 December 2026
+        why: The duty is Art 50(2)'s, for systems placed on the market before 2 August 2026; it takes the
+          tier Art 50(2) resolves to (Art 99(4)(g)).
+    tiers:
+      - id: ai-act-99-3
+        point: 99(3)
+        tier: top
+        penalty_cite: AI Act Art 99(3)
+        provisions:
+          - "5"
+        quote: Non-compliance with the prohibition of the AI practices referred to in Article 5 shall be
+          subject to administrative fines of up to EUR 35 000 000
+      - id: ai-act-99-4-a
+        point: 99(4)(a)
+        tier: not_top
+        penalty_cite: AI Act Art 99(4)(a)
+        provisions:
+          - "16"
+        quote: obligations of providers pursuant to Article 16
+      - id: ai-act-99-4-b
+        point: 99(4)(b)
+        tier: not_top
+        penalty_cite: AI Act Art 99(4)(b)
+        provisions:
+          - "22"
+        quote: obligations of authorised representatives pursuant to Article 22
+      - id: ai-act-99-4-c
+        point: 99(4)(c)
+        tier: not_top
+        penalty_cite: AI Act Art 99(4)(c)
+        provisions:
+          - "23"
+        quote: obligations of importers pursuant to Article 23
+      - id: ai-act-99-4-d
+        point: 99(4)(d)
+        tier: not_top
+        penalty_cite: AI Act Art 99(4)(d)
+        provisions:
+          - "24"
+        quote: obligations of distributors pursuant to Article 24
+      - id: ai-act-99-4-da
+        point: 99(4)(da)
+        tier: not_top
+        penalty_cite: AI Act Art 99(4)(da), inserted by Regulation (EU) 2026/1744 Art 1 point (38)(b)
+        provisions:
+          - 25(2)
+          - 25(4)
+        quote: obligations of providers and operators pursuant to Article 25(2) and (4)
+        url: https://publications.europa.eu/resource/celex/32026R1744
+      - id: ai-act-99-4-e
+        point: 99(4)(e)
+        tier: not_top
+        penalty_cite: AI Act Art 99(4)(e)
+        provisions:
+          - "26"
+        quote: obligations of deployers pursuant to Article 26
+      - id: ai-act-99-4-f
+        point: 99(4)(f)
+        tier: not_top
+        penalty_cite: AI Act Art 99(4)(f)
+        provisions:
+          - "31"
+          - 33(1)
+          - 33(3)
+          - 33(4)
+          - "34"
+        quote: requirements and obligations of notified bodies pursuant to Article 31, Article 33(1), (3)
+          and (4) or Article 34
+      - id: ai-act-99-4-g
+        point: 99(4)(g)
+        tier: not_top
+        penalty_cite: AI Act Art 99(4)(g)
+        provisions:
+          - "50"
+        quote: transparency obligations for providers and deployers pursuant to Article 50
+    penalty_paragraphs:
+      - id: ai-act-99-3-paragraph
+        tier: top
+        penalty_cite: AI Act Art 99(3)
+        provisions:
+          - 99(3)
+      - id: ai-act-99-4
+        tier: not_top
+        penalty_cite: AI Act Art 99(4)
+        provisions:
+          - 99(4)
+        quote: Non-compliance with any of the following provisions related to operators or notified bodies,
+          other than those laid down in Articles 5, shall be subject to administrative fines of up
+          to EUR 15 000 000
+      - id: ai-act-99-5
+        tier: not_top
+        penalty_cite: AI Act Art 99(5)
+        provisions:
+          - 99(5)
+        quote: The supply of incorrect, incomplete or misleading information to notified bodies or national
+          competent authorities in reply to a request shall be subject to administrative fines of up
+          to EUR 7 500 000
+      - id: ai-act-101-1
+        tier: not_top
+        penalty_cite: AI Act Art 101(1)
+        provisions:
+          - 101(1)
+        quote: The Commission may impose on providers of general-purpose AI models fines not exceeding 3 %
+          of their annual total worldwide turnover in the preceding financial year or EUR 15 000 000
+        why: The Commission's fine on general-purpose model providers is the Art 99(4) amount, so not top.
+          Their duties are not named in any Art 99 list and take the lower tier by the unlisted rule
+          either way.
+    unlisted:
+      id: ai-act-99-1
+      tier: not_top
+      penalty_cite: AI Act Art 99(1), as replaced by Regulation (EU) 2026/1744 Art 1 point (38)(a)
+      provisions:
+        - 99(1)
+      quote: Member States shall lay down the rules on penalties and other enforcement measures, which may
+        also include administrative fines, warnings and non-monetary measures, applicable to any
+        infringement of this Regulation by operators
+      member_states: true
+      url: https://publications.europa.eu/resource/celex/32026R1744
+      why: A provision none of Art 99's lists names is left to national penalties; Art 75c(4) puts it at
+        the Art 99(4) amount where the AI Office enforces. It takes the regime's lower tier.
+      support:
+        - id: ai-act-75c-4
+          penalty_cite: AI Act Art 75c(4), inserted by Regulation (EU) 2026/1744
+          quote: infringement of any applicable provision of this Regulation, including those not listed in
+            Article 99(4)
+          url: https://publications.europa.eu/resource/celex/32026R1744
+        - id: ai-act-75c-4-chapeau
+          penalty_cite: AI Act Art 75c(4), inserted by Regulation (EU) 2026/1744
+          quote: In particular, the following shall be subject to administrative fines as referred to in
+            Article 99(4)
+          url: https://publications.europa.eu/resource/celex/32026R1744
+    notes:
+      - id: ai-act-99-6
+        cite: AI Act Art 99(6)
+        quote: In the case of SMEs, including start-ups, each fine referred to in this Article shall be up
+          to the percentages or amount referred to in paragraphs 3, 4 and 5, whichever thereof is
+          lower
+        used_for_tier: false
+        why: Turns on a fact about the person (size), changes the amount, never the tier of the duty.
+      - id: ai-act-99-6a
+        cite: AI Act Art 99(6a), inserted by Regulation (EU) 2026/1744 Art 1 point (38)(c)
+        quote: In the case of SMCs, each fine referred to in paragraphs 4 and 5 shall be up to the
+          percentages or amount referred therein, whichever is lower
+        url: https://publications.europa.eu/resource/celex/32026R1744
+        used_for_tier: false
+        why: Turns on a fact about the person (size), changes the amount, never the tier of the duty.
+    application:
+      - id: ai-act-113-a
+        provisions:
+          - 5(1)(ba)
+          - 5(1)(bb)
+          - 5(1a)
+          - 5(1b)
+        date: 2026-12-02
+        cite: AI Act Art 113, third paragraph, point (a), as amended by Regulation (EU) 2026/1744
+        quote: Chapters I and II shall apply from 2 February 2025, with the exception of Article 5(1), first
+          subparagraph, points (ba) and (bb), and Article 5(1a) and (1b) which shall apply from 2
+          December 2026
+      - id: ai-act-113-c-ii
+        provisions:
+          - 6(1)
+          - Annex I
+        date: 2028-08-02
+        cite: AI Act Art 113, third paragraph, point (c)(ii), as amended by Regulation (EU) 2026/1744
+        quote: 2 August 2028 as regards AI systems classified as high-risk pursuant to Article 6(1) and
+          Annex I
+      - id: ai-act-113-c-excluded
+        provisions:
+          - 6(5)
+        date: null
+        cite: AI Act Art 113, third paragraph, point (c), as amended by Regulation (EU) 2026/1744
+        quote: Chapter III, Sections 1, 2, and 3, with the exception of Article 6(5), shall apply from
+      - id: ai-act-113-c-i
+        provisions:
+          - 6-27
+          - Annex III
+        date: 2027-12-02
+        cite: AI Act Art 113, third paragraph, point (c)(i), as amended by Regulation (EU) 2026/1744
+        quote: 2 December 2027 as regards AI systems classified as high-risk pursuant to Article 6(2) and
+          Annex III
+        why: Arts 6 to 27 (Chapter III, Sections 1 to 3) apply on the earlier of the two dates for an Annex
+          III system and on 2 August 2028 for an Annex I product. A cite of an article in that range
+          other than Art 6(1) gets the earlier date, so the words never put the deadline later than
+          it may be.
+      - id: ai-act-111-4-date
+        provisions:
+          - 111(4)
+        date: 2026-12-02
+        cite: AI Act Art 111(4), added by Regulation (EU) 2026/1744 Art 1 point (39)(b)
+        quote: shall take the necessary steps in order to comply with Article 50(2) by 2 December 2026
+        why: For a system placed on the market before 2 August 2026, the Art 50(2) duty this paragraph
+          carries is due by 2 December 2026. Whether a system is one of them is a product fact the
+          table cannot know; a cite of Art 50(2) itself carries no date.
+      - id: ai-act-111-1-date
+        provisions:
+          - 111(1)
+        date: 2030-12-31
+        cite: AI Act Art 111(1), first subparagraph
+        quote: AI systems which are components of the large-scale IT systems established by the legal acts
+          listed in Annex X that have been placed on the market or put into service before 2 August
+          2027 shall be brought into compliance with this Regulation by 31 December 2030
+        why: For an AI system that is a component of a large-scale IT system listed in Annex X and was
+          placed on the market or put into service before 2 August 2027, compliance is due by 31
+          December 2030. Whether a system is one is a product fact the table cannot know; the words
+          should name it.
+      - id: ai-act-111-2-date
+        provisions:
+          - 111(2)
+        date: 2030-08-02
+        cite: AI Act Art 111(2), second sentence, as replaced by Regulation (EU) 2026/1744 Art 1 point
+          (39)(a)
+        quote: In any case, the providers and deployers of high-risk AI systems intended to be used by
+          public authorities shall take the necessary steps to comply with the requirements and
+          obligations laid down in this Regulation by 2 August 2030
+        why: The first sentence brings an older high-risk system in only on a significant change in its
+          design and sets no date; the second sets 2 August 2030 for high-risk systems intended to
+          be used by public authorities. Whether a system is one is a product fact the table cannot
+          know; the words should name it.
+      - id: ai-act-111-3-date
+        provisions:
+          - 111(3)
+        date: 2027-08-02
+        cite: AI Act Art 111(3)
+        quote: Providers of general-purpose AI models that have been placed on the market before 2 August
+          2025 shall take the necessary steps in order to comply with the obligations laid down in
+          this Regulation by 2 August 2027
+        why: For a general-purpose AI model placed on the market before 2 August 2025, compliance is due by
+          2 August 2027. Whether a model is one is a product fact the table cannot know; the words
+          should name it.
+  - id: cra
+    name: CRA
+    match:
+      - Cyber Resilience Act
+      - \bCRA\b
+      - Regulation \(EU\) 2024/2847
+    tiered: true
+    penalty_cite: CRA Art 64(1)-(4), (10)
+    source_url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+    definitions:
+      - "3"
+    no_duty:
+      - provisions:
+          - "2"
+        why: "scope: says which products the Regulation reaches, lays down no duty"
+      - provisions:
+          - "71"
+        why: "entry into force and application dates: say from when, lay down no duty"
+    closed_lists:
+      - id: cra-64-2-list
+        paragraph: 64(2)
+        tier: top
+        opens: Non-compliance with the essential cybersecurity requirements set out in Annex I and the
+          obligations set out in Articles 13 and 14 shall be subject to administrative fines
+      - id: cra-64-3-list
+        paragraph: 64(3)
+        tier: not_top
+        opens: Non-compliance with the obligations set out in Articles 18 to 23
+    carried_duties:
+      - id: cra-24-3
+        provisions:
+          - 24(3)
+        duty: 14(1)
+        cite: CRA Art 24(3)
+        quote: The obligations laid down in Article 14(1) shall apply to open-source software stewards to
+          the extent that they are involved in the development of the products with digital elements
+        why: "The duty is Art 14(1)'s, extended to stewards; it takes the tier Art 14(1) resolves to (Art
+          64(2)). Its second sentence also applies Art 14(3) and (8) to stewards for severe
+          incidents (note cra-24-3-second): the same article, the same tier. That no fine reaches a
+          steward (Art 64(10)(b)) is a fact about the person and changes no tier. Art 24(1) and (2)
+          stay on the unlisted line, and a cite of Art 24 without a paragraph takes the heavier of
+          the two."
+    tiers:
+      - id: cra-64-2
+        point: 64(2)
+        tier: top
+        penalty_cite: CRA Art 64(2)
+        provisions:
+          - "13"
+          - "14"
+          - Annex I
+        quote: Non-compliance with the essential cybersecurity requirements set out in Annex I and the
+          obligations set out in Articles 13 and 14 shall be subject to administrative fines of up
+          to EUR 15 000 000
+      - id: cra-64-3
+        point: 64(3)
+        tier: not_top
+        penalty_cite: CRA Art 64(3)
+        provisions:
+          - 18-23
+          - "28"
+          - 30(1)-(4)
+          - 31(1)-(4)
+          - 32(1)-(3)
+          - 33(5)
+          - "39"
+          - "41"
+          - "47"
+          - "49"
+          - "53"
+        quote: Non-compliance with the obligations set out in Articles 18 to 23, Article 28, Article 30(1)
+          to (4), Article 31(1) to (4), Article 32(1), (2) and (3), Article 33(5), and Articles 39,
+          41, 47, 49 and 53 shall be subject to administrative fines of up to EUR 10 000 000
+    annexes:
+      - id: cra-annex-ii-via-13-18
+        annex: II
+        tier: top
+        penalty_cite: CRA Art 64(2), through Art 13(18)
+        quote: Manufacturers shall ensure that products with digital elements are accompanied by the
+          information and instructions to the user set out in Annex II
+        why: Annex II lists the information Art 13(18) obliges the manufacturer to supply; the duty is Art
+          13's, which Art 64(2) puts in the top tier.
+      - id: cra-annex-v-via-13-12
+        annex: V
+        tier: top
+        penalty_cite: CRA Art 64(2), through Art 13(12)
+        quote: manufacturers shall draw up the EU declaration of conformity in accordance with Article 28
+          and affix the CE marking in accordance with Article 30
+        why: "Annex V is the model structure of the EU declaration of conformity (Art 28(2), note cra-28-2).
+          A cite of it alone could rest on Art 28 (Art 64(3), not top) or on the manufacturer's duty
+          in Art 13(12) to draw the declaration up (Art 13, Art 64(2), top); the heavier reading is
+          taken, as for any cite that could be either. Cited with Art 28 it is top too: the heaviest
+          provision decides."
+      - id: cra-annex-vii-via-13-4
+        annex: VII
+        tier: top
+        penalty_cite: CRA Art 64(2), through Art 13(4) and 13(8)
+        quote: the manufacturer shall include the cybersecurity risk assessment referred to in paragraph 3
+          of this Article in the technical documentation required pursuant to Article 31 and Annex
+          VII
+        why: Annex VII is the content of the technical documentation. A cite of it alone could rest on Art
+          31 (Art 64(3), not top) or on the manufacturer's duties in Art 13(4) and 13(8) to put the
+          risk assessment and the support-period information in it (Art 13, Art 64(2), top; note
+          cra-13-8); the heavier reading is taken, as for any cite that could be either.
+    penalty_paragraphs:
+      - id: cra-64-2-paragraph
+        tier: top
+        penalty_cite: CRA Art 64(2)
+        provisions:
+          - 64(2)
+      - id: cra-64-3-paragraph
+        tier: not_top
+        penalty_cite: CRA Art 64(3)
+        provisions:
+          - 64(3)
+      - id: cra-64-4
+        tier: not_top
+        penalty_cite: CRA Art 64(4)
+        provisions:
+          - 64(4)
+        quote: The supply of incorrect, incomplete or misleading information to notified bodies and market
+          surveillance authorities in reply to a request shall be subject to administrative fines of
+          up to EUR 5 000 000
+    unlisted:
+      id: cra-64-1
+      tier: not_top
+      penalty_cite: CRA Art 64(1)
+      provisions:
+        - 64(1)
+      quote: Member States shall lay down the rules on penalties applicable to infringements of this
+        Regulation and shall take all measures necessary to ensure that they are implemented
+      member_states: true
+      why: Art 64(1) sets no fine; a provision none of Art 64's lists names is left to national penalties
+        and takes the regime's lower tier.
+    notes:
+      - id: cra-64-10
+        cite: CRA Art 64(10), introductory wording, as corrected by the corrigendum published in OJ L,
+          2025/90555 of 2 July 2025
+        url: https://publications.europa.eu/resource/celex/32024R2847R%2802%29
+        quote: By way of derogation from paragraphs 2 to 9, the administrative fines referred to in those
+          paragraphs shall not apply to the following
+        used_for_tier: false
+        why: Turns on a fact about the person (a micro or small manufacturer for the Art 14(2)(a) and
+          14(4)(a) deadlines; an open-source software steward), never on the duty.
+      - id: cra-64-10-a
+        cite: CRA Art 64(10)(a)
+        quote: manufacturers that qualify as microenterprises or small enterprises with regard to any
+          failure to meet the deadline referred to in Article 14(2), point (a), or Article 14(4),
+          point (a)
+        used_for_tier: false
+        why: A person fact (size), read through business.size.class.
+      - id: cra-64-10-b
+        cite: CRA Art 64(10)(b)
+        quote: any infringement of this Regulation by open-source software stewards
+        used_for_tier: false
+        why: A person fact (steward), read through the CRA gate's steward limb (rules/gates/cra-scope.yaml).
+      - id: cra-24-3-second
+        cite: CRA Art 24(3), second sentence
+        quote: The obligations laid down in Article 14(3) and (8) shall apply to open-source software
+          stewards to the extent that severe incidents having an impact on the security of products
+          with digital elements affect network and information systems provided by the open-source
+          software stewards for the development of such products
+        used_for_tier: false
+        why: "The second duty Art 24(3) carries: Art 14 again, so the tier of carried line cra-24-3 (Art
+          64(2), top) holds for it too."
+      - id: cra-28-2
+        cite: CRA Art 28(2)
+        quote: The EU declaration of conformity shall have the model structure set out in Annex V
+        used_for_tier: false
+        why: "Where Annex V is reached from: annex line cra-annex-v-via-13-12."
+      - id: cra-13-8
+        cite: CRA Art 13(8)
+        quote: Manufacturers shall include the information that was taken into account to determine the
+          support period of a product with digital elements in the technical documentation as set
+          out in Annex VII
+        used_for_tier: false
+        why: "The second Art 13 duty that reaches Annex VII: annex line cra-annex-vii-via-13-4."
+    application:
+      - id: cra-71-2-art-14
+        provisions:
+          - "14"
+          - 35-51
+        date: null
+        cite: CRA Art 71(2), second subparagraph
+        quote: However, Article 14 shall apply from 11 September 2026 and Chapter IV (Articles 35 to 51)
+          shall apply from 11 June 2026
+        why: "Both dates are on or before the table's review date: those provisions apply already."
+      - id: cra-71-2
+        provisions:
+          - "*"
+          - Annex I
+          - Annex II
+        date: 2027-12-11
+        cite: CRA Art 71(2), first subparagraph
+        quote: This Regulation shall apply from 11 December 2027
+  - id: dsa
+    name: DSA
+    match:
+      - Digital Services Act
+      - \bDSA\b
+      - Regulation \(EU\) 2022/2065
+    tiered: true
+    penalty_cite: DSA Art 52(3); Art 74(1)-(2)
+    source_url: https://publications.europa.eu/resource/celex/32022R2065
+    definitions:
+      - "3"
+    no_duty:
+      - provisions:
+          - "2"
+        why: "scope: says which services the Regulation reaches, lays down no duty"
+      - provisions:
+          - "93"
+        why: "entry into force and application: says from when, lays down no duty"
+    tiers:
+      - id: dsa-52-3-first
+        tier: top
+        penalty_cite: DSA Art 52(3), first sentence
+        provisions:
+          - "*"
+        quote: Member States shall ensure that the maximum amount of fines that may be imposed for a failure
+          to comply with an obligation laid down in this Regulation shall be 6 % of the annual
+          worldwide turnover of the provider of intermediary services concerned in the preceding
+          financial year
+    penalty_paragraphs:
+      - id: dsa-52-3-second
+        tier: not_top
+        penalty_cite: DSA Art 52(3), second sentence
+        provisions: []
+        quote: Member States shall ensure that the maximum amount of the fine that may be imposed for the
+          supply of incorrect, incomplete or misleading information, failure to reply or rectify
+          incorrect, incomplete or misleading information and failure to submit to an inspection
+          shall be 1 % of the annual income or worldwide turnover
+      - id: dsa-52-3
+        tier: top
+        penalty_cite: DSA Art 52(3)
+        provisions:
+          - 52(3)
+      - id: dsa-74-1
+        tier: top
+        penalty_cite: DSA Art 74(1)
+        provisions:
+          - 74(1)
+        quote: the Commission may impose on the provider of the very large online platform or of the very
+          large online search engine concerned fines not exceeding 6 % of its total worldwide annual
+          turnover in the preceding financial year
+      - id: dsa-74-2
+        tier: not_top
+        penalty_cite: DSA Art 74(2)
+        provisions:
+          - 74(2)
+        quote: supply incorrect, incomplete or misleading information in response to a simple request or
+          request by a decision pursuant to Article 67
+  - id: data-act
+    name: Data Act
+    match:
+      - \bData Act\b
+      - Regulation \(EU\) 2023/2854
+    tiered: false
+    penalty_cite: Data Act Art 40(1), (4)
+    member_states_penalty: data-act-40-1
+    source_url: https://publications.europa.eu/resource/celex/32023R2854
+    definitions:
+      - "2"
+    no_duty:
+      - provisions:
+          - "1"
+        why: "subject matter and scope: lays down no duty"
+      - provisions:
+          - "50"
+        why: "entry into force and application: says from when, lays down no duty"
+    penalty_quotes:
+      - id: data-act-40-1
+        cite: Data Act Art 40(1)
+        quote: Member States shall lay down the rules on penalties applicable to infringements of this
+          Regulation and shall take all measures necessary to ensure that they are implemented
+      - id: data-act-40-4
+        cite: Data Act Art 40(4)
+        quote: For infringements of the obligations laid down in Chapter II, III and V of this Regulation,
+          the supervisory authorities responsible for monitoring the application of Regulation (EU)
+          2016/679 may within their scope of competence impose administrative fines in accordance
+          with Article 83 of Regulation (EU) 2016/679 and up to the amount referred to in Article
+          83(5) of that Regulation
+        reaches:
+          - 3-7
+          - 8-12
+          - 14-22
+        why: Chapter II of the Data Act is Arts 3 to 7, Chapter III Arts 8 to 12 and Chapter V Arts 14 to
+          22; Art 40(4) reaches the obligations those chapters lay down and no other.
+        says: also lets the authorities that supervise the GDPR, within their competence, impose
+          administrative fines up to the amount in GDPR Art 83(5)
+    why: "Art 40(1) leaves penalties to Member States and sets no tiers. Art 40(4) is a second
+      enforcement route, run by another authority within its own competence, at the GDPR's top
+      amount; it is not a set of ceilings across the Act's duties. Every duty is top: a regime that
+      sets no tiers is weighed as heavily as any other regime's top tier."
+  - id: eaa
+    name: EAA
+    match:
+      - European Accessibility Act
+      - \bEAA\b
+      - Directive \(EU\) 2019/882
+    tiered: false
+    penalty_cite: EAA Art 30
+    member_states_penalty: eaa-30-1
+    source_url: https://publications.europa.eu/resource/celex/32019L0882
+    definitions:
+      - "3"
+    no_duty:
+      - id: eaa-4-5
+        provisions:
+          - 4(5)
+        quote: Microenterprises providing services shall be exempt from complying with the accessibility
+          requirements referred to in paragraph 3 of this Article and any obligations relating to
+          the compliance with those requirements
+        why: "the microenterprise exemption: turns on a fact about the person and lays down no duty"
+      - id: eaa-14-1
+        provisions:
+          - 14(1)
+        quote: The accessibility requirements referred to in Article 4 shall apply only to the extent that
+          compliance
+        why: "the limit for a fundamental alteration or a disproportionate burden: turns on facts about the
+          product and lays down no duty. Only paragraph 1: Art 14(2)-(5) and (8) lay down duties
+          (quoted under notes) and take the top tier like every EAA duty."
+    notes:
+      - id: eaa-14-2
+        cite: EAA Art 14(2)
+        quote: Economic operators shall carry out an assessment of whether compliance with the accessibility
+          requirements referred to in Article 4 would introduce a fundamental alteration
+        used_for_tier: false
+        why: "A duty (the assessment), so not no_duty: top, as every EAA duty."
+      - id: eaa-14-3
+        cite: EAA Art 14(3)
+        quote: Economic operators shall document the assessment referred to in paragraph 2
+        used_for_tier: false
+        why: "A duty (document, keep and supply the assessment): top."
+      - id: eaa-14-4
+        cite: EAA Art 14(4), second sentence
+        quote: microenterprises dealing with products and which have chosen to rely on paragraph 1 shall
+          provide the authority with the facts relevant to the assessment referred to in paragraph 2
+        used_for_tier: false
+        why: "The paragraph is one subparagraph of two sentences: the first exempts microenterprises dealing
+          with products from documenting the assessment; the second lays down a duty: top."
+      - id: eaa-14-5
+        cite: EAA Art 14(5)
+        quote: Service providers relying on point (b) of paragraph 1 shall, with regard to each category or
+          type of service, renew their assessment of whether the burden is disproportionate
+        used_for_tier: false
+        why: "A duty (renew the assessment): top."
+      - id: eaa-14-8
+        cite: EAA Art 14(8)
+        quote: Where economic operators rely on paragraph 1 for a specific product or service they shall
+          send information to that effect to the relevant market surveillance authorities
+        used_for_tier: false
+        why: "A duty (inform the authorities): top."
+    penalty_quotes:
+      - id: eaa-30-1
+        cite: EAA Art 30(1)
+        quote: Member States shall lay down the rules on penalties applicable to infringements of national
+          provisions adopted pursuant to this Directive and shall take all measures necessary to
+          ensure that they are implemented
+    why: "National penalties with no tiers set by the Directive. Every duty is top: a regime that sets
+      no tiers is weighed as heavily as any other regime's top tier."
+  - id: eprivacy
+    name: ePrivacy
+    match:
+      - ePrivacy
+      - e-Privacy
+      - Directive 2002/58
+    tiered: false
+    penalty_cite: ePrivacy Directive Art 15a(1), and the national laws transposing it
+    member_states_penalty: eprivacy-15a-1
+    source_url: https://publications.europa.eu/resource/celex/02002L0058-20091219
+    definitions:
+      - "2"
+    penalty_quotes:
+      - id: eprivacy-15a-1
+        cite: ePrivacy Directive Art 15a(1)
+        quote: Member States shall lay down the rules on penalties, including criminal sanctions where
+          appropriate, applicable to infringements of the national provisions adopted pursuant to
+          this Directive
+    why: "The duties bind through national transpositions, whose penalties the Directive leaves to each
+      Member State with no tiers. Every duty is top: a regime that sets no tiers is weighed as
+      heavily as any other regime's top tier."
+  - id: eprivacy-2009-136
+    name: ePrivacy
+    match:
+      - Directive 2009/136
+    tiered: false
+    penalty_cite: ePrivacy Directive Art 15a(1) (the Directive 2009/136/EC amends; its penalties sit there)
+    member_states_penalty: eprivacy/eprivacy-15a-1
+    source_url: https://publications.europa.eu/resource/celex/02002L0058-20091219
+    why: "Directive 2009/136/EC amends Directive 2002/58/EC (its Art 2(5) replaces Art 5(3)); a cite of
+      it is a cite of the amended ePrivacy duty, whose penalties sit in Art 15a(1) of the amended
+      Directive, quoted under the ePrivacy regime. Every duty is top: a regime that sets no tiers is
+      weighed as heavily as any other regime's top tier."
+  - id: geo-blocking
+    name: Geo-blocking Regulation
+    match:
+      - Geo-?blocking
+      - Regulation \(EU\) 2018/302
+    tiered: false
+    penalty_cite: Geo-blocking Regulation Art 7(2)
+    member_states_penalty: geo-blocking-7-2
+    source_url: https://publications.europa.eu/resource/celex/32018R0302
+    definitions:
+      - "2"
+    no_duty:
+      - provisions:
+          - "1"
+        why: "objective and scope: lays down no duty"
+      - provisions:
+          - "7"
+        why: "enforcement by the Member States: lays down no duty for the trader"
+      - id: geo-blocking-6
+        provisions:
+          - "6"
+        quote: to act in violation of the prohibitions laid down in Articles 3, 4 and 5 of this Regulation
+          shall be automatically void
+        why: "agreements on passive sales: which agreements the Regulation leaves alone (6(1)) and which
+          clauses are void (6(2)); lays down no duty for the trader, whose duties are Arts 3 to 5"
+    penalty_quotes:
+      - id: geo-blocking-7-2
+        cite: Geo-blocking Regulation Art 7(2)
+        quote: Member States shall lay down the rules setting out the measures applicable to infringements
+          of the provisions of this Regulation and shall ensure that they are implemented
+    why: "National measures with no tiers. Every duty is top: a regime that sets no tiers is weighed as
+      heavily as any other regime's top tier."
+  - id: psd2
+    name: PSD2
+    match:
+      - \bPSD2\b
+      - Directive \(EU\) 2015/2366
+    tiered: false
+    penalty_cite: PSD2 Art 103(1)
+    member_states_penalty: psd2-103-1
+    source_url: https://publications.europa.eu/resource/celex/02015L2366-20250117
+    definitions:
+      - "4"
+    penalty_quotes:
+      - id: psd2-103-1
+        cite: PSD2 Art 103(1)
+        quote: Member States shall lay down rules on penalties applicable to infringements of the national
+          law transposing this Directive and shall take all necessary measures to ensure that they
+          are implemented
+    why: "National penalties with no tiers. Every duty is top: a regime that sets no tiers is weighed as
+      heavily as any other regime's top tier."
+  - id: psd2-sca-rts
+    name: PSD2
+    match:
+      - Regulation \(EU\) 2018/389
+      - Delegated Regulation \(EU\) 2018/389
+    tiered: false
+    penalty_cite: PSD2 Art 103(1) (the regulatory technical standards are adopted under PSD2; their
+      penalties sit there)
+    member_states_penalty: psd2/psd2-103-1
+    source_url: https://publications.europa.eu/resource/celex/02015L2366-20250117
+    why: "Commission Delegated Regulation (EU) 2018/389 supplements PSD2 and sets no penalties of its
+      own; they sit in PSD2 Art 103(1), quoted under the PSD2 regime. Every duty is top: a regime
+      that sets no tiers is weighed as heavily as any other regime's top tier."
+  - id: eidas
+    name: eIDAS
+    match:
+      - \beIDAS\b
+      - Regulation \(EU\) No 910/2014
+    tiered: false
+    penalty_cite: eIDAS Art 16
+    member_states_penalty: eidas-16-1
+    source_url: https://publications.europa.eu/resource/celex/02014R0910-20241018
+    definitions:
+      - "3"
+    penalty_quotes:
+      - id: eidas-16-1
+        cite: eIDAS Art 16(1)
+        quote: Member States shall lay down the rules on penalties applicable to infringements of this
+          Regulation. Those penalties shall be effective, proportionate and dissuasive
+    why: "National penalties. Art 16(2) sets minimum maximum fines by whether the trust service provider
+      is a natural or a legal person, a fact about the person and not the duty. Every duty is top: a
+      regime that sets no tiers is weighed as heavily as any other regime's top tier."
+  - id: e-commerce
+    name: e-Commerce Directive
+    match:
+      - e-?Commerce Directive
+      - Directive 2000/31
+    tiered: false
+    penalty_cite: e-Commerce Directive Art 20
+    member_states_penalty: e-commerce-20
+    source_url: https://publications.europa.eu/resource/celex/02000L0031-20240217
+    definitions:
+      - "2"
+    penalty_quotes:
+      - id: e-commerce-20
+        cite: e-Commerce Directive Art 20
+        quote: Member States shall determine the sanctions applicable to infringements of national
+          provisions adopted pursuant to this Directive and shall take all measures necessary to
+          ensure that they are enforced
+    why: "National sanctions with no tiers. Every duty is top: a regime that sets no tiers is weighed as
+      heavily as any other regime's top tier."
+  - id: csa-directive
+    name: Directive 2011/93/EU
+    match:
+      - Directive 2011/93
+    coverage: definitions_only
+    tiered: null
+    penalty_cite: "not assessed: the rules cite only its definitions article"
+    definitions:
+      - "2"
+  - id: tris-directive
+    name: Directive (EU) 2015/1535
+    match:
+      - Directive \(EU\) 2015/1535
+    coverage: definitions_only
+    tiered: null
+    penalty_cite: "not assessed: the rules cite only its definitions article"
+    definitions:
+      - "1"
+  - id: mdr
+    name: Medical Devices Regulation
+    match:
+      - Medical Devices Regulation
+      - Regulation \(EU\) 2017/745
+    coverage: definitions_only
+    tiered: null
+    penalty_cite: "not assessed: the rules cite only its definitions article"
+    definitions:
+      - "2"
+  - id: jp-appi
+    name: APPI (Japan)
+    match:
+      - Japan APPI
+      - Act on the Protection of Personal Information
+    tiered: false
+    penalty_cite: APPI Art 178 (with Art 148 and Art 184)
+    source_url: https://laws.e-gov.go.jp/api/1/lawdata/415AC0000000057
+    definitions:
+      - "2"
+      - "16"
+    penalty_quotes:
+      - id: jp-appi-178
+        cite: APPI Art 178
+        quote: 第百四十八条第二項又は第三項の規定による命令に違反した場合には、当該違反行為をした者は、一年以下の拘禁刑又は百万円以下の罰金に処する。
+    why: "The Act's penalties differ by route and by named act, not by a fine schedule across the duties
+      a rule cites. Art 148(1) lists the duties a Commission recommendation (and so an order) can
+      reach, and Art 148(3) those for which it may order at once (Arts 18 to 20 and 23 to 26 among
+      them); violating such an order is punished under Art 178 (quoted), with Art 184(1) raising the
+      fine for a corporation: the heaviest route the Act sets for an operator's duty. Arts 179, 182
+      and 185 set separate penalties for named acts (providing or misappropriating a personal
+      information database for illicit gain, a failure to report under Art 146(1), a breach of Art
+      30(2) or 56). Every APPI duty the rules cite (Art 23, Art 26) is in both Art 148(1) and
+      148(3), so it is on the order route at its heaviest: top. A duty outside Art 148(1) (Art 17 or
+      22, say) also resolves top here, which rounds up; it is not a claim that the Act sets no
+      tiers."
+  - id: cn-ai-labelling
+    name: AI content labelling rules (China)
+    match:
+      - China Measures for Labelling AI-Generated Synthetic Content
+      - GB 45438-2025
+    tiered: false
+    penalty_cite: not quoted in this table
+    why: Taken as setting no tiers across its duties, so every duty is top; its penalty provisions are
+      not quoted in this table. The mandatory national standard GB 45438-2025 is taken with the
+      Measures that require it.
+  - id: us-ccpa
+    name: CCPA (California)
+    match:
+      - California Consumer Privacy Act
+      - Cal\. Civ\. Code Sec\. 1798\.1
+      - California Civil Code Sec\. 1798\.1
+    tiered: false
+    penalty_cite: not quoted in this table (the official site refused the fetch, HTTP 403, on 2026-10-28)
+    why: "US state law: taken as setting no tiers across its duties, so every duty is top. Its penalty
+      provisions are not quoted in this table."
+  - id: us-cal-civ-1798-81-5
+    name: California Civil Code Sec. 1798.81.5
+    match:
+      - California Civil Code Sec\. 1798\.81\.5
+      - Cal\. Civ\. Code Sec\. 1798\.81\.5
+    tiered: false
+    penalty_cite: not quoted in this table
+    why: "US state law: taken as setting no tiers across its duties, so every duty is top. Its penalty
+      provisions are not quoted in this table."
+  - id: us-ca-sb-243
+    name: California S.B. 243
+    match:
+      - California S\.B\. 243
+    tiered: false
+    penalty_cite: not quoted in this table
+    why: "US state law: taken as setting no tiers across its duties, so every duty is top. Its penalty
+      provisions are not quoted in this table."
+  - id: us-ftc-act
+    name: FTC Act
+    match:
+      - FTC Act Sec\. 5
+      - 15 U\.S\.C\. Sec\. 45
+    tiered: false
+    penalty_cite: not quoted in this table
+    why: "US federal law: taken, like the state laws, as setting no tiers across its duties, so every
+      duty is top. Its penalty provisions are not quoted in this table."
+  - id: us-glba
+    name: Gramm-Leach-Bliley Act
+    match:
+      - Gramm-Leach-Bliley Act
+    tiered: false
+    penalty_cite: not quoted in this table
+    why: "US federal law: taken, like the state laws, as setting no tiers across its duties, so every
+      duty is top. Its penalty provisions are not quoted in this table."
+  - id: us-il-wopr
+    name: Illinois WOPR Act
+    match:
+      - Illinois Wellness and Oversight for Psychological Resources Act
+    tiered: false
+    penalty_cite: not quoted in this table
+    why: "US state law: taken as setting no tiers across its duties, so every duty is top. Its penalty
+      provisions are not quoted in this table."
+  - id: us-nv-ab-406
+    name: Nevada A.B. 406
+    match:
+      - Nevada A\.B\. 406
+    tiered: false
+    penalty_cite: not quoted in this table
+    why: "US state law: taken as setting no tiers across its duties, so every duty is top. Its penalty
+      provisions are not quoted in this table."
+  - id: us-ny-gbl-47
+    name: New York General Business Law Art. 47
+    match:
+      - New York General Business Law
+    tiered: false
+    penalty_cite: not quoted in this table
+    why: "US state law: taken as setting no tiers across its duties, so every duty is top. Its penalty
+      provisions are not quoted in this table."
+  - id: us-tn-elvis
+    name: Tennessee ELVIS Act
+    match:
+      - Tennessee Ensuring Likeness, Voice, and Image Security Act
+    tiered: false
+    penalty_cite: not quoted in this table
+    why: "US state law: taken as setting no tiers across its duties, so every duty is top. Its penalty
+      provisions are not quoted in this table."
+  - id: us-ut-ai
+    name: Utah AI law
+    match:
+      - Utah Artificial Intelligence Consumer Protection Act
+      - Utah H\.B\. 452
+    tiered: false
+    penalty_cite: not quoted in this table
+    why: "US state law: taken as setting no tiers across its duties, so every duty is top. Its penalty
+      provisions are not quoted in this table."
+explicit:
+  - id: national-age-gdpr-8
+    match: ^(?:NOT VERIFIED AGAINST [A-Z ]+\. )?NATIONAL AGE - [A-Z]{2} \d+\.
+    regime: gdpr
+    provision: 8(1)
+    why: A national provision fixing the age below which GDPR Art 8(1) needs a parent's consent. The
+      duty is Art 8's, which Art 83(4)(a) places in the lower tier.
+  - id: eprivacy-2009-136-2-5
+    match: ^Directive 2009/136/EC, Art\. 2\(5\)
+    regime: eprivacy
+    provision: 5(3)
+    why: Directive 2009/136/EC Art 2(5) replaces ePrivacy Art 5(3); the cited duty is Art 5(3) as
+      replaced.
+  - id: ai-act-1744-recitals
+    match: "^Regulation \\(EU\\) 2026/1744 \\(CELEX 32026R1744\\), recitals "
+    regime: ai-act
+    tier: no_duty
+    why: Recitals of the amending act lay down no duty.
+  - id: cra-annex-i-part-ii-8-free-of-charge
+    match: "^Cyber Resilience Act \\(Regulation \\(EU\\) 2024/2847\\), the free-of-charge limb of Annex
+      I Part II point \\(8\\) and its tailor-made carve-out, with Recital 64 "
+    regime: cra
+    provision: Annex I
+    cite: CRA Annex I, Part II, point (8)
+    quote: they are disseminated without delay and, unless otherwise agreed between a manufacturer and a
+      business user in relation to a tailor-made product with digital elements, free of charge
+    why: The cite rests on the vulnerability-handling requirement of Annex I Part II point (8), quoted,
+      which Art 64(2) puts in the top tier, and names Recital 64 (no duty) in prose the reader does
+      not read ('and its tailor-made carve-out, with'). Annex I decides it; Recital 64 could only
+      lower it.
+  - id: non-legislative
+    match: ^(?:CNIL\b|EDPB\b|European Data Protection Board\b|Article 29 (?:Data Protection )?Working
+      Party\b|CJEU\b|Court of Justice of the European Union\b|Fashion ID, C-40/17\b|Munich Regional
+      Court\b|Tribunal judiciaire\b|Commission Guidelines\b|Code of Practice on Transparency of
+      AI-generated Content\b|Google\b|IAB Europe\b|Japan, Personal Information Protection
+      Commission, Guidelines\b|United States, Federal Trade Commission, )
+    tier: no_duty
+    why: Guidance, decisions and judgments of authorities and courts, industry frameworks and vendor
+      documentation interpret or apply a duty; they lay down none of their own. The duty is the
+      statute's, cited beside them.

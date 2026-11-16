@@ -1,0 +1,423 @@
+id: safeguard-reach-002
+pack: safeguard-reach
+short_name: Data-limiting control that cannot reach its target
+problem_line:
+  text: Data-limiting control that does not reach its target
+fix_line: Restore a dead check or drop its switch, clear each named store, purge flagged objects,
+  reach or record no-expiry rows.
+title: Data-limiting control whose predicate, binding or presence cannot reach what it is for
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(e), the storage-limitation principle. Art. 5(1)
+      opens 'Personal data shall be:' and point (e) reads: 'kept in a form which permits
+      identification of data subjects for no longer than is necessary for the purposes for which the
+      personal data are processed'. This is the operative provision for limb (i) and for the
+      flag-write form of limb (ii): where the sweep cannot select the rows left at the shipped
+      default, or where the removal writes a flag while the object persists, those records are kept,
+      and the period for which they are kept is set by the purpose rather than by the existence of
+      the sweep. Read the words exactly: FOR NO LONGER THAN IS NECESSARY means no duration is right
+      or wrong on its face and a detector cannot compute the permitted period from code, and KEPT IN
+      A FORM WHICH PERMITS IDENTIFICATION means data anonymised past identification is outside the
+      point altogether. Reused in substance from `eu-retention-001`, which cites the same point with
+      the same quoted spans."
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(a) - personal data shall be 'processed lawfully,
+      fairly and in a transparent manner in relation to the data subject'. The operative provision
+      for limb (iii) and for the client-side form of limb (ii). A control the person can see - a
+      reset button, a visibility switch - states something about the processing of their data by
+      existing at all. Where the control's own binding reaches a narrower set of records than a
+      reader would conclude from seeing it, or where the guard that would have honoured the person's
+      setting survives only as commented-out code, the person has been given a picture of the
+      processing that the code does not answer to.
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 17(1): 'The data subject shall have the right to obtain
+      from the controller the erasure of personal data concerning him or her without undue delay and
+      the controller shall have the obligation to erase personal data without undue delay where one
+      of the following grounds applies', the first ground being that 'the personal data are no
+      longer necessary in relation to the purposes for which they were collected or otherwise
+      processed'. Carried to fix a boundary rather than to test one. Where the control this rule
+      matches is the path a person uses to erase their own data, a binding that reaches one store of
+      two leaves the erasure incomplete; where it is an operator's maintenance sweep, Art. 17 is not
+      engaged and Art. 5(1)(e) carries the finding alone. Which of the two it is, is context
+      question 4. Reused in substance from `eu-retention-001` and `eu-dsr-001`, both of which quote
+      this paragraph."
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(2): 'The controller shall be responsible for, and be
+      able to demonstrate compliance with, paragraph 1'. Reference only. It is carried because every
+      candidate this rule raises is a question the operator can answer and the reader cannot - what
+      the insert path writes, which stores exist, whether the routine is ever called - and Art. 5(2)
+      is why the absence of an answer is itself worth recording. It establishes no duty this
+      detector tests."
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.2
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  shared_vocabulary:
+    - retention_time_columns
+  vocabulary:
+    expiry_column:
+      - expire_in
+      - expires_at
+      - expired_at
+      - expire_at
+      - expire_time
+      - expire_token
+      - expire_date
+      - expires_on
+      - expiry_date
+      - expiration_date
+      - expiration
+      - expiry
+      - expires
+      - valid_until
+      - valid_till
+      - delete_after
+      - purge_after
+      - retain_until
+      - retention_until
+      - ttl
+    erasure_call:
+      - delete
+      - deletes
+      - delete_many
+      - delete_all
+      - delete_expired
+      - destroy
+      - destroy_all
+      - remove
+      - removes
+      - remove_many
+      - batch_remove
+      - batch_delete
+      - purge
+      - prune
+      - sweep
+      - evict
+      - expire_all
+    time_comparison_keyword:
+      - lt
+      - lte
+      - gt
+      - gte
+      - before
+      - less_than
+      - greater_than
+      - older_than
+    soft_delete_flag:
+      - deleted
+      - is_deleted
+      - soft_deleted
+      - removed
+      - is_removed
+      - purged
+      - tombstoned
+    access_guard_concept:
+      - visibility
+      - visible
+      - private
+      - privacy
+      - public
+      - consent
+      - permission
+      - permitted
+      - allowed
+      - forbidden
+      - authorized
+      - authorised
+      - restricted
+      - visitor
+      - anonymous
+      - guest
+      - unauthenticated
+      - opt_out
+      - no_index
+      - no_crawl
+      - prevent_ai_learning
+      - can_view
+      - hidden
+    sweep_time_column_tokens:
+      - date
+      - dtl
+      - dt
+      - time
+      - tml
+      - tm
+      - ts
+      - timestamp
+      - stamp
+      - mtime
+      - ctime
+      - atime
+      - epoch
+      - created
+      - inserted
+      - recorded
+      - captured
+      - modified
+      - updated
+      - age
+      - older
+      - since
+      - until
+      - cutoff
+      - expire
+      - expiry
+      - seen
+      - day
+      - week
+      - month
+      - year
+  vocabulary_matching:
+    expiry_column:
+      case_insensitive: true
+      separator_insensitive: true
+    erasure_call:
+      case_insensitive: true
+      separator_insensitive: true
+    time_comparison_keyword:
+      case_insensitive: true
+      separator_insensitive: true
+    soft_delete_flag:
+      case_insensitive: true
+      separator_insensitive: true
+    access_guard_concept:
+      case_insensitive: true
+      separator_insensitive: true
+    sweep_time_column_tokens:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - ^(?![ \t]*(?://|#|--|\*))[^\n]{0,200}(?<![A-Za-z0-9])(?&erasure_call)[A-Za-z_]{0,30}[
+      \t]*\([^\n]{0,80}(?<![A-Za-z0-9])(?&expiry_column)(?![A-Za-z0-9])[^\n]{0,25}(?:[<>]=?|__(?&time_comparison_keyword)(?![A-Za-z0-9])|(?:=>|[:=])[
+      \t]*\{?[ \t]*["']?(?&time_comparison_keyword)(?![A-Za-z0-9]))
+    - ^(?![ \t]*(?://|#|--|\*))[^\n]{0,200}(?<![A-Za-z0-9])(?&expiry_column)(?![A-Za-z0-9])[
+      \t]*(?:__(?&time_comparison_keyword)(?![A-Za-z0-9])|[<>]=?|(?:=>|[:=])[ \t]*\{?[
+      \t]*["']?(?&time_comparison_keyword)(?![A-Za-z0-9]))[^\n]{0,80}(?<![A-Za-z0-9])(?&erasure_call)[A-Za-z_]{0,30}[
+      \t]*(?:[(.!;]|\r?$)
+    - ^(?![ \t]*(?://|#|--|\*))[^\n]{0,200}\b(?:DELETE|[Dd]elete)[
+      \t]+(?:FROM|from)\b[^\n]{0,80}\b(?:WHERE|where)\b[^\n]{0,60}(?<![A-Za-z0-9])(?&expiry_column)(?![A-Za-z0-9])[
+      \t]*[<>]=?
+    - ^(?![
+      \t]*(?://|#|--|\*))[^\n]{0,200}(?<![A-Za-z0-9_.])(?:[Ll]ocal[Ff]orage|idb[-_]?[Kk]eyval)[
+      \t]*\.[ \t]*[Cc]lear[ \t]*\(
+    - ^(?![ \t]*(?://|#|--|\*))[^\n]{0,200}(?<![A-Za-z0-9])(?&soft_delete_flag)(?![A-Za-z0-9])[
+      \t]*(?:=>|[:=])[ \t]*(?:true|True|TRUE|:true|1)(?![A-Za-z0-9_])
+    - ^[ \t]*(?://|#|--|/\*|\*)[
+      \t]*(?:if|unless|elsif|elif)(?![A-Za-z0-9_])[^\n]{0,100}(?&access_guard_concept)
+    - ^[ \t]*(?://|#|--|/\*|\*)[
+      \t]*(?:throw|raise|return|abort|deny|reject|forbid)(?![A-Za-z0-9_])[^\n]{0,100}(?&access_guard_concept)
+    - ^(?![ \t]*(?://|#|--|\*))[^\n]{0,200}\.[ \t]*(?:and|or|And|Or)?[
+      \t]*(?:[Ww]here|WHERE)(?:Raw|Not|_raw)?[ \t]*\([
+      \t]*['"`](?:[\w$]{0,30}\.)?(?&retention_time_columns)(?![\w$])['"`][ \t]*,[
+      \t]*['"`](?:<=|>=|<|>|lt|lte|gt|gte)['"`][ \t]*,
+    - ^(?![
+      \t]*(?://|#|--|\*))[^\n]{0,200}(?<![\w$])(?:[Ww]here|WHERE|[Ff]ilter|and[Ww]here|or[Ww]here|and_where|or_where)(?:Raw|_raw)?[
+      \t]*\([ \t]*['"`][^'"`\n]{0,160}?(?<![\w$])(?&retention_time_columns)(?![\w$])[
+      \t]*(?:<=|>=|<|>)[
+      \t]*(?:\?|\$[0-9]{1,2}|:[A-Za-z_]\w{0,30}|@[A-Za-z_]\w{0,30}|%s|(?:NOW|now)[ \t]*\()
+    - ^(?![
+      \t]*(?://|#|--|\*))[^\n]{0,200}["'`][^"'`\n]{0,120}?(?<![\w$])(?=(?:[A-Za-z0-9$]{0,30}[_$])?(?:(?&retention_time_columns)|(?&sweep_time_column_tokens))(?:e?s)?(?![A-Za-z]))[\w$]{1,40}[
+      \t]*(?:<=|>=|<|>)[ \t]*["'`]{1,2}[ \t]*(?:\+|\.|\|\||,)[ \t]*[A-Za-z_$][\w$]{0,40}
+    - ^(?![ \t]*(?://|#|--|\*))[^\n]{0,300}\{[ \t]*#[ \t]*if[ \t]+0(?![0-9])[ \t][^\n]{0,900}#[
+      \t]*endif\b[ \t]*(?:return[ \t]+(?:0|true|TRUE|OK|[A-Z][A-Z0-9_]{1,40})[ \t]*;[ \t]*)?\}
+    - ^(?![ \t]*(?://|#|--|\*))[^\n]{0,400}(?<![\w$])(?&erasure_call)[A-Za-z_]{0,30}[
+      \t]*\([^)\n]{0,40}\)[^\n]{0,120}?\.[ \t]*(?:filter|Filter|where|Where|and_where|andWhere)[
+      \t]*\([^\n]{0,120}?\.[ \t]*(?&time_comparison_keyword)(?![A-Za-z0-9])[ \t]*\([
+      \t]*[A-Za-z_$][\w$]{0,40}[ \t]*\)
+  match_in_comments: true
+  join_bracketed_constructs: true
+  resolve_import_aliases: true
+context_questions:
+  - "MANDATORY FOR CLAUSES 1 TO 3, 8 AND 9, AND THE DETECTOR COULD NOT CHECK IT: WHAT DOES THE
+    INSERT PATH WRITE INTO THAT COLUMN? A sweep that deletes by an inequality can never select a row
+    whose value is null, because no comparison with NULL is ever true in SQL and the same holds of
+    every ORM that compiles to it. So the whole question is what the column holds for a record
+    nobody set an expiry on. Open the insert path and the migration and read three things: the
+    column's database default, whether the insert writes an explicit null or a `|| null` fallback,
+    and whether the field is required in the interface that creates the record. Where the default is
+    a real duration, the sweep reaches everything and there is nothing here. This is in a different
+    file from the sweep in the tree this clause was built from, which is why no pattern can answer
+    it."
+  - IS THE ROUTINE SCHEDULED, AND WHAT IS THE PERIOD? A sweep in a request handler runs when
+    somebody asks; a sweep on a timer runs whether or not anybody is looking, and only the second is
+    the control an operator would point at when asked how retention is enforced. Find the caller.
+    Say whether it is a timer, a cron entry, a queue worker or a manual command, and give the
+    interval. Where it is not scheduled at all, say so - that changes what the control is, not only
+    how often it runs.
+  - "FOR CLAUSES 4 AND 5: WHAT ELSE HOLDS A COPY, AND DOES ANYTHING DELETE FROM IT? This is the limb
+    the detector cannot see and it decides the candidate. Enumerate every store the record or the
+    object exists in - a named browser store beside the default one, an analytics warehouse beside
+    the primary database, an object store beside the row, another device holding a synchronised copy
+    - and then look for deletion code addressing each. A tree that constructs a warehouse and
+    carries no deletion, mutation or expiry code for it at all is the recorded shape; establishing
+    that requires reading the whole tree, and reporting an absence honestly means saying how you
+    looked."
+  - IS THIS CONTROL ON A DATA-SUBJECT PATH OR AN OPERATOR PATH? A reset button the person presses, a
+    delete-my-account route and an operator's maintenance sweep engage different provisions and
+    produce different findings. Name the route and say who can reach it. Where the person can reach
+    it, whatever they were told about it is part of the finding, and `safeguard-reach-001` is the
+    rule that reads that half.
+  - "IS THE ROUTINE INVOKED AT ALL? This is constitutive for this type and this detector cannot see
+    it: a removal routine with zero callers is not this construct - it is dead code, and the
+    recorded class for a safeguard that is merely absent is a different one. Find the call sites.
+    Where there are none, say so and close the candidate on that ground. Where the only call site is
+    a test, say that too."
+  - "FOR CLAUSES 6 AND 7, FIRST: IS THIS A COMMENT AT ALL? Check this before anything else, because
+    one shape reaches these clauses that is not a comment and is not this construct. In C and C++ a
+    line beginning `#` is a PREPROCESSOR DIRECTIVE - `#if`, `#  if`, `#endif` - and it is live code
+    that the compiler acts on; the same is true of any language where `#` opens a directive rather
+    than a remark. A conditional compilation guard named after a permission, a consent flag or a
+    build profile is a build-time switch and nothing this rule is looking for, and it should be
+    closed on that ground. The construct requires a check that WOULD have run and was commented out.
+    Ordinary comment prose shaped like a guard - a documentation line reading `if the visitor is
+    anonymous we skip` - is the same kind of miss and closes the same way. THEN: IS THE LIVE SIBLING
+    OF THIS GUARD SOMEWHERE ELSE, AND WHAT DOES THE SETTING PROMISE? A commented-out check is
+    evidence about intent and nothing more until two further things are read. First, look for the
+    same check alive in a neighbouring endpoint - in the tree this clause was built from, the guard
+    is commented out in one endpoint and live one file away, which is what makes the gap a gap
+    rather than a feature that was never built. Second, read the setting the guard was there to
+    honour, and quote what the interface tells the person it does. Then say what the endpoint
+    returns to an unauthenticated caller today."
+  - WHAT WAS THE COMMENT NEXT TO IT? For clauses 6 and 7 especially, the reason somebody wrote for
+    taking the check out is usually one line away and is usually specific - a login problem, a
+    broken test, a migration in progress. Quote it. A guard removed to fix a bug in an unrelated
+    path is a different finding from a guard removed because the feature was abandoned, and the
+    remediation differs.
+  - "FOR CLAUSE 11, AND IT IS TWO QUESTIONS THE PATTERN CANNOT ANSWER: IS THE STUBBED ROUTINE A
+    CONTROL, AND WHAT DOES THE BUILD ACTUALLY SHIP? A routine whose whole body sits between `#if 0`
+    and `#endif` is present, callable and inert, and this clause reports it on that shape alone - it
+    does not read what the routine was for. Open it and say what the disabled body did: a
+    peer-authentication handler, a visibility check and a debug print are three different findings
+    and only the first two are this rule's. Then check the build. `#if 0` is not a configuration
+    switch and cannot be turned on by any build, so the code is in no binary - but a live equivalent
+    may exist elsewhere, and in the tree this clause was built from the client side of the same
+    protocol is live one file away. Look for a sibling routine that still runs, look for the call
+    sites of the stub, and say whether anything performs the check today. Where the stub is dead
+    code nobody calls, say so and close it on context question 5's ground."
+  - "FOR CLAUSE 10: WHERE IS THE REMOVAL, AND WHAT IS THE CUTOFF? This clause reads a selection
+    predicate written as a string with the cutoff concatenated into it, and it requires no removal
+    call anywhere on the line, so the erasure may be in another function that receives the finished
+    query. Find the function that consumes the query and say what it does with the rows it selects.
+    Then read the cutoff. It is a host-language variable, so what it holds is computed in code
+    rather than written in the statement, and whether it is a retention period an operator
+    configured, a fixed date or a value taken from a request changes the finding entirely. The
+    column name is the only thing on the line that says the comparison is about time; say what the
+    column actually holds."
+evidence_template: "{file}:{line} matched one of seven shapes in three groups, and which group it is
+  decides what was established. GROUP (i), CLAUSES 1 TO 3 - A REMOVAL BY INEQUALITY ON AN EXPIRY
+  COLUMN, written as an ORM call, a chained query or an SQL statement. THIS ESTABLISHES THAT THE
+  SWEEP EXISTS AND HOW IT SELECTS. IT DOES NOT ESTABLISH THAT ANY ROW ESCAPES IT: that turns on what
+  the insert path writes into the column, which is in a different file in the tree this clause was
+  built from, and it is context question 1. An age-based sweep is the ordinary and correct way to
+  enforce a retention period; it is this construct only where the shipped default cannot be selected
+  by an inequality. GROUP (ii), CLAUSES 4 AND 5 - A CLEARING CALL BOUND TO THE DEFAULT INSTANCE OF A
+  LIBRARY WHOSE STORES ARE NAMED, OR A REMOVAL WRITTEN AS A FLAG. Clause 4 rests on an API fact -
+  the library's top-level clear reaches the default instance alone - and does NOT establish that a
+  named instance exists in this tree (context question 3). Clause 5 reports a soft delete, WHICH IS
+  A LEGITIMATE AND VERY COMMON PATTERN: it is this construct only where the object behind the flag
+  persists and something claims otherwise, and neither half is visible here. GROUP (iii), CLAUSES 6
+  AND 7 - AN ACCESS OR VISIBILITY GUARD THAT SURVIVES ONLY AS COMMENTED-OUT CODE. This is the
+  strongest of the three and still establishes only that the check is not running on this path;
+  whether an equivalent check runs elsewhere, and what the setting promised, are context question 6.
+  CHECK ONE THING BEFORE ANY OF THAT, BECAUSE THE PATTERN CANNOT: A LINE BEGINNING `#` MAY BE A C OR
+  C++ PREPROCESSOR DIRECTIVE RATHER THAN A COMMENT - `#if`, `#  if`, `#endif` are live code the
+  compiler acts on, they survive comment-blanking, and a conditional compilation guard named after a
+  permission or a consent flag is a build-time switch and not this construct. Ordinary comment prose
+  shaped like a guard closes the same way. Context question 6 asks both first. THREE THINGS ARE NOT
+  ESTABLISHED BY ANY CLAUSE. FIRST, WHETHER THE ROUTINE IS EVER CALLED - 'invoked' is constitutive
+  for this type and a call graph is not visible to this detector (context question 5). SECOND,
+  WHETHER A SECOND STORE EXISTS OR IS CONFIGURED IN THIS DEPLOYMENT (context question 3). THIRD,
+  WHAT ANYBODY WAS TOLD THE CONTROL DOES - that is the claim side, and `safeguard-reach-001` reads
+  it. ADDED 2026-09-04: GROUP (i) NOW HAS TWO FURTHER CLAUSES, 8 AND 9, so there are nine shapes
+  rather than seven; the group (i) paragraph above governs them unchanged except on one point. THE
+  COLUMN THEY READ IS NOT AN EXPIRY COLUMN. They reach a removal keyed to an ACTIVITY or
+  ROW-LIFECYCLE column - seen_at, active_at, last_seen, created_at, deleted_at - which this rule's
+  own expiry_column list deliberately excludes, read inside a query predicate: clause 8 as the first
+  argument of a where(column, operator, cutoff) triple, clause 9 as a quoted SQL predicate whose
+  cutoff is a bound parameter or a clock call. FOR CLAUSE 9 THE REMOVAL CALL IS NOT REQUIRED ON THE
+  LINE, so a candidate from it is weaker than one from clauses 1 to 3: it shows the SELECTION of a
+  sweep and leaves whether a removal is chained to it to a reader of the file. Context question 1
+  decides candidates from clauses 8 and 9 exactly as it decides clauses 1 to 3. ADDED 2026-09-09:
+  THREE FURTHER CLAUSES, 10 TO 12, so there are twelve shapes rather than nine. CLAUSE 10 BELONGS TO
+  GROUP (i) and that paragraph governs it with one thing added: THE PREDICATE IS ASSEMBLED AS A
+  STRING AND THE CUTOFF IS A HOST-LANGUAGE VARIABLE SPLICED INTO IT, so the removal call is NOT
+  required on the line and a candidate from it is weaker than one from clauses 1 to 3 in exactly the
+  way clause 9 is - in the tree it was built from the predicate is built in one function and the
+  finished query is handed to another that erases. CLAUSES 11 AND 12 READ A JOINED VIEW OF A
+  BRACKETED CONSTRUCT rather than a physical line, so the line the finding names is the line the
+  construct OPENS on and what matched may be several lines below it: `locations[].joined_from`
+  carries the span and must be read before anything else. CLAUSE 11 REPORTS A ROUTINE WHOSE WHOLE
+  BODY IS COMPILED OUT BY `#if 0` AND WHICH STILL RETURNS A SUCCESS VALUE. THIS IS COMPILED-OUT
+  CODE, SO WHAT THE DEPLOYMENT ACTUALLY RUNS IS A BUILD QUESTION THIS FINDING DOES NOT ANSWER;
+  neither does it establish that the stubbed routine is a data-limiting control at all, and context
+  question 8 asks both. It is NOT the `#ifdef FEATURE_FLAG` shape context question 6 tells you to
+  close on, because `#if 0` cannot be enabled by any build configuration. CLAUSE 12 REPORTS AN
+  ERASURE CALL WHOSE FILTER COMPARES SOMETHING TO A CUTOFF WITH AN ORM COMPARISON METHOD. IT DOES
+  NOT ESTABLISH THAT THE COMPARED COLUMN IS A TIME COLUMN - it may be any member the ORM exposes -
+  so read the column name first, and context question 1 then decides it exactly as it decides
+  clauses 1 to 3."
+remediation_template: >
+  Take the three groups separately, because they fail for different reasons and the repairs are not
+
+  the same.
+
+  For a sweep that selects by an inequality, first read what the insert path writes into the column.
+
+  Where a record can be created with no expiry, decide deliberately what should happen to it: give
+
+  the column a real default so the sweep reaches it, or add the null case to the sweep's own
+
+  predicate, or state in the retention record that records of that kind are kept indefinitely and
+
+  why. Leaving the three-valued behaviour of SQL to decide it is the one option that is not a
+
+  decision.
+
+  For a clearing call bound to one store, enumerate the stores and clear each of them by name. Where
+
+  a library distinguishes a default instance from named ones, the top-level call is not a shortcut
+
+  for all of them, and the code should say which instances it is clearing rather than relying on a
+
+  reader to know the library's contract.
+
+  For a removal written as a flag, decide what the flag is for. A tombstone that exists so other
+
+  devices can converge is a legitimate mechanism; what it is not is an erasure, and something has to
+
+  remove the object it points at, on a schedule, with a period. Write that period down.
+
+  For a guard that survives only as commented-out code, do one of two things and do not leave it in
+
+  the third state: restore the check, or remove the setting it was there to honour along with
+
+  whatever the interface says about it. A switch a person can set that no code reads is worse than
+  no
+
+  switch, because it tells them something about the processing that is not so.
+
+  In every case record the outcome in the record of processing activities against the store that
+
+  keeps the residue, with its own period and its own purpose, rather than folding it into the period
+
+  of the store the control does reach.
+data_categories:
+  - user.account
+  - user.content
+  - user.behavior
+fingerprint_spec: file

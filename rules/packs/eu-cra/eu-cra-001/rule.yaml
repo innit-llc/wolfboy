@@ -1,0 +1,641 @@
+id: eu-cra-001
+pack: eu-cra
+short_name: Packaging, release, install, firmware or payment-SDK line
+problem_line:
+  text: Vulnerability disclosure policy or contact not found
+fix_line: Publish a vulnerability disclosure policy and a reporting contact; the CRA asks both of
+  products placed from Dec 2027.
+title: Packaging, release, install, firmware or payment SDK - CRA vulnerability disclosure policy
+  and contact (products placed from Dec 2027)
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Annex I, Part II (Vulnerability handling
+      requirements), chapeau and points (5) and (6). Chapeau: 'Manufacturers of products with
+      digital elements shall:'. Point (5): 'put in place and enforce a policy on coordinated
+      vulnerability disclosure;'. Point (6): 'take measures to facilitate the sharing of information
+      about potential vulnerabilities in their product with digital elements as well as in
+      third-party components contained in that product, including by providing a contact address for
+      the reporting of the vulnerabilities discovered in the product with digital elements;'. The
+      addressee named in the chapeau is the MANUFACTURER, defined in Art. 3(13) as 'a natural or
+      legal person who develops or manufactures products with digital elements or has products with
+      digital elements designed, developed or manufactured, and markets them under its name or
+      trademark, whether for payment, monetisation or free of charge'. (Corrected 2026-07-27 from
+      3(12), which is 'economic operator'; the quoted definition was always the manufacturer's, only
+      its number was wrong. Verified by enumerating all 51 definitions in Art. 3.) Point (5) is a
+      policy, point (6) is a published address; a repository can carry evidence of either, both or
+      neither."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Annex II (Information and instructions to
+      the user), chapeau and point 2. Chapeau: 'At minimum, the product with digital elements shall
+      be accompanied by:'. Point 2: 'the single point of contact where information about
+      vulnerabilities of the product with digital elements can be reported and received, and where
+      the manufacturer's policy on coordinated vulnerability disclosure can be found;'. This is the
+      reason the absence of a published pointer matters and not only the absence of an internal
+      process: Annex II point 2 requires the contact and the location of the policy to travel WITH
+      the product. Annex II point 1 separately requires general manufacturer contact details, and
+      point 6 an internet address for the EU declaration of conformity, neither of which this rule
+      tests."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Art. 13(8), (17) and (18) - the operative
+      articles that bind the two Annexes to the manufacturer. Art. 13(8), first subparagraph:
+      'Manufacturers shall ensure, when placing a product with digital elements on the market, and
+      for the support period, that vulnerabilities of that product, including its components, are
+      handled effectively and in accordance with the essential cybersecurity requirements set out in
+      Part II of Annex I.' Art. 13(8), final subparagraph: 'Manufacturers shall have appropriate
+      policies and procedures, including coordinated vulnerability disclosure policies, referred to
+      in Part II, point (5), of Annex I to process and remediate potential vulnerabilities in the
+      product with digital elements reported from internal or external sources.' Art. 13(17), first
+      and second subparagraphs: 'For the purposes of this Regulation, manufacturers shall designate
+      a single point of contact to enable users to communicate directly and rapidly with them,
+      including in order to facilitate reporting on vulnerabilities of the product with digital
+      elements. Manufacturers shall ensure that the single point of contact is easily identifiable
+      by the users. They shall also include the single point of contact in the information and
+      instructions to the user set out in Annex II.' Art. 13(18), first sentence: 'Manufacturers
+      shall ensure that products with digital elements are accompanied by the information and
+      instructions to the user set out in Annex II, in paper or electronic form.' Annex VII, point
+      2(b) further requires the technical documentation to contain 'the coordinated vulnerability
+      disclosure policy, evidence of the provision of a contact address for the reporting of the
+      vulnerabilities'."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Art. 71(2): 'This Regulation shall apply
+      from 11 December 2027. However, Article 14 shall apply from 11 September 2026 and Chapter IV
+      (Articles 35 to 51) shall apply from 11 June 2026.' Art. 71(1) sets entry into force on the
+      twentieth day following publication; the act was done at Strasbourg on 23 October 2024. Annex
+      I Part II points (5) and (6) and Annex II point 2 are reached through Art. 13, which sits in
+      Chapter II and is NOT carved out of the second subparagraph - so THIS rule's duty applies from
+      11 December 2027, not from 11 September 2026. Art. 69(2) adds that products placed on the
+      market before 11 December 2027 are subject to the Regulation only if they are substantially
+      modified from that date, and Art. 69(3) carves Art. 14 back out of that grandfathering: 'By
+      way of derogation from paragraph 2 of this Article, the obligations laid down in Article 14
+      shall apply to all products with digital elements that fall within the scope of this
+      Regulation that have been placed on the market before 11 December 2027.'"
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Art. 14 - the only substantive manufacturer
+      obligation that applies from 11 September 2026. Art. 14(1): a manufacturer 'shall notify any
+      actively exploited vulnerability contained in the product with digital elements that it
+      becomes aware of simultaneously to the CSIRT designated as coordinator ... and to ENISA', via
+      the single reporting platform established under Art. 16. Art. 14(2) sets the clocks: an early
+      warning 'without undue delay and in any event within 24 hours of the manufacturer becoming
+      aware of it' (point (a)), a vulnerability notification within 72 hours (point (b)), and a
+      final report 'no later than 14 days after a corrective or mitigating measure is available'
+      (point (c)). Art. 14(3) and (4) impose the same 24-hour / 72-hour pattern for severe incidents
+      having an impact on the security of the product, with a final report 'within one month after
+      the submission of the incident notification under point (b)' (Art. 14(4), point (c)) - the
+      month runs from the 72-hour notification, not from the incident and not from a fix. Art. 15
+      provides for voluntary reporting. The connection to this rule is operational, not legal: the
+      24-hour clock starts when the manufacturer BECOMES AWARE, and a manufacturer that publishes no
+      reporting address is unlikely to become aware from an outside finder in time. The Art. 14 duty
+      is nevertheless a separate obligation with no source-code trace of its own - this product
+      treats it as an organisational duty with no source-code trace, and this rule does not test
+      it."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Art. 2(1) and the Art. 3 defined terms the
+      rest of this rule turns on. THIS ENTRY IS NOT THE SCOPE TEST AND MUST NOT BE READ AS ONE; the
+      pointer at the end says where the test is. Art. 2(1) is the paragraph that brings a product
+      IN: the Regulation 'applies to products with digital elements made available on the market,
+      the intended purpose or reasonably foreseeable use of which includes a direct or indirect
+      logical or physical data connection to a device or network'. Art. 3(1) defines a product with
+      digital elements as 'a software or hardware product and its remote data processing solutions,
+      including software or hardware components being placed on the market separately'; Art. 3(2)
+      confines 'remote data processing' to processing 'for which the software is designed and
+      developed by the manufacturer, or under the responsibility of the manufacturer, and the
+      absence of which would prevent the product with digital elements from performing one of its
+      functions'. Art. 3(22) defines making available on the market as 'the supply of a product with
+      digital elements for distribution or use on the Union market in the course of a commercial
+      activity, whether in return for payment or free of charge'; Art. 3(21) defines placing on the
+      market as 'the first making available of a product with digital elements on the Union market',
+      which is the event Art. 13(8) and Art. 69(2) both turn on. (Corrected 2026-07-27 from 3(21)
+      for making available - 3(21) is placing on the market and 3(20) is the support period; the
+      quoted words were always those of 3(22).) WHAT THIS ENTRY LEAVES OUT, NAMED SO THAT NOBODY
+      MISTAKES IT FOR NOTHING. Article 2 has eight paragraphs. Only the first, quoted above, brings
+      a product into the Regulation; the other seven are subtractive. Five exclude outright: Art.
+      2(2), products with digital elements to which Regulation (EU) 2017/745 on medical devices,
+      Regulation (EU) 2017/746 on in vitro diagnostic medical devices or Regulation (EU) 2019/2144
+      on motor vehicles applies; Art. 2(3), products certified in accordance with Regulation (EU)
+      2018/1139 on civil aviation; Art. 2(4), equipment falling within the scope of Directive
+      2014/90/EU on marine equipment; Art. 2(6), spare parts made available to replace identical
+      components and manufactured to the same specifications as the components they replace; and
+      Art. 2(7), products developed or modified exclusively for national security or defence
+      purposes and products specifically designed to process classified information. One is a power
+      rather than an exclusion: Art. 2(5) empowers the Commission to adopt delegated acts limiting
+      or excluding the application of this Regulation to products already covered by other Union
+      rules addressing the same risks, and only the excluding branch takes a product out. One carves
+      out information rather than products: Art. 2(8) provides that the obligations laid down in the
+      Regulation do not entail supplying information whose disclosure would be contrary to the
+      essential national security, public security or defence interests of the Member States. The
+      2026-07-27 version of this entry stated the scope question as Art. 2(1) plus Art. 3(1), (2),
+      (21) and (22) plus Recitals 12, 15, 18 and 20, and named, quoted and analysed none of those
+      seven paragraphs - the same defect that was found in the shared CRA scope gate on 2026-08-04
+      and closed there by an independent adversarial legal check. THE COMPLETE ARTICLE 2 ANALYSIS IS
+      NOT RE-DERIVED HERE AND MUST NOT BE. It lives in the shared CRA scope gate, `gate_id`
+      `cra-scope`, which SHIPS INSIDE THIS BUNDLE - the build splices it whole into every checklist
+      that names it, so a reader holds it as the `applicability` object of the three CRA checklists
+      in `checklists.json` - and which decomposes Article 2 in full - each of the seven paragraphs
+      above carrying its own limb, its own question and its own verbatim quote of the operative
+      words - alongside the Article 3 definitions, Art. 24, Art. 69(2), Art. 71(2) and Recitals 11,
+      12, 15, 16, 18, 19, 20, 25 and 27, into 37 limbs backed by 50 supporting quotes. Every one of
+      those quotes was verified against the Official Journal text and twice checked by independent
+      adversarial legal review on 2026-08-04; the receipts and the review records are held by the
+      rule author and do not ship, so nothing here asks a reader to open them. Recitals 12, 15, 18
+      and 20 were quoted in this entry until 2026-08-05 and are quoted in that gate, where each
+      carries a limb; they were removed from here rather than maintained in two places, which is the
+      drifting-copy defect this repository has paid for repeatedly. This rule's own applicability
+      question, context_questions[0], no longer restates Art. 2(1) either: it sends the adjudicating
+      agent to that gate and to the applicability verdict a scan already computes from it. What the
+      link is and is not: no rule evaluates a gate directly - referencing a gate is a facility of
+      checklists and not of rules - so this pointer is documentary and a reader has to follow it
+      into the checklists the bundle ships. A scan nevertheless reaches the same gate by a different
+      route: it annotates every candidate whose legal_basis cites name an instrument that a shipped
+      gate assesses, every cite in this file names Regulation (EU) 2024/2847, and the verdict
+      arrives on the candidate as `depends_on_applicability`."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Art. 24 and Art. 3(14) - open-source
+      software stewards, a DIFFERENT addressee from the manufacturer, with a lighter regime. Art.
+      3(14) defines a steward as 'a legal person, other than a manufacturer, that has the purpose or
+      objective of systematically providing support on a sustained basis for the development of
+      specific products with digital elements, qualifying as free and open-source software and
+      intended for commercial activities, and that ensures the viability of those products'. Art.
+      24(1): stewards 'shall put in place and document in a verifiable manner a cybersecurity policy
+      to foster the development of a secure product with digital elements as well as an effective
+      handling of vulnerabilities by the developers of that product. That policy shall also foster
+      the voluntary reporting of vulnerabilities as laid down in Article 15 by the developers of
+      that product and take into account the specific nature of the open-source software steward and
+      the legal and organisational arrangements to which it is subject. That policy shall, in
+      particular, include aspects related to documenting, addressing and remediating vulnerabilities
+      and promote the sharing of information concerning discovered vulnerabilities within the
+      open-source community.' Art. 24(2) requires cooperation with market surveillance authorities
+      and production of that documentation on reasoned request. Art. 24(3) applies only Art. 14(1)
+      (to the extent the steward is involved in development) and Art. 14(3) and (8) (for severe
+      incidents affecting the steward's own development infrastructure). Three differences matter
+      for this rule. First, a steward owes a documented cybersecurity policy, NOT the Annex I Part
+      II point (5) coordinated-disclosure policy, NOT the point (6) contact address and NOT the
+      Annex II accompanying information - which is the difference this rule turns on, and it holds
+      on the operative words of Art. 24 alone. Second, a steward may not affix the CE marking
+      (Recital 19: 'they should not be permitted to affix the CE marking to the products with
+      digital elements whose development they support'). Third - and this changed on 2 July 2025 -
+      Art. 64(10), point (b), names 'any infringement of this Regulation by open-source software
+      stewards', and the corrigendum published as OJ L, 2025/90555 of 2 July 2025 corrected the
+      chapeau of Art. 64(10) so that the derogation runs from paragraph 2 rather than from paragraph
+      3. Art. 64(2), the tier that covers Annex I and Arts. 13 and 14, is therefore inside the range
+      of paragraphs whose administrative fines that point disapplies; the corrected operative words
+      are quoted in full in entry (6) and are not repeated here. Recital 120 describes the same two
+      points in its closing sentence, quoted here in full because this entry sits on the base
+      Official Journal text and the consolidated rendering carries no recitals: 'Given that
+      administrative fines do not apply to microenterprises or small enterprises for a failure to
+      meet the 24-hour deadline for the early warning notification of actively exploited
+      vulnerabilities or severe incidents having an impact on the security of the product with
+      digital elements, nor to open-source software stewards for any infringement of this
+      Regulation'. The disagreement between that recital and the operative provision which this
+      entry recorded until 2026-09-07 does not exist. Nothing in this rule's detection turns on the
+      point either way: a steward is outside the duty this rule tests, so it never reaches the
+      question of a fine. Recital 19 confines the category to 'legal persons who provide support on
+      a sustained basis for the development of such products which are intended for commercial
+      activities, and who play a main role in ensuring the viability of those products', naming
+      'certain foundations as well as entities that develop and publish free and open-source
+      software in a business context'. A solo developer or a small team publishing their own
+      application is a manufacturer if they market it under their own name in the course of a
+      commercial activity, and is outside the Regulation entirely if they do not; they are not
+      stewards of their own product."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-09-07
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Art. 64(2): 'Non-compliance with the
+      essential cybersecurity requirements set out in Annex I and the obligations set out in
+      Articles 13 and 14 shall be subject to administrative fines of up to EUR 15 000 000 or, if the
+      offender is an undertaking, up to 2,5 % of the its total worldwide annual turnover for the
+      preceding financial year, whichever is higher' (the 'of the its' is the Official Journal
+      wording). Art. 64(5)(c) requires due regard to 'the size, in particular with regard to
+      microenterprises and small and medium sized-enterprises, including start-ups, and the market
+      share of the economic operator'. Art. 64(10) IS QUOTED HERE FROM THE CONSOLIDATED TEXT, CELEX
+      02024R2847-20241120, which carries the correction made by the corrigendum published as OJ L,
+      2025/90555 of 2 July 2025; the base Official Journal text is not corrected in place and still
+      serves the uncorrected chapeau, which is why this entry's url is the consolidated one. The
+      chapeau reads 'By way of derogation from paragraphs 2 to 9, the administrative fines referred
+      to in those paragraphs shall not apply to the following:', and the two points read '(a)
+      manufacturers that qualify as microenterprises or small enterprises with regard to any failure
+      to meet the deadline referred to in Article 14(2), point (a), or Article 14(4), point (a); (b)
+      any infringement of this Regulation by open-source software stewards.' The corrigendum
+      replaced the words paragraphs 3 to 9 with paragraphs 2 to 9 in that chapeau, and this entry
+      quoted the uncorrected range and reasoned from it until 2026-09-07. WHAT THE CORRECTED
+      PARAGRAPH PROVIDES, ON BOTH POINTS. Paragraph 2 is inside the range, so the administrative
+      fines the paragraph disapplies include those of Art. 64(2) - the tier of EUR 15 000 000 or 2,5
+      % that covers Annex I and Arts. 13 and 14, and the only tier this rule's subject matter can
+      attract - as well as those of Art. 64(3) and Art. 64(4). Point (a) is bounded twice, by
+      addressee and by subject matter: it reaches a manufacturer that qualifies as a microenterprise
+      or a small enterprise, and within that only a failure to meet the 24-hour early warning of
+      Art. 14(2), point (a), or Art. 14(4), point (a). It reaches no other obligation of Art. 14 and
+      not the duty this rule tests. Point (b) is bounded by addressee alone: it reaches any
+      infringement of the Regulation by an open-source software steward, which is a party the duty
+      this rule tests does not attach to in the first place - see entry (5). Recital 120 describes
+      both points in its closing sentence and now reads with the operative provision rather than
+      against it, so the adjudicating agent has no tension to report; that instruction was removed
+      on 2026-09-07. Art. 64(1) leaves the rules on penalties to the Member States, so what a
+      national authority may impose outside these administrative fines is not settled by Art.
+      64(10). Art. 64 sits in Chapter VII (Arts. 63 to 65) and therefore applies from 11 December
+      2027 under Art. 71(2)."
+    url: http://publications.europa.eu/resource/celex/02024R2847-20241120
+    checked_at: 2026-09-07
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Cyber Resilience Act (Regulation (EU) 2024/2847), Recital 76: 'Manufacturers of products with
+      digital elements should put in place coordinated vulnerability disclosure policies to
+      facilitate the reporting of vulnerabilities by individuals or entities either directly to the
+      manufacturer or indirectly, and where requested anonymously, via CSIRTs designated as
+      coordinators for the purposes of coordinated vulnerability disclosure in accordance with
+      Article 12(1) of Directive (EU) 2022/2555. Manufacturers' coordinated vulnerability disclosure
+      policy should specify a structured process through which vulnerabilities are reported to a
+      manufacturer in a manner allowing the manufacturer to diagnose and remedy such vulnerabilities
+      before detailed vulnerability information is disclosed to third parties or to the public.
+      Moreover, manufacturers should also consider publishing their security policies in
+      machine-readable format. Given the fact that information about exploitable vulnerabilities in
+      widely used products with digital elements can be sold at high prices on the black market,
+      manufacturers of such products should be able to use programmes, as part of their coordinated
+      vulnerability disclosure policies, to incentivise the reporting of vulnerabilities by ensuring
+      that individuals or entities receive recognition and compensation for their efforts. This
+      refers to so-called 'bug bounty programmes'.' The single quotation marks around the phrase bug
+      bounty programmes are the Journal's own and are part of the quotation; CORRECTION 2026-08-03,
+      this entry re-rendered them as double quotation marks until the quote-verification gate was
+      extended to rule cites, and that re-rendering truncated the verified span to its first 442
+      characters of about 1,330, so do not restore it. Two things follow. (i) The machine-readable
+      form the ecosystem settled on is RFC 9116 (A File Format to Aid in Security Vulnerability
+      Disclosure, IETF, April 2022), which defines the '/.well-known/security.txt' file and its
+      Contact, Policy, Expires and Canonical fields. RFC 9116 is not EU law and creates no
+      obligation; it is named here because a repository that publishes one has answered Annex I Part
+      II point (6) in the exact form Recital 76 encourages, and because it is the first thing
+      context question 2 sends the adjudicating agent to look for. It was also what the rule's first
+      `guard_missing` branch recognised until guards were removed from every rule on 2026-07-27; the
+      shape did not stop being evidence, it stopped being a suppression. (ii) A bug-bounty programme
+      is not adjacent to the point (5) policy, it is expressly a permitted part OF it. So a
+      project's own programme page on a coordinated-disclosure platform is evidence of the
+      instrument itself and not merely of a related activity, and context question 2 and the
+      remediation template both say so. The first draft recorded the opposite while deleting a prose
+      '[Bb]ug [Bb]ounty' detector branch: that deletion was right on its measurement - a sentence
+      mentioning somebody else's programme is not evidence of your own - and wrong on its law."
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2027-12-11
+sunset: null
+superseded_by: null
+severity: medium
+rule_confidence: 0.2
+detector:
+  engine: builtin-regex
+  shared_vocabulary:
+    - payment_sdk_names_cra_scope
+  match:
+    - ^\s*"bin"\s*:|^\s*"publishConfig"\s*:|^\s*"private"\s*:\s*false|^\s*"productName"\s*:|^\[project\]|^\[package\]|^\[tool\.poetry\]|^\[project\.scripts\]|^\[tool\.poetry\.scripts\]|^\s*scripts\s*=\s*\{|^\s*package\.name\s*=|Gem::Specification|<artifactId>|<packaging>|^publish_to:|^\s*applicationId
+      |CFBundleIdentifier|com\.android\.application|^\s*"type"\s*:\s*"(?:project|library|metapackage|composer-plugin)"|^\s*"psr-4"\s*:|^\s*"psr-0"\s*:|^\s*"laravel"\s*:\s*\{
+    - ^FROM[ \t]+(?:--platform=\S+[ \t]+)?[$\w{][^\s;]*(?:[ \t]+(?:AS|as|As)[ \t]+[\w.$-]+)?[
+      \t]*\\?[ \t]*(?:#[^\x00]*)?$|^ENTRYPOINT|^CMD\s+[\["'\w/]
+    - npm publish|yarn publish|pnpm publish|cargo publish|twine upload|poetry publish|maturin
+      publish|gh release
+      create|goreleaser|semantic-release|electron-builder|electron-forge|@tauri-apps|tauri
+      build|fastlane|docker push|docker buildx|docker/build-push-action|jreleaser|flutter build
+    - "npm (?:i|install) (?:-g|--global) |pnpm add -g |yarn global add |pipx install |uvx |docker
+      run |docker pull |docker compose up|docker-compose up|brew install |go install |cargo install
+      |helm install |winget install |choco install |snap install |flatpak install |composer
+      create-project|composer (?:global )?require |php artisan serve|php artisan
+      [a-z][A-Za-z0-9_.:-]*:install|php -S |php bin/console "
+    - "[\"'@]stripe(?:/|[\"'])|(?&payment_sdk_names_cra_scope)|checkout\\.sessions\\.create"
+    - ^\[env:|^\[platformio\]|^\s*(?:project|PROJECT|Project)\s*\(|esp_ota_|esptool|idf\.py |west
+      (?:build|sign|flash)|mcumgr |dfu-util |arduino-cli
+      (?:compile|upload)|CONFIG_BOOTLOADER|(?<![\w])OTA_UPDATE|firmware\.(?:bin|hex|uf2|elf)
+  match_without:
+    - ^\s*(?:COPY|ADD)\s
+    - \b(?:SELECT|JOIN|WHERE|GROUP BY|ORDER BY|HAVING)\b
+context_questions:
+  - "Does the Cyber Resilience Act reach what this repository supplies at all? Do not answer that
+    from Art. 2(1) alone and do not re-derive the test here. Article 2 has eight paragraphs: the
+    first brings a product in, and the other seven take it back out or limit what applies - Art.
+    2(2) for products covered by the medical devices, in vitro diagnostic devices or motor vehicle
+    Regulations, Art. 2(3) for products certified under the civil aviation Regulation, Art. 2(4) for
+    marine equipment, Art. 2(5) for a delegated act limiting or excluding application, Art. 2(6) for
+    spare parts replacing identical components, Art. 2(7) for products developed or modified
+    exclusively for national security or defence and products designed to process classified
+    information, and Art. 2(8) for information whose disclosure would be contrary to essential
+    security interests. The whole test, decomposed into 37 limbs with the operative words of each
+    paragraph quoted, is the shared scope gate `rules/gates/cra-scope.yaml`, and a scan evaluates
+    that gate rather than leaving you to open a 37-limb file cold. Read the scan output first, in
+    this order. (a) On this candidate, `depends_on_applicability`: one entry per checklist that
+    names the gate - `cra-product-information-13-8` and `cra-sbom-annex-i-ii-1` today, both
+    reporting the same gate, so two identical entries are one verdict and not two - each carrying
+    `verdict` (applies, likely-applies, does-not-apply or unresolved) and `because`. (b) At the top
+    level of the findings file, `applicability`: the same assessment in full, with every limb and
+    its state, the evidence for and against each, `unresolved_limbs` naming what nothing settled,
+    and `contradictions` where the person running the scan declared one thing and the tree shows
+    another. If the verdict is does-not-apply, record that and stop: the duty this rule tests does
+    not attach. If it is unresolved or likely-applies, work through the limbs named in
+    `unresolved_limbs` using the questions the gate itself states, and note that every Art. 2(2) to
+    2(8) limb turns on a fact about what the product IS - a medical device, a vehicle component,
+    defence software - which is asked of the person running the scan or read from their declared
+    documents, and is never inferred from vocabulary in the tree. If no applicability information
+    reached you, say so plainly and answer the limbs by asking, rather than substituting a scope
+    analysis of your own. Then the part that is specific to this rule and that the gate cannot do
+    for you: quote what the repository actually ships - a container image, a signed desktop or
+    mobile bundle, a published package, a firmware image - and quote the evidence that it is or is
+    not monetised, since the matched lines carried under this candidate are where the supply and
+    commercial-activity limbs of the gate get their code evidence. Where what ships is a service the
+    team hosts itself, do not stop there: who operates the servers is not this Regulation's test.
+    Art. 3(1) makes a product with digital elements 'a software or hardware product and its remote
+    data processing solutions, including software or hardware components being placed on the market
+    separately', and Recital 11 says that approach secures such products 'in their entirety by their
+    manufacturers, irrespective of whether data is processed or stored locally on the user's device
+    or remotely by the manufacturer'. Recital 12 conditions itself in its own first sentence - cloud
+    solutions are remote data processing solutions 'only if they meet the definition laid down in
+    this Regulation' - and introduces its inside case with 'For example', so the operative test
+    stays Art. 3(2): data processing at a distance 'for which the software is designed and developed
+    by the manufacturer, or under the responsibility of the manufacturer, and the absence of which
+    would prevent the product with digital elements from performing one of its functions'. Ask that
+    as two cumulative questions and quote your evidence for each. (a) Does this same party also make
+    available something somebody else installs, runs or flashes, or a component placed on the market
+    separately - a published package or library, a container image, a desktop or mobile bundle, a
+    browser extension, a device, a firmware image? (b) Is the hosted service's software built by
+    that party or under its responsibility, and would its absence stop one of that thing's functions
+    from working? Where both are yes, the hosted service is inside the scope as that product's
+    remote data processing solution, and Recital 11 states this audience's ordinary case in terms:
+    'a mobile application requires access to an application programming interface or to a database
+    provided by means of a service developed by the manufacturer. In such a case, the service falls
+    within the scope of this Regulation as a remote data processing solution.' Say in the same
+    breath how far that reaches, because a yes here is narrower than it looks: Recital 11 draws
+    processing at a distance in 'only in so far as it is necessary for a product with digital
+    elements to perform its functions', and adds that the requirements 'do therefore not entail
+    technical, operational or organisational measures aiming to manage the risks posed to the
+    security of a manufacturer's network and information systems as a whole', so the rest of the
+    team's infrastructure does not come with it. What Recital 12 places outside is narrower than
+    self-hosting: 'cloud services designed and developed outside the responsibility of a
+    manufacturer of a product with digital elements', and 'websites that do not support the
+    functionality of a product with digital elements'. Where (a) is no, so that nothing is supplied
+    beyond the hosted service itself, say so plainly: software that executes on the manufacturer's
+    own servers and is merely accessed by the user is not, on that basis alone, a product with
+    digital elements. The Commission's guidance on the application of the Regulation reads Recitals
+    11 and 12 so, and names as the typical case a web application, a progressive web app included,
+    that users reach only through a web browser (C(2026) 5252 final of 27.7.2026, Annex, paragraph
+    21 and Example 5; the Commission's reading of the recitals, not the text). That answer belongs
+    to the gate's `is-a-product-with-digital-elements` limb, whose 'no' closes the gate and which
+    only the person running the scan or their declared documents settle: report the limb, the answer
+    the evidence points to and that evidence, and let the gate's verdict be what ends the enquiry;
+    the only stop this question carries is the does-not-apply one above. Directive (EU) 2022/2555
+    may reach the hosted service whichever way this comes out - Recital 12 routes cloud computing
+    services and cloud service models, 'such as Software as a Service (SaaS), Platform as a Service
+    (PaaS) or Infrastructure as a Service (IaaS)', to that Directive, and names entities at or above
+    the medium-sized-enterprise thresholds of Recommendation 2003/361/EC - and it is a different
+    instrument with different duties, not a lighter version of this one."
+  - "Does this project publish a coordinated vulnerability disclosure policy AND a contact route a
+    reporter could actually use? This is the question the finding turns on, and the detector does
+    not answer any part of it - it only established that something is supplied from here. Until
+    2026-07-27 a `guard_missing` clause answered it inside layer 1 and deleted the candidate when it
+    thought the answer was yes; that mechanism is gone, so answer it yourself, by reading files.
+    Look in every place a reporter would look, in this order: `SECURITY.md` at the repository root,
+    `docs/SECURITY.md`, `.github/SECURITY.md`, `/.well-known/security.txt` (or `public/`, `static/`,
+    `apps/docs/public/` copies of it), a `## Security` section of the README or CONTRIBUTING, and
+    any security page the README links to. What counts as a policy: a document that names where a
+    report goes and what happens to it - Recital 76 calls it 'a structured process through which
+    vulnerabilities are reported to a manufacturer in a manner allowing the manufacturer to diagnose
+    and remedy such vulnerabilities before detailed vulnerability information is disclosed to third
+    parties or to the public'. What counts as a contact route: an RFC 9116 `Contact:` or `Policy:`
+    field whose value is a security address or a security page; a monitored mailbox such as
+    `security@`, `psirt@`, `secalert@`, `secops@`, `infosec@`, `appsec@`, `cve@`, `disclosure@` or
+    `responsible-disclosure@` on the project's own domain; a GitHub private vulnerability reporting
+    form at `/security/advisories/new` or the rendered `/security/policy` page; or the project's own
+    programme page on a coordinated-disclosure platform (hackerone.com, bugcrowd.com, intigriti.com,
+    yeswehack.com, huntr.com, openbugbounty.org, hackenproof.com) - Recital 76 puts bug-bounty
+    programmes expressly inside the point (5) policy, so a programme page is the instrument itself.
+    What does NOT count: a placeholder such as `security@example.com` or an address at a your-domain
+    placeholder host, which no report reaches; a `SECURITY.md` that lists only supported versions
+    and no route in; a dependabot configuration or a CI security-scanning job, which are inbound
+    hygiene and not an intake path; a `# Security` heading with no address or link under it; and
+    `/security/advisories` without `/new`, which is where fixed advisories are published (Annex I
+    Part II point (4)) rather than where reports arrive. Quote the file and the line you relied on,
+    or say that you looked in all of those places and found nothing."
+  - "Is the policy somewhere this scan could not see? This is the known and expected reason for a
+    candidate here to be wrong, and it must be checked before anything else is concluded. Look in
+    this order. (a) An organisation-level `.github` community-health repository: GitHub serves a
+    SECURITY.md from `<org>/.github` to every repository in the organisation that lacks its own, so
+    the policy can be entirely absent from this tree and still be published on this repository's
+    Security tab. (b) A same-repository `.github/SECURITY.md` or `.github/SECURITY.rst`: this is one
+    of the three locations GitHub documents. The scanner CAN read it as of 2026-07-27 - the walker
+    descends into `.github` - but `.rst` is not in SCAN_EXTS, and a policy in any other unread
+    format under that directory is still invisible, so check the filesystem directly before
+    concluding. One such case: a security contact address published in an issue template under
+    `.github/ISSUE_TEMPLATE/`. (c) `/.well-known/security.txt` served by the deployed site rather
+    than committed here - look at the deploy configuration, the CDN or reverse-proxy rules, the
+    static-hosting redirects and any `public/` or `static/` directory of a separate website
+    repository. (d) A separate documentation, marketing or handbook repository, or a security page
+    on the product's own domain, linked from the README or the docs. (e) The org's other
+    conventions: a `SECURITY` section in CONTRIBUTING.md, a security page in a docs site, or a
+    vulnerability-reporting address in a support or trust centre. Say which of these you checked and
+    what you found. If a policy exists anywhere a user could reasonably reach from the product,
+    record that the candidate does not stand and stop."
+  - "If you found an address or a link, is it the manufacturer's own intake path or somebody else's?
+    This question exists for the mirror case: a repository that documents how to report
+    vulnerabilities to an upstream dependency, a registry or a hosting provider has published
+    nothing about its own product. Quote the address or URL and say whose domain, organisation or
+    programme it belongs to. Annex I Part II point (6) asks for a contact address for
+    vulnerabilities discovered 'in the product with digital elements' - the one this repository
+    supplies."
+  - "Which of the two duties is unmet - the policy or the address? They are separate. Annex I Part
+    II point (5) requires the manufacturer to 'put in place and enforce a policy on coordinated
+    vulnerability disclosure', which is a documented process for receiving a report, triaging it and
+    coordinating the timing of public disclosure; Recital 76 describes it as 'a structured process
+    through which vulnerabilities are reported to a manufacturer in a manner allowing the
+    manufacturer to diagnose and remedy such vulnerabilities before detailed vulnerability
+    information is disclosed to third parties or to the public'. Point (6) requires the address
+    through which reports arrive. Annex II point 2 requires both to travel with the product: 'the
+    single point of contact where information about vulnerabilities ... can be reported and
+    received, and where the manufacturer's policy on coordinated vulnerability disclosure can be
+    found'. A repository can satisfy one and not the other - a bare `security@` line in a README is
+    an address with no process behind it, and an internal handbook page is a process nobody outside
+    can reach. Report which limb is missing rather than reporting a single undifferentiated gap."
+  - "Is the party behind this repository a manufacturer or an open-source software steward? They are
+    different addressees with different duties. Art. 3(13) makes a manufacturer anyone who develops
+    a product with digital elements 'and markets them under its name or trademark, whether for
+    payment, monetisation or free of charge'. Art. 3(14) makes a steward 'a legal person, other than
+    a manufacturer' that systematically sustains the development of free and open-source software
+    'intended for commercial activities' and ensures its viability - Recital 19 names foundations
+    and entities publishing open source in a business context. A steward owes only the Art. 24(1)
+    documented cybersecurity policy plus cooperation with market surveillance; it does not owe Annex
+    I Part II point (5), point (6) or Annex II. On administrative fines, keep to what Art. 64(10)
+    provides and say no more than it does. Point (b) disapplies 'the administrative fines referred
+    to in those paragraphs' for 'any infringement of this Regulation by open-source software
+    stewards', and the chapeau - as corrected by the corrigendum published as OJ L, 2025/90555 of 2
+    July 2025, which is the reading the consolidated text carries - derogates from paragraphs 2 to
+    9. Paragraph 2 is the tier that covers Annex I and Arts. 13 and 14, so it is inside the
+    derogation, and Recital 120's closing sentence reads with the article rather than against it.
+    This question is nevertheless about the duty and not about the fine: report that the Annex I
+    Part II point (5) and point (6) duties and the Annex II point 2 duty do not attach to a steward,
+    and leave what a national authority may impose to whoever asks about it, since Art. 64(1) leaves
+    the rules on penalties to the Member States. A team publishing its own application is not a
+    steward of that application. Where the repository belongs to a foundation sustaining somebody
+    else's ecosystem, record that this rule's duty is the wrong instrument and that Art. 24 is the
+    one to read."
+  - "What is the date position, and does it change what should be said to the reader? The duty this
+    rule tests applies from 11 December 2027 (Art. 71(2), first subparagraph). It is not among the
+    provisions the second subparagraph brings forward: only Art. 14 (11 September 2026) and Chapter
+    IV, Articles 35 to 51 (11 June 2026), move earlier. Art. 69(2) additionally grandfathers
+    products placed on the market before 11 December 2027 unless they are substantially modified
+    from that date - and Art. 69(3) carves Art. 14 back out of that grandfathering, so the reporting
+    duty reaches products already shipped. Placing on the market is per individual product (Recital
+    38), so the grandfathering works differently for the two kinds of product: standalone software
+    already released takes this duty on its next substantial modification on or after 11 December
+    2027 (and a new product or variant first released from that date takes it then), while for
+    hardware and firmware every unit placed on the market from 11 December 2027 must comply, of an
+    old model or a new one. Nothing here is chargeable today. State the finding as preparation for a
+    dated obligation, and note the operational link if it applies: the Art. 14(2)(a) early warning
+    is due within 24 hours of the manufacturer becoming aware of an actively exploited
+    vulnerability, and a manufacturer with no published address is unlikely to become aware from an
+    outside finder within that window. Art. 64(10), point (a), removes the administrative fines of
+    Art. 64(2) to (9) for microenterprises and small enterprises for missing that 24-hour deadline,
+    and equally for missing the 24-hour early warning of a severe incident under Art. 14(4), point
+    (a), which is the second deadline the point names and which this sentence omitted until
+    2026-09-07. It reaches those two deadlines and nothing else."
+  - Is there an existing process that is real but simply not published where a scanner or a finder
+    would look? A team may triage reports through a private mailing list, a paid platform they have
+    not linked, an internal runbook, or a support contract, and Annex II point 2 is about where a
+    user can find that process, not about whether it exists. Quote whatever internal evidence you
+    find - a triage runbook, an on-call rotation for security reports, an advisory history under the
+    repository's Security tab - and distinguish 'no process' from 'a process with no published
+    entrance', because the engineering work those two need is not the same.
+evidence_template: "{file}:{line} matched one of this rule's six branches: a manifest key that
+  declares a distributable artifact, a container image build instruction, a release or publication
+  automation token, an instruction telling a reader to install or run software on their own machine,
+  a payment SDK declared as a dependency or imported, or a firmware or embedded build declaration.
+  READ THE LOCATIONS BEFORE ACCEPTING THE HEADLINE. This rule raises one finding per repository, and
+  a candidate can rest entirely on the payment-SDK branch, which is evidence of commercial activity
+  and NOT of a product with digital elements. The install-instruction branch has a reading problem
+  of its own: a `docker run` or `brew install` line in a README can be telling the reader to fetch
+  somebody else's artifact. So the detector did not establish that this repository supplies a
+  product with digital elements; that is context question 1, answered against the shared scope gate
+  and never inferred from these lines. It says nothing about whether a disclosure policy exists
+  either: this detector does not look for one. Read context question 2 and check `SECURITY.md`,
+  `.github/SECURITY.md`, `/.well-known/security.txt`, the README security section and any linked
+  security page - and, because the scan reads this repository only, the organisation's
+  `<org>/.github` community-health repository and the product website as well - before treating this
+  as a gap"
+remediation_template: >
+  This is a candidate for review against CRA (Regulation (EU) 2024/2847) Annex I, Part II,
+
+  points (5) and (6) and Annex II, point 2, not a determination about this repository. What the scan
+
+  established is narrower than it may look: a line here matched one of six patterns the rule reads
+  as
+
+  evidence that something is supplied from this repository, and one of those six - a payment SDK
+
+  declared or imported - is evidence of monetisation rather than of a distributed artifact. It did
+
+  NOT establish that what you supply is a product with digital elements, and it did NOT check
+  whether
+
+  you publish a disclosure policy. Both are the adjudicating agent's to settle, and if you already
+
+  publish a policy this candidate closes with no change.
+
+  Check first whether the policy already exists. In the repository: `SECURITY.md` at the root, in
+
+  `docs/` or in `.github/`; `/.well-known/security.txt`; a security section in the README or
+
+  CONTRIBUTING. Outside it, where no single-repository scan can look: an organisation-level
+
+  `<org>/.github` repository serves a SECURITY.md to every repository in the organisation that lacks
+
+  its own; `/.well-known/security.txt` is frequently served by the deployed site rather than
+
+  committed; and a security page on the product's own domain is in no repository at all. If any of
+
+  those applies, nothing needs to change here.
+
+  What does not close it: a `SECURITY.md` listing only supported versions, a dependabot
+
+  configuration, a CI security-scanning job, or a `# Security` heading with no address or link under
+
+  it. Those are inbound hygiene. Points (5) and (6) are about a route in for somebody outside.
+
+  Dates, so the work can be scheduled rather than rushed. The two Annex I Part II duties and the
+
+  Annex II accompanying-information duty apply from 11 December 2027 (Art. 71(2)): to every hardware
+
+  unit placed on the market from that date, and to software first released, or substantially
+
+  modified, from that date (Art. 69(2)). What applies
+
+  from 11 September 2026 is Art. 14 alone: an early warning to the coordinating CSIRT and ENISA
+
+  within 24 hours of becoming aware of an actively exploited vulnerability, a fuller notification
+
+  within 72 hours, and a final report no later than 14 days after a corrective or mitigating
+
+  measure is available (Art. 14(2)); for a severe incident having an impact on the security of the
+
+  product, the same 24-hour early warning and 72-hour notification, and a final report within one
+
+  month of that notification (Art. 14(4)). Art. 69(3) applies that reporting duty to products
+
+  already on the market. The connection to this finding is practical: the 24-hour clock starts on
+  awareness, and
+
+  an outside finder with no address to write to is a slow way to become aware.
+
+  Two artifacts close the gap, and they are separate requirements:
+
+  1. The policy - point (5). A SECURITY.md at the repository root, in `docs/`, or in `.github/`,
+     stating where to send a report, what a reporter can expect (acknowledgement time, triage,
+     status updates), what is in and out of scope, and how disclosure timing is coordinated before
+     details become public. GitHub's private vulnerability reporting, a platform programme, or a
+     plain mailbox all work as the intake; what point (5) asks for is that a process exists and is
+     enforced, and Recital 76 describes it as a structured process that lets the manufacturer
+     diagnose and remedy before details reach the public.
+  2. The address - point (6). A monitored mailbox on the product's own domain - `security@` is the
+     commonest spelling, `psirt@`, `secalert@`, `secops@`, `infosec@`, `appsec@` and
+     `responsible-disclosure@` all work as well - or the link to whichever intake channel the policy
+     names: GitHub's private reporting form at `/security/advisories/new`, or your own programme page
+     on a coordinated-disclosure platform such as hackerone.com, bugcrowd.com, intigriti.com,
+     yeswehack.com, huntr.com, openbugbounty.org or hackenproof.com. Recital 76 puts bug-bounty
+     programmes expressly inside the point (5) policy, so a programme page is part of the instrument
+     and not a substitute for it. Do not ship a placeholder: `security@example.com` in a template is
+     an address no report reaches. Recital 76 also suggests publishing the policy in machine-readable
+     form, which in practice means an RFC 9116 `/.well-known/security.txt` carrying `Contact:` and
+     `Policy:` fields, served from the product's domain.
+  Annex II point 2 then requires the single point of contact and the location of the policy to
+
+  travel with the product itself - in the README, the release notes, the store listing or the
+
+  in-product help - not only to sit in the repository. Art. 13(17) adds that the contact must be
+
+  easily identifiable by users and must not be limited to automated tools.
+
+  Where the repository belongs to a foundation or entity that sustains open-source software it does
+
+  not itself market, read Art. 24 instead: a steward owes a documented cybersecurity policy and
+
+  cooperation with market surveillance, and none of the three provisions above.
+fingerprint_spec: project
+reading_class:
+  class: existence
+  elements:
+    - name: disclosure_policy
+      question: 5
+      text: a policy on coordinated vulnerability disclosure - "put in place and enforce a policy on
+        coordinated vulnerability disclosure" (Annex I Part II point (5))
+    - name: report_address
+      question: 5
+      text: the address through which reports arrive (Annex I Part II point (6)); Annex II point 2
+        requires both to travel with the product

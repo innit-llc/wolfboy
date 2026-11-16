@@ -1,0 +1,331 @@
+id: eu-accessibility-001
+pack: eu-accessibility
+short_name: Page markup failing a basic accessibility check
+problem_line:
+  text: Page markup fails a basic accessibility check
+fix_line: Make the change the matched check names, such as alt text, a lang attribute, a keyboard
+  path or an accessible name.
+title: Markup, template or object-literal line matching a source-decidable accessibility check (EAA
+  candidate)
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "European Accessibility Act, Directive (EU) 2019/882, Art. 13(1) read with Art. 4(1) and 4(3)
+      and Annex I Section III(c) — a Directive, so the enforceable duty is the national measure
+      transposing it (Art. 31(1): Member States adopt and publish by 28 June 2022; Art. 31(2): they
+      apply those measures from 28 June 2025), not the Directive as such. Addressee: economic
+      operators (Art. 3(21)) that are service providers (Art. 3(4): 'any natural or legal person who
+      provides a service on the Union market or makes offers to provide such a service to consumers
+      in the Union'), and only for the services listed in Art. 2(2) provided to consumers (Art.
+      3(22)) after 28 June 2025 — (a) electronic communications services, (b) services providing
+      access to audiovisual media services, (c) listed elements of air, bus, rail and waterborne
+      passenger transport services, (d) consumer banking services, (e) e-books and dedicated
+      software, (f) e-commerce services (Art. 3(30): 'services provided at a distance, through
+      websites and mobile device-based services by electronic means and at the individual request of
+      a consumer with a view to concluding a consumer contract'). Not every website owner: a
+      business-to-business tool, an internal application, a developer library or a component package
+      is outside Art. 2(2). Art. 13(1): 'Service providers shall ensure that they design and provide
+      services in accordance with the accessibility requirements of this Directive.' Annex I Section
+      III(c) states the substantive requirement this rule tests: 'making websites, including the
+      related online applications, and mobile device-based services, including mobile applications,
+      accessible in a consistent and adequate way by making them perceivable, operable,
+      understandable and robust'. EN 301 549 is the benchmark European practice uses for that
+      wording, but no harmonised standard has been cited in the Official Journal for this Directive,
+      so EN 301 549 confers no presumption of conformity under it."
+    url: https://eur-lex.europa.eu/eli/dir/2019/882/oj/eng
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "Directive (EU) 2019/882 Art. 4(5): 'Microenterprises providing services shall be exempt from
+      complying with the accessibility requirements referred to in paragraph 3 of this Article and
+      any obligations relating to the compliance with those requirements.' Art. 3(23) defines a
+      microenterprise as 'an enterprise which employs fewer than 10 persons and which has an annual
+      turnover not exceeding EUR 2 million or an annual balance sheet total not exceeding EUR 2
+      million'. Recital 70 explains that demanding even the Art. 14 proportionality assessment from
+      a microenterprise providing services would itself be a disproportionate burden, which is why
+      the exemption for services is outright. Note the asymmetry: Art. 4(5) exempts microenterprises
+      providing SERVICES only; microenterprises dealing with products get the lighter regime of Art.
+      14(4), not an exemption. Headcount and turnover are not repository facts, so this derogation
+      is settled outside the scan. Reference only: this entry narrows the rule's reach and does not
+      establish the obligation it tests."
+    url: https://eur-lex.europa.eu/eli/dir/2019/882/oj/eng
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Directive (EU) 2019/882 Art. 14(1): the accessibility requirements referred to in Art. 4
+      'shall apply only to the extent that compliance: (a) does not require a significant change in
+      a product or service that results in the fundamental alteration of its basic nature; and (b)
+      does not result in the imposition of a disproportionate burden on the economic operators
+      concerned.' Art. 14(2) puts the assessment on the economic operator, against the criteria in
+      Annex VI for point (b); Art. 14(3) requires that assessment to be documented and kept for five
+      years and produced to the authorities on request; Art. 14(5) requires a service provider
+      relying on point (b) to renew the assessment when the service is altered, when the authorities
+      ask, and in any event at least every five years; Art. 14(6) removes reliance on point (b)
+      where the accessibility work was funded from sources other than the operator's own resources.
+      Reference only: this entry is the derogation branch of the finding, not the source of the
+      obligation the rule tests."
+    url: https://eur-lex.europa.eu/eli/dir/2019/882/oj/eng
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Tribunal judiciaire de Caen, ordonnance de refere of 4 June 2026, apiDV and Droit Pluriel
+      (supported by Interet a Agir) v Carrefour France — as reported by the claimant associations
+      and the French trade press, Carrefour France was ordered to bring the carrefour.fr website and
+      the Carrefour mobile application into full conformity with the RGAA within six months, under
+      an astreinte of EUR 500 per day, together with EUR 10,000 in damages; a measured RGAA
+      conformity rate of 71.21% was held not to discharge the duty, the court treating digital
+      accessibility as an obligation of result ('le site de e-commerce concerne ne peut pas etre
+      seulement un peu accessible, il doit l'etre totalement'). Decided under the French
+      transposition of Directive (EU) 2019/882 (ordonnance n. 2023-859 of 6 September 2023 and
+      decret n. 2023-931 of 9 October 2023, amending the Code de la consommation), which is the
+      point: enforcement runs on the national measure. Verification caveat: this account rests on
+      the parties' own publication and on secondary reporting, not on a published text of the order
+      obtained from a primary court database. Reference only — a national enforcement data point,
+      not the source of the obligation this rule tests."
+    url: https://droitpluriel.fr/decision-du-tribunal-judiciaire-de-caen-apidv-et-droit-pluriel-c-carrefour-une-decision-de-justice-majeure-pour-laccessibilite-numerique/
+    checked_at: 2026-07-27
+    jurisdiction: FR
+    supports_rule_condition: false
+effective_date: 2025-06-28
+severity: medium
+rule_confidence: 0.7
+applicability_preconditions:
+  - audience.consumer
+  - scope.eaa_listed_service
+detector:
+  engine: builtin-regex
+  structural_checks:
+    - accessibility-elements-v1
+  vocabulary:
+    generic_elements:
+      - div
+      - span
+      - li
+      - td
+      - th
+      - p
+      - h1
+      - h2
+      - h3
+      - h4
+      - h5
+      - h6
+    pointer_handlers_jsx:
+      - onClick
+      - onMouseDown
+      - onPointerDown
+    pointer_handlers_markup:
+      - onclick
+      - "@click"
+      - v-on:click
+      - on:click
+      - x-on:click
+      - (click)
+      - onmousedown
+      - "@mousedown"
+      - v-on:mousedown
+      - on:mousedown
+      - x-on:mousedown
+      - (mousedown)
+      - onpointerdown
+      - "@pointerdown"
+      - v-on:pointerdown
+      - on:pointerdown
+      - x-on:pointerdown
+      - (pointerdown)
+      - "@@click"
+      - "@@mousedown"
+      - "@@pointerdown"
+    key_handlers:
+      - onKey
+      - onkey
+      - "@key"
+      - v-on:key
+      - on:key
+      - x-on:key
+      - (key
+    icon_elements:
+      - i
+      - em
+      - span
+      - svg
+      - img
+    name_attributes:
+      - aria-label
+      - aria-labelledby
+      - title
+    presentation_attributes:
+      - role
+      - aria-hidden
+  match:
+    - <img(?![-\w])(?!.*(\balt\b|aria-hidden|\srole\s*=)).*?(?<!=)>
+    - <html(?![-\w])(?!.*\blang\b).*?(?<!=)>
+    - (?<!(?:[-\w]|\bthis\.))tab[Ii]ndex\s*=\s*["'{]?\s*[1-9][0-9]*
+    - <(?&generic_elements)(?![-\w])(?=[^>]*\s(?&pointer_handlers_jsx)\s*=)(?!.*(\srole\s*=|tab[Ii]ndex|(?&key_handlers))).*?(?<!=)>
+    - <(?&generic_elements)(?![-\w])(?=[^>]*\s(?&pointer_handlers_markup)[.=\s|])(?!.*(\srole\s*=|tab[Ii]ndex|(?&key_handlers))).*?(?<!=)>
+    - <a(?![-\w])(?=[^>]*\s((?&pointer_handlers_jsx)|(?&pointer_handlers_markup))[.=\s|])(?!.*(href|\srole\s*=|tab[Ii]ndex)).*?(?<!=)>
+    - <(button|a)(?![-\w])(?!.*(?&name_attributes)\s*=).*?(?<!=)>\s*<[A-Z][\w.]*[^>]*/>\s*</(button|a)>
+    - <(button|a)(?![-\w])(?!.*(?&name_attributes)\s*=).*?(?<!=)>\s*<(?&icon_elements)(?![-\w])[^>]*>\s*</(?&icon_elements)>\s*</(button|a)>
+    - ^\s*%img(?![-\w])(?!.*(\balt\b|\b(?&presentation_attributes)\b))(?!.*,\s*$)
+    - ^\s*%html(?![-\w])(?!.*\blang\b)(?!.*(?<!#)\{\s*[A-Za-z_][\w.]*\s*\})(?!.*,\s*$)
+    - (?:^\s*|[{,(]\s*)(?<!#\s.*)\[?\s*(?:tab[Ii]ndex|'tab[Ii]ndex'|"tab[Ii]ndex")\s*\]?\s*(?::|=>)\s*(?:[1-9][0-9]*|'[1-9][0-9]*'|"[1-9][0-9]*")\s*(?:[,;)\]}]|$)
+    - ^\s*(%(?&generic_elements)(?![-\w])|[.#][A-Za-z_])(?=.*(?<![-\w])(?&pointer_handlers_markup)['"]?\s*(?::|=>|=))(?!.*(\brole\b|tab[Ii]ndex|(?&key_handlers)))(?!.*,\s*$)
+    - ^\s*%a(?![-\w])(?=.*(?<![-\w])(?&pointer_handlers_markup)['"]?\s*(?::|=>|=))(?!.*(\bhref\b|\brole\b|tab[Ii]ndex))(?!.*,\s*$)
+    - ^\s*%(button|a)(?![-\w])(?!.*\b(?&name_attributes)\b)[^<]*<(?&icon_elements)(?![-\w])[^>]*>\s*</(?&icon_elements)>\s*$
+    - ^\s*(%(?&generic_elements)(?![-\w])|%a(?![-\w])|[.#][A-Za-z_])(?=.*action['"]?\s*(?::|=>)\s*['"](click|mousedown|pointerdown)->)(?!.*(\brole\b|tab[Ii]ndex|\bhref\b|(?&key_handlers)))(?!.*,\s*$)
+    - <IMG(?![-\w])(?!.*(\b(?:ALT|alt)\b|(?:ARIA|aria)-(?:HIDDEN|hidden)|\s(?:ROLE|role)\s*=)).*?(?<!=)>
+    - <HTML(?![-\w])(?!.*\b(?:LANG|lang)\b).*?(?<!=)>
+    - <(?:DIV|SPAN|LI|TD|TH|P|H[1-6])(?![-\w])(?=[^>]*\s(?:ONCLICK|ONMOUSEDOWN|ONPOINTERDOWN)\s*=)(?!.*(\s(?:ROLE|role)\s*=|(?:TABINDEX|tab[Ii]ndex)|(?:ONKEY|onkey))).*?(?<!=)>
+    - <(?:BUTTON|A)(?![-\w])(?!.*(?:ARIA-LABEL|ARIA-LABELLEDBY|TITLE|aria-label|aria-labelledby|title)\s*=).*?(?<!=)>\s*<(?:I|EM|SPAN|SVG|IMG)(?![-\w])[^>]*>\s*</(?:I|EM|SPAN|SVG|IMG)>\s*</(?:BUTTON|A)>
+    - <%=[^%\n]*(?<![-\w])image_tag(?![-\w])(?![^\n]*\balt\b)
+    - <(?&generic_elements)(?![-\w])(?=[^>]*\suse:\w*(?:[Cc]lick|CLICK|[Pp]ress|PRESS|[Tt]ap|TAP|[Pp]ointer|POINTER|[Mm]ouse|MOUSE|[Dd]rag|DRAG|[Ss]wipe|SWIPE))(?!.*(\srole\s*=|tab[Ii]ndex|(?&key_handlers))).*?(?<!=)>
+    - <(?&generic_elements)(?![-\w])(?=[^>]*\s(?:v-on:|@)\[[A-Za-z_$][\w$]*\]\s*=)(?!.*(\srole\s*=|tab[Ii]ndex|(?&key_handlers))).*?(?<!=)>
+  match_without:
+    - ^\s*(//|\*|<!--|\{\s*/\*)
+    - \{\s*\.\.\.
+    - v-bind\s*=
+    - "[\"'`]\\s*<html"
+    - <(Link|NavLink)\b
+    - (preg_match|preg_replace|preg_split|new RegExp|RegExp\(|strip_tags)
+    - <(img|html)(?![-\w])(\[|\.\*|\\)
+    - ^\s*"[\w.-]+"\s*:\s*"<
+  path_without:
+    - (^|/)(__tests__|__mocks__|__fixtures__|__snapshots__|__stories__)/
+    - (^|/)(stories|\.storybook)/
+    - \.(?:story|e2e)\.[cm]?[jt]sx?$
+    - \.stories\.(vue|svelte|html?)$
+    - \.min\.(js|html?)$
+    - ^(README|CONTRIBUTING|CONTRIBUTORS|CHANGELOG|AGENTS|CLAUDE)[^/]*\.(md|mdx|txt)$
+    - ^\.github/([^/]+/)*(README|CONTRIBUTING|CONTRIBUTORS|CHANGELOG|AGENTS|CLAUDE)[^/]*\.(md|mdx|txt)$
+    - (^|/)(emails?|mail|mailer)/(?!.*\.(tsx|jsx|vue|svelte)$)
+    - (^|/)(emails?|mail|mailer)/([^/]*/)*[^/]*[Ee]mail[^/]*\.(tsx|jsx|vue|svelte)$
+    - (^|/)(jquery|yuilib|tcpdf|tinymce|htmlpurifier|phpspreadsheet|guzzlehttp|country-flag-icons)[^/]*/
+context_questions:
+  - "Is this product one of the services listed in EAA Art. 2(2), provided to consumers — an
+    e-commerce service (Art. 3(30): provided at a distance, through websites or mobile device-based
+    services, by electronic means and at the individual request of a consumer, with a view to
+    concluding a consumer contract), an electronic communications service, a service providing
+    access to audiovisual media services, a listed element of air, bus, rail or waterborne passenger
+    transport, a consumer banking service, or e-books and dedicated software? A business-to-business
+    tool, an internal admin console, a developer library, a CLI or a component package sits outside
+    Art. 2(2), and a candidate the person's answer places there is closed on scope. Whether the
+    product is one of these services, and whether it is offered to consumers, are facts about the
+    product that the person running the scan answers - the EAA service and Consumers questions, this
+    rule's two premises - and the code never decides them. Where the person has answered, take the
+    answer. Where either is open, quote what the repository shows - checkout or payment code, a
+    store listing, the stated audience - as corroboration or contradiction only, and write the
+    finding as waiting on the open question instead of closing it on scope."
+  - "Does the Art. 4(5) derogation reach this provider: is it a microenterprise, meaning (Art.
+    3(23)) an enterprise employing fewer than 10 persons and having an annual turnover not exceeding
+    EUR 2 million or an annual balance sheet total not exceeding EUR 2 million? Headcount and
+    financial figures are not repository facts and no scan can settle them, so record the question
+    as unresolved and put it to the team rather than assuming either way. Where the derogation does
+    apply, Art. 4(5) removes the Art. 4(3) service requirements outright and the candidate closes on
+    that ground. Note it exempts microenterprises providing services only — a microenterprise
+    dealing with products gets Art. 14(4), which is lighter documentation and not an exemption."
+  - "Is the template or component that produced this line shipped to end users of the service, or
+    does it render a developer or operator surface only — a design-system playground, an internal
+    dashboard, a build-time generator, an email body, a documentation preview? Trace the route, page
+    or entry point that renders it and quote it. A directory named examples/, demo/ or docs/ settles
+    nothing on its own: such directories are routinely deployed, and the path filter deliberately
+    leaves them in."
+  - Would remedying this defect engage EAA Art. 14 — a significant change resulting in the
+    fundamental alteration of the basic nature of the service (Art. 14(1)(a)), or a disproportionate
+    burden judged against the Annex VI criteria (Art. 14(1)(b))? Art. 14(2)-(3) put the assessment
+    and its documentation on the economic operator and require it to be kept for five years; Art.
+    14(5) requires a service provider relying on point (b) to renew it when the service is altered,
+    on request, and at least every five years; Art. 14(6) removes point (b) where the accessibility
+    work was funded from outside the operator's own resources. Record the answer as 'derogation
+    relied on, and here is the documented assessment' or as 'no such assessment was found', so the
+    finding can say 'exempt, but' where that is the truth. Adding an alt attribute, a lang attribute
+    or an aria-label rarely approaches either threshold; say so where that is the case here.
+  - Does the defect survive into what a user actually receives, or is the detector reading a
+    fragment? Check whether the accessible name arrives from a wrapper component, a higher-order
+    component, a directive or a parent element that a line-level detector cannot see; whether the
+    element is nested inside a control that already carries the name; and whether this template is
+    ever mounted at all. Quote what you find, and close the candidate where the name is supplied
+    elsewhere.
+  - Is the affected content inside an EAA Art. 2(4) carve-out — pre-recorded time-based media or
+    office file formats published before 28 June 2025, online maps where the essential information
+    is offered in an accessible digital manner, third-party content that is neither funded nor
+    developed by nor under the control of this operator, or an archive whose content is not updated
+    or edited after 28 June 2025?
+evidence_template: "{file}:{line} matches one of this rule's six source-decidable accessibility
+  checks - an image with no alt attribute, a document root with no lang, a positive tabindex, a
+  pointer handler on a generic element with no keyboard path, an anchor with a handler and no href,
+  or an icon-only button or anchor with no accessible name. Read the matched line before looking for
+  an element: it may be angle-bracket markup (<img>, <html>, <a>, <button>, <div>), a HAML element
+  written with a sigil (%img, %html, %a, %button) or with none at all, since a line opening .class
+  or #id is HAML's implicit div, or an entry in an object or hash - JavaScript, Ruby, JSON, YAML or
+  a HAML attribute hash - whose key is tabIndex or tabindex, since the positive-tabindex check reads
+  a hash key as well as an HTML attribute, and where that key sits in a plain object rather than on
+  an element, the control it reaches is rendered elsewhere. Whether the defect survives into what a
+  user receives is not decided by the detector - an accessible name may arrive from a wrapper a
+  line-level pattern cannot see, which is context question 5; every affected line in this file is
+  listed in the finding's locations"
+remediation_template: >
+  This is a candidate for review against the European Accessibility Act, Directive (EU) 2019/882,
+
+  not a determination about this code.
+
+  Where the review confirms the defect, the change on each listed line is specific to the check that
+
+  matched. These checks restate WCAG 2.1 Level A success criteria,
+
+  which EN 301 549 carries and which European practice uses as the benchmark for EAA Annex I Section
+
+  III(c) — with the caveat that no harmonised standard has been cited in the Official Journal for
+  this
+
+  Directive, so meeting EN 301 549 earns no presumption of conformity under it.
+
+  Each fix is written below in angle-bracket markup first. Where the matched line is HAML, the same
+
+  attribute goes inside the element's attribute hash (alt: '...', lang: I18n.locale, 'aria-label' =>
+
+  'Delete'); where it is an entry in a JavaScript, Ruby, JSON or YAML object, the same attribute is
+  a
+
+  key on that object (tabIndex: 0).
+
+  - Image with no alt: add alt="..." describing what the image conveys — alt: '...' inside a HAML
+    %img hash. For a purely decorative image write alt="" — empty, not absent — so assistive
+    technology skips it.
+  - Document root with no lang: set lang on the document root (app/layout.tsx, _document.tsx,
+    index.html, app/views/layouts/*.html.haml, the framework's head config) to the language the page
+    is actually written in. In HAML that is %html{ lang: ... }, taking the application's own locale.
+  - Positive tabindex: use 0 (focusable in DOM order) or -1 (focusable only in script) —
+  tabindex="0"
+    as an HTML attribute, tabIndex: 0 in a JavaScript field descriptor or props object, 'tabindex' =>
+    '0' in a Ruby or HAML hash — and correct the order by moving the markup rather than by numbering
+    it. Where the key sits in a plain object rather than on an element, the control it applies to is
+    rendered elsewhere: follow the value through to the component that puts it on the element.
+  - Pointer handler on a generic element (<div>, <span>, <li>, <td>, <p>, a heading, or HAML's
+    implicit div, which is a line opening .class or #id with no tag name written at all): use
+    <button type="button"> for an action or <a href> for navigation — %button{ type: 'button' } and
+    %a{ href: ... } in HAML. Where the element must stay generic, add role="button", a tabindex of 0
+    and a key handler that responds to Enter and Space.
+  - Anchor with a handler and no href: an anchor without href exposes no link role, sits outside the
+    tab order and cannot be activated from the keyboard. Use <button type="button"> for an action, or
+    give the anchor a real href — %a{ href: ... } in HAML.
+  - Icon-only button or anchor: give the control an accessible name — aria-label="Delete", or
+    'aria-label' => 'Delete' in a HAML hash, or visually hidden text inside it — and mark the icon
+    aria-hidden="true" so the name is not announced twice.
+  Settle scope before any of this reaches a compliance record: whether the product is an Art. 2(2)
+
+  service at all, whether the Art. 4(5) microenterprise derogation applies, and whether an Art. 14
+
+  fundamental-alteration or disproportionate-burden assessment is being relied on — Art. 14(3)
+  requires
+
+  the operator to document that assessment and keep it for five years.
+
+  Scope of this detector: source only, one line at a time. Colour contrast, focus visibility,
+  reading
+
+  and focus order, live-region behaviour, media captions, form-label association and everything else
+
+  that needs a rendered page with computed styles are outside what it can see. A scan with no
+
+  candidates is not an accessibility audit and must not be reported as one.
+data_categories: []
+fingerprint_spec: directory

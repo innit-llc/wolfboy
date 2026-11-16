@@ -1,0 +1,325 @@
+id: derived-personal-data-004
+pack: derived-personal-data
+short_name: Location worked out from a visitor's IP address
+problem_line:
+  text: Visitor location derived from IP addresses
+fix_line: Record the IP-to-location derivation, on whom and what it produces, and keep no finer
+  location than the purpose needs.
+title: A location derived from a visitor's IP address, and whether that derivation is in the record
+  of processing
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1) - 'Each controller and, where applicable, the
+      controller's representative, shall maintain a record of processing activities under its
+      responsibility. That record shall contain all of the following information', and at point (c)
+      'a description of the categories of data subjects and of the categories of personal data'.
+      This is the duty the rule tests. An IP-to-location derivation is a processing activity, the
+      location it produces is a category of personal data, and the visitors it is performed on are a
+      category of data subjects - so all three of point (c)'s elements are engaged by an operation
+      that is very often invisible to whoever compiles the record, because the value is computed in
+      a queue worker and only an aggregate is stored. The duty is not unconditional: Art. 30(5)
+      provides that 'The obligations referred to in paragraphs 1 and 2 shall not apply to an
+      enterprise or an organisation employing fewer than 250 persons unless the processing it
+      carries out is likely to result in a risk to the rights and freedoms of data subjects, the
+      processing is not occasional, or the processing includes special categories of data as
+      referred to in Article 9(1) or personal data relating to criminal convictions and offences
+      referred to in Article 10.' Read the exemption's own words: it falls away where ANY of the
+      three conditions is met, and a derivation performed on every visitor to every page is not
+      occasional"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1) - personal data 'means any information relating to
+      an identified or identifiable natural person', and an identifiable natural person is 'one who
+      can be identified, directly or indirectly, in particular by reference to an identifier such as
+      a name, an identification number, location data, an online identifier or to one or more
+      factors specific to the physical, physiological, genetic, mental, economic, cultural or social
+      identity of that natural person'. Reference only: a definition establishes no duty of its own.
+      It is carried because both halves of this construct are named in that list in terms - the IP
+      address is the online identifier and the value derived from it is location data - so the
+      question whether this operation touches personal data at all is answered by the definition
+      rather than by argument"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: GDPR (Regulation (EU) 2016/679), Recital 30 - 'Natural persons may be associated with online
+      identifiers provided by their devices, applications, tools and protocols, such as internet
+      protocol addresses, cookie identifiers or other identifiers such as radio frequency
+      identification tags. This may leave traces which, in particular when combined with unique
+      identifiers and other information received by the servers, may be used to create profiles of
+      the natural persons and identify them.' Reference only, and a recital enacts no duty. It is
+      carried because it answers the objection a reader reaches for first - that an IP address held
+      for a few milliseconds and reduced to a two-letter country code is nothing at all - by naming
+      the IP address as an online identifier and describing exactly the combination this construct
+      performs
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(c) - personal data shall be 'adequate, relevant
+      and limited to what is necessary in relation to the purposes for which they are processed'.
+      Reference only: this detector cannot establish what any deployment needs, and saying which
+      resolution of a location is necessary for somebody else's product is exactly the product fact
+      a scanner must ask rather than infer. It is carried because it is the question that follows a
+      confirmed finding - a country code, a city, a set of coordinates and a retained IP address are
+      four different answers to the same purpose - and because the choice between them is usually a
+      one-line change nobody has revisited"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: low
+rule_confidence: 0.35
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    geo_ip_library:
+      - geoip
+      - geoip_lite
+      - geoip2
+      - geolite2
+      - maxmind
+      - maxminddb
+      - maxmind_db
+      - ip2location
+      - ipinfo
+      - ipstack
+      - ipgeolocation
+      - ipapi
+      - ip_api
+      - freegeoip
+      - dbip
+      - db_ip
+      - ipware
+      - geoip2_golang
+      - net_geoip
+    geo_lookup_verb:
+      - lookup
+      - country
+      - country_code
+      - country_name
+      - city
+      - region
+      - location
+      - asn
+      - reader
+      - open
+      - open_database
+      - enterprise
+      - insights
+      - resolve
+    client_ip_source:
+      - req_ip
+      - request_ip
+      - remote_addr
+      - remote_ip
+      - peer_ip
+      - x_forwarded_for
+      - x_real_ip
+      - client_ip
+      - visitor_ip
+      - user_ip
+      - get_ip_address
+      - get_client_ip
+      - trust_proxy
+    derived_location_field:
+      - ip_country
+      - ip_countries
+      - ip_country_code
+      - geo_country
+      - geo_countries
+      - geoip_country
+      - country_from_ip
+      - country_by_ip
+      - ip_city
+      - ip_cities
+      - geo_city
+      - geo_cities
+      - geoip_city
+      - ip_region
+      - geo_region
+      - ip_continent
+      - ip_timezone
+      - ip_latitude
+      - ip_longitude
+      - geo_latitude
+      - geo_longitude
+      - ip_location
+      - geolocate_ip
+      - locate_ip
+    edge_geo_header:
+      - cf_ipcountry
+      - cf_ipcity
+      - cf_ipcontinent
+      - cf_iplongitude
+      - cf_iplatitude
+      - x_vercel_ip_country
+      - x_vercel_ip_city
+      - x_vercel_ip_country_region
+      - x_vercel_ip_latitude
+      - x_vercel_ip_longitude
+      - cloudfront_viewer_country
+      - cloudfront_viewer_city
+      - cloudfront_viewer_latitude
+      - x_appengine_country
+      - x_appengine_city
+      - x_appengine_citylatlong
+      - x_geo_country
+      - x_country_code
+      - x_client_geo_location
+      - fastly_client_geo_country
+    edge_geo_object:
+      - request_cf_country
+      - req_cf_country
+      - request_cf_city
+      - req_cf_city
+      - request_geo_country
+      - req_geo_country
+      - request_geo_city
+      - req_geo_city
+      - context_geo_country
+      - geo_from_request
+  vocabulary_matching:
+    geo_ip_library:
+      case_insensitive: true
+      separator_insensitive: true
+    geo_lookup_verb:
+      case_insensitive: true
+      separator_insensitive: true
+    client_ip_source:
+      case_insensitive: true
+      separator_insensitive: true
+    derived_location_field:
+      case_insensitive: true
+      separator_insensitive: true
+    edge_geo_header:
+      case_insensitive: true
+      separator_insensitive: true
+    edge_geo_object:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?&geo_ip_library)[^\n]{0,60}(?&geo_lookup_verb)\s*[(.]
+    - (?&geo_ip_library)[^\n]{0,80}(?&client_ip_source)|(?&client_ip_source)[^\n]{0,80}(?&geo_ip_library)
+    - (?:require|import|from|include_once|require_once)\s*\(?\s*["'][^"'\n]{0,40}(?&geo_ip_library)
+    - "[\"'][^\"'\\n]{0,30}(?&geo_ip_library)[^\"'\\n]{0,30}[\"']\\s*:\\s*[\"'][~^><=v0-9]"
+    - ^[ \t]*(?:import|from|use|require)\s[^\n]{0,80}(?&geo_ip_library)
+    - ^[ \t]*gem\s+["'](?&geo_ip_library)
+    - ^[ \t]*(?&geo_ip_library)[A-Za-z0-9_.-]*\s*[=<>!~]=
+    - ^[ \t]*[a-z0-9._/-]*(?&geo_ip_library)[a-z0-9._/-]*\s+v[0-9]
+    - <artifactId>[^<\n]{0,40}(?&geo_ip_library)
+    - ^[ \t]*["'][a-z0-9._/-]*(?&geo_ip_library)[a-z0-9._/-]*["'][ \t]*$
+    - "[\"'](?&edge_geo_header)[\"']|[\"']HTTP_(?&edge_geo_header)[\"']"
+    - (?&edge_geo_object)\s*(?:[)\],;}]|=|\?|\||&|$)
+    - (?:^|[^A-Za-z0-9_])(?&derived_location_field)
+    - "[A-Za-z0-9_./-]{0,60}\\.mmdb(?![A-Za-z0-9_])"
+context_questions:
+  - "FIND THE CALL SITE AND QUOTE IT. A dependency entry says the product carries an IP-geolocation
+    database; it does not say anything runs. Find the line that performs the lookup, name the file,
+    and say what is passed in - a request IP, a proxy-forwarded header, an address stored earlier -
+    and what comes out. Where the only match is a manifest entry, an import or a database file and
+    no call exists anywhere, say so: an unused dependency is a different finding and a much smaller
+    one."
+  - "WHAT IS KEPT, AND FOR HOW LONG? Three separate answers, and products differ on all three. Is
+    the derived value written to a row at all, or only counted? Is the input address written
+    anywhere - a log line, a request trace, an error report - after the derivation? And what is the
+    value's resolution: a two-letter country code, a city, a region, a set of coordinates? Quote the
+    schema or the insert statement rather than inferring from the variable name, because the
+    difference between a counter keyed to a country and a per-visit row carrying a city is the whole
+    difference between a small finding and a large one."
+  - WHOSE RECORD DOES THE DERIVED VALUE END UP ON? A country attached to an aggregate counter is a
+    statistic about an audience. A country attached to a session, a visit, an account or an event
+    row is an attribute of a person. Say which it is, and where the value is attached to a person's
+    record, say whether a subject-access export returns it - derived attributes are routinely
+    missing from exports assembled out of the primary tables.
+  - IS THE DERIVATION IN THE RECORD OF PROCESSING ACTIVITIES? This is the question the rule exists
+    to raise and it cannot be answered from code. Look at whatever the deployment keeps as its
+    record of processing - a register, a data map, a privacy notice's processing table - and say
+    whether an IP-to-location derivation appears in it as an activity, with the categories of data
+    subjects and of personal data that Art. 30(1)(c) names. The ordinary answer is that it does not,
+    because the value is computed in a worker and nothing durable shows it. Note also that Art.
+    30(5)'s exemption for organisations under 250 persons does not apply where the processing is not
+    occasional, and a derivation performed on every visitor is not occasional.
+  - "IS THE LOCATION ACTUALLY DERIVED HERE, OR DID SOMETHING UPSTREAM DERIVE IT? Where a CDN or an
+    edge runtime supplies the country in a request header, the product may never touch the address
+    at all. That is a different position and it should be recorded as one: the derivation is
+    performed by another party, that party is a recipient or a separate controller for it, and the
+    product's own record has to describe the arrangement rather than the lookup. Say which path this
+    deployment is on, and where both exist, say which one runs in production."
+  - IS ANYBODY TREATED DIFFERENTLY ON THE RESULT? If the derived location decides access, routing,
+    pricing or the payment instruments offered, that is a market-access question under a different
+    instrument and `eu-market-001` is the rule that carries it. This rule does not ask it and does
+    not answer it. Say here only whether such a use exists, so that a reader knows whether to go and
+    look at the other finding; do not fold the two into one.
+evidence_template: "{file}:{line} matched a place where this product turns a visitor's IP ADDRESS
+  INTO A LOCATION, or carries the means to: a named IP-geolocation database being asked a question,
+  such a database beside the address it is given, the database wired in through an import or a
+  manifest entry, an edge or CDN geolocation header read, a field that names its own provenance, or
+  a MaxMind-format database file. THAT IS THE WHOLE OF WHAT IS ESTABLISHED. THE MATCHES ARE NOT
+  EQUALLY INFORMATIVE AND THE DIFFERENCE MATTERS MORE HERE THAN IN MOST RULES. A LOOKUP CALL is the
+  construct. A DEPENDENCY ENTRY, AN IMPORT OR A DATABASE FILE says the product carries the
+  capability and says nothing at all about whether any line uses it - context question 1 asks for
+  the call site and an unused dependency is a much smaller finding. A HEADER READ says the
+  derivation happened somewhere upstream, which is a different arrangement with a different party in
+  it (question 5). WHAT THIS DETECTOR DOES NOT ESTABLISH: whether the derived value is stored, at
+  what resolution, and whether the input address is retained (question 2); whether the value ends up
+  on a record about a person or only in an aggregate (question 3); and whether the operation appears
+  in the controller's record of processing activities, which is the duty this rule tests and which
+  no scan of source code can answer (question 4). THIS FINDING IS NOT A MARKET-ACCESS FINDING.
+  Whether anybody is blocked, rerouted or refused a payment instrument on the result is
+  `eu-market-001`'s question, that rule requires a country source paired with such an act by an
+  explicit and measured design decision of its own, and this rule neither reopens nor duplicates
+  it."
+remediation_template: >
+  Start by finding the call site, because everything else depends on whether one exists. A manifest
+
+  entry with no call is an unused dependency and the answer is to say so and stop.
+
+  Where a lookup does run, write down three facts and put them in the record of processing
+
+  activities: that an IP-to-location derivation is performed, on whom, and what category of personal
+
+  data it produces. Art. 30(1)(c) asks for the categories of data subjects and of personal data, and
+
+  a derivation performed on every visitor is not occasional, so the small-organisation exemption in
+
+  Art. 30(5) does not carry it.
+
+  Then check the resolution against the purpose. A country code, a city, a region and a set of
+
+  coordinates answer very different questions, the choice between them is usually one argument in
+  one
+
+  call, and it is rarely revisited after the day the feature was written.
+
+  Check what happens to the address itself. The derivation is often described as transient while the
+
+  same request writes the address into an access log, an error report or a request trace, and those
+
+  three are ordinarily governed by nothing.
+
+  Where the value is attached to a person's record rather than to an aggregate, check the export and
+
+  the deletion path reach it. A derived attribute added by a worker is the kind of column a
+
+  subject-access export assembled from the primary tables leaves out.
+
+  Where a CDN or an edge runtime supplies the country instead, record the arrangement rather than
+  the
+
+  lookup: another party performs the derivation, and what the record has to describe is that
+
+  relationship.
+data_categories:
+  - user.device.ip_address
+  - user.location.imprecise
+  - user.location
+  - user.behavior
+fingerprint_spec: project
+reading_class:
+  class: existence

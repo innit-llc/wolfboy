@@ -1,0 +1,74 @@
+id: eu-consent-012
+pack: eu-consent
+short_name: Browser fingerprinting library in the product
+problem_line:
+  text: "Device fingerprinting: consent or disclosure not found"
+fix_line: Read device traits only after consent, or limit the use to fraud prevention and disclose
+  its purpose and retention.
+title: Browser fingerprinting library referenced
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC) (prior consent
+      for storing or accessing information on terminal equipment — reading device characteristics
+      for fingerprinting is in scope)
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) (replaces Art. 5(3) of Directive 2002/58/EC: the 2002
+      wording offered only a right to refuse, the replacement wording requires prior consent) and
+      Art. 4 (Member State transposition deadline 25 May 2011)"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: Article 29 Working Party, Opinion 9/2014 (WP224) on the application of Directive 2002/58/EC to
+      device fingerprinting, adopted 25 November 2014 (consent requirement)
+    url: https://ec.europa.eu/justice/article-29/documentation/opinion-recommendation/files/2014/wp224_en.pdf
+    checked_at: 2026-07-22
+    jurisdiction: EU
+effective_date: 2011-05-25
+severity: high
+rule_confidence: 0.85
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  resolve_import_aliases: true
+  match:
+    - "@fingerprintjs/fingerprintjs"
+    - openfpcdn\.io
+    - fpjscdn\.net
+    - FingerprintJS\.load\(
+context_questions:
+  - "Is this line a use of the fingerprinting library, or only a declaration that it exists? The
+    detector matches a package name and two CDN hostnames, and all three appear in places where no
+    fingerprint is ever computed: a dependency entry in package.json, a lockfile, a
+    Content-Security-Policy or connect-src allow-list, a documentation page, a bundle-analysis
+    report, or a transitively pulled dependency nothing in this project imports. Quote the import or
+    the call that loads the agent and runs it, or record that you looked and found only a
+    declaration - in which case the candidate closes here and the remaining questions do not arise."
+  - Is fingerprinting confined to fraud prevention and security, or is it used for advertising and
+    tracking?
+  - Does it run before consent has been recorded? Quote the call path.
+  - Even where the purpose is fraud prevention, is there transparency — is the processing disclosed
+    in the privacy policy?
+evidence_template: "{file}:{line} references a fingerprinting library - check whether the line is a
+  use or only a declaration"
+remediation_template: >
+  This is a candidate for review against ePrivacy Directive 2002/58/EC Art. 5(3) as nationally
+
+  transposed, not a determination about this code. The changes below apply where the review
+
+  confirms it.
+
+  Where the purpose is tracking, obtain prior consent before device characteristics are read
+  (ePrivacy Art. 5(3)).
+
+  Otherwise, confine the use to strict fraud prevention and disclose the purpose and retention
+  period in the privacy policy.
+
+  Alternatively, replace it with first-party risk signals.
+data_categories:
+  - user.device
+  - user.unique_id
+fingerprint_spec: default

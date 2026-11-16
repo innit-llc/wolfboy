@@ -1,0 +1,438 @@
+id: eu-dsr-002
+pack: eu-dsr
+short_name: Erasure, export or objection action to review
+problem_line:
+  text: "Rights route flaw: reach, access, format, timing or promise"
+fix_line: Record the route, make it reach every copy or record why a copy is kept, and give people a
+  way to request it.
+title: Erasure, export or objection action named over a person-shaped store - implementation needs
+  review - GDPR Arts. 15-22, or a file hand-out with no such noun on the line
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Arts. 15-22 - the data subject
+      rights this rule reports the implementation of. Art. 15(3): 'The controller shall provide a
+      copy of the personal data undergoing processing', and 'Where the data subject makes the
+      request by electronic means, and unless otherwise requested by the data subject, the
+      information shall be provided in a commonly used electronic form.' Art. 16: 'The data subject
+      shall have the right to obtain from the controller without undue delay the rectification of
+      inaccurate personal data concerning him or her'. Art. 17(1): 'The data subject shall have the
+      right to obtain from the controller the erasure of personal data concerning him or her without
+      undue delay and the controller shall have the obligation to erase personal data without undue
+      delay where one of the following grounds applies'. Art. 20(1) gives the right 'to receive the
+      personal data concerning him or her, which he or she has provided to a controller, in a
+      structured, commonly used and machine-readable format and have the right to transmit those
+      data to another controller without hindrance'. Art. 21(3) provides that where the data subject
+      objects to processing for direct marketing purposes 'the personal data shall no longer be
+      processed for such purposes', which is the provision an unsubscribe or blocklist route bears
+      on. A ROUTE THAT EXISTS IS NOT A RIGHT THAT IS DISCHARGED, and nothing in this rule says
+      otherwise: what the code shows is a mechanism, and whether it reaches every store, every
+      recipient and every copy is the reader's question. Applies since 2018-05-25, Art. 99(2): 'It
+      shall apply from 25 May 2018.'"
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-08-28
+    jurisdiction: EU
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 12(2)-(4) - the duty to
+      make the rights usable, which is not discharged by the existence of a function. Art. 12(2):
+      'The controller shall facilitate the exercise of data subject rights under Articles 15 to 22.
+      In the cases referred to in Article 11(2), the controller shall not refuse to act on the
+      request of the data subject for exercising his or her rights under Articles 15 to 22, unless
+      the controller demonstrates that it is not in a position to identify the data subject.' Art.
+      12(3): 'The controller shall provide information on action taken on a request under Articles
+      15 to 22 to the data subject without undue delay and in any event within one month of receipt
+      of the request.' Art. 12(5) makes the actions free of charge. Read against what this rule
+      finds, three things follow and the context questions ask all three. A route reachable only by
+      an administrator does not facilitate the DATA SUBJECT's exercise of anything. A route with no
+      response inside a month does not satisfy Art. 12(3) however well it deletes. And a route that
+      charges for an export does not satisfy Art. 12(5). Reference only: this entry withholds
+      satisfaction rather than establishing the duty the rule reports on."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Arts. 17(2) and 19 - why an
+      erasure that stops at the local database is incomplete. Art. 17(2): 'Where the controller has
+      made the personal data public and is obliged pursuant to paragraph 1 to erase the personal
+      data, the controller, taking account of available technology and the cost of implementation,
+      shall take reasonable steps, including technical measures, to inform controllers which are
+      processing the personal data that the data subject has requested the erasure by such
+      controllers of any links to, or copy or replication of, those personal data.' Art. 19: 'The
+      controller shall communicate any rectification or erasure of personal data or restriction of
+      processing carried out in accordance with Article 16, Article 17(1) and Article 18 to each
+      recipient to whom the personal data have been disclosed, unless this proves impossible or
+      involves disproportionate effort.' Art. 4(9) defines a recipient as 'a natural or legal
+      person, public authority, agency or another body, to which the personal data are disclosed,
+      whether a third party or not' - which reaches the analytics, error-reporting, messaging, CRM
+      and payment vendors an application forwards user records to. A `delete_user` that removes rows
+      and tells no vendor is exactly the case these two provisions are about, and it is
+      context_questions[2]. Reference only."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 5(2) and Art. 30(1) -
+      accountability and the record of processing activities, which is what a positive finding
+      feeds. Art. 5(2): 'The controller shall be responsible for, and be able to demonstrate
+      compliance with, paragraph 1'. Art. 30(1) requires the record to 'contain all of the following
+      information', including at point (f) 'where possible, the envisaged time limits for erasure of
+      the different categories of data'. Art. 30(5) exempts smaller organisations conditionally
+      only: 'The obligations referred to in paragraphs 1 and 2 shall not apply to an enterprise or
+      an organisation employing fewer than 250 persons unless the processing it carries out is
+      likely to result in a risk to the rights and freedoms of data subjects, the processing is not
+      occasional, or the processing includes special categories of data as referred to in Article
+      9(1) or personal data relating to criminal convictions and offences referred to in Article
+      10.' A list of the routes through which a person can act on their own record is the
+      demonstration Art. 5(2) asks for, and it is the half of the record no scan of an absence can
+      produce. Reference only: it is why the finding is worth raising, not the duty it tests."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: General Data Protection Regulation, Regulation (EU) 2016/679, Art. 28(3)(e) and (g) - where a
+      PROCESSOR's position differs. The contract binding the processor must stipulate that the
+      processor 'taking into account the nature of the processing, assists the controller by
+      appropriate technical and organisational measures, insofar as this is possible, for the
+      fulfilment of the controller's obligation to respond to requests for exercising the data
+      subject's rights laid down in Chapter III', and Art. 28(3)(g) adds that at the end of the
+      service the processor must, at the controller's choice, delete or return all the personal data
+      and delete existing copies. A repository that is a pure processor - a hosted API, a background
+      worker, an SDK operating on a customer's data - therefore owes an assistance duty under a
+      contract rather than Arts. 15-22 directly, and a route found in it is evidence about that
+      assistance rather than about a discharged right. Reference only, and it is the first context
+      question.
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 4(1) and Art. 11 - what
+      the detector may not decide. Personal data 'means any information relating to an identified or
+      identifiable natural person', and an identifiable natural person 'is one who can be
+      identified, directly or indirectly, in particular by reference to an identifier such as a
+      name, an identification number, location data, an online identifier or to one or more factors
+      specific to the physical, physiological, genetic, mental, economic, cultural or social
+      identity of that natural person'. A route named for a person-shaped noun is not thereby a
+      route over personal data: `deleteContact` in a device-pairing feature and `deleteContact` in a
+      recruitment database are the same eleven characters. Art. 11(2) then disapplies part of the
+      duty outright: 'Where, in cases referred to in paragraph 1 of this Article, the controller is
+      able to demonstrate that it is not in a position to identify the data subject, the controller
+      shall inform the data subject accordingly, if possible. In such cases, Articles 15 to 20 shall
+      not apply except where the data subject, for the purpose of exercising his or her rights under
+      those articles, provides additional information enabling his or her identification.' The
+      disapplication reaches Arts. 15 to 20 only; Arts. 21 and 22 are outside it. Reference only.
+      Both determinations are for the adjudicating agent or for the person running the scan, and no
+      pattern here tests either."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: low
+rule_confidence: 0.34
+detector:
+  engine: builtin-regex
+  shared_vocabulary:
+    - export_disposition_carriers
+    - export_download_triggers
+    - export_document_writers
+  vocabulary:
+    erasure_export_verbs:
+      - delete
+      - remove
+      - erase
+      - destroy
+      - purge
+      - wipe
+      - forget
+      - anonymize
+      - anonymise
+      - pseudonymize
+      - export
+      - download
+      - extract
+      - dump
+      - rectify
+      - deactivate
+      - unsubscribe
+      - blocklist
+      - opt_out
+    data_subject_nouns:
+      - user
+      - account
+      - member
+      - profile
+      - customer
+      - subscriber
+      - contact
+      - person
+      - people
+      - patient
+      - employee
+      - applicant
+      - candidate
+      - student
+      - lead
+      - my_data
+      - my_account
+      - personal_data
+      - account_data
+      - user_data
+      - subscriber_data
+    self_service_nouns:
+      - me
+    privacy_surface_words:
+      - privacy
+      - gdpr
+      - dsar
+      - data_subject
+      - right_to_be_forgotten
+      - erasure_request
+      - privacy_request
+      - subject_access
+    export_formats:
+      - csv
+      - tsv
+      - xls
+      - xlsx
+      - vcard
+      - vcf
+      - ical
+      - ics
+      - rss
+      - atom
+    http_delete_paths:
+      - me
+      - account
+      - user
+      - profile
+      - subscriber
+      - member
+      - customer
+  vocabulary_matching:
+    erasure_export_verbs:
+      case_insensitive: true
+      separator_insensitive: true
+    data_subject_nouns:
+      case_insensitive: true
+      separator_insensitive: true
+    self_service_nouns:
+      case_insensitive: true
+    privacy_surface_words:
+      case_insensitive: true
+      separator_insensitive: true
+    http_delete_paths:
+      case_insensitive: true
+    export_formats:
+      case_insensitive: true
+  match:
+    - (?&erasure_export_verbs)[_.\-
+      ]?(?:(?&data_subject_nouns)(?:e?s)?(?![a-z])|(?&self_service_nouns)(?:e?s)?(?![a-z])(?!(?<=[A-Z][A-Z])[A-Z]))
+    - (?&data_subject_nouns)(?:e?s)?[^A-Za-z\n]{1,4}(?:[A-Za-z]{1,3}[^A-Za-z\n]{1,3})?(?&erasure_export_verbs)(?![a-z])
+    - (?:function|def|func|fn|sub)[ \t]+(?&erasure_export_verbs)[A-Za-z_]{0,20}[
+      \t]*\([^)\n]{0,60}(?&data_subject_nouns)
+    - (?&privacy_surface_words)[^\n]{0,40}?(?&erasure_export_verbs)(?![a-z])|(?&erasure_export_verbs)[^\n]{0,40}?(?&privacy_surface_words)(?![a-z])
+    - (?:DELETE|Delete|delete)[ \t]*[("'`]{1,2}[
+      \t]*/[A-Za-z0-9/:_.{}$-]{0,40}(?&http_delete_paths)s?(?:["'`/]|$)
+    - (?:\bformat\s*\.\s*|\brender\s+|\bsend_data\b[^\n]{0,30}|\brespond_with\b[^\n]{0,20}|\bContent-Disposition[^\n]{0,50}\.|\bContent-[Tt]ype[^\n]{0,20}/)(?&export_formats)(?![A-Za-z])[^\n]{0,60}(?&data_subject_nouns)(?:e?s)?(?![a-z])|(?&data_subject_nouns)(?:e?s)?(?![a-z])[^\n]{0,60}(?:\bformat\s*\.\s*|\brender\s+|\bsend_data\b[^\n]{0,30}|\bto_)(?&export_formats)(?![A-Za-z])
+    - ^(?=[^\n]*(?:^|[^A-Za-z0-9_])(?&export_disposition_carriers)(?![A-Za-z0-9_]))[^\n]*[Aa][Tt][Tt][Aa][Cc][Hh][Mm][Ee][Nn][Tt](?![A-Za-z0-9])|(?:^|[^A-Za-z0-9_])(?!saveAs(?![A-Za-z0-9_]))(?&export_download_triggers)(?![A-Za-z0-9_])|(?:^|[^A-Za-z0-9_])saveAs[
+      \t]*\(|(?:^|[^A-Za-z0-9_])saveAs(?![A-Za-z0-9_])[^\n]{0,80}[Ff]ile[_-]?[Ss]aver|[Ff]ile[_-]?[Ss]aver[^\n]{0,80}saveAs(?![A-Za-z0-9_])|(?:^[
+      \t]+|[^A-Za-z0-9_.$\n]|^(?=[^\n]*;[ \t]*$))[A-Za-z0-9_$][A-Za-z0-9_$.]{0,40}[ \t]*\.[
+      \t]*download[ \t]*=(?!=)|(?:^|[^A-Za-z0-9_])[Ss]et[Aa]ttribute[ \t]*\([
+      \t]*["'`]download["'`]|(?:^|[^A-Za-z0-9_])(?:a|link|anchor|downloadLink|tempLink|downloadEl)[
+      \t]*\.[ \t]*click[ \t]*\([
+      \t]*\)|(?:^|[^A-Za-z0-9_])(?&export_document_writers)(?![A-Za-z0-9_])|(?:^|[^A-Za-z0-9_])(?:showSaveDialog(?:Sync)?|showSaveFilePicker|getSaveFileName)[
+      \t]*\(|(?:^|[^A-Za-z0-9_])(?:copy|copyFile|copyFileSync|copySync|copy_file)[
+      \t]*\([^;\n]{0,60}(?:[Rr]esource|[Aa]ttachment)
+  match_without:
+    - (?:[Nn]ot[
+      _]?[Ii]mplemented|NotImplementedError|NotImplementedException|StatusNotImplemented|[Uu]nimplemented|[Cc]oming[
+      _][Ss]oon)
+  shared_path_exclusions:
+    - attribution_documents
+context_questions:
+  - "MANDATORY, and the detector did not check it: IS THE RECORD THIS ROUTE ACTS ON PERSONAL DATA,
+    AND IS THIS PARTY THE CONTROLLER? Two determinations, neither of which a pattern may make.
+    First, the record: a route named for a person-shaped noun is not thereby a route over personal
+    data - `deleteContact` removes a CRM record in one product and a paired device in another. Open
+    what the route touches, quote the table, model or collection, and quote its columns. Where the
+    ScanProfile or the operator's declared documents answer whether that store is personal data
+    within GDPR Art. 4(1), say which one you used and quote it; where nothing answers it, return
+    needs_human rather than deciding it from a noun. Second, the party: Arts. 15-22 are owed by the
+    controller (Art. 4(7)). A pure processor - a hosted API, a background worker, an SDK operating
+    on a customer's data - owes the derived assistance duty in Art. 28(3)(e) under a contract
+    instead, so a route found in a processor's repository is evidence about assistance and not about
+    a discharged right. Say which this repository is and on what evidence."
+  - "WHO CAN REACH THIS ROUTE - the data subject, or only an operator? This is the difference
+    between Art. 12(2), which requires the controller to facilitate the DATA SUBJECT's exercise of
+    the rights, and an administrative capability that helps the controller answer a request that
+    arrived some other way. Both are worth recording and they are different facts. Read the
+    authorisation: is the route behind a session belonging to the person whose record it touches,
+    behind an administrator permission, behind an API key, or behind nothing? Quote the check. In
+    the corpus this rule was built against, one product's forty erasure and export routes are a
+    recruiter acting on a candidate's record and another product's are a subscriber acting on their
+    own, and the two are written identically. Say which this is, and if it is an operator route, say
+    whether any self-service route exists beside it."
+  - "WHAT DOES THE ERASURE OR EXPORT ACTUALLY REACH? Follow it and enumerate, because this is the
+    question a positive finding is worth the most on. For an erasure: which tables, collections,
+    buckets, caches, search indexes, backups and logs are touched, and which are not? Does it
+    cascade, soft-delete or hard-delete - and if it sets a deleted flag, what still holds the
+    person's data afterwards? GDPR Art. 19 requires the controller to communicate an erasure or
+    rectification to each recipient to whom the data were disclosed, and Art. 4(9) makes a recipient
+    include the analytics, error-reporting, messaging, CRM and payment vendors this application
+    forwards records to; so name every vendor the code sends identity to and say whether the erasure
+    path tells any of them. Art. 17(2) adds a further step where the data were made public. For an
+    export: what fields does it contain, in what format, and is that format structured, commonly
+    used and machine-readable as Art. 20(1) requires? Report the list, and report what is missing
+    from it."
+  - "DOES THE ROUTE ANSWER, AND ON WHAT TERMS? Existence is not usability, and Art. 12 sets three
+    conditions a working route still has to meet. TIME: Art. 12(3) requires information on the
+    action taken without undue delay and in any event within one month of receipt, extendable by two
+    further months only where necessary and only with notice inside the first month. Is the route
+    synchronous, queued, or dependent on somebody reading a mailbox? COST: Art. 12(5) makes the
+    action free of charge, so an export behind a paid plan tier is a finding in its own right -
+    check the plan gating. REFUSAL: Art. 12(4) says that where the controller does not act, it must
+    say so within one month and name the reasons, the right to complain to a supervisory authority
+    and the judicial remedy. If the route can refuse, quote what it returns. Report each of the
+    three separately and do not merge them."
+  - "IS THIS ONE ROUTE OR A CATALOGUE ENTRY DESCRIBING ONE? A localised label, a settings key, a
+    permission name and a route registration are four different kinds of evidence about the same
+    surface, and this rule reports all four. Say which you have. Where the match is a translation
+    catalogue entry, find the template or component that renders it and the handler behind that, and
+    report the chain; where it is a settings flag such as an allow-export or allow-wipe switch,
+    report its SHIPPED DEFAULT, because a rights surface that ships switched off is a different fact
+    from one that ships on. Decide a place of this kind on the line that SETS what it names - the
+    grant (the permission rule that allows the action, and to whom), the definition, the default
+    value - read in the place's window or, where it sits outside, Read and given as `beyond`; a
+    permission that lets a person delete or export their own record is the self-service route
+    question 2 asks about, whatever else the same rule gates. A place's shape alone - a permission
+    predicate, a serializer attribute, a setting's name in a defaults list - never makes it
+    `not_the_construct`: where you have not read the line that sets it, answer `undetermined` and
+    name that line. Where several matches in this candidate are the same key repeated across locale
+    files, say so and count them once."
+  - IS ANYTHING PROMISED THAT IS NOT HERE, OR HERE THAT IS NOT PROMISED? This is the reconciliation
+    question and it runs both ways. Read the product's privacy policy, its terms and its user-facing
+    documentation, and list the data-subject rights they say are offered. Compare that list against
+    the routes found here. A right promised in the policy with no route in the code is the more
+    serious direction and it is exactly what this rule's inventory makes visible; a route in the
+    code that no document mentions is the other, and it belongs in the record of processing
+    activities that Art. 5(2) and Art. 30(1) ask the controller to be able to produce. Report both
+    lists and the difference between them, and state plainly which items you could not check.
+evidence_template: "{file}:{line} names an ERASURE, EXPORT, RECTIFICATION OR OBJECTION ROUTE over a
+  person-shaped record, WITHOUT any not-implemented marker on the line. THIS IS AN EXISTENCE FINDING
+  AND NOT A COMPLIANCE FINDING, and that distinction is the whole of how it should be read: it
+  records that a mechanism is present, it is offered as evidence for a record of processing
+  activities and for reconciliation against what the product publishes, and IT SAYS NOTHING ABOUT
+  WHETHER ANY DUTY UNDER GDPR ARTS. 15-22 IS DISCHARGED. This detector cannot report that, and no
+  finding from this product ever reports safety. WHAT WAS ESTABLISHED, and which of the five it is
+  has to be read off the line. A VERB JOINED TO A PERSON-SHAPED NOUN - `DeleteSubscribers`,
+  `export_subscriber_data`, `deleteAccount` - establishes that this product names such an operation;
+  the join may be a space, so a user-facing label and an ordinary English sentence about deleting a
+  user both reach this clause. THE SAME TWO WORDS IN THE OPPOSITE ORDER -
+  `$candidates->delete($candidateID)`, `'contacts.delete'` - binds a receiver to a method or a
+  parameter to its value, and a permission name reaches it as readily as a call. A DEFINITION
+  POSITION - `public function delete($candidateID)`, `def delete_user(user)` - establishes the most:
+  the route is being IMPLEMENTED here rather than called, quoted or permitted. A PRIVACY-, GDPR- OR
+  DSAR-NAMED SURFACE CARRYING AN ACTION VERB establishes that a rights surface exists under that
+  name, and it is the clause that reaches a product which names the duty rather than the person; the
+  two words may belong to different halves of a settings structure. AN HTTP DELETE ROUTE WITH A
+  PERSON-SHAPED PATH establishes a method bound to a path. WHAT WAS NOT ESTABLISHED, and every one
+  of these is a question rather than a caveat. FIRST, THE RECORD WAS NOT READ: nothing here says the
+  store this route touches holds personal data within Art. 4(1), and `deleteContact` is a CRM record
+  in one product and a paired device in another. SECOND, WHO CAN REACH IT WAS NOT READ. Art. 12(2)
+  is about the data subject's own exercise of the right, and most of what this rule finds is an
+  operator acting on other people's records; the two are written identically. THIRD, WHAT IT REACHES
+  WAS NOT FOLLOWED - which stores, which caches, which backups, and whether any recipient is told,
+  which Arts. 17(2) and 19 require. FOURTH, NOTHING ESTABLISHES THAT IT ANSWERS: not within the
+  month Art. 12(3) allows, not free of charge as Art. 12(5) requires, and not with the reasons Art.
+  12(4) demands where it refuses. FIFTH, A LABEL IS NOT A ROUTE. A translation catalogue entry, a
+  settings key and a permission name each describe a surface without being one, and where the match
+  is a settings switch its SHIPPED DEFAULT decides whether the surface is offered at all. AND A
+  LABEL MAY STATE THE OPPOSITE OF WHAT IT NAMES. `msg_cant_delete_user: ^Couldn't delete the user
+  since %{value} has related assets present.` is reported by this rule - twenty such locations in
+  twenty files over the corpus it was built against - and it is a message saying that a deletion was
+  REFUSED. Lines of that class are reported deliberately, because a refusal is a fact about the
+  erasure path that Arts. 12(4) and 17(1) both bear on and that the record of processing activities
+  needs; but a refusal message is evidence that a route exists AND CAN DECLINE, never evidence that
+  an erasure succeeded. Read the string before recording the route, and where it states a refusal
+  say so and quote the condition that triggers it. ADDED 2026-09-04: A SIXTH SHAPE REACHES THIS RULE
+  AND IT IS THE ONLY ONE THAT CARRIES NO PERSON-SHAPED NOUN. AN EXPORT HAND-OUT - an attachment
+  disposition, a browser download trigger, or an archive, compressed-stream or rendered-document
+  writer - establishes that this product BUILDS A FILE AND GIVES IT TO SOMEBODY, and nothing more.
+  It was added because requiring the noun was itself the miss: one comment engine's export handler
+  streams one user's whole profile and every comment they wrote, and neither of its two operative
+  lines carries a person-shaped word, which sits eleven lines up in the function's name; the nearest
+  person-shaped token on any line is `user.ID` two lines above, and a noun two lines up is exactly
+  as unreachable as one eleven lines up, because this detector reads one line at a time. THIS IS
+  THEREFORE THE WIDEST CLAUSE IN THE RULE AND THE ONE MOST OFTEN NOT A RIGHTS SURFACE AT ALL: an
+  invoice, a logo, a firmware image and a report of other people's records all reach it. Say which
+  of those you have, and where the file's contents are a person's records, say whose - the
+  operator's view of everybody, or the subject's own copy of themselves. That distinction is context
+  question 2's, and on this clause it is the first thing to settle rather than the last."
+remediation_template: >
+  WHAT WAS FOUND, AND WHY IT IS NOT A DEFECT REPORT. A route through which a person's record can be
+
+  erased, exported, corrected or objected to. Nothing here says anything is wrong. This finding is
+  an
+
+  INVENTORY ENTRY: it exists so that the routes a product offers can be listed, checked and compared
+
+  against what the product tells people it offers. For a well-built product the whole of the work
+
+  below is confirmation, and no code changes.
+
+
+  1. WRITE IT DOWN. GDPR Art. 5(2) puts the burden of being able to demonstrate the position on the
+     controller, and Art. 30(1) describes the record of processing activities that demonstration
+     rests on. A rights route that exists in code and appears in no record is a capability nobody
+     outside the repository can rely on. Add it to the record: what it erases or exports, who can
+     invoke it, and how long it takes.
+  2. CHECK THAT IT REACHES EVERYTHING. This is where a real gap is most often found, and it is a gap
+     in an implemented route rather than a missing one. Follow the erasure through every store the
+     record touches - the primary tables, the caches, the search index, the object storage, the
+     backups, the logs - and then outward: Art. 19 requires the erasure or rectification to be
+     communicated to each recipient the data were disclosed to, and Art. 4(9) makes a recipient
+     include the analytics, error-reporting, messaging, CRM and payment vendors the application
+     forwards identity to. An erasure that clears rows and leaves a vendor's copy is the ordinary
+     shape of this problem.
+  3. CHECK THAT THE PERSON CAN REACH IT. An administrator-only route is worth having and it is not
+     what Art. 12(2) asks for, which is that the controller facilitate the data subject's own
+     exercise of the rights. If the only route is an operator's, say by what channel a request from
+     a person reaches that operator, and how long that takes.
+
+  IF SOMETHING DOES NEED TO CHANGE, the useful changes are these, in order of how often they are the
+
+  right one.
+
+
+  - EXTEND AN EXISTING ROUTE RATHER THAN ADDING A NEW ONE. Where the erasure misses a store or a
+    vendor, the fix belongs inside the route that already exists, so that one path stays the answer.
+  - PUBLISH THE ROUTE. A capability nobody is told about is not a modality for exercising a right.
+    Name it in the privacy policy and in the account settings, with what it does and how long it
+    takes.
+  - GIVE THE PERSON A WAY TO ASK. Art. 12(2) asks the controller to facilitate the exercise of the
+    rights, so where the third check above finds only an operator's route, add the way a person's
+    request reaches it: a self-service action in the person's own account, or a request form or
+    address that lands with whoever runs the route. Art. 12(2) names no particular channel; publish
+    the one chosen with the route.
+  - MAKE THE EXPORT FORMAT ANSWER ART. 20(1), which asks for structured, commonly used and
+    machine-readable. A rendered HTML page or a PDF of a table is none of the three.
+  - REMOVE ANY CHARGE OR PLAN GATE ON THE RIGHTS ROUTES. Art. 12(5) makes the action free of charge,
+    so an export available only on a paid tier needs a reason that survives that provision.
+  - ANSWER IN TIME, AND GIVE REASONS WHEN THE ANSWER IS NO. Art. 12(3) asks for information on the
+    action taken without undue delay and in any event within one month of receipt, extendable by
+    two further months where necessary, with the extension and its reasons told inside the first
+    month. Where a request waits in a queue or a mailbox, record when it arrived and bring it to
+    someone before the month runs out. Where the route can decline a person's request, Art. 12(4)
+    asks that the person be told within the month why, and that they may lodge a complaint with a
+    supervisory authority and seek a judicial remedy: make what the refusal returns to them say both.
+  - RECORD WHAT THE ROUTE DELIBERATELY KEEPS. Erasure has limits - a legal retention duty, a
+  dispute,
+    an accounting record - and writing them beside the route is what turns an inconsistency into a
+    documented decision.
+data_categories:
+  - user.account
+  - user.contact.email
+  - user.name
+  - user.unique_id
+fingerprint_spec: directory

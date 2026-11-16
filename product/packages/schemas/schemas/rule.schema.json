@@ -1,0 +1,562 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/rule.schema.json",
+  "title": "Rule (authoring format)",
+  "description": "Format of the rule-authoring YAML: the rule files that build the bundle the scanner runs are written in it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "pack",
+    "title",
+    "short_name",
+    "jurisdiction",
+    "legal_basis",
+    "severity",
+    "rule_confidence",
+    "detector",
+    "context_questions",
+    "remediation_template",
+    "problem_line",
+    "fix_line"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]+$",
+      "description": "Stable rule identifier. It appears in emitted findings and in suppression comments, so it must never be reused for a different rule."
+    },
+    "pack": {
+      "type": "string",
+      "description": "Rule pack this rule ships in."
+    },
+    "short_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60,
+      "description": "A short plain name for the person: what the layer-2 report's first screen and work list call the rule, where the title is detector-shaped. Required; at most 60 characters; no two rules share one (tools/build-bundle.mjs refuses a shared name)."
+    },
+    "problem_line": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text"],
+      "description": "Presentation only: the title of a finding the review marks to fix, on the finding's card and in every list that names it. It says what is wrong in the code, never a legal conclusion, and it must be true of every to-fix verdict this rule can produce: where the rule names more than one way to fail, the line names the duty, not one of the ways. The build moves it out of the rule into the bundle's rule-lines.json, so it is never part of the rule's digest (rests-on.ts ruleHash) and never handed to a review seat: changing it re-judges nothing. Required, with fix_line, since every rule carries both.",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60,
+          "pattern": "^[^{}<>\\u0000-\\u001F\\u007F-\\u009F]+$",
+          "description": "The form with no slot, used whenever the program has no fact to fill a slot with, or the filled template would pass 60 characters. At most 60 characters: the card's heading is '# F<n> · ' and this line inside a 75-column raw line."
+        },
+        "template": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 60,
+          "pattern": "^[^<>\\u0000-\\u001F\\u007F-\\u009F]+$",
+          "description": "The same line with one or both slots, {data} (the kinds of data the program established at the decisive place, a plural or singular noun phrase such as 'e-mail addresses') and {recipient} (who receives them, such as 'the analytics service'). Used only where the program has a fact for every slot it names and the filled line is at most 60 characters; otherwise 'text' is used. No other brace is allowed (tools/build-bundle.mjs, product/packages/cli/src/rule-lines.ts)."
+        }
+      }
+    },
+    "fix_line": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "pattern": "^[^{}<>\\u0000-\\u001F\\u007F-\\u009F]+$",
+      "description": "Presentation only: what to do, in one line of at most 120 characters, on the card of a finding to fix ('What to do'). Written from remediation_template and no wider than it; engineering guidance, not legal advice. Kept out of the rule's digest and out of every review seat's payload exactly as problem_line is."
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 180,
+      "description": "One-line summary of the compliance gap the rule looks for, phrased as a concern rather than a conclusion. RAISED FROM 120 TO 160 ON 2026-09-03 AND FROM 160 TO 180 ON 2026-09-04. 120 had stopped being a guard and become the reason four shipped titles were untrue: a later change added clauses to eu-consent-001, eu-consent-014, baseline-004 and baseline-007 whose constructs the titles do not name, and three of the four sat at 111-117 characters with no room for the words that would fix them, so the corrections were withdrawn and carried to the owner instead. 160 was set to the longest title that round wrote (155) plus five characters. INDEPENDENT VERIFICATION THEN MEASURED WHAT 160 STILL COST: eu-consent-001 cannot be made fully descriptive inside it, because a title naming the vendor host, the wrapper package AND the container identifier its clause 3 also fires on is 168 characters. 180 is the smallest multiple of ten that admits that title with margin, and it is set from a measured requirement rather than from a round number. The number is not a budget to spend: this field is the one the console summary line and the SARIF shortDescription carry alone."
+    },
+    "jurisdiction": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "Jurisdictions the rule applies to: \"EU\" or ISO 3166-1 alpha-2 country codes. Matched against ScanProfile.distribution_regions."
+    },
+    "legal_basis": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Sources the rule rests on. At least one is mandatory: a rule that cannot cite its basis must not ship.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "cite",
+          "checked_at"
+        ],
+        "properties": {
+          "cite": {
+            "type": "string",
+            "description": "Citation in its official form (e.g. \"GDPR Art. 6(1)(a)\", \"ePrivacy Directive Art. 5(3)\")."
+          },
+          "url": {
+            "type": "string",
+            "description": "Link to the authoritative text, preferably a permanent one such as EUR-Lex."
+          },
+          "checked_at": {
+            "type": "string",
+            "format": "date",
+            "description": "Date the citation was last verified against the source. Law moves, so a stale check is a signal to re-review the rule."
+          },
+          "jurisdiction": {
+            "type": "string",
+            "description": "Jurisdiction this particular source establishes an obligation for: \"EU\" or an ISO 3166-1 alpha-2 country code. Every jurisdiction the rule declares must be covered by at least one legal_basis entry, otherwise the rule asserts reach it cannot source."
+          },
+          "supports_rule_condition": {
+            "type": "boolean",
+            "description": "Set false when this source is kept for reference but does NOT establish the obligation the rule tests (so it must not count as covering its jurisdiction)."
+          }
+        }
+      }
+    },
+    "effective_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date the underlying obligation starts to apply, as a full ISO-8601 calendar date (YYYY-MM-DD). Rules may ship ahead of this date so teams can prepare, and a rule whose date has not arrived still fires: the field records when the duty starts and is never read as a filter. The format constraint is what makes it safe to consume as data - it is the same constraint legal_basis[].checked_at already carries, and it was added on 2026-08-13 together with the wiring that first carried this field into a scan's output, because until then nothing read the value and a typo could not be noticed. All 49 values then on disk satisfy it. Where a rule rests on several instruments with different start dates, one scalar cannot express them: the seven baseline-* rules therefore declare none, and an absent field means 'this rule states no date', never 'the duty applies now'."
+    },
+    "sunset": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Date the rule stops applying, or null while it remains in force."
+    },
+    "superseded_by": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "ID of the rule that replaces this one, or null."
+    },
+    "severity": {
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "description": "Impact if the candidate turns out to be a real gap. Independent of how reliable the detector is, which is rule_confidence."
+    },
+    "rule_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "0..1 confidence in the detector itself, i.e. how often a hit is a real signal rather than noise. Kept separate from severity so that a high-impact but noisy rule can still ship, clearly marked."
+    },
+    "applicability_preconditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "JSON path expressions evaluated against the ScanProfile (e.g. features.analytics_ads[]). SINCE 2026-08-27 THIS IS A LABEL, NOT A GATE: the rule reads the tree regardless of the answers. What an answer does is label what the rule reports — a candidate or roster row whose profile answer puts the rule's subject out of scope carries declared_inapplicable_preconditions, and an expression that is unanswered (undefined or null at the path, or no profile at all) is listed in unanswered_preconditions and is never read as a no. The evaluator and statement of record is preconditionStatus in product/packages/cli/src/engine.ts. An earlier version of this description said the rule was evaluated only when all expressions hold; that was true until 2026-08-27 and is exactly the off-switch that change removed (it accounted for 21 of the 69 located misses in the 2026-08-26 pass-1 runs). Description corrected 2026-09-01; the field's name is kept for compatibility."
+    },
+    "detector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "engine"
+      ],
+      "description": "How candidates are found. The negative fields exist to keep precision high: output nobody trusts is output nobody reads.",
+      "properties": {
+        "engine": {
+          "enum": [
+            "builtin-regex",
+            "ast-grep",
+            "opengrep"
+          ],
+          "description": "Matching engine. \"builtin-regex\" uses the fields below; the others delegate to query_ref."
+        },
+        "match": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A line matching any of these raises a candidate (builtin-regex)."
+        },
+        "match_without": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Discard the candidate if the same line also matches any of these (same-line negation)."
+        },
+        "guard_missing": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The rule only fires when the guard is missing: if any of these appears anywhere within the scan scope (the whole project in a normal scan, the single file in a fixture test), the candidate is suppressed."
+        },
+        "also_in_file": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Suppress the candidate unless at least one of these also appears somewhere in the same file."
+        },
+        "path_without": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Skip candidates whose file path matches any of these, typically tests, examples and vendored code, where a match carries no compliance meaning. A clause SEVERAL rules must agree on belongs in shared_path_exclusions instead."
+        },
+        "shared_path_exclusions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z_][a-z0-9_]*$"
+          },
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Names of shared path-exclusion sets this rule imports from rules/path-exclusions/*.yaml, each contributing its clauses to detector.path_without exactly as if the rule had written them itself. The name is not aliasable on import, so two rules cannot disagree about what a set is called. Imports resolve first, in declared order, then the rule's own path_without clauses; the order is fixed so that a gate can assert the resolved list byte for byte, and nothing in the engine depends on it. A name no shared file declares is a hard error, so is one clause arriving from two named sets, and so is a clause the rule ALSO writes inline — there is no precedence between the two, because either precedence leaves one of them written down and never read. Imports are merged into path_without by tools/build-bundle.mjs, so a shipped bundle carries none and the scanner never needs the authoring tree; a rule reaching the engine with this field still on it is a hard error rather than a rule that silently reads every surface the sets exclude."
+        },
+        "file_globs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The scanning surface this rule declares for itself, as paths relative to the scan root. Supports *, **, ?, {a,b} and a leading ! for negation; a negation always wins, and a list of only negations means \"everything except these\". Absent means the walker's default surface. This exists because \"is this a test file?\" is the wrong question and \"does it matter, for THIS rule, that this is a test file?\" is the right one: a consent gate or an AI disclosure inside a test carries no legal exposure, while a live key or a real person's data inside a test fixture carries the same exposure it would anywhere, whether or not the file ships. Declared per rule and readable, rather than decided once for all rules inside the scanner."
+        },
+        "gate_view": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "yaml-anchors",
+              "comments-visible"
+            ]
+          },
+          "description": "Derived, read-only views of the file that this rule's also_in_file clauses are ALSO tested against, in addition to the file's own comment-stripped text. Opt-in per rule and inert when absent: no view is built for a rule that does not name one, and the file's own text is always tested first, so a view can only open a gate that was shut and can never shut one that was open. NO VIEW REACHES THE PER-LINE match STEP AND NO VIEW REACHES guard_missing. The second is absolute and is argued under \"comments-visible\" below; the reason for the first differs by member and is stated with each. \"yaml-anchors\" is the .yml/.yaml document with anchors, aliases and merge keys resolved per YAML semantics, which is what lets a gate see a bound a merge key (<<: *common) puts in another block of the same document; it may not reach the match step because a resolved document has its own line structure and no correspondence to the file's, and malformed input falls back to the unexpanded text and is counted in stats.derived_views_failed. \"comments-visible\" is the file's own text with NOTHING blanked - the reading every gate had before 2026-07-27 - offered back to one rule at a time. THE 2026-07-27 DEFAULT IS NOT CHANGED AND MUST NOT BE: a maintainer writing that a duty is unmet must not be read as evidence that it is met, and that failure was demonstrated on four rules in one day. What makes the opt-in admissible is the SIGN of this field. also_in_file is POSITIVE corroboration, so a comment that satisfies it ADDS a candidate the adjudicator then reads; guard_missing is negative, so a comment that satisfies it DELETES candidates, and no view reaches guard_missing or ever will (see derive.ts). It does not reach the per-line match step either, and there the reason is NOT line structure - this view is the file's own text, line for line - but that the match side already has its own field for the same question: detector.match_in_comments, which each rule declares for itself. A rule naming this view is stating that a comment is admissible evidence FOR ITS OWN CLAUSES, so its clauses must be specific enough that a maintainer's note about the OPPOSITE state cannot satisfy them, and its evidence_template must say that the corroboration may be prose. THE ENGINE CANNOT MAKE THAT DISTINCTION AND DOES NOT TRY: a comment reading \"retention: we do not delete anything\" opens a gate whose clause is a bare unit word, which is a candidate layer 2 reads rather than a miss, and is why the requirement above sits on the rule's author. The view is built only where the file's raw text and its comment-blanked text DIFFER - a file carrying no comment the stripper recognises has no second string to offer and produces none - and it is counted in stats.derived_views_built exactly as yaml-anchors is. It has no parse and no ceiling, so it has no failure mode and can never increment stats.derived_views_failed."
+        },
+        "gate_scope": {
+          "enum": [
+            "file",
+            "directory",
+            "project"
+          ],
+          "default": "file",
+          "description": "How far the also_in_file corroboration may look for the fact it requires. \"file\" is the default and is the behaviour every rule has had since that field existed: the clause list is tested against this file's own comment-blanked text and nothing else. \"directory\" ALSO opens the gate when the clause list matched the comment-blanked text of another file the rule is allowed to read whose immediate parent directory is this file's own - the same reading of the word `directory` that fingerprint_spec has, so it does not descend into subdirectories. \"project\" ALSO opens it when any file the rule is allowed to read anywhere in the scan matched. THE FILE'S OWN TEXT IS TESTED FIRST AND ITS RESULT STANDS, so a wider scope can only open a gate that was shut and can never shut one that was open - which matters because a clause may carry a negation, and a negation is more often false over more text: measured 2026-08-13 over the 94 pinned trees, re-scoping eu-consent-021's gate to the repository REMOVED 67 of its 67 locations, and the union rule here is what makes that impossible. THE DECISION IS TAKEN AFTER THE WHOLE TREE HAS BEEN WALKED, on the same two-phase shape guard_missing already uses: a candidate whose file-scope gate shut is HELD in place - its line number and its position among that file's other candidates unchanged - and is released or removed once every file has been read, so a corroborator in a file walked later still counts. ONLY A FILE'S OWN COMMENT-BLANKED TEXT CORROBORATES ANOTHER FILE: a derived view (gate_view) opens the gate of the file it was built from and never corroborates a different one, because a reader must be able to open the corroborating file at the line the record names and a view has its own line structure. Opt-in per rule and inert when absent: a rule that declares nothing, or declares \"file\", is evaluated by exactly the expression it is evaluated by today and cannot observe that this field exists. THE CORROBORATION CORPUS IS THE RULE'S OWN DECLARED SURFACE, not the tree: file_globs and path_without are applied first, so a rule that excludes tests is not corroborated by a test, and no file is read that the rule was not already going to read. Declaring gate_scope without also_in_file is a hard error at build time (tools/build-bundle.mjs) rather than a silent no-op. WHAT A WIDER SCOPE DOES NOT ESTABLISH: that the corroborating file and the candidate belong to the same code path. It establishes that the fact is written somewhere in the scope, which is a weaker statement than the file scope's, so a rule widening its gate states the weaker reading in its own evidence_template, and the finding carries the corroborator's file and line in locations[].corroborated_from so a reader can check it. A gate that stays shut at project scope proves nothing about the tree: it establishes that these patterns did not match this text. ONE FILE CORROBORATES THE WHOLE SCOPE, added 2026-09-06: the corroborator is registered once per (rule, scope) and every held candidate of that rule in that scope is then released by it and names it, so a single package-level file - a whole-application configuration, a catalogue, a fake-data fixture - opens the gate for every candidate the rule raises around it. AND THE FILE THE RECORD NAMES IS THE FIRST ONE THE WALK FOUND, not the nearest, not the most relevant and not the only one: where several files in the scope would corroborate, locations[].corroborated_from names whichever the walk reached first, so a reader who finds the named file unconvincing has not thereby established that the scope holds nothing better."
+        },
+        "gate_applies_to": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^match\\[[0-9]+\\]$"
+          },
+          "description": "WHICH OF THIS RULE'S OWN CLAUSES THE also_in_file CORROBORATION IS ABOUT, as field[index] with the index 0-based, exactly the reference grammar detector.cost_exempt and detector.volume_exempt already use. ABSENT MEANS EVERY CLAUSE, which is the behaviour every rule that declares also_in_file has had since that field existed, byte for byte. It exists because the corroboration gate had a scope and no SUBJECT: declared on a rule whose clause groups are written so that any one of them can fire alone, a rule-global gate silences the clauses that were never ambiguous along with the one that was, which is why remote-actuation-001 and eu-minors-001 each record a decision in their own file AGAINST declaring one. Only match clauses may be named: a gate's subject is a clause that raises candidates, and naming also_in_file[i] or path_without[i] would name a clause that raises none. A candidate is in the subject only when EVERY clause it fired is named here and at least one clause fired, so a line that also fired an unnamed clause is never touched, and a candidate the structural reading produced - which fires no match clause - is never touched either. An index past this rule's own match list, a duplicate, an empty list, and this field without also_in_file are all hard errors in tools/build-bundle.mjs rather than silent no-ops. What the engine DOES with the subject is detector.gate_mode, and the default there removes nothing."
+        },
+        "gate_mode": {
+          "enum": [
+            "annotate",
+            "gate"
+          ],
+          "default": "annotate",
+          "description": "WHAT THE ENGINE DOES WITH THE CORROBORATION IT COMPUTED FOR THE CLAUSES detector.gate_applies_to NAMES. Read only when that field is present, and it is the field that decides whether this mechanism can create a miss. \"annotate\" is the default and REMOVES NOTHING: every candidate stands, and each location of a subject clause carries corroborated_in_project - true with the corroborating file and line, false when the whole scope carried none - so layer 2 receives the fact layer 1 computed as a named premise and decides the candidate with it. \"gate\" is the subtracting form: a subject-clause candidate whose scope carries no corroboration is removed and recorded in suppressed_by_corroboration exactly as a rule-global gate's removal is. Subtraction is the only operation that can create a miss, so the mode that subtracts is the one a rule has to ask for in terms. Whether a project-wide fact about the TREE may be computed at all is settled and is not what this field asks: \"does this tree anywhere define X\" is read from code and is layer 1's to compute either way, while a fact about the PRODUCT - what it is for, who it serves - is asked of the person running the scan and is never inferred from source vocabulary."
+        },
+        "resolve_import_aliases": {
+          "type": "boolean",
+          "description": "When true, each line is ALSO tested against a copy of itself in which import aliases are replaced by the module they name (JS/TS `import X from \"m\"`, `import { A as B } from \"m\"`, `import * as N from \"m\"`, `const X = require(\"m\")`; Python `import m as alias`, `from m import name as alias`). Only names the module does NOT itself use are bound, since an unrenamed import writes the module's own spelling at the use site and hides nothing. The original line is tested first and is the sole authority for the candidate's line number and quoted text; a candidate raised from the resolved line must also survive the rule's own match_without on both texts. Opt-in per rule and inert when absent."
+        },
+        "resolve_local_values": {
+          "type": "boolean",
+          "description": "When true, each line is ALSO tested against a copy of itself in which names this SAME FILE defines as string literals have been replaced by those literals, and adjacent literals joined by `+`, `.` or `<>` have been folded into one - so `const HOST = \"example.com\"` several lines up makes `fetch(\"http://\" + HOST)` read as `fetch(\"http://example.com\")`, and `get(TOKEN_KEY)` read as `get(\"api_key\")`. Binding forms: an assignment whose whole right-hand side is a string literal (`const`/`let`/`var`/`:=`/`$x =`/a bare `X = \"s\"`), PHP `define(\"NAME\", \"s\")`, an Elixir module attribute, and a `key: value` line in a configuration file. ONE HOP AND ONE FILE: a definition whose right-hand side is another name binds nothing, so there is no chain to walk; nothing is carried across files; a value that exists only at runtime (an environment variable, a request header, a function parameter) cannot be reached at all. A name defined twice with two different literals is unbound rather than guessed. The original line is tested first and is the sole authority for the candidate's line number and quoted text; a candidate raised from the resolved line must also survive the rule's own match_without on both texts, and it carries the definition site it was reached through in `locations[].resolved_from`. Opt-in per rule and inert when absent."
+        },
+        "join_bracketed_constructs": {
+          "type": "boolean",
+          "description": "When true, this rule's match clauses are ALSO tested against the whole of the BRACKET-BALANCED construct that OPENS on each line, folded onto one string - so an options object, a struct literal or a call whose arguments are written over several physical lines is matched as one text. Until this existed the engine tested one physical line at a time and no clause of any rule could see such a construct as a whole, which baseline-005 records as a KNOWN LIMIT of its own clause (11) and eu-retention-003 as a half it \"cannot see\". THE FOLD RULE: a line whose brackets open more than they close OPENS a construct; the construct runs to the last line before the balance returns to where it was; those lines are joined by one space with whitespace runs collapsed. Brackets inside a string literal are not counted, and the three kinds are not matched against each other. A RUN OF THREE IDENTICAL \" OR ' CHARACTERS IS ONE DELIMITER AND WHAT IT OPENS RUNS ACROSS LINES - a Java text block, a Python docstring in either spelling, a Kotlin or C# 11 raw string - so the body of one contributes no brackets and the construct enclosing it closes where the language says it does; three BACKTICKS are not such a delimiter (a Markdown code fence is not a string, and one backtick opens a template literal this scanner does not carry across lines either), and a block that is never closed leaves the rest of that file inside a string, which folds nothing there and costs a match pass rather than a candidate. TWO CONTINUATION FORMS ARE DELIBERATELY NOT FOLDED and no rule may be written as though they were: a line ending in a trailing operator with no bracket (`... +`), and a backslash continuation - every construct the batch that asked for this view has evidence of is bracket-balanced, and the first instance that needs another form is the reason to add it. THE ORIGINAL LINE IS TESTED FIRST AND IS THE SOLE AUTHORITY for the candidate's line number and quoted text: the fold is a second string at the SAME index, one per line, so no line is added, removed, split or reordered and a finding on a five-line literal reports the line the literal OPENS on. A candidate raised from the folded text must also survive the rule's own match_without on BOTH the folded text and the original line, so a clause that is true of the opening line alone still cancels it; and the fold is reached only where the original line produced no hit, so it can never remove a candidate that exists without it. Because the reported line's own text does not show what was matched - the attribute a cookie literal lacks is absent several lines below it - the candidate carries the span it was folded from in locations[].joined_from, and that field is not optional. A CONSTRUCT INSIDE ANOTHER IS FOLDED AT EACH OPENING LINE, AND FROM 2026-09-07 THE ENCLOSING CANDIDATE IS NOT REPORTED WHEN IT READS NOTHING ITS OWN CONTENTS DO NOT. A literal written inside a closure folds on its own opening line and so does the closure, and both folds carry the literal; fingerprint_spec does not collapse them and never did. THE CONDITION, and nothing wider: a fold-derived candidate is dropped only when, for the same rule in the same file, EVERY match clause it fired is also fired by candidates whose own fold span - or whose line, for a candidate with no span - lies inside its fold span. So an outer candidate that fires a clause NOTHING inside it fires is reported exactly as it was: a clause requiring a cookie-family word ON THE LINE is satisfied at the enclosing construct, whose opening line carries the word, and not at the literal inside it, and that reading exists nowhere else in the file. Nothing without a fold span is ever dropped, a candidate of a DIFFERENT rule inside the span collapses nothing, and no line number moves. What was removed is visible twice over: stats.joined_outer_duplicates_dropped counts the drops and locations[].also_opens_at names each collapsed opening line on the first surviving report inside its span, in file order, so the count is checkable against the document that carries it. Measured over sixteen corpus trees before the mechanism shipped: 110 of 175 fold-derived candidates collapse and 6 do not, and no clause reading is lost by any of the 110. Measured again on twelve of those sixteen by the unit that shipped it, this time by running the engine rather than a replica of it: 51 candidates collapse where the pre-ship figure predicted 50, and for every one of the 51 every clause it fired is also fired by a candidate that survived inside its span, so the shipped total over the sixteen is at least 111 and the lost readings are still none. Two genuinely DIFFERENT constructs, one inside the other, firing the same clause for different reasons is the shape this condition cannot tell from a duplicate, and it drops the outer one; the corpus gives no instance and the two records above are what make one findable. It is de-duplication of one construct's several depths, never a judgement about whether a candidate is real - that is layer 2's - and the remaining candidates are cost for the adjudicating agent to weigh and never a miss. A FOLD THAT IS WRONG ABOUT WHERE A CONSTRUCT ENDS produces a long meaningless string: it costs one match pass and can never cost a candidate, because the original line was tested first and its result stands. Opt-in per rule and inert when absent: no fold is computed for any file unless a rule that declared this reaches it, and a rule that declares nothing cannot observe that the capability exists."
+        },
+        "match_in_comments": {
+          "type": "boolean",
+          "description": "When true, this rule's match clauses are tested against the raw line ONLY, so it may raise a candidate whose evidence exists only inside a comment. When absent (the default from 2026-08-19), a line is a candidate only if match fires on the raw line AND on the same line with its comments blanked by strip-comments.ts — a comment no longer matches like code. This is opt-in because it is a WIDENING and because it re-opens the defect the default closes: a rule with no match_without could otherwise fire on a maintainer's sentence after //, on a commented-out call, or on a fixture's own header comment. It exists for the one kind of rule where a comment is still the thing: a commented-out credential is still a leaked credential. It changes nothing about guard_missing or also_in_file, which have read the comment-blanked view since 2026-07-27."
+        },
+        "query_ref": {
+          "type": "string",
+          "description": "Reference to an external ast-grep/opengrep query (W2+)."
+        },
+        "cost_exempt": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "clause",
+              "reason"
+            ],
+            "properties": {
+              "clause": {
+                "type": "string",
+                "pattern": "^(match|match_without|guard_missing|also_in_file|path_without)\\[[0-9]+\\]$",
+                "description": "The clause this exemption is for, as field[index] with the index 0-based, e.g. match[16]."
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 20,
+                "description": "Why no cheaper wording accepting the same lines exists. Read by review, never by the engine."
+              }
+            }
+          },
+          "description": "Clauses whose measured cost is over one of the clause-cost gate's ceilings and that the author has accepted anyway, one entry per clause, each with its reason written out. The gate's job is to make an author WRITE DOWN that a cost was accepted, not to let an expensive clause in unremarked. THE ENGINE NEVER READS THIS FIELD. It changes no pattern, admits no line and suppresses nothing — a clause named here matches exactly what it matched before, which is why the mark can never create a miss. A mark naming a clause the rule does not have is a hard failure of that gate, and so is a mark on a clause that is under every ceiling: an exemption that outlives its reason is a record nobody is reading. A cost figure is a COST figure and never a precision one, so neither this field nor the gate that reads it ever asks for a clause to be narrowed. Added 2026-09-16 with the gate; zero rules declare it."
+        },
+        "volume_exempt": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "clause",
+              "reason"
+            ],
+            "properties": {
+              "clause": {
+                "type": "string",
+                "pattern": "^(match|match_without|guard_missing|also_in_file|path_without)\\[[0-9]+\\]$",
+                "description": "The clause this exemption is for, as field[index] with the index 0-based, e.g. match[12]."
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 20,
+                "description": "What the matched lines were read to be, and why the clause is kept as it is. Read by review, never by the engine."
+              }
+            }
+          },
+          "description": "Clauses whose matched-line volume crosses the clause-volume gate's ceiling and whose lines the author has READ and accepted, one entry per clause, each with the reading written out. Like cost_exempt, it exists because the gate's job is to make an author read a wide clause once and write down what they saw, not to keep a wide clause out. THE ENGINE NEVER READS THIS FIELD. It changes no pattern, admits no line and suppresses nothing - a clause named here matches exactly what it matched before, which is why the mark can never create a miss. A mark naming a clause the rule does not have is a hard failure of that gate, and so is a mark on a clause under the ceiling: an exemption that outlives its reason is a record nobody is reading. Volume is a COST figure and never a precision one, so neither this field nor the gate that reads it ever asks for a clause to be narrowed - being wide is not a defect. Added 2026-09-16 with the gate; zero rules declare it."
+        },
+        "structural_checks": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "accessibility-elements-v1"
+            ]
+          },
+          "description": "Named sets of structural checks this rule is ALSO read by, in addition to its own match patterns. Opt-in per rule and inert when absent: no file is parsed for a rule that names none, no grammar is loaded on its account, and a rule that names none cannot observe any difference. A check set reads the file's parse tree and may only ADD candidates — it never removes one the match patterns produced, every candidate it raises reports a line of the original file, and every way the parse can fail (no grammar for the language, a grammar that will not load, a parse that throws, a file over the size ceiling) falls back to the line-based reading and is counted in stats.structural_*. The words a check set matches on come from detector.vocabulary, never from the code implementing it, and a rule that opts in without declaring one of the lists its set reads is a hard error rather than a silent fallback. A named set the engine's registry does not implement is a hard error too, not a silent no-op. Versioned in the name so that a change in what the checks mean ships as -v2 and an author sees it in the rule."
+        },
+        "vocabulary": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "description": "Named lists of literal strings this rule matches on, declared once and spliced into every place that needs them: a match pattern writes (?&name) where the list belongs, and a structural check set reads the same list by name. It exists so that the words a rule looks for are written in exactly one place — the structural prototype kept its own copies of this rule's element and handler lists and they had already drifted by the time the two were read side by side. Items are literal text, not regular expressions: each is escaped when spliced into a pattern, and the branches are ordered longest-first so no item can shadow a longer one. A (?&name) naming an undeclared list is a hard error, and an unexpanded (?&name) is not a valid regular expression, so a consumer that forgets to expand it fails loudly instead of matching nothing. A list SEVERAL rules must agree on belongs in shared_vocabulary instead."
+        },
+        "vocabulary_matching": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "minProperties": 1,
+            "properties": {
+              "case_insensitive": {
+                "type": "boolean",
+                "description": "The item's ASCII letters match in either case, so a list carrying `postmark` also reaches `Bamboo.PostmarkAdapter`. Only ASCII letters fold: `toUpperCase()` on a non-ASCII letter is not a per-character operation (`\u00df` upper-cases to two characters), and a class built from one would match strings nobody wrote."
+              },
+              "separator_insensitive": {
+                "type": "boolean",
+                "description": "A run of `-`, `_` or `.` BETWEEN two alphanumerics matches any of those separators or none, so a list carrying `help_scout` also reaches `helpscout` and `help-scout`. A leading or trailing run is never flexible, whitespace and `/` are never separators, and the run may never grow — `mailgun.js` reaches `mailgunjs` and never `mailgun--js`. This is what keeps the anchor from reaching across a boundary it was not meant to cross."
+              }
+            }
+          },
+          "description": "How this rule's vocabulary lists are spelled into the patterns that splice them, keyed by list name. Opt-in per list and inert by absence: a list with no entry compiles the byte-identical alternation it compiled before this field existed, which is what lets the capability be turned on one list at a time and measured one list at a time. Both flags only ever WIDEN what a list matches, so a flagged list may not be spliced into match_without, path_without or guard_missing, and may not sit inside a negative lookahead or lookbehind anywhere in any pattern of any field — widening anything that is read as a negation makes the rule fire on FEWER lines, which is a narrowing wearing the coat of an addition, and it is a hard error rather than a silent one. The field name is not the whole question: (?!...) inside match is read as a negation by the regular-expression engine just the same, and eu-accessibility-001 and eu-retention-002 both splice a list that way today. A name that is not one of this rule's lists, a flag name that does not exist, an entry that turns nothing on, and this object itself being empty are all hard errors too: each of the four reads in review as the capability being on and compiles as it being off. A SHARED list declares its own matching in rules/vocabulary/*.yaml — how a list's spellings are matched is a fact about the list, not about any rule importing it — and tools/build-bundle.mjs merges it into this field, so a rule may not also flag an imported list here.",
+          "examples": [
+            {
+              "payment_recipients": {
+                "case_insensitive": true,
+                "separator_insensitive": true
+              }
+            }
+          ]
+        },
+        "shared_vocabulary": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+          },
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Names of shared word lists this rule imports from rules/vocabulary/*.yaml, each becoming a detector.vocabulary list of that same name — spliced with (?&name) and read by structural check sets exactly like a list the rule declared itself. The name is not aliasable on import, deliberately: the list has one name, so two rules cannot disagree about what it is called either. A name that no shared file declares is a hard error, and so is a name this rule ALSO declares in its own detector.vocabulary — there is no precedence between the two, because either precedence leaves one of the two lists written down and never read. Imports are merged into detector.vocabulary by tools/build-bundle.mjs, so a shipped bundle carries none and the scanner never needs the authoring tree; a rule reaching the engine with this field still on it is a hard error rather than a rule that silently looks for nothing."
+        }
+      }
+    },
+    "context_questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "Questions the adjudicator must answer from the surrounding code before reaching a verdict. At least one is mandatory: a detector hit on its own never establishes non-compliance, and these questions are what keeps the pipeline from asserting more than the evidence supports."
+    },
+    "evidence_template": {
+      "type": "string",
+      "description": "The rule author's account of what a match establishes and what it does not — in several rules the only place a limit of this detector is disclosed. Copied verbatim into every candidate (findings.schema.json, candidates.items.evidence_template) and passed to the adjudicating agent, so it is shipped prose rather than an internal note, and it is screened by all three build lints (injection, legality assertion, CJK). It carries no more authority than 'title': both are the same author's prose about the same detector, and product/plugin/agents/legal-adjudicator.md says what an adjudicator does when they disagree. Not an excerpt of the source and not rendered by any template engine: '{file}' and '{line}' stand for the first entry of the candidate's 'locations' and are deliberately left unsubstituted, because substituting the first location would misdescribe a candidate that carries several, and because a path out of the scanned repository does not belong inside a field an agent reads as the rule's own words."
+    },
+    "remediation_template": {
+      "type": "string",
+      "description": "Guidance for the engineer: what the gap is and a concrete change that would close it. Written as engineering guidance, not legal advice."
+    },
+    "data_categories": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)*$"
+      },
+      "description": "fideslang taxonomy keys for the data involved (e.g. user.device.cookie_id). THE VOCABULARY IS OPEN AND UNNORMALISED, AND THIS SCHEMA CONSTRAINS ONLY SHAPE, NEVER MEMBERSHIP. The pattern requires lowercase dotted segments and 'uniqueItems' forbids a key repeated inside one rule; both were added on 2026-08-13 together with the wiring that first carried this field into a scan's output, on the same reasoning as effective_date's format constraint - until then nothing read the value, so a typo could not be noticed. All 99 values then on disk satisfy both. There is deliberately no enum: a census on 2026-08-13 found 33 distinct values over 99 entries with three unreconciled splits, and those three were reconciled the same day against published fideslang (owner-approved): the census now reads 30 distinct values over 99 entries, 90 of which are keys in fideslang 2.0.0. What remains is parent keys used beside their own children (user.device beside user.device.cookie_id), which fideslang itself declares and which is legitimate granularity rather than a split, and five house keys over nine entries that no fideslang release carries. Three declarations, three different statements: a populated list names categories, '[]' says the author considered the question and named none, and omitting the field says the rule states nothing at all - eu-cra-001 and eu-cra-002 are product-security duties with no personal-data object, and eu-data-act-001 argues its own absence from the taxonomy being one of personal data while its duty is expressly about any data."
+    },
+    "fingerprint_spec": {
+      "enum": [
+        "default",
+        "file",
+        "directory",
+        "project",
+        "file+component"
+      ],
+      "default": "default",
+      "description": "How finding_id is derived, and therefore when two hits count as the same finding across scans: \"default\" keys on rule, file and matched line, \"file\" on rule and file, \"directory\" on rule and the file's immediate parent directory, \"project\" on the rule alone (a single finding for the whole repository). \"directory\" exists for volume: a tree of near-identical files becomes one question the agent answers once, with every location still carried in the output, instead of one adjudication per file or a rule narrowed until the tree disappears."
+    },
+    "seat_model": {
+      "enum": [
+        "sonnet",
+        "opus"
+      ],
+      "description": "The model layer 2's place seats and answer seat read this rule's candidates on. ABSENT MEANS `sonnet`, which is every rule today: on present evidence no rule is set to `opus` (the clarified wording took Sonnet's misses from 61 to 16 under the same reader). The packer never puts two models in one seat. The person's run-wide `--seat-model` overrides it, and the run names every rule read on a model other than this setting, with its place count, so an override is never silent (review R18)."
+    },
+    "finding_role": {
+      "enum": ["duty_check", "inventory"],
+      "description": "What a finding of this rule is. ABSENT MEANS `duty_check`: the finding says whether a duty is met. `inventory`: a match establishes only that the processing exists, so a finding is a record of it unless the review marks a duty unmet with the line that puts it at risk. A rule declares `inventory` only where its own `evidence_template` says a match establishes existence only, and the declaration is verified by someone who did not write it."
+    },
+    "duty_about": {"enum": ["product_runtime", "release_supply_documentation"], "description": "What the rule's duty is about. AN OPT-IN. `product_runtime`: the duty attaches only to what the product does when it runs (processing the shipped product performs: its own trackers, its handling of data-subject requests, retention in its own storage), so a file outside every shipped artifact cannot create it, and ONLY such a rule's finding whose every kept place does not ship (documentation, development or test) is listed as not part of the shipped product (disposition row 4). ABSENT MEANS NOT DECLARED, and a finding of the rule NEVER takes row 4, whether the not-shipped value is the program's premise or the seat's own `ships`: a rule whose duty can also arise from what the repository itself publishes or holds (a credential anywhere in it, a document, a docs site, a release or CI workflow, a store declaration, a notice) must not declare `product_runtime`, and a rule nobody weighed stays counted. `release_supply_documentation` behaves exactly as absence; it records that the duty was weighed and is about how the product is released, supplied or documented (for example the CRA's information duties, which live in install documents, and its supply duties, which live in release workflows). This is the one place that says which rules are such; the disposition, the second look and the seat's brief read it from the rule."},
+    "reading_class": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "class"
+      ],
+      "description": "What ONE answer of this rule covers, and therefore how much of a candidate a single adjudication seat has to read before it may rule. Added 2026-09-21 with the unit-of-judgment design. OPTIONAL, AND ABSENT MEANS \"per-location\": a rule that declares nothing is read the way every rule was read before this field existed, every location its own reading unit, which can only read more than a declared class and never less. IT IS A READING INSTRUCTION AND NOT A DETECTOR SETTING: nothing here changes what the patterns match, which locations are written, or how finding_id is derived (fingerprint_spec does that and is a separate question) - subtraction is the only operation that can create a miss, and this field subtracts nothing. The value is carried into the adjudication payload's 'rules' block beside the rule's own prose, so the seat holds one instruction and the CLI holds no table of its own. WHAT IT IS NOT: it is not a claim that the machine can check the resulting list is complete. That holds only where 'item_source' is 'token', 'clause' or 'sub_shape' - there the scanner has the item set before any model reads a line. Where 'item_source' is 'reading' the completeness of the list is the seat's stated duty and no gate can confirm it; product/plugin/skills/legal-scan/SKILL.md step 5a says so in the same words.",
+      "properties": {
+        "class": {
+          "enum": [
+            "existence",
+            "enumeration",
+            "per-location",
+            "mixed"
+          ],
+          "description": "\"existence\" - one question for the whole installation: the seat establishes the premise from the strongest same-kind line groups it was handed, answers the duty's elements by one recorded project-wide search, and records the rest as not read rather than pretending to have opened them. A verdict of this class may not be not_applicable while any group is unread. \"enumeration\" - the finding IS a list (vendors, regions, constructs, paths), so every group is read and each item gets its own entry or its own quoted dismissal. \"per-location\" - each matched line is separately a possible violation, so the reading unit is the location and the verdict comes from the most serious line; this is also what an absent field means. \"mixed\" - the rule asks questions of more than one of those shapes, and 'limbs' says which question is which."
+        },
+        "elements": {
+          "type": "array",
+          "minItems": 1,
+          "description": "THE PARTS OF THE DUTY THIS RULE'S OWN QUESTION TEXT WALKS, one entry each, so that a seat's evidence can be checked element by element (design section 2 evidence rule E3, built in unit R1 on 2026-09-22). Declared ONLY where a question enumerates the parts in its own words - the eight rights of eu-dsr-001 Q5, the two duties of eu-cra-001 Q5, the who/when/what of eu-consent-016 Q5 - and never invented: an element that the question does not name is not declared here, and a part that only the reader of the rule infers is not an element. It is allowed on every class, because a mixed or enumeration rule can still walk elements in one of its questions. WHAT IT OBLIGES: the gate over a verdict of this rule requires, per element, either an evidence entry with role 'element' carrying this name or a recorded project-wide search whose 'for' is this name - a search that returned nothing is an answer, an omission is not. WHAT IT IS NOT: it is not a detector setting, it matches nothing, and it does not change which locations are written. A question whose walk depends on a fact about the product that only the person running the scan can settle - which Member States a service reaches, whether a deployment is China-facing - declares no elements, because code cannot decide that fact and a gate built on it would fire on every candidate alike.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "question",
+              "text"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9_]*$",
+                "description": "A short identifier for the element, lower case with underscores. It is what an evidence entry's 'name' and a recorded search's 'for' must equal, so it is matched exactly and a rename here is a rename in both."
+              },
+              "question": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "The 1-based position of the question whose text walks this element - question 1 is context_questions[0]. Like 'limbs' above, this map goes stale silently when questions are renumbered, inserted or deleted, so a rule whose questions are edited has its elements re-read against the new text."
+              },
+              "text": {
+                "type": "string",
+                "description": "The element in the rule's own words, quoted or closely paraphrased from the question named above, so that a reader of a verdict can see what was asked without opening the rule."
+              }
+            }
+          }
+        },
+        "item": {
+          "type": "string",
+          "description": "What one entry of the list is, in the rule's own words - \"vendor\", \"service and region pair\", \"auxiliary path\", \"tool handler\". Written where the class or a limb is \"enumeration\", so that a reader of a verdict can say what it would take for the list to be short. Prose for a human and never matched against anything."
+        },
+        "item_source": {
+          "enum": [
+            "token",
+            "clause",
+            "sub_shape",
+            "reading"
+          ],
+          "description": "WHERE AN ITEM'S IDENTITY LIVES, which is what decides whether any machine can check the list is complete. \"token\" - the item IS the matched word, so the scanner holds the whole item set before a model reads a line. \"clause\" - the item is which of the detector's clauses fired. \"sub_shape\" - the item is distinguished by text a same-kind line group folds away and only the finer shape keeps, so the reading unit drops to the sub-shape: eu-cra-002's version value and platform-store-002's attribute value are the two, and in both the rule's own text says the value is what the question turns on. \"reading\" - the item is found by reading (an entry point, a handler, a held value, a channel, a connector), so no gate can say the list is complete and the seat states in its reasoning that it walked every group for that limb."
+        },
+        "limbs": {
+          "type": "array",
+          "minItems": 1,
+          "description": "For a \"mixed\" rule, the questions that depart from the rule's own class, one entry each. A question not named here is read at the widest class among this rule's limbs, and at \"per-location\" where no limb is wider \u2014 and since \"per-location\" is the widest unit there is, that is the effective default: an unnamed question is read location by location, and the seat also reads the question's own text. This is a map onto context_questions BY POSITION and it is the one part of this field that goes stale silently: renumbering, inserting or deleting a question moves every limb below it, so a rule whose questions are edited has to have its limbs re-read against the new text.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "question",
+              "class"
+            ],
+            "properties": {
+              "question": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "The 1-based position of the question in this rule's own context_questions array - question 1 is context_questions[0]."
+              },
+              "class": {
+                "enum": [
+                  "existence",
+                  "enumeration",
+                  "per-location"
+                ],
+                "description": "How this one question is answered: once for the installation, as a list, or once per reading unit. \"mixed\" is not available here - a limb that is itself mixed is two limbs."
+              },
+              "item": {
+                "type": "string",
+                "description": "As 'item' above, for this limb's list."
+              },
+              "item_source": {
+                "enum": [
+                  "token",
+                  "clause",
+                  "sub_shape",
+                  "reading"
+                ],
+                "description": "As 'item_source' above, for this limb's list."
+              }
+            }
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Who produced and reviewed the rule. Kept for auditability of the rule base itself.",
+      "properties": {
+        "compiled_by": {
+          "type": "string",
+          "description": "Who authored or compiled the rule."
+        },
+        "reviewed_by": {
+          "type": "string",
+          "description": "Who reviewed the legal basis and the detector."
+        }
+      }
+    }
+  }
+}

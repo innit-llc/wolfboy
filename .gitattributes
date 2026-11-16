@@ -1,0 +1,6 @@
+# Shell scripts keep LF line endings in every checkout, Windows included: Git for Windows' installer sets
+# core.autocrlf=true, and bash cannot run a script whose lines end in CR (the plugin's launcher then stops with
+# "set: pipefail: invalid option name", and its hooks' shim cannot start).
+product/plugin/bin/* text eol=lf
+*.sh text eol=lf
+*.bash text eol=lf

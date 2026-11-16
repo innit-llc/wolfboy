@@ -1,0 +1,29 @@
+Third-party notices for wolfboy
+
+The packages listed below are installed with this command-line tool and are needed when it runs.
+Their npm packages are published without a licence file, so the licence text of each is reproduced
+here, copied unchanged from the package's upstream source repository at the version the tool
+installs. Every other third-party package the tool needs at run time carries its own licence file
+in its own package directory.
+
+========================================================================
+Package: @ruby/prism
+Version: 1.9.0
+Declared licence: MIT
+Upstream repository: https://github.com/ruby/prism
+Upstream tag: v1.9.0
+Upstream commit: c0e37816e97e23e92524a4070e1b99a4025bc63f
+Upstream file: LICENSE.md
+Upstream blob: 2d449f909f21778746fa1e6bfc32bd2254d78830
+Source: https://raw.githubusercontent.com/ruby/prism/v1.9.0/LICENSE.md
+Text sha256: b471020939ffa8ec28125e4e31c29ef56dee40aa5403640f8311374cc5b413fc
+Copied: 2026-09-28
+----- BEGIN LICENCE TEXT -----
+Copyright 2022-present, Shopify Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+----- END LICENCE TEXT -----

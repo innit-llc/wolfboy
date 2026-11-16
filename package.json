@@ -1,0 +1,15 @@
+{
+  "name": "wolfboy-workspace",
+  "private": true,
+  "type": "module",
+  "license": "FSL-1.1-ALv2",
+  "scripts": {
+    "build:bundle": "node tools/build-bundle.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "markdown-it": "14.3.3",
+    "yaml": "^2.5.0"
+  }
+}

@@ -1,0 +1,211 @@
+id: eu-consent-006
+pack: eu-consent
+short_name: Fonts or images fetched from another company on page view
+problem_line:
+  text: Page view sends the visitor's IP to a font or image host
+fix_line: Serve fonts and images from your own origin (self-host, generate or cache them), or make
+  the remote fetch opt-in.
+title: Third-party asset fetched on page render - a Google Fonts host or build step, or a
+  third-party image URL assembled from a value that varies
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: GDPR Art. 6(1) (a legal basis is required for the processing; an IP address transmitted to a
+      third-party provider is processed without one unless a basis applies)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: Munich Regional Court I (LG München I), final judgment of 20 January 2022, 3 O 17493/20 —
+      dynamic embedding of Google Fonts transmits the visitor's IP address to Google; the court
+      found no consent under GDPR Art. 6(1)(a) and rejected reliance on Art. 6(1)(f) because the
+      fonts can be served locally, awarding EUR 100 in damages
+    url: https://www.gesetze-bayern.de/Content/Document/Y-300-Z-BECKRS-B-2022-N-612
+    checked_at: 2026-07-22
+    jurisdiction: DE
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.75
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  shared_vocabulary:
+    - avatar_image_recipients
+  vocabulary:
+    google_font_hosts:
+      - fonts.googleapis.com
+      - fonts.gstatic.com
+  vocabulary_matching:
+    google_font_hosts:
+      case_insensitive: true
+  match:
+    - fonts\.googleapis\.com
+    - fonts\.gstatic\.com
+    - "[\"'`](?:gatsby-plugin-google-fonts|@nuxtjs/google-fonts|nuxt-google-fonts|vite-plugin-googl\
+      e-fonts|unplugin-fonts|webpack-google-fonts-plugin)(?:/[A-Za-z0-9._-]+)*[\"'`]"
+    - \bgoogle(?:Fonts)?\s*:\s*\{[^\n]*\bfamilies\b
+    - "\\b(?:[Uu]nfonts|fonts)\\s*[({][^\\n]*\\bgoogle\\s*:"
+    - (?:https?:)?//[^\n"'`]*(?&avatar_image_recipients)[^\n"'`]*(?:["'`][
+      \t]*(?:\+|\.\s*(?:concat|format|join)\b|%[
+      \t]*[A-Za-z_$({])|\$\{|#\{|\{\{|<%=|%s|%d|\{\}|\{0\}|\{[a-z_]+\})
+    - fonts\\\.\(?(?:googleapis|gstatic)
+    - (?&google_font_hosts)
+  match_without:
+    - \b(default|script|style|img|font|connect|frame|media|object|child|worker|manifest|prefetch)-src\b
+  shared_path_exclusions:
+    - email_template_directories
+  path_without:
+    - (^|/)(app|pages|src)/api/og/
+context_questions:
+  - Are the fonts converted to self-hosted assets at build time? next/font and fontsource emit local
+    files, so no request leaves the user's browser — quote the configuration.
+  - Is this page served to users in the EU?
+  - "IF THE MATCHED LINE IS AN ASSEMBLED IMAGE URL RATHER THAN A FONT REFERENCE, WHAT IS SPLICED
+    INTO IT, AND WHERE DOES THE RESULT GO? Clause 6, added 2026-09-04, reads two things and no more:
+    a third-party image host from the shared avatar-and-image list, and a build operator directly
+    after the URL literal - a concatenation, an interpolation opener or a format placeholder - which
+    says the URL is assembled rather than fixed. (a) READ THE SPLICED VALUE. Where it is a hash or
+    an identifier derived from the person - an email digest, a user id, a handle - the request key
+    identifies them to the vendor, and the vendor learns which visitor it is as well as the
+    visitor's IP address and user agent; Gravatar's key is a hash of the email address, which is
+    personal data in its own right. Where it is a DOMAIN, a file name or another URL - an image
+    proxy, a favicon lookup - the request discloses the visitor's address and what they are looking
+    at, but nothing that names them, and the finding is materially weaker. Quote the value's own
+    definition, do not read it off the variable name. (b) READ WHERE IT GOES. The detector reads the
+    assembly and never the use, and at the tree this clause was written from the assembly is three
+    files away from the <img> tag that consumes it. Where the built URL reaches an img src, a CSS
+    background or a link href rendered into a page a visitor opens, their browser fetches the vendor
+    on page render with no action of theirs, which is the situation this rule is about. Where it is
+    fetched by the server - in a request, a background job, a rake task or an operator script,
+    whether or not the result is then cached locally - no visitor's address reaches the vendor from
+    this line, but the spliced value does: a server-side fetch keyed on an email hash or a user id
+    discloses that person to the vendor all the same, so where the fetch runs never closes a finding
+    whose value (a) found derived from the person. Where it is handed to an API consumer, whoever
+    renders it fetches the vendor with the same key. (c) IS THERE A LOCAL FALLBACK OR A SWITCH?
+    Products that embed an avatar service commonly ship a setting that turns it off or a locally
+    generated image beside it; name the setting and its shipped default, and say which branch the
+    deployment takes."
+  - "IF THE MATCHED LINE IS A BUILD-TIME FONT CONFIGURATION RATHER THAN A HOST, WHICH PROVIDER IS
+    CONFIGURED - AND ONLY THEN, WHAT DOES THE PACKAGE DO AT RUN TIME? ASK THE PROVIDER QUESTION
+    FIRST AND ANSWER IT FROM THE CONFIGURATION, BECAUSE ONE OF THE PACKAGES THIS RULE MATCHES IS
+    MULTI-PROVIDER AND ITS NAME SETTLES NOTHING: unplugin-fonts takes google, fontsource, custom and
+    typekit providers, and a candidate raised on the package name alone - a dependency entry, a bare
+    import - carries NO evidence about which of them this tree uses. Open the configuration and
+    quote the provider key. WHERE NO GOOGLE PROVIDER APPEARS, no request to Google is possible from
+    this mechanism and the candidate closes there; say which provider you found instead, because a
+    fontsource or a custom provider is a self-hosting configuration and this rule has nothing to ask
+    about it. Where a google provider IS named, quote that line and go on. Two clauses reach a
+    plugin or a provider block that names Google as the foundry and carries no host literal, and the
+    detector cannot tell what the package does with it - that is a property of the package, of its
+    pinned version and of the options set here, not of the matched line. Name the package and the
+    version you read from the manifest, then answer three things from its own documentation and from
+    the options written here. (a) Does it DOWNLOAD the font files during the build and serve them
+    from this product's own origin, or does it EMIT A STYLESHEET LINK the visitor's browser follows
+    to Google? Several of these packages do both and the difference is one option - a download or
+    inline flag - so quote the option as it is set here, and say what the package's default is when
+    it is not set. (b) Is there a RUNTIME FALLBACK: does the package fetch from Google when the
+    build-time download fails, in development mode, or for a family it could not resolve? A
+    mechanism that self-hosts in production and fetches in development still sends a developer
+    machine's address, and a fallback path that nobody has exercised is not evidence that it does
+    not exist. (c) Which families and subsets are requested, since that is what a URL would carry if
+    one is emitted. WHERE THE ANSWER IS THAT THE FILES ARE DOWNLOADED AT BUILD TIME AND SERVED
+    LOCALLY, the request was made by the build machine and not by any visitor, no address of a data
+    subject reaches Google, and the candidate closes there - which is what this rule's remediation
+    already says of that shape. Do not answer any of this from the package name."
+evidence_template: "{file}:{line} references a third-party asset the visitor's browser fetches when
+  the page renders. TWO ASSET TYPES REACH THIS RULE AND THEY ARE READ DIFFERENTLY, so establish
+  which one the matched line is before the paragraphs below. AN ASSEMBLED IMAGE URL (clause 6, added
+  2026-09-04) is a third-party avatar, identicon or image-proxy host inside a URL literal with a
+  build operator directly after it - a concatenation, an interpolation opener or a format
+  placeholder. What that establishes is that the URL is ASSEMBLED here from a value that varies, and
+  nothing more: it does not say that the value identifies a person, because the same shape splices a
+  domain into a favicon endpoint and another URL into an image proxy, and it does not say the result
+  is ever rendered, because the tag that consumes it is usually in another file and carries no host.
+  Both questions are context question 3, in that order, and the finding is only about a data subject
+  once the first one is answered from the value's own definition. Everything below is about the
+  other asset type, a FONT reference, and is unchanged: {file}:{line} references Google Fonts - as a
+  stylesheet link, a preconnect hint, a CSS import or a build-time configuration. A SEVENTH CLAUSE,
+  added the same day, reads one further font spelling: the host written as a REGULAR EXPRESSION in a
+  build script, with its dots backslash-escaped, which is how a vendored script greps the built
+  assets for font URLs before downloading them. That shape is usually a SELF-HOSTING step - the
+  script fetches the files on the build machine and rewrites the references to a local path - which
+  is the change this rule's own remediation recommends, so read the script's rewrite step before
+  treating the candidate as a visitor-facing load. Whether a visitor's browser makes the request,
+  and so whether their IP address reaches Google, is context question 1. WHICH OF THE FOUR SHAPES IT
+  IS DECIDES WHAT THE LINE ESTABLISHES AND THE FIRST THREE ARE NOT THE FOURTH. The first three carry
+  one of Google's two font hosts verbatim, so the destination is on the line. THE FOURTH CARRIES NO
+  HOST, and it splits again into two branches of very different strength. ONE BRANCH IS A PACKAGE
+  NAME - a plugin that CAN put the Google stylesheet into the page - and it asserts NOTHING about
+  which foundry this tree asked for: unplugin-fonts, the widest of them, takes google, fontsource,
+  custom and typekit providers, so a dependency entry or a bare import is evidence that a font
+  plugin is wired up here and evidence of nothing else. THE OTHER BRANCH IS THE CONFIGURATION
+  ITSELF, a fonts option object naming the google provider, and that one rests on the tree's own
+  words. Read which of the two you are holding before anything else, and where it is the package
+  name, open the configuration and find the provider key - a fontsource or custom provider is a
+  self-hosting configuration and there is no Google request to weigh. Only where a Google provider
+  is configured does the second question arise: what the package does at run time - download the
+  files during the build and serve them locally, or emit a link the visitor's browser follows -
+  which is a property of that package, of its pinned version and of the options set here, and which
+  the detector cannot read either. Both questions are context question 2, in that order. TWO
+  BUILD-TIME MECHANISMS ARE DELIBERATELY NOT MATCHED and their absence is a decision rather than a
+  gap: next/font and fontsource emit local files, this rule's own remediation recommends both as the
+  fix, and fixtures/ok.tsx holds that silence in place"
+remediation_template: >
+  The change is to serve the font files from the product's own origin, and where the reference lives
+
+  decides what has to be edited. This rule matches two hosts and they appear in different places:
+
+  fonts.googleapis.com carries the stylesheet, fonts.gstatic.com carries the font binaries, and
+
+  either can appear as a <link>, as a preconnect or dns-prefetch hint, as an @import or a
+
+  @font-face src inside a CSS or SCSS file, or as a build-tool configuration value.
+
+  Where the reference is a <link rel="stylesheet"> or an @import, remove it and add the font through
+
+  next/font (Next.js) or fontsource, both of which emit local files at build time so that no request
+
+  leaves the visitor's browser.
+
+  Where the reference is a preconnect or dns-prefetch hint, remove it with the load it was warming;
+  a
+
+  hint left behind after the fonts were self-hosted opens a connection to Google for nothing.
+
+  Where the reference is a @font-face src pointing at fonts.gstatic.com, download the .woff2 files,
+
+  commit or bundle them, and point the src at the local path.
+
+  Where the reference is a build-time configuration that fetches the font during the build, the
+
+  request is made by the build machine and not by any visitor - record that and close the candidate
+
+  rather than changing anything. A build script that greps the compiled assets for the font host,
+
+  downloads the files and rewrites the references to a local path is that same shape written in
+
+  shell, and the same reading applies: record it and close the candidate.
+
+  WHERE THE MATCHED LINE IS AN ASSEMBLED IMAGE URL RATHER THAN A FONT REFERENCE, none of the
+
+  paragraphs above applies and the change is a different one. The image is fetched by the visitor's
+
+  browser from a third party, and where the value spliced into the URL is derived from the person -
+
+  an email digest, a user id - the request key identifies them to that vendor as well. The change
+
+  is to generate the image locally (an identicon rendered from the same value on this product's own
+
+  origin, which is what several products already ship beside the remote service), or to cache the
+
+  remote image server-side and serve it from this origin, or to make the remote lookup something
+
+  the person turns on rather than the shipped default. Where the product already has a setting that
+
+  disables the remote service, say what its shipped default is; a setting that defaults to on is
+
+  the finding, not the remedy.
+data_categories:
+  - user.device
+  - user.unique_id
+fingerprint_spec: file

@@ -1,0 +1,272 @@
+id: eu-dsr-007
+pack: eu-dsr
+short_name: Remote wipe of a person's device, reported back
+problem_line:
+  text: "Remote wipe: who orders it, reach, notice or proof unclear"
+fix_line: Record who may order a wipe, bound what it removes, tell the person at enrolment, and log
+  silence as unconfirmed.
+title: Server-commanded wipe of the person's own device, with completion reported back - GDPR Arts.
+  17(1) and 32(1)
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 17(1) - the erasure duty,
+      which this construct is a way of DISCHARGING rather than a way of failing. 'The data subject
+      shall have the right to obtain from the controller the erasure of personal data concerning him
+      or her without undue delay and the controller shall have the obligation to erase personal data
+      without undue delay where one of the following grounds applies'. A remote wipe is the only
+      mechanism in this slice that reaches the copy furthest from the server - the one on hardware
+      the controller does not own - and a product that has one can answer a question most products
+      cannot. What a reader has to check is the other side of the same mechanism: what it removes
+      that the person may have no other copy of, and who is allowed to fire it. Applies since
+      2018-05-25, Art. 99(2)."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 5(1)(f) - integrity and
+      confidentiality, which covers destruction as well as disclosure. Personal data shall be
+      'processed in a manner that ensures appropriate security of the personal data, including
+      protection against unauthorised or unlawful processing and against accidental loss,
+      destruction or damage, using appropriate technical or organisational measures'. Accidental
+      loss, destruction or damage is named there in the same breath as the processing Art. 5(1)(f)
+      guards against, which is why this construct is a security question in both directions: a wipe
+      fired by the wrong party, or on the wrong account, destroys data the person may hold nowhere
+      else, and the same credential that authorises the wipe is a credential worth stealing."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: General Data Protection Regulation, Regulation (EU) 2016/679, Art. 32(1) - security of
+      processing, which is the provision the authorisation on this command has to answer to. 'Taking
+      into account the state of the art, the costs of implementation and the nature, scope, context
+      and purposes of processing as well as the risk of varying likelihood and severity for the
+      rights and freedoms of natural persons, the controller and the processor shall implement
+      appropriate technical and organisational measures to ensure a level of security appropriate to
+      the risk, including inter alia as appropriate:' ... '(b) the ability to ensure the ongoing
+      confidentiality, integrity, availability and resilience of processing systems and services'.
+      AVAILABILITY IS NAMED IN THE SAME BREATH AS CONFIDENTIALITY, and a destructive command
+      reachable with a stored credential is an availability risk to the person's own data as much as
+      it is a control over the controller's. Art. 32(4) adds that the controller must ensure that
+      any natural person acting under its authority who has access to personal data does not process
+      them except on instructions - which is the question of who inside the operator's staff can
+      fire this.
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 24(1) - accountability,
+      which is what the completion report can and cannot be evidence of. 'Taking into account the
+      nature, scope, context and purposes of processing as well as the risks of varying likelihood
+      and severity for the rights and freedoms of natural persons, the controller shall implement
+      appropriate technical and organisational measures to ensure and to be able to demonstrate that
+      processing is performed in accordance with this Regulation. Those measures shall be reviewed
+      and updated where necessary.' A client that reports a completed wipe is producing exactly the
+      kind of evidence 'be able to demonstrate' asks for, and that is worth having. WHAT IT IS NOT
+      is proof: the report is made by the client itself, on the strength of its own success flag,
+      and a device that never came back online, whose disk was already copied, or whose files were
+      synchronised elsewhere reports nothing and its data is not thereby gone. Reference only: this
+      entry says what the attestation is for, and does not establish the duty this rule tests."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: medium
+rule_confidence: 0.4
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    remote_wipe_commands:
+      - remote_wipe
+      - remotewipe
+      - wipe/check
+      - wipe_check
+      - wipe/status
+      - wipe_status
+      - wipe_requested
+      - wipe_command
+      - wipe_account
+      - wipe_folder
+      - wipeforremoval
+      - wipe_device
+      - device_wipe
+    wipe_attestation_markers:
+      - wipe/success
+      - wipe_success
+      - wipe_done
+      - wipe_complete
+      - wipe_completed
+      - wipe_ack
+      - wipe_report
+      - wipe_confirm
+      - confirm_wipe
+      - notify_server_success
+      - report_wipe
+    retained_credentials:
+      - app_password
+      - apppassword
+      - write_app_password
+      - app_token
+      - device_token
+      - device_credential
+      - management_token
+      - enrollment_token
+    platform_wipe_apis:
+      - devicepolicymanager
+      - wipedata
+      - erasedevice
+      - erase_device
+      - dowipe
+      - dowipepersistprovisioneddata
+      - enterprisewipe
+      - enterprise_wipe
+      - remotelock
+      - clear_device_owner
+  vocabulary_matching:
+    remote_wipe_commands:
+      case_insensitive: true
+      separator_insensitive: true
+    wipe_attestation_markers:
+      case_insensitive: true
+      separator_insensitive: true
+    retained_credentials:
+      case_insensitive: true
+      separator_insensitive: true
+    platform_wipe_apis:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?&remote_wipe_commands)
+    - (?&wipe_attestation_markers)
+    - (?&retained_credentials)[^\n]{0,70}[Ww]ipe|[Ww]ipe[^\n]{0,70}(?&retained_credentials)
+    - (?&platform_wipe_apis)
+  shared_path_exclusions:
+    - attribution_documents
+context_questions:
+  - "MANDATORY, and the detector did not check it: WHOSE DEVICE IS WIPED, AND WHO MAY ORDER IT?
+    These two answers decide how the whole finding reads and neither is in the code. The device may
+    be an employer-managed handset, a contractor's own laptop running a synchronisation client, or a
+    shared terminal - and the person losing the data may or may not be the person who agreed to the
+    software being there. On the ordering side: is the command reachable by the account holder
+    themselves (a self-service 'wipe my lost laptop'), by an administrator of the account's
+    organisation, by the operator of the server, or by anyone holding the stored credential? Quote
+    the authorisation check on the server side if it is in scope, and say plainly where you could
+    not see it."
+  - "WHAT DOES THE WIPE ACTUALLY REMOVE, AND IS ANY OF IT THE ONLY COPY? Follow the local side and
+    enumerate: the synchronised folder only, every folder for that account, the account's
+    credentials, the local database and cache, files the person created and never uploaded, files
+    shared into the folder by other people. The distinction that matters most is whether the wipe
+    removes anything that exists NOWHERE ELSE, because that is destruction of the person's own data
+    rather than removal of a copy the server also holds. Report what the code deletes, in the order
+    it deletes it, and what it leaves."
+  - "WHAT IS THE CREDENTIAL, AND WHAT ELSE CAN IT DO? The construct's authorisation is a stored
+    secret, and its exposure is what an attacker gets by taking it. Say where the credential is
+    stored on the device, whether it is in an OS keychain or a plain file, what scope it carries
+    besides the wipe check, whether it is rotated, and whether it survives the wipe itself. Then say
+    what the server does with it on the wipe endpoints: is the wipe decision made from the
+    credential alone, or is there a second factor - a signed command, a device identifier, a nonce -
+    that would stop a replayed or stolen token from destroying somebody's data."
+  - "WHAT DOES THE COMPLETION REPORT PROVE, AND WHAT IS RECORDED? The attestation is the half that
+    makes this construct distinct, and it is worth reading carefully rather than accepting. Find
+    what is posted back, when it is posted, and what the server stores. Then say what it does NOT
+    establish: the report is made by the client on the strength of its own success flag; a device
+    that never came back online reports nothing; a disk image taken before the wipe is unaffected;
+    and files synchronised to a second device are outside this path entirely. Say whether the server
+    distinguishes 'reported success', 'reported failure' and 'never heard from', because a system
+    that treats silence as success is asserting something it does not know."
+  - IS THE PERSON TOLD, BEFORE OR AFTER? Find whatever the product shows on the device when a wipe
+    is executed - a dialog, a notification, a log line, nothing at all - and quote it. Then find
+    what the person was told when the account was set up, in the terms, the onboarding or the
+    documentation, about the operator's ability to erase their device. A destructive capability
+    disclosed only in a server-side administration guide is a different fact from one the person
+    consented to at enrolment, and it is the fact the reconciliation pillar reads the product's own
+    documents for.
+  - IS THIS A REMOTE WIPE AT ALL, OR A LOCAL SIGN-OUT? Several matches will be the second. A
+    client-initiated logout that clears the local folder, a cache reset, a test teardown and an
+    account removal from a settings screen all delete local data and none of them is commanded by a
+    server or reported back to one. Read the trigger. Say whether the deletion begins with a
+    response from a server, a user action on the device, or a scheduled job, and if it is not the
+    first, report the candidate as not this construct and stop.
+evidence_template: "{file}:{line} names a REMOTE WIPE COMMAND, its completion report, a credential
+  held to authorise one, or a platform device-management erasure API. THIS IS A CAPABILITY FINDING
+  AND IT IS NOT A DEFECT REPORT. Of everything in this rule pack, a remote wipe is the erasure
+  mechanism that WORKS: it reaches the copy furthest from the server, on hardware the controller
+  does not own, and a product that has one can answer a question most products cannot. It is
+  reported because of what else follows from it - a destructive command, authorised by a stored
+  secret, over data some of which may exist nowhere else. WHAT WAS ESTABLISHED, and which of the
+  four it is has to be read off the line. A COMMAND OR ENDPOINT BY NAME - `wipe/check`,
+  `remote_wipe`, `RemoteWipe`, `wipeForRemoval` - establishes that this product has such a
+  mechanism. THE COMPLETION REPORT - `wipe/success`, `notifyServerSuccess`, `wipeDone` - establishes
+  the half that distinguishes this construct from an ordinary remote logout: the device tells the
+  server it complied. A STORED CREDENTIAL NAMED BESIDE A WIPE WORD establishes the authorisation
+  relationship; it is the loosest of the four and may be reading two facts that happen to share a
+  line. A PLATFORM DEVICE-MANAGEMENT API - `DevicePolicyManager.wipeData`, `EraseDevice`, `doWipe` -
+  establishes that the erasure reaches the operating system rather than the application's own
+  folder; these spellings were observed in no corpus tree and are present so the rule reaches
+  products the anchors do not cover. WHAT WAS NOT ESTABLISHED, and each is a question rather than a
+  caveat. FIRST, WHOSE DEVICE IT IS WAS NOT READ, and it changes everything: an employer-managed
+  handset, a person's own laptop, and a shared terminal are three different facts. SECOND, WHO MAY
+  ORDER IT WAS NOT READ - the account holder, an organisation administrator, the server operator, or
+  anyone holding the token - and the authorisation usually lives on the server side, which may not
+  be in this repository at all. THIRD, THE SCOPE WAS NOT FOLLOWED: whether the wipe removes a
+  synchronised folder, an account, or a whole device, and whether any of it is the person's only
+  copy, is decided in a folder manager or a platform call that this line usually is not. FOURTH, THE
+  ATTESTATION PROVES LESS THAN IT LOOKS LIKE. The report is made by the client on the strength of
+  its own success flag: a device that never comes back online reports nothing, a disk image taken
+  beforehand is unaffected, and a system that reads silence as success is asserting what it does not
+  know. FIFTH, THE TRIGGER WAS NOT ESTABLISHED - a local sign-out, a cache reset and a
+  settings-screen account removal delete local data too, and none of them is commanded by a server.
+  AND ONE LIMIT OF THE PATTERNS: matching is per physical line, so a client that assembles the
+  endpoint path from a base constant and a suffix across two lines is not reached by any clause
+  here."
+remediation_template: >
+  WHAT WAS FOUND. Machinery by which a server can order the erasure of data on a person's device,
+  and
+
+  by which the device reports that it complied. For a synchronisation client, a mail client or a
+
+  managed-device agent this is an expected and useful capability - it is how a lost laptop stops
+
+  being a data breach - and nothing below asks for it to be removed. The work is about who can fire
+
+  it, what it takes with it, and what the person knows.
+
+
+  1. WRITE DOWN THE AUTHORISATION, ON BOTH SIDES. On the server: who may issue the command, what
+     check stands in front of it, and whether the action is logged with the identity of whoever fired
+     it. On the client: what the stored credential is, what else it authorises, and whether a
+     second factor - a signed command, a device identifier, a nonce - stands between a stolen token
+     and somebody's data. GDPR Art. 32(1) is the provision this answers to, and Art. 32(4) asks
+     specifically about people acting under the controller's authority.
+  2. BOUND THE SCOPE, AND SAY WHAT IT IS. A wipe that removes the synchronised folder is a different
+     act from one that removes the account, and both are different from one that erases the device.
+     Name which this is, in the code and in the operator documentation, and check that files the
+     person created locally and never uploaded are treated deliberately rather than incidentally.
+  3. TELL THE PERSON AT ENROLMENT, NOT IN AN ADMINISTRATION GUIDE. The moment to say that the
+     operator can erase this data from this machine is when the account is added. A capability
+     disclosed only server-side is a capability the person never agreed to.
+  4. DO NOT LET SILENCE MEAN SUCCESS. Record three outcomes rather than two: reported success,
+     reported failure, and never heard from. Art. 24(1) is about being able to DEMONSTRATE what was
+     done, and a record that cannot distinguish a wiped device from an offline one demonstrates less
+     than it appears to.
+
+  IF SOMETHING DOES NEED TO CHANGE, the changes that are usually right, in order:
+
+
+  - SIGN THE COMMAND, rather than treating possession of the stored credential as the whole
+    authorisation. A replayed wipe is an availability incident against the person's own data.
+  - KEEP THE CREDENTIAL IN THE PLATFORM KEYSTORE, not in a configuration file, and rotate it when
+  the
+    account's password changes.
+  - MAKE THE LOCAL DELETION AUDITABLE ON THE DEVICE - a log the person can read afterwards saying
+    what was removed and when the command arrived.
+  - SEPARATE 'REMOVE THIS ACCOUNT' FROM 'ERASE THIS DEVICE' in the API, the permissions and the
+    operator interface, so that the destructive one has to be chosen rather than inherited.
+data_categories:
+  - user.device
+  - user.account
+  - user.credentials
+  - user.content
+fingerprint_spec: directory

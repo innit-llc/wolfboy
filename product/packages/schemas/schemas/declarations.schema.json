@@ -1,0 +1,1103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/declarations.schema.json",
+  "title": "DeclarationsReport (what the agent concluded from a reconciliation)",
+  "description": "The auditable output of pillar 2: the developer's published documents read against what their code does. Every finding here asserts something stronger than a rule does - that a published statement and the code do not appear to match - so the wording standard is part of the contract and is stated on DeclarationFinding.finding_text. Nothing in this document concludes that the law has been broken; a mismatch between a policy and a repository is a question for the people who own both.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "reconcile_id",
+    "target",
+    "bundle",
+    "documents_read",
+    "checklist_ids",
+    "applicability_verdicts",
+    "checklist_results",
+    "claims",
+    "findings",
+    "completed_at",
+    "disclaimer"
+  ],
+  "properties": {
+    "reconcile_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The ReconcileInput this report was produced from, carrying the same value, which is what ties every conclusion below to the inputs it was drawn from."
+    },
+    "target": {
+      "type": "string",
+      "description": "Root of the tree the code half was taken from; file paths below are relative to it."
+    },
+    "bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version"
+      ],
+      "description": "The compiled bundle whose checklist was walked. Recorded so a result can be reproduced after the bundle has moved on.",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Bundle version (YYYY.MM.n)."
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "Digest of the bundle manifest."
+        }
+      }
+    },
+    "documents_read": {
+      "type": "array",
+      "description": "Every document this report rests on, pinned by content digest and by the time it was read. This is the one thing a code finding never needs: a policy published at a URL changes without the repository changing, so a finding here can go stale while the tree it describes is untouched. The digest is what makes that visible, and it is what a reader compares against when a claim is disputed.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path_or_url",
+          "sha256",
+          "read_at"
+        ],
+        "properties": {
+          "path_or_url": {
+            "type": "string",
+            "description": "Repository-relative path, or the full URL where the document was fetched."
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Digest of the exact bytes that were read. A different digest means a different document, whatever the path says."
+          },
+          "read_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the text was read."
+          },
+          "fetched_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the URL was retrieved, for fetched documents. Separate from read_at because a response can be read some time after it arrived, and it is the fetch that dates the content. A LIVE PAGE IS NOT A FIXED ARTEFACT, and the pair (sha256, fetched_at) is what makes that visible rather than a problem: measured on the first --policy <url> run (2026-09-03), two fetches of one legal page three minutes apart returned the IDENTICAL byte count and DIFFERENT digests - a CMS-driven page carries per-request-varying content of fixed width (a nonce, a cache-busting token) even on a route with no visible dynamic text. THE PINNED DIGEST IS THE RUN'S DOCUMENT, without qualification: every claim, finding and checklist answer in this report was read from those bytes, and they are the bytes reconcile-verify checks every quotation against. A later fetch returning something else is a DIFF QUESTION - what changed between two dated readings - and never an error in this report or a reason to distrust it. Report two fetches as two dated, separately-hashed events; never collapse them into one, and never chase a byte-exact match against a page already shown to vary."
+          }
+        }
+      }
+    },
+    "checklist_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Which checklists were walked. Empty where the run had none, in which case checklist_results is empty and says nothing whatever about whether the document is complete. An array since 2026-07-28: one run now walks every checklist the bundle carries, and each one answers to a different instrument."
+    },
+    "applicability_verdicts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/applicabilityVerdict"
+      },
+      "description": "One verdict per checklist carried, whether or not its items were walked. Required in full for the same reason checklist_results is: a checklist that was skipped because the law does not reach this project, and a checklist nobody looked at, are different states that must not print the same."
+    },
+    "checklist_results": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/checklistResult"
+      },
+      "description": "One result for every checklist item walked, including the items the document satisfies. Reported in full because a list of only the failures cannot be told apart from a walk that stopped early."
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/claim"
+      },
+      "description": "What the documents assert, in a form that can be checked against code. Reported even where nothing contradicted them, so a reader can see what was checked and not only what failed."
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/declarationFinding"
+      },
+      "description": "Where the document and the code do not appear to match. An empty list means the checks that were run found nothing, which is a statement about the checks and not about the product."
+    },
+    "considered_and_rejected": {
+      "type": "array",
+      "description": "Candidates the agent looked at and chose not to report, with the reason. The discipline made visible: without it, a short findings list and a shallow read produce the same document.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "subject",
+          "reason"
+        ],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "description": "What was considered - a claim, a fact, or a pairing of the two."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why it was not reported, specific enough that a reader can disagree with the decision."
+          }
+        }
+      }
+    },
+    "agent_model": {
+      "type": "string",
+      "description": "Model that produced this report, recorded because the reliability of every judgement in it depends on the model, and the user's own agent supplies the model."
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the agent finished the reconciliation."
+    },
+    "disclaimer": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Statement that the output is informational and not legal advice. Mandatory, and more load-bearing here than in a code scan: this document quotes the user's own published promises back at them."
+    },
+    "quote_verification": {
+      "$ref": "#/$defs/quoteVerification"
+    }
+  },
+  "$defs": {
+    "quoteLocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source",
+        "lines"
+      ],
+      "description": "A place a quotation sits: a document path or URL when the corpus is \"document\", a path relative to target when it is \"code\". One shape for both, because the waterfall that finds them is one algorithm and two copies of a shape are two things that can disagree.",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The document (path or URL) or the file the quotation is in."
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "The line numbers, in the source's own numbering. Empty where the report declared none."
+        }
+      }
+    },
+    "quoteCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "corpus",
+        "declared",
+        "status",
+        "final",
+        "tier",
+        "fallback",
+        "notes"
+      ],
+      "description": "One quotation, checked mechanically against the text it claims to come from - written by `reconcile-verify` and never by the agent. WHY THIS EXISTS: the declaration-reconcile skill names the failure this pillar has to be built against - \"Confabulating a contradiction is the worst failure mode this pillar has. It is worse than a pillar-1 false positive, because it accuses a developer of misleading their users, using their own published words as the weapon.\" A quotation that is not in the document is that failure in its purest form, and until this check existed nothing could see it: the schema requires a quote, and a fabricated string satisfies a schema exactly as well as a real one.",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Where in this report the quotation lives, e.g. `claims[2].quote` or `findings[0].searches[1].hits[3]`. A reader can go straight to it, and the annotation needs no position of its own inside the object it describes."
+        },
+        "corpus": {
+          "enum": [
+            "document",
+            "code"
+          ],
+          "description": "\"document\": checked against the extracted text in the reconciliation input, which carries the document's own line numbers. \"code\": checked against the real file under the scanned tree. The two are different bodies of evidence and a reader should not have to infer which one was searched. WHICH ONE IS DECIDED BY THE CITATION'S OWN SHAPE, never by which field it sits in: from 2026-09-03 a finding's evidence[] entry and a search hit each name either a `file` or a `document_ref`, so a finding quoting a fetched policy is checked against that policy's pinned text and lands here as \"document\", while the entry beside it quoting source lands as \"code\"."
+        },
+        "declared": {
+          "$ref": "#/$defs/quoteLocation",
+          "description": "What the report itself said, copied here unchanged. THE REPORT'S OWN NUMBERS ARE NEVER REWRITTEN: what the agent asserted is the evidence that anything needed correcting, and a verifier that edited it in place would destroy the only record of the mistake. Corrections live in `final`, beside this, never over it."
+        },
+        "status": {
+          "enum": [
+            "confirmed_at_declared",
+            "repaired",
+            "re_attributed",
+            "ambiguous",
+            "unverifiable"
+          ],
+          "description": "\"confirmed_at_declared\": the text is in the source the report named, and every line the report declared falls inside a real occurrence of it. \"repaired\": the text is in that source, at a different position, which is in `final` - declared positions drift and declared text is usually real, so this is the common outcome and not a fault. \"re_attributed\": the text is not in the source the report named and is in exactly one other source in scope. \"ambiguous\": the text is real and sits in more than one candidate source, so no position is asserted at all rather than one being picked. \"unverifiable\": the text was found nowhere - the confabulation alarm. It is not the only row that puts the run into the non-zero exit: a row carrying `fallback` does too, whatever its status word, because only the quotation's first line was found there. AN UNVERIFIABLE QUOTE NEVER DELETES ANYTHING: the claim or finding stays exactly where the agent put it, flagged, because deciding what to do about it - a mistranscription to correct, or an item to withdraw to considered_and_rejected - is the orchestrator's to make with the source open, not a verifier's to make by removal."
+        },
+        "final": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/quoteLocation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Where the text really is. Null for \"ambiguous\" and \"unverifiable\", which assert no position: a tool that guessed one would be inventing the thing it exists to check. When `fallback` is true this is an ANCHOR - the place the quotation's first line sits - and not a verification of the quotation."
+        },
+        "tier": {
+          "oneOf": [
+            {
+              "enum": [
+                "T1-exact",
+                "T2-collapsed",
+                "T2-normalized",
+                "T3-fragment"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Which tier found the text: exact substring, whitespace-collapsed, normalised (spacing beside punctuation or across a line end, typographic quote marks and dashes, Unicode forms; letters, digits and word boundaries are never folded), or independent per-line fragments. Null when nothing matched. Carried as data rather than only in the notes so a regression in one tier is something a gate can pin - the tool this one is ported from exists because three independent rebuilds each shipped a different tier bug."
+        },
+        "fallback": {
+          "type": "boolean",
+          "description": "True when ONLY the quotation's FIRST LINE was found and the rest of its text is nowhere in scope. THE DISTINCTION THIS FIELD CARRIES IS THE POINT OF THE WHOLE CHECK: a quotation whose first line is real and whose remainder is invented lands on `repaired`, wearing the same word as an ordinary drifted line number, and a report that rendered the two alike let a fabricated code line through the guard built to stop it. A fallback row is treated exactly as an unverifiable one - it is printed in its own console group, it is never listed as a corrected position, it puts the run into the non-zero exit, and the skill sends it back to the source to be corrected or withdrawn."
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Which tier matched and what that means, plus every disclosure: a match whose text is too short to be strong evidence, a quote that only matched once its HTML entities were decoded, the full list of what was searched when nothing matched. Always present, and empty only when there was nothing to say."
+        }
+      }
+    },
+    "quoteVerification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tool",
+        "verifier_version",
+        "counts",
+        "fallback_anchored",
+        "total",
+        "document_checks",
+        "code_checks",
+        "code_scope",
+        "skipped_no_document_quote",
+        "provenance",
+        "not_verified_here",
+        "searches_reporting_more_hits_than_listed"
+      ],
+      "description": "The mechanical quote check over this whole report, written by `reconcile-verify` into an annotated COPY. The agent's own file is left untouched, which is why this field can be absent: absent means nobody has run the check, not that it passed. No timestamp is carried, deliberately - the run is pinned by the two reconcile_ids and the document digests below, and a clock in the output would make two runs over identical inputs differ.",
+      "properties": {
+        "tool": {
+          "const": "reconcile-verify",
+          "description": "Which tool wrote this. Named rather than assumed, so an annotation cannot be mistaken for something the agent produced about itself."
+        },
+        "verifier_version": {
+          "type": "integer",
+          "description": "Bumped whenever the tier logic or the status vocabulary of the tiers every caller runs changes, so a reader can tell which behaviour produced these rows. A tier that only a caller asking for it runs is marked by that caller instead: T2n (verdict-verify alone) left this at 1, because nothing reconcile-verify or questionnaire verify writes changed, and verdict-verify marks it with its own mapping_version (3)."
+        },
+        "counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "confirmed_at_declared",
+            "repaired",
+            "re_attributed",
+            "ambiguous",
+            "unverifiable"
+          ],
+          "description": "One count per status, all five always present. A zero that is printed is a fact; a zero the reader has to infer from an absent key is not.",
+          "properties": {
+            "confirmed_at_declared": {
+              "type": "integer"
+            },
+            "repaired": {
+              "type": "integer"
+            },
+            "re_attributed": {
+              "type": "integer"
+            },
+            "ambiguous": {
+              "type": "integer"
+            },
+            "unverifiable": {
+              "type": "integer"
+            }
+          }
+        },
+        "fallback_anchored": {
+          "type": "integer",
+          "description": "How many checks rest on the first-line fallback alone. Counted beside `counts` rather than inside it, because such a row carries a status word that reads as success and the evidential weight of a failure - see `quoteCheck.fallback`. The run's exit code turns on this number as well as on the unverifiable count."
+        },
+        "total": {
+          "type": "integer",
+          "description": "Quotations checked. Equals the sum of `counts`."
+        },
+        "document_checks": {
+          "type": "integer",
+          "description": "How many of them were checked against the extracted documents."
+        },
+        "code_checks": {
+          "type": "integer",
+          "description": "How many were checked against files in the scanned tree."
+        },
+        "code_scope": {
+          "type": "integer",
+          "description": "Files named anywhere in this report, which is the whole scope a code quotation can be re-attributed within. A file the report never mentions is not searched: re-attributing a quote to it would be a guess, and it would turn a verification step into a second scan."
+        },
+        "skipped_no_document_quote": {
+          "type": "array",
+          "description": "Findings that carry no document quotation. A DIRECTION-B FINDING HAS NONE BY DESIGN and is never penalised for it: it starts from a code fact and its whole point is that no document mentions it, so there is no document line to quote. The skill records what demanding one costs - it discards the findings it calls \"where the value is\", five of the trial's seven. A direction-A finding without one is listed here too, as an observation for the reader, and changes no count and no exit code.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "direction"
+            ],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "direction": {
+                "enum": [
+                  "A",
+                  "B"
+                ]
+              }
+            }
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "report_reconcile_id",
+            "input_reconcile_id",
+            "reconcile_id_matches",
+            "documents_with_pin_mismatch",
+            "documents_in_report_not_in_input",
+            "documents_in_input_not_read_by_report",
+            "unplaced_document_lines"
+          ],
+          "description": "Whether the bytes this check read are the bytes the report says it read. A policy changes without the repository changing, so this is the field that separates \"the quotation is not in the document\" from \"the document is no longer the one that was quoted\" - two results that read identically to the person receiving them and mean opposite things.",
+          "properties": {
+            "report_reconcile_id": {
+              "type": "string"
+            },
+            "input_reconcile_id": {
+              "type": "string"
+            },
+            "reconcile_id_matches": {
+              "type": "boolean",
+              "description": "False means the report and the input may describe different runs, which is said out loud rather than resolved: nothing here picks one of them to believe."
+            },
+            "documents_with_pin_mismatch": {
+              "type": "array",
+              "description": "Documents whose digest in the report differs from the digest in the reconciliation input. The check still runs, against the input's text, because that is the text this tool can read - and it says so, because a quotation confirmed under a mismatch was confirmed against different bytes from the ones the agent read.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "doc",
+                  "report_sha256",
+                  "input_sha256"
+                ],
+                "properties": {
+                  "doc": {
+                    "type": "string"
+                  },
+                  "report_sha256": {
+                    "type": "string"
+                  },
+                  "input_sha256": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "documents_in_report_not_in_input": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Documents the report records reading that the input does not carry, so nothing quoted from them could be checked against their own text."
+            },
+            "documents_in_input_not_read_by_report": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Documents the input carries that the report does not record reading. Not a fault on its own, and stated because a document nobody read is a silence rather than a clean result."
+            },
+            "unplaced_document_lines": {
+              "type": "array",
+              "description": "Extracted lines whose line number is larger than their own document's byte count, which cannot be a line of that document. Counted and reported rather than reshaped quietly.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "doc",
+                  "lines"
+                ],
+                "properties": {
+                  "doc": {
+                    "type": "string"
+                  },
+                  "lines": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "not_verified_here": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What this check does NOT cover, carried in the output itself. A check that appears to cover a whole report and covers part of it is how \"verified\" gets claimed for something nobody measured, so the boundary travels with the result rather than living only in the documentation."
+        },
+        "searches_reporting_more_hits_than_listed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Searches whose hit_count exceeds the hits they list. Only the listed lines can be checked, and saying which searches those are keeps a truncated list from reading as a fully checked one."
+        },
+        "id_cross_references": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "prefixes",
+            "checked",
+            "dangling"
+          ],
+          "description": "Identifiers this report's own PROSE names, checked against the identifiers it actually carries. Absent means the check has not been run, which is this object's standing convention and never a pass. WHAT IT CLOSES (hole 9, bitwarden-url run, 2026-09-03): assembly renumbers claims[] and findings[] globally, because each seat numbers its own output from C1/F1. The assembly rewrote every STRUCTURED reference - findings[].claim_ref - and could not rewrite plain-text mentions inside finding_text, where one finding's narrative said \"C1 is an unqualified claim ... C3 discloses ... (C7)\" about a seat's local numbering the same run had renumbered to C13/C15/C19. Nothing mechanical could see it: a bare `C3` in a prose field is not a quotation and not a reference the schema knows, so neither the quote waterfall nor schema validation looks at it, and the reader is sent to the wrong claim. THE CHECK NEVER REWRITES PROSE: what to do about a dangling reference is the orchestrator's with both objects open, exactly as it is for an unverifiable quotation.",
+          "properties": {
+            "prefixes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "description": "EXACTLY THE SHAPES THAT WERE SEARCHED FOR, derived from this report's own ids - each claim_id and finding_id split into a leading prefix and trailing digits, PLUS the bare letter at the end of a namespaced prefix. A report whose ids are C1/F1 has `C<digits>` and `F<digits>` searched for and nothing else; one whose ids are store-C1/gdpr-F1 has those two shapes AND the bare `C<digits>`/`F<digits>` a stale sentence would use, which is what keeps this check alive under the per-seat-namespace repair for hole 9 rather than dropping it to zero coverage on exactly the reports that adopt that repair (independent verification, 2026-09-03, M2). Deriving the shape instead of fixing one keeps the check from inventing a vocabulary the report does not use. An id that yields no shape at all is counted in ids_not_cross_referenced and never carried here as an empty string: a list holding one would make the console's own \"nothing was searched for\" disclosure unreachable."
+            },
+            "ids_not_cross_referenced": {
+              "type": "integer",
+              "description": "Ids that contributed no searchable shape - one of bare digits, whose empty prefix would match every number in every prose field, and one with no trailing digits at all. Counted apart from `checked` because a report with a non-zero count here has had LESS checked than `checked` suggests, and that must never have to be inferred from a zero."
+            },
+            "checked": {
+              "type": "integer",
+              "description": "Id-shaped tokens found in prose and resolved against the id set."
+            },
+            "dangling": {
+              "type": "array",
+              "description": "Tokens that look exactly like this report's own ids and name no claim and no finding in it. Each one puts the run into the non-zero exit, for the same reason an unverifiable quotation does: a reference a reader cannot follow is a false statement about the report's own contents.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "path",
+                  "id",
+                  "context"
+                ],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "Where the reference sits, in the vocabulary quote_checks[].path uses, e.g. `findings[3].finding_text`."
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "The identifier the prose names."
+                  },
+                  "context": {
+                    "type": "string",
+                    "description": "The words around it, so the sentence can be corrected without opening the file first."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "extractions": {
+          "type": "array",
+          "description": "Evidence entries whose quote this tool wrote from a declared location, and the ones it refused to write. Present only where at least one entry named a location and no text.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "source",
+              "declared"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "description": "JSON path of the entry, in the vocabulary quote_checks[].path uses."
+              },
+              "source": {
+                "type": "string",
+                "description": "The file under --target the range was read from."
+              },
+              "declared": {
+                "type": "string",
+                "description": "The range as the report declared it."
+              },
+              "lines": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Lines taken, where the extraction succeeded."
+              },
+              "refusal": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Why nothing was taken, where it did not. The entry then carries no quote at all."
+              }
+            }
+          }
+        }
+      }
+    },
+    "censusCategory": {
+      "enum": [
+        "recipients",
+        "transfers",
+        "retention",
+        "collection",
+        "distribution",
+        "commercial",
+        "provenance",
+        "purpose"
+      ],
+      "description": "The axis shared between the law and the code census. A finding names the categories it belongs to, so results can be read against the checklist items that ask about the same thing."
+    },
+    "pillar1Overlap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finding_id",
+        "rule_id",
+        "same_line",
+        "locations_in_file"
+      ],
+      "description": "A pillar-1 candidate sitting where this finding sits. Annotation only, never suppression: the same line can carry two unrelated questions - a secret-in-a-URL rule and an undisclosed-recipient finding fire on the identical line and ask different things - so a suppressor keyed on line overlap would delete real findings. What to do about the overlap is recorded separately, in overlap_disposition.",
+      "properties": {
+        "finding_id": {
+          "type": "string",
+          "pattern": "^fp_[a-f0-9]{16}$",
+          "description": "The pillar-1 candidate, copied verbatim from its findings.json. Where the row covers a group the scanner split this is its FIRST part and group_id names the group; it is always the id of a candidate that exists in that document."
+        },
+        "group_id": {
+          "type": "string",
+          "pattern": "^fp_[a-f0-9]{16}$",
+          "description": "Present ONLY where this row covers a group the scanner split because it carried more locations than one adjudicating agent reads (findings.json candidates[].group_part). One overlap row is one QUESTION, never one part of one: a file whose locations straddle a part boundary would otherwise appear twice for one rule, each row carrying a fraction of locations_in_file, and the reader of an overlap is asking whether the code scan already reports this rule here - which one row answers."
+        },
+        "rule_id": {
+          "type": "string",
+          "description": "Rule that raised the pillar-1 candidate."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of that rule, copied in so the overlap reads on its own."
+        },
+        "first_context_question": {
+          "type": "string",
+          "description": "That rule's first context question, carried so a reader can see what pillar 1 is asking and decide whether it is the same question."
+        },
+        "same_line": {
+          "type": "boolean",
+          "description": "True when the pillar-1 candidate is on the exact same line. Evidence about location only, never on its own evidence that the questions are the same."
+        },
+        "locations_in_file": {
+          "type": "integer",
+          "description": "How many places in that file the pillar-1 candidate matched."
+        },
+        "declared_inapplicable_preconditions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "The applicability_preconditions of the OVERLAPPING PILLAR-1 RULE that the person's ScanProfile answered in a way that puts that rule out of scope, carried through from the reconcile input. Present only when non-empty. THE OVERLAP IS QUALIFIED, NOT UNQUALIFIED: pillar 1 raised this candidate although the person declared that rule's subject out of scope, and an overlap arriving without this field says pillar 1 reports the construct here flatly. Until 2026-08-27 such a rule raised no candidate at all, so no such overlap could exist. IT QUALIFIES AND NEVER SUPPRESSES, exactly as the overlap itself does, and it is not for the agent to resolve from the code: whether the product carries the feature is a fact about the product and is asked of the person."
+        }
+      }
+    },
+    "reconSearch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pattern",
+        "paths",
+        "hit_count",
+        "hits"
+      ],
+      "description": "A search the agent actually ran, in a form a reader can re-run verbatim. Without this the output is an opinion; with it, it is a finding a developer can check in thirty seconds.",
+      "properties": {
+        "pattern": {
+          "type": "string",
+          "description": "The pattern searched for, exactly as it was run, so re-running it is copy and paste rather than reconstruction."
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Paths or globs the search covered. A narrow search that found nothing is a very different result from a whole-tree search that found nothing, and only this field separates them."
+        },
+        "flags": {
+          "type": "string",
+          "description": "Flags the search ran with, where they change what it would have matched (case-insensitivity in particular)."
+        },
+        "hit_count": {
+          "type": "integer",
+          "description": "Total hits. May exceed the length of hits where the list below was truncated."
+        },
+        "hits": {
+          "type": "array",
+          "description": "The matching lines. A zero-hit search is still reported: \"we looked here and found nothing\" is the evidence behind most direction-B findings.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "line",
+              "line_text"
+            ],
+            "oneOf": [
+              {
+                "required": [
+                  "file"
+                ]
+              },
+              {
+                "required": [
+                  "document_ref"
+                ]
+              }
+            ],
+            "description": "One matching line, addressed EITHER by a file under the scanned tree OR by a document in documents_read. Exactly one of the two, enforced by the oneOf: an entry carrying both names two different bodies of evidence for one line and an entry carrying neither names none. `document_ref` was added 2026-09-03 - see declarationFinding.evidence.items.document_ref for the account.",
+            "properties": {
+              "file": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Path relative to target. NON-EMPTY: an empty string names nowhere, and the oneOf above would otherwise be satisfied by an entry that names nothing at all (independent verification, 2026-09-03, L3)."
+              },
+              "document_ref": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The document this line is in, named by its documents_read[].path_or_url - a repository path or the URL a --policy <url> run fetched. The line is a line of the EXTRACTED text those pinned bytes produced, which is the text claims[].quote is checked against."
+              },
+              "line": {
+                "type": "integer"
+              },
+              "line_text": {
+                "type": "string",
+                "description": "The matching line, so a hit can be judged without opening the file."
+              }
+            }
+          }
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_id",
+        "claim",
+        "quote",
+        "source_location",
+        "falsifiable_by",
+        "direction"
+      ],
+      "description": "Something a document asserts that can be checked against code.",
+      "properties": {
+        "claim_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Identifier the agent assigns, referenced by DeclarationFinding.claim_ref. Agent-authored, so no format is imposed beyond being non-empty; the machine-generated identifiers in this pipeline are fact_id and pillar 1's finding_id."
+        },
+        "claim": {
+          "type": "string",
+          "description": "The assertion in plain terms, as the agent read it. The document's own words are in quote, and disagreement between the two is exactly what a reader should be able to see."
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The document's own words the claim was read from. Verbatim, never paraphrased or reconstructed, so a reader can reject the reading without re-reading the document."
+        },
+        "source_location": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "doc",
+            "line"
+          ],
+          "description": "Where the quote came from, using the line numbers ExtractedDoc carries, so a reader can open the document at the place.",
+          "properties": {
+            "doc": {
+              "type": "string",
+              "description": "Document path or URL, matching an entry in documents_read."
+            },
+            "line": {
+              "type": "integer",
+              "description": "Line in the source document."
+            }
+          }
+        },
+        "law_ref": {
+          "type": "string",
+          "description": "Checklist item or article this claim answers, where it answers one. Absent for claims the document volunteers beyond what any item requires."
+        },
+        "falsifiable_by": {
+          "type": "string",
+          "description": "What evidence in the code would show this claim untrue. Mandatory: a claim broad enough that nothing could falsify it is not a finding waiting to happen, it is boilerplate, and writing this down is what keeps boilerplate out of the report."
+        },
+        "direction": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "description": "Which way the check runs. \"A\": start from this claim and look for code that contradicts it. \"B\": start from a code fact and ask whether the document mentions it at all."
+        },
+        "depends_on_runtime_config": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Environment variables the claim's truth turns on, carried from the facts it was checked against. Where this is non-empty the claim can be true in one deployment and false in another."
+        },
+        "quote_checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/quoteCheck"
+          },
+          "description": "The mechanical check of this claim's `quote` against the document it cites. Added by `reconcile-verify` and never by the agent; absent means the check has not been run, which is not the same as passing it."
+        }
+      }
+    },
+    "applicabilityVerdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checklist_id",
+        "status",
+        "reasoning"
+      ],
+      "description": "Whether one instrument reaches this project, answered before its items are walked.",
+      "properties": {
+        "checklist_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The checklist whose applicability gate this answers."
+        },
+        "status": {
+          "enum": [
+            "applies",
+            "does-not-apply",
+            "unresolved"
+          ],
+          "description": "\"applies\": the items were walked. \"does-not-apply\": the law does not reach this project, and the reason is in reasoning - the items are then reported as not-applicable rather than omitted. \"unresolved\": the gate could not be settled, which is neither of the other two and must never be rendered as either. An unresolved gate leaves the obligation unexamined, and saying so is the whole point of recording it."
+        },
+        "reasoning": {
+          "type": "string",
+          "description": "Why the status follows, citing the scope provision and the facts or answers relied on. Required for every status: an unexplained \"does-not-apply\" removes a whole instrument from the report and nobody can check it."
+        },
+        "asked_the_user": {
+          "type": "boolean",
+          "description": "True where the agent had to ask the person running the scan, because neither the code nor the documents could settle the gate. Recorded so a reader can tell a verdict resting on a human answer from one resting on evidence in the repository."
+        },
+        "user_answer": {
+          "type": "string",
+          "description": "What the user said, in their own words, where they were asked. Quoted rather than summarised: the answer is the evidence."
+        }
+      }
+    },
+    "checklistResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checklist_id",
+        "item_id",
+        "status",
+        "reasoning"
+      ],
+      "description": "The agent's answer to one checklist item, for the document as a whole.",
+      "properties": {
+        "checklist_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The checklist this item belongs to. Required since 2026-07-28: item ids are unique within a checklist and not across them, so a result without it cannot be read back against the question that produced it once a bundle carries more than one list."
+        },
+        "item_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The ChecklistItem this answers."
+        },
+        "status": {
+          "enum": [
+            "present",
+            "partial",
+            "absent",
+            "unresolved",
+            "not-applicable",
+            "found",
+            "not-found"
+          ],
+          "description": "\"present\": the document contains the required information. \"partial\": some of it, with the rest missing. \"absent\": the document is silent - a claim that presupposes a document was found and read, and which must never be recorded when discovery returned nothing, because \"we could not find your policy\" and \"your policy does not say this\" are different statements that read identically to the person receiving them. \"unresolved\": the agent could not settle it - a statement about the reading, not about the document, and the correct status whenever no candidate document of the relevant kind was discovered. \"not-applicable\": the requirement does not reach this product, which is a different claim from \"absent\" and must never be collapsed into it. \"found\" and \"not-found\" exist for the few items whose checklist declares `finding_when: present` — Data Act Art. 23 asks whether the contract imposes an obstacle to switching, Art. 29(1) whether it imposes a switching charge — where the answer \"yes, it is there\" is the problem. For such an item these two words are the ONLY permitted values and \"present\"/\"absent\" must never be used, because they mean the opposite of what a reader assumes: a report saying \"switching charge: present\" about a provider that charges nothing is worse than no report. Conversely an ordinary item must never take \"found\"/\"not-found\". The checklist carries the flag; read it before choosing the word."
+        },
+        "evidence": {
+          "type": "array",
+          "description": "Where the document satisfies the item, when it does. Line numbers are ExtractedDoc line numbers, so a reader can open the document at the place rather than searching for the wording.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "doc",
+              "line",
+              "quote"
+            ],
+            "properties": {
+              "doc": {
+                "type": "string",
+                "description": "Document path or URL, matching an entry in documents_read."
+              },
+              "line": {
+                "type": "integer"
+              },
+              "quote": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Verbatim excerpt from the document, never paraphrased."
+              }
+            }
+          }
+        },
+        "reasoning": {
+          "type": "string",
+          "description": "Why the status follows from the document, in terms a reader can disagree with. Required for every status including \"present\": an unexplained pass is not reviewable."
+        },
+        "quote_checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/quoteCheck"
+          },
+          "description": "The mechanical check of this item's `evidence[]` quotations against the documents they cite. Added by `reconcile-verify` and never by the agent; absent means the check has not been run. A checklist item's evidence carries the same confabulation risk a finding's does - it is the quotation that makes a \"present\" reviewable - so it is checked on the same terms."
+        }
+      }
+    },
+    "declarationFinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finding_id",
+        "direction",
+        "categories",
+        "searches",
+        "evidence",
+        "confidence",
+        "finding_text"
+      ],
+      "description": "One reconciliation finding: the published document and the code do not appear to match.",
+      "properties": {
+        "finding_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Identifier the agent assigns to this finding. Agent-authored, so no format is imposed beyond being non-empty."
+        },
+        "direction": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "description": "\"A\": the check started from a claim in the document and found code that contradicts it. \"B\": the check started from a code fact and found the document silent about it. The two are different questions and a reader should not have to infer which one was asked."
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/censusCategory"
+          },
+          "description": "Which parts of a notice this finding bears on, so it can be read against the checklist items that ask about the same thing."
+        },
+        "claim_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The claim this finding contradicts, by claim_id. Present for direction A."
+        },
+        "fact_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^cf_[a-f0-9]{16}$"
+          },
+          "description": "The census facts this finding rests on, by fact_id. Present for direction B, and machine-checkable against the ReconcileInput so a finding cannot cite a fact the census never produced."
+        },
+        "quote": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "doc",
+            "line",
+            "text"
+          ],
+          "description": "The user's own words, in the source language, with the line that carries them. The original is what the finding is about; a translation never replaces it.",
+          "properties": {
+            "doc": {
+              "type": "string",
+              "description": "Document path or URL, matching an entry in documents_read."
+            },
+            "line": {
+              "type": "integer"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Verbatim text from the document, in its own language and script."
+            }
+          }
+        },
+        "quote_translation": {
+          "type": "string",
+          "description": "English rendering of quote where the source language is not English. Carried alongside the original and never instead of it: the finding is about what the document says, and a translation is the agent's reading of that."
+        },
+        "searches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reconSearch"
+          },
+          "description": "The searches the finding rests on, including the ones that returned nothing. For a direction-B finding the empty searches are the evidence."
+        },
+        "evidence": {
+          "type": "array",
+          "description": "What the finding rests on, quoted: code under the scanned tree, or a passage of a document in documents_read. Sparse only where the finding is about something neither contains, in which case searches carries the weight instead.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "lines"
+            ],
+            "oneOf": [
+              {
+                "required": [
+                  "file"
+                ]
+              },
+              {
+                "required": [
+                  "document_ref"
+                ]
+              }
+            ],
+            "properties": {
+              "file": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Path the quote was taken from, relative to target. NON-EMPTY: an empty string names nowhere, and the oneOf below would otherwise be satisfied by an entry that names nothing at all (independent verification, 2026-09-03, L3). EXACTLY ONE of this and `document_ref` is present, enforced by the oneOf above: an entry carrying both names two bodies of evidence for one citation, and an entry carrying neither names none."
+              },
+              "document_ref": {
+                "type": "string",
+                "minLength": 1,
+                "description": "THE DOCUMENT this citation is in, named by its documents_read[].path_or_url - a repository path, or the full URL a `--policy <url>` run fetched. ADDED 2026-09-03, and what it repairs is structural. Until then this entry and reconSearch.hits[] had one addressing scheme between them, `file`, documented \"Path relative to target\" - so a citation of a DOCUMENT was valid only by accident, when the document happened to be a file in the tree and its path happened to be a filesystem path too. A live-fetched policy breaks that accident for the first time: `https://bitwarden.com/privacy/` is a real, digest-pinned entry of documents_read[] and is never a path, so reconcile-verify resolved it under --target and failed with ENOENT on all six citations of it, and all six were reworded out of a finished report to reach exit 0 (hole 8, bitwarden-url run). MEASURED AGAINST THE REAL EXTRACTED TEXT rather than assumed (independent verification, 2026-09-03): two of the six were byte-exact quotations, which this shape verifies, and four were search hits that could never have verified - three carrying literal `...` elision markers and one a space typed where the page carries a private-use icon glyph. This field removes the ENOENT; it never removes a transcription defect underneath one. That is what makes the gap structural: under the ENOENT all six read as ONE failure, so a byte-exact citation of a real policy and a spliced one were indistinguishable, and the report could be \"repaired\" by deleting either. WHAT IT POINTS AT IS AN IDENTITY, NOT A LOCATION: documents_read[] pins the document by sha256 and by the time it was read, `lines` below are lines of the EXTRACTED text those bytes produced, and reconcile-verify checks such a citation against that text with the same waterfall, the same tiers and the same five states a file citation gets."
+              },
+              "lines": {
+                "type": "string",
+                "description": "Line or line range the quote covers (e.g. \"42\" or \"42-47\")."
+              },
+              "quote": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Verbatim excerpt from the actual source, never paraphrased or reconstructed, so a reader can check it against the file. OPTIONAL SINCE 2026-09-03. An entry that supplies a location (`file` or `document_ref`) and `lines` and NO `quote` has `reconcile-verify` write the text from the real bytes at that range - the file's bytes under --target, or the pinned extracted text of the document - and the transcription defect class - an ellipsis joining two real strings that are not adjacent, a dropped markdown marker, an ASCII apostrophe typed for a curly one, a raw-file quote where the extracted text is what is checked, a citation composed rather than opened - cannot then occur at all. That class has recurred in three consecutive real runs, each time after the rule against it was pasted verbatim into every brief that could produce one. Supplying the text is still permitted and is verified exactly as before; what an extracted quote is worth is stated on `quote_verification.extractions`. TWO REFUSALS BOUND WHAT THE TOOL WILL WRITE, and both apply whichever location kind is named: a range over 40 lines, and a range whose text does not decode as text. A THIRD applies to a document: a line at or over the length at which a line number stops locating anything inside itself (`extract.ts`'s LINE_LOCATES_NOTHING_CHARS) would put the whole document into this field, so it is refused and the passage is quoted by hand instead."
+              },
+              "quote_source": {
+                "type": "string",
+                "enum": [
+                  "agent-transcribed",
+                  "extracted-from-declared-range"
+                ],
+                "description": "WHERE THIS TEXT CAME FROM. Written by `reconcile-verify`, never by the agent; absent means the agent transcribed it. An extracted quote cannot carry a transcription defect, so its verification is a tautology - it says the bytes came from the file, never that those lines support the finding. Which lines are the evidence stays the agent's judgement, checked by the refuter and by the reader."
+              }
+            }
+          }
+        },
+        "law_ref": {
+          "type": "string",
+          "description": "Checklist item or article the finding bears on, where it bears on one."
+        },
+        "depends_on_runtime_config": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Named environment variables the finding is conditional on. Where this is non-empty, finding_text has to be phrased as conditional: the code path exists, and whether it runs is a deployment question this repository cannot answer."
+        },
+        "pillar1_overlaps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pillar1Overlap"
+          },
+          "description": "Pillar-1 candidates sitting at the same place. Annotation carried through from the reconcile input."
+        },
+        "overlap_disposition": {
+          "enum": [
+            "different-question",
+            "duplicate",
+            "related"
+          ],
+          "description": "What the overlap with pillar 1 amounts to. \"different-question\": the same line carries two unrelated questions, which is the common case and not a duplicate. \"duplicate\": pillar 1 already asks this, and showing it twice wastes the reader's attention. \"related\": the questions touch, and neither subsumes the other. Recorded as a judgement rather than applied automatically, because a suppressor keyed on line overlap deletes real findings."
+        },
+        "confidence": {
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ],
+          "description": "How firmly the evidence supports the finding. Low confidence is a reason to look again, not a reason to drop it."
+        },
+        "finding_text": {
+          "type": "string",
+          "description": "The finding in prose, and the wording rule is binding because this asserts something stronger than a rule does. The finding states that the published statement and the code do not appear to match, and it is phrased as a question wherever runtime configuration could resolve it. Worked example: \"the only code path that deletes it is an admin endpoint with no in-app schedule; is something outside the repository calling it?\" is true whether or not an external cron job exists, while \"you do not delete the data\" is false the moment one does."
+        },
+        "refutation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "outcome",
+            "reasoning"
+          ],
+          "description": "The second pass. A separate agent, instructed to prove the finding wrong, reports what it found. Carried on findings for the same reason as on verdicts: the first pass has already dismissed the easy cases, so what survives a deliberate attempt at refutation is what the user should be shown.",
+          "properties": {
+            "outcome": {
+              "enum": [
+                "upheld",
+                "overturned",
+                "needs_human"
+              ],
+              "description": "\"upheld\": the refuter tried and could not disprove it. \"overturned\": the refuter found the ground it fails on, and the finding is withdrawn. \"needs_human\": the question is genuinely open on the evidence available."
+            },
+            "reasoning": {
+              "type": "string",
+              "description": "What was checked and what was found, quoting the document or the source when it overturns."
+            },
+            "grounds": {
+              "enum": [
+                "already-disclosed",
+                "dependency-not-called",
+                "no-user-data-on-path",
+                "not-falsifiable-from-code",
+                "claim-holds",
+                "over-disclosure-not-a-contradiction",
+                "pillar1-duplicate",
+                "strained-reading"
+              ],
+              "description": "Present only when overturned: which class of mistake the first pass made. \"already-disclosed\": the document does say it, elsewhere. \"dependency-not-called\": the package is declared and nothing imports it. \"no-user-data-on-path\": the call happens, but no personal data reaches it. \"not-falsifiable-from-code\": the claim is about something the repository cannot show either way. \"claim-holds\": the code does what the document says. \"over-disclosure-not-a-contradiction\": the document declares more than the code does, which is not a mismatch worth reporting. \"pillar1-duplicate\": the code scan already asks this question. \"strained-reading\": the document does not actually say what the claim attributed to it. Aggregating these is how the reconciliation prompt gets better over time."
+            },
+            "agent_model": {
+              "type": "string",
+              "description": "Model that ran the refutation, recorded because the weight of an \"upheld\" depends on it."
+            }
+          }
+        },
+        "quote_checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/quoteCheck"
+          },
+          "description": "The mechanical check of every quotation this finding owns - its own `quote` from the document, each `evidence[]` excerpt against the real file, and each listed search hit against the line it names. Added by `reconcile-verify` and never by the agent; absent means the check has not been run. A finding whose evidence quotation is not in the file, or whose document quotation is not in the document, is the confabulated contradiction the skill calls this pillar's worst failure mode, and this is where that becomes visible instead of plausible."
+        }
+      }
+    }
+  }
+}

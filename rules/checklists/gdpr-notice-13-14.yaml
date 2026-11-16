@@ -1,0 +1,733 @@
+checklist_id: gdpr-notice-13-14
+title: GDPR Articles 13 and 14 notice completeness checklist
+law: Regulation (EU) 2016/679 (General Data Protection Regulation)
+source_url: https://publications.europa.eu/resource/celex/02016R0679-20160504
+checked_at: 2026-09-07
+scope_note: "This checklist records whether a privacy notice contains the information that Articles
+  13(1), 13(2), 14(1) and 14(2) require to be provided to the data subject. Its output is a
+  completeness record rather than a verdict about conformity. **It does decide whether the
+  Regulation reaches a project of this kind**, in the applicability gate below, which resolves two
+  limbs from the code — whether personal data is processed by automated means, and whether it is
+  collected from the data subject, obtained from elsewhere, or both — while the territorial limb of
+  Article 3 is settled by the pack's standing premise rather than asked. A third question, whether
+  the project is controller, joint controller or processor for a given category, **annotates
+  findings and never removes one**; the gate's verdict does not turn on it. **This note said the
+  opposite until 2026-07-29** (\"It does not decide whether the Regulation applies to the service
+  being scanned ... Where a service is directed at users outside the Union, applicability under
+  Article 3 is a separate question that a human has to answer\"), which told a reader to put to a
+  person the one question the gate below expressly forbids asking. The identical sentence was
+  corrected in `cra-product-information-13-8.yaml` earlier the same day and not carried here — the
+  recurring failure in this repository is fixing an instance and leaving its class, and this is an
+  instance of that. **One item, two provisions: how fourteen items cover two Articles.** Article 14
+  repeats most of Article 13 with different lettering, so rather than carry duplicate items, each
+  Article 13 item names its Article 14 counterpart in its `article` field and is answered for both.
+  Only the two Article 14 requirements with no Article 13 counterpart are separate items, 14(1)(d)
+  and 14(2)(f), and Article 13(2)(e) has no Article 14 counterpart at all, which its own note
+  explains. This convention lived in a comment at the top of the source file until 2026-09-01, and a
+  comment does not survive the build: what reached an agent was `13(2)(a) (Art 14(2)(a))` in a
+  free-text field, with nothing anywhere telling it what the bracket meant. **Two rules follow from
+  it, and both decide what a report says.** First, **an item that names a counterpart is answered
+  per category of personal data, for both halves.** Articles 13 and 14 attach per category of
+  personal data and not per project, so where a notice answers the Article 13 half for the data its
+  own forms collect and says nothing about the categories an identity provider or an enrichment
+  service hands over, the first half however complete does not satisfy the item. Answering such an
+  item against the notice as a whole is a silent pass, and that pass is available on all fourteen
+  items rather than only on the three whose applicability turns on the split. Each item's `evidence`
+  and `reasoning` say which categories each half was answered for. Second, **a finding cites the
+  provision that reaches the data it was answered for.** Where the gate finds that nothing is
+  collected from the data subject, Article 13 reaches the project nowhere - its paragraph 1 opens
+  \"Where personal data relating to a data subject are collected from the data subject\" - and every
+  item is then reported against the Article 14 counterpart named in its own `article` field, with
+  the finding citing that counterpart rather than the Article 13 form carried in the item's `cite`.
+  **What these fourteen items do not cover, named here rather than left to be discovered.** Four
+  further paragraphs of the same two Articles are outside them, and a completeness record produced
+  here says nothing about any of the four. **Articles 13(3) and 14(4)** — informing the data subject
+  before further processing for another purpose — are a duty that arises at a moment rather than a
+  property of a published document, and no item asks about them. **Article 13(4)** is Article 13's
+  own partial disapplication where the data subject already has the information; it is quoted in the
+  gate beside Article 14(5) and bears on how the items are answered rather than adding one.
+  **Article 14(3)** is the time by which the Article 14 information must be given — within a
+  reasonable period and at the latest within one month, at the latest at the first communication, at
+  the latest at the first disclosure to another recipient — which a published document cannot
+  evidence and which is asked of the controller. **Article 12(1)** is the form the information
+  takes: concise, transparent, intelligible and easily accessible, in clear and plain language. This
+  checklist reads for content and measures none of those qualities, so a notice whose fourteen items
+  are all recorded complete may still be one a reader cannot use."
+applicability:
+  question: "Three things, all read from the code and the census rather than asked of anyone. First,
+    does the project process personal data, wholly or partly by automated means — accounts, names,
+    email addresses, location data, online identifiers, or any other information relating to an
+    identifiable person? Second, is that personal data collected from the data subject, obtained
+    from somewhere else, or both — since Article 13 governs the first and Article 14 the second, and
+    three of the items below reach only one of the two? Third, and **for annotation only, never to
+    remove a finding**: is the project the controller for that data, a joint controller with a
+    customer, or a processor acting on a customer's instructions?"
+  quote: This Regulation applies to the processing of personal data wholly or partly by automated
+    means and to the processing other than by automated means of personal data which form part of a
+    filing system or are intended to form part of a filing system.
+  cite: GDPR Art. 2(1)
+  url: https://publications.europa.eu/resource/celex/02016R0679-20160504
+  checked_at: 2026-07-29
+  ask_the_user: false
+  census_categories:
+    - collection
+    - recipients
+  supporting_quotes:
+    - quote: "'personal data' means any information relating to an identified or identifiable natural
+        person ('data subject'); an identifiable natural person is one who can be identified,
+        directly or indirectly, in particular by reference to an identifier such as a name, an
+        identification number, location data, an online identifier or to one or more factors
+        specific to the physical, physiological, genetic, mental, economic, cultural or social
+        identity of that natural person;"
+      cite: GDPR Art. 4(1)
+      url: http://publications.europa.eu/resource/celex/32016R0679
+      checked_at: 2026-07-29
+      why: What "personal data" means, in the Regulation's own words — the definition the gate's code
+        reading is performed against. Names, identification numbers, location data and online
+        identifiers are all listed by the provision itself.
+    - quote: Natural persons may be associated with online identifiers provided by their devices,
+        applications, tools and protocols, such as internet protocol addresses, cookie identifiers
+        or other identifiers such as radio frequency identification tags.
+      cite: GDPR Recital 30
+      url: http://publications.europa.eu/resource/celex/32016R0679
+      checked_at: 2026-07-29
+      why: "Why a backend is rarely outside this gate: internet protocol addresses and cookie identifiers
+        are named as online identifiers, and almost any server or analytics setup handles at least
+        one of the two. A project genuinely outside the gate is the exception - a pure library, an
+        offline CLI tool, a static page with no analytics - and the code shows that too."
+    - quote: "This Regulation does not apply to the processing of personal data: (a) in the course of an
+        activity which falls outside the scope of Union law; (b) by the Member States when carrying
+        out activities which fall within the scope of Chapter 2 of Title V of the TEU; (c) by a
+        natural person in the course of a purely personal or household activity; (d) by competent
+        authorities for the purposes of the prevention, investigation, detection or prosecution of
+        criminal offences or the execution of criminal penalties, including the safeguarding against
+        and the prevention of threats to public security."
+      cite: GDPR Art. 2(2)
+      url: http://publications.europa.eu/resource/celex/32016R0679
+      checked_at: 2026-09-01
+      why: "**The Regulation's own narrowing of the paragraph this gate quotes first, and it was absent
+        from the file until 2026-09-01.** Article 2(1) says what the Regulation reaches; this
+        paragraph says what it does not, and a gate whose job includes saying when the Regulation
+        does not reach a project has to name the exclusions rather than leave a reader unable to
+        tell an exclusion that was considered from one that was missed. Three of the four describe
+        no product this scan is pointed at: activities outside the scope of Union law, Member State
+        activities under Chapter 2 of Title V of the TEU, and competent authorities acting on
+        criminal offences and penalties. **(c) is the one this product's audience could reach**, and
+        the pack's own premise disposes of it: running the EU pack is the statement that the project
+        is offered into the Union as a product or a service, which is a professional or commercial
+        activity and not a purely personal or household one. Recital 18, quoted next, carries the
+        rest of that disposal in the Regulation's own words. Where the scanned party really is a
+        natural person processing for a purely personal activity with no connection to a
+        professional or commercial activity, that is a fact about that person rather than about the
+        tree: say so in the verdict and ask."
+    - quote: This Regulation does not apply to the processing of personal data by a natural person in the
+        course of a purely personal or household activity and thus with no connection to a
+        professional or commercial activity. Personal or household activities could include
+        correspondence and the holding of addresses, or social networking and online activity
+        undertaken within the context of such activities. However, this Regulation applies to
+        controllers or processors which provide the means for processing personal data for such
+        personal or household activities.
+      cite: GDPR Recital 18
+      url: http://publications.europa.eu/resource/celex/32016R0679
+      checked_at: 2026-09-01
+      why: Why Article 2(2)(c) does not carry the projects this checklist is pointed at, quoted so that a
+        reader can check the disposal against the text instead of taking it from the note above. Two
+        halves matter. The exemption belongs to the natural person carrying on the personal or
+        household activity, and it is qualified by "thus with no connection to a professional or
+        commercial activity". And the last sentence says expressly that the Regulation applies to
+        the controllers and processors which **provide the means** for such activities — which is
+        what the developer running this scan over a product does.
+    - quote: "This Regulation applies to the processing of personal data of data subjects who are in the
+        Union by a controller or processor not established in the Union, where the processing
+        activities are related to: (a) the offering of goods or services, irrespective of whether a
+        payment of the data subject is required, to such data subjects in the Union; or (b) the
+        monitoring of their behaviour as far as their behaviour takes place within the Union."
+      cite: GDPR Art. 3(2)
+      url: http://publications.europa.eu/resource/celex/32016R0679
+      checked_at: 2026-07-28
+      why: "The territorial limb, retained for reading rather than for asking: **running the EU pack is
+        treated as the statement that the project is offered into the Union**, so the gate does not
+        ask about EU users. What the pack's premise does NOT settle - and this gate must - is the
+        material limb above: whether personal data is processed at all."
+    - quote: "'controller' means the natural or legal person, public authority, agency or other body
+        which, alone or jointly with others, determines the purposes and means of the processing of
+        personal data; where the purposes and means of such processing are determined by Union or
+        Member State law, the controller or the specific criteria for its nomination may be provided
+        for by Union or Member State law;"
+      cite: GDPR Art. 4(7)
+      url: http://publications.europa.eu/resource/celex/32016R0679
+      checked_at: 2026-07-29
+      why: "**The addressee of Articles 13 and 14, and it appeared nowhere in this file until
+        2026-07-29.** Both Articles open by naming the controller, and neither reaches anybody else.
+        The gate decided whether the Regulation touches the project and never asked whether the
+        notice duty is the project's to carry. **Why this matters for the audience this product
+        has**: a business-to-business tool holds two kinds of personal data at once. The data of its
+        own account holders — the developer decides what it is for, so the developer is the
+        controller and owes the notice. The data its customers push into it about *their* users —
+        where the customer alone decides what that is for and the developer only follows
+        instructions, the developer is a processor for that data, and reporting it as a gap in the
+        developer's own notice is a finding about a duty they do not carry. **Controller and
+        processor are not an exhaustive pair, and reading them as one is how this limb goes wrong.**
+        Article 4(7) says \"alone **or jointly with others**\", so the customer being a controller
+        does not make the provider a processor. Article 4(8) requires the provider to process **on
+        behalf of** the controller, which is not what a provider does with data it also uses for its
+        own purposes — product improvement, analytics, model training, its own security telemetry.
+        Where purposes and means are determined jointly, both are controllers, and Article 26(1) —
+        quoted below — **allocates** the Article 13 and 14 duties between them rather than
+        extinguishing either. So the question is three-way: controller, joint controller, or
+        processor, and only the third removes the item. **The answer is read from the tree, not
+        asked.** Multi-tenant schemas, per-customer API keys or workspaces, an ingestion endpoint
+        customers send their own users' records to, a data processing agreement in the published
+        terms: all of them are signals that some of the data is held on someone else's behalf. What
+        decides it is who determines the purposes and means, not who holds the bytes. **When it is
+        not clear, err towards the duty existing.** A wrong removal here is silent — the report says
+        nothing and the reader cannot tell the difference between \"checked and fine\" and \"never
+        looked\". So: treat the project as controller unless the code or the documents positively
+        show otherwise, and narrow the finding to the data the project controls rather than dropping
+        the item. **What this question may write when the split is unclear is stated once, in
+        `when_unresolved` below, and is deliberately not repeated here** — two copies of it stood in
+        these notes and disagreed with that paragraph until 2026-09-01."
+    - quote: Where two or more controllers jointly determine the purposes and means of processing, they
+        shall be joint controllers. They shall in a transparent manner determine their respective
+        responsibilities for compliance with the obligations under this Regulation, in particular as
+        regards the exercising of the rights of the data subject and their respective duties to
+        provide the information referred to in Articles 13 and 14, by means of an arrangement
+        between them unless, and in so far as, the respective responsibilities of the controllers
+        are determined by Union or Member State law to which the controllers are subject.
+      cite: GDPR Art. 26(1)
+      url: http://publications.europa.eu/resource/celex/32016R0679
+      checked_at: 2026-07-29
+      why: "**The provision that stops the controller/processor limb from becoming an off switch, added
+        2026-07-29 after the limb was written as a two-way choice and immediately produced a way to
+        drop items wrongly.** Where purposes and means are determined jointly, both parties are
+        controllers, and this paragraph names the Article 13 and 14 duties expressly as something
+        the joint controllers **allocate between themselves** — not something one of them stops
+        carrying. Practically: a provider that co-designs what its customers' data is used for, or
+        reuses it for its own analytics or model training, is not made a processor by the fact that
+        its customer is also a controller. Where the arrangement exists it says who provides the
+        information; where the code shows joint determination and no arrangement is visible, the
+        allocation could not be read and the item keeps the question rather than an answer — what
+        this limb may write in that case is stated once in `when_unresolved` below."
+    - quote: "'processor' means a natural or legal person, public authority, agency or other body which
+        processes personal data on behalf of the controller;"
+      cite: GDPR Art. 4(8)
+      url: http://publications.europa.eu/resource/celex/32016R0679
+      checked_at: 2026-07-29
+      why: "The other half of the pair, quoted so the distinction can be checked against the text rather
+        than against this file's summary of it. Note how short it is: the whole test is \"on behalf
+        of the controller\". A project is not a processor because it is technical, or small, or a
+        dependency — only because somebody else determines what the processing is for."
+    - quote: Paragraphs 1, 2 and 3 shall not apply where and insofar as the data subject already has the
+        information.
+      cite: GDPR Art. 13(4)
+      url: http://publications.europa.eu/resource/celex/32016R0679
+      checked_at: 2026-09-01
+      why: "**Article 13's own off-switch, the twin of Article 14(5)(a) below, and it was in neither the
+        gate nor any item until 2026-09-01** while Article 14(5) had been quoted in full since
+        2026-07-29 — the same class of defect this file's `scope_note` records about itself, an
+        instance repaired and its class left. The reason the 14(5) note gives is true of this
+        paragraph word for word: a gate that can turn Article 13 on has to be able to say when the
+        Article turns itself off, or it produces `absent` findings against a duty that may not
+        exist. **Read the chapeau exactly: \"where and insofar as\".** This is a partial
+        disapplication and not a switch. It reaches only the information the data subject already
+        has, so it applies item by item and category by category — the same discipline the Article
+        14(5) note states, and a whole-Article verdict drawn from a partial limb is a wrong record.
+        **It also reaches paragraph 3**, the duty to inform before further processing for another
+        purpose, which no item here covers; the `scope_note` says so among the four paragraphs this
+        checklist leaves out. **Who answers it.** What a data subject already has is a fact about
+        what the controller told them elsewhere — at the point of collection, in an onboarding
+        screen, in an earlier notice — and neither the tree nor the document being read settles it.
+        Ask; until it is answered, walk the item and record what the notice contains. Where the limb
+        is made out for an item and a category, name the limb and the information it covers in the
+        reasoning."
+    - quote: "Paragraphs 1 to 4 shall not apply where and insofar as: (a) the data subject already has the
+        information; (b) the provision of such information proves impossible or would involve a
+        disproportionate effort, in particular for processing for archiving purposes in the public
+        interest, scientific or historical research purposes or statistical purposes, subject to the
+        conditions and safeguards referred to in Article 89(1) or in so far as the obligation
+        referred to in paragraph 1 of this Article is likely to render impossible or seriously
+        impair the achievement of the objectives of that processing. In such cases the controller
+        shall take appropriate measures to protect the data subject's rights and freedoms and
+        legitimate interests, including making the information publicly available; (c) obtaining or
+        disclosure is expressly laid down by Union or Member State law to which the controller is
+        subject and which provides appropriate measures to protect the data subject's legitimate
+        interests; or (d) where the personal data must remain confidential subject to an obligation
+        of professional secrecy regulated by Union or Member State law, including a statutory
+        obligation of secrecy."
+      cite: GDPR Art. 14(5)
+      url: http://publications.europa.eu/resource/celex/32016R0679
+      checked_at: 2026-07-29
+      why: "**Article 14's own off-switch, and it was neither quoted nor named anywhere in this file until
+        2026-07-29.** A gate that can turn Article 14 on has to be able to say when the Article
+        turns itself off, or it produces `absent` findings against a duty that may not exist. **Read
+        the chapeau exactly: \"where and insofar as\".** This is a partial disapplication, not a
+        switch. Under (a) it reaches only the information the data subject already has, so it
+        applies per item and per category — the same discipline this checklist already requires of
+        `art-14-1-d` and `art-14-2-f`. A whole-Article `not-applicable` drawn from a partial limb is
+        a wrong record, and the first version of this note licensed exactly that. **(b) does not
+        switch the check off — it redirects it.** The quote now runs to the end of the point, and
+        its second sentence is the reason: where disproportionate effort is relied on, the
+        controller \"shall take appropriate measures ... including making the information publicly
+        available\". That residual measure is a published notice, which is the very artefact this
+        checklist reads. So on (b) the items are still walked, against whatever was made publicly
+        available. Cutting the quote before that sentence — as this note did when it was added
+        earlier the same day — switched the check off at the one point where the provision keeps it
+        alive. **(c) and (d) carry conditions that must not be dropped.** (c) needs the obtaining or
+        disclosure to be **expressly** laid down by **Union or Member State law to which the
+        controller is subject**, **and** that law to provide appropriate measures protecting the
+        data subject's legitimate interests. (d) needs the secrecy obligation to be **regulated by
+        Union or Member State law**. A controller answering \"a statute requires this\" about a
+        non-Union law, or about a law with no protective measures, has not met either. Both are
+        facts about the controller's legal position: ask, never infer. Where a limb is made out,
+        record `not-applicable` **for the items and categories it actually reaches**, naming the
+        limb; where it is merely possible, `unresolved`; never `absent`."
+  when_unresolved: "**The territorial question is settled by the pack itself**: running the EU pack is
+    treated as the statement that the project is offered into the Union, so do not ask about EU
+    users, and say in the verdict that this is the pack's premise rather than a finding. **The
+    material question is settled by the code, in this order.** Look for the positive signals first:
+    account or user tables and authentication, email or name or address fields in schemas and forms,
+    analytics or error-tracking that receives user context, permission APIs (geolocation, camera,
+    microphone), outbound requests carrying user data, server-side request logging - Recital 30
+    makes internet protocol addresses and cookie identifiers online identifiers, so an ordinary
+    backend or an analytics tag is already inside. Any of those found: the gate is `applies`, and
+    cite the code. None of them found after a real look - the shape of a pure library, an offline
+    CLI tool, or a static site with no analytics and no forms: record `does-not-apply`, bounded
+    honestly - \"no processing of personal data was visible in what was scanned\" - and walk no
+    item, because fourteen `absent` findings against a project with no personal data is a wrong
+    report about a notice nobody owes. Where the code is genuinely ambiguous, record `unresolved`
+    and name what was ambiguous. Never resolve this limb by assumption in either direction. **What
+    the declared census_categories on this gate are, and what they are not.** They are `collection`
+    - browser permission APIs, geolocation, camera, microphone, clipboard - and `recipients` -
+    outbound hosts and called dependencies. They are **corroborating** evidence and never the whole
+    of the limb. **No collector emits the evidence that actually settles this gate**: a user table,
+    an email or name column, a sign-up form field. An agent that treated `census_categories` as its
+    evidence source would decide whether the GDPR reaches a project on whether the project reads the
+    clipboard, which is how the first end-to-end run nearly went. The limb is settled by reading the
+    schemas, the forms and the routes, as the paragraphs above direct; the census confirms and adds
+    recipients the reader would otherwise miss. This paragraph stood in a source-file comment from
+    2026-07-29 until 2026-09-01 and reached no agent at all, because the build ships parsed fields
+    and drops comments. **Article 2(2) is where the Regulation narrows the paragraph this gate
+    quotes, and it is quoted above with all four of its exclusions.** Three of them describe no
+    product this scan is pointed at: activities outside the scope of Union law, Member State
+    activities under Chapter 2 of Title V of the TEU, and competent authorities acting on criminal
+    offences and penalties. The fourth, processing by a natural person in the course of a purely
+    personal or household activity, is disposed of by the pack's own premise: a project offered into
+    the Union as a product or a service is a professional or commercial activity, and Recital 18,
+    also quoted above, puts the controllers and processors which provide the means for personal or
+    household activities inside the Regulation. Say in the verdict that the four exclusions were
+    considered, so that a reader can tell that from an exclusion nobody read. Where the scanned
+    party really is a natural person processing for a purely personal activity with no connection to
+    a professional or commercial activity, that is a fact about that person rather than about the
+    tree: say so and ask. **The second question decides which items are walked, and it is a
+    different question from the first.** Article 13 governs personal data collected from the data
+    subject; Article 14 governs personal data that was not. Most projects do both, and then every
+    item is walked. Read the code for each side separately. *Collected from the data subject*:
+    sign-up and profile forms, anything a user types or uploads, a checkout form, a support ticket.
+    *Obtained from somewhere else*: an identity provider returning profile fields the user never
+    typed here, an enrichment or lookup API, a partner feed, a data broker, a public-source scrape,
+    an import of a customer list. Then route the three items whose reach depends on the answer, and
+    state the routing in the verdict so a reader can see which way it went. **Three cases, not two,
+    and the third is the commonest:** **Nothing is collected from the data subject** — `art-13-2-e`
+    is `not-applicable`, never `absent`, and Article 13 reaches nothing else here either. Its
+    paragraph 1 opens \"Where personal data relating to a data subject are collected from the data
+    subject\", so every remaining item is reported against the Article 14 counterpart named in its
+    own `article` field, and the finding cites that counterpart rather than the Article 13 form the
+    item's `cite` carries. The `scope_note` states that rule for the whole checklist; this is the
+    case that makes it bite on twelve items at once, and a report citing Article 13 to a controller
+    who obtained nothing from any data subject names a provision that does not reach them.
+    **Everything is collected from the data subject** — `art-14-1-d` and `art-14-2-f` are
+    `not-applicable`, never `absent`. **Both, which is the ordinary case** — all three are walked,
+    **and each is answered against the data it actually reaches, not against the notice as a
+    whole.** **That last clause is not special to these three items.** It is the per-category rule
+    the `scope_note` states once for every item that names an Article 14 counterpart: a service
+    whose sign-up forms collect most of what it holds, and which also receives profile fields from
+    an identity provider and location from an address-lookup service, owes Article 14 **for those
+    categories and no others** — and its retention period, its recipients, its legal basis and its
+    transfers can each differ between the two sides, so `art-13-2-a` and `art-13-1-e` are answered
+    the same way `art-14-1-d` is. What this paragraph adds is the order of work: name the
+    externally-obtained categories first, from the code, then ask whether the notice covers those,
+    and say in each item's `evidence` and `reasoning` which categories each half was answered for.
+    The rule itself is stated once, in the `scope_note`, and is not restated here. Where the code
+    shows one side and is silent about the other, say which side was shown and record the other
+    side's items as `unresolved`. An item marked `absent` because the wrong Article was walked tells
+    a developer their notice is missing something they never owed, which is the same wrong report as
+    fourteen `absent` findings against a project with no personal data. **A third question, which
+    decides whose notice this is.** Articles 13 and 14 are addressed to the controller — the party
+    that determines the purposes and means, alone **or jointly with others** — and to nobody else. A
+    project that holds personal data **only** on someone else's instructions is a processor for that
+    data, and the notice is owed by the customer rather than by the developer being scanned. This is
+    not the rare case: a business-to-business tool is ordinarily controller for its own account
+    holders and processor for whatever its customers push into it about their users, at the same
+    time. Read it from the tree — multi-tenant schemas, per-customer workspaces or API keys, an
+    ingestion endpoint for customers' own records, a data processing agreement in the published
+    terms — and then **narrow each item to the data the project controls** rather than dropping the
+    item. **This question annotates findings. It never removes one.** That is a hard rule and it is
+    the whole safeguard, replacing a set of individually-worded guards that an adversarial pass took
+    apart in eleven ways on 2026-07-29. Concretely, the controller/processor answer may **not**: set
+    the gate verdict to `does-not-apply`; set any item to `absent`, `not-applicable` or `not-found`;
+    or narrow the material limb, which is answered against **all** personal data in the tree before
+    any of this is considered. What it may do is two things and no more. It may **add to a finding's
+    reasoning that some of the data it concerns appears to be held on a customer's behalf, and name
+    which categories** — the item is still reported. And where the split is genuinely unclear it may
+    **record the affected items `unresolved`, with the reason**, which is the one status word this
+    question reaches: `unresolved` removes nothing, the item stays in the report carrying the
+    question, where `absent`, `not-applicable` and `not-found` would each answer it and end it.
+    **This paragraph is the statement of record for what this question may write, and the supporting
+    quotes above point at it rather than repeating it.** It read \"or be used as the ground on which
+    a later question writes a status\" until 2026-09-01, while the Article 4(7) and Article 26(1)
+    notes above told the reader to record `unresolved` on exactly that ground — one fact written in
+    two places, disagreeing, which is the shape this file's own `scope_note` records about itself.
+    The reason is the asymmetry this whole product is built on. A finding a developer does not owe
+    is visible, countable and fixable in one sentence of reply. A finding removed because a role was
+    misjudged produces silence, and silence reads exactly like a clean result. Two answers cost a
+    developer a paragraph of annoyance; one costs them a duty they never learn about. **How to
+    answer it.** Three positions, not two: **controller** (determines the purposes and means alone);
+    **joint controller** (determines them together with the customer — which is what a provider does
+    when it reuses customer-supplied data for its own analytics, product improvement or model
+    training, and Article 26(1) then *allocates* the Articles 13 and 14 duties between the parties
+    rather than extinguishing either); **processor** (processes only on the customer's instructions,
+    for that data). Read it from the tree: multi-tenant schemas, per-customer workspaces or API
+    keys, an ingestion endpoint for customers' own records, a data processing agreement in the
+    published terms. **What does not count as showing it.** A role label the scanned party wrote
+    about itself — a published data processing agreement saying \"we act solely as a processor\" is
+    a claim, not a determination, and this gate's own Article 4(7) note says what decides it is who
+    determines the purposes and means. Nor does a multi-tenant schema on its own: architecture shows
+    who holds the bytes, not who sets the purpose. What does count is a purpose visible in the code
+    — a cross-tenant job **over the customers' own records**, an export the vendor sells, an
+    enrichment call the vendor pays for, a model trained on the pooled data — or an instruction
+    document written by the counterparty. **Say which data the cross-tenant job reads before
+    counting it**: a job that sweeps every tenant's usage meters, error counts or invoices is the
+    operator running its own business, and that is not a purpose set over the customers' personal
+    data. This clause named a cross-tenant job and not the data it reads until 2026-09-01, and on
+    the one real tree where the limb bites, the only such job was the operator's own billing meter.
+    **A party may be neither.** Software that other people self-host, where the scanned party never
+    receives the data at all, is not a processor: the deployer is the controller and the scanned
+    party is outside the relationship. Say that, and then check whether the same tree also builds a
+    hosted edition the party runs itself — it usually does, and that edition is a controlled surface
+    of its own. **Every annotation is recorded.** Whatever categories this question leads you to
+    describe as held on someone else's behalf go into `considered_and_rejected` with the reason, so
+    that the narrowing is a line a reader can see and disagree with rather than an absence."
+items:
+  - id: art-13-1-a
+    article: 13(1)(a) (Art 14(1)(a))
+    quote: the identity and the contact details of the controller and, where applicable, of the
+      controller's representative;
+    cite: GDPR Art. 13(1)(a)
+    quote_anchor: "Where personal data relating to a data subject are collected from the data subject,
+      the controller shall, at the time when personal data are obtained, provide the data subject
+      with all of the following information:"
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    question: Does the notice give the identity and the contact details of the controller, and of the
+      controller's representative where one has been designated?
+  - id: art-13-1-b
+    article: 13(1)(b) (Art 14(1)(b))
+    quote: the contact details of the data protection officer, where applicable;
+    cite: GDPR Art. 13(1)(b)
+    quote_anchor: "Where personal data relating to a data subject are collected from the data subject,
+      the controller shall, at the time when personal data are obtained, provide the data subject
+      with all of the following information:"
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    question: Does the notice give contact details for a data protection officer?
+    applicability_note: "The requirement is qualified by \"where applicable\". Article 37 sets out when
+      a controller has to designate a data protection officer; where none has been designated,
+      record that this item does not apply rather than recording it as missing. A privacy role
+      created under another jurisdiction's law does not by itself answer this item, because the item
+      asks for the officer described in Article 37. **Whether a designation has been made is a fact
+      about the organisation and not about the tree.** Nothing a scanner reads settles it: a
+      designation can exist with no line of code and no sentence in any document naming it, and a
+      document naming an officer under another statute's regime says nothing either way about
+      Article 37. So put the question to the person running the scan, in these words — has a data
+      protection officer been designated under Article 37 of the Regulation? — and while it stands
+      unanswered record the item `unresolved` and carry the question itself into the report, so that
+      its reader can see what would settle it. The two paragraphs are the two halves of one route:
+      the answer \"none has been designated\" is what the first paragraph turns on, the answer \"one
+      has\" sends the walker back to the document for the contact details, and no answer at all
+      leaves the item `unresolved`. The current format has no item-level ask field, so the question
+      travels in the reasoning."
+  - id: art-13-1-c
+    article: 13(1)(c) (Art 14(1)(c))
+    quote: the purposes of the processing for which the personal data are intended as well as the legal
+      basis for the processing;
+    cite: GDPR Art. 13(1)(c)
+    quote_anchor: "Where personal data relating to a data subject are collected from the data subject,
+      the controller shall, at the time when personal data are obtained, provide the data subject
+      with all of the following information:"
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    question: Does the notice state the purposes for which the personal data are processed, and, for
+      those purposes, the legal basis the controller relies on?
+  - id: art-13-1-d
+    article: 13(1)(d) (Art 14(2)(b))
+    quote: where the processing is based on point (f) of Article 6(1), the legitimate interests pursued
+      by the controller or by a third party;
+    cite: GDPR Art. 13(1)(d)
+    quote_anchor: "Where personal data relating to a data subject are collected from the data subject,
+      the controller shall, at the time when personal data are obtained, provide the data subject
+      with all of the following information:"
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    question: Where the notice relies on point (f) of Article 6(1), does it describe the legitimate
+      interests pursued by the controller or by a third party?
+    applicability_note: "This item is engaged only where the controller relies on point (f) of Article
+      6(1). Where the notice states no legal basis at all, whether this item applies cannot be
+      settled from the document alone: record it as unresolved and refer it to a human, rather than
+      recording it as missing. **Refer it in words the person can answer.** Which ground a
+      controller relies on is a fact about that controller's own reasons, so put the question to the
+      person running the scan in these words — is any of the processing this notice describes
+      carried out on the ground of legitimate interests under point (f) of Article 6(1)? — and
+      record the item `unresolved` until it is answered. A ground the code appears to imply is
+      corroboration and not an answer: an analytics call or a fraud check may be run on consent, on
+      a contract or on legitimate interests, and the tree does not say which. The current format has
+      no item-level ask field, so the question travels in the reasoning."
+  - id: art-13-1-e
+    article: 13(1)(e) (Art 14(1)(e))
+    quote: the recipients or categories of recipients of the personal data, if any;
+    cite: GDPR Art. 13(1)(e)
+    quote_anchor: "Where personal data relating to a data subject are collected from the data subject,
+      the controller shall, at the time when personal data are obtained, provide the data subject
+      with all of the following information:"
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    question: Does the notice identify the recipients or the categories of recipients of the personal data?
+    applicability_note: "**Recipients are read per category of personal data, on the rule the
+      `scope_note` states once for every item that names an Article 14 counterpart.** Article
+      13(1)(e) and Article 14(1)(e) ask the same question of two different bodies of data, and the
+      answers can differ: a notice may name the categories of recipient for what its own forms
+      collect and say nothing about who receives what an identity provider or an enrichment service
+      hands over. Answer both sides, and say in the reasoning which categories each half was
+      answered for. Until 2026-09-01 that instruction was addressed to the three items whose
+      applicability turns on the split, and this item — which carries two provisions like nine
+      others — was outside it. **What the `recipients` census category contributes here, and what it
+      cannot.** It is outbound hosts and called dependencies: it names destinations the notice can
+      be checked against, and it adds recipients a reader working from the document alone would
+      miss. It carries neither direction nor purpose, so a host in it is a party the code talks to
+      and not, by itself, a recipient of personal data. The item is answered from the notice, with
+      those hosts as corroboration and with the call sites read before any of them is called a
+      recipient."
+    census_categories:
+      - recipients
+  - id: art-13-1-f
+    article: 13(1)(f) (Art 14(1)(f))
+    quote: where applicable, the fact that the controller intends to transfer personal data to a third
+      country or international organisation and the existence or absence of an adequacy decision by
+      the Commission, or in the case of transfers referred to in Article 46 or 47, or the second
+      subparagraph of Article 49(1), reference to the appropriate or suitable safeguards and the
+      means by which to obtain a copy of them or where they have been made available.
+    cite: GDPR Art. 13(1)(f)
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    question: Does the notice state that personal data are transferred to a third country or an
+      international organisation, and for each such transfer name either the Commission adequacy
+      decision or the existence of no such decision, or the safeguards relied on together with how
+      to obtain a copy of them or where they have been made available?
+    applicability_note: '**Qualified by "where applicable", and the qualifier is the whole item.** The
+      paragraph bites only where the controller *intends to transfer* personal data outside the
+      Union, so a service hosted entirely inside it, with no third-country processor, owes nothing
+      here: record `not-applicable` with the census facts that show it, never `absent`. That
+      distinction is the only thing standing between this item and a false report, because the
+      notice of a service with no transfers looks exactly like the notice of a service that has them
+      and does not say so. Where the census names region constants outside the Union — a deployment
+      region is a statement about where the processing is placed — and the notice says nothing, that
+      is `absent` and it is a real finding; where the census is silent and nobody has said where the
+      service runs, it is `unresolved`. **A host name corroborates and does not settle it.** An
+      outbound host says which party is called, never where that party keeps the data: a `.com`
+      served from Frankfurt, an edge node in the Union in front of storage outside it and a European
+      domain resolving to a United States region all look alike in that category, so a host is a
+      reason to read the code and the notice, not a finding of transfer on its own. Note also the
+      two limbs the question carries that are easy to drop: the paragraph asks for "the existence
+      **or absence**" of an adequacy decision - saying there is none satisfies it - and it accepts
+      "or **where they have been made available**" as an alternative to supplying a copy.'
+    census_categories:
+      - transfers
+      - recipients
+  - id: art-13-2-a
+    article: 13(2)(a) (Art 14(2)(a))
+    quote: the period for which the personal data will be stored, or if that is not possible, the
+      criteria used to determine that period;
+    cite: GDPR Art. 13(2)(a)
+    quote_anchor: "In addition to the information referred to in paragraph 1, the controller shall, at
+      the time when personal data are obtained, provide the data subject with the following further
+      information necessary to ensure fair and transparent processing:"
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    question: Does the notice state the period for which the personal data will be stored, or the
+      criteria used to determine that period, and where the categories it describes are kept for
+      different lengths of time, does it state that for each of them?
+    applicability_note: "**Where the per-category reading comes from, since the paragraph's own words do
+      not carry it.** Article 13(2)(a) asks for the period the personal data will be stored for, or
+      the criteria for determining that period. Where one period covers everything the notice
+      describes, one sentence answers the item and nothing more is owed. Where the categories are
+      kept for different lengths of time — an account record for the life of the account, a request
+      log for thirty days, an invoice for a statutory term — no single period is true of all of
+      them, so the paragraph is answered for each of those categories and left unanswered for every
+      category the stated period does not describe. That granularity is read out of the requirement
+      itself rather than added to it, and this file quotes no provision stating it in those words;
+      the question said \"for each category of personal data\" flatly until 2026-09-01, which
+      asserted as the article's words a duty the article does not spell out. **The second reading is
+      the Article 13 / Article 14 split**, on the rule the `scope_note` states once for every item
+      that names a counterpart. What the forms collect and what an identity provider or an
+      enrichment service hands over can be kept for different lengths of time, and this item is
+      answered for both bodies of data. A notice giving periods for its own form-collected records
+      while the externally-obtained categories carry none has answered the Article 13(2)(a) half and
+      left the Article 14(2)(a) half open; recording that as satisfied is the silent pass the
+      `scope_note` describes."
+    census_categories:
+      - retention
+  - id: art-13-2-b
+    article: 13(2)(b) (Art 14(2)(c))
+    quote: the existence of the right to request from the controller access to and rectification or
+      erasure of personal data or restriction of processing concerning the data subject or to object
+      to processing as well as the right to data portability;
+    cite: GDPR Art. 13(2)(b)
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    question: Does the notice tell the data subject that they may request access, rectification,
+      erasure, and restriction of processing, that they may object to processing, and that they have
+      a right to data portability, and which of those six does the notice leave out?
+  - id: art-13-2-c
+    article: 13(2)(c) (Art 14(2)(d))
+    quote: where the processing is based on point (a) of Article 6(1) or point (a) of Article 9(2), the
+      existence of the right to withdraw consent at any time, without affecting the lawfulness of
+      processing based on consent before its withdrawal;
+    cite: GDPR Art. 13(2)(c)
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    question: Where the notice relies on consent, does it state that consent may be withdrawn at any
+      time, and does it also state what withdrawal does to processing already carried out before the
+      withdrawal?
+  - id: art-13-2-d
+    article: 13(2)(d) (Art 14(2)(e))
+    quote: the right to lodge a complaint with a supervisory authority;
+    cite: GDPR Art. 13(2)(d)
+    quote_anchor: "In addition to the information referred to in paragraph 1, the controller shall, at
+      the time when personal data are obtained, provide the data subject with the following further
+      information necessary to ensure fair and transparent processing:"
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    question: Does the notice tell the data subject that a complaint may be lodged with a supervisory
+      authority?
+  - id: art-13-2-e
+    article: 13(2)(e) (no Art 14 counterpart)
+    quote: whether the provision of personal data is a statutory or contractual requirement, or a
+      requirement necessary to enter into a contract, as well as whether the data subject is obliged
+      to provide the personal data and of the possible consequences of failure to provide such data;
+    cite: GDPR Art. 13(2)(e)
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    question: Does the notice state whether providing the personal data is required by statute or by
+      contract or is necessary to enter into a contract, whether the data subject has to provide it,
+      and what follows if they do not?
+    applicability_note: "**This item is the mirror of `art-14-1-d` and `art-14-2-f`, and it was the one
+      without a note until 2026-07-29.** Article 13(2)(e) has no Article 14 counterpart: the whole
+      point of the requirement is to tell a person, at the moment they are being asked for data,
+      what happens if they decline — and that moment does not exist where the controller never asked
+      them. Where nothing is collected from the data subject, record `not-applicable`, never
+      `absent`. The gate's second question settles this before any item is walked; if it was not
+      settled there, settle it here and say so."
+  - id: art-13-2-f
+    article: 13(2)(f) (Art 14(2)(g))
+    quote: the existence of automated decision-making, including profiling, referred to in Article 22(1)
+      and (4) and, at least in those cases, meaningful information about the logic involved, as well
+      as the significance and the envisaged consequences of such processing for the data subject.
+    cite: GDPR Art. 13(2)(f)
+    quote_anchor: "In addition to the information referred to in paragraph 1, the controller shall, at
+      the time when personal data are obtained, provide the data subject with the following further
+      information necessary to ensure fair and transparent processing:"
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    question: Does the notice state whether automated decision-making, including profiling, takes place,
+      and where it does, does it describe the logic involved and the significance and the envisaged
+      consequences of that processing for the data subject?
+    census_categories: []
+    applicability_note: This item is engaged only by automated decision-making of the kind described in
+      Article 22(1) and (4), which turns on whether the decision produces legal effects concerning
+      the data subject or similarly significantly affects them. Automated processing that does not
+      reach that threshold does not engage this item. Where the threshold cannot be settled from the
+      document alone, record the item as unresolved and refer it to a human. **No collector emits
+      evidence of a decision under Article 22(1) and (4), which is why this item's
+      `census_categories` is empty rather than absent — considered, and empty, instead of a field
+      nobody filled in.** It declared `recipients` — outbound hosts and called dependencies — until
+      2026-09-01, and a hostname cannot show that a decision produces a legal effect concerning
+      anybody or similarly significantly affects them, so the declaration offered an adjudicating
+      agent evidence about a different question and could pull the item's status down on it. A model
+      dependency, an inference endpoint or a scoring library in the tree is a reason to ask, never
+      an answer. **Refer it in words the person can answer.** The threshold is a fact about what the
+      controller does with the output of an automated step, so put the question to the person
+      running the scan in these words — does any automated step decide something about a person that
+      produces a legal effect concerning them or similarly significantly affects them? — and record
+      the item `unresolved` until it is answered. The current format has no item-level ask field, so
+      the question travels in the reasoning.
+  - id: art-14-1-d
+    article: 14(1)(d)
+    quote: the categories of personal data concerned;
+    cite: GDPR Art. 14(1)(d)
+    quote_anchor: "Where personal data have not been obtained from the data subject, the controller
+      shall provide the data subject with the following information:"
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    question: For personal data the controller did not obtain from the data subject, does the notice
+      state the categories of personal data concerned, rather than pointing at an external service
+      without naming what is taken from it?
+    applicability_note: "**Article 14 applies only where personal data have NOT been obtained from the
+      data subject**, so this item does not reach a controller that collects everything directly
+      from its users - record `not-applicable`, not `absent`. This is the commonest shape in this
+      product's audience: an application whose data comes from its own sign-up forms owes nothing
+      under Article 14 at all. Look for the opposite in the code before answering: an enrichment or
+      lookup API, a data broker, a partner feed, a public-source scrape, an identity provider that
+      returns profile fields the user never typed here. Any of those and the item bites; none of
+      them and it does not. Where the code is ambiguous, `unresolved`. **Where some data is obtained
+      externally and some is not — the ordinary case — this item is answered for the
+      externally-obtained categories alone.** Name them from the code first, then ask whether the
+      notice states those categories. A notice that lists in full what its own forms collect, and
+      says nothing about what the identity provider hands over, does not satisfy this item however
+      complete the first half is. Answering against the whole notice is how that passes silently.
+      **What the declared census category can and cannot do here.** This item declares `recipients`
+      — outbound hosts and called dependencies — because the origins it asks about are reached over
+      the network: an identity provider, an enrichment or lookup API, a partner feed, a broker
+      endpoint. It declared `collection` until 2026-09-01, and `collection` is browser permission
+      APIs — geolocation, camera, microphone, clipboard — which is evidence about data a person
+      supplies through their own device, the one origin this item does not reach. On a project whose
+      entire account record arrives from an identity provider, that declaration returned a single
+      clipboard permission and nothing else. **The category corroborates and cannot triage.** No
+      census fact records direction, so a host in it may be somewhere data was sent rather than
+      somewhere data came from, and the categories obtained from outside are named by reading the
+      routes that call those hosts. Read the call sites, then ask whether the notice states the
+      categories they bring back."
+    census_categories:
+      - recipients
+  - id: art-14-2-f
+    article: 14(2)(f)
+    quote: from which source the personal data originate, and if applicable, whether it came from
+      publicly accessible sources;
+    cite: GDPR Art. 14(2)(f)
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    question: For personal data the controller did not obtain from the data subject, does the notice
+      name the source the data came from, including data derived on the controller's behalf by a
+      third party, and state whether that source was publicly accessible?
+    applicability_note: "Same condition as the item above, and the same failure to avoid: **Article 14
+      reaches only data the controller did not obtain from the data subject.** A service that
+      collects everything through its own forms is `not-applicable` here, never `absent`. Where an
+      external source does exist, note that the \"if applicable\" attaches to the
+      publicly-accessible half only: naming the source is required, saying whether it was public is
+      required only where it was. **And where only some of the data comes from outside, this item is
+      answered for that data alone**, on the same reasoning as the item above: every external source
+      has to be named, and a notice naming one of three sources while describing its own forms
+      exhaustively has not satisfied it. **What `recipients` contributes here, and its limit.** The
+      hosts that answer this item do sit in that category — an identity provider, a lookup service,
+      a broker endpoint — but no census fact records direction, and a hostname in it may be a
+      destination rather than a source. On one real tree fourteen of sixteen facts naming a large
+      provider's host were authorisation scope strings and not a data source at all. So the category
+      is corroboration for a source read out of the routes, never the triage: the file has to be
+      opened either way. **The clause in the question about data derived on the controller's behalf
+      by a third party is this checklist's reading of \"from which source the personal data
+      originate\", not the article's own words**, and it is marked as a reading rather than quoted
+      because this file quotes what it requires. Where a third party compiles or derives the data
+      and hands it over, that party is where the data originates for the person it is about, and a
+      notice naming only the services the person dealt with leaves the origin unstated. The bare
+      question reaches that case without the clause; the clause is kept because dropping it is what
+      lets a derived-data source go unnamed."
+    census_categories:
+      - recipients

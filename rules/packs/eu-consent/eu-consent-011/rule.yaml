@@ -1,0 +1,70 @@
+id: eu-consent-011
+pack: eu-consent
+short_name: Error reports set to include personal data (Sentry)
+problem_line:
+  text: Error reports set to include IP, cookies and user data
+fix_line: Turn send-default-PII off and attach only the context you need in the SDK's before-send hook.
+title: Sentry send-default-PII set to true - whether this line is a live configuration, and data
+  minimisation, need review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: GDPR Art. 5(1)(c) (data minimisation) and Art. 25 (data protection by design and by default)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-21
+    jurisdiction: EU
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.9
+detector:
+  engine: builtin-regex
+  match:
+    - sendDefaultPii\s*:\s*true
+    - send_default_pii["']?\s*(=>|[:=])\s*(?:env\([^)]*,\s*)?(true|True|TRUE)
+    - SendDefaultPII\s*:\s*true
+    - SendDefaultPii\s*=\s*true
+    - setSendDefaultPii\(\s*true
+    - send-default-pii\s*(?:=>|[:=])\s*(?:\$\{[A-Za-z_][A-Za-z0-9_]*:)?true
+    - SENTRY_SEND_DEFAULT_PII\s*(?:=>|[:=])\s*["']?(true|True|TRUE|1)
+    - (?&send_default_pii_option)["']?\s*\]?\s*(?:=>|[:=])\s*(?:env\([^)]*,\s*)?["']?(?:true|True|TRUE|1)\b
+    - (?&send_default_pii_option)=?["']?\s*,\s*["']?(?:true|True|TRUE)\b
+  resolve_local_values: true
+  vocabulary:
+    send_default_pii_option:
+      - send_default_pii
+  vocabulary_matching:
+    send_default_pii_option:
+      case_insensitive: true
+      separator_insensitive: true
+context_questions:
+  - Is this line a live configuration, or a template that ships no value? The detector matches an
+    option set to true, and the same text appears in .env.example files, deployment documentation,
+    Helm or Compose templates, a test or development profile, and a commented-out block a comment
+    filter did not catch. Quote the file and say whether this configuration reaches a production
+    process. Where it is a template or a development-only profile, record that and close the
+    candidate.
+  - Are IP addresses, cookies and user records needed to investigate errors, or can the payload be
+    minimised?
+  - Is scrubbing implemented in beforeSend (before_send / BeforeSend) to strip personal data before
+    the event leaves the process?
+  - On a server SDK, does the enabled option also attach request bodies, headers and cookies for
+    every handled request? Quote the integration list passed to init.
+  - Does the privacy policy disclose transmission to an error-tracking provider?
+evidence_template: "{file}:{line} sets Sentry's send-default-PII option to true, which where it
+  reaches a production process attaches IP addresses and similar personal data by default. Whether
+  this line is a live configuration or a template that ships no value is context question 1"
+remediation_template: |
+  This is a candidate for review against GDPR Art. 5(1)(c) (data minimisation) and Art. 25 (data
+  protection by design and by default), not a determination about this code. Read the matched line
+  first: the detector matches the option set to true wherever it appears, so a .env.example, a
+  deployment guide, a Helm or Compose template and a test fixture all match, and where the line
+  ships no value to a production process the candidate closes there - that is context question 1.
+  Where the line is a live configuration, return the option to false (the SDK default) and attach
+  only the context you need explicitly in the SDK's before-send hook, stripping the rest there.
+  The option name is sendDefaultPii in
+  JavaScript, send_default_pii in Python, Ruby, PHP, Rust and Elixir, SendDefaultPII in Go,
+  SendDefaultPii in .NET, and setSendDefaultPii in Java.
+data_categories:
+  - user.device
+  - user.contact
+fingerprint_spec: default

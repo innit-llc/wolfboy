@@ -1,0 +1,643 @@
+id: eu-dsr-001
+pack: eu-dsr
+short_name: Where people's data is stored and read, for access requests
+problem_line:
+  text: Personal data with no complete rights-request route found
+  template: "{data} with no complete rights-request route found"
+fix_line: Let people erase themselves and request every other right, export included; remove, not
+  only mark; tell recipients.
+title: Store, schema or read surface for people, an identity disclosed, or a stubbed data-subject
+  route - GDPR Arts. 15-22
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: 'General Data Protection Regulation, Regulation (EU) 2016/679, Arts. 15-22 - the data subject
+      rights, every one of them owed by the CONTROLLER (Art. 4(7)). Art. 15(1): "The data subject
+      shall have the right to obtain from the controller confirmation as to whether or not personal
+      data concerning him or her are being processed, and, where that is the case, access to the
+      personal data and the following information", followed by points (a)-(h) (purposes; categories
+      of personal data; recipients; storage period; the existence of the rectification, erasure,
+      restriction and objection rights; the right to lodge a complaint; the source where data were
+      not collected from the data subject; the existence of automated decision-making). Art. 15(3):
+      "The controller shall provide a copy of the personal data undergoing processing", and "Where
+      the data subject makes the request by electronic means, and unless otherwise requested by the
+      data subject, the information shall be provided in a commonly used electronic form." Art. 16:
+      "The data subject shall have the right to obtain from the controller without undue delay the
+      rectification of inaccurate personal data concerning him or her", and to have incomplete data
+      completed. Art. 17(1): "The data subject shall have the right to obtain from the controller
+      the erasure of personal data concerning him or her without undue delay and the controller
+      shall have the obligation to erase personal data without undue delay where one of the
+      following grounds applies", grounds (a)-(f) including (a) the data are no longer necessary,
+      (b) consent is withdrawn and no other legal ground applies, and (d) the data have been
+      unlawfully processed. Art. 18(1) gives a right to obtain restriction of processing in the four
+      listed situations. Art. 20(1): the right "to receive the personal data concerning him or her,
+      which he or she has provided to a controller, in a structured, commonly used and
+      machine-readable format and have the right to transmit those data to another controller
+      without hindrance", where processing rests on consent or contract and is carried out by
+      automated means. Art. 21(1)-(3) give a right to object, and Art. 21(3) provides that where the
+      data subject objects to processing for direct marketing purposes "the personal data shall no
+      longer be processed for such purposes". Art. 22(1) gives a right not to be subject to a
+      decision based solely on automated processing producing legal or similarly significant
+      effects. Retrieved 2026-07-27 from the Publications Office cellar
+      (http://publications.europa.eu/resource/celex/32016R0679, Accept-Language: eng).'
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 12(2)-(4) - the duty to
+      make the rights usable, again on the controller. Art. 12(2), quoted in full because the
+      earlier version of this entry stopped at the first sentence and lost the Art. 11(2) limit that
+      the second sentence carries: \"The controller shall facilitate the exercise of data subject
+      rights under Articles 15 to 22. In the cases referred to in Article 11(2), the controller
+      shall not refuse to act on the request of the data subject for exercising his or her rights
+      under Articles 15 to 22, unless the controller demonstrates that it is not in a position to
+      identify the data subject.\" Recital 59 sits behind that duty and is quoted here because this
+      rule previously asserted the opposite of it: \"Modalities should be provided for facilitating
+      the exercise of the data subject's rights under this Regulation, including mechanisms to
+      request and, if applicable, obtain, free of charge, in particular, access to and rectification
+      or erasure of personal data and the exercise of the right to object. The controller should
+      also provide means for requests to be made electronically, especially where personal data are
+      processed by electronic means.\" A published electronic address is therefore capable of being
+      a modality; whether a particular one is depends on whether it is monitored and answered, which
+      is a question for the reader and not a matter this rule settles. Art. 12(3): \"The controller
+      shall provide information on action taken on a request under Articles 15 to 22 to the data
+      subject without undue delay and in any event within one month of receipt of the request. That
+      period may be extended by two further months where necessary, taking into account the
+      complexity and number of the requests. The controller shall inform the data subject of any
+      such extension within one month of receipt of the request, together with the reasons for the
+      delay. Where the data subject makes the request by electronic form means, the information
+      shall be provided by electronic means where possible, unless otherwise requested by the data
+      subject.\" Art. 12(4): \"If the controller does not take action on the request of the data
+      subject, the controller shall inform the data subject without delay and at the latest within
+      one month of receipt of the request of the reasons for not taking action and on the
+      possibility of lodging a complaint with a supervisory authority and seeking a judicial
+      remedy.\" Art. 12(5) makes the actions free of charge, and puts the burden of proving a
+      request manifestly unfounded or excessive on the controller. A route that answers a request
+      with a fixed refusal is therefore not outside these provisions - Art. 12(4) is the provision
+      it has to satisfy, and it must name reasons, the supervisory authority and the judicial
+      remedy."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: 'General Data Protection Regulation, Regulation (EU) 2016/679, Arts. 17(2) and 19 - why an
+      erasure that stops at the local database is incomplete. Art. 17(2): "Where the controller has
+      made the personal data public and is obliged pursuant to paragraph 1 to erase the personal
+      data, the controller, taking account of available technology and the cost of implementation,
+      shall take reasonable steps, including technical measures, to inform controllers which are
+      processing the personal data that the data subject has requested the erasure by such
+      controllers of any links to, or copy or replication of, those personal data." Art. 19: "The
+      controller shall communicate any rectification or erasure of personal data or restriction of
+      processing carried out in accordance with Article 16, Article 17(1) and Article 18 to each
+      recipient to whom the personal data have been disclosed, unless this proves impossible or
+      involves disproportionate effort. The controller shall inform the data subject about those
+      recipients if the data subject requests it." Art. 4(9) defines a recipient as "a natural or
+      legal person, public authority, agency or another body, to which the personal data are
+      disclosed, whether a third party or not" - which reaches the analytics, error-reporting,
+      messaging, CRM and payment vendors an application forwards user records to.'
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: 'General Data Protection Regulation, Regulation (EU) 2016/679, Art. 11 - processing which does
+      not require identification. Art. 11(1): "If the purposes for which a controller processes
+      personal data do not or do no longer require the identification of a data subject by the
+      controller, the controller shall not be obliged to maintain, acquire or process additional
+      information in order to identify the data subject for the sole purpose of complying with this
+      Regulation." Art. 11(2): "Where, in cases referred to in paragraph 1 of this Article, the
+      controller is able to demonstrate that it is not in a position to identify the data subject,
+      the controller shall inform the data subject accordingly, if possible. In such cases, Articles
+      15 to 20 shall not apply except where the data subject, for the purpose of exercising his or
+      her rights under those articles, provides additional information enabling his or her
+      identification." The disapplication reaches Arts. 15 to 20 only: the Art. 21 right to object
+      and the Art. 22 right regarding solely automated decisions are outside it. Two boundaries
+      decide whether it is available at all. Art. 4(5) defines pseudonymisation as processing after
+      which the personal data "can no longer be attributed to a specific data subject without the
+      use of additional information, provided that such additional information is kept separately",
+      and Recital 26 says personal data which have undergone pseudonymisation "should be considered
+      to be information on an identifiable natural person" - so holding the re-identification key
+      defeats the Art. 11 case, and it also means a pseudonymisation routine does not discharge Art.
+      17. Recital 26 puts only data "rendered anonymous in such a manner that the data subject is
+      not or no longer identifiable" outside the Regulation. Retrieved 2026-07-27 from the
+      Publications Office cellar (http://publications.europa.eu/resource/celex/32016R0679,
+      Accept-Language: eng).'
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 28(3)(e) - where a
+      PROCESSOR's duty differs, and it differs completely. The contract binding the processor must
+      stipulate that the processor \"taking into account the nature of the processing, assists the
+      controller by appropriate technical and organisational measures, insofar as this is possible,
+      for the fulfilment of the controller's obligation to respond to requests for exercising the
+      data subject's rights laid down in Chapter III\". A processor therefore owes an assistance
+      duty under a contract, not the Arts. 15-22 rights themselves, and it answers to the controller
+      rather than to the data subject: Art. 28(3)(a) has it process personal data \"only on
+      documented instructions from the controller\". Art. 28(3)(g) adds that at the end of the
+      service the processor must, at the controller's choice, delete or return all the personal data
+      and delete existing copies. A repository that is a pure processor - a hosted API, a background
+      worker, an SDK operating on a customer's data - is outside the primary duty this rule tests,
+      which is why identifying the role is the first context question."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 83(5)(b) and Art. 99(2) -
+      exposure and date. Art. 83(5)(b) puts infringements of \"the data subjects' rights pursuant to
+      Articles 12 to 22\" in the higher fining tier, \"up to 20 000 000 EUR, or in the case of an
+      undertaking, up to 4 % of the total worldwide annual turnover of the preceding financial year,
+      whichever is higher\". Art. 99(2): \"It shall apply from 25 May 2018.\" Supervisory-authority
+      attention is current rather than historical: the EDPB's Coordinated Enforcement Framework
+      action for 2024 was the right of access (Art. 15) across 1,185 controllers, and the 2025
+      action was the right to erasure (Art. 17) across 32 supervisory authorities and 764
+      controllers, with the report adopted 2026-02-10."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.15
+detector:
+  engine: builtin-regex
+  match_in_comments: true
+  join_bracketed_constructs: true
+  resolve_local_values: true
+  shared_vocabulary:
+    - personal_data_field_names
+    - position_bound_field_names
+  match:
+    - create_table\s+[:"']
+    - \bhas_secure_password\b|\bdevise\s+:[a-z_]|\bdevise_for\s+:|\bauthenticates_with_sorcery\b|\bhas_secure_token\s+:|\bclass\s+[A-Za-z][A-Za-z0-9_:]{0,60}\s*<\s*(ApplicationRecord|ActiveRecord::Base)\b
+    - \bt\.(string|text|citext|date|datetime|inet)\s+:[\w]*(email|email_address|phone|phone_number|mobile|first_name|last_name|full_name|display_name|username|password_digest|encrypted_password|address|street|city|postcode|postal_code|zipcode|date_of_birth|birthday|dob|bio|avatar|gender|nationality|national_id|tax_id|ip_address|last_sign_in_ip|last_seen_at)[\w]*\b
+    - \.permit\([^)]{0,200}:(email|email_address|phone|phone_number|first_name|last_name|full_name|display_name|password|address|postcode|postal_code|date_of_birth|birthday|dob|bio|avatar|gender)\b
+    - \bclass\s+\w*(User|Account|Member|Profile|Customer|Subscriber|Contact|Person|Patient|Employee)\w*\s*\(\s*(models\.Model|AbstractUser|AbstractBaseUser|PermissionsMixin|Base|db\.Model|SQLModel|BaseModel|UserenaBaseProfile)\b|\bclass\s+\w+\s*\(\s*(models\.Model|AbstractUser|AbstractBaseUser|PermissionsMixin|db\.Model|SQLModel|UserenaBaseProfile)\b
+    - \b(AbstractBaseUser|AbstractUser|BaseUserManager|USERNAME_FIELD|UserCreationForm|create_superuser|get_user_model|AUTH_USER_MODEL)\b|\b(email|phone|phone_number|first_name|last_name|full_name|date_of_birth|birth_date|address|postal_code|gender)\s*=\s*models\.[A-Za-z]*Field\(|\b(email|email_address|phone|phone_number|first_name|last_name|full_name|display_name|username|date_of_birth|birth_date|address|postal_code|gender|candidate_name|employee_name|customer_name|contact_name|patient_name)\s*:\s*Mapped\[
+    - __tablename__\s*=\s*["']
+    - \b[A-Za-z]{0,20}(Email|EmailAddress|PhoneNumber|FirstName|LastName|FullName|DateOfBirth|PostalCode|PasswordHash|HashedPassword)\s+(string|\*string|time\.Time|sql\.NullString)\b
+    - Schema::create\(\s*["']
+    - \bclass\s+\w+\s+extends\s+(Authenticatable|Model|Eloquent|BaseUser)\b
+    - \$table->[a-zA-Z]{0,12}\(\s*["'][\w]*(email|email_address|phone|phone_number|first_name|last_name|full_name|username|password|address|postcode|postal_code|date_of_birth|birthday|dob|gender|national_id|iban|bic|account_number)[\w]*["']
+    - "@Entity\\b|@Table\\b"
+    - \bDbSet<|\b(public|private|protected)\s+(String|string)\s+[A-Za-z]{0,20}(email|Email|phoneNumber|PhoneNumber|firstName|FirstName|lastName|LastName|dateOfBirth|DateOfBirth)\b
+    - (pgTable|sqliteTable|mysqlTable|defineTable|sequelize\.define|mongoose\.model|defineModel|defineEntity)\(|createTable\(\s*[{\s]*(tableName|name|modelName|collection)?:?\s*["'`]
+    - \b(prisma|db|database|knex|trx|tx|orm|sequelize|supabase|models|repo|repository|ctx\.db|payload|pool|conn|em|entityManager|queryRunner|mongo|firestore|drizzle|kysely|xata)\.[\w$]*\b([Uu]sers?|[Aa]ccounts?|[Mm]embers?|[Pp]rofiles?|[Cc]ustomers?|[Ss]ubscribers?|[Cc]ontacts?|[Pp]atients?|[Ee]mployees?|[Aa]pplicants?|[Cc]andidates?|[Ss]tudents?)\b[\w$.]*\.(create|createMany|insert|insertOne|insertMany|upsert|save|add|put)\(
+    - \bnext-auth\b|@auth/core|\bNextAuth\(|\bpassport\.use\(|\bbcrypt\.(hash|hashSync|compare)\(|\bBCrypt\.|\bargon2\.(hash|verify)\(|\bmake_password\(|\bset_password\(|@clerk/|\blucia-auth\b|\bbetter-auth\b|\bsupabase\.auth\.(signUp|signIn|admin|updateUser|getUser)|\bauth\.signUp\(|\bsignUpWithPassword\(|\bcreateUserWithEmailAndPassword\(|\bdjango\.contrib\.auth\b|\bIdentityUser\b|\bdevise\b
+    - "(?<!\\[)type=[\"'](email|tel|password)[\"']|<input[^>]{0,160}name=[\"'](email|e-mail|phone|t\
+      el|firstName|first_name|lastName|last_name|fullName|full_name|dob|birthday|address|postcode|p\
+      ostal_code)[\"']|autocomplete=[\"'](email|tel|name|given-name|family-name|street-address|post\
+      al-code|bday|new-password|current-password)[\"']|\\bf\\.(email_field|phone_field|password_fie\
+      ld)\\s+:"
+    - ^\s*["']?(email|emailAddress|email_address|phone|phoneNumber|phone_number|mobileNumber|firstName|first_name|lastName|last_name|fullName|full_name|display_name|userName|user_name|userEmail|user_email|contactEmail|contact_email|contactName|contact_name|customerName|customer_name|candidateName|candidate_name|employeeName|employee_name|patientName|patient_name|subjectName|dateOfBirth|date_of_birth|birthDate|address1|addressLine1|address_line1|streetAddress|street_address|postalCode|postal_code|postcode|zipCode|zip_code|nationalId|national_id|taxId|ssn|passportNumber|ipAddress|ip_address)["']?\s*\??\s*:\s*(string\b|String\b|str\b|text\b|Text\b|\?string\b|Optional\[str\])
+    - (?:\b(user|users|account|accounts|member|members|profile|profiles|customer|customers|subscriber|subscribers|applicant|applicants|candidate|candidates|student|students|person|people|current_user|currentUser)|@(user|account))\b[^\n]{0,40}\b(deleted_at|deletedAt|is_deleted|isDeleted|soft_delete|softDelete|softDeleted|deleted_flag|is_removed|archived_at|archivedAt|disabled_at|deactivated_at|marked_for_deletion|pending_deletion)\b
+    - \b(deleted_at|deletedAt|is_deleted|isDeleted|soft_delete|softDelete|deleted_flag|archived_at|deactivated_at)\b[^\n]{0,40}\b(user|users|account|accounts|member|members|profile|customer|subscriber|applicant|applicants|candidate|candidates)\b
+    - (?:\b(user|users|account|accounts|member|profile|customer|subscriber|current_user|currentUser)|@(user|account))\b[^\n]{0,30}\b(is_active|isActive|active|enabled|is_enabled|status|state)\b\s*(?:=>|[:=]){1,2}\s*(False|false|0|["'](?:deleted|removed|inactive|disabled|closed|archived)["'])
+    - \buse\s+[A-Za-z,
+      ]{0,40}SoftDeletes\b|\bSoftDeletes;|\bacts_as_paranoid\b|\binclude\s+Discard::Model\b|\bparanoid:\s*true\b|\bwithSoftDeletes?\(|\bsoftDelete:\s*true\b
+    - \b([Dd]elete|DELETE|[Ee]rase|[Ee]xport|[Dd]ownload|[Pp]urge|[Aa]nonymi[sz]e)[_-]?(account|Account|ACCOUNT|user|User|USER|data|Data|DATA|profile|Profile)\w{0,16}\b[^\n]{0,120}(501|403|[Nn]ot
+      [Ii]mplemented|NotImplemented|not_implemented|notImplemented|NotImplementedError|NotImplementedException|StatusNotImplemented|[Uu]nimplemented|[Cc]oming
+      [Ss]oon|coming_soon|[Nn]ot [Ss]upported|[Uu]nsupported|[Nn]ot [Aa]vailable|[Nn]ot
+      [Yy]et|[Nn]ot [Bb]uilt|TODO|FIXME|[Ff]orbidden|[Dd]enied|[Ss]tubbed|throw new
+      Error|\braise\b|\bpass\b|[Cc]ontact (us|support)|[Ee]mail (us|support))
+    - (501|403|[Nn]ot
+      [Ii]mplemented|NotImplemented|not_implemented|notImplemented|NotImplementedError|NotImplementedException|StatusNotImplemented|[Uu]nimplemented|[Cc]oming
+      [Ss]oon|coming_soon|[Nn]ot [Ss]upported|[Uu]nsupported|[Nn]ot [Aa]vailable|[Nn]ot
+      [Yy]et|[Nn]ot [Bb]uilt|TODO|FIXME|[Ff]orbidden|[Dd]enied|[Ss]tubbed|throw new
+      Error|\braise\b|\bpass\b|[Cc]ontact (us|support)|[Ee]mail
+      (us|support))[^\n]{0,120}\b([Dd]elete|[Ee]rase|[Ee]xport|[Dd]ownload|[Pp]urge)[_-]?(account|Account|user|User|data|Data|profile|Profile)\w{0,16}\b
+    - \b(dsar|DSAR|[Dd]ata[_-]?[Ss]ubject|[Gg]dpr|GDPR|[Rr]ight[_-]?[Tt]o[_-]?[Bb]e[_-]?[Ff]orgotten|[Ee]rasure[_-]?[Rr]equest|[Pp]rivacy[_-]?[Rr]equest)\w{0,20}\b[^\n]{0,120}(501|403|[Nn]ot
+      [Ii]mplemented|NotImplemented|not_implemented|notImplemented|NotImplementedError|NotImplementedException|StatusNotImplemented|[Uu]nimplemented|[Cc]oming
+      [Ss]oon|coming_soon|[Nn]ot [Ss]upported|[Uu]nsupported|[Nn]ot [Aa]vailable|[Nn]ot
+      [Yy]et|[Nn]ot [Bb]uilt|TODO|FIXME|[Ff]orbidden|[Dd]enied|[Ss]tubbed|throw new
+      Error|\braise\b|\bpass\b|[Cc]ontact (us|support)|[Ee]mail (us|support))
+    - \b(analytics|segment|rudderanalytics|posthog|mixpanel|amplitude|heap|smartlook|logrocket|hotjar|clarity|intercom|Intercom|customerio|cio|klaviyo|braze|appboy|iterable|onesignal|pendo|userpilot|fullstory|FS)\.(identify|people\.set|setUserId|setUserProperties|setUserVars|boot|update|track_identity)\(
+    - Sentry\.setUser\(|scope\.setUser\(|\bset_user\(\s*\{|\bbugsnag\.setUser\(|\bdatadogRum\.setUser\(|\bLogRocket\.identify\(|\bFS\.identify\(|\bmixpanel\.people\.set\(|\bposthog\.identify\(
+    - \bstripe\.[Cc]ustomers\.create\(|\bStripe::Customer\.create\(|\bcustomers\.create\(\s*\{[^\n]{0,60}email|\blists\.addListMember\(|\bmailchimp\.[a-zA-Z.]{0,30}\.set\(|\bsendgrid\.[a-zA-Z.]{0,30}contacts|\bcontacts\.(put|create|upsert)\(|\bhubspot\.[a-zA-Z.]{0,30}contacts|\bBrevo\b|\bsendinblue\b
+    - json:"(email|phone|phone_number|first_name|last_name|full_name|display_name|username|password|password_hash|address|street|city|postcode|postal_code|zip|date_of_birth|birthday|dob|gender|national_id|tax_id|ip_address)(?:,[A-Za-z]+)*"
+    - '@Column\([^\n]{0,60}name\s*=\s*"(?:[A-Za-z0-9]+_)?((?&personal_data_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?"'
+    - \b(?:mapped_column|Column)\(\s*["'](?:[A-Za-z0-9]+_)?((?&personal_data_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?["']
+    - ^\s+(email|phone|phone_number|phoneNumber|first_name|firstName|last_name|lastName|full_name|fullName|display_name|displayName|username|password|password_hash|passwordHash|address|street|city|postcode|postal_code|postalCode|zip|date_of_birth|dateOfBirth|birthday|dob|gender|national_id|nationalId|tax_id|taxId|ip_address|ipAddress)\s+(String|Int|BigInt|Float|Decimal|Boolean|DateTime|Json|Bytes)\b
+    - ^\s+[`"\[]?(?:[A-Za-z0-9]+_)?((?&personal_data_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?[`"\]]?\s+(VARCHAR|varchar|Varchar|VARCHAR2|varchar2|Varchar2|CHARACTER
+      VARYING|character varying|Character
+      varying|CHAR|char|Char|NVARCHAR|nvarchar|Nvarchar|NCHAR|nchar|Nchar|TEXT|text|Text|CITEXT|citext|Citext|CLOB|clob|Clob|STRING|string|String|INET|inet|Inet|DATE|date|Date|DATETIME|datetime|Datetime|TIMESTAMP|timestamp|Timestamp|TIMESTAMPTZ|timestamptz|Timestamptz|BIGINT|bigint|Bigint|INTEGER|integer|Integer|INT|int|Int|SMALLINT|smallint|Smallint|NUMERIC|numeric|Numeric|DECIMAL|decimal|Decimal|BOOLEAN|boolean|Boolean|BOOL|bool|Bool|UUID|uuid|Uuid|JSONB|jsonb|Jsonb|JSON|json|Json|BYTEA|bytea|Bytea|BLOB|blob|Blob|ENUM|enum|Enum)\b
+    - ^\s*model\s+\w+\s*\{
+    - gorm:"
+    - \b(?:db|bson):"(?:[A-Za-z0-9]+_)?((?&personal_data_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?(?:,[A-Za-z]+)*"
+    - '@(?:JsonProperty|SerializedName)\(\s*(?:value\s*=\s*)?"(?:[A-Za-z0-9]+_)?((?&personal_data_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?"'
+    - "@Column\\(\\s*\\{[^\\n]{0,60}name:\\s*['\"](?:[A-Za-z0-9]+_)?((?&personal_data_field_names))\
+      (?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?['\"]"
+    - (?:\b[A-Za-z_][A-Za-z0-9_]{0,20}\.Property<[^>\n]{0,60}>|\bHasColumnName)\(\s*"(?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?"
+    - ^\s*(?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?\s*=\s*[A-Za-z_][A-Za-z0-9_]{0,20}\.Column<[^>\n]{0,60}>\(
+    - \.(?:AddColumn|AlterColumn|RenameColumn|DropColumn)<[^>\n]{0,60}>\(\s*name:\s*"(?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?"
+    - ^[
+      \t]*name:\s*"(?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?"\s*,?[
+      \t]*$
+    - ^\s*(?:public|private|protected|internal)(?:\s+(?:static|readonly|virtual|override|sealed|abstract|new|required|const|async|partial|unsafe|extern|volatile|internal|protected|private))*\s+[A-Za-z_][A-Za-z0-9_.]{0,40}(?:<[^>\n]{0,60}>)?\??(?:\[\])?\s+(?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?\s*(?:\{|=>|=|;)
+    - "[A-Za-z_][A-Za-z0-9_]{0,40}(?:<[^>\\n]{0,60}>)?\\((?:[^()'\"\\n]{0,200}[,(])?[
+      \\t]*[A-Za-z_][A-Za-z0-9_.]{0,40}(?:<[^>\\n]{0,60}>)?\\??(?:\\[\\])?\\s+(?:[A-Za-z0-9]+_)?((?\
+      &personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{\
+      0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?\\s*[,)]"
+    - ^[
+      \t]+(?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?,[
+      \t]*$
+    - ^[
+      \t]*['"`(]?[A-Za-z_][A-Za-z0-9_]{0,30}\.(?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?\s+(?:AS|as|As)\s+[A-Za-z_`"\[]
+    - ^\s*(?:(?:AND|OR|WHERE|SET|and|or|where|set)\s+)?(?:[A-Za-z_][A-Za-z0-9_]{0,30}\.)?(?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?\s*(?:=|<>|!=|>=|<=|\bLIKE\b|\blike\b)\s*(?:%s|\?|\$[0-9]|:[A-Za-z_][A-Za-z0-9_]*(?![A-Za-z0-9_.]))
+    - \$[A-Za-z_][A-Za-z0-9_]{0,40}(?:->[A-Za-z_][A-Za-z0-9_]{0,40}|\[[^\]\n]{0,30}\])*\[\s*['"](?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?['"]\s*\]
+    - "[A-Za-z_][A-Za-z0-9_]{0,40}\\(\\s*['\"](?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&p\
+      osition_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{\
+      1,2})?['\"]\\s*,\\s*\\$_(?:POST|GET|REQUEST|COOKIE|FILES|SESSION|SERVER)\\b"
+    - ->\s*(?:get|set|read|fetch)(?:[A-Za-z0-9]+_)?((?&personal_data_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?\s*\(|\$this->_?(?:[A-Za-z0-9]+_)?((?&personal_data_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?\b
+    - ^\s*['"](?:[A-Za-z0-9]+_)?((?&personal_data_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?['"]\s*=>|=>\s*['"](?:[A-Za-z0-9]+_)?((?&personal_data_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?['"]
+    - (?:getElementById|getElementsByName|querySelector|querySelectorAll|fillField|fill_field|setFieldValue|find_field)\(\s*['"]#?(?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?['"]
+    - (?:<[A-Za-z0-9:_-]{0,20}?(?:[Ii]nput|INPUT|[Ss]elect|SELECT|[Tt]extarea|TEXTAREA|[Ff]ield|FIELD|[Ee]lement|ELEMENT|[Ff]orm|FORM|[Cc]ombobox|[Cc]heckbox|[Rr]adio|[Aa]utocomplete|[Pp]art|PART)\b[^>\n]{0,200}\bname=|\[\s*name\s*=\s*)['"](?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?['"]
+    - <label[^>\n]{0,120}\bfor=['"](?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?['"]
+    - ^[
+      \t]+(?:[A-Za-z0-9]+_)?((?&personal_data_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?:(?:[
+      \t]*$|[ \t]+[^\n]{1,80},[ \t]*$)
+    - \b(?:v-model|x-model|ng-model|wire:model|formControlName|data-model)(?:\.[a-z]+)?=['"][A-Za-z_$][A-Za-z0-9_$.\[\]]{0,40}\.(?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?['"]
+    - (?:\$_SESSION\b[^\n]{0,40}|\b(?:[Ss]ession|SESSION)\b[^\n]{0,20})->\s*(?:get|set)(?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?\s*\(|\b(?:[Ss]ession|SESSION)\b[^\n]{0,4}\[\s*['":](?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?['"]?\s*\]|\b(?:[Ss]ession|SESSION)\??\.(?:[A-Za-z_]\w{0,20}\??\.)?(?:[A-Za-z0-9]+_)?((?&personal_data_field_names)|(?&position_bound_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?\b
+    - "['\"`][Xx]-[A-Za-z0-9-]{0,30}(?:[Uu]ser|USER|[Ss]ite|SITE|[Aa]ccount|ACCOUNT|[Ss]ubscriber|S\
+      UBSCRIBER|[Cc]ustomer|CUSTOMER|[Mm]ember|MEMBER|[Vv]isitor|VISITOR|[Ss]ession|SESSION)[A-Za-z\
+      0-9-]{0,20}['\"`]"
+    - \b(?:includes|preload|eager_load|left_joins|joins)\s*\([^\n]{0,160}[:'"{\[
+      ](?:ips|invite_request|invite_requests|emails|email_addresses|phone_numbers|addresses|identities|devices|sign_in_ips|most_recent_ip|last_sign_in_ip)\b
+    - "@(?:accounts|users|members|customers|subscribers|contacts|people|candidates|employees|patien\
+      ts|students|readers|learners)\\s*=\\s*[^\\n]{0,70}\\.(?:page|per|paginate|limit|all|results|t\
+      o_a)\\b"
+    - ^[ \t]+(?:readonly[
+      \t]+)?(?:[A-Za-z0-9]+_|[a-z][A-Za-z0-9]{2,16}(?=[A-Z]))?((?&personal_data_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?\??:[
+      \t]*[A-Za-z_{\[][A-Za-z0-9_<>\[\]{}|'" .]{0,60}[;,]
+    - ^[
+      \t]+(?:[A-Za-z0-9]+_|[a-z][A-Za-z0-9]{2,16}(?=[A-Z]))?(?:[Mm]obile[_\-]?(?:[Nn]umber|[Nn]o(?![a-z]))|[Cc]ell[_\-]?[Pp]hone|[Ee]mail[_\-]?[Aa]ddr(?![a-z])|[Gg]iven[_\-]?[Nn]ame|[Ff]amily[_\-]?[Nn]ame|[Ss]urname|[Ss]creen[_\-]?[Nn]ame|[Nn]ick[_\-]?[Nn]ame|[Pp]ost[_\-]?[Cc]ode|[Zz]ip[_\-]?[Cc]ode|[Bb]irth[_\-]?[Dd]ate|[Cc]ontact[_\-]?(?:[Nn]umber|[Ee]mail|[Pp]hone)|[Hh]ome[_\-]?[Aa]ddress|[Bb]illing[_\-]?[Aa]ddress|[Ss]hipping[_\-]?[Aa]ddress)(?![A-Za-z])[
+      \t]*(?:=>|[:=])|\b(?:private|public|protected|internal)[
+      \t]+(?:(?:final|static|readonly|volatile|transient)[ \t]+)*[A-Za-z_][A-Za-z0-9_.<>\[\]]{0,30}[
+      \t]+(?:[a-z][A-Za-z0-9]{2,16}(?=[A-Z]))?(?:[Mm]obile[_\-]?(?:[Nn]umber|[Nn]o(?![a-z]))|[Cc]ell[_\-]?[Pp]hone|[Ee]mail[_\-]?[Aa]ddr(?![a-z])|[Gg]iven[_\-]?[Nn]ame|[Ff]amily[_\-]?[Nn]ame|[Ss]urname|[Ss]creen[_\-]?[Nn]ame|[Nn]ick[_\-]?[Nn]ame|[Pp]ost[_\-]?[Cc]ode|[Zz]ip[_\-]?[Cc]ode|[Bb]irth[_\-]?[Dd]ate|[Cc]ontact[_\-]?(?:[Nn]umber|[Ee]mail|[Pp]hone)|[Hh]ome[_\-]?[Aa]ddress|[Bb]illing[_\-]?[Aa]ddress|[Ss]hipping[_\-]?[Aa]ddress)(?![A-Za-z])
+    - <[Ii]nput[^>\n]{0,200}\b(?:placeholder|value|defaultValue)=["'][^"'\n]{0,40}@[A-Za-z0-9.-]{2,30}\.[A-Za-z]{2,10}["']
+    - \b(?:is_deleted|isDeleted|is_active|isActive|is_removed|isRemoved|is_disabled|isDisabled|soft_delete|softDelete|deleted_at|deletedAt|archived_at|deactivated_at|is_anonymi[sz]ed)\b[^\n]{0,40}\b(?:[Aa]ttendees?|ATTENDEES?|[Gg]uests?|[Pp]articipants?|[Rr]egistrants?|[Rr]ecipients?|[Pp]atrons?|[Dd]onors?|[Vv]olunteers?|[Pp]assengers?|[Rr]iders?|[Dd]rivers?|[Rr]esidents?|[Ee]mployees?|[Pp]atients?|[Bb]uyers?|[Ss]ellers?|[Aa]uthors?|[Rr]eaders?|[Ll]earners?|[Ii]nstructors?|[Tt]eachers?|[Pp]arents?|[Gg]uardians?|[Ww]orkers?|[Ff]reelancers?|[Ss]hoppers?|[Rr]enters?|[Hh]olders?|HOLDERS?|[Ll]eads?)\b|\b(?:[Aa]ttendees?|ATTENDEES?|[Gg]uests?|[Pp]articipants?|[Rr]egistrants?|[Rr]ecipients?|[Pp]atrons?|[Dd]onors?|[Vv]olunteers?|[Pp]assengers?|[Rr]iders?|[Dd]rivers?|[Rr]esidents?|[Ee]mployees?|[Pp]atients?|[Bb]uyers?|[Ss]ellers?|[Aa]uthors?|[Rr]eaders?|[Ll]earners?|[Ii]nstructors?|[Tt]eachers?|[Pp]arents?|[Gg]uardians?|[Ww]orkers?|[Ff]reelancers?|[Ss]hoppers?|[Rr]enters?|[Hh]olders?|HOLDERS?|[Ll]eads?)\b[^\n]{0,40}\b(?:is_deleted|isDeleted|is_active|isActive|is_removed|isRemoved|is_disabled|isDisabled|soft_delete|softDelete|deleted_at|deletedAt|archived_at|deactivated_at|is_anonymi[sz]ed)\b
+    - \b(?:[Cc]los|[Rr]emov|[Dd]eactivat|[Tt]erminat|[Cc]ancel|[Ww]ip|[Rr]edact|[Ff]orget|[Ss]crub|[Oo]ffboard|[Dd]eregister)[A-Za-z]{0,8}[_\-
+      ]?(?:your |the |my |an |a
+      )?(?:[Aa]ccounts?|ACCOUNTS?|[Uu]sers?|USERS?|[Dd]ata|DATA|[Pp]rofiles?|PROFILES?|[Mm]embers?|[Cc]ustomers?|[Ss]ubscribers?)\b[^\n]{0,120}(501|403|[Nn]ot
+      [Ii]mplemented|NotImplemented|not_implemented|notImplemented|NotImplementedError|NotImplementedException|StatusNotImplemented|[Uu]nimplemented|[Cc]oming
+      [Ss]oon|coming_soon|[Nn]ot [Ss]upported|[Uu]nsupported|[Nn]ot [Aa]vailable|[Nn]ot
+      [Yy]et|[Nn]ot [Bb]uilt|TODO|FIXME|[Ff]orbidden|[Dd]enied|[Ss]tubbed|throw new
+      Error|\braise\b|\bpass\b|[Cc]ontact (us|support)|[Ee]mail (us|support)|[Bb]y
+      hand|[Mm]anual(?:ly)?|self[- ]service|[Ss]upport runs|we do it)|(501|403|[Nn]ot
+      [Ii]mplemented|NotImplemented|not_implemented|notImplemented|NotImplementedError|NotImplementedException|StatusNotImplemented|[Uu]nimplemented|[Cc]oming
+      [Ss]oon|coming_soon|[Nn]ot [Ss]upported|[Uu]nsupported|[Nn]ot [Aa]vailable|[Nn]ot
+      [Yy]et|[Nn]ot [Bb]uilt|TODO|FIXME|[Ff]orbidden|[Dd]enied|[Ss]tubbed|throw new
+      Error|\braise\b|\bpass\b|[Cc]ontact (us|support)|[Ee]mail (us|support)|[Bb]y
+      hand|[Mm]anual(?:ly)?|self[- ]service|[Ss]upport runs|we do
+      it)[^\n]{0,120}\b(?:[Cc]los|[Rr]emov|[Dd]eactivat|[Tt]erminat|[Cc]ancel|[Ww]ip|[Rr]edact|[Ff]orget|[Ss]crub|[Oo]ffboard|[Dd]eregister)[A-Za-z]{0,8}[_\-
+      ]?(?:your |the |my |an |a
+      )?(?:[Aa]ccounts?|ACCOUNTS?|[Uu]sers?|USERS?|[Dd]ata|DATA|[Pp]rofiles?|PROFILES?|[Mm]embers?|[Cc]ustomers?|[Ss]ubscribers?)\b
+    - \b(?:[Dd]ata[_\-/ ]?[Ss]ubject|[Ss]ubject[_\-/ ]?[Aa]ccess|[Aa]ccess[_\-/
+      ]?[Rr]equest|[Ee]rasure[_\-/ ]?[Rr]equest|[Pp]rivacy[_\-/ ]?[Rr]equest|[Rr]ight[_\-/
+      ]?[Tt]o[_\-/ ]?(?:[Bb]e[_\-/ ]?[Ff]orgotten|[Ee]rasure|[Aa]ccess)|[Dd]ata[_\-/
+      ]?[Pp]ortabilit)\w{0,20}\b[^\n]{0,120}(501|403|[Nn]ot
+      [Ii]mplemented|NotImplemented|not_implemented|notImplemented|NotImplementedError|NotImplementedException|StatusNotImplemented|[Uu]nimplemented|[Cc]oming
+      [Ss]oon|coming_soon|[Nn]ot [Ss]upported|[Uu]nsupported|[Nn]ot [Aa]vailable|[Nn]ot
+      [Yy]et|[Nn]ot [Bb]uilt|TODO|FIXME|[Ff]orbidden|[Dd]enied|[Ss]tubbed|throw new
+      Error|\braise\b|\bpass\b|[Cc]ontact (us|support)|[Ee]mail (us|support)|[Bb]y
+      hand|[Mm]anual(?:ly)?|self[- ]service|[Ss]upport runs|we do it)|(501|403|[Nn]ot
+      [Ii]mplemented|NotImplemented|not_implemented|notImplemented|NotImplementedError|NotImplementedException|StatusNotImplemented|[Uu]nimplemented|[Cc]oming
+      [Ss]oon|coming_soon|[Nn]ot [Ss]upported|[Uu]nsupported|[Nn]ot [Aa]vailable|[Nn]ot
+      [Yy]et|[Nn]ot [Bb]uilt|TODO|FIXME|[Ff]orbidden|[Dd]enied|[Ss]tubbed|throw new
+      Error|\braise\b|\bpass\b|[Cc]ontact (us|support)|[Ee]mail (us|support)|[Bb]y
+      hand|[Mm]anual(?:ly)?|self[- ]service|[Ss]upport runs|we do it)[^\n]{0,120}\b(?:[Dd]ata[_\-/
+      ]?[Ss]ubject|[Ss]ubject[_\-/ ]?[Aa]ccess|[Aa]ccess[_\-/ ]?[Rr]equest|[Ee]rasure[_\-/
+      ]?[Rr]equest|[Pp]rivacy[_\-/ ]?[Rr]equest|[Rr]ight[_\-/ ]?[Tt]o[_\-/ ]?(?:[Bb]e[_\-/
+      ]?[Ff]orgotten|[Ee]rasure|[Aa]ccess)|[Dd]ata[_\-/ ]?[Pp]ortabilit)\w{0,20}\b
+    - \b(?:router|app|api|Router|routes?|blueprint|bp|Route)\s*\.\s*(?:get|post|put|patch|delete|del|use|route|add_url_rule|map)\(\s*["'`][^"'`\n]{0,60}(?:dsar|gdpr|data[_\-/]?subject|privacy[_\-/]?request|access[_\-/]?request|erasure|right[_\-/]?to[_\-/]?be[_\-/]?forgotten|my[_\-/]?data|(?:account|profile|user|me)[_\-/](?:copy|export|download|data|deletion|delete|closure|close|erase))
+    - \b(?:a copy of|copy of (?:their|your|what|the)|what we (?:know|hold|store|have)
+      about|everything we (?:know|hold|have|store) about|all (?:their|your)
+      data)\b[^\n]{0,160}(501|403|[Nn]ot
+      [Ii]mplemented|NotImplemented|not_implemented|notImplemented|NotImplementedError|NotImplementedException|StatusNotImplemented|[Uu]nimplemented|[Cc]oming
+      [Ss]oon|coming_soon|[Nn]ot [Ss]upported|[Uu]nsupported|[Nn]ot [Aa]vailable|[Nn]ot
+      [Yy]et|[Nn]ot [Bb]uilt|TODO|FIXME|[Ff]orbidden|[Dd]enied|[Ss]tubbed|throw new
+      Error|\braise\b|\bpass\b|[Cc]ontact (us|support)|[Ee]mail (us|support)|[Bb]y
+      hand|[Mm]anual(?:ly)?|self[- ]service|[Ss]upport runs|we do it)|(501|403|[Nn]ot
+      [Ii]mplemented|NotImplemented|not_implemented|notImplemented|NotImplementedError|NotImplementedException|StatusNotImplemented|[Uu]nimplemented|[Cc]oming
+      [Ss]oon|coming_soon|[Nn]ot [Ss]upported|[Uu]nsupported|[Nn]ot [Aa]vailable|[Nn]ot
+      [Yy]et|[Nn]ot [Bb]uilt|TODO|FIXME|[Ff]orbidden|[Dd]enied|[Ss]tubbed|throw new
+      Error|\braise\b|\bpass\b|[Cc]ontact (us|support)|[Ee]mail (us|support)|[Bb]y
+      hand|[Mm]anual(?:ly)?|self[- ]service|[Ss]upport runs|we do it)[^\n]{0,160}\b(?:a copy of|copy
+      of (?:their|your|what|the)|what we (?:know|hold|store|have) about|everything we
+      (?:know|hold|have|store) about|all (?:their|your) data)\b
+    - (?:[Pp]assword|[Hh]ash(?:er|ing)|[Cc]rypt)[A-Za-z]{0,12}\.(?:hash|hashSync|compare|verify|make)\(|\.(?:hash|hashSync|compare|verify)\(\s*[A-Za-z_$][A-Za-z0-9_$.]{0,30}\.(?:password|passwd|pwd|secret)\b
+    - "\\.(?:create|createMany|insert|insertOne|upsert|save|update)\\(\\s*\\{[^\\n]{0,140}\\b(?:ema\
+      il|emailAddress|email_address|phone|phoneNumber|phone_number|firstName|first_name|lastName|la\
+      st_name|fullName|full_name|displayName|display_name|password|passwordHash|password_hash|dateO\
+      fBirth|date_of_birth|address|postalCode|postal_code)\\s*:"
+    - \.(?:identify|setUser|setUserId|setUserProperties|setUserVars|set_user)\(\s*[^)\n]{0,100}\b(?:email|emailAddress|email_address|phone|phoneNumber|phone_number|firstName|first_name|lastName|last_name|fullName|full_name|username|user_id|userId)\b
+    - \b(?:text|varchar|char|integer|bigint|boolean|timestamp|date|uuid|json|jsonb)\(\s*["'`](?:[A-Za-z0-9]+_)?((?&personal_data_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?["'`]\s*\)
+    - :(?:string|text|citext|date|datetime|inet|integer|bigint|boolean|binary|decimal|float|json|jsonb)\s*,\s*:(?:[A-Za-z0-9]+_)?((?&personal_data_field_names))(?:_[A-Za-z0-9]+|[A-Z][A-Za-z0-9]{0,20}|e?s|[0-9]{1,2})?(?:_[0-9]{1,2})?\b
+    - params\s*\.\s*require\(\s*:(?:user|member|account|customer|subscriber|person|people|profile|contact|applicant|candidate|student|employee|patient|attendee|guest|participant|registrant|buyer|author|reader|learner|donor|volunteer|patron|recipient|resident|passenger)s?\b
+  match_without:
+    - ^\s*(\*|//|/\*|#|<!--|--\s)(?![^\n]*(501|403|[Nn]ot
+      [Ii]mplemented|NotImplemented|not_implemented|notImplemented|NotImplementedError|NotImplementedException|StatusNotImplemented|[Uu]nimplemented|[Cc]oming
+      [Ss]oon|coming_soon|[Nn]ot [Ss]upported|[Uu]nsupported|[Nn]ot [Aa]vailable|[Nn]ot
+      [Yy]et|[Nn]ot [Bb]uilt|TODO|FIXME|[Ff]orbidden|[Dd]enied|[Ss]tubbed|throw new
+      Error|\braise\b|\bpass\b|[Cc]ontact (us|support)|[Ee]mail (us|support)))
+  shared_path_exclusions:
+    - attribution_documents
+  path_without:
+    - (^|/)(mock|__mock__|testdata|test[_-]data|test-utils|test-helpers|test-fixtures|factories)/
+    - _test\.(go|py|rb|php)$|_spec\.rb$|_test\.exs?$|\.(e2e|e2e-spec|integ|int-spec)\.[cm]?[jt]sx?$
+    - \.(test|spec)\.[a-z-]+\.[cm]?[jt]sx?$
+    - (^|/)(generated|__generated__|codegen|\.output|\.vercel)/|\.(min|bundle|chunk)\.[cm]?jsx?$
+context_questions:
+  - "Is the scanned party a controller or a processor for the personal data in the locations list?
+    Art. 4(7) makes the controller the party that determines the purposes and means of the
+    processing, and Arts. 15-22 are owed by the controller alone. A processor's duty is the derived
+    one in Art. 28(3)(e) - assist the controller, on the controller's documented instructions, so
+    that the controller can answer requests - and it is owed to the controller under a contract, not
+    to the data subject. Decide from what the repository is: a product with its own accounts and its
+    own sign-up is a controller for those accounts; a hosted API, a background worker, an SDK or a
+    library that only handles data its customer supplies is a processor for that data, and often a
+    controller for its own account holders at the same time. Name the role for each store, and where
+    the answer is processor, say which of the Art. 28(3) duties applies instead."
+  - Are the values in the locations list personal data within Art. 4(1) - information relating to an
+    identified or identifiable natural person - or are they something the vocabulary only makes look
+    personal? A `users` table holding machine accounts or API service principals, a `customers`
+    table of company records with no named contact, a schema for the product's own configuration and
+    a type declaration with no store behind it are all outside Art. 4(1). Quote the two or three
+    strongest locations, say what identifies a person in each, and list the ones you are discarding
+    with the reason. If every location is incidental, that is a complete answer and it closes the
+    candidate.
+  - Does the repository store the data at all, or only pass them through? The rights bite on data
+    the controller holds. Distinguish a persistent store (a table, a document collection, an object
+    store, a durable queue, a log retained on disk) from a value that exists only for the duration
+    of one request. Quote the write.
+  - "THE CENTRAL QUESTION, and the detector answers no part of it: does this project provide a route
+    by which a DATA SUBJECT - not an administrator - can obtain erasure of their personal data and a
+    copy of it in a commonly used electronic form, and make a request under Arts. 15-22 at all; and
+    does that route reach a working implementation rather than a stub? Until 2026-07-27 a regex
+    tried to answer this by suppressing the candidate whenever it saw a matching identifier, and it
+    was measured silencing 21 of 28 real repositories, at least 14 of them on shapes that were not
+    mechanisms. The vocabulary it used is retained here as SEARCH TERMS, which is all it was ever
+    good for. Account deletion: delete_account, deleteAccount, DELETE_ACCOUNT, account_deletion,
+    accountDeletion, can_delete_account, destroy_account, terminate_account, delete_my_account,
+    DeleteAccountButton, DeleteAccountLink, showDeleteAccount. Erasure of the person's record:
+    delete_user, deleteUser, user_deletion, PermanentDeleteUser, hard_delete_user, purge_user,
+    erase_user, scrub_user, wipe_user, anonymize_user, UserAnonymizer, UserDestroyer, delete_member,
+    delete_profile, delete_customer, delete_subscriber. Erasure of the contents:
+    delete_personal_data, erase_personal_data, purge_personal_data, data_erasure, erasure_job,
+    erasure_service, erasure_workflow. A copy or portability path: export_user_data, exportUserData,
+    export_account_data, export_personal_data, download_your_data, download_my_data,
+    data_portability, portability_request. A request route named for the right: dsar, DSAR,
+    data_subject_request, subject_access_request, gdpr_export, gdpr_delete, right_to_be_forgotten,
+    right_to_erasure, right_of_access, erasure_request, deletion_request, privacy_request. A
+    persisted request record: data_subject_requests, DataSubjectRequest, request_account_deletion,
+    request_data_export, request_erasure. Search for the IDENTIFIER, never the substring, and read
+    the line before believing it - every one of these was measured deleting a whole repository's
+    findings while being nothing of the kind: forgetmenot in a common-password wordlist (that is not
+    forget_me), deleteuser-v2.png (a screenshot file name), takeout_box (an emoji slug),
+    .delete-user-modal (a stylesheet class), a documentation table row naming the audit-log event
+    user_deleted, and userDeletedSuccess (an admin panel's success message). Weigh rather than
+    count: an admin console only staff can reach is not a route for the data subject; a settings
+    page that exists only as a route string is not a mechanism; an unsubscribe link serves the Art.
+    21(3) direct-marketing objection and nothing else; a mechanism living in a separate front-end or
+    mobile repository, or in a hosted identity provider's console, is outside this scan and is worth
+    recording as such rather than assumed. A privacy@ or dpo@ address is an open question and not a
+    settled one: Recital 59 says the controller \"should also provide means for requests to be made
+    electronically, especially where personal data are processed by electronic means\", so a
+    monitored inbox can be a modality under Art. 12(2), while an unattended address in a page footer
+    is not - say which one the evidence supports. Record what you searched for, quote what you
+    found, and state explicitly if you found nothing."
+  - "Which of the seven rights does the mechanism you found actually serve, and which are unserved?
+    A project that ships account deletion and nothing else has answered Art. 17 and still owes Art.
+    15 access, Art. 16 rectification, Art. 18 restriction, Art. 20 portability and Art. 21 objection
+    - and this candidate will look identical either way, because the detector reports the presence
+    of personal data and nothing about routes. Go through them one at a time against what the code
+    offers: erasure (17), a copy in a commonly used electronic form (15(3)), a structured, commonly
+    used and machine-readable export of the data the person provided (20(1)), correction of
+    inaccurate data (16), restriction (18), objection including to direct marketing (21), and a
+    route for a decision made solely by automated means (22)."
+  - "If a deletion path exists, does it erase or does it mark? Art. 17(1) requires erasure. Trace
+    what the path does to the row: a `deleted_at` timestamp, an `is_deleted` boolean, a status
+    string, a disabled flag or a move to an archive table leaves the name, the email address and
+    everything else in place and readable. Quote the write. Where the mark is the first half of a
+    two-stage design, find the second half - the job, cron, lifecycle rule or scheduled task that
+    actually removes the data - and quote it too; if you cannot find it, say the erasure is unproven
+    rather than assuming it exists."
+  - If a deletion path exists, where does it stop? Art. 19 requires the controller to communicate
+    the erasure to each recipient the data were disclosed to, and Art. 17(2) adds a duty to inform
+    other controllers where the data were made public. List the recipients this repository sends
+    personal data to - analytics and product-analytics vendors, error reporting, session replay, CRM
+    and marketing automation, transactional email and SMS, payment processors, support desks, data
+    warehouses, search indexes, backups and read replicas - then say, for each, whether the deletion
+    path reaches it. A path that deletes one database row while the same person stays identified in
+    an analytics vendor, a CRM and an error tracker has not completed the erasure.
+  - "Does any route that answers a data-subject request return a fixed refusal, or is it a stub?
+    Art. 12(2) requires the controller to facilitate the exercise of the rights; Art. 12(4) requires
+    that where the controller does not act it inform the person, within one month, of the reasons,
+    of the possibility of lodging a complaint with a supervisory authority and of seeking a judicial
+    remedy; and Art. 12(5) puts the burden of showing a request manifestly unfounded or excessive on
+    the controller. Read the handler BODY rather than its name - a name is not an implementation,
+    and the shapes measured in real repositories are: a 501 or 403 response, a NotImplementedError,
+    a bare `raise` or `pass` in Python, `throw new Error` in JavaScript, an empty function body, a
+    route registered but never wired to a handler, a handler that only sends an email to the team,
+    and a feature flag that gates the whole path (in which case say whether anything in the
+    repository shows it switched on). Detector branch (11) puts such a line into the locations list
+    when the refusal shares the line with the route name; when it sits a few lines below, nothing in
+    layer 1 can see it and this question is the only thing that will. Quote the handler and say what
+    it returns."
+  - "Can the person reach the mechanism, and how long does the answer take? Art. 12(2) is a duty to
+    facilitate, and Art. 12(3) sets one month from receipt, extendable by two further months for
+    complexity or number, with the person told of the extension and its reasons inside the first
+    month; Art. 12(5) makes the action free of charge. Say whether the path is self-service, whether
+    it needs a support ticket, whether a human must run a script, whether any fee or plan tier is
+    attached, and what evidence there is about elapsed time. Where the code shows an identity check
+    before acting, note it: Art. 12(6) permits the controller to ask for information needed to
+    confirm identity where it has reasonable doubts."
+  - 'Can this controller identify the data subject at all? Art. 11(1): where the purposes for which
+    a controller processes personal data "do not or do no longer require the identification of a
+    data subject by the controller, the controller shall not be obliged to maintain, acquire or
+    process additional information in order to identify the data subject for the sole purpose of
+    complying with this Regulation". Art. 11(2): where the controller "is able to demonstrate that
+    it is not in a position to identify the data subject" it shall inform the data subject
+    accordingly if possible, and "In such cases, Articles 15 to 20 shall not apply except where the
+    data subject, for the purpose of exercising his or her rights under those articles, provides
+    additional information enabling his or her identification". Art. 12(2) carries the same limit
+    from the other side: in Art. 11(2) cases the controller "shall not refuse to act on the request
+    of the data subject for exercising his or her rights under Articles 15 to 22, unless the
+    controller demonstrates that it is not in a position to identify the data subject". This reaches
+    stores keyed only by an installation id, a device id or a hashed event key with no account
+    behind them; it does not reach a product with sign-in, where an account row carrying an email
+    address identifies the person by construction. Note the boundary: Art. 11(2) disapplies Arts. 15
+    to 20 only, so the Art. 21 objection right and the Art. 22 automated-decision right stay owed
+    either way. Where the store keeps a pseudonymous key, say whether the repository holds the
+    additional information that re-attaches it, because Art. 4(5) and Recital 26 keep pseudonymised
+    data inside the definition of personal data.'
+  - Does an exemption or a limit apply to part of the data? Art. 17(3) withholds the erasure duty so
+    far as processing is necessary for freedom of expression and information, for compliance with a
+    legal obligation or a public-interest task, for public health, for archiving, research or
+    statistics under Art. 89(1), or for the establishment, exercise or defence of legal claims; Art.
+    20(1) attaches portability only where processing rests on consent or contract and is automated,
+    and Art. 20(4) preserves the rights and freedoms of others - the reason a forum can be obliged
+    to erase an author's account while other people's replies quoting it stay. Where a retention
+    obligation is relied on, name the law and the period rather than the intention.
+  - "Is this product offered in the EU at all, and to whom? Art. 3(1) applies the Regulation to
+    processing in the context of the activities of an establishment in the Union, and Art. 3(2) to a
+    controller outside it that offers goods or services to, or monitors the behaviour of, people in
+    the Union. Check ScanProfile.distribution_regions and any EU-facing signal in the repository,
+    such as EU locales, EUR pricing or EU consent code. A region that is not in the list may not
+    have been asked: that question is open, not answered no."
+evidence_template: "{file}:{line} matched one of this rule's five shapes: a store, schema, model or
+  form field named for people and their contact details; A NAMED PERSONAL-DATA FIELD READ, BOUND
+  FROM A REQUEST OR HELD IN A SESSION - a quoted subscript read, an object accessor or property, a
+  request-binding helper, a DOM field lookup, a form control or label, a mapping or object-literal
+  key, a form model binding, or a server-side session store - WHICH SAYS THE PRODUCT HANDLES THE
+  FIELD AND NOT THAT IT DECLARES IT, so read it as a pointer to the store rather than as the store;
+  an identity forwarded to an analytics, error-reporting, payment or marketing vendor, or named in
+  an identifier-shaped custom HTTP header (x-...-user-id and its siblings) whose receiving party the
+  line does not identify - GDPR Art. 4(9) makes a recipient a body to which personal data are
+  disclosed whether a third party or not, which is why an unnamed internal service counts. THE
+  HEADER LIMB ESTABLISHES THE HEADER NAME AND NOT THE DIRECTION OF TRAVEL, and that limit is stated
+  here rather than left to be found: the clause reads a quoted x-... header name wherever it stands,
+  so a line that READS a header this product RECEIVED matches in exactly the same way as a line that
+  writes one it sends. Measured 2026-08-28 over the eight pinned corpus trees, 2 of the 7 lines this
+  limb reaches are inbound reads of that shape - `site_id = find_header(headers, x-site-id)` and
+  `user_id = find_header(headers, x-current-user-id)`, in the same file whose lines 20 to 22 are the
+  outbound writes. NOTHING ON THE MATCHED LINE SAYS WHICH SIDE OF THE WIRE IT IS ON. Read the
+  surrounding lines before you record a disclosure; where the line turns out to be a read of an
+  inbound header, the match is position-correct and direction-wrong, no recipient row follows from
+  it, and saying so is the right answer rather than a dropped finding. The clause is not narrowed to
+  the writing form, because a header name is the construct and nothing on a single line
+  distinguishes the two uses; a data-subject route name sharing a line with a refusal or
+  not-implemented marker; or an authentication construct named on an import, dependency or call line
+  - next-auth, @auth/core, NextAuth(, passport.use(, bcrypt, argon2, make_password, set_password,
+  @clerk/, lucia-auth, better-auth, supabase.auth.*, createUserWithEmailAndPassword(,
+  django.contrib.auth, IdentityUser, devise and their siblings. THE FIFTH SHAPE IS AN INFERENCE, NOT
+  A STORE, and a line matched by it will not look like one: an import of an authentication library
+  is not a schema, not a form field and not a vendor disclosure, so nothing in the first four shapes
+  describes it. The clause raises it because a project that authenticates people keeps accounts, and
+  accounts are what Arts. 15-22 attach to. Read such a line as a pointer rather than as evidence:
+  find the account store it implies and report that, or record that you looked and could not - it is
+  neither a store on its own nor an incidental match to be dropped. Since 2026-09-14 the match may
+  also come from a CONSTRUCT rather than from that line alone: this rule reads the bracket-balanced
+  construct a line opens on as one folded text as well, so a data-subject route or handler whose
+  refusal sits in a body written on the lines below its opening brace is matched as a whole, and
+  where that is what happened the finding is reported on the line the construct opens on and carries
+  the span it was folded from in locations[].joined_from. Read those lines together, not the opening
+  line alone. Whether the values are personal data within Art. 4(1), or something the vocabulary
+  only makes look personal, is context question 2. Whether this project offers the data subject an
+  erasure route, a copy of the data in a commonly used electronic form and a way to make a request
+  under Arts. 15-22 is not decidable from this line and is not decided by this detector: it is
+  context question 4, answered by reading the code"
+remediation_template: >
+  Read this only after context question 4 has been answered. This candidate is raised by the
+
+  presence of personal data, not by the absence of a route: a project that already ships a
+
+  self-service erasure path and a JSON export produces exactly the same candidate as one that ships
+
+  nothing, and the difference between them is a question for the reader rather than for the scanner.
+
+  If the routes are already there, the useful output is the note recording where they live.
+
+  Settle the role first, because GDPR Arts. 15-22 are owed by the controller (Art. 4(7)) and not by
+
+  a processor. A product with its own accounts is the controller for those accounts; a service that
+
+  only handles a customer's data on that customer's instructions is a processor for it, and owes the
+
+  narrower Art. 28(3)(e) duty to assist the controller instead. If the repository is a processor for
+
+  everything in the locations list, record that and the candidate closes.
+
+  For a controller, the size of the team changes nothing: Chapter III carries no micro or small
+
+  enterprise carve-out, and Art. 83(5)(b) puts an infringement of Arts. 12-22 in the higher fining
+
+  tier.
+
+  Engineering changes that close the gap, in the order they pay off:
+
+  1. An erasure path the person can start themselves, which removes the data rather than marking
+     them. Art. 17(1) says erase. If a two-stage design is wanted - mark now, remove later - ship
+     the second stage as a scheduled job in the same change, with the interval written down, so the
+     mark is a queue entry and not the whole feature.
+  2. Propagation, which is the half that is usually missing. Art. 19 requires the erasure to be
+     communicated to every recipient the data were disclosed to. Enumerate the recipients once
+     (analytics, error reporting, session replay, CRM, transactional email and SMS, payments,
+     support desk, warehouse, search index, backups and read replicas), then make the erasure path
+     call each one's own deletion API and record the outcome. Several of them have one: a suppression
+     or delete endpoint on the analytics vendor, a contact-delete on the CRM, a customer-delete on
+     the payment processor. Where a store cannot be reached in-line - a backup, an immutable log -
+     write down the retention period after which the copy disappears.
+  3. A copy of the data, in a commonly used electronic form (Art. 15(3)) and, for the data the
+     person provided under consent or contract, in a structured, commonly used and machine-readable
+     format that another controller can ingest (Art. 20(1)). A JSON or CSV bundle generated on
+     request satisfies both; a screenshot or a PDF of a settings page does not satisfy Art. 20.
+  4. A route for the rest of Chapter III - access (15), rectification (16), restriction (18),
+     objection (21) and a decision made solely by automated means (22) - even if it is one form
+     that opens a ticket. Persist the request with its receipt timestamp so the Art. 12(3) one-month
+     clock is measurable, and so an extension can be notified with reasons inside that first month.
+  5. Where a request is refused, Art. 12(4) is what the response has to carry: the reasons, the
+     possibility of lodging a complaint with a supervisory authority, and the possibility of a
+     judicial remedy. A handler that returns a bare 403, a 501 or "not available" meets none of
+     that, and Art. 12(5) puts the burden of showing a request excessive on the controller.
+  6. Name the routes the way the ecosystem names them, so the next reader finds them in one search:
+     delete_account / deleteAccount / accountDeletion for the Art. 17 action, delete_user_data or
+     erase_personal_data for the contents, export_user_data / download_your_data / data_portability
+     for the Art. 15(3) copy and the Art. 20(1) export, and dsar / data_subject_request /
+     erasure_request for the intake route, with the request itself persisted as
+     data_subject_requests. This is naming, not compliance - the scanner no longer reads these names
+     and no longer suppresses anything on the strength of one - but a route nobody can find is a
+     route the next audit will not credit either.
+  One thing that does not count as erasure: pseudonymisation. Art. 4(5) defines it as processing
+
+  after which the data "can no longer be attributed to a specific data subject without the use of
+
+  additional information", and Recital 26 says such data "should be considered to be information on
+
+  an identifiable natural person" - so a pseudonymiser leaves the data inside the Regulation and
+
+  leaves Art. 17 unanswered. Anonymisation is different: Recital 26 puts data "rendered anonymous in
+
+  such a manner that the data subject is not or no longer identifiable" outside the Regulation,
+  which
+
+  is why an anonymiser that genuinely severs re-identification can discharge the erasure duty.
+
+  Where a mechanism already exists but the scanner could not see it - a form in a separate front-end
+
+  repository, an identity provider's own console, a documented manual process - record where it
+  lives
+
+  so that the next reader can close the candidate from the note rather than re-deriving it.
+data_categories:
+  - user.contact.email
+  - user.name
+  - user.unique_id
+  - user.authorization.credentials
+  - user.contact.phone_number
+  - user.contact.address
+  - user.demographic.date_of_birth
+fingerprint_spec: project
+reading_class:
+  class: existence
+  elements:
+    - name: erasure
+      question: 5
+      text: erasure (17)
+    - name: access_copy
+      question: 5
+      text: a copy in a commonly used electronic form (15(3))
+    - name: portability_export
+      question: 5
+      text: a structured, commonly used and machine-readable export of the data the person provided
+        (20(1))
+    - name: rectification
+      question: 5
+      text: correction of inaccurate data (16)
+    - name: restriction
+      question: 5
+      text: restriction (18)
+    - name: objection
+      question: 5
+      text: objection including to direct marketing (21)
+    - name: automated_decision_route
+      question: 5
+      text: a route for a decision made solely by automated means (22)

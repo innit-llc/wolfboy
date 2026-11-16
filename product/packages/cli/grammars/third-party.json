@@ -1,0 +1,455 @@
+{
+  "schema_version": 1,
+  "title": "Third-party grammar artefacts vendored into wolfboy",
+  "description": "The single authority for what is vendored under product/packages/cli/grammars/. Four consumers read this file and none of them keeps its own list: the third-party check (a gate: files, hashes and licence texts agree with this record), the structural preflight (a gate: every artefact named here loads and parses), the grammar rebuild (rebuilds every artefact from the upstream coordinates recorded here and compares) and the CLI's structural reader (maps a language key to an artefact file). Adding a grammar means adding an entry here first; an artefact with no entry, or an entry with no artefact, fails the gate.",
+  "recorded": "2026-08-11",
+  "layout": {
+    "directory": "product/packages/cli/grammars",
+    "why_not_dist": "The repository .gitignore ignores dist/ at any depth, so an artefact under product/packages/cli/dist/ can never be committed; and tsc (rootDir src, outDir dist) copies no non-TypeScript file, so an artefact under src/ never reaches dist/ either. This directory is a sibling of both, is tracked by git, and is included by npm pack because the package declares no files field and carries no .npmignore.",
+    "resolved_from_compiled_module": "new URL('../../grammars/', import.meta.url) from a module compiled to dist/<subdir>/*.js — identical for a local build and for an installed package.",
+    "license_dir": "licenses"
+  },
+  "toolchain": {
+    "description": "What produced the built artefacts. Pinned, because a different compiler produces a different byte string for the same source.",
+    "tree_sitter_cli": "0.25.10",
+    "emscripten": "4.0.23-git (7a5d93b50f6a3a35e85a0d2fc9e667b8498e6aed)",
+    "node": "v22.19.0",
+    "platform": "linux-x64 (Ubuntu 24.04 on WSL2)",
+    "note": "The artefacts are WebAssembly and are platform-independent at run time. The platform is recorded because it is what the build ran on, not because the output depends on it."
+  },
+  "runtime_dependency": {
+    "name": "web-tree-sitter",
+    "version_spec": "0.25.10",
+    "declared_in": "product/packages/cli/package.json",
+    "url": "https://github.com/tree-sitter/tree-sitter/tree/master/lib/binding_web",
+    "license": "MIT",
+    "vendored": false,
+    "attribution": "Installed by npm as an ordinary dependency, which distributes the package with its own LICENSE file. Nothing of it is copied into this repository, so no licence text is carried here for it. The MIT text of the tree-sitter project is nonetheless present as licenses/tree-sitter.LICENSE.txt, because the built artefacts compile tree-sitter's own headers (see components below)."
+  },
+  "shared_components": {
+    "tree-sitter-headers": {
+      "what": "src/tree_sitter/parser.h, and where present alloc.h and array.h — headers of the tree-sitter project itself, redistributed inside each grammar repository and compiled into every artefact built here.",
+      "license": "MIT",
+      "copyright": "Copyright (c) 2018-2024 Max Brunsfeld",
+      "text_file": "licenses/tree-sitter.LICENSE.txt",
+      "why_recorded": "Each grammar's own MIT licence already covers everything in its repository, including these headers. They are named separately because the compiled artefact contains code that originates in a different project, and a third-party record that cannot say where the bytes came from is not a record.",
+      "not_a_component": "Emscripten. The artefacts are built as wasm side modules: every libc symbol (malloc, memcpy, strlen, …) is imported from the host at load time rather than linked in, so no emscripten or musl code is present in the artefact. Verified by reading each module's import list.",
+      "text_sha256": "5f9cf9fb6acb1972b35ae29119ce563bb60ec097656bc4b69b9bac2d04c7a147"
+    }
+  },
+  "vendored": [
+    {
+      "language": "html",
+      "artifact": "tree-sitter-html.wasm",
+      "sha256": "c48fcd82c7ea8bf943180088ba7f28c48b2bb5287874179168bf9d31e394cf85",
+      "bytes": 18385,
+      "tree_sitter_abi": 14,
+      "provenance": "published-upstream",
+      "upstream": {
+        "name": "tree-sitter-html",
+        "url": "https://github.com/tree-sitter/tree-sitter-html",
+        "kind": "npm",
+        "package": "tree-sitter-html",
+        "version": "0.23.2",
+        "commit": null,
+        "npm_integrity": "sha512-TN+l+7cCeLx9db/1RhRSqMAZO/266Oh2BHb8J8hMSSFLuzYvFTYP/UnD3S0mny5awzw05KzFNgu2vnwzN9wVJg==",
+        "tarball_sha256": "6b024fc38fce2b4807d0ac35023487da682a15cd986ba2ee9d6c25feff9392ed"
+      },
+      "build": {
+        "needs_compiler": false,
+        "command": "npm pack tree-sitter-html@0.23.2 && tar -xzf tree-sitter-html-0.23.2.tgz && cp package/tree-sitter-html.wasm .",
+        "note": "Upstream publishes the .wasm inside the npm package. Nothing is compiled; the file is copied out of the published tarball unchanged."
+      },
+      "license": {
+        "spdx": "MIT",
+        "copyright": "Copyright (c) 2014 Max Brunsfeld",
+        "text_file": "licenses/tree-sitter-html.LICENSE.txt",
+        "text_sha256": "2e0110e07abef7c2548b26ec9d6969775617ca539a0dc8dbeeb14d6452c711d1",
+        "additional_conditions": null,
+        "requires": "The copyright notice and the permission notice must be reproduced in all copies or substantial portions of the software.",
+        "satisfied_by": "The upstream LICENSE file is carried verbatim at licenses/tree-sitter-html.LICENSE.txt, is committed to the repository and is included in the published npm tarball of wolfboy."
+      },
+      "components": [],
+      "canary": {
+        "file": "tools/structural-canaries/html.html",
+        "expect_root": "document",
+        "expect_node": "element",
+        "why": "The structural preflight gate loads this artefact, parses this file, and fails the gate unless the root node is expect_root, a node of type expect_node is present, and the tree carries no ERROR or MISSING node. expect_node is chosen to be specific to this grammar, so a wrong-but-loadable artefact is caught rather than passed."
+      }
+    },
+    {
+      "language": "tsx",
+      "artifact": "tree-sitter-tsx.wasm",
+      "sha256": "79e5da75ea62855a0cd67177685f0164eac87d5f630b3cbe1e0a099751ad30f8",
+      "bytes": 1445638,
+      "tree_sitter_abi": 14,
+      "provenance": "published-upstream",
+      "upstream": {
+        "name": "tree-sitter-typescript",
+        "url": "https://github.com/tree-sitter/tree-sitter-typescript",
+        "kind": "npm",
+        "package": "tree-sitter-typescript",
+        "version": "0.23.2",
+        "commit": null,
+        "npm_integrity": "sha512-e04JUUKxTT53/x3Uq1zIL45DoYKVfHH4CZqwgZhPg5qYROl5nQjV+85ruFzFGZxu+QeFVbRTPDRnqL9UbU4VeA==",
+        "tarball_sha256": "0fdf63c35930a75885145d75ee63cb879da2d49db9bfe454bd8e60b08ba778a1"
+      },
+      "build": {
+        "needs_compiler": false,
+        "command": "npm pack tree-sitter-typescript@0.23.2 && tar -xzf tree-sitter-typescript-0.23.2.tgz && cp package/tree-sitter-tsx.wasm .",
+        "note": "One npm package publishes two grammars; this entry and the ts entry take a different .wasm out of the same tarball."
+      },
+      "license": {
+        "spdx": "MIT",
+        "copyright": "Copyright (c) 2017 Max Brunsfeld",
+        "text_file": "licenses/tree-sitter-typescript.LICENSE.txt",
+        "text_sha256": "49bf33cf78ef5897e4e161ce1517df7de1ae5042a65b6bcfd44401e0fc606559",
+        "additional_conditions": null,
+        "requires": "The copyright notice and the permission notice must be reproduced in all copies or substantial portions of the software.",
+        "satisfied_by": "The upstream LICENSE file is carried verbatim at licenses/tree-sitter-typescript.LICENSE.txt, is committed to the repository and is included in the published npm tarball of wolfboy."
+      },
+      "components": [],
+      "canary": {
+        "file": "tools/structural-canaries/tsx.tsx",
+        "expect_root": "program",
+        "expect_node": "jsx_element",
+        "why": "The structural preflight gate loads this artefact, parses this file, and fails the gate unless the root node is expect_root, a node of type expect_node is present, and the tree carries no ERROR or MISSING node. expect_node is chosen to be specific to this grammar, so a wrong-but-loadable artefact is caught rather than passed."
+      }
+    },
+    {
+      "language": "ts",
+      "artifact": "tree-sitter-typescript.wasm",
+      "sha256": "778025db5a8be0e70f8ccc3671e486dfeddd048c25d9e8a70c26de2e1bf6f97d",
+      "bytes": 1413849,
+      "tree_sitter_abi": 14,
+      "provenance": "published-upstream",
+      "upstream": {
+        "name": "tree-sitter-typescript",
+        "url": "https://github.com/tree-sitter/tree-sitter-typescript",
+        "kind": "npm",
+        "package": "tree-sitter-typescript",
+        "version": "0.23.2",
+        "commit": null,
+        "npm_integrity": "sha512-e04JUUKxTT53/x3Uq1zIL45DoYKVfHH4CZqwgZhPg5qYROl5nQjV+85ruFzFGZxu+QeFVbRTPDRnqL9UbU4VeA==",
+        "tarball_sha256": "0fdf63c35930a75885145d75ee63cb879da2d49db9bfe454bd8e60b08ba778a1"
+      },
+      "build": {
+        "needs_compiler": false,
+        "command": "npm pack tree-sitter-typescript@0.23.2 && tar -xzf tree-sitter-typescript-0.23.2.tgz && cp package/tree-sitter-typescript.wasm .",
+        "note": "Serves .ts/.mts/.cts. Whether the tsx grammar could serve those too, and save 1.41 MB of payload, is an open question, not decided here."
+      },
+      "license": {
+        "spdx": "MIT",
+        "copyright": "Copyright (c) 2017 Max Brunsfeld",
+        "text_file": "licenses/tree-sitter-typescript.LICENSE.txt",
+        "text_sha256": "49bf33cf78ef5897e4e161ce1517df7de1ae5042a65b6bcfd44401e0fc606559",
+        "additional_conditions": null,
+        "requires": "The copyright notice and the permission notice must be reproduced in all copies or substantial portions of the software.",
+        "satisfied_by": "The upstream LICENSE file is carried verbatim at licenses/tree-sitter-typescript.LICENSE.txt, is committed to the repository and is included in the published npm tarball of wolfboy."
+      },
+      "components": [],
+      "canary": {
+        "file": "tools/structural-canaries/ts.ts",
+        "expect_root": "program",
+        "expect_node": "predefined_type",
+        "why": "The structural preflight gate loads this artefact, parses this file, and fails the gate unless the root node is expect_root, a node of type expect_node is present, and the tree carries no ERROR or MISSING node. expect_node is chosen to be specific to this grammar, so a wrong-but-loadable artefact is caught rather than passed."
+      }
+    },
+    {
+      "language": "erb",
+      "artifact": "tree-sitter-embedded_template.wasm",
+      "sha256": "d15bbf3cb90901d0372b5599761c7a1ada344a0f11573c173ace7042636a6174",
+      "bytes": 5531,
+      "tree_sitter_abi": 15,
+      "provenance": "published-upstream",
+      "upstream": {
+        "name": "tree-sitter-embedded-template",
+        "url": "https://github.com/tree-sitter/tree-sitter-embedded-template",
+        "kind": "npm",
+        "package": "tree-sitter-embedded-template",
+        "version": "0.25.0",
+        "commit": null,
+        "npm_integrity": "sha512-DLWFFWito68hgjMC3kDaqDpcHRGr+ZC2cz4pFR/XeWilq9C0dLawsxi+pK6qRM/ICZw6YNmf5w28y0tpcfbNsA==",
+        "tarball_sha256": "e344de9d29654bb0222b3a593f507cd82356db1f26e42f3b400b3b0af93c95f7"
+      },
+      "build": {
+        "needs_compiler": false,
+        "command": "npm pack tree-sitter-embedded-template@0.25.0 && tar -xzf tree-sitter-embedded-template-0.25.0.tgz && cp package/tree-sitter-embedded_template.wasm .",
+        "note": "The published file name uses an underscore, which is the grammar's own name; the artefact keeps it."
+      },
+      "license": {
+        "spdx": "MIT",
+        "copyright": "Copyright (c) 2018 Max Brunsfeld",
+        "text_file": "licenses/tree-sitter-embedded-template.LICENSE.txt",
+        "text_sha256": "c5cfb43042b6b72045f4ba997834d0a7786d2793d91680868b5815b39f14fc78",
+        "additional_conditions": null,
+        "requires": "The copyright notice and the permission notice must be reproduced in all copies or substantial portions of the software.",
+        "satisfied_by": "The upstream LICENSE file is carried verbatim at licenses/tree-sitter-embedded-template.LICENSE.txt, is committed to the repository and is included in the published npm tarball of wolfboy."
+      },
+      "components": [],
+      "canary": {
+        "file": "tools/structural-canaries/erb.html.erb",
+        "expect_root": "template",
+        "expect_node": "output_directive",
+        "why": "The structural preflight gate loads this artefact, parses this file, and fails the gate unless the root node is expect_root, a node of type expect_node is present, and the tree carries no ERROR or MISSING node. expect_node is chosen to be specific to this grammar, so a wrong-but-loadable artefact is caught rather than passed."
+      }
+    },
+    {
+      "language": "haml",
+      "artifact": "tree-sitter-haml.wasm",
+      "sha256": "097839467220d99678475ba3857701c3af7096854206e921e4a34de71de0438a",
+      "bytes": 38945,
+      "tree_sitter_abi": 15,
+      "provenance": "built-here",
+      "upstream": {
+        "name": "tree-sitter-haml",
+        "url": "https://github.com/vitallium/tree-sitter-haml",
+        "kind": "git",
+        "package": null,
+        "version": "0.1.0",
+        "commit": "3ea15266a86dc4d921e8a2c2213d1ca15661d7ba",
+        "npm_integrity": null,
+        "tarball_sha256": null
+      },
+      "build": {
+        "needs_compiler": true,
+        "command": "git clone https://github.com/vitallium/tree-sitter-haml && git checkout 3ea15266a86dc4d921e8a2c2213d1ca15661d7ba && tree-sitter build --wasm -o tree-sitter-haml.wasm .",
+        "note": "Not published on npm as a package at all and not published as .wasm anywhere; the pilot installed it as a git dependency, which needs both git and a C++ toolchain. The clone carries its own tree-sitter.json, so no build input has to be supplied."
+      },
+      "license": {
+        "spdx": "MIT",
+        "copyright": "Copyright (c) 2024 Vitaly Slobodin <vitaliy.slobodin@gmail.com>",
+        "text_file": "licenses/tree-sitter-haml.LICENSE.txt",
+        "text_sha256": "623ed734dd3a0ace52aa470557ad4944c2038bef5f2532b76de2c25a373070a1",
+        "additional_conditions": null,
+        "requires": "The copyright notice and the permission notice must be reproduced in all copies or substantial portions of the software.",
+        "satisfied_by": "The upstream LICENSE file is carried verbatim at licenses/tree-sitter-haml.LICENSE.txt, is committed to the repository and is included in the published npm tarball of wolfboy."
+      },
+      "components": [
+        "tree-sitter-headers"
+      ],
+      "canary": {
+        "file": "tools/structural-canaries/haml.html.haml",
+        "expect_root": "source_file",
+        "expect_node": "ruby_attributes",
+        "why": "The structural preflight gate loads this artefact, parses this file, and fails the gate unless the root node is expect_root, a node of type expect_node is present, and the tree carries no ERROR or MISSING node. expect_node is chosen to be specific to this grammar, so a wrong-but-loadable artefact is caught rather than passed."
+      }
+    },
+    {
+      "language": "slim",
+      "artifact": "tree-sitter-slim.wasm",
+      "sha256": "3364868de94a068d579aaf1db69b8f1ba6b1815d9bd1d8577679245b666e3816",
+      "bytes": 60006,
+      "tree_sitter_abi": 15,
+      "provenance": "built-here",
+      "upstream": {
+        "name": "tree-sitter-slim",
+        "url": "https://github.com/kolen/tree-sitter-slim",
+        "kind": "git",
+        "package": null,
+        "version": "0.1.1",
+        "commit": "d116919433c4d8935501df72405141c602e9bd25",
+        "npm_integrity": null,
+        "tarball_sha256": null
+      },
+      "build": {
+        "needs_compiler": true,
+        "command": "git clone https://github.com/kolen/tree-sitter-slim && git checkout d116919433c4d8935501df72405141c602e9bd25 && tree-sitter build --wasm -o tree-sitter-slim.wasm .",
+        "note": "Slim was once recorded as needing a tree-sitter.json written by hand. That was true of the copy npm installs, whose files list omits it; the git clone this build uses carries the file upstream, so no build input is supplied and none is needed."
+      },
+      "license": {
+        "spdx": "MIT",
+        "copyright": "Copyright (c) 2024 tree-sitter-slim contributors",
+        "text_file": "licenses/tree-sitter-slim.LICENSE.txt",
+        "text_sha256": "f68594e7c25ae94657384cf891210755bdc80f32b78592bd15bc327d9181a163",
+        "additional_conditions": null,
+        "requires": "The copyright notice and the permission notice must be reproduced in all copies or substantial portions of the software.",
+        "satisfied_by": "The upstream LICENSE file is carried verbatim at licenses/tree-sitter-slim.LICENSE.txt, is committed to the repository and is included in the published npm tarball of wolfboy."
+      },
+      "components": [
+        "tree-sitter-headers"
+      ],
+      "canary": {
+        "file": "tools/structural-canaries/slim.slim",
+        "expect_root": "source_file",
+        "expect_node": "attr_value_quoted",
+        "why": "The structural preflight gate loads this artefact, parses this file, and fails the gate unless the root node is expect_root, a node of type expect_node is present, and the tree carries no ERROR or MISSING node. expect_node is chosen to be specific to this grammar, so a wrong-but-loadable artefact is caught rather than passed."
+      }
+    },
+    {
+      "language": "pug",
+      "artifact": "tree-sitter-pug.wasm",
+      "sha256": "ca414276d0bd294844e334a5c0e8357d2473f1c6e50d26c19d36d7004c8875aa",
+      "bytes": 112667,
+      "tree_sitter_abi": 15,
+      "provenance": "built-here",
+      "upstream": {
+        "name": "tree-sitter-pug",
+        "url": "https://github.com/zealot128/tree-sitter-pug",
+        "kind": "npm",
+        "package": "tree-sitter-pug",
+        "version": "1.0.12",
+        "commit": null,
+        "npm_integrity": "sha512-q1PVopWSO4Tl4aw9WbPs5mnotOeT7l6eC4v9kU6JPu22qwh+dnPVRv5erYqtnDiY3yiXH1fqeTyrf4qtJjTyHA==",
+        "tarball_sha256": "ebfe7cee7080f836034beee9d3ff7e1fc54232db4d4ac71d50a3d9e256f4c757"
+      },
+      "build": {
+        "needs_compiler": true,
+        "command": "npm pack tree-sitter-pug@1.0.12 && tar -xzf tree-sitter-pug-1.0.12.tgz && tree-sitter build --wasm -o tree-sitter-pug.wasm package",
+        "note": "The npm package publishes prebuilt native binaries but no .wasm, so the grammar is compiled from the published sources."
+      },
+      "license": {
+        "spdx": "MIT",
+        "copyright": "Copyright (c) 2021 Florian Proksch",
+        "text_file": "licenses/tree-sitter-pug.LICENSE.txt",
+        "text_sha256": "895984d35cda4b4d18eeb57def3715904d659d653bbe86b0eb0a1c931a50d9ce",
+        "additional_conditions": null,
+        "requires": "The copyright notice and the permission notice must be reproduced in all copies or substantial portions of the software.",
+        "satisfied_by": "The upstream LICENSE file is carried verbatim at licenses/tree-sitter-pug.LICENSE.txt, is committed to the repository and is included in the published npm tarball of wolfboy."
+      },
+      "components": [
+        "tree-sitter-headers"
+      ],
+      "canary": {
+        "file": "tools/structural-canaries/pug.pug",
+        "expect_root": "source_file",
+        "expect_node": "quoted_attribute_value",
+        "why": "The structural preflight gate loads this artefact, parses this file, and fails the gate unless the root node is expect_root, a node of type expect_node is present, and the tree carries no ERROR or MISSING node. expect_node is chosen to be specific to this grammar, so a wrong-but-loadable artefact is caught rather than passed."
+      }
+    },
+    {
+      "language": "blade",
+      "artifact": "tree-sitter-blade.wasm",
+      "sha256": "1be3233e6c1a42ab50cc00c9c4f48a79b8421157149ed73eef386f8c2a4e1819",
+      "bytes": 1138265,
+      "tree_sitter_abi": 14,
+      "provenance": "built-here",
+      "upstream": {
+        "name": "tree-sitter-blade",
+        "url": "https://github.com/EmranMR/tree-sitter-blade",
+        "kind": "npm",
+        "package": "tree-sitter-blade",
+        "version": "0.11.0",
+        "commit": null,
+        "npm_integrity": "sha512-NY7K2Yk0zOJFNiqGhV2gyLE6qXjSHYZu04vOK/zaiOitvTegSrJ2iLSTDuKBQ6PByGlg4IqH9WUHdk4qJuT8ww==",
+        "tarball_sha256": "0a75c3b366d1385e2014ff5bb5783f3dfa13e30cc37846c1aaaef830a3254f26"
+      },
+      "build": {
+        "needs_compiler": true,
+        "command": "npm pack tree-sitter-blade@0.11.0 && tar -xzf tree-sitter-blade-0.11.0.tgz && cp <build_input> package/tree-sitter.json && tree-sitter build --wasm -o tree-sitter-blade.wasm package",
+        "build_inputs": [
+          {
+            "source": "tools/grammar-build-inputs/tree-sitter-blade.tree-sitter.json",
+            "destination": "tree-sitter.json",
+            "sha256": "b7d833124bdbe850289e1f4ee0531c1838edb2f5233e513a1f8e70d13844c394",
+            "why": "The published 0.11.0 tarball has no tree-sitter.json and the CLI refuses to build without one. Only grammars[0].name is load bearing — it selects the exported symbol tree_sitter_blade — and the rest is metadata copied from the file upstream added after this release."
+          }
+        ],
+        "note": "The wasm build does not need product/pilot-structural/tools/patch-blade-binding.mjs. That patch exists because the published package ships a nan-era Node binding the native path rejects; a wasm build compiles src/parser.c and reads none of it."
+      },
+      "license": {
+        "spdx": "MIT",
+        "copyright": "Copyright (c) 2023 Emran Mashhadi Ramezan",
+        "text_file": "licenses/tree-sitter-blade.LICENSE.txt",
+        "text_sha256": "96e0c1803ffb831c7287b1fb7f88567d05e58d37da553e6bb9a9c4a765434ecb",
+        "additional_conditions": null,
+        "requires": "The copyright notice and the permission notice must be reproduced in all copies or substantial portions of the software.",
+        "satisfied_by": "The upstream LICENSE file is carried verbatim at licenses/tree-sitter-blade.LICENSE.txt, is committed to the repository and is included in the published npm tarball of wolfboy."
+      },
+      "components": [
+        "tree-sitter-headers"
+      ],
+      "canary": {
+        "file": "tools/structural-canaries/blade.blade.php",
+        "expect_root": "blade",
+        "expect_node": "loop",
+        "why": "The structural preflight gate loads this artefact, parses this file, and fails the gate unless the root node is expect_root, a node of type expect_node is present, and the tree carries no ERROR or MISSING node. expect_node is chosen to be specific to this grammar, so a wrong-but-loadable artefact is caught rather than passed."
+      }
+    },
+    {
+      "language": "heex",
+      "artifact": "tree-sitter-heex.wasm",
+      "sha256": "784fe0ef16e053d836217953a0086a8d53d494b3187037d1162f383c1d11c645",
+      "bytes": 30540,
+      "tree_sitter_abi": 15,
+      "provenance": "built-here",
+      "upstream": {
+        "name": "tree-sitter-heex",
+        "url": "https://github.com/phoenixframework/tree-sitter-heex",
+        "kind": "git",
+        "package": null,
+        "version": "0.9.0",
+        "commit": "5842537f734d7c12685bf27d6005313e3e5a47a0",
+        "npm_integrity": null,
+        "tarball_sha256": null
+      },
+      "build": {
+        "needs_compiler": true,
+        "command": "git clone https://github.com/phoenixframework/tree-sitter-heex && git checkout 5842537f734d7c12685bf27d6005313e3e5a47a0 && tree-sitter build --wasm -o tree-sitter-heex.wasm .",
+        "note": "Published on npm as tree-sitter-heex, but the published package carries no .wasm — only the C sources and node prebuilds — so the artefact is compiled here from a pinned clone, as haml and slim are. The clone carries its own tree-sitter.json and a committed src/parser.c, so no build input has to be supplied and the pinned tree-sitter CLI never has to regenerate the parser."
+      },
+      "license": {
+        "spdx": "MIT",
+        "copyright": "Copyright (c) 2022 Connor Lay",
+        "text_file": "licenses/tree-sitter-heex.LICENSE.txt",
+        "text_sha256": "a36f89fb6cebf85bfb6702c9a8bf39a17ea0fa7b98d1b2d8f4b281e9bdcd4994",
+        "additional_conditions": null,
+        "requires": "The copyright notice and the permission notice must be reproduced in all copies or substantial portions of the software.",
+        "satisfied_by": "The upstream LICENSE file is carried verbatim at licenses/tree-sitter-heex.LICENSE.txt, is committed to the repository and is included in the published npm tarball of wolfboy."
+      },
+      "components": [
+        "tree-sitter-headers"
+      ],
+      "canary": {
+        "file": "tools/structural-canaries/heex.html.heex",
+        "expect_root": "fragment",
+        "expect_node": "component",
+        "why": "The structural preflight gate loads this artefact, parses this file, and fails the gate unless the root node is expect_root, a node of type expect_node is present, and the tree carries no ERROR or MISSING node. expect_node is chosen to be specific to this grammar, so a wrong-but-loadable artefact is caught rather than passed: no other vendored grammar has a component node, which is the HEEx function-component element."
+      }
+    },
+    {
+      "language": "elixir",
+      "artifact": "tree-sitter-elixir.wasm",
+      "sha256": "046e233bc224130aa096b893de3b416fff3693d64742d14c89a206a19c8b10a4",
+      "bytes": 1412146,
+      "tree_sitter_abi": 14,
+      "provenance": "built-here",
+      "upstream": {
+        "name": "tree-sitter-elixir",
+        "url": "https://github.com/elixir-lang/tree-sitter-elixir",
+        "kind": "git",
+        "package": null,
+        "version": "0.3.5",
+        "commit": "e2d9e6e0e76b0c436fa48a0b8c32a031d0cbdf49",
+        "npm_integrity": null,
+        "tarball_sha256": null
+      },
+      "build": {
+        "needs_compiler": true,
+        "command": "git clone https://github.com/elixir-lang/tree-sitter-elixir && git checkout e2d9e6e0e76b0c436fa48a0b8c32a031d0cbdf49 && tree-sitter build --wasm -o tree-sitter-elixir.wasm .",
+        "note": "BUILT FROM A CLONE ALTHOUGH UPSTREAM PUBLISHES A READY-BUILT .wasm, AND THE REASON IS THE LICENCE. npm's tree-sitter-elixir@0.3.5 does contain tree-sitter-elixir.wasm (1,412,267 bytes, sha256 ed99093c548c12d43f7e337fd3440e9e2daa2ec671a5e29aadb6c6dcb2232a62), so a published-upstream entry would need no compiler at all. But the package's own files list is [grammar.js, binding.gyp, prebuilds/**, bindings/node/*, queries/*, src/**, *.wasm] and npm's always-include set covers LICENSE and not NOTICE, so THE PUBLISHED TARBALL CARRIES NO NOTICE FILE — verified by listing it. Apache-2.0 4(d) makes the upstream NOTICE part of what a redistribution has to carry, and this repository cannot carry a file its source does not ship. The git tree at the same tag carries both LICENSE and NOTICE, so the clone is the source and the artefact is compiled here, as haml, slim and heex are. The clone carries its own tree-sitter.json and a committed src/parser.c, so no build input has to be supplied and the pinned tree-sitter CLI never has to regenerate the parser."
+      },
+      "license": {
+        "spdx": "Apache-2.0",
+        "copyright": "Copyright 2021 The Elixir Team",
+        "text_file": "licenses/tree-sitter-elixir.LICENSE.txt",
+        "text_sha256": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9",
+        "notice_file": "licenses/tree-sitter-elixir.NOTICE.txt",
+        "notice_sha256": "119588423fbaa46a6955a044fee5a23338c7de190d8c4651a94c6d0b98ca2cda",
+        "modifications": "none",
+        "additional_conditions": "Apache-2.0 4(a)-(d): (a) the licence text travels with every copy; (b) modified files carry prominent notices saying they were changed; (c) copyright, patent, trademark and attribution notices in the Source form are retained; (d) the attribution notices in the upstream NOTICE file are reproduced. The licence allow-list is MIT, and Apache-2.0 for vendored grammars. Each condition above is recorded in this entry and checked by that gate.",
+        "requires": "A copy of the Apache License 2.0 must be given to every recipient; the attribution notices in the upstream NOTICE file must be reproduced; any file this repository modified must say so; and the copyright, patent, trademark and attribution notices carried in the upstream source must be retained.",
+        "satisfied_by": "The upstream LICENSE is carried verbatim at licenses/tree-sitter-elixir.LICENSE.txt and the upstream NOTICE at licenses/tree-sitter-elixir.NOTICE.txt; both are committed and both are included in the published npm tarball of wolfboy, which is where a recipient of this package receives them. NOTHING WAS MODIFIED: the artefact is compiled from the pristine clone at the pinned commit with no build input supplied, which the grammar rebuild proves by reproducing the committed bytes from a fresh clone, and the third-party check holds to account by refusing the pair (modifications: none, a non-empty build_inputs). The NOTICE's own three-way split is why components below is not the whole story: it puts everything in src/ that the tree-sitter CLI generated under MIT (Copyright (c) 2018-2021 Max Brunsfeld) — which is the same attribution shared_components[tree-sitter-headers] already records — some test/corpus fragments under MIT (Copyright (c) 2021 Anantha Kumaran), and everything else under Apache-2.0. The compiled artefact therefore contains MIT code (the generated src/parser.c and the tree_sitter headers) and MIT-or-Apache-2.0 code depending on how one reads the NOTICE's first heading (the hand-written scanner), and both licences' texts are shipped. THE HEADING AND THE TREE DISAGREE ON THE SCANNER'S FILE NAME, recorded here on 2026-08-28 after independent verification found it and re-verified against upstream: the NOTICE's first section reads \"All files in src/ except scanner.cc\", while the tree at the pinned commit e2d9e6e0e76b0c436fa48a0b8c32a031d0cbdf49 contains src/scanner.c and no scanner.cc (confirmed by listing src/ at that commit through the GitHub contents API on 2026-08-28: grammar.json, node-types.json, parser.c, scanner.c, tree_sitter/). Read literally, the exception does not name the file that exists, so src/scanner.c falls INSIDE the first section and is MIT (Copyright (c) 2018-2021 Max Brunsfeld) rather than part of the Apache-2.0 residue; read as upstream evidently intended, the hand-written scanner is the exception whatever its extension and it is Apache-2.0. THE REDISTRIBUTION IS COMPLIANT ON EITHER READING AND NOTHING HERE CHANGES, and that is the point of recording it rather than picking a side: this repository ships both licence texts verbatim (licenses/tree-sitter-elixir.LICENSE.txt and licenses/tree-sitter-elixir.NOTICE.txt, both digest-checked by the third-party check), reproduces the upstream NOTICE unaltered as Apache-2.0 4(d) requires, and records both attributions - Max Brunsfeld's through shared_components[tree-sitter-headers] and The Elixir Team's in this entry's copyright field. The obligations are discharged for the whole artefact under both licences at once, so which of the two covers that one file decides no duty. What would NOT be compliant is asserting one reading as established fact, which the previous wording of this sentence did."
+      },
+      "components": [
+        "tree-sitter-headers"
+      ],
+      "canary": {
+        "file": "tools/structural-canaries/elixir.ex",
+        "expect_root": "source",
+        "expect_node": "sigil",
+        "why": "The structural preflight gate loads this artefact, parses this file, and fails the gate unless the root node is expect_root, a node of type expect_node is present, and the tree carries no ERROR or MISSING node. expect_node is chosen to be specific to this grammar, so a wrong-but-loadable artefact is caught rather than passed: sigil is the node this adapter exists to read — the ~H sigil holding a HEEx template — and no other vendored grammar has one."
+      }
+    }
+  ]
+}

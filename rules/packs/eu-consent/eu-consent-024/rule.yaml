@@ -1,0 +1,136 @@
+id: eu-consent-024
+pack: eu-consent
+short_name: Session recording built into the product
+problem_line:
+  text: "Built-in session replay: consent or masking floor not found"
+fix_line: Start capture only after recorded consent, and set the masking floor in the product, not
+  in a configuration value.
+title: This product implements its own session recorder - the capture call, the store it writes to,
+  or the path that replays it
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC) (prior consent
+      for storing or accessing information on terminal equipment)
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) (replaces Art. 5(3) of Directive 2002/58/EC: the 2002
+      wording offered only a right to refuse, the replacement wording requires prior consent) and
+      Art. 4 (Member State transposition deadline 25 May 2011)"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: GDPR Art. 5(1)(c) (data minimisation) and Art. 25 (data protection by design and by default) —
+      a session recorder captures whatever the page displayed, so what a record contains is decided
+      by the masking default rather than by the capture call
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-21
+    jurisdiction: EU
+effective_date: 2011-05-25
+severity: high
+rule_confidence: 0.45
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  match:
+    - \brrweb(?:-player|-snapshot|-replay)?\b
+    - "[=(,:]\\s*record\\s*\\(\\s*\\{\\s*$"
+    - \brecord\s*\(\s*\{[^\n]*\bemit\b
+    - \(\s*\{[^\n]*\b(?:checkoutEveryNms|slimDOMOptions|recordCrossOriginIframes)\b
+    - characterData\s*:\s*true[^\n]*subtree\s*:\s*true|subtree\s*:\s*true[^\n]*characterData\s*:\s*true
+    - \b(?:session_replays?|sessionReplays?|replay_events?|replayEvents?|session_recordings?|sessionRecordings?|recording_events?|recordingEvents?)\b
+    - "[\"'`](?:/[A-Za-z0-9_.:{}$-]+)*/(?:replays?|recordings?)(?:/|[\"'`?])"
+    - "[\"'`](?:/[A-Za-z0-9_.:{}$-]+)*/session-replays(?:/|[\"'`?])"
+    - "[\"'`](?:/[A-Za-z0-9_.:{}$-]+)*/session-replays?/[:{$\\[<]"
+context_questions:
+  - WHICH OF THE THREE PARTS IS THIS, AND WHERE ARE THE OTHER TWO? The construct is a capture call,
+    a store the recorded buffer is written to, and a path that serves it back for replay, and the
+    detector reports whichever of the three it met. Name the part you are holding, then look for the
+    other two by name and quote them, or say that you searched and did not find them. A capture call
+    with no store is a feature that records nothing durable; a store with no capture call is a
+    schema nobody fills; and the finding is different in each case.
+  - DOES THE RECORDER RUN FOR END USERS, AND AT WHAT SAMPLE RATE? A recorder that is off by default
+    and switched on per deployment is a different finding from one that runs for every visitor.
+    Quote the flag or the configuration value that decides it, and quote the sample rate. A rate of
+    zero means nothing is recorded and the candidate closes there.
+  - WHAT DOES THE MASKING CONFIGURATION LEAVE UNMASKED, AND WHAT IS THE DEFAULT? This is the
+    question that decides what a recorded session actually contains, and it is answered by reading
+    every branch of whatever builds the masking options - not by the capture call, which says
+    nothing about it. Where one branch sets a text-masking or input-masking key that another branch
+    omits, say which branch is the shipped default and name the keys it leaves out. Masking controls
+    written as an explicit option are also eu-consent-020's subject; the two findings are about one
+    mechanism and neither disposes of the other.
+  - WHAT DID THE RECORDED PAGES ACTUALLY SHOW? THE DETECTOR CANNOT ANSWER THIS AND MUST NOT BE READ
+    AS TRYING TO. A DOM recorder's content set is everything any recorded page displayed to that
+    person, which is not written in the schema and not written in the recorder. Read the templates
+    and the routes that are in scope for recording and say what is on them - names, addresses,
+    message bodies, order lines, health or payment fields. Where any recorded route renders
+    special-category content under Art. 9(1), say so explicitly.
+  - WHO IS THE RECORDER FOR, AND WHO OPERATES THE STORE? A product may record its own visitors, or
+    it may ship a recorder that ITS OWN CUSTOMERS embed on THEIR sites, in which case the recorded
+    people are the customers' visitors and this product holds the store. The two arrangements have
+    different controllers and different notices owed, and the code looks the same. Say which this is
+    and quote what told you - a build target, an embed snippet, a per-site configuration endpoint.
+  - IS THERE A CONSENT GATE BEFORE CAPTURE BEGINS? Search the whole repository for a consent
+    decision, a consent-management platform, or the recorder's own opt-out before concluding there
+    is none, and quote the loading path from the page to the capture call.
+evidence_template: "{file}:{line} carries part of a session recorder this repository implements
+  itself, rather than a third party's recorder being loaded - which is eu-consent-005's subject and
+  a different finding about a different set of facts. WHICH PART IT IS DECIDES WHAT THE LINE
+  ESTABLISHES, and the five clause groups are not equally strong. A dependency on the rrweb family,
+  or a record({...}) capture call, establishes that a DOM recorder is constructed in this code. A
+  DOM observer configured for the whole subtree AND for text changes establishes a hand-rolled
+  equivalent of the same capture. THE OTHER TWO CLAUSE GROUPS MATCH A NAME AND NOT A CALL: an
+  identifier saying a store holds replay events, and a route path saying it serves them. A name can
+  belong to a schema that was planned and never filled, or to a route that was removed, so read the
+  surrounding code before treating either as a running recorder. WHAT NO BRANCH ESTABLISHES, and it
+  is the whole of the exposure: what any recorded page actually showed the person. The store's
+  content set is everything any recorded page displayed, which is written in neither the schema nor
+  the recorder, and it is context_questions[3]. Nor does any branch establish that the recorder runs
+  for end users, at what sample rate, under what masking default, or whether consent is taken first
+  - context questions 1, 2 and 5 ask those, and a recorder that is off by default records nothing"
+remediation_template: >
+  Read which part of the recorder the matched line is before changing anything: a dependency, a
+
+  capture call, a masking-configuration site, a store, or a serve path. The change is different for
+
+  each and only the capture and masking sites decide what a recording contains.
+
+  Take consent before capture begins, not before the recording is viewed. Storing or reading
+
+  anything on the visitor's terminal equipment is what ePrivacy Art. 5(3) attaches to, and a DOM
+
+  recorder does both from its first event, so a gate that runs after capture has started is late.
+
+  Load the recorder only once a stored consent decision permits it.
+
+  Set the masking floor in the product rather than leaving it to a configuration value. Where the
+
+  recorder's options are built by a function that switches over a level, read every branch and make
+
+  the protective keys - text masking and input masking - present in all of them, so that the default
+
+  branch is not weaker than the one beside it. Where the options object is supplied from outside the
+
+  code entirely, the product enforces no floor at all; that is the change to make.
+
+  Give the store a retention period and a deletion path keyed to the same identifier the recording
+  is
+
+  keyed to, so that an erasure request reaches the recordings and not only the account.
+
+  Where the recorder is shipped for other people to embed on their own sites, say in the product's
+
+  own documentation who the controller is for the recordings, what masking is applied by default,
+  and
+
+  how a person recorded on somebody else's site reaches you.
+data_categories:
+  - user.behavior
+  - user.content
+  - user.device
+fingerprint_spec: directory

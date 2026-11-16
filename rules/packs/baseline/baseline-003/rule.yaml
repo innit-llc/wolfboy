@@ -1,0 +1,243 @@
+id: baseline-003
+pack: baseline
+short_name: Plain-text connection scheme (http://, ws:// and the like)
+problem_line:
+  text: Data sent over a connection with no encryption found
+  template: "{data} sent with no encryption found"
+fix_line: Move the endpoint to its TLS form (https, wss, ldaps and so on) or open it with TLS;
+  replace telnet with SSH.
+title: "Plaintext transport: a URL whose scheme has no TLS (http://, ws://, ldap://, redis:// and
+  the like) in a string or configuration value, or an HTTP connection without TLS"
+jurisdiction:
+  - EU
+  - US
+  - JP
+legal_basis:
+  - cite: GDPR Art. 32 (security of processing; encryption in transit is a baseline measure)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "EU Cyber Resilience Act (Regulation (EU) 2024/2847), Annex I, Part I, point (2)(e) (essential
+      cybersecurity requirement to protect the confidentiality of stored, transmitted or otherwise
+      processed data, personal or other, such as by encrypting relevant data at rest or in transit
+      by state of the art mechanisms). Per Art. 71(2) the Regulation applies from 11 December 2027.
+      Scope check: the CRA reaches products with digital elements made available on the EU market
+      (Art. 2(1), Art. 3(1)) and hosted software only as a remote data processing solution within
+      Art. 3(2). Recital 12 places websites that do not support the functionality of such a product,
+      and cloud services (SaaS, PaaS, IaaS) designed and developed outside a manufacturer's
+      responsibility, outside this Regulation and inside Directive (EU) 2022/2555 instead. For a
+      plain hosted web application this entry therefore does not reach the scanned artefact and GDPR
+      Art. 32 is the operative EU basis; it applies where the repository ships a distributed product
+      or the backend of one. Where it does apply it is the only EU basis here that covers
+      non-personal data"
+    url: https://eur-lex.europa.eu/eli/reg/2024/2847/oj
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: Japan APPI (Act on the Protection of Personal Information, Act No. 57 of 2003), Art. 23
+      (security control measures — a business handling personal information must take necessary and
+      appropriate measures for the security control of the personal data it handles). Bites only
+      where personal data is what travels over the plaintext connection
+    url: https://laws.e-gov.go.jp/law/415AC0000000057
+    checked_at: 2026-07-22
+    jurisdiction: JP
+  - cite: "Japan, Personal Information Protection Commission, Guidelines on the APPI (General Rules) Q&A
+      10-21, on methods for preventing leakage in the use of information systems under the Art. 23
+      security control measures. The Commission's own answer gives encryption of personal data on
+      networks that may be intercepted, naming SSL/TLS and S/MIME, as such a method — the most
+      directly on-point Japanese source in this pack for transport encryption. Guidance rather than
+      statute: the operative duty is APPI Art. 23"
+    url: https://www.ppc.go.jp/all_faq_index/faq1-q10-21/
+    checked_at: 2026-07-22
+    jurisdiction: JP
+  - cite: "United States, FTC Act Sec. 5 (15 U.S.C. Sec. 45(a)(1) and (n)) — unfair or deceptive acts or
+      practices in or affecting commerce. Transport security sits inside the Federal Trade
+      Commission's data-security line, which reaches a failure to employ reasonable security that
+      causes or is likely to cause substantial injury to consumers, not reasonably avoidable and not
+      outweighed by countervailing benefits. General basis: no federal statute requires TLS for a
+      given connection, and the theory reaches this finding only where personal data or credentials
+      travel on it"
+    url: https://www.govinfo.gov/content/pkg/USCODE-2023-title15/html/USCODE-2023-title15-chap2-subchapI-sec45.htm
+    checked_at: 2026-07-22
+    jurisdiction: US
+severity: medium
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  resolve_local_values: true
+  vocabulary:
+    plaintext_scheme:
+      - http://
+      - ws://
+      - ftp://
+      - ldap://
+      - telnet://
+      - smtp://
+      - imap://
+      - pop3://
+      - redis://
+      - amqp://
+      - mqtt://
+      - irc://
+      - rtmp://
+      - rtsp://
+      - nntp://
+      - gopher://
+      - tftp://
+    plaintext_port_call:
+      - Net::HTTP.new
+      - Net::HTTP.start
+      - TCPSocket.new
+      - TCPSocket.open
+      - Socket.tcp
+      - fsockopen
+      - pfsockopen
+      - socket_connect
+      - create_connection
+      - connect
+      - Connect
+      - ConnectAsync
+      - Socket
+      - InetSocketAddress
+      - TcpClient
+      - DnsEndPoint
+      - HttpHost
+      - TcpStream::connect
+      - :gen_tcp.connect
+      - begin
+      - createConnection
+    plaintext_dial_call:
+      - net.Dial
+      - net.DialTimeout
+      - TcpStream::connect
+      - stream_socket_client
+    plaintext_scheme_name:
+      - http
+    scheme_key:
+      - scheme
+    protocol_key:
+      - protocol
+  vocabulary_matching:
+    plaintext_scheme:
+      case_insensitive: true
+    plaintext_scheme_name:
+      case_insensitive: true
+    scheme_key:
+      case_insensitive: true
+    protocol_key:
+      case_insensitive: true
+  match:
+    - "[\"'`]http://(?![\"'`]|\\\\|<|&lt;|\\{|%[sd])(?:[A-Za-z0-9._~%+:-]+@|(?![A-Za-z0-9._~%+:-]+@\
+      ))(?!localhost|[A-Za-z0-9.-]+\\.localhost(?![A-Za-z0-9.-])|[A-Za-z0-9-]+(?:\\.[A-Za-z0-9-]+)*\
+      \\.(?:test|invalid)(?![A-Za-z0-9.-])|127\\.|0\\.\\d|10\\.\\d|169\\.254\\.|192\\.168\\.|172\\.\
+      (?:1[6-9]|2\\d|3[01])\\.|100\\.(?:6[4-9]|[7-9]\\d|1[01]\\d|12[0-7])\\.|2(?:2[4-9]|3\\d)\\.\\d\
+      |255\\.255\\.255\\.255|192\\.0\\.2\\.|198\\.51\\.100\\.|203\\.0\\.113\\.|host\\.docker\\.inte\
+      rnal|metadata\\.google\\.internal|\\[(?:::1|::)(?:\\]|[^0-9A-Fa-f:])|\\[(?:::(?:ffff:)?|64:ff\
+      9b::)(?:127\\.|0\\.|10\\.|169\\.254\\.|192\\.168\\.|172\\.(?:1[6-9]|2\\d|3[01])\\.)|\\[(?:::f\
+      fff:|2002:)(?:7f[0-9a-f]{2}|a9fe|c0a8|0a[0-9a-f]{2}|ac1[0-9a-f]):|\\[f[cd][0-9a-f]{0,2}:|\\[f\
+      e[89ab][0-9a-f]:|\\[2001:[Dd][Bb]8[:\\]]|\\d{1,3}[\\u3002\\uff0e\\uff61]|(?:%[0-9A-Fa-f]{2}){\
+      2,}(?!%|[A-Za-z0-9._~-]))"
+    - ^\s*(?:-\s*)?[A-Za-z_][A-Za-z0-9_.-]*\s*(?:=>|[:=])\s*http://(?!["'`]|\\|<|&lt;|\{|%[sd]|\$)(?:[A-Za-z0-9._~%+:-]+@|(?![A-Za-z0-9._~%+:-]+@))(?!localhost|[A-Za-z0-9.-]+\.localhost(?![A-Za-z0-9.-])|[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.(?:test|invalid)(?![A-Za-z0-9.-])|127\.|0\.\d|10\.\d|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.|100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.|2(?:2[4-9]|3\d)\.\d|255\.255\.255\.255|192\.0\.2\.|198\.51\.100\.|203\.0\.113\.|host\.docker\.internal|metadata\.google\.internal|\[(?:::1|::)(?:\]|[^0-9A-Fa-f:])|\[(?:::(?:ffff:)?|64:ff9b::)(?:127\.|0\.|10\.|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)|\[(?:::ffff:|2002:)(?:7f[0-9a-f]{2}|a9fe|c0a8|0a[0-9a-f]{2}|ac1[0-9a-f]):|\[f[cd][0-9a-f]{0,2}:|\[fe[89ab][0-9a-f]:|\[2001:[Dd][Bb]8[:\]]|\d{1,3}[\u3002\uff0e\uff61]|(?:%[0-9A-Fa-f]{2}){2,}(?!%|[A-Za-z0-9._~-]))
+    - <[A-Za-z][^<>]*>\s*http://(?!["'`]|\\|<|&lt;|\{|%[sd])(?:[A-Za-z0-9._~%+:-]+@|(?![A-Za-z0-9._~%+:-]+@))(?!localhost|[A-Za-z0-9.-]+\.localhost(?![A-Za-z0-9.-])|[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.(?:test|invalid)(?![A-Za-z0-9.-])|127\.|0\.\d|10\.\d|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.|100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.|2(?:2[4-9]|3\d)\.\d|255\.255\.255\.255|192\.0\.2\.|198\.51\.100\.|203\.0\.113\.|host\.docker\.internal|metadata\.google\.internal|\[(?:::1|::)(?:\]|[^0-9A-Fa-f:])|\[(?:::(?:ffff:)?|64:ff9b::)(?:127\.|0\.|10\.|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)|\[(?:::ffff:|2002:)(?:7f[0-9a-f]{2}|a9fe|c0a8|0a[0-9a-f]{2}|ac1[0-9a-f]):|\[f[cd][0-9a-f]{0,2}:|\[fe[89ab][0-9a-f]:|\[2001:[Dd][Bb]8[:\]]|\d{1,3}[\u3002\uff0e\uff61]|(?:%[0-9A-Fa-f]{2}){2,}(?!%|[A-Za-z0-9._~-]))
+    - "[\"'`](?&plaintext_scheme)(?![\"'`]|\\\\|<|&lt;|\\{|%[sd])(?:[A-Za-z0-9._~%+:-]+@|(?![A-Za-z\
+      0-9._~%+:-]+@))(?!localhost|[A-Za-z0-9.-]+\\.localhost(?![A-Za-z0-9.-])|[A-Za-z0-9-]+(?:\\.[A\
+      -Za-z0-9-]+)*\\.(?:test|invalid)(?![A-Za-z0-9.-])|127\\.|0\\.\\d|10\\.\\d|169\\.254\\.|192\\.\
+      168\\.|172\\.(?:1[6-9]|2\\d|3[01])\\.|100\\.(?:6[4-9]|[7-9]\\d|1[01]\\d|12[0-7])\\.|2(?:2[4-9\
+      ]|3\\d)\\.\\d|255\\.255\\.255\\.255|192\\.0\\.2\\.|198\\.51\\.100\\.|203\\.0\\.113\\.|host\\.\
+      docker\\.internal|metadata\\.google\\.internal|\\[(?:::1|::)(?:\\]|[^0-9A-Fa-f:])|\\[(?:::(?:\
+      ffff:)?|64:ff9b::)(?:127\\.|0\\.|10\\.|169\\.254\\.|192\\.168\\.|172\\.(?:1[6-9]|2\\d|3[01])\
+      \\.)|\\[(?:::ffff:|2002:)(?:7f[0-9a-f]{2}|a9fe|c0a8|0a[0-9a-f]{2}|ac1[0-9a-f]):|\\[f[cd][0-9a\
+      -f]{0,2}:|\\[fe[89ab][0-9a-f]:|\\[2001:[Dd][Bb]8[:\\]]|\\d{1,3}[\\u3002\\uff0e\\uff61]|(?:%[0\
+      -9A-Fa-f]{2}){2,}(?!%|[A-Za-z0-9._~-]))"
+    - ^\s*(?:-\s*)?[A-Za-z_][A-Za-z0-9_.-]*\s*(?:=>|[:=])\s*(?&plaintext_scheme)(?!["'`]|\\|<|&lt;|\{|%[sd]|\$)(?:[A-Za-z0-9._~%+:-]+@|(?![A-Za-z0-9._~%+:-]+@))(?!localhost|[A-Za-z0-9.-]+\.localhost(?![A-Za-z0-9.-])|[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.(?:test|invalid)(?![A-Za-z0-9.-])|127\.|0\.\d|10\.\d|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.|100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.|2(?:2[4-9]|3\d)\.\d|255\.255\.255\.255|192\.0\.2\.|198\.51\.100\.|203\.0\.113\.|host\.docker\.internal|metadata\.google\.internal|\[(?:::1|::)(?:\]|[^0-9A-Fa-f:])|\[(?:::(?:ffff:)?|64:ff9b::)(?:127\.|0\.|10\.|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)|\[(?:::ffff:|2002:)(?:7f[0-9a-f]{2}|a9fe|c0a8|0a[0-9a-f]{2}|ac1[0-9a-f]):|\[f[cd][0-9a-f]{0,2}:|\[fe[89ab][0-9a-f]:|\[2001:[Dd][Bb]8[:\]]|\d{1,3}[\u3002\uff0e\uff61]|(?:%[0-9A-Fa-f]{2}){2,}(?!%|[A-Za-z0-9._~-]))
+    - <[A-Za-z][^<>]*>\s*(?&plaintext_scheme)(?!["'`]|\\|<|&lt;|\{|%[sd])(?:[A-Za-z0-9._~%+:-]+@|(?![A-Za-z0-9._~%+:-]+@))(?!localhost|[A-Za-z0-9.-]+\.localhost(?![A-Za-z0-9.-])|[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.(?:test|invalid)(?![A-Za-z0-9.-])|127\.|0\.\d|10\.\d|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.|100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.|2(?:2[4-9]|3\d)\.\d|255\.255\.255\.255|192\.0\.2\.|198\.51\.100\.|203\.0\.113\.|host\.docker\.internal|metadata\.google\.internal|\[(?:::1|::)(?:\]|[^0-9A-Fa-f:])|\[(?:::(?:ffff:)?|64:ff9b::)(?:127\.|0\.|10\.|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)|\[(?:::ffff:|2002:)(?:7f[0-9a-f]{2}|a9fe|c0a8|0a[0-9a-f]{2}|ac1[0-9a-f]):|\[f[cd][0-9a-f]{0,2}:|\[fe[89ab][0-9a-f]:|\[2001:[Dd][Bb]8[:\]]|\d{1,3}[\u3002\uff0e\uff61]|(?:%[0-9A-Fa-f]{2}){2,}(?!%|[A-Za-z0-9._~-]))
+    - ^(?!.*(?:(?&plaintext_port_call)|(?&plaintext_dial_call)|JoinHostPort)\s*\(\s*\(?(?:[^()"'`]|["'`][^"'`]*["'`])*?["'`](?:tcp://)?(?:localhost|[A-Za-z0-9.-]+\.localhost(?![A-Za-z0-9.-])|[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.(?:test|invalid)(?![A-Za-z0-9.-])|127\.|0\.\d|10\.\d|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.|100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.|2(?:2[4-9]|3\d)\.\d|255\.255\.255\.255|192\.0\.2\.|198\.51\.100\.|203\.0\.113\.|host\.docker\.internal|metadata\.google\.internal|\[(?:::1|::)(?:\]|[^0-9A-Fa-f:])|\[(?:::(?:ffff:)?|64:ff9b::)(?:127\.|0\.|10\.|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)|\[(?:::ffff:|2002:)(?:7f[0-9a-f]{2}|a9fe|c0a8|0a[0-9a-f]{2}|ac1[0-9a-f]):|\[f[cd][0-9a-f]{0,2}:|\[fe[89ab][0-9a-f]:|\[2001:[Dd][Bb]8[:\]]|\d{1,3}[\u3002\uff0e\uff61]|(?:%[0-9A-Fa-f]{2}){2,}(?!%|[A-Za-z0-9._~-]))).*?(?<![\w$])(?:(?&plaintext_port_call)\s*\(\s*\(?(?:\([^()]*\)|[^()])*?,\s*80\s*\)?\s*[,)]|(?&plaintext_dial_call)\s*\(\s*(?:["'`]tcp[46]?["'`]\s*,\s*)?(?:\([^()]*\)|[^()])*?:80["'`]\s*[,)]|JoinHostPort\s*\((?:\([^()]*\)|[^()])*?,\s*["'`]80["'`]\s*\)|(?:connect|Connect|ConnectAsync|createConnection)\s*\(\s*80\s*[,)])
+    - ^(?!.*(?:HTTPConnection(?:Pool)?\s*\(\s*(?:host\s*=\s*)?|Net::HTTP\.(?:new|start|get|get_response|get_print)\s*\(\s*|URI::HTTP\.build\s*\([^()]*\bhost:\s*|base_uri\s*\(?\s*|Uri\.http\s*\(\s*|Mint\.HTTP[12]?\.connect\s*\(\s*:http\s*,\s*)["'`](?:localhost|[A-Za-z0-9.-]+\.localhost(?![A-Za-z0-9.-])|[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.(?:test|invalid)(?![A-Za-z0-9.-])|127\.|0\.\d|10\.\d|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.|100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.|2(?:2[4-9]|3\d)\.\d|255\.255\.255\.255|192\.0\.2\.|198\.51\.100\.|203\.0\.113\.|host\.docker\.internal|metadata\.google\.internal|\[(?:::1|::)(?:\]|[^0-9A-Fa-f:])|\[(?:::(?:ffff:)?|64:ff9b::)(?:127\.|0\.|10\.|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)|\[(?:::ffff:|2002:)(?:7f[0-9a-f]{2}|a9fe|c0a8|0a[0-9a-f]{2}|ac1[0-9a-f]):|\[f[cd][0-9a-f]{0,2}:|\[fe[89ab][0-9a-f]:|\[2001:[Dd][Bb]8[:\]]|\d{1,3}[\u3002\uff0e\uff61]|(?:%[0-9A-Fa-f]{2}){2,}(?!%|[A-Za-z0-9._~-]))).*?(?:(?<![\w$])HTTPConnection(?:Pool)?\s*\(|\bNet::HTTP\.new\s*\(\s*(?:["'][^"'()]*["']|[^"'(),\s](?:[^"'(),]|\([^()]*\))*)\s*\)(?!.*\buse_ssl\b)|\bNet::HTTP\.start\s*\((?![^()]*(?:\([^()]*\)[^()]*)*\buse_ssl\b)[^()]*(?:\([^()]*\)[^()]*)*\)|\bNet::HTTP\.(?:get|get_response|get_print)\s*\(\s*(?:["'][^"']*["']|[A-Za-z_@$][\w.:@$]*)\s*,\s*["']/|\bURI::HTTP\.build\s*\((?=[^()]*\bhost:)|^\s*base_uri\s*\(?\s*["'](?![A-Za-z][\w+.-]*://|#\{)[^"'\s]|\bUri\.http\s*\(|\bMint\.HTTP[12]?\.connect\s*\(\s*:http\s*,|\.use_ssl\s*=\s*false\b|\bNet::HTTP\.start\s*\([^()]*\buse_ssl(?::|\s*=>)\s*false\b)
+    - ^(?!.*(?:(?<![\w$-])["'`]?(?:(?:set|with)?[Hh]ost(?:[Nn]ame)?|HOST(?:NAME)?)["'`]?\s*(?:=>|:=|[:=(])\s*["'`](?:(?:https?|tcp)://)?|(?:URL|URI|UriBuilder|HttpHost|urlun(?:parse|split))\s*\(\s*[\[(]?\s*[^,()]*,\s*["'`]|HttpHost\s*\(\s*["'`])(?:localhost|[A-Za-z0-9.-]+\.localhost(?![A-Za-z0-9.-])|[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.(?:test|invalid)(?![A-Za-z0-9.-])|127\.|0\.\d|10\.\d|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.|100\.(?:6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.|2(?:2[4-9]|3\d)\.\d|255\.255\.255\.255|192\.0\.2\.|198\.51\.100\.|203\.0\.113\.|host\.docker\.internal|metadata\.google\.internal|\[(?:::1|::)(?:\]|[^0-9A-Fa-f:])|\[(?:::(?:ffff:)?|64:ff9b::)(?:127\.|0\.|10\.|169\.254\.|192\.168\.|172\.(?:1[6-9]|2\d|3[01])\.)|\[(?:::ffff:|2002:)(?:7f[0-9a-f]{2}|a9fe|c0a8|0a[0-9a-f]{2}|ac1[0-9a-f]):|\[f[cd][0-9a-f]{0,2}:|\[fe[89ab][0-9a-f]:|\[2001:[Dd][Bb]8[:\]]|\d{1,3}[\u3002\uff0e\uff61]|(?:%[0-9A-Fa-f]{2}){2,}(?!%|[A-Za-z0-9._~-]))).*?(?:(?<![\w:-]|[Rr]equest\.|\breq\.)["'`]?(?:(?&scheme_key)["'`]?\s*(?:=>|:=|[:=])\s*(?:["'`](?&plaintext_scheme_name)["'`](?!\s*\|)|(?&plaintext_scheme_name)\s*(?:#.*)?$)|(?&protocol_key)["'`]?\s*(?:=>|:=|[:=])\s*["'`](?&plaintext_scheme_name):["'`])|(?<![Rr]equest|\breq)(?:\.|->)(?:scheme|setScheme|withScheme)\s*\(\s*(?:["'`](?&plaintext_scheme_name)["'`]|(?:http::uri::)?Scheme::HTTP\b)\s*\)|(?<![\w$])(?:URL|URI|UriBuilder|HttpHost)\s*\(\s*(?:["'`](?&plaintext_scheme_name)["'`]|Uri\.UriSchemeHttp\b(?!s))\s*,|\burlun(?:parse|split)\s*\(\s*[\[(]\s*["'`](?&plaintext_scheme_name)["'`]\s*,|(?<![\w$])HttpHost\s*\((?:\([^()]*\)|[^()])*,\s*["'`](?&plaintext_scheme_name)["'`]\s*\)|(?<![=!]=\s*|Equals\s*\([^()]*)(?<!\w)Uri\.UriSchemeHttp\b(?!s)(?!\s*[=!]=))
+  match_without:
+    - ^(?!.*(?<![A-Za-z0-9+.-])(?![Hh][Tt][Tt][Pp][Ss]:|[Tt][Cc][Pp]:)[A-Za-z][A-Za-z0-9+.-]*://(?:[^\s"'`@/]*@)?(?!127\.|0\.0\.0\.0)(?:[A-Za-z0-9-]+\.[A-Za-z0-9.-]*[A-Za-z0-9]|\[|\$|#\{)).*?(?:=>|[:=])\s*(?!https:|tcp:)[a-z][a-z0-9+.-]*://[A-Za-z0-9_-]+(:[0-9]+)?([/?#]\S*)?\s*$
+    - xmlns|w3\.org|schema\.org|schemas\.|example\.(com|org|net)|\.example\b|\.local\b|ns\.adobe
+    - ^\s*(//|/\*|\*|#|<!--|<\?xml)
+    - e\.g\.|@example|\bexamples?"?\s*:|\bnot-set\b|\bTODO\b
+    - ^(?!.*(?<![Pp]laceholder\s*(?:=>|[:=])\s*[{"'`]*|\bp:\s*["'`])(?<![A-Za-z0-9+.-])(?![Hh][Tt][Tt][Pp][Ss]:|[Tt][Cc][Pp]:)[A-Za-z][A-Za-z0-9+.-]*://(?:[^\s"'`@/]*@)?(?!127\.|0\.0\.0\.0)(?:[A-Za-z0-9-]+\.[A-Za-z0-9.-]*[A-Za-z0-9]|\[|\$|#\{))(?=.*(?:[Pp]laceholder\s*(?:=>|[:=])\s*[{"'`]*[a-z][a-z0-9+.-]*://|\bp:\s*["'`][a-z][a-z0-9+.-]*://))
+    - hl7\.org|snomed\.info|loinc\.org|unitsofmeasure\.org|nlm\.nih\.gov|nucc\.org|ama-assn\.org|nema\.org|xmlsoap\.org|oasis-open\.org|openarchives\.org|iana\.org|unstats\.un\.org|adaptivecards\.io|nodeinfo\.diaspora|webfinger\.net|ostatus\.org|joinmastodon\.org|search\.yahoo\.com/mrss|acs\.amazonaws\.com/groups/|meta\.firephp\.org|rssboard\.org/media-rss|xmlrpc\.com/spec|georss\.org/georss|dublincore\.org/documents/|data-vocabulary\.org|blackboard\.com/content-packaging|leapspecs\.org|h5p\.org/x-api/|oauth\.net/grant_type/
+    - /[Ff][Hh][Ii][Rr]/|/CodeSystem/|/ValueSet/|/StructureDefinition/|/StructureMap/|/CapabilityStatement/|/ImplementationGuide/|/ns/schema/
+    - (^|[^A-Za-z0-9_$])"?(system|answerValueSet|valueSet|codeSystem|fullUrl|targetNamespace|schemaLocation|\$schema)"?\s*(?:=>|[:=])\s*[{"'`]*https?://
+    - "[\"'`]http://[^\"'`\\s]*\\|"
+    - ^(?!.*(?<!\.(?:startsWith|endsWith|includes|indexOf|replace|replaceAll|split|slice|substring|search|test|match|equals|equalsIgnoreCase|contentEquals|contains|compareTo)\s*\(\s*["'`])(?<![A-Za-z0-9+.-])(?![Hh][Tt][Tt][Pp][Ss]:|[Tt][Cc][Pp]:)[A-Za-z][A-Za-z0-9+.-]*://(?:[^\s"'`@/]*@)?(?!127\.|0\.0\.0\.0)(?:[A-Za-z0-9-]+\.[A-Za-z0-9.-]*[A-Za-z0-9]|\[|\$|#\{)(?![^"'`\s]*["'`]\s*\.\s*(?:equals|equalsIgnoreCase|contentEquals|startsWith|endsWith|contains|compareTo|indexOf)\s*\())(?=.*(?:\.(startsWith|endsWith|includes|indexOf|replace|replaceAll|split|slice|substring|search|test|match|equals|equalsIgnoreCase|contentEquals|contains|compareTo)\s*\(\s*["'`][a-z][a-z0-9+.-]*://|["'`][a-z][a-z0-9+.-]*://[^"'`\s]*["'`]\s*\.\s*(?:equals|equalsIgnoreCase|contentEquals|startsWith|endsWith|contains|compareTo|indexOf)\s*\())
+    - ^(?!.*(?<![A-Za-z0-9+.-])(?![Hh][Tt][Tt][Pp][Ss]:|[Tt][Cc][Pp]:)[A-Za-z][A-Za-z0-9+.-]*://(?:[^\s"'`@/]*@)?(?![^"'`/\s]*\$\{)(?!127\.|0\.0\.0\.0)(?:[A-Za-z0-9-]+\.[A-Za-z0-9.-]*[A-Za-z0-9]|\[|\$|#\{))(?=.*["'`]http://[^"'`/\s]*\$\{)(?=.*(new
+      URL\(|\.hostname\b|\.origin\b|\.searchParams|\.headers\.host|isPrivate|allowedOrigins|LOOPBACK|LOCAL_(HOST|IP|URL|ADDR)|localhost|===\s*["'`]*https?://|http://\[))
+    - ^(?!.*(?<![A-Za-z0-9+.-])(?![Hh][Tt][Tt][Pp][Ss]:|[Tt][Cc][Pp]:)[A-Za-z][A-Za-z0-9+.-]*://(?:[^\s"'`@/]*@)?(?![^"'`/\s]*\$\{)(?!127\.|0\.0\.0\.0)(?:[A-Za-z0-9-]+\.[A-Za-z0-9.-]*[A-Za-z0-9]|\[|\$|#\{)).*?new
+      URL\(\s*[^,()]+,\s*["'`](?!https:|tcp:|http:)[a-z][a-z0-9+.-]*://[^"'`/\s]*\$\{
+    - ^(?!.*(?<![A-Za-z0-9+.-])(?![Hh][Tt][Tt][Pp][Ss]:|[Tt][Cc][Pp]:)[A-Za-z][A-Za-z0-9+.-]*://(?:[^\s"'`@/]*@)?(?!127\.|0\.0\.0\.0)(?:[A-Za-z0-9-]+\.[A-Za-z0-9.-]*[A-Za-z0-9]|\[|\$|#\{)).*?["'`](?!https:|tcp:)[a-z][a-z0-9+.-]*://[A-Za-z0-9_-]+(:\d+)?([/?#][^"'`\s]*)?["'`]
+    - ^(?!.*(?<![A-Za-z0-9+.-])(?![Hh][Tt][Tt][Pp][Ss]:|[Tt][Cc][Pp]:)[A-Za-z][A-Za-z0-9+.-]*://(?:[^\s"'`@/]*@)?(?!(?:dummy|your-|changeme|acme|evil\.|test\.com(?![A-Za-z0-9-]|\.[A-Za-z0-9])))(?!127\.|0\.0\.0\.0)(?:[A-Za-z0-9-]+\.[A-Za-z0-9.-]*[A-Za-z0-9]|\[|\$|#\{)).*?(?<![a-z0-9+.-])(?!https:|tcp:)[a-z][a-z0-9+.-]*://(?:dummy|your-|changeme|acme|evil\.|test\.com(?![A-Za-z0-9-]|\.[A-Za-z0-9]))
+    - https?://(?:purl\.[A-Za-z0-9.-]+|[^\s"'`<>]*(?:/xsd/|/expapi/|/ns#|(?:\.xsd|\.dtd|\.rdf|\.owl|\.ttl|\.rng)(?![A-Za-z0-9])))
+    - <[A-Za-z][A-Za-z0-9]*:(?:import|schema|redefine)\b|\brdf:(?:resource|about|RDF|Description)\b|["']@(?:context|id|vocab)["']|(^|[^A-Za-z0-9_$])(?:NS|NAMESPACE|XMLNS)[A-Z0-9_]*\s*(?:=|=>)|define\s*\(\s*["'](?:NS|NAMESPACE|XMLNS)[A-Z0-9_]*["']\s*,
+    - https?://(?:www\.)?(?:gnu\.org/(?:copyleft|licenses)|opensource\.org/(?:docs/definition|licenses)|creativecommons\.org/(?:licenses|publicdomain|ns)|apache\.org/licenses|opendatacommons\.org/licenses)
+    - <%@\s*taglib\b
+    - \.(?:set|get)(?:Feature|Property)\s*\(\s*["'`]https?://
+  path_without:
+    - \.(e2e-spec|e2e|integ|int-spec)\.[cm]?[jt]sx?$
+    - (^|/)__mocks__/|(^|/)mocks?/|(^|/)mock\.[cm]?[jt]sx?$
+context_questions:
+  - Is this URL actually dereferenced, or is it a namespace URI, a canonical identifier or prose in
+    a comment? Name the call that reaches the host.
+  - Does what travels over this connection include personal data or credentials (request body, query
+    string, headers, cookies, a directory bind password, mail, queued jobs, cached sessions, chat
+    messages)?
+  - Is this the application's own outbound request, or is it defaulting a scheme for a link the user
+    will follow? If it is scheme-defaulting, say whether https is attempted first, and whether the
+    rendered link carries rel=noreferrer - without it the referring URL travels in cleartext.
+  - "For a scheme other than http - ws, ldap, smtp, imap, pop3, ftp, redis, amqp, mqtt and the rest
+    - is TLS switched on another way the URL does not show: StartTLS required on the LDAP, SMTP,
+    IMAP or POP3 connection, a tls option on the client, or a TLS-terminating proxy in front of the
+    host? Does the host leave the machine or the private network?"
+  - "Where the line opens a connection by host and port rather than writing a URL - port 80, an
+    HTTPConnection or Net::HTTP call with no TLS on the line, a URL built with the scheme http -
+    which host does it reach, and is TLS switched on anywhere the line does not show: a use_ssl
+    setting on a following line, an options hash, or a TLS-terminating proxy in front of the host?"
+evidence_template: "{file}:{line} carries a plaintext endpoint or connection in one of the positions
+  this rule reads: a URL whose scheme carries no TLS (http://, ws://, ftp://, ldap://, telnet://,
+  smtp://, imap://, pop3://, redis://, amqp://, mqtt://, irc://, rtmp://, rtsp://, nntp://,
+  gopher://, tftp://) inside a quoted string, on the right of a `name: value`, `name => value` or
+  `NAME=value` configuration line, or immediately after an HTML or XML tag; or a connection opened
+  by host and port with no TLS on the line - a call whose port is the literal 80, a connection type
+  that carries no TLS unless told to (Python HTTPConnection, Ruby Net::HTTP with one argument or
+  started without use_ssl, Dart Uri.http, Mint with :http), or a URL assembled from parts with the
+  scheme http (a scheme key, setter or constructor argument). That is text in a file. The detector
+  did not establish that anything connects to it, that the host is remote rather than loopback, that
+  TLS is not switched on by a line it did not read, or that the line is deployed code rather than
+  documentation, an example template or test data - the same positions are satisfied by a
+  contributor's personal homepage in a credits file, by mock data inside a unit test's stubbed
+  return value, by a getting-started document whose host is the placeholder [HOSTNAME_OR_IP], by a
+  worked example in a migration guide using a stand-in address, by a test server on loopback reached
+  through a port variable, and by a development-server URL assembled through interpolation, where
+  the host variable defaults to 127.0.0.1 and the clause, which declines a loopback address written
+  literally, cannot see one that arrives through a variable. Context questions 1, 4 and 5 are where
+  this is settled: name the call that reaches the host, and whether TLS is switched on elsewhere"
+remediation_template: >
+  This is a candidate for review against GDPR Art. 32 (security of processing), not a determination
+
+  about this code. The changes below apply where the review confirms it.
+
+  Move the endpoint to its TLS form: https, wss, ldaps (or LDAP with StartTLS required), ftps or
+  sftp,
+
+  smtps (or SMTP with STARTTLS required), imaps, pop3s, rediss, amqps, mqtts, ircs or rtmps. telnet
+  has no
+
+  TLS form; replace it with SSH.
+
+  For a connection opened by host and port, open it with TLS: `use_ssl = true` on port 443 for Ruby
+
+  Net::HTTP, HTTPSConnection for Python, the https scheme for a URL built
+
+  from parts, and port 443 behind a TLS wrapper (such as `ssl://` or `tls://` in PHP) for a raw
+  socket.
+
+  Where the remote side offers no TLS, switch to a different provider, or put a TLS-terminating
+
+  proxy you control in front of it.
+data_categories: []
+fingerprint_spec: directory

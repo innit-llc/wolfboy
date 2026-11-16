@@ -1,0 +1,363 @@
+id: eu-dsr-006
+pack: eu-dsr
+short_name: Deleted content that moderators can still read
+problem_line:
+  text: Deleted content can stay readable by peer moderators
+fix_line: Say at the button what delete means, bound the kept original and always purge it, and
+  separate peer from staff access.
+title: Deletion masks the content and keeps the original retrievable by peer moderators - GDPR Art. 17(1)
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: General Data Protection Regulation, Regulation (EU) 2016/679, Art. 17(1) - the duty this rule
+      tests. 'The data subject shall have the right to obtain from the controller the erasure of
+      personal data concerning him or her without undue delay and the controller shall have the
+      obligation to erase personal data without undue delay where one of the following grounds
+      applies'. THE QUESTION THIS RULE PUTS is whether masking is erasure. Where the deletion
+      primitive a person is offered replaces the visible content and copies the original into a
+      second store that other people can read, what has happened is a change of visibility, and the
+      reader has to decide what the person was actually offered and what they were told they were
+      getting. Applies since 2018-05-25, Art. 99(2).
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: General Data Protection Regulation, Regulation (EU) 2016/679, Art. 5(1)(e) - storage
+      limitation, which the retention period on the retained original engages directly. Personal
+      data shall be 'kept in a form which permits identification of data subjects for no longer than
+      is necessary for the purposes for which the personal data are processed; personal data may be
+      stored for longer periods insofar as the personal data will be processed solely for archiving
+      purposes in the public interest, scientific or historical research purposes or statistical
+      purposes in accordance with Article 89(1) subject to implementation of the appropriate
+      technical and organisational measures required by this Regulation in order to safeguard the
+      rights and freedoms of the data subject ('storage limitation')'. A bounded period is the right
+      shape and it is what the declaring tree implements; what the provision asks is whether the
+      length matches the purpose, and the purpose here is stated as incident review.
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 25(2) - data protection BY
+      DEFAULT, which is the provision the shipped default engages. 'The controller shall implement
+      appropriate technical and organisational measures for ensuring that, by default, only personal
+      data which are necessary for each specific purpose of the processing are processed. That
+      obligation applies to the amount of personal data collected, the extent of their processing,
+      the period of their storage and their accessibility. In particular, such measures shall ensure
+      that by default personal data are not made accessible without the individual's intervention to
+      an indefinite number of natural persons.' Three of the four things that sentence names - the
+      extent of the processing, the period of storage, and ACCESSIBILITY - are exactly what a
+      default-on peer-retrieval switch decides. Note the addressee: the obligation is the
+      CONTROLLER's, and for self-hosted software the controller is the operator running the
+      deployment rather than the project that wrote the default. That distinction is
+      context_questions[3] and it is not decided here."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: General Data Protection Regulation, Regulation (EU) 2016/679, Art. 32(1) and 32(1)(b) -
+      security of processing, which is what the access rule on the retained store is. 'Taking into
+      account the state of the art, the costs of implementation and the nature, scope, context and
+      purposes of processing as well as the risk of varying likelihood and severity for the rights
+      and freedoms of natural persons, the controller and the processor shall implement appropriate
+      technical and organisational measures to ensure a level of security appropriate to the risk,
+      including inter alia as appropriate:' ... '(b) the ability to ensure the ongoing
+      confidentiality, integrity, availability and resilience of processing systems and services'. A
+      store whose whole content is material the authors asked to have removed, readable by parties
+      who hold a role granted inside the product rather than by the controller, is a confidentiality
+      question that the ordinary access-control review will not have covered - because the ordinary
+      review looks at the primary store.
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "Digital Services Act, Regulation (EU) 2022/2065, Art. 17(1) - the duty a content restriction
+      triggers, which is about the NOTICE and not about the retained copy. 'Providers of hosting
+      services shall provide a clear and specific statement of reasons to any affected recipients of
+      the service for any of the following restrictions imposed on the ground that the information
+      provided by the recipient of the service is illegal content or incompatible with their terms
+      and conditions:' ... '(a) any restrictions of the visibility of specific items of information
+      provided by the recipient of the service, including removal of content, disabling access to
+      content, or demoting content'. WHAT THIS ESTABLISHES AND WHAT IT DOES NOT. It establishes that
+      where a hosting provider removes or hides a person's content, the affected recipient is owed a
+      specific statement of reasons - which is directly relevant to a moderation redaction and is
+      worth a reader's attention. IT ESTABLISHES NOTHING ABOUT RETAINING THE PRE-REDACTION ORIGINAL,
+      nothing about how long it may be kept, and nothing about who may retrieve it: Art. 17(3)'s
+      required contents are about the decision and its grounds, not about a copy. Reference only,
+      and it does not support this rule's condition."
+    url: https://eur-lex.europa.eu/eli/reg/2022/2065/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Digital Services Act, Regulation (EU) 2022/2065, Art. 20(1) and 20(4), with Art. 24(5) as the
+      counterweight - the DSA's functional reason a provider may need the pre-restriction content,
+      and its limits. Art. 20(1): 'Providers of online platforms shall provide recipients of the
+      service, including individuals or entities that have submitted a notice, for a period of at
+      least six months following the decision referred to in this paragraph, with access to an
+      effective internal complaint-handling system' against, among others, 'decisions whether or not
+      to remove or disable access to or restrict visibility of the information'. Art. 20(2) fixes
+      when the clock starts: 'The period of at least six months referred to in paragraph 1 of this
+      Article shall start on the day on which the recipient of the service is informed about the
+      decision'. Art. 20(4) is what makes the retention functional rather than optional: where a
+      complaint is well founded, 'it shall reverse its decision referred to in paragraph 1 without
+      undue delay'. A PROVIDER THAT HAS IRREVERSIBLY DESTROYED THE CONTENT CANNOT REVERSE A DECISION
+      TO REMOVE IT, so a bounded retention of pre-restriction material has a reason behind it -
+      which is the shape a bounded period with a purge path already implements. NOTHING HERE IS A
+      RETENTION OBLIGATION: no provision says keep the original, and the duty to be able to reverse
+      is what implies the capability. TWO LIMITS A READER MUST CARRY, AND THEY SPLIT THIS RULE'S TWO
+      LIMBS APART. First, Art. 20 binds PROVIDERS OF ONLINE PLATFORMS as Art. 3(i) defines them, so
+      whether a given self-hosted deployment is one is a fact about the operator and not about the
+      code. Second, Art. 20(1) is about restrictions imposed on the ground that the information is
+      content within Art. 3(h) or incompatible with the terms and conditions - MODERATION decisions
+      - and it says nothing about a redaction the author asked for themselves, which is the GDPR
+      Art. 17 case entry 1 carries. A retained original on the moderation path therefore has a
+      reason the retained original on the self-deletion path does not, and layer 2 should say which
+      path it is looking at. AND THE DSA ALSO PULLS THE OTHER WAY: Art. 24(5) requires statements of
+      reasons to be submitted to the Commission database and adds that 'Providers of online
+      platforms shall ensure that the information submitted does not contain personal data', which
+      is a de-identification duty and argues against reading the DSA as a retention mandate. Art.
+      21's out-of-court dispute settlement route was read and is deliberately not cited: it names no
+      period and imposes no retention duty. Reference only, and it establishes no duty this rule
+      tests."
+    url: https://eur-lex.europa.eu/eli/reg/2022/2065/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: medium
+rule_confidence: 0.37
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    pre_redaction_stores:
+      - originalpdu
+      - original_pdu
+      - original_event
+      - original_content
+      - original_body
+      - original_message
+      - pre_redaction
+      - preredaction
+      - pre_deletion
+      - pre_edit_content
+      - retained_pdu
+      - retained_event
+      - unredacted_events
+      - unredacted_content
+      - shadow_copy
+    redaction_settings:
+      - save_unredacted
+      - keep_unredacted
+      - store_unredacted
+      - retain_original
+      - keep_original
+      - save_original
+      - redaction_retention
+      - unredaction_retention
+      - original_retention
+      - allow_room_admins_to_request_unredacted_events
+      - allow_unredact
+      - disable_local_redactions
+    unredaction_words:
+      - unredact
+      - un_redact
+      - unredacted
+      - undelete
+      - un_delete
+      - unhide
+      - unmask
+      - restore_deleted
+      - restore_original
+      - retained_pdu
+      - original_pdu
+    soft_delete_markers:
+      - soft_delete
+      - soft_deleted
+      - softdelete
+      - deleted_at
+      - is_deleted
+      - trashed_at
+      - discarded_at
+      - removed_at
+      - redacted_at
+      - hidden_at
+    restore_paths:
+      - restore
+      - recover
+      - undelete
+      - untrash
+      - unarchive
+      - with_deleted
+      - withtrashed
+      - only_deleted
+      - only_trashed
+      - include_deleted
+      - with_removed
+  vocabulary_matching:
+    pre_redaction_stores:
+      case_insensitive: true
+      separator_insensitive: true
+    redaction_settings:
+      case_insensitive: true
+      separator_insensitive: true
+    unredaction_words:
+      case_insensitive: true
+      separator_insensitive: true
+    soft_delete_markers:
+      case_insensitive: true
+      separator_insensitive: true
+    restore_paths:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?&pre_redaction_stores)
+    - (?&redaction_settings)
+    - (?:include|request|fetch|get|show|reveal|view)[_A-Za-z]{0,12}(?&unredaction_words)
+    - (?:admin|moderator|[Pp]ower[_
+      ]?[Ll]evel|permission|role|privilege|can_redact|redact)[^\n]{0,70}(?&unredaction_words)
+    - (?&unredaction_words)[^\n]{0,70}(?:admin|moderator|[Pp]ower[_
+      ]?[Ll]evel|permission|role|privilege|can_redact)
+    - (?&soft_delete_markers)[^\n]{0,60}(?&restore_paths)(?![a-z])
+    - (?&restore_paths)[^\n]{0,60}(?&soft_delete_markers)(?![a-z])
+  shared_path_exclusions:
+    - attribution_documents
+context_questions:
+  - "MANDATORY, and the detector did not check it: WHO CAN RETRIEVE THE ORIGINAL - THE CONTROLLER'S
+    STAFF, OR OTHER DATA SUBJECTS? This is the whole distinction this rule is named for, and no line
+    establishes it. Read the authorisation on the retrieval path and say which of three it is: a
+    server or instance administrator (the controller's own staff, which is an ordinary
+    administrative capability); a role granted INSIDE the product to an ordinary user - a room or
+    group moderator, a forum administrator, a community owner - which is a peer holding the same
+    status as the person whose content it is; or anybody at all. Quote the check. In the tree this
+    construct was declared from, retrieval is served to a server admin OR, when a setting is on, to
+    any user whose power level in that room is at least the redact level, which is the second case."
+  - "WHAT IS THE SHIPPED DEFAULT OF EVERY SWITCH ON THIS PATH, AND WHERE IS IT STATED? Art. 25(2) is
+    about what happens by default, so the default is the finding rather than a detail of it. List
+    each switch you find, its default value, and where that default is written - a struct attribute,
+    a configuration sample, an environment variable, a documentation page - and say whether the
+    values agree across those places. In the declaring tree, three switches are involved and all
+    three default to the retaining, retrievable behaviour: the original is saved, it is kept for
+    sixty days, and users with the redact power level may request it. Report the numbers you find;
+    do not carry these over."
+  - "WHAT IS ACTUALLY IN THE RETAINED STORE, AND FOR HOW LONG? Enumerate rather than summarise: is
+    the retained copy the whole original item including its author, its timestamps, its attachments
+    and its edit history, or a subset? Is it indexed or searchable? Is it included in exports, in
+    backups, or in anything the product hands to an administrator in bulk? Then find the removal
+    path - a purge, a sweep, an expiry - and say what triggers it and whether it is reached on every
+    branch. Art. 5(1)(e) asks whether the period matches the purpose, and the purpose stated for
+    this store in the declaring tree is incident review, which is a purpose with a natural end."
+  - "WHO IS THE CONTROLLER HERE, AND WHOSE DECISION IS THE DEFAULT? For self-hosted software this
+    matters and it is often got wrong in both directions. The project that writes the default is
+    usually not the controller; the operator running the deployment usually is, and Art. 25(2)'s
+    obligation is the controller's. So the finding worth writing has two halves: what the software
+    does out of the box, which is a fact about this repository, and what a given deployment does,
+    which is a fact about a configuration file that is not in this repository. Say which of the two
+    you are reporting, and where the reader would look for the other."
+  - WHAT IS THE PERSON TOLD WHEN THEY DELETE? Find the wording the product shows at the point of
+    deletion - the button label, the confirmation dialog, the API response, the documentation - and
+    quote it. A product that says the message was removed while a copy stays readable by the people
+    in the room is the specific mismatch this rule exists to surface; a product that says the
+    content is hidden and retained for a period is describing what it does, and that is a materially
+    different finding. GDPR Art. 12(3) requires information on the action taken, and DSA Art. 17(1)
+    separately requires a statement of reasons to the affected recipient where a hosting provider
+    restricts the visibility of their content.
+  - "IS THIS A RETAINED PRE-DELETION ORIGINAL AT ALL, OR AN ORDINARY TRASH CAN? Several matches here
+    will be the second, and clause 3 is written knowing that: a soft-delete column beside a restore
+    method is how every recycle bin, every draft recovery and every undo feature is written, and
+    none of those is this construct unless the item was deleted BY ITS AUTHOR and can be brought
+    back BY SOMEBODY ELSE. An erasure carried out FOR the person is the same duty as one the person
+    carries out: an item that an operator, an administrator or a moderator deletes, hides or redacts
+    at the person's request, or because the person's account is being deleted, is this construct
+    where somebody other than that person can bring it back - read the caller of the masking (the
+    request, the account-deletion path, a moderation action) to say which it is. A moderator's
+    removal, for moderation, of content its author did not ask to have removed is not an erasure the
+    person was offered; this question does not reach it, and question 3 (what the retained store
+    keeps, and for how long) still does. Read the caller. Say who deletes, who restores, and whether
+    the two are the same person (for an erasure carried out for the person, the person whose item it
+    is counts as the one who deletes, whoever carried it out); where they are, report the candidate
+    as not this construct and stop. Answer it from the lines that GRANT the deletion and the restore
+    - read in the place's window or, where they sit outside it, Read and given as `beyond` - and not
+    from the matched line's shape: a permission rule that denies or allows a verb beside an
+    un-redaction word is evidence that the retrieval route this rule's evidence names exists - the
+    route itself is the grant that rule stands beside, which is the line to read - not a reason to
+    stop. The same ROLE is not the same PERSON: where any holder of a role may restore what another
+    holder hid, the two are not the same person, and questions 1 to 3 still apply."
+evidence_template: "{file}:{line} names a store of PRE-DELETION ORIGINALS, a setting that governs
+  one, a route that retrieves one, or a soft-delete marker named beside a restore path. THE CONCERN
+  IS THAT THE DELETION PRIMITIVE THE PERSON WAS OFFERED IS MASKING: the visible content is replaced,
+  the original is kept, and somebody else can read it. THIS IS NOT A DETERMINATION THAT ANY DUTY WAS
+  BREACHED, and a bounded retention with a stated purpose and a purge path is a defensible design
+  that this finding is meant to make visible rather than to condemn. WHAT WAS ESTABLISHED, and which
+  of the four it is has to be read off the line. A SECOND STORE BY NAME - `original_pdu`,
+  `pre_redaction`, `unredacted_content`, `retained_event` - establishes that a copy of pre-deletion
+  material has somewhere to live. A SETTING BY NAME - `save_unredacted_events`,
+  `redaction_retention_seconds`, `allow_room_admins_to_request_unredacted_events` - establishes the
+  most, because a settings name is where a product states its own behaviour without being asked, and
+  the value beside it is usually the shipped default. AN UN-REDACTION BOUND TO A REQUESTER - a
+  retrieval verb, a role, a permission or a power level beside an un-redaction word - establishes
+  that a retrieval route exists and that it is gated on something. A SOFT-DELETE MARKER BESIDE A
+  RESTORE PATH establishes the generic form of the same idea; on its own, a soft-delete column is
+  not matched by this rule at all. WHAT WAS NOT ESTABLISHED, and each is a question rather than a
+  caveat. FIRST, WHO MAY RETRIEVE WAS NOT READ. Whether the party holding the retrieval right is the
+  controller's own staff or another data subject holding a role granted inside the product is the
+  distinction this rule exists for, and it is decided by reading the role model. SECOND, THE DEFAULT
+  WAS NOT READ off any line here in most cases: the switch's shipped value may be in a struct
+  attribute, a sample configuration or a documentation page, and Art. 25(2) is about the default
+  rather than about the switch. THIRD, THE CONTENT WAS NOT READ: a retained original may be a
+  message a person wrote, a moderation note or a configuration event, and Art. 4(1) is not decided
+  by a store name. FOURTH, THE CONTROLLER WAS NOT IDENTIFIED. For self-hosted software the project
+  that writes the default is usually not the controller, and Art. 25(2)'s obligation is the
+  controller's; what this repository shows is what the software does out of the box. FIFTH, THE
+  RETENTION WAS NOT FOLLOWED - whether a purge path exists, what triggers it and whether every
+  branch reaches it are facts about other files. AND ONE LIMIT OF THE PATTERNS: matching is per
+  physical line, so a role check spread over several lines is not reachable by any clause here,
+  which is why the request parameter and the setting name are what clause 2 reads."
+remediation_template: >
+  WHAT WAS FOUND. Machinery by which content a person deleted is masked rather than removed, with
+  the
+
+  original kept and retrievable. This is a legitimate design with a real purpose behind it - a
+
+  moderator who cannot see what was said cannot act on a report about it - and the work below is
+
+  about bounding it and being honest about it, not about removing it.
+
+
+  1. SAY WHAT DELETE MEANS, WHERE THE PERSON DELETES. The confirmation dialog, the button label and
+     the API response are where this belongs, not only in the privacy policy. "Removed for everyone;
+     moderators can retrieve the original for 60 days" is a sentence a product can put next to the
+     button, and it turns the finding into a documented decision. GDPR Art. 12(3) requires
+     information on the action taken; DSA Art. 17(1) separately requires a statement of reasons to
+     the affected recipient where a hosting provider restricts the visibility of their content.
+  2. DECIDE THE DEFAULT DELIBERATELY, AND WRITE THE DECISION DOWN. Art. 25(2) asks that, by default,
+     only what is necessary is processed - and it names the extent, the storage period and the
+     ACCESSIBILITY. Each switch on this path should have a default that somebody chose on the record.
+     A peer-retrieval switch that ships on because it shipped on is the case the provision is about.
+  3. BOUND THE RETENTION TO THE PURPOSE, AND MAKE THE PURGE UNCONDITIONAL. If the purpose is
+  incident
+     review, the period is however long a report can arrive and be handled. Make sure the purge runs
+     on every branch that removes the visible item, including the bulk and administrative ones, and
+     that a failed purge is visible rather than silent.
+  4. SEPARATE PEER RETRIEVAL FROM STAFF RETRIEVAL. These are different exposures and they usually do
+     not need the same answer. Where a peer role genuinely needs it, narrow what it gets - the fact
+     that content was redacted, its author and its timestamp, rather than the body - and log each
+     retrieval with who asked and why.
+
+  IF SOMETHING DOES NEED TO CHANGE, the changes that are usually right, in order:
+
+
+  - MAKE PEER RETRIEVAL OPT-IN AT THE DEPLOYMENT LEVEL, so the operator decides rather than
+  inherits.
+
+  - RECORD EVERY RETRIEVAL, with the requester, the item and the stated reason, and make the record
+    visible to whoever runs the deployment. An access that leaves no trace cannot be reviewed.
+  - GIVE THE RETAINED STORE ITS OWN ACCESS RULE rather than inheriting the primary store's. Its
+  whole
+    content is material somebody asked to have removed, which is not the same risk profile.
+  - EXCLUDE THE RETAINED STORE FROM EXPORTS, SEARCH AND BULK ADMINISTRATIVE READS unless it is
+    deliberately included, and say which it is.
+data_categories:
+  - user.behavior
+  - user.account
+  - user.contact
+  - user.unique_id
+fingerprint_spec: directory

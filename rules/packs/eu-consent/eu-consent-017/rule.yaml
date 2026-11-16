@@ -1,0 +1,427 @@
+id: eu-consent-017
+pack: eu-consent
+short_name: "Consent given: an equally easy way to withdraw it"
+problem_line:
+  text: "Withdrawing consent: equal path, effect or notice not found"
+fix_line: Make withdrawal as easy as giving consent, make it undo what the grant switched on, and
+  say how before asking.
+title: Consent grant written, or a symbol named for one - revocation path and its parity with
+  granting need review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 7(3), quoted in full from the Official Journal text
+      (CELEX 32016R0679, retrieved 2026-07-27 from the Publications Office cellar and re-fetched
+      from the same source on 2026-07-28, character-exact both times): 'The data subject shall have
+      the right to withdraw his or her consent at any time. The withdrawal of consent shall not
+      affect the lawfulness of processing based on consent before its withdrawal. Prior to giving
+      consent, the data subject shall be informed thereof. It shall be as easy to withdraw as to
+      give consent.' Four sentences, three duties and one saving clause: withdrawal at any time; no
+      retroactive effect on processing already carried out; notice of the right before consent is
+      taken; and parity of effort between giving and withdrawing. ADDRESSEE: the controller (Art.
+      4(7)). The paragraph is drafted as a right of the data subject, and the correlative duty is
+      placed on the controller by Art. 7(1) ('the controller shall be able to demonstrate') and
+      stated directly by EDPB Guidelines 05/2020 para. 113: 'Article 7(3) of the GDPR prescribes
+      that the controller must ensure that consent can be withdrawn by the data subject as easy as
+      giving consent and at any given time.' Applies since 2018-05-25 (Art. 99(2))."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 42, last sentence, from the same Official Journal
+      text: 'Consent should not be regarded as freely given if the data subject has no genuine or
+      free choice or is unable to refuse or withdraw consent without detriment.' This is the recital
+      that makes an absent withdrawal path a defect in the consent itself rather than a separate
+      housekeeping failure: where withdrawal cannot be exercised, the consent that was collected is
+      open to challenge from the moment it was given. Read with Art. 7(3) it also fixes what the
+      adjudicating agent is looking for - not the wording of a banner, but whether the code contains
+      any path back to the stored decision, and what that path costs the user compared with the one
+      that took the decision in the first place."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 13(2)(c): where processing is based on Art. 6(1)(a) or
+      Art. 9(2)(a), the controller shall provide 'the existence of the right to withdraw consent at
+      any time, without affecting the lawfulness of processing based on consent before its
+      withdrawal'. This carries the third sentence of Art. 7(3) ('Prior to giving consent, the data
+      subject shall be informed thereof') into the information that must be given at collection,
+      which is why a banner that names no withdrawal route is within this rule's subject matter even
+      when a route exists elsewhere in the product."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    jurisdiction: EU
+  - cite: EDPB Guidelines 05/2020 on consent under Regulation 2016/679, Version 1.1, adopted 4 May 2020
+      (v1.1 of 13 May 2020 carries formatting corrections only), section 5.2 - para. 113 (the
+      controller must ensure withdrawal is as easy as giving and available at any time; 'the GDPR
+      does not say that giving and withdrawing consent must always be done through the same
+      action'); para. 114 ('when consent is obtained via electronic means through only one
+      mouse-click, swipe, or keystroke, data subjects must, in practice, be able to withdraw that
+      consent equally as easily. Where consent is obtained through use of a service-specific user
+      interface (for example, via a website, an app, a log-on account, the interface of an IoT
+      device or by e-mail), there is no doubt a data subject must be able to withdraw consent via
+      the same electronic interface, as switching to another interface for the sole reason of
+      withdrawing consent would require undue effort'; withdrawal must be possible 'free of charge
+      or without lowering service levels'); para. 115 (Example 22 - a one-click online grant against
+      a withdrawal that requires a business-hours phone call does not comply with Art. 7(3)); para.
+      116 ('If the withdrawal right does not meet the GDPR requirements, then the consent mechanism
+      of the controller does not comply with the GDPR', and the controller must inform the data
+      subject of the right before consent is given); para. 117 (processing carried out before
+      withdrawal remains unaffected, 'however, the controller must stop the processing actions
+      concerned. If there is no other lawful basis justifying the processing (e.g. further storage)
+      of the data, they should be deleted').
+    url: https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-052020-consent-under-regulation-2016679_en
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "ePrivacy Directive 2002/58/EC, Art. 5(3) (as replaced by Directive 2009/136/EC) read with
+      Art. 2(f), and GDPR Art. 94. Art. 5(3) requires that storing information, or gaining access to
+      information already stored, in a user's terminal equipment be 'only allowed on condition that
+      the subscriber or user concerned has given his or her consent'. Art. 2(f) provides that
+      \"'consent' by a user or subscriber corresponds to the data subject's consent in Directive
+      95/46/EC\", and GDPR Art. 94(1)-(2) repeals that Directive with effect from 25 May 2018 and
+      provides that 'references to the repealed Directive shall be construed as references to this
+      Regulation'. The chain is what makes this rule reach cookie and tracker banners: the consent
+      they collect is GDPR consent, so Art. 7(3) supplies its withdrawal condition. Both texts
+      quoted from the Official Journal (CELEX 02002L0058-20091219 and 32016R0679, retrieved
+      2026-07-27)."
+    url: http://publications.europa.eu/resource/celex/02002L0058-20091219
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "CNIL, Deliberation no. 2020-092 of 17 September 2020 adopting a recommendation on practical
+      means of compliance when 'cookies and other trackers' are used, Article 3 ('Retrait et gestion
+      du consentement'), paras 40-45. A recommendation rather than a binding instrument - it
+      describes practical means of complying with Art. 82 of the French Data Protection Act, the
+      national transposition of ePrivacy Art. 5(3) - and it is cited here because it is the clearest
+      published statement of the code-visible shape this rule looks for. Para. 40: users who have
+      consented 'doivent etre en mesure de le retirer a tout moment', and it must be 'aussi simple
+      de retirer son consentement que de le donner'. Para. 41: users must be informed of the means
+      of withdrawal before they consent. Para. 42: withdrawal solutions should be 'aisement
+      accessibles a tout moment', simplicity being measured by the time and the number of actions
+      needed. Para. 43: withdrawal 'peut par exemple etre offerte via un lien accessible a tout
+      moment depuis le service concerne', with a descriptive name such as 'gerer mes cookies', or a
+      settings module reachable from every page through a cookie icon - i.e. exactly the persistent
+      re-entry point context_questions[3] asks the adjudicator to look for and to price against the
+      grant. Para. 45: for withdrawal to be effective it may be necessary to ensure that trackers
+      previously used are no longer read or written, which is limb (d) of that comparison. Note the
+      negative use of this source too: the name CNIL recommends for the link, 'gerer mes cookies',
+      was matched by none of the eight guard branches this rule used to carry, which is one reason
+      they were inert on real code."
+    url: https://www.cnil.fr/sites/cnil/files/atoms/files/recommandation-cookies-et-autres-traceurs.pdf
+    checked_at: 2026-07-27
+    jurisdiction: FR
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 17(1)(b): the controller shall erase personal data
+      without undue delay where 'the data subject withdraws consent on which the processing is based
+      according to point (a) of Article 6(1), or point (a) of Article 9(2), and where there is no
+      other legal ground for the processing'. EDPB Guidelines 05/2020 para. 117 links the two:
+      processing already carried out is unaffected, the processing actions concerned must stop, and
+      absent another ground the data should be deleted. This rule does not test erasure;
+      eu-consent-017 fires on the absence of a withdrawal path, not on what happens afterwards."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-28
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  match:
+    - (?:[Ll]ocalStorage|[Ss]essionStorage|[Ss]torage)\s*\??\.\s*setItem\s*\(\s*[^)\n]{0,80}(?:[Cc]onsent|CONSENT|[Cc]ookie[_-]?[Pp]ref|COOKIE_PREF|[Cc]ookies?[_-]?[Aa]ccepted|[Gg]dpr|GDPR)
+    - (?:document\s*\.\s*cookie\s*=|[Cc]ookies?\s*(?:\.|::)\s*(?:set|Set|queue|make|add|forever)\b|[Ss]et[_-]?[Cc]ookie|setcookie|SET_COOKIE|[Cc]ookies?\s*\[|[Cc]ookies\s*\.\s*(?:permanent|signed|encrypted)|cookieStore\s*\.\s*set|new\s+Cookie\s*\(|http\.Cookie\s*\{|[Ww]ith[Cc]ookies?\s*\()[^\n]{0,90}(?:[Cc]onsent|CONSENT|[Cc]ookie[_-]?[Pp]ref|[Gg]dpr|GDPR|[Cc]ookies?[_-]?[Aa]ccepted)
+    - (?:Name|name|NAME)\s*(?:=>|[:=])\s*["'`][a-z0-9][a-z0-9_.-]{0,24}consent[a-z0-9_.-]{0,24}["'`]
+    - (?:[Aa]ccept(?!ance)|ACCEPT|[Aa]gree|AGREE|[Aa]llow|ALLOW|[Gg]rant|GRANT|[Gg]ive)\w{0,10}[_-]?(?:[Cc]onsent|CONSENT)
+    - (?:[Aa]ccept(?!ance)|ACCEPT|[Aa]gree|AGREE|[Gg]rant|GRANT|[Gg]ive)\w{0,10}[_-]?(?:[Cc]ookies?|COOKIES?|[Tt]racking|TRACKING)
+    - "[Oo]pt[_-]?[Ii]n\\w{0,6}[_-]?(?:[Cc]apturing|[Tt]racking|[Cc]onsent|[Aa]nalytics|[Cc]ookies?\
+      )|opt_in_capturing|opt_in_tracking"
+    - (?:[Cc]onsent|CONSENT)\w{0,20}\s*(?:\?)?\s*(?::|=>|(?<![=!<>+*/-])=(?!=))\s*(?:true|True|TRUE|["'`](?:true|yes|granted|accepted|all|allow)["'`])
+    - gtag\s*\(\s*["'][Cc]onsent["']\s*,\s*["']update["']|(?:analytics_storage|ad_storage|ad_user_data|ad_personalization|functionality_storage|personalization_storage)["']?\s*:\s*["']granted["']|acceptAllServices|__tcfapi\s*\(
+    - "[Cc]onsent(?:ed)?[_-]?(?:[Aa]t|AT|[Dd]ate|[Tt]imestamps?|[Vv]ersion|[Gg]iven)\\b|[Cc]onsent(\
+      ?:ed)?[_-]?(?:[Ll]ogs?|[Rr]ecords?|[Hh]istory)\\s*(?:[.\\[({=:,]|$)|[Cc]onsents?\\w{0,14}[^\\\
+      n]{0,12}(?:\\.|->|::)\\s*(?:create|insert|save|upsert|bulkCreate)\\b|INSERT\\s+INTO\\s+[^\\n]\
+      {0,40}consent"
+    - (?:[Tt]able|TABLE|[Cc]ollection|COLLECTION|[Mm]odel|MODEL)\w{0,10}\s*(?:=>|[:=])\s*["'`][a-z0-9_.-]{0,24}consents?[a-z0-9_.-]{0,14}["'`]
+    - (?:[Ss]ession|SESSION)\s*(?:\[|(?:\(\s*\))?\s*(?:\.|->)\s*(?:set|put|update)\s*\(\s*\{?)\s*[:'"`$]?\w{0,24}[Cc]onsent|\$_SESSION\s*\[[^\]\n]{0,30}consent
+    - (?:(?<![A-Za-z])set|Set|SET|(?<![A-Za-z])save|Save|SAVE|(?<![A-Za-z])store|Store|STORE|(?<![A-Za-z])record(?!ing)|Record(?!ing)|RECORD|(?<![A-Za-z])persist|Persist|(?<![A-Za-z])write|Write|(?<![A-Za-z])update|Update|UPDATE)\w{0,8}[_-]?(?:[Cc]onsent|CONSENT)
+    - ^(?![^\n]*["']default["'])[^\n]*(?:analytics_storage|ad_storage|ad_user_data|ad_personalization|functionality_storage|personalization_storage|security_storage)["']?\s*:\s*["']denied["']
+    - (?:TERMS?|PRIVACY|COOKIES?|GDPR|EULA|MARKETING)(?:[_-][A-Z]{2,14}){0,2}[_-]ACCEPT(?:ED|ANCE)?(?![A-Z])|(?:[Tt]erms?|[Pp]rivacy[Pp]olicy|[Pp]rivacy_policy|[Cc]ookie[Pp]olicy)\w{0,12}[_-]?[Aa]ccept(?:ed|ance)(?![a-z])|(?:[Aa]ccept(?:ed|ance)|ACCEPTED)[_-]?(?:[Tt]erms?|TERMS?|[Pp]rivacy|PRIVACY)(?![a-z])
+    - (?:oauth2?|OAuth2?|Oauth2?|OAUTH2?|oidc|OIDC|Oidc)[_-]?(?:[Cc]onsents?|CONSENTS?)(?![a-z])
+    - (?:[Cc]onsent|CONSENT)[_-]?(?:[Pp]age|PAGE|[Uu]ri|URI|[Uu]rl|URL|[Rr]oute|ROUTE|[Pp]ath|PATH)\s*(?:=>|[:=])\s*["'`/]
+  join_bracketed_constructs: true
+  resolve_local_values: true
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|<%#)
+    - prompt\s*(?:=>|[:=])\s*["']?consent|access_type\s*(?:=>|[:=])|/oauth/consent|https?://[^\s"'`]{0,200}oauth2?[_-]?consent|[Cc]onsent[_-]?[Ss]creen|consent
+      screen|[Aa]dmin[_-]?[Cc]onsent|ADMIN_CONSENT|[Bb]lock\w{0,6}[_-]?[Cc]onsent
+  shared_path_exclusions:
+    - localisation_catalogues
+    - markdown_documents
+    - openapi_documents
+context_questions:
+  - "Is the thing being agreed to actually consent within GDPR Art. 4(11) and ePrivacy Art. 5(3) - a
+    decision about processing personal data or about storing or reading something on the user's
+    device - or is it agreement to a contract? This is the commonest wrong answer here, and it was
+    found in the owner's own production application: a component named ConsentGate.tsx turned out to
+    be a terms-of-service and privacy-policy re-acceptance modal whose only actions are 'agree' and
+    'close the account', posting to /users/me/reagree and writing a ConsentLog row keyed by
+    termsVersion. Accepting revised terms is a contract question under Art. 6(1)(b) and national
+    contract law; it is not consent under Art. 6(1)(a), and Art. 7(3) does not attach to it.
+    Grepping for the word consent puts exactly this kind of component first. Open the file, quote
+    what the flow actually gates and what the stored value is keyed to - a document version, a
+    marketing channel, a tracker category - and say which of the two it is. Where it is contract
+    re-acceptance, record that and stop."
+  - "If it is consent, what is it consent FOR, and is consent the basis actually being relied on?
+    Quote the code path that reads the stored value and name what turns on it: a tracking or
+    advertising SDK (ePrivacy Art. 5(3) with GDPR Art. 7), a marketing send list (ePrivacy Art. 13),
+    an optional feature. Where the value is read by nothing, say so - a decision recorded and never
+    consulted raises a different question and not this one. Where the processing rests on contract
+    or legitimate interests and the flag is a product preference, Art. 7(3) does not attach and the
+    candidate should be dismissed on that ground. A per-user OAuth grant - the row an authorization
+    server keeps recording that one user let one client have certain scopes - is the case where this
+    is hardest and it is reached by the clauses added 2026-09-05, so decide it explicitly rather
+    than by default: the disclosure to that client commonly rests on Art. 6(1)(a), and where it
+    does, Art. 7(3) requires taking the grant back to be as easy as giving it - a
+    connected-applications screen that deletes the row; but where the user asked for that
+    integration as part of the service they signed up to, the same disclosure can rest on Art.
+    6(1)(b), and then this rule has nothing to attach to. Quote what the scopes let the client read
+    and how the grant was solicited, and say which of the two it is. One case decides itself and it
+    is the commonest shape in the corpus, so check it explicitly: where the stored decision gates
+    nothing except whether the notice re-renders - the tag, the SDK or the send fires identically
+    whether the user accepted or never answered - then nothing is being processed on the basis of
+    consent and there is no consent for the reader to withdraw. Art. 7(3) has almost nothing to
+    attach to; the defect is the absence of a consent mechanism at all, which is eu-consent-001's
+    subject matter (EU coverage map row 1) and not this rule's. Say which of the two it is and route
+    it there, rather than reporting one fact pattern under both rules - adversarial review found
+    exactly that inconsistency in this rule's own recorded diagnostics, where an accept-only notice
+    sitting over an unconditional analytics load was claimed here while a materially identical tree
+    was assigned to row 1."
+  - "Is there any path in this codebase by which a user who has granted consent can take it back?
+    Search beyond what the detector already searched: a settings page or account route, a footer
+    link, a CMP widget the vendor renders, an email preference centre, a support flow that writes
+    the same store. Quote the route definition, the handler or the component, and quote the line
+    that writes or clears the stored value. Look in every language in the repository, not only the
+    one the banner is written in - the grant is often client-side JavaScript while the withdrawal
+    route lives in routes.rb, urls.py, a Laravel route file or a Go mux. The detector searched for
+    none of this: it reports the grant it matched and nothing else, so finding a withdrawal path is
+    the ordinary outcome of this question and not an unexpected one. Do not stop at the first symbol
+    that looks like withdrawal - the next question is what decides the candidate, and a symbol that
+    no user can reach answers neither. The vocabulary listed at the end of the next question is a
+    starting set of search terms, not a checklist."
+  - "Compare the two paths and answer with two counts, not with a symbol. The fourth sentence of
+    Art. 7(3) is a comparison - 'It shall be as easy to withdraw as to give consent.' - so a
+    withdrawal function existing somewhere in the repository is not the test, and finding one is not
+    by itself a dismissal. Reconstruct the GIVING path from the line that raised this candidate:
+    where the user first meets it (a banner on first page load, a signup form, a checkout step), how
+    many actions it takes (one click on Accept is the usual answer), whether it needs an account,
+    and which interface it happens in. Then reconstruct the WITHDRAWING path from whatever the
+    previous question found, in the same terms, and report the difference limb by limb. (a) ACTIONS
+    - how many clicks, taps or requests, counted from the same place the grant was offered. (b)
+    VISIBILITY - a persistent footer link or a CMP widget that renders on every page is reachable; a
+    route documented only in the privacy policy is not; and a banner suppressed by the stored value
+    is not a re-entry point at all, so check what the banner is gated on before crediting it. (c)
+    CHANNEL - does withdrawing require an email, a support ticket, a form, a phone call, or a login
+    that giving did not? EDPB Guidelines 05/2020 para. 115 Example 22 treats a one-click online
+    grant against a withdrawal that needs a business-hours telephone call as failing this Article,
+    and para. 114 requires withdrawal through the same electronic interface, 'free of charge or
+    without lowering service levels'. A 'contact us to opt out' line is a finding, not a dismissal.
+    (d) EFFECT - does the path actually stop the processing going forward, or does it only flip a
+    stored flag while the tag, the SDK or the send list keeps reading the old value? On (d), be
+    exact about what the Article does not require: the second sentence of Art. 7(3) preserves the
+    lawfulness of processing already carried out, so a route that stops future processing and leaves
+    past records alone is CORRECT and must not be marked defective for failing to undo history. What
+    is defective is a route that changes nothing going forward. Where the two counts differ, say by
+    how much and on which limb - that difference is the finding, and it is what a controller has to
+    close. Where they do not differ, dismiss the candidate and quote both paths. Note that a reject
+    button on the banner's first layer answers a different obligation (accept-versus-reject parity,
+    EU coverage map row 1b) and is not a withdrawal path. Finally, the vocabulary this detector used
+    to treat as proof and now hands you as evidence to weigh instead: clearConsent, resetConsent,
+    revokeConsent, withdrawConsent, deleteUserConsent, consent_withdrawn_at, consentRevokedAt;
+    opt_out_capturing, opt_out_tracking, optOutTracking; a gtag('consent','update', ...) carrying
+    'denied'; a route literal such as '/cookie-settings' or '/consent-preferences';
+    openCookiePreferences, showConsentSettings, manage_cookie_preferences, toggleCookieSettings; a
+    CMP re-entry call (Cookiebot.renew, Cookiebot.show, UC_UI.showFirstLayer, UC_UI.showSecondLayer,
+    UC.updateServices, UC.denyAllServices, Osano.cm.showDrawer, klaro.show,
+    OneTrust.ToggleInfoDisplay, Optanon.ToggleInfoDisplay, Didomi.preferences.show,
+    CookieConsent.showPreferences, cky-btn-revisit); a DELETE or PATCH endpoint on a consent path;
+    an ORM delete against the consent entity. Each of those was measured deleting real candidates
+    for reasons that had nothing to do with withdrawal - an admin-only cache purge named
+    clear_consent, a legacy-key migration inside an init path, sign-out housekeeping, and a link to
+    STRIPE's cookie-settings page inside a privacy policy. So open the file each one sits in and say
+    who can reach it and what it does: a symbol you cannot trace to a user-reachable action is not a
+    withdrawal path. The list is not exhaustive in the other direction either - CNIL Deliberation
+    2020-092 para. 43's own recommended name for the link, '/gerer-mes-cookies', appears nowhere in
+    it, and neither does an uppercase DELETE_CONSENT action beside a recognised SET_CONSENT one."
+  - "Does withdrawal propagate to what the grant switched on? Trace it: if the grant called
+    gtag('consent','update',{...'granted'}), does the withdrawal send the matching denied update; if
+    it called an SDK opt-in, is there an opt-out; if it wrote a server-side record, do the sends or
+    the tags actually read that record before firing. CNIL Deliberation 2020-092 para. 45 makes this
+    the practical test - for withdrawal to be effective it may be necessary to ensure that trackers
+    previously used are no longer read or written. A withdrawal that only flips a flag in a database
+    while the tag keeps loading does not close this gap."
+  - Is the user told, before consenting, that the consent can be withdrawn and how? Art. 7(3) third
+    sentence and Art. 13(2)(c) both require it, and EDPB Guidelines 05/2020 para. 116 restates it.
+    Quote the banner or notice copy. Where the notice is silent on withdrawal, record that
+    separately from the question of whether a route exists - a product can have a working settings
+    page and still fall short of this limb.
+  - "Is this product offered to users in the EU or the EEA? Read ScanProfile.distribution_regions,
+    which is supplied with this candidate. A region that is not in the list may not have been asked:
+    that question is open, not answered no. Where it is absent, say so and return needs_human rather
+    than guessing: this question decides whether the obligation is engaged at all. Where the consent
+    being recorded is agreement to a third-party platform's own terms - a connector writing a
+    marketing-consent field into Shopify, Klaviyo or Campaign Monitor, which is how this rule fires
+    in integration monorepos - identify who the controller is for that processing before treating
+    the scanned repository as the addressee. The same question runs the other way on a candidate
+    from the OAuth clauses added 2026-09-05 - an entity named oauthConsent or oauth_consent, or a
+    consentPage key - and it must be settled before anything else: where the scanned product is
+    holding the grant record and serving the screen, then it is the party that discloses the user's
+    data to the client, and the client is somebody else's software. Say whether this product is that
+    authorization server, and say it from the product's own description or from the person running
+    the scan rather than from the symbol - the code shows a grant table, which corroborates the fact
+    and does not establish it. Then answer the controller question above for THAT disclosure before
+    going any further, because holding the record is not the same fact as determining the purposes
+    and means of the disclosure (Art. 4(7)): a product that runs the authorization server on another
+    organisation's behalf, on its instructions, is a processor for it and the duty in Art. 7(3)
+    lands on that other organisation. Where this product is the authorization server AND the
+    controller of the disclosure, the addressee of Art. 7(3) for it is this product; where the
+    repository is instead a CLIENT holding tokens someone else issued, this rule reports nothing
+    about that flow and a candidate on one of these lines is misread."
+evidence_template: "{file}:{line} writes a consent decision - to Web Storage, a cookie, a
+  server-side session or a database record, or through an SDK grant call - or else names a symbol
+  for one, which several clauses cannot tell apart from the write: a function, export or import
+  called acceptConsent, grantConsent, saveConsent or setConsent matches on its declaration line, and
+  one clause matches a cookie name literal. Read the matched line and say which of the two it is -
+  or that it is neither. Since 2026-09-14 the match may also come from a CONSTRUCT rather than from
+  that line alone: this rule reads the bracket-balanced construct a line opens on as one folded text
+  as well, so a storage or cookie write a formatter wrapped at its opening parenthesis -
+  localStorage.setItem( or response.set_cookie( with the consent key on a line below it - is matched
+  as a whole, and where that is what happened the finding carries the span it was folded from in
+  locations[].joined_from. Read those lines together, not the opening line alone. The acceptance
+  clauses allow up to ten filler characters between the acceptance word and the storage word, so a
+  longer identifier can be split across the match and the token the clause found need not be the
+  token a reader would say is on the line: `Agree` + `mentAccess` + `Cookie` matches inside
+  `getSignedAgreementAccessCookieName`, a cookie recording that a visitor signed an access
+  agreement, which is a contract acceptance rather than a consent decision - the distinction context
+  question 1 asks for, and the one Art. 7(3) does not attach to. Where the line is that shape,
+  record it and do not read a grant into the identifier. This detector reports the grant and nothing
+  else: whether a way back exists, and whether withdrawing costs the user what giving cost, are
+  questions answered by reading the project, not by this line. A candidate here is NOT a claim that
+  no withdrawal path exists - it is one half of an Art. 7(3) pair, surfaced so the other half can be
+  looked for. TWO CLAUSES ADDED 2026-09-04 REACH SOMETHING THAT IS NOT A GRANT AT ALL, and a reader
+  who treats a candidate from either of them as one will be wrong. THE FIRST IS A CONSENT MODE
+  STORAGE KEY SET TO 'denied' - ad_storage, analytics_storage, ad_user_data, ad_personalization and
+  their siblings - on a line that is not a 'default' initialisation. Its shipped sibling reads the
+  same keys set to 'granted'; this one reads the withholding direction, because the keys are a
+  control with two poles and context question 5 asks whether the withdrawal sends the matching
+  denied update. What it establishes is that the tag layer's consent channel is written here, and
+  not that any user decided anything: where nothing in the product ever changes these values - no
+  banner, no settings route, a signal written unconditionally on every page view - there is no
+  consent to withdraw and the defect, if any, is the absence of a consent mechanism, which is a
+  different rule's subject matter and is context question 2. THE SECOND IS AN ACCEPTANCE CONSTANT
+  NAMING A DOCUMENT: TERMS_CONDITION_ACCEPTED, PRIVACY_POLICY_ACCEPTED, termsAccepted,
+  accepted_terms_at. Read context question 1 before anything else on one of these, because the
+  commonest correct outcome is to close it: accepting terms of service is a contract matter under
+  Art. 6(1)(b) and Art. 7(3) does not attach to it, and being shown a privacy policy - an Art. 13
+  notice - is not consenting to anything either. What decides it is what the stored value is keyed
+  to and what reads it: a document version is contract acceptance, a tracker category or a marketing
+  channel is not. TWO FURTHER CLAUSES ADDED 2026-09-05 REACH THE SIDE OF AN OAUTH FLOW ON WHICH THE
+  SCANNED PRODUCT IS THE AUTHORIZATION SERVER, and shipped clause (4) reaches a third - a function
+  that GRANTS an OAuth consent, such as grant_oauth2_consent, which matches the acceptance-verb
+  clause and was cancelled by the exclusion until 2026-09-05. THE FIRST IS AN ENTITY NAMED FOR AN
+  OAUTH OR OIDC CONSENT - oauthConsent, oauth_consent, OAuthConsentService, oidc_consents - which is
+  how a product that issues its own tokens names the row recording that one user let one client have
+  certain scopes. THE SECOND IS A CONSENT PAGE, ROUTE, URL OR PATH GIVEN AS A CONFIGURATION KEY -
+  consentPage: '/api/auth/oauth', consent_url = '/cookie-settings' - which is where that decision is
+  taken, or where a cookie decision is revisited; the clause carries no OAuth vocabulary because the
+  plugin call that gives such a key its meaning usually sits on another line. WHAT NEITHER OF THEM
+  ESTABLISHES. Not that this product is an OAuth authorization server: that is a fact about the
+  product, and it is answered by the person running the scan or by their own declared documents,
+  never read off a symbol - the line shows a construct, and a construct corroborates that fact
+  without deciding it. Not that the scanned party is the controller of the disclosure the grant
+  authorises, which is context question 7 and is the first thing to settle where the client is
+  another company's software. And not that the grant rests on Art. 6(1)(a): where the user asked for
+  the integration as part of the service, the disclosure to that client can rest on contract under
+  Art. 6(1)(b), and Art. 7(3) attaches to neither the token nor the integration in that case -
+  context question 2, answered before this candidate means anything. Where consent IS the basis,
+  what Art. 7(3) then asks for is concrete and worth naming: revoking one client's access must be as
+  easy as granting it was, which in practice is a connected-applications screen listing the grants
+  and deleting the row. THE CLIENT-SIDE SHAPES OF THE SAME FLOW STAY EXCLUDED AND ARE STILL NOT
+  REPORTED: a product sending its user to someone else's consent screen - prompt: 'consent',
+  access_type, an authorize URL containing /oauth/consent, an absolute URL WRITTEN LITERALLY ON THE
+  LINE to another origin's consent endpoint (https://id.vendor.example/oauth2_consent), a name
+  carrying ConsentScreen, tenant-wide admin consent - raises nothing here, because the screen and
+  the grant record belong to the other party. BE EXACT ABOUT THE LIMIT OF THAT LAST ONE, BECAUSE IT
+  DECIDES CANDIDATES YOU WILL SEE. The exclusion reads one line at a time and needs the scheme and
+  host on it, so a client that ASSEMBLES the same URL from a variable host -
+  f\"{issuer}/oauth2_consent\", `${vendor}/o/oauth_consent`, vendor + \"/oauth2_consent\" - is NOT
+  cancelled and is reported here. So is any other local symbol a client happens to name for an OAuth
+  consent. Those candidates are client-side and the reader closes them, on the question that decides
+  every candidate from these clauses: whose server issues the token, and who is the controller of
+  the disclosure - context questions 1 and 7. Closing one is a one-line answer, not a defect in the
+  code"
+remediation_template: |
+  This is a candidate for review against GDPR Art. 7(3), not a determination about this code. The
+  scanner found a consent grant being written; it did NOT check whether a withdrawal path exists,
+  and it is not asserting that one is missing. That comparison is the reviewer's, and it is the
+  whole of the Article: withdrawal at any time, no retroactive effect on processing already
+  carried out, notice of the right before consent is taken (Art. 7(3) third sentence and
+  Art. 13(2)(c)), and parity of effort between giving and withdrawing. The addressee is the
+  controller.
+  Two facts decide most candidates, so establish them first:
+  1. Is this consent at all? Agreement to revised terms of service or a privacy policy is a
+     contract matter, and Art. 7(3) does not attach to it. Where the stored value is keyed to a
+     document version rather than to a tracker category or a marketing channel, move on.
+  2. Does a withdrawal path already exist? The scanner did not look, so start from the shapes that
+     usually carry one and treat each as evidence to weigh rather than as an answer:
+     clearConsent, resetConsent, revokeConsent, withdrawConsent, deleteUserConsent,
+     consent_withdrawn_at; opt_out_capturing, opt_out_tracking, optOutTracking; a
+     gtag('consent','update', ...) carrying 'denied'; a route literal such as '/cookie-settings',
+     '/consent-preferences' or CNIL's '/gerer-mes-cookies'; openCookiePreferences,
+     showConsentSettings, manage_cookie_preferences; a CMP re-entry call (Cookiebot.renew,
+     UC_UI.showSecondLayer, UC.updateServices, UC.denyAllServices, Osano.cm.showDrawer,
+     klaro.show, OneTrust.ToggleInfoDisplay, Optanon.ToggleInfoDisplay, Didomi.preferences.show,
+     CookieConsent.showPreferences, cky-btn-revisit); a DELETE or PATCH endpoint on a consent
+     path; an ORM delete against the consent entity. Each of these has been observed in real
+     repositories meaning something else - an admin-only cache purge, a legacy-key migration in an
+     init path, sign-out housekeeping, or a link to another company's cookie-settings page inside
+     a privacy policy - so quote the one you find, say who can reach it, and only then close the
+     candidate. It closes on reachability and effort parity, not on the symbol being present.
+  Where the gap is real, the engineering change has four parts, and partial work leaves the gap
+  open:
+  - A revocation write for every store the grant touches. Whatever the grant writes - Web Storage
+    key, cookie, session key, database row, SDK opt-in - needs a counterpart that clears or
+    reverses it. Naming that function for what it does (withdrawConsent, clearCookieConsent)
+    makes it findable by a reviewer as well as by a scanner.
+  - A re-entry point that outlives the banner. A route such as /cookie-settings, reachable from
+    the footer or the account page on every page, is the shape CNIL Deliberation 2020-092
+    para. 43 describes ("gerer mes cookies"); a CMP's own persistent widget serves the same
+    purpose if it is enabled. A banner suppressed by the stored value is not a re-entry point.
+  - Propagation to whatever the grant enabled. Send the matching gtag('consent','update',{...
+    'denied'}) or the SDK's opt-out, stop the sends that read the consent flag, and delete the
+    identifiers the grant allowed to be written where nothing else supports keeping them
+    (Art. 17(1)(b)).
+  - A line in the notice, before the decision is taken, saying that the choice can be changed and
+    where. Effort parity is the test EDPB Guidelines 05/2020 para. 114 applies: one click to
+    grant means withdrawal has to be about as cheap, in the same interface.
+data_categories:
+  - user.device.cookie_id
+  - user.unique_id
+  - user.behavior
+fingerprint_spec: project
+reading_class:
+  class: existence
+  elements:
+    - name: actions
+      question: 4
+      text: (a) ACTIONS - how many clicks, taps or requests, counted from the same place the grant was
+        offered
+    - name: visibility
+      question: 4
+      text: (b) VISIBILITY - a persistent footer link or a CMP widget that renders on every page is
+        reachable; a route documented only in the privacy policy is not
+    - name: channel
+      question: 4
+      text: (c) CHANNEL - does withdrawing require an email, a support ticket, a form, a phone call, or a
+        login that giving did not?
+    - name: effect
+      question: 4
+      text: (d) EFFECT - does the path actually stop the processing going forward, or does it only flip a
+        stored flag while the tag, the SDK or the send list keeps reading the old value?

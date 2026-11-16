@@ -1,0 +1,2079 @@
+lists:
+  analytics_recipients:
+    kind: recipient
+    purpose: Web and product analytics vendors that receive event-level records of what a person did in
+      the scanned product - page views, identify and track calls, session recordings and heatmaps.
+      Every anchor is a spelling the vendor owns — an SDK package name, an npm scope, a registry
+      coordinate, an import specifier, a snippet global or an API hostname — EXCEPT the
+      community-authored client libraries flagged as corroborating-only in the entries that carry
+      them. A match is evidence that the vendor's code or endpoint is named at this location; it is
+      not, on its own, evidence that anything was disclosed to that vendor, which is what the
+      importing rule's context questions are for.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: PostHog — PostHog Inc. (formerly known as Hiberly Inc.)
+        legal_name: PostHog Inc.
+        anchors:
+          - posthog-js
+          - posthog-node
+          - posthog-react-native
+          - posthog-js-lite
+          - posthog
+          - posthog-ruby
+          - posthog/posthog-php
+          - github.com/posthog/posthog-go
+          - app.posthog.com
+          - us.i.posthog.com
+          - eu.i.posthog.com
+          - us.posthog.com
+          - eu.posthog.com
+          - i.posthog.com
+          - posthog.com/static/array
+          - PostHogProvider
+          - usePostHog
+          - posthog-js/react
+          - posthog-rs
+          - posthog_ex
+        receives: "posthog-js autocapture and $pageview (browser): The event name and its properties; the
+          `distinct_id` (a stable pseudonymous identifier PostHog sets in a cookie or in
+          localStorage and which is linked to a real user id by `identify`); for autocapture, the
+          DOM path, tag name, element text and href of the element interacted with; `$current_url`,
+          `$referrer`, `$host`, `$pathname`; screen and viewport dimensions; the user agent and the
+          browser, OS and device it is parsed into. — AUTOCAPTURE IS THE FIELD THAT MATTERS MOST
+          HERE AND IT IS THE ONE THE OPERATOR IS LEAST LIKELY TO HAVE ENUMERATED: element TEXT is
+          captured, so a button or link whose label carries a person's name, an order number or an
+          email address discloses it without any explicit event being written. Whether autocapture
+          is on for the deployment in front of you is a configuration fact this detector does not
+          have. || posthog.identify(distinctId, properties): The application's own user identifier,
+          and every person property the call passes - in ordinary use an email address, a name, a
+          plan or role, an organisation and a signup date. — This is the call that turns a
+          pseudonymous `distinct_id` into a named person for every event already recorded against
+          it, historically as well as prospectively. || Session replay (posthog-js
+          `session_recording`, and @posthog/react-native session replay): A serialised recording of
+          the DOM and of its mutations over the session, plus mouse movement, clicks, scrolls and
+          network request metadata where those are enabled. — WHETHER FORM CONTENTS TRAVEL COULD NOT
+          BE ESTABLISHED FIRST-HAND IN THIS PASS. PostHog documents input masking with configurable
+          behaviour, and the default was not verified against a retrieved document. Treat as
+          unconfirmed and read the deployment's own `session_recording` configuration rather than
+          assuming either answer. Contrast Microsoft Clarity, whose own documentation was retrieved
+          and states input boxes are masked in all modes. || posthog-node / posthog-python /
+          posthog-go server-side capture: Whatever the server passes: the distinct id, the event
+          name and its properties. The caller's IP address here is the SERVER's, not the end user's,
+          unless the application forwards `$ip` explicitly. — The server-side path is the one where
+          the operator has full control of the payload, so it is the one where 'what does it
+          receive' has to be read from the calling code and cannot be answered from the vendor's
+          name. || What PostHog necessarily learns on every path, regardless of payload: The
+          caller's IP address (from which a coarse location is ordinarily derived), the user agent,
+          the destination host and path, and the TLS SNI. For the browser paths, additionally the
+          page URL and the referrer, and the stable `distinct_id` in the cookie or localStorage. —
+          This is the floor. An operator who strips every property from every event still discloses
+          this much, and Art. 4(1) makes an IP address and a stable identifier personal data in
+          their own right."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (PostHog
+          Inc.), with subsidiaries in the United Kingdom (Hiberly Ltd) and Germany (PostHog GmbH) ||
+          CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the day each
+          document was read: PostHog Inc. (formerly known as Hiberly Inc.) — United States, as the
+          research pass recorded it; no registered address and no state of incorporation was
+          obtained — named together with 'any of its subsidiaries and/or affiliates'. The policy
+          names the three entities as a group and never says which of them contracts with a given
+          customer [read from https://posthog.com/privacy on 2026-08-25]; Hiberly Ltd — United
+          Kingdom — named as the subsidiary based in the United Kingdom, in the same policy and with
+          the same silence about which entity contracts [read from https://posthog.com/privacy on
+          2026-08-25]; PostHog GmbH — Germany — named as the subsidiary based in Germany. Note that
+          the EU hosting option places DATA in Germany, which is a fact about where data sits and
+          not a fact about which entity contracts [read from https://posthog.com/privacy on
+          2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT
+          OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order
+          form, the data processing agreement or the invoice that operator actually signed; where
+          none of those can be read, the answer for this field is needs_human. Do not choose a
+          candidate because it is the largest, the nearest, the one with the most familiar name or
+          the only one left. Every date above is the day that document was read and nothing in this
+          repository re-reads it, so this list ages into an INCOMPLETE list and never into a false
+          statement — a candidate may have been renamed, acquired or added since."
+        jurisdiction_source: "The three entities are named first-hand in PostHog's own privacy policy. WHICH
+          of them contracts with a given customer is NOT established and is not inferable from the
+          policy: it names them as a group. PostHog Cloud has a EU-hosted option and the policy
+          places that hosting in Germany, which is a fact about where data sits and NOT a fact about
+          which entity contracts - the two are separate and are recorded separately here. No
+          registered address and no state of incorporation for PostHog Inc. was obtained. ||
+          https://posthog.com/privacy (retrieved 2026-08-25) names, for \"PostHog names three
+          entities: PostHog Inc. and subsidiaries in the UK and Germany\": \"PostHog Inc. (formerly
+          known as Hiberly Inc.) and/or any of its subsidiaries and/or affiliates\" [SUMMARY, not
+          raw text: the fetching tool returned quoted fragments selected against a prompt rather
+          than the document's own text in order. The fragment is presented as a quotation because
+          the tool was asked for verbatim wording and returned it in quotation marks; a reader
+          re-deriving this should re-fetch and read the document in full.] ||
+          https://posthog.com/privacy (retrieved 2026-08-25) names, for \"The UK and Germany
+          subsidiaries are named\": \"our subsidiaries based in the UK (Hiberly Ltd) and in Germany
+          (PostHog GmbH)\" [SUMMARY, not raw text - same fetch as the citation above.] ||
+          https://posthog.com/privacy (retrieved 2026-08-25) names, for \"EU hosting is in
+          Germany\": \"The Websites are hosted in the United States, or in Germany if you are a
+          PostHog Cloud customer who has selected EU hosting\" [SUMMARY, not raw text. This sentence
+          is about the WEBSITES; whether it also governs the ingestion endpoints a product's own
+          code posts to was not established.]"
+      - vendor: Google Analytics and Google Tag Manager — Google LLC, 1600 Amphitheatre Parkway, Mountain
+          View, CA 94043, USA
+        legal_name: Google LLC
+        anchors:
+          - "@google-analytics/data"
+          - "@google-analytics/admin"
+          - "@google-analytics/"
+          - google-analytics-data
+          - google-analytics-admin
+          - com.google.analytics
+          - com.google.android.gms:play-services-analytics
+          - com.google.firebase:firebase-analytics
+          - cloud.google.com/go/analytics
+          - google-analytics.com
+          - www.google-analytics.com
+          - ssl.google-analytics.com
+          - region1.google-analytics.com
+          - analytics.google.com
+          - googletagmanager.com
+          - www.googletagmanager.com
+          - analyticsdata.googleapis.com
+          - analyticsadmin.googleapis.com
+          - gtag.js
+          - gtm.js
+          - googletagmanager.com/gtag/js
+          - googletagmanager.com/gtm.js
+          - googletagmanager.com/ns.html
+          - gtm.start
+          - GTM-
+        receives: "gtag.js / GTM container page_view beacon: The measurement or container id;
+          `page_location` (the full page URL including its query string), `page_referrer`,
+          `page_title`; the `_ga` client id, a stable pseudonymous device identifier Google's own
+          script sets in a first-party cookie; the session id and session number; screen resolution,
+          language, and the user agent; and, where the application sets it, `user_id`. —
+          `page_location` IS THE FIELD TO READ FIRST. A URL carrying an order number, an email
+          address, a password-reset token or a document title is disclosed in full by the default
+          page-view beacon with no custom event written at all, and applications routinely put such
+          values in the path or the query string. || gtag('event', ...) and dataLayer.push custom
+          events: The event name and every parameter the application chooses to attach, including
+          e-commerce item, transaction and value parameters. — The operator decides these fields
+          entirely; they cannot be inferred from the vendor's name and must be read from the calling
+          code. || Google Tag Manager container load: The container id, the page URL and referrer,
+          the caller's IP and user agent. The container itself then decides which further tags load,
+          and those tags may be other vendors entirely. — A GTM CONTAINER IS A RECIPIENT AND ALSO A
+          ROUTER. The record owes Google as a recipient for the container load, AND owes whatever
+          the container's published configuration ships to - which is not in the source tree at all
+          and has to be read from the GTM workspace. That second half is the thing most often
+          missing from a record of processing activities for this vendor. || Measurement Protocol /
+          GA4 Data API server-side calls: Whatever the server sends: client_id or user_id, event
+          names and parameters. For the Data API, the direction is inbound (reports read back)
+          rather than a disclosure. — `@google-analytics/data` is a READ client for reporting, so a
+          hit on it is weaker evidence of a disclosure than a hit on the measurement path. Say which
+          direction the code runs in. || What Google necessarily learns on every path, regardless of
+          payload: The caller's IP address, the user agent, the destination host and path, the TLS
+          SNI, and for the browser paths the page URL, the referrer and the `_ga` client id. —
+          Google documents IP-address handling controls for GA4; whether any of them is enabled for
+          the deployment in front of you is a configuration fact this detector does not have and no
+          anchor establishes."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (Google LLC,
+          Mountain View, California) || CANDIDATE CONTRACTING ENTITIES, as the vendor's own
+          documents named them on the day each document was read: Google LLC — United States (1600
+          Amphitheatre Parkway, Mountain View, CA 94043) — named as the party the terms of service
+          are entered into by. The document read is the UNITED STATES region version; a
+          region-specific version for the European Economic Area exists and was not read, so whether
+          a customer there contracts with an Irish entity is unconfirmed [read from
+          https://marketingplatform.google.com/about/analytics/terms/us/ on 2026-08-25]; Google
+          Ireland Limited — Ireland, as the research pass recorded it — named in Google's CONSUMER
+          privacy policy as an affiliate for services in the European Economic Area. That is a
+          different document about a different product, and it is here so a reader knows the entity
+          exists rather than as evidence about this one [read from
+          https://policies.google.com/privacy on 2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN
+          OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR.
+          It is read from the order form, the data processing agreement or the invoice that operator
+          actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "ESTABLISHED FIRST-HAND FOR THE PRODUCT, and this is a case where the brief's
+          general rule needed testing rather than applying. The brief states that a vendor's
+          contracting entity does not change between its products; for Google that is FALSE as a
+          general matter, and it was checked rather than assumed. The Google Analytics Terms of
+          Service retrieved in this pass name Google LLC as the contracting party and name NO EEA
+          entity at all, while the first bundle's research recorded Google Cloud EMEA Limited as the
+          (weak-evidence) EMEA contracting entity for Google Cloud Storage and the consumer privacy
+          policy names Google Ireland Limited for EEA consumer services. THREE DIFFERENT ENTITIES
+          ACROSS THREE DOCUMENTS. WHAT WAS CARRIED ACROSS FROM THE FIRST BUNDLE: only the recorded
+          fact that Google's own canonical contracting-entity page
+          (cloud.google.com/terms/google-entity) is a JavaScript-rendered single-page application
+          that returns no server-rendered text, so it was not re-attempted here. WHAT WAS NOT
+          CARRIED ACROSS: the Google Cloud EMEA Limited establishment, which is about Google Cloud
+          Platform and not about Google Analytics, and which the first bundle's own research tagged
+          JURISDICTION NOT ESTABLISHED. The document read here is the US-REGION Analytics terms; a
+          region-specific EEA version exists and was NOT read, so whether an EEA customer contracts
+          with an Irish entity is UNCONFIRMED. ||
+          https://marketingplatform.google.com/about/analytics/terms/us/ (retrieved 2026-08-25)
+          names, for \"The Google Analytics Terms of Service name Google LLC as the contracting
+          party\": \"These Google Analytics Terms of Service (this \"Agreement\") are entered into
+          by Google LLC (\"Google\") and the entity executing this Agreement (\"You\").\" [SUMMARY,
+          not raw text. CORRECTED 2026-08-25 by's independent manual check: the summarising fetch
+          had transcribed the vendor's own straight double quotes around
+          \"Agreement\"/\"Google\"/\"You\" as single quotes; the source (fetched and read directly
+          for this correction) prints them in <strong>\"...\"</strong> spans with literal double
+          quotes, now matched verbatim. The fetching tool also reported the notice address 'Google
+          LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA' and reported in terms that
+          the document names no separate EEA entity. This is the US-region terms document; the
+          region in the URL path is deliberate and is why the EEA question stays open.] ||
+          https://policies.google.com/privacy (retrieved 2026-08-25) names, for \"Google Ireland
+          Limited is named as an EEA affiliate in the consumer privacy policy\": \"Google Ireland
+          Limited, Google Ltd, Google Payment Corp, and Google Dialer Inc.\" [SUMMARY, not raw text.
+          This is the CONSUMER privacy policy and the entities it names provide consumer services;
+          it is NOT evidence about who a Google Analytics customer contracts with, and it is cited
+          here only so a reader does not mistake its absence for a gap in the research.]"
+      - vendor: Mixpanel — Mixpanel, Inc.
+        legal_name: Mixpanel, Inc.
+        anchors:
+          - mixpanel-browser
+          - mixpanel
+          - mixpanel-react-native
+          - mixpanel-ruby
+          - mixpanel/mixpanel-php
+          - github.com/mixpanel/mixpanel-go
+          - com.mixpanel.android
+          - com.mixpanel.android:mixpanel-android
+          - api.mixpanel.com
+          - api-eu.mixpanel.com
+          - api-in.mixpanel.com
+          - decide.mixpanel.com
+          - cdn.mxpnl.com
+          - mxpnl.com
+          - Mixpanel-swift
+          - mixpanel_api_ex
+          - Mixpanel-csharp
+        receives: "mixpanel.track(event, properties) (browser): The event name and its properties; the
+          `distinct_id`; and Mixpanel's own default properties - `$current_url`, `$referrer`,
+          `$referring_domain`, `$screen_height`, `$screen_width`, `$browser`, `$os`, `$device`,
+          `$initial_referrer`, `$search_engine` and `mp_lib`. — The default properties travel
+          whether or not the application passes any, so 'we only send an event name' does not
+          describe what leaves the browser. || mixpanel.identify / mixpanel.people.set: The
+          application's user identifier and every profile property set - in ordinary use `$email`,
+          `$name`, `$first_name`, `$last_name`, `$phone`, `$created`, and any custom property. —
+          `$email` and `$phone` are Mixpanel's OWN reserved property names, which is why a profile
+          call is the path most likely to disclose direct identifiers. || Server-side /track and
+          /import (mixpanel Python, Node, Ruby, PHP, Go): Whatever the server passes. The default
+          browser properties are absent unless the application supplies them, and the IP seen by
+          Mixpanel is the server's unless `ip` is set explicitly. — Mixpanel documents an explicit
+          `ip` property for server-side calls, so an operator can cause an end user's IP to be
+          disclosed from a server path where it otherwise would not be. Read the calling code. ||
+          What Mixpanel necessarily learns on every path, regardless of payload: The caller's IP
+          address, the user agent, the destination host and path, and the TLS SNI; for the browser
+          paths, the page URL and referrer and the `distinct_id` cookie value."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (Mixpanel,
+          Inc., San Francisco, California) || CANDIDATE CONTRACTING ENTITIES, as the vendor's own
+          documents named them on the day each document was read: Mixpanel, Inc. — United States
+          (San Francisco, California); the address is given for NOTICES to the legal department
+          rather than as a registered office, and no state of incorporation is stated — named as the
+          party in the terms of use; no entity established in the European Economic Area is named in
+          the document read [read from https://mixpanel.com/legal/terms-of-use/ on 2026-08-25]. ||
+          WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT
+          AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing
+          agreement or the invoice that operator actually signed; where none of those can be read,
+          the answer for this field is needs_human. Do not choose a candidate because it is the
+          largest, the nearest, the one with the most familiar name or the only one left. Every date
+          above is the day that document was read and nothing in this repository re-reads it, so
+          this list ages into an INCOMPLETE list and never into a false statement — a candidate may
+          have been renamed, acquired or added since."
+        jurisdiction_source: "The Terms of Use name Mixpanel, Inc. and give a San Francisco address, but the
+          address is given as the address for NOTICES to the legal department and NOT as a
+          registered office, and no state of incorporation is stated. The place is recorded at that
+          strength and no further. No EEA entity is named in the document read. ||
+          https://mixpanel.com/legal/terms-of-use/ (retrieved 2026-08-25) names, for \"Mixpanel,
+          Inc. is the named party and its notice address is in San Francisco\": \"Pier 1, Bay 2, The
+          Embarcadero, San Francisco, CA 94111\" [SUMMARY, not raw text. The fetching tool reported
+          in terms that the document names 'Mixpanel, Inc.' but gives no incorporation state,
+          country of registration or registered business address, and that the quoted address is
+          designated as the notice address for the legal department.]"
+      - vendor: Vercel Web Analytics and Speed Insights — Vercel Inc.
+        legal_name: Vercel Inc.
+        anchors:
+          - "@vercel/analytics"
+          - "@vercel/speed-insights"
+          - va.vercel-scripts.com
+          - vitals.vercel-insights.com
+          - vitals.vercel-analytics.com
+          - "@vercel/analytics/react"
+          - "@vercel/analytics/next"
+          - "@vercel/analytics/nuxt"
+          - "@vercel/analytics/svelte"
+          - "@vercel/speed-insights/next"
+          - "@vercel/speed-insights/react"
+          - SpeedInsights
+        receives: "@vercel/analytics page view: The page path (with dynamic route parameters, where the
+          framework integration supplies the route pattern), the referrer, and the deployment and
+          project the request belongs to. — VERCEL'S OWN POSITIONING IS THAT WEB ANALYTICS IS
+          COOKIE-FREE AND DOES NOT USE A PERSISTENT IDENTIFIER, and that positioning was NOT
+          verified against a retrieved document in this pass. Treat it as unconfirmed. It matters
+          for the record either way: even on the vendor's own account, the request still discloses
+          the caller's IP address and the page URL, and Art. 4(1) does not stop applying because no
+          cookie was set. || @vercel/analytics `track(name, properties)` custom events: The event
+          name and every property the application attaches. Properties are operator-chosen and are
+          not constrained by the vendor's product. — This is the path where a cookie-free product
+          can still receive a direct identifier, because nothing stops an application putting one in
+          a property. || @vercel/speed-insights: Core Web Vitals measurements (LCP, CLS, INP, FCP,
+          TTFB) with the route they were measured on, plus the connection type and device class. —
+          The lowest-materiality path in this bundle in payload terms, and it still discloses the
+          caller's IP and the page URL. || What Vercel necessarily learns on every path, regardless
+          of payload: The caller's IP address, the user agent, the destination host and path, the
+          TLS SNI, and the page URL and referrer."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (Vercel Inc.)
+          || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the day
+          each document was read: Vercel Inc. — United States; the document read states NO country,
+          NO state of incorporation and NO registered address, so this place rests on the entity
+          suffix and on the document being the United States terms — named as the only entity in the
+          terms of service; no entity established in the European Economic Area is named [read from
+          https://vercel.com/legal/terms on 2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN
+          OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR.
+          It is read from the order form, the data processing agreement or the invoice that operator
+          actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "The Terms of Service name Vercel Inc. and no other entity. NO state of
+          incorporation, NO country designation and NO registered address are given in the document
+          read, and the place above is therefore weaker than it looks - it rests on the entity
+          suffix 'Inc.' and on the document being the US terms, not on a stated country. No EEA
+          entity is named. || https://vercel.com/legal/terms (retrieved 2026-08-25) names, for
+          \"Vercel Inc. is the only contracting entity named\": \"Vercel Inc. (\"Vercel\", \"we\",
+          \"us\" and/or \"our\") provides access to Vercel's Services.\" [SUMMARY, not raw text. The
+          fetching tool reported in terms that no state of incorporation, country designation or
+          registered address is provided in the agreement text and that no separate EU entity is
+          mentioned.]"
+      - vendor: Hotjar (Contentsquare) — (see note for the entities the research recorded)
+        anchors:
+          - "@hotjar/browser"
+          - "@hotjar/"
+          - static.hotjar.com
+          - script.hotjar.com
+          - in.hotjar.com
+          - vc.hotjar.io
+          - surveys.hotjar.com
+          - insights.hotjar.com
+          - hotjar.com
+          - hotjar.io
+          - _hjSettings
+          - hjid
+          - hjsv
+          - _hjIncludedInSessionSample
+          - react-hotjar
+          - vue-hotjar
+          - "@nuxtjs/hotjar"
+        receives: "Hotjar tracking-code page load: The site id, the page URL and referrer, the caller's IP
+          address, the user agent, screen and viewport dimensions, and a Hotjar user identifier
+          stored in the browser. || Session recording: A serialised recording of the page and its
+          mutations over the visit, including mouse movement, clicks, scrolls, page transitions, and
+          the text content of the page as rendered. — WHETHER FORM CONTENTS TRAVEL COULD NOT BE
+          ESTABLISHED FIRST-HAND. Hotjar's Data Suppression help article
+          (https://help.hotjar.com/hc/en-us/articles/115011789828-Data-Suppression) returned HTTP
+          403 to this pass and no substitute was found. Hotjar is understood to suppress keystrokes
+          in input fields by default and to offer `data-hj-allow` to opt individual fields back in,
+          AND THAT UNDERSTANDING IS RECORDED AS UNVERIFIED. Read the deployment's own suppression
+          configuration. Do not assume either answer, and note that the opt-in direction means a
+          developer can deliberately un-suppress a field. || Heatmaps: Aggregated click, move and
+          scroll coordinates per page, plus a snapshot of the page's rendered DOM against which the
+          coordinates are drawn. — THE DOM SNAPSHOT IS THE PART THAT IS EASY TO MISS. A heatmap is
+          often described as anonymous aggregate coordinates, but the picture has to be drawn on
+          something, and that something is a capture of the page as one visitor saw it - which on an
+          authenticated page is that person's own data. || Surveys and feedback widgets: Free-text
+          answers the person types, the rating chosen, and any identifying attributes the
+          application attaches to the session. — Free text is the field class with the least
+          predictable content in this whole bundle: a person may type anything into it, including
+          special-category data under Art. 9(1). || What Hotjar necessarily learns on every path,
+          regardless of payload: The caller's IP address, the user agent, the destination host and
+          path, the TLS SNI, the page URL and the referrer."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: NOT ESTABLISHED
+          [JURISDICTION NOT ESTABLISHED in the research pass; treat as unconfirmed — see note] || NO
+          CANDIDATE CONTRACTING ENTITY WAS ESTABLISHED in the research pass. This is not a short
+          list; it is an empty one. Do not populate it from a headquarters, a billing country, a
+          domain suffix, a group parent or anything else outside a document the operator holds. ||
+          WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT
+          AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing
+          agreement or the invoice that operator actually signed; where none of those can be read,
+          the answer for this field is needs_human. Do not choose a candidate because it is the
+          largest, the nearest, the one with the most familiar name or the only one left. Every date
+          above is the day that document was read and nothing in this repository re-reads it, so
+          this list ages into an INCOMPLETE list and never into a false statement — a candidate may
+          have been renamed, acquired or added since."
+        jurisdiction_source: "THREE DOCUMENTS WERE ATTEMPTED AND NONE NAMED AN ENTITY. hotjar.com's own
+          privacy policy URL now issues a 301 redirect to Contentsquare's trust centre; the trust
+          centre page names no entity; contentsquare.com/legal/ is a hub page that links legal
+          documents without carrying entity details; and
+          contentsquare.com/privacy-center/privacy-policy/ likewise names none. Contentsquare is
+          widely understood to be a French company, and THAT UNDERSTANDING IS NOT WRITTEN INTO THE
+          PLACE FIELD, because no document read in this pass says so. A reader may not substitute
+          France, Malta, or anything else. Return needs_human for this field. ||
+          https://trust.contentsquare.com/?itemUid=fa7a4923-3f51-431c-9eb6-3f88989ea858&source=title
+          (retrieved 2026-08-25) names, for \"Hotjar has been incorporated into Contentsquare - the
+          only entity-level fact obtained\": \"At Contentsquare (to which Heap and Hotjar have
+          recently been incorporated)...\" [SUMMARY, not raw text. Reached by following a 301
+          redirect from https://www.hotjar.com/legal/policies/privacy/, which is Hotjar's own
+          published privacy-policy URL. The fetching tool reported in terms that the page names no
+          legal entity, country of incorporation, registration number or registered address. The
+          sentence quoted establishes CORPORATE OWNERSHIP and nothing about establishment.]"
+      - vendor: Twilio Segment — Twilio Ireland Limited, a company registered in the Republic of Ireland,
+          whose registered address is 70 Sir John Rogerson's Quay, Dublin 2, D02 R296, Ireland
+        legal_name: Twilio Ireland Limited
+        anchors:
+          - "@segment/analytics-next"
+          - "@segment/analytics-node"
+          - "@segment/analytics-react-native"
+          - "@segment/snippet"
+          - analytics-node
+          - "@segment/"
+          - segment-analytics-python
+          - analytics-python
+          - segment-analytics-ruby
+          - analytics-ruby
+          - segmentio/analytics-php
+          - github.com/segmentio/analytics-go
+          - gopkg.in/segmentio/analytics-go
+          - com.segment.analytics.android
+          - com.segment.analytics.java
+          - api.segment.io
+          - cdn.segment.com
+          - segment.io
+          - cdn.segment.io
+          - api.segmentapis.com
+          - events.eu1.segmentapis.com
+          - cdn.eu1.segmentapis.com
+          - segmentio/
+          - segment_elixir
+        receives: "analytics.identify(userId, traits): The application's user id and every trait passed - in
+          ordinary use email, name, company, plan, createdAt - plus Segment's automatically
+          collected context: the caller's IP address, the user agent, the page URL, path, referrer,
+          title and search string, the locale, the timezone, and the anonymousId cookie. — SEGMENT
+          IS A ROUTER AS WELL AS A RECIPIENT, and that is the fact this vendor turns on. A Customer
+          Data Platform's purpose is to forward what it receives to further destinations chosen in
+          ITS OWN configuration, which is not in the source tree. The record owes Twilio as a
+          recipient AND owes every destination the workspace fans out to - and the second list is
+          invisible to any code scanner. || analytics.track(event, properties) and analytics.page():
+          The event or page name and its properties, plus the same automatically collected context.
+          || analytics.group() and analytics.alias(): An organisation or account identifier and its
+          traits; and, for alias, the linking of a previously anonymous identifier to a known user
+          id. — `alias` is the call that retroactively attaches a person's identity to everything
+          already recorded against their anonymous id. || Server-side sources (analytics-node,
+          analytics-python, analytics-ruby, analytics-go, analytics-php): Whatever the server
+          passes. Context is not collected automatically from a browser and must be supplied. ||
+          What Twilio Segment necessarily learns on every path, regardless of payload: The caller's
+          IP address, the user agent, the destination host and path, and the TLS SNI; for browser
+          paths, the page URL, the referrer and the anonymousId."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Ireland (Twilio Ireland
+          Limited) for EEA, UK and Swiss customers; United States, Delaware (Twilio Inc.) for most
+          others || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the
+          day each document was read: Twilio Ireland Limited — Ireland (registered address 70 Sir
+          John Rogerson's Quay, Dublin 2, D02 R296) — named as the contracting entity for customers
+          in the European Economic Area, the United Kingdom and Switzerland. The document read is
+          Twilio's general terms of service and names no separate contracting entity for this
+          product specifically, so that it governs this product is a reading and not a quoted fact
+          [read from https://www.twilio.com/en-us/legal/tos on 2026-08-25]; Twilio Inc. — United
+          States (a Delaware corporation, 101 Spear Street, 5th Floor, San Francisco, California,
+          94105) — named as the contracting entity for most countries outside the European Economic
+          Area and Asia-Pacific, with the same limitation about the document being the general terms
+          [read from https://www.twilio.com/en-us/legal/tos on 2026-08-25]. || WHICH CANDIDATE
+          APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN
+          ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement or
+          the invoice that operator actually signed; where none of those can be read, the answer for
+          this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "THE STRONGEST ESTABLISHMENT IN THIS BUNDLE, and the only one naming an EEA
+          entity with a registered address. It is also the one that needed the corporate-ownership
+          correction the brief warned about: Segment is Twilio, the brand is not the contracting
+          party, and a record naming 'Segment, Inc.' names a company that was acquired in 2020. ONE
+          HONEST CAVEAT: the document read is Twilio's general Terms of Service, and the fetching
+          tool reported in terms that it names no separate contracting entity for Segment services
+          specifically. So what is established is which entity a TWILIO customer contracts with by
+          region; that this governs the Segment product is a reasonable reading and is not a quoted
+          fact. || https://www.twilio.com/en-us/legal/tos (retrieved 2026-08-25) names, for \"Twilio
+          Ireland Limited is the contracting entity for EEA, UK and Swiss customers\": \"Twilio
+          Ireland Limited, a company registered in the Republic of Ireland, whose registered address
+          is 70 Sir John Rogerson's Quay, Dublin 2, D02 R296, Ireland\" [SUMMARY, not raw text. The
+          fetching tool returned a per-region table of five contracting entities and reported in
+          terms that no separate entity is named for Segment services in this document.] ||
+          https://www.twilio.com/en-us/legal/tos (retrieved 2026-08-25) names, for \"Twilio Inc. is
+          the contracting entity for most countries outside the EEA and Asia-Pacific\": \"Twilio
+          Inc., a Delaware corporation, with a place of business at 101 Spear Street, 5th Floor, San
+          Francisco, California, 94105, United States of America\" [SUMMARY, not raw text - same
+          fetch as the citation above.]"
+      - vendor: Fullstory — Fullstory, Inc., a Delaware (USA) corporation
+        legal_name: Fullstory, Inc.
+        anchors:
+          - "@fullstory/browser"
+          - "@fullstory/snippet"
+          - "@fullstory/react-native"
+          - "@fullstory/babel-plugin-annotate-react"
+          - "@fullstory/babel-plugin-react-native"
+          - "@fullstory/"
+          - com.fullstory
+          - fullstory.com
+          - edge.fullstory.com
+          - rs.fullstory.com
+          - fs.fullstory.com
+          - api.fullstory.com
+          - _fs_org
+          - _fs_script
+          - _fs_namespace
+          - _fs_host
+          - FS.identify
+          - FS.setUserVars
+          - FS.shutdown
+        receives: "Fullstory session capture (the default product): A continuous serialised recording of the
+          DOM and its mutations for the whole session, mouse and touch input, scrolls, page
+          transitions, console errors, and network request metadata where enabled. — WHETHER FORM
+          CONTENTS TRAVEL COULD NOT BE ESTABLISHED FIRST-HAND. Fullstory is understood to exclude
+          input values by default and to provide `fs-exclude`, `fs-mask` and `fs-unmask` element
+          classes, with `fs-unmask` deliberately allowing a developer to un-exclude a field. THAT
+          UNDERSTANDING IS RECORDED AS UNVERIFIED - no Fullstory document was retrieved in this
+          pass. Read the deployment's own annotations, and note that the un-mask direction exists.
+          || FS.identify(uid, userVars) and FS.setUserVars(userVars): The application's user
+          identifier and every user variable set - Fullstory's own documented conventions include
+          `displayName` and `email`. — This is the call that attaches a name and an email address to
+          a session recording, which converts a recording of a screen into a record about a named
+          person. || What Fullstory necessarily learns on every path, regardless of payload: The
+          caller's IP address, the user agent, the destination host and path, the TLS SNI, the page
+          URL and the referrer, and a Fullstory device identifier stored in the browser."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States, Delaware
+          (Fullstory, Inc.) || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named
+          them on the day each document was read: Fullstory, Inc. — United States (a Delaware
+          corporation, stated in the vendor's own words); no registered address was obtained — named
+          as the contracting party; no entity established in the European Economic Area is named in
+          the document read [read from https://www.fullstory.com/legal/terms-and-conditions/ on
+          2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT
+          OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order
+          form, the data processing agreement or the invoice that operator actually signed; where
+          none of those can be read, the answer for this field is needs_human. Do not choose a
+          candidate because it is the largest, the nearest, the one with the most familiar name or
+          the only one left. Every date above is the day that document was read and nothing in this
+          repository re-reads it, so this list ages into an INCOMPLETE list and never into a false
+          statement — a candidate may have been renamed, acquired or added since."
+        jurisdiction_source: "The state of incorporation is stated in the vendor's own words, which is
+          stronger than most entries in this bundle. No EEA entity is named in the document read,
+          and no registered address was obtained. ||
+          https://www.fullstory.com/legal/terms-and-conditions/ (retrieved 2026-08-25) names, for
+          \"Fullstory, Inc. is a Delaware corporation and is the contracting party\": \"Fullstory,
+          Inc., a Delaware (USA) corporation\" [SUMMARY, not raw text. The fetching tool reported
+          the phrase as appearing in the opening paragraph identifying the company with which
+          customers enter into the Master Services Agreement.]"
+      - vendor: Amplitude — Amplitude, Inc. with its offices at 201 3rd Street, Suite 200, San Francisco, CA
+          94103
+        legal_name: Amplitude, Inc.
+        anchors:
+          - "@amplitude/analytics-browser"
+          - "@amplitude/analytics-node"
+          - "@amplitude/analytics-react-native"
+          - "@amplitude/session-replay-browser"
+          - "@amplitude/experiment-js-client"
+          - amplitude-js
+          - "@amplitude/"
+          - amplitude-analytics
+          - github.com/amplitude/analytics-go
+          - com.amplitude
+          - com.amplitude:analytics-android
+          - com.amplitude:android-sdk
+          - api.amplitude.com
+          - api2.amplitude.com
+          - api.eu.amplitude.com
+          - api2.eu.amplitude.com
+          - cdn.amplitude.com
+          - amplitude.com
+          - amplitude-api
+          - zumba/amplitude-php
+        receives: "@amplitude/analytics-browser track and page view: The event type and its event
+          properties; the `device_id` and, where set, the `user_id`; and Amplitude's automatically
+          collected fields - the page URL, referrer, the caller's IP address, the platform, OS,
+          device model, language, and a coarse location derived from the IP. — AMPLITUDE'S DEFAULT
+          BEHAVIOUR INCLUDES DERIVING A GEOGRAPHIC LOCATION FROM THE IP ADDRESS, which means the
+          vendor produces a new personal datum from a request property rather than merely
+          transporting what was sent. That is a distinction a record of processing activities has to
+          carry. || identify() and setUserId(): The application's user identifier and every user
+          property set - in ordinary use email, name, plan, cohort. ||
+          @amplitude/session-replay-browser: A serialised recording of the DOM and its mutations for
+          the sampled session. — WHETHER FORM CONTENTS TRAVEL COULD NOT BE ESTABLISHED FIRST-HAND.
+          Amplitude documents text and input masking options for session replay; the default was not
+          verified against a retrieved document. Treat as unconfirmed and read the deployment's own
+          configuration. || Server-side HTTP V2 API (@amplitude/analytics-node, amplitude-analytics
+          for Python, analytics-go): Whatever the server passes: device_id or user_id, event type
+          and properties, and optionally an explicit `ip`. || What Amplitude necessarily learns on
+          every path, regardless of payload: The caller's IP address, the user agent, the
+          destination host and path, the TLS SNI; for browser paths, the page URL, the referrer and
+          the device id."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (Amplitude,
+          Inc., San Francisco, California) || CANDIDATE CONTRACTING ENTITIES, as the vendor's own
+          documents named them on the day each document was read: Amplitude, Inc. — United States
+          (offices at 201 3rd Street, Suite 200, San Francisco, CA 94103); no state of incorporation
+          is stated — named as the only contracting entity in the terms; no entity established in
+          the European Economic Area is named [read from https://amplitude.com/terms on 2026-08-25].
+          || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN
+          CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data
+          processing agreement or the invoice that operator actually signed; where none of those can
+          be read, the answer for this field is needs_human. Do not choose a candidate because it is
+          the largest, the nearest, the one with the most familiar name or the only one left. Every
+          date above is the day that document was read and nothing in this repository re-reads it,
+          so this list ages into an INCOMPLETE list and never into a false statement — a candidate
+          may have been renamed, acquired or added since."
+        jurisdiction_source: "The entity and a street address are stated in the vendor's own terms. No state
+          of incorporation is stated and no EEA entity is named in the document read. ||
+          https://amplitude.com/terms (retrieved 2026-08-25) names, for \"Amplitude, Inc. is the
+          only contracting entity named, with a San Francisco address\": \"Amplitude, Inc. with its
+          offices at 201 3rd Street, Suite 200, San Francisco, CA 94103\" [SUMMARY, not raw text.
+          The fetching tool reported in terms that no EU, Ireland or Netherlands entity is
+          identified in these Terms of Service.]"
+      - vendor: Plausible Analytics — Plausible Insights OÜ, Tartu, Estonia
+        legal_name: Plausible Insights OÜ
+        anchors:
+          - plausible-tracker
+          - next-plausible
+          - "@plausible-analytics/tracker"
+          - plausible.io
+          - plausible.io/js/script.js
+          - plausible.io/api/event
+        receives: "Plausible script page view (plausible.io/js/script.js): The page URL, the referrer, the
+          screen size, the browser and operating system as parsed from the user agent, and a country
+          derived from the caller's IP address. —'S OWN POSITIONING IS THAT IT SETS NO COOKIE AND
+          STORES NO PERSONAL DATA, and that positioning was NOT verified against a retrieved
+          document in this pass. The IP ADDRESS STILL REACHES THE SERVER on every request whatever
+          is done with it afterwards, and the page URL still travels - a URL carrying an order id or
+          an email address is disclosed by the default page view here as much as by any other
+          vendor's. || Custom events and revenue (plausible.io/api/event): The event name and any
+          custom properties the application attaches. — Custom properties are operator-chosen and
+          nothing constrains what goes in them. || What necessarily learns on every path, regardless
+          of payload: The caller's IP address, the user agent, the destination host and path, the
+          TLS SNI, the page URL and the referrer."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Estonia (Plausible Insights
+          OÜ, Tartu) || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on
+          the day each document was read: Plausible Insights OÜ — Estonia (Tartu); no registration
+          number was obtained — named as the operator of the service. The hosting location is a
+          separate fact and the vendor states its servers are in Falkenstein, Germany [read from
+          https://plausible.io/privacy on 2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN
+          OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR.
+          It is read from the order form, the data processing agreement or the invoice that operator
+          actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "The only EEA-established vendor in this bundle whose establishment rests on
+          the vendor's own words and needs no group reasoning. The hosting location is stated
+          separately and is a different fact from the establishment: servers in Falkenstein,
+          Germany. No registration number was obtained. || https://plausible.io/privacy (retrieved
+          2026-08-25) names, for \"Plausible Insights OU, in Tartu, Estonia, operates the service\":
+          \"Plausible Insights OÜ  Tartu, Estonia\" [SUMMARY, not raw text. The fetching tool
+          returned the entity name and location as a two-line block; the double space in the
+          quotation above is where the line break was.] || https://plausible.io/privacy (retrieved
+          2026-08-25) names, for \"Data is hosted in Germany and stays in the EU - a fact about
+          hosting, not about establishment\": \"All of the data that we collect is kept fully
+          secured, encrypted and hosted on 100% renewable energy powered servers in Falkenstein,
+          Germany.\" [SUMMARY, not raw text. The same fetch also returned the sentence 'Your site
+          data never leaves the EU.' Both are the vendor's own statements about the vendor's hosted
+          service and say nothing about a SELF-HOSTED Plausible deployment, which is a different
+          arrangement entirely.]"
+      - vendor: Microsoft Clarity — (see note for the entities the research recorded)
+        anchors:
+          - "@microsoft/clarity"
+          - clarity-js
+          - clarity-decode
+          - clarity-visualize
+          - clarity.ms
+          - www.clarity.ms
+          - c.clarity.ms
+          - d.clarity.ms
+          - z.clarity.ms
+          - clarity.microsoft.com
+          - data-clarity-mask
+          - data-clarity-unmask
+        receives: "Clarity session recording: A serialised recording of the page and its mutations for the
+          session, mouse and touch input, scrolls, page transitions, and the page's text content
+          subject to the masking mode in force. — FORM CONTENTS ARE MASKED IN ALL MODES, ON THE
+          VENDOR'S OWN WORDS. Microsoft's documentation states: 'Content in the input boxes is
+          masked in all modes and can't be customized.' and 'The drop-down menus are also masked in
+          all modes.' and, of the least strict mode, 'Relaxed: No content is masked. Input boxes and
+          dropdowns are still be masked.' [the vendor's own text carries that grammatical error]. It
+          also states 'Clarity masks sensitive content on your website by default and never captures
+          anything that is masked or sent over the wire.' TWO THINGS THAT ARE NOT COVERED BY THAT,
+          on the same document's own words: in Relaxed mode NO OTHER CONTENT IS MASKED, so the
+          rendered page text of an authenticated screen does travel; and 'Currently, Clarity doesn't
+          mask content within style sheets or style tags. Hence, it is recommended not to host
+          sensitive content within CSS.' The default mode is Balanced, in which 'Only sensitive
+          content is masked. We classify numbers and email addresses as sensitive content.' ||
+          Clarity heatmaps: Click, scroll and area coordinates per page, drawn against a captured
+          rendering of the page. — The same point as for Hotjar: the coordinates are aggregate, the
+          picture they are drawn on is a capture. || clarity(\"identify\", ...) and clarity(\"set\",
+          ...): A custom user identifier, session id and page id for `identify`; an arbitrary key
+          and value for `set`. — `identify` is the call that attaches an application user id to a
+          recording. || What Microsoft necessarily learns on every path, regardless of payload: The
+          caller's IP address, the user agent, the destination host and path, the TLS SNI, the page
+          URL and the referrer, and a Clarity identifier stored in the browser."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: NOT ESTABLISHED
+          [JURISDICTION NOT ESTABLISHED in the research pass; treat as unconfirmed — see note] || NO
+          CANDIDATE CONTRACTING ENTITY WAS ESTABLISHED in the research pass. This is not a short
+          list; it is an empty one. Do not populate it from a headquarters, a billing country, a
+          domain suffix, a group parent or anything else outside a document the operator holds. ||
+          WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT
+          AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing
+          agreement or the invoice that operator actually signed; where none of those can be read,
+          the answer for this field is needs_human. Do not choose a candidate because it is the
+          largest, the nearest, the one with the most familiar name or the only one left. Every date
+          above is the day that document was read and nothing in this repository re-reads it, so
+          this list ages into an INCOMPLETE list and never into a false statement — a candidate may
+          have been renamed, acquired or added since."
+        jurisdiction_source: "WHAT WAS CARRIED ACROSS AND WHAT IT DOES NOT SUPPORT. an internal record
+          (vendor id `azure_blob`) established Microsoft Ireland Operations Limited as the EEA
+          processor entity and Microsoft Corporation as the US entity, quoting Microsoft's own
+          Volume Licensing Data Protection Addendum. Those entity names are carried across here as
+          Microsoft's known contracting entities and NOTHING MORE. THEY ARE NOT AN ESTABLISHMENT FOR
+          CLARITY, for three reasons that are recorded rather than reasoned past: the Addendum
+          quoted is the Volume Licensing one and Clarity is offered free and outside Volume
+          Licensing; the first bundle's own citation note records that the PDF was retrieved from a
+          THIRD PARTY'S host (www.shl.com) rather than from microsoft.com and is dated 2022-09-15;
+          and three attempts to read a Clarity-specific terms or privacy document in this pass
+          returned nothing - learn.microsoft.com/.../clarity-terms returned HTTP 404,
+          clarity.microsoft.com/terms and clarity.microsoft.com/terms-of-use both returned only a
+          page title with no body text, which is the JavaScript-rendered-single-page-application
+          failure the first bundle recorded for Google. YOU MAY NOT FILL IN A JURISDICTION FOR
+          CLARITY. Return needs_human. ||
+          https://www.shl.com/assets/documents/microsoft-azure-sccs.pdf (retrieved 2026-08-25)
+          names, for \"Microsoft's EEA and US entities, carried across from the first bundle's Azure
+          research and NOT established for Clarity\": \"\"2021 Standard Contractual Clauses\" means
+          the standard data protection clauses (processor-to-processor module) between Microsoft
+          Ireland Operations Limited and Microsoft Corporation for the transfer of personal data
+          from processors in the EEA to processors established in third countries which do not
+          ensure an adequate level of data protection, as described in Article 46 of the GDPR and
+          approved by the European Commission in decision 2021/914/EC, dated 4 June 2021.\" [CARRIED
+          ACROSS, NOT RE-FETCHED IN THIS PASS. The quotation, the URL and the retrieval date are
+          copied from an internal record, vendor `azure_blob`, whose own note records that the host
+          is not Microsoft's and that the document may not be the current version. It is reproduced
+          here so a reader can see exactly what the carried-across fact rests on, and it is cited
+          for MICROSOFT'S ENTITY NAMES only - it says nothing about Clarity.]"
+      - vendor: Matomo Analytics (formerly Piwik) — InnoCraft Limited, 7 Waterloo Quay, PO Box 625, 6140
+          Wellington, New Zealand (NZBN 6106769)
+        legal_name: InnoCraft Limited
+        anchors:
+          - matomo.php
+          - piwik.php
+          - matomo.js
+          - piwik.js
+          - matomo.cloud
+          - _paq
+          - Matomo
+          - Piwik
+        receives: "Tracking HTTP API request (matomo.php or piwik.php, one request per action): The site
+          identifier idsite and the required rec flag; the full page URL in url and the referrer in
+          urlref; the action name; the visitor identifier in _id or cid, which Matomo's own
+          reference describes as a 16-character hexadecimal string; and the application's own user
+          identifier in uid where the operator sets it. — THE URL PARAMETER IS THE FIELD MOST OFTEN
+          OVERLOOKED. A page URL carrying a record identifier, an email address or a search term is
+          disclosed by the ordinary page-view request as much as by any explicit event, and nothing
+          in the protocol strips it. uid is the parameter that turns a pseudonymous visitor
+          identifier into a named person for every action already recorded against it. || Bulk
+          Tracking request (a JSON body carrying a requests array, with token_auth): An array of
+          complete tracking requests in one HTTP call, each carrying the fields above, together with
+          an authentication token. Matomo's own reference states that token_auth is a 32-character
+          authorization key used to authenticate the API request, and that it is what permits the
+          request to set cip, cdt, country, region, city, lat and long. — THIS IS THE SERVER-SIDE
+          PATH AND IT IS THE ONE WHERE THE PAYLOAD IS ENTIRELY THE OPERATOR'S. No browser is
+          involved, so what travels cannot be read from the vendor's name and must be read from the
+          calling code that fills the array. Note the consequence for the IP address: on this path
+          the caller's address is the SERVER's, not the person's, unless the operator sets cip
+          explicitly - which is one of the parameters the token authorises. Whether a deployment
+          sets it is a configuration fact this detector does not have. || JavaScript tracker in the
+          page (matomo.js loaded, events queued through _paq): The same tracking parameters,
+          assembled in the browser: the page URL, the referrer, the title, the screen and viewport
+          dimensions, the visitor identifier Matomo stores on the device, and whatever the operator
+          queues through _paq - including a user identifier where setUserId is called. — This is the
+          path the browser-side clauses of eu-consent-013 already reach and it is recorded here for
+          completeness rather than because this unit's anchor is on it. The anchor that opened this
+          entry is the server-side path above and has no browser artefact at all. || What the
+          tracker host necessarily learns on every path, regardless of payload: The caller's IP
+          address, the user agent, the destination host and path, and the TLS SNI. On the browser
+          paths, additionally the page URL, the referrer and the visitor identifier stored on the
+          device. — WHO the tracker host is depends on the self-hosting question at the top of this
+          entry, and this floor is what that host learns whoever it is. On the server-side relay the
+          caller is the product's own server, so the floor is smaller than it looks - which is the
+          single most important difference between this vendor's two paths."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: New Zealand (InnoCraft
+          Limited, Wellington) || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents
+          named them on the day each document was read: InnoCraft Limited — New Zealand (7 Waterloo
+          Quay, PO Box 625, 6140 Wellington); NZBN 6106769 — named as the operator of the Matomo
+          Cloud hosted service, and as the publisher of the Matomo software. The Matomo Cloud
+          privacy policy and the matomo.org privacy policy name the same company in the same words.
+          WHERE MATOMO IS SELF-HOSTED THERE IS NO CONTRACT WITH THIS ENTITY AT ALL and the recipient
+          is whoever operates the deployment's own tracker host, which is recipients-003's question
+          and not this one [read from https://matomo.org/privacy-policy/ on 2026-09-09]. || WHICH
+          CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT
+          AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement
+          or the invoice that operator actually signed; where none of those can be read, the answer
+          for this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "The entity is established first-hand from the vendor's own two privacy
+          policies, which name the same company, the same registration number and the same address.
+          THE HOSTING LOCATION IS A SEPARATE FACT AND IS RECORDED SEPARATELY: the Matomo Cloud
+          privacy policy states that personal data in a customer's Matomo Cloud instance is stored
+          in Europe, which says where data sits and says nothing about which entity contracts. The
+          and PostHog entries in this same list record the identical distinction and it is not a
+          variation in method. THE LARGEST QUALIFICATION IS NOT ABOUT THE ENTITY AT ALL: Matomo is
+          self-hostable, and a deployment pointing at the operator's own tracker host discloses
+          nothing to InnoCraft Limited - see the entry's note. || https://matomo.org/privacy-policy/
+          (retrieved 2026-09-09) names, for \"InnoCraft Limited, a New Zealand registered company,
+          is the entity behind Matomo Analytics\": \"We are InnoCraft Limited (InnoCraft, we), a New
+          Zealand registered company (NZBN 6106769), established by the creators of Matomo
+          Analytics.\" [Read through a fetching tool that converts the page to text and answers a
+          prompt against it; the tool was asked for the sentence verbatim and returned it. A reader
+          re-deriving this should re-fetch and read the document in full. The registration number is
+          the vendor's own NZBN as printed.] || https://matomo.org/privacy-policy/ (retrieved
+          2026-09-09) names, for \"The registered office address InnoCraft Limited prints for
+          itself\": \"Our offices are located at 7 Waterloo Quay, PO Box 625, 6140 Wellington, New
+          Zealand.\" [Same fetch as the sentence above. The page calls this the office location and
+          does not call it a registered address; the two are not necessarily the same and no
+          companies-register record was retrieved.] ||
+          https://matomo.org/matomo-cloud-privacy-policy/ (retrieved 2026-09-09) names, for \"The
+          same entity is named in the separate Matomo Cloud privacy policy, which is the document
+          that governs the hosted service\": \"We are InnoCraft Limited (InnoCraft, we), a New
+          Zealand registered company (NZBN 6106769), established by the creators of Matomo.\" [The
+          two policies are separate documents and the matomo.org policy says so in terms - it states
+          that it does not apply to the Matomo Cloud-hosted service. The sentences differ only in
+          their closing words (Matomo Analytics against Matomo) and are quoted separately here
+          rather than merged, because they are two documents.] ||
+          https://matomo.org/matomo-cloud-privacy-policy/ (retrieved 2026-09-09) names, for \"Matomo
+          Cloud data is stored in Europe - a fact about hosting, not about establishment\":
+          \"Personal data held in Customer's Matomo Cloud instance and instance backups are securely
+          stored in Europe.\" [Recorded under jurisdiction because a reader will meet it there, and
+          labelled in the claim so it is not read as an establishment. Europe is the word the
+          document uses; it does not name a country or a sub-processor, and none was retrieved.]"
+  avatar_image_recipients:
+    kind: recipient
+    purpose: Avatar and image hosting, generation and proxying services that render an image on a
+      person's behalf, and that receive the request key - which for Gravatar is a hash of the
+      person's email address - along with everything an HTTP request discloses. Every anchor is a
+      spelling the vendor owns — an SDK package name, an npm scope, a registry coordinate, an import
+      specifier, a snippet global or an API hostname — EXCEPT the community-authored client
+      libraries flagged as corroborating-only in the entries that carry them. A match is evidence
+      that the vendor's code or endpoint is named at this location; it is not, on its own, evidence
+      that anything was disclosed to that vendor, which is what the importing rule's context
+      questions are for.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: Gravatar (Automattic) — Aut O'Mattic A8C Ireland Ltd., Grand Canal Dock, 25 Herbert Pl,
+          Dublin, D02 AY86, Ireland
+        legal_name: Aut O'Mattic A8C Ireland Ltd.
+        anchors:
+          - gravatar
+          - gravatar-url
+          - "@gravatar-com/hovercards"
+          - "@gravatar-com/quick-editor"
+          - "@gravatar-com/"
+          - libgravatar
+          - gravatar_image_tag
+          - gravatar-ultimate
+          - gravatar.com
+          - www.gravatar.com
+          - secure.gravatar.com
+          - 0.gravatar.com
+          - 1.gravatar.com
+          - 2.gravatar.com
+          - api.gravatar.com
+          - cdn.gravatar.com
+          - gravatar.com/avatar/
+          - exgravatar
+          - gravatar-rs
+        receives: "Avatar image request - https://gravatar.com/avatar/{identifier}: THE REQUEST KEY IS A
+          HASH OF THE PERSON'S EMAIL ADDRESS. Gravatar's documented construction is to trim
+          whitespace from the email address, lowercase it, and hash it - historically with MD5 and
+          currently with SHA-256 - and to place that hash in the URL path. Alongside it travel the
+          caller's IP address, the user agent, the referrer (which is the page of the scanned
+          product the avatar is displayed on), and the query parameters `s` (size), `d` (default
+          image) and `r` (rating). — THE HASH IS AN IDENTIFIER AND NOT AN ANONYMISATION, AND THIS IS
+          THE MOST IMPORTANT SENTENCE IN THIS ENTRY. A hash of an email address is 'an online
+          identifier' within Art. 4(1)'s own words and it relates to an identified natural person:
+          it is stable, it is the same value for that person on every site that computes it, it is
+          reversible in practice for any address a rainbow table or a dictionary of known addresses
+          covers, and its whole purpose is to look a specific person up. Recital 26's
+          pseudonymisation reasoning is the point - data that can be attributed to a person by the
+          use of additional information is still personal data. So the product that renders a
+          Gravatar DISCLOSES ITS USERS' EMAIL ADDRESSES to Automattic in identifier form, on every
+          page view, together with the page they were on. Wherever the hash travels in an `<img
+          src>` rendered in the person's own browser, the disclosure is made by the VISITOR'S
+          browser at the product's instruction, which does not remove it from the record - the
+          product decided that the request would be made. || Gravatar profile API -
+          https://api.gravatar.com/v3/profiles/{identifier}: The same email hash as the key, in a
+          server-to-server call, returning the person's Gravatar profile. — On this path the
+          caller's IP is the SERVER'S rather than the visitor's, so the visitor's IP is not
+          disclosed - but the email hash still is, and so is the fact that this product holds that
+          address. || What Automattic necessarily learns on every path, regardless of payload: The
+          caller's IP address, the user agent, the destination host and path - WHICH IS THE EMAIL
+          HASH - the TLS SNI, and the referrer. — This vendor is the one where the 'necessarily
+          learns' floor and the payload are the SAME THING: the identifier is the URL. There is no
+          configuration that sends less."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (Automattic
+          Inc., San Francisco, California) and Ireland (Aut O'Mattic A8C Ireland Ltd., Dublin) ||
+          CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the day each
+          document was read: Automattic Inc. — United States (60 29th Street #343, San Francisco, CA
+          94110) — named in the privacy policy this vendor's own privacy URL redirects to. The
+          policy names the two entities without allocating services between them, so which one is
+          controller or processor for an image request specifically was not established [read from
+          https://automattic.com/privacy/ on 2026-08-25]; Aut O'Mattic A8C Ireland Ltd. — Ireland
+          (Grand Canal Dock, 25 Herbert Pl, Dublin, D02 AY86) — named in the same policy, with the
+          same silence about which of the two applies to an image request [read from
+          https://automattic.com/privacy/ on 2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN
+          OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR.
+          It is read from the order form, the data processing agreement or the invoice that operator
+          actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "Both entities and both full addresses are stated in Automattic's own privacy
+          policy, which is the policy Gravatar's own privacy URL redirects to. WHICH of the two is
+          the controller or processor for a Gravatar image request specifically is NOT established -
+          the policy names them as Automattic's entities without allocating services between them.
+          Record both places and do not choose. || https://automattic.com/privacy/ (retrieved
+          2026-08-25) names, for \"Automattic's US and Ireland entities, with addresses\":
+          \"Automattic Inc. 60 29th Street #343 San Francisco, CA 94110\" [SUMMARY, not raw text.
+          Reached by following a 302 redirect from https://gravatar.com/site/privacy, which is
+          Gravatar's own published privacy URL - so this document IS Gravatar's privacy policy, not
+          merely a parent company's. The fetching tool reported in terms that Gravatar is referenced
+          as one of Automattic's products and is not separately incorporated. CORRECTED 2026-08-25
+          by's independent manual check: the summarising fetch had inserted commas at each line
+          break of the source's three-line address block (rendered via <br/> tags, which carry no
+          comma); the source (fetched and read directly for this correction) reads \"Automattic Inc.
+          60 29th Street #343 San Francisco, CA 94110\" with no comma after \"Inc.\" or after
+          \"#343\". The address itself (entity name, street, city, state, zip) is unchanged - only
+          the invented commas are removed.] || https://automattic.com/privacy/ (retrieved
+          2026-08-25) names, for \"Automattic's Ireland entity, with address\": \"Aut O'Mattic A8C
+          Ireland Ltd. Grand Canal Dock, 25 Herbert Pl Dublin, D02 AY86 Ireland\" [SUMMARY, not raw
+          text - same fetch as the citation above. CORRECTED 2026-08-25 by's independent manual
+          check: the summarising fetch had inserted commas at each line break of the source's
+          address block (rendered via <br/> tags, which carry no comma); the source reads \"Aut
+          O'Mattic A8C Ireland Ltd. Grand Canal Dock, 25 Herbert Pl Dublin, D02 AY86 Ireland\" with
+          no comma after \"Ltd.\", after \"Pl\", or after \"AY86\" (the commas within \"Grand Canal
+          Dock, 25 Herbert Pl\" and \"Dublin, D02 AY86\" ARE genuinely in the source, mid-line, and
+          are unchanged). The address itself is unchanged - only the invented line-break commas are
+          removed.]"
+      - vendor: DiceBear — Florian Körner, Karlsruher Str. 12, 23568 Lübeck, Germany
+        legal_name: Florian Körner
+        anchors:
+          - "@dicebear/core"
+          - "@dicebear/collection"
+          - "@dicebear/converter"
+          - "@dicebear/avatars"
+          - "@dicebear/avatars-identicon-sprites"
+          - "@dicebear/avatars-initials-sprites"
+          - "@dicebear/"
+          - api.dicebear.com
+          - avatars.dicebear.com
+          - dicebear.com
+        receives: "api.dicebear.com avatar request: THE SEED IS IN THE URL, and applications routinely use a
+          username, a user id or an email address as the seed -
+          `https://api.dicebear.com/7.x/initials/svg?seed=Jane%20Doe`. Alongside it travel the
+          caller's IP address, the user agent, the referrer (the page of the scanned product), and
+          the style and option parameters. — THE SEED IS THE DISCLOSURE AND IT IS OPERATOR-CHOSEN. A
+          seed of a random UUID discloses nothing about a person; a seed of `jane.doe@example.com`
+          discloses an email address in plaintext in a URL. The two are the same anchor and the same
+          host and only the calling code tells them apart, so this is a vendor where 'what does it
+          receive' genuinely cannot be answered without reading the line. || @dicebear/core and
+          @dicebear/collection used as libraries: NOTHING LEAVES THE MACHINE. The avatar is
+          generated locally from the seed. — This path is not a disclosure at all and is the
+          likeliest shape for a candidate on this vendor. It is recorded as a path rather than
+          omitted, because an adjudicating agent needs to be able to close a candidate on it. ||
+          What DiceBear necessarily learns on the API path, regardless of payload: The caller's IP
+          address, the user agent, the destination host and path - which contains the seed - the TLS
+          SNI, and the referrer. DiceBear's own policy states it logs the IP address, the URI, the
+          time, the method, the response size and status, the country of origin, and the browser and
+          operating system features."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Germany (Florian Körner,
+          Lübeck) || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the
+          day each document was read: Florian Körner — Germany (Karlsruher Str. 12, 23568 Lübeck) —
+          a NATURAL PERSON named as the Owner, not a company: there is no legal entity to name and
+          no contracting entity to look up, which Art. 4(9) covers expressly. The document was
+          reached by following a redirect from the vendor's own published privacy-policy URL to a
+          policy hosted on a third-party policy-hosting service [read from
+          https://www.iubenda.com/privacy-policy/57216581/full-legal on 2026-08-25]. || WHICH
+          CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT
+          AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement
+          or the invoice that operator actually signed; where none of those can be read, the answer
+          for this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "A NATURAL PERSON, NOT A COMPANY, and that is a fact the record has to carry
+          rather than smooth over: DiceBear's own privacy policy names an individual with a
+          residential-style address as the Owner. There is no legal entity to name and no
+          contracting entity to look up. The document was reached by following a 301 redirect from
+          DiceBear's own published privacy-policy URL to a policy hosted on iubenda, a third-party
+          policy-hosting service - so the HOST is not DiceBear's, though the document is DiceBear's
+          own policy and is linked as such from its own site. ||
+          https://www.iubenda.com/privacy-policy/57216581/full-legal (retrieved 2026-08-25) names,
+          for \"The Owner of DiceBear is an individual in Lubeck, Germany\": \"Florian
+          Körner  Karlsruher Str. 12  23568 Lübeck  Germany\" [SUMMARY, not raw text. Reached by
+          following a 301 redirect from https://www.dicebear.com/legal/privacy-policy/. The double
+          spaces in the quotation are where line breaks were. The same fetch returned the contact
+          address.] || https://www.iubenda.com/privacy-policy/57216581/full-legal (retrieved
+          2026-08-25) names, for \"What the DiceBear website logs\": \"the IP addresses or domain
+          names of the computers utilized by the Users who use this Website, the URI addresses
+          (Uniform Resource Identifier), the time of the request, the method utilized to submit the
+          request to the server, the size of the file received in response, the numerical code
+          indicating the status of the server's answer (successful outcome, error, etc.), the
+          country of origin, the features of the browser and the operating system utilized by the
+          User\" [SUMMARY, not raw text. THIS IS THE WEBSITE'S USAGE-DATA CLAUSE and the fetching
+          tool reported in terms that 'The policy does not explicitly state that api.dicebear.com
+          specifically collects or logs data separately from the main website.' So it is evidence
+          about dicebear.com and is being read across to api.dicebear.com by inference, which is
+          recorded here rather than hidden.]"
+      - vendor: wsrv.nl (formerly images.weserv.nl) — Andries Louw Wolthuizen and Kleis Auke Wolthuizen
+        legal_name: Andries Louw Wolthuizen and Kleis Auke Wolthuizen
+        anchors:
+          - images.weserv.nl
+          - wsrv.nl
+          - weserv.nl
+          - wsrv.nl/?url=
+          - images.weserv.nl/?url=
+        receives: "Image proxy request - https://wsrv.nl/?url={source}: THE SOURCE IMAGE URL IN FULL, as a
+          query parameter - which for an avatar is routinely a URL that itself identifies a person,
+          including a Gravatar URL containing an email hash, a social-network profile image URL
+          containing a user id, or a signed object-storage URL containing a bucket path and a token.
+          Alongside it travel the caller's IP address, the user agent, the referrer (the page of the
+          scanned product), and the transformation parameters. — A PROXY IS A RECIPIENT OF
+          EVERYTHING IT IS ASKED TO FETCH, AND ALSO OF WHERE IT WAS ASKED TO FETCH IT FROM. This is
+          the vendor in the bundle whose disclosure is most often invisible to the operator, because
+          the proxy is added for performance and the person adding it is thinking about image size
+          rather than about a third party seeing every avatar URL and every visitor's IP address.
+          Where the proxied URL is a signed one, the signature travels too. || What wsrv.nl
+          necessarily learns, regardless of payload: The caller's IP address, the user agent, the
+          destination host and path including the full `url` parameter, the TLS SNI, and the
+          referrer. — For this vendor the 'necessarily learns' floor is the ONLY established
+          statement of what it receives, because no logging or retention statement was obtained."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: NOT ESTABLISHED
+          [JURISDICTION NOT ESTABLISHED in the research pass; treat as unconfirmed — see note] || NO
+          CANDIDATE CONTRACTING ENTITY WAS ESTABLISHED in the research pass. This is not a short
+          list; it is an empty one. Do not populate it from a headquarters, a billing country, a
+          domain suffix, a group parent or anything else outside a document the operator holds. ||
+          WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT
+          AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing
+          agreement or the invoice that operator actually signed; where none of those can be read,
+          the answer for this field is needs_human. Do not choose a candidate because it is the
+          largest, the nearest, the one with the most familiar name or the only one left. Every date
+          above is the day that document was read and nothing in this repository re-reads it, so
+          this list ages into an INCOMPLETE list and never into a false statement — a candidate may
+          have been renamed, acquired or added since."
+        jurisdiction_source: "The service's own site at wsrv.nl returned HTTP 403 to this pass, and
+          images.weserv.nl 301-redirects to it. The only entity-level fact obtained is the two
+          maintainer names, read from the project's GitHub repository, which states no country and
+          no organisation. THE `.nl` TOP-LEVEL DOMAIN IS NOT EVIDENCE OF ESTABLISHMENT and it is not
+          being read as any - a Netherlands domain can be registered by anyone. You may not fill in
+          the Netherlands. Return needs_human. || https://github.com/weserv/images (retrieved
+          2026-08-25) names, for \"The two named maintainers of the images.weserv.nl / wsrv.nl
+          proxy\": \"Andries Louw Wolthuizen\" [SUMMARY, not raw text. The fetching tool reported
+          both names as the creators/maintainers and reported in terms that the page states nothing
+          about what the hosted service logs or receives, pointing instead at a Privacy-Policy.md
+          the fetch did not return. A maintainer of an open-source repository is not necessarily the
+          operator of the hosted service, and that gap is recorded rather than bridged.]"
+      - vendor: UI Avatars — (see note for the entities the research recorded)
+        anchors:
+          - ui-avatars.com
+          - ui-avatars.com/api
+          - ui-avatars.com/api/
+        receives: "Avatar generation request - https://ui-avatars.com/api/?name=...: THE `name` PARAMETER,
+          WHICH IS ORDINARILY THE PERSON'S NAME IN PLAINTEXT - that is the service's purpose: it
+          renders initials from a name. Alongside it travel the caller's IP address, the user agent,
+          the referrer (the page of the scanned product), and the size, colour and format
+          parameters. — THE PLAINTEXT NAME IS THE DISCLOSURE. Unlike Gravatar, nothing is hashed:
+          the person's name travels in the query string on every page view of every page their
+          avatar appears on, along with the referrer that says which page that was. Against that
+          sits the operator's own assertion that nothing is stored and logging is disabled - which,
+          if true, changes the retention picture and changes nothing about the disclosure, because
+          the data still reaches the recipient. || What UI Avatars necessarily learns, regardless of
+          payload: The caller's IP address, the user agent, the destination host and path including
+          the `name` parameter, the TLS SNI, and the referrer."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: NOT ESTABLISHED
+          [JURISDICTION NOT ESTABLISHED in the research pass; treat as unconfirmed — see note] || NO
+          CANDIDATE CONTRACTING ENTITY WAS ESTABLISHED in the research pass. This is not a short
+          list; it is an empty one. Do not populate it from a headquarters, a billing country, a
+          domain suffix, a group parent or anything else outside a document the operator holds. ||
+          WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT
+          AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing
+          agreement or the invoice that operator actually signed; where none of those can be read,
+          the answer for this field is needs_human. Do not choose a candidate because it is the
+          largest, the nearest, the one with the most familiar name or the only one left. Every date
+          above is the day that document was read and nothing in this repository re-reads it, so
+          this list ages into an INCOMPLETE list and never into a false statement — a candidate may
+          have been renamed, acquired or added since."
+        jurisdiction_source: "The site was read successfully and simply names nobody. This is the cleanest
+          kind of unconfirmed field in this file - not a fetch that failed, but a document that was
+          read and contains no answer. You may not fill one in. Return needs_human. ||
+          https://ui-avatars.com/ (retrieved 2026-08-25) names, for \"The service states that it
+          stores nothing and that logging is disabled - the only data statement obtained\": \"No
+          data is being stored on our serveres. Monitoring & logging is entirely disabled.\"
+          [SUMMARY, not raw text. The spelling 'serveres' is the site's own and is quoted unchanged.
+          The fetching tool reported in terms that no person or company name operating
+          ui-avatars.com is stated. NOTE WHAT THIS QUOTATION IS AND IS NOT: it is the operator's own
+          unaudited assertion about its own practice, made on a marketing page. It is evidence that
+          the operator says this; it is not evidence that it is so, and a record of processing
+          activities that repeats it should say whose statement it is.]"
+  audit_log_recipients:
+    kind: recipient
+    purpose: Audit-log and compliance-logging services that receive a structured record of who did what
+      to which object and when, on behalf of the scanned product or of its tenants. Every anchor is
+      a spelling the vendor owns — an SDK package name, an npm scope, a registry coordinate, an
+      import specifier, a snippet global or an API hostname — EXCEPT the community-authored client
+      libraries flagged as corroborating-only in the entries that carry them. A match is evidence
+      that the vendor's code or endpoint is named at this location; it is not, on its own, evidence
+      that anything was disclosed to that vendor, which is what the importing rule's context
+      questions are for.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: WorkOS — WorkOS, Inc.
+        legal_name: WorkOS, Inc.
+        anchors:
+          - "@workos-inc/node"
+          - "@workos-inc/authkit-nextjs"
+          - "@workos-inc/authkit-react"
+          - "@workos-inc/authkit-js"
+          - "@workos-inc/widgets"
+          - "@workos-inc/"
+          - workos
+          - workos/workos-php
+          - WorkOS.net
+          - github.com/workos/workos-go
+          - com.workos
+          - api.workos.com
+          - workos.com
+        receives: "Audit Logs - workos.auditLogs.createEvent(...): The organisation id; the event `action`;
+          the `actor` - its id, name and type, which for a person is a user identifier and often a
+          name or an email address; the `targets` - the objects acted on, with their ids, names and
+          types, which routinely identify other people; the `context` - THE ACTOR'S IP ADDRESS AND
+          USER AGENT, which are fields the schema asks for by name; the occurrence timestamp; and an
+          arbitrary `metadata` map. — AN AUDIT LOG IS THE MOST STRUCTURALLY PERSONAL RECORD IN THIS
+          WHOLE BUNDLE, and calling this class 'low materiality per event' is wrong for it. Every
+          entry is by construction 'this identified person did this specific thing to this object at
+          this time from this IP address' - which is the definition of behavioural data about an
+          identified person, retained deliberately and for a long time because retention is the
+          product's purpose. The `metadata` map is operator-chosen and unbounded. || Audit Logs
+          export and streaming: The same events, in bulk, delivered to the operator or to a
+          destination the operator configures. — Where the operator configures a streaming
+          destination, THAT destination is a further recipient whose identity is not in the source
+          tree - which is recipients-003's question, not this rule's. || Other WorkOS products
+          reached by the same anchors: SSO and AuthKit: the authenticated person's profile - id,
+          email, first and last name, the connection and organisation. Directory Sync: the
+          customer's whole directory of employees, including names, emails, job titles and group
+          membership. — RECORDED HERE DELIBERATELY THOUGH IT IS ANOTHER CLASS'S SUBJECT, because the
+          anchors cannot tell the products apart and an adjudicating agent that meets
+          `@workos-inc/node` needs to know what the OTHER products disclose in order to say which
+          one it is looking at. Directory Sync is a materially larger disclosure than audit logging:
+          it is the customer's entire employee list. || What WorkOS necessarily learns on every
+          path, regardless of payload: The caller's IP address - the server's, on the server-side
+          paths - the user agent, the destination host and path, and the TLS SNI. — For the
+          audit-log path the END USER's IP address is in the PAYLOAD rather than in the connection,
+          because the schema asks for it. That is unusual and worth noticing: the operator sends it
+          deliberately."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (WorkOS, Inc.)
+          || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the day
+          each document was read: WorkOS, Inc. — United States; the terms of service state NO
+          country, NO state of incorporation and NO registered address, so this place rests on the
+          entity suffix and on nothing else in the document — named as the only entity in the terms
+          of service; no entity established in the European Economic Area is named [read from
+          https://workos.com/legal/terms on 2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN
+          OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR.
+          It is read from the order form, the data processing agreement or the invoice that operator
+          actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "WEAK. The Terms of Service name WorkOS, Inc. and give NO state of
+          incorporation, NO country and NO registered address. The place above rests on the entity
+          suffix 'Inc.' and on nothing else in the document, and it is recorded at that strength
+          deliberately rather than upgraded to a plausible Delaware or San Francisco. No EEA entity
+          is named. || https://workos.com/legal/terms (retrieved 2026-08-25) names, for \"WorkOS,
+          Inc. is the only entity named\": \"offered by WorkOS, Inc. (\"WorkOS\")\" [SUMMARY, not
+          raw text. The fetching tool reported in terms that no incorporation details or registered
+          address are provided in the document.]"
+      - vendor: Retraced — (see note for the entities the research recorded)
+        anchors:
+          - retraced
+          - "@retracedhq/retraced"
+          - "@retracedhq/logs-viewer"
+          - "@retracedhq/"
+          - github.com/retracedhq/retraced-go
+          - api.retraced.io
+          - retraced.io
+        receives: "Retraced event reporting - reportEvent(...): The `action`; the `actor` with its id and
+          name; the `target` with its id, name and type; the `group` or tenant; `source_ip`;
+          `is_failure`, `crud` and `component`; the timestamp; and arbitrary `fields`. —
+          Structurally the same disclosure as WorkOS Audit Logs: who did what to what, when, and
+          from which IP address, retained on purpose. || Self-hosted deployment: NOTHING LEAVES THE
+          OPERATOR'S OWN INFRASTRUCTURE. — THIS IS THE LIKELIEST SHAPE FOR THIS VENDOR AND IT IS NOT
+          A DISCLOSURE TO A THIRD PARTY AT ALL. An adjudicating agent should establish which
+          deployment is in use before anything else, and should be ready to close the candidate
+          outright. || What a hosted Retraced would necessarily learn, regardless of payload: The
+          caller's IP address - the server's - the user agent, the destination host and path, and
+          the TLS SNI. — Stated conditionally because whether a hosted service is in use at all is
+          unestablished for this vendor."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: NOT ESTABLISHED
+          [JURISDICTION NOT ESTABLISHED in the research pass; treat as unconfirmed — see note] || NO
+          CANDIDATE CONTRACTING ENTITY WAS ESTABLISHED in the research pass. This is not a short
+          list; it is an empty one. Do not populate it from a headquarters, a billing country, a
+          domain suffix, a group parent or anything else outside a document the operator holds. ||
+          WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT
+          AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing
+          agreement or the invoice that operator actually signed; where none of those can be read,
+          the answer for this field is needs_human. Do not choose a candidate because it is the
+          largest, the nearest, the one with the most familiar name or the only one left. Every date
+          above is the day that document was read and nothing in this repository re-reads it, so
+          this list ages into an INCOMPLETE list and never into a false statement — a candidate may
+          have been renamed, acquired or added since."
+        jurisdiction_source: "THIS VENDOR MAY NOT BE A RECIPIENT AT ALL, AND THAT IS THE FIRST THING TO SAY
+          ABOUT IT. Retraced is an open-source audit-logs service designed to be deployed into the
+          operator's own Kubernetes cluster. Where an operator runs it themselves, NO THIRD PARTY
+          RECEIVES ANYTHING and there is no recipient to record - the same reservation an internal
+          record records for BoxyHQ Jackson ('arguably not a third party at all when the operator
+          runs it themselves'). No hosted-service terms, privacy policy or contracting entity was
+          found in this pass. You may not fill in a jurisdiction. Return needs_human, and check
+          first whether there is a third party here at all. ||
+          https://github.com/retracedhq/retraced (retrieved 2026-08-25) names, for \"Retraced is
+          open source, self-deployed, and associated with two other companies rather than an entity
+          of its own\": \"A fully open source audit logs service and embeddable UI easily deployed
+          to your own Kubernetes cluster. Brought to you by replicated.com and boxyhq.com\"
+          [SUMMARY, not raw text - obtained through a web search rather than a direct fetch of the
+          repository, and the quotation is the repository description as the search result
+          reproduced it. WEAKER EVIDENCE THAN A RETRIEVED DOCUMENT, flagged as such. It establishes
+          the project's own self-description and nothing about any hosted service's operator.]"
+  session_replay_recipients:
+    kind: recipient
+    purpose: Session-replay and session-recording vendors that receive a reconstruction of the rendered
+      page - the DOM and its mutations over a visit, with pointer movement, clicks, scrolls and,
+      depending on the masking configuration, the text on screen and the values typed into inputs.
+      Every anchor is a spelling the vendor owns — an SDK package name, an npm scope, a registry
+      coordinate, an import specifier, a snippet global or an API hostname — EXCEPT the
+      community-authored client libraries flagged as corroborating-only in the entries that carry
+      them. A match is evidence that the vendor's code or endpoint is named at this location; it is
+      not, on its own, evidence that anything was disclosed to that vendor, which is what the
+      importing rule's context questions are for.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: LogRocket — LogRocket, Inc.
+        legal_name: LogRocket, Inc.
+        anchors:
+          - logrocket
+          - logrocket-react
+          - "@logrocket/"
+          - cdn.logr-in
+          - cdn.lr-ingest
+          - r.lr-ingest.io
+          - LogRocket.init
+          - LogRocket.identify
+        receives: "LogRocket.init and the session recording it starts (browser): A serialised recording of
+          the DOM and of its mutations over the session - the page as it was rendered to this person
+          - together with mouse movement, clicks, scrolls, console output, and network request and
+          response metadata where those are enabled. The vendor's masking options decide whether the
+          text of the page and the values typed into inputs travel with it. — THE MASKING DEFAULTS
+          POINT THE OTHER WAY FOR THIS VENDOR, and the shipped rule eu-consent-020 records it in
+          terms: its `dom.inputSanitizer`, `dom.textSanitizer` and `dom.imageSanitizer` all default
+          to false, so unmasked is where this vendor starts. Read the deployment's own sanitizer
+          configuration rather than assuming a protective default. || LogRocket.identify(id,
+          traits): The application's own user identifier and every trait the call passes - in
+          ordinary use a name, an email address, a plan and an organisation - which attaches a named
+          person to every session already recorded against that identifier. || What this vendor
+          necessarily learns on every path, regardless of payload: The caller's IP address, the user
+          agent, the destination host and path, and the TLS SNI; for the browser paths, the page URL
+          and the referrer, and the session identifier the recorder holds. Art. 4(1) makes an IP
+          address and a stable identifier personal data in their own right, so this floor is a
+          disclosure even where the operator strips every field it controls."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (LogRocket,
+          Inc., New York) - and the strength of this is stated rather than implied: it rests on the
+          site footer of the privacy policy, not on a contracting clause || CANDIDATE CONTRACTING
+          ENTITIES, as the vendor's own documents named them on the day each document was read:
+          LogRocket, Inc. — United States (New York); no state of incorporation and no registered
+          office is stated in the document read — named in the privacy policy's footer as the
+          copyright holder; the policy names no contracting entity at all [read from
+          https://logrocket.com/privacy on 2026-09-02]. || WHICH CANDIDATE APPLIES TO A GIVEN
+          OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR.
+          It is read from the order form, the data processing agreement or the invoice that operator
+          actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "THE PRIVACY POLICY NAMES NO CONTRACTING ENTITY IN ITS BODY. It describes
+          LogRocket's controller and processor roles at length and never says which company
+          contracts with a customer. The only entity-level fact this pass obtained is the page's own
+          footer, which carries a New York address and the company name, and the place above is
+          recorded at that strength and no further. No entity established in the European Economic
+          Area is named in the document read. This is the Vercel treatment in this same file,
+          applied for the same reason. || https://logrocket.com/privacy (retrieved 2026-09-02)
+          names, for \"The privacy policy's footer names LogRocket, Inc. and a New York address -
+          the only entity-level fact obtained\": \"W 22nd St, Suite 502 New York, NY 10010 ...
+          LogRocket, Inc\" [RAW TEXT, fetched directly and converted from HTML in this pass. The
+          elision skips the page's sales telephone number and status line, which sit between the
+          address and the company name in the footer. The quotation is a FOOTER and not a
+          contracting clause, which is why the place field says so.]"
+      - vendor: Mouseflow — Mouseflow ApS
+        legal_name: Mouseflow ApS
+        anchors:
+          - mouseflow
+          - mouseflow.com
+          - cdn.mouseflow.com
+          - api.mouseflow.com
+          - _mfq.push
+          - mouseflow.js
+        receives: "The Mouseflow tracking snippet and the session recording it starts: A serialised
+          recording of the page and its mutations over the visit, including mouse movement, clicks,
+          scrolls and page transitions, together with the page URL and referrer, the caller's IP
+          address, the user agent and the viewport, and a visitor identifier the vendor stores in
+          the browser. — WHETHER KEYSTROKES TRAVEL IS A CONFIGURATION FACT AND IS NOT ESTABLISHED
+          HERE. The shipped rule eu-consent-020 records, from its own 2026-07-29 reading, that this
+          vendor masks keystrokes by default and that the whitelisting which reverses it is done in
+          the vendor's dashboard rather than in code - so a repository can carry no line at all and
+          still be recording typed input. Read the vendor account, not only the tree. || Heatmap
+          capture: Aggregated click, movement and scroll coordinates per page, plus a snapshot of
+          the page's rendered DOM against which those coordinates are drawn. — THE DOM SNAPSHOT IS
+          THE PART THAT IS EASY TO MISS, and it is the same point this file's Hotjar entry makes: a
+          heatmap is described as anonymous aggregate coordinates, but the picture has to be drawn
+          on something, and on an authenticated page that something is one person's own screen. ||
+          What this vendor necessarily learns on every path, regardless of payload: The caller's IP
+          address, the user agent, the destination host and path, and the TLS SNI; for the browser
+          paths, the page URL and the referrer, and the visitor identifier the snippet stores in the
+          browser. Art. 4(1) makes an IP address and a stable identifier personal data in their own
+          right, so this floor is a disclosure even where the operator strips every field it
+          controls."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Denmark (Mouseflow ApS) - an
+          ApS is a Danish private limited company, and the terms name it as the counterparty; no
+          registered address and no company registration number was obtained || CANDIDATE
+          CONTRACTING ENTITIES, as the vendor's own documents named them on the day each document
+          was read: Mouseflow ApS — Denmark; the entity suffix ApS is a Danish private limited
+          company. No registered address and no registration number is stated in the document read —
+          named in the Terms of Use as the party the customer's agreement is with [read from
+          https://mouseflow.com/legal/terms/ on 2026-09-02]. || WHICH CANDIDATE APPLIES TO A GIVEN
+          OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR.
+          It is read from the order form, the data processing agreement or the invoice that operator
+          actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "The Terms of Use name Mouseflow ApS as the party the customer contracts with,
+          and the privacy policy names the same entity. A United States affiliate is widely
+          understood to exist and NO DOCUMENT READ IN THIS PASS NAMES ONE, so none is written here.
+          Return needs_human where the operator's own order form names a different entity. ||
+          https://mouseflow.com/legal/terms/ (retrieved 2026-09-02) names, for \"The Terms of Use
+          name Mouseflow ApS as the contracting party\": \"This Agreement is between you and
+          Mouseflow ApS\" [RAW TEXT, fetched directly and converted from HTML in this pass. The
+          sentence continues into the vendor's own defined terms in curly quotation marks, which are
+          outside the span quoted here.]"
+      - vendor: OpenReplay — Asayer SAS
+        legal_name: Asayer SAS
+        anchors:
+          - "@openreplay/tracker"
+          - "@openreplay/tracker-assist"
+          - "@openreplay/tracker-axios"
+          - "@openreplay/"
+          - api.openreplay.com
+          - openreplay.com
+          - openreplay-tracker
+        receives: "The @openreplay/tracker session recording (browser): A serialised recording of the DOM
+          and of its mutations over the session, with mouse movement, clicks, scrolls, console
+          output and network request metadata where those plugins are enabled, plus the page URL and
+          referrer, the caller's IP address and the user agent. — THE DESTINATION IS THE QUESTION
+          FOR THIS VENDOR AND NO ANCHOR ANSWERS IT. OpenReplay is designed to be self-hosted; a
+          self-managed installation discloses to nobody outside the operator. The package name and
+          the tracker call are identical either way and the difference lives in the ingest URL,
+          which is very often an environment variable. Read the configuration. || tracker.setUserID
+          and tracker.setMetadata: The application's own user identifier and any metadata the call
+          passes, which attaches a named person to every session recorded against that identifier.
+          || What this vendor necessarily learns on every path, regardless of payload: The caller's
+          IP address, the user agent, the destination host and path, and the TLS SNI; for the
+          browser paths, the page URL and the referrer, and the session identifier the tracker
+          holds. Art. 4(1) makes an IP address and a stable identifier personal data in their own
+          right, so this floor is a disclosure even where the operator strips every field it
+          controls."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: NOT ESTABLISHED
+          [JURISDICTION NOT ESTABLISHED in the research pass; treat as unconfirmed — see note] || NO
+          CANDIDATE CONTRACTING ENTITY WAS ESTABLISHED in the research pass. This is not a short
+          list; it is an empty one. Do not populate it from a headquarters, a billing country, a
+          domain suffix, a group parent or anything else outside a document the operator holds. ||
+          WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT
+          AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing
+          agreement or the invoice that operator actually signed; where none of those can be read,
+          the answer for this field is needs_human. Do not choose a candidate because it is the
+          largest, the nearest, the one with the most familiar name or the only one left. Every date
+          above is the day that document was read and nothing in this repository re-reads it, so
+          this list ages into an INCOMPLETE list and never into a false statement — a candidate may
+          have been renamed, acquired or added since."
+        jurisdiction_source: "TWO DOCUMENTS NAME TWO DIFFERENT ENTITIES AND NEITHER GIVES A COUNTRY. The
+          privacy policy names Asayer SAS, an entity suffix used in France and in several other
+          civil-law jurisdictions; the terms page's own footer names Asayer, Inc. Which of them
+          contracts with a customer is not stated anywhere this pass could read, and a country
+          cannot be inferred from a suffix. A reader may not substitute France, the United States,
+          or anything else. Return needs_human. NOTE ALSO THAT THIS VENDOR IS SELF-HOSTABLE: a
+          self-managed installation sends nothing to Asayer at all, and the anchors cannot tell the
+          two apart. || https://openreplay.com/legal/privacy/ (retrieved 2026-09-02) names, for
+          \"The privacy policy names Asayer SAS as the entity offering the websites and self-managed
+          installations\": \"offered by Asayer SAS and/or any of its affiliates\" [RAW TEXT, fetched
+          directly and converted from HTML in this pass. The sentence continues into the vendor's
+          own defined terms in curly quotation marks, which are outside the span quoted here. The
+          same page's footer names a DIFFERENT entity, Asayer, Inc., and that difference is the
+          reason this vendor's place is the sentinel.] || https://openreplay.com/legal/privacy/
+          (retrieved 2026-09-02) names, for \"The same page's footer names Asayer, Inc. - the second
+          of the two entities, and the reason neither is written as the answer\": \"OpenReplay is a
+          registered trademark of Asayer, Inc.\" [RAW TEXT, fetched directly and converted from HTML
+          in this pass. A trademark holder is not necessarily a contracting party, and this citation
+          is here so that a reader sees both names rather than only the one that appears first.]"
+      - vendor: Datadog Real User Monitoring and Session Replay — Datadog, Inc.
+        legal_name: Datadog, Inc.
+        anchors:
+          - "@datadog/browser-rum"
+          - "@datadog/browser-rum-slim"
+          - "@datadog/browser-logs"
+          - "@datadog/mobile-react-native"
+          - com.datadoghq:dd-sdk-android-rum
+          - com.datadoghq:dd-sdk-android-session-replay
+          - com.datadoghq
+          - browser-intake-datadoghq.com
+          - browser-intake-datadoghq.eu
+          - rum.browser-intake-datadoghq.com
+          - datadoghq.com
+          - datadoghq.eu
+          - datadogRum.init
+          - startSessionReplayRecording
+          - DD_RUM
+        receives: "datadogRum.init and startSessionReplayRecording (browser): Real user monitoring events -
+          page views, resource and long-task timings, errors and user actions - and, where session
+          replay is started, a serialised recording of the DOM and of its mutations, with the page
+          URL and referrer, the caller's IP address, the user agent and a session identifier the SDK
+          stores in the browser. — THE PRIVACY LEVEL DECIDES WHAT THE RECORDING CONTAINS and it is a
+          configuration fact this detector does not have. The shipped rule eu-consent-020 records,
+          from its own reading of the vendor's documentation, that `defaultPrivacyLevel` defaults to
+          mask in the browser and that the Android and iOS SDKs default to MASK_ALL and .maskAll. ||
+          The mobile RUM SDKs (Android, iOS, React Native): The same event stream from a mobile
+          application, plus device model, operating system version and, where session replay is
+          enabled, a reconstruction of the rendered view hierarchy. || What this vendor necessarily
+          learns on every path, regardless of payload: The caller's IP address, the user agent, the
+          destination host and path, and the TLS SNI; for the browser paths, the page URL and the
+          referrer, and the RUM session identifier. Art. 4(1) makes an IP address and a stable
+          identifier personal data in their own right, so this floor is a disclosure even where the
+          operator strips every field it controls."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (Datadog,
+          Inc., 620 8th Avenue, Floor 45, New York, NY 10018) || CANDIDATE CONTRACTING ENTITIES, as
+          the vendor's own documents named them on the day each document was read: Datadog, Inc. —
+          United States (620 8th Avenue, Floor 45, New York, NY 10018, given as a contact address
+          rather than as a registered office) — named in the privacy policy as the data controller
+          of the personal information the vendor holds in its own right, unless a supplemental
+          notice says otherwise [read from https://www.datadoghq.com/legal/privacy/ on 2026-09-02].
+          || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN
+          CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data
+          processing agreement or the invoice that operator actually signed; where none of those can
+          be read, the answer for this field is needs_human. Do not choose a candidate because it is
+          the largest, the nearest, the one with the most familiar name or the only one left. Every
+          date above is the day that document was read and nothing in this repository re-reads it,
+          so this list ages into an INCOMPLETE list and never into a false statement — a candidate
+          may have been renamed, acquired or added since."
+        jurisdiction_source: "The privacy policy names Datadog, Inc. as the data controller of the personal
+          information it holds about its own site visitors and customers, and gives a New York
+          address for contact. IT ALSO NAMES AN EU REPRESENTATIVE, Datadog Ireland Limited,
+          appointed under Art. 27 GDPR - AND AN ART. 27 REPRESENTATIVE IS NOT A CONTRACTING ENTITY
+          AND NOT AN ESTABLISHMENT. The two are recorded separately below so that a reader does not
+          read the second as an answer to the first. || https://www.datadoghq.com/legal/privacy/
+          (retrieved 2026-09-02) names, for \"The privacy policy names Datadog, Inc. as the data
+          controller\": \"Datadog, Inc. is the data controller of your personal information.\" [RAW
+          TEXT, fetched directly and converted from HTML in this pass. The sentence is preceded by a
+          supplemental-notice qualifier which is outside the span quoted here. This statement is
+          about the personal information Datadog holds as a controller - about site visitors and
+          customer contacts - and it is NOT a statement about the customer data Datadog processes as
+          a processor on an operator's behalf, which is the direction this rule's finding runs in.]
+          || https://www.datadoghq.com/legal/privacy/ (retrieved 2026-09-02) names, for \"The same
+          policy gives the New York address for contact\": \"Datadog, Inc., 620 8th Avenue, Floor
+          45, New York, NY 10018\" [RAW TEXT, fetched directly and converted from HTML in this pass.
+          It is a CONTACT address in the policy's closing section, not a stated registered office,
+          and it is recorded at that strength.]"
+      - vendor: Smartlook — (see note for the entities the research recorded)
+        anchors:
+          - smartlook-client
+          - react-native-smartlook-analytics
+          - manager.smartlook.com
+          - web-writer.smartlook.com
+          - smartlook.com
+          - smartlook.init
+          - smartlook.cloud
+        receives: "The Smartlook web recorder: A serialised recording of the page and its mutations over the
+          visit, with clicks, scrolls and page transitions, plus the page URL and referrer, the
+          caller's IP address, the user agent and a visitor identifier stored in the browser. — THIS
+          VENDOR'S CAPTURE IS OPT-IN RATHER THAN OPT-OUT FOR THE SENSITIVE FIELDS, which is the
+          reverse of most of this class, and the shipped rule eu-consent-020 records it from its own
+          reading: the web SDK records no form input, email, number or IP until a record call asks
+          it to. A repository that asks for them writes the line; one that does not, does not. ||
+          What this vendor necessarily learns on every path, regardless of payload: The caller's IP
+          address, the user agent, the destination host and path, and the TLS SNI; for the browser
+          paths, the page URL and the referrer, and the visitor identifier the recorder stores. Art.
+          4(1) makes an IP address and a stable identifier personal data in their own right, so this
+          floor is a disclosure even where the operator strips every field it controls."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: NOT ESTABLISHED
+          [JURISDICTION NOT ESTABLISHED in the research pass; treat as unconfirmed — see note] || NO
+          CANDIDATE CONTRACTING ENTITY WAS ESTABLISHED in the research pass. This is not a short
+          list; it is an empty one. Do not populate it from a headquarters, a billing country, a
+          domain suffix, a group parent or anything else outside a document the operator holds. ||
+          WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT
+          AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing
+          agreement or the invoice that operator actually signed; where none of those can be read,
+          the answer for this field is needs_human. Do not choose a candidate because it is the
+          largest, the nearest, the one with the most familiar name or the only one left. Every date
+          above is the day that document was read and nothing in this repository re-reads it, so
+          this list ages into an INCOMPLETE list and never into a false statement — a candidate may
+          have been renamed, acquired or added since."
+        jurisdiction_source: "THE VENDOR'S OWN LEGAL PAGES NO LONGER RESOLVE. Both
+          https://www.smartlook.com/terms-of-service/ and https://www.smartlook.com/privacy-policy/
+          redirect to the site's front page, which is an end-of-sale notice. The only entity-level
+          fact obtained is that the product has been taken into Cisco, which establishes CORPORATE
+          OWNERSHIP and nothing about establishment - the same position this file already records
+          for Hotjar and Contentsquare, and it is treated the same way. A reader may not substitute
+          the Czech Republic, the United States, or anything else. Return needs_human. ||
+          https://www.smartlook.com/ (retrieved 2026-09-02) names, for \"The vendor's own front page
+          states that the product has been taken into Cisco - the only entity-level fact obtained\":
+          \"Smartlook has joined Cisco!\" [RAW TEXT, fetched directly and converted from HTML in
+          this pass. Reached by following redirects from the vendor's own terms-of-service and
+          privacy-policy URLs, both of which now land on this page. The same page carries an
+          END-OF-SALE notice stating that existing customers may renew until 31 August 2026, which
+          is recorded here because it changes how a reader should weigh an integration found in a
+          tree: the product may be on its way out of the deployment rather than into it.]"
+  error_monitoring_recipients:
+    kind: recipient
+    purpose: Error, crash and application-monitoring vendors that receive a report of what failed - the
+      exception, its stack trace, the breadcrumb trail and request context leading up to it, and
+      whatever identifier the application attached to the person it failed for. Every anchor is a
+      spelling the vendor owns — an SDK package name, an npm scope, a registry coordinate, an import
+      specifier, a snippet global or an API hostname — EXCEPT the community-authored client
+      libraries flagged as corroborating-only in the entries that carry them. A match is evidence
+      that the vendor's code or endpoint is named at this location; it is not, on its own, evidence
+      that anything was disclosed to that vendor, which is what the importing rule's context
+      questions are for.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: Sentry — Functional Software, Inc. d/b/a Sentry
+        legal_name: Functional Software, Inc.
+        anchors:
+          - "@sentry/browser"
+          - "@sentry/node"
+          - "@sentry/react"
+          - "@sentry/vue"
+          - "@sentry/nextjs"
+          - "@sentry/angular"
+          - "@sentry/svelte"
+          - "@sentry/remix"
+          - "@sentry/nestjs"
+          - "@sentry/react-native"
+          - "@sentry/electron"
+          - "@sentry/replay"
+          - "@sentry/tracing"
+          - "@sentry/"
+          - sentry-sdk
+          - sentry-ruby
+          - sentry-rails
+          - sentry/sentry
+          - sentry/sentry-laravel
+          - sentry/sentry-symfony
+          - github.com/getsentry/sentry-go
+          - io.sentry
+          - io.sentry:sentry-android
+          - io.sentry:sentry-spring-boot-starter
+          - Sentry.AspNetCore
+          - ingest.sentry.io
+          - ingest.us.sentry.io
+          - ingest.de.sentry.io
+          - sentry.io
+          - SENTRY_DSN
+          - Sentry.init
+          - Sentry.captureException
+          - Sentry.replayIntegration
+        receives: "Sentry.init and captureException / captureMessage (browser and server): The error's type,
+          message and stack trace, the source file and line, the release and environment, the
+          breadcrumb trail leading up to the error - which ordinarily includes the URLs visited, the
+          console output and the network requests made - the caller's IP address, the user agent,
+          and whatever the application attached through setUser, setTag, setContext or setExtra. —
+          THE BREADCRUMB TRAIL AND THE STACK-LOCAL VARIABLES ARE THE FIELDS AN OPERATOR IS LEAST
+          LIKELY TO HAVE ENUMERATED. A stack trace can carry the arguments a function was called
+          with, and an application that puts an email address, a token or a document title in a URL
+          discloses it in the breadcrumbs without any deliberate call. What is attached is decided
+          by the calling code and cannot be inferred from the vendor's name. ||
+          Sentry.replayIntegration - Session Replay: A serialised recording of the DOM and of its
+          mutations over the session, with mouse movement, clicks, scrolls and network request
+          metadata, sampled at whatever rate the deployment configures. — THIS PATH IS WHY THIS
+          ENTRY MATTERS TO TWO DIFFERENT RULES. The base error integration is a recipients question;
+          the replay integration is also a prior-consent and a masking question, which is what
+          eu-consent-005 and eu-consent-020 ask. The vendor's own masking options - maskAllText,
+          maskAllInputs, blockAllMedia - default to the protective value, as eu-consent-020 records
+          from its own reading, so what a recording contains depends on whether the deployment
+          reversed them. || sendDefaultPii: Where this option is switched on, the SDK attaches the
+          end user's IP address, cookies and request headers to every event without the application
+          naming any of them. — A single option changes what every event in the deployment carries,
+          which is why a rule elsewhere in this bundle matches it separately. Read the option before
+          answering what the vendor receives. || What this vendor necessarily learns on every path,
+          regardless of payload: The caller's IP address, the user agent, the destination host and
+          path, and the TLS SNI; for the browser paths, the page URL and the referrer, and the data
+          source name, which identifies the operator's own project to the vendor. Art. 4(1) makes an
+          IP address and a stable identifier personal data in their own right, so this floor is a
+          disclosure even where the operator strips every field it controls."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (Functional
+          Software, Inc. d/b/a Sentry, 45 Fremont Street, 8th Floor, San Francisco, CA 94105) ||
+          CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the day each
+          document was read: Functional Software, Inc. d/b/a Sentry — United States (45 Fremont
+          Street, 8th Floor, San Francisco, CA 94105); no state of incorporation is stated in the
+          document read — named in the privacy policy as the data controller of the personal
+          information the vendor holds in its own right [read from https://sentry.io/privacy/ on
+          2026-09-02]; Sentry Software Netherlands B.V. — Netherlands (Schiphol Boulevard 359, 1118
+          BJ, Amsterdam Schiphol) — named as the EU representative appointed under Art. 27 GDPR. An
+          Art. 27 representative receives correspondence on the controller's behalf; it does not
+          make the controller established in the Union and it is not the party a customer contracts
+          with [read from https://sentry.io/privacy/ on 2026-09-02]. || WHICH CANDIDATE APPLIES TO A
+          GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE
+          VENDOR. It is read from the order form, the data processing agreement or the invoice that
+          operator actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "The privacy policy names Functional Software, Inc. d/b/a Sentry as the data
+          controller and gives a San Francisco address. IT ALSO NAMES AN EU REPRESENTATIVE, Sentry
+          Software Netherlands B.V., appointed under Art. 27 GDPR - AND AN ART. 27 REPRESENTATIVE IS
+          NEITHER A CONTRACTING ENTITY NOR AN ESTABLISHMENT. Both are listed below as separate
+          candidates with the condition each was named under, so that a reader does not read the
+          Netherlands entity as an answer to which company an operator contracts with. ||
+          https://sentry.io/privacy/ (retrieved 2026-09-02) names, for \"The privacy policy names
+          Functional Software, Inc. d/b/a Sentry as the data controller\": \"The data controller of
+          your personal information is Functional Software, Inc. d/b/a Sentry.\" [RAW TEXT, fetched
+          directly and converted from HTML in this pass. This statement is about the personal
+          information Sentry holds in its own right; the customer data an operator sends to Sentry
+          is processed on that operator's behalf, and this citation is not evidence about that
+          second relationship.] || https://sentry.io/privacy/ (retrieved 2026-09-02) names, for
+          \"The same policy names the EU representative appointed under Art. 27 GDPR, which is not a
+          contracting entity\": \"Sentry Software Netherlands B.V., Schiphol Boulevard 359, 1118 BJ,
+          Amsterdam Schiphol, Netherlands.\" [RAW TEXT, fetched directly and converted from HTML in
+          this pass. It is quoted so that a reader sees the Netherlands entity and the reason it is
+          NOT the answer to the establishment question in the same place.]"
+      - vendor: Rollbar — Rollbar, Inc.
+        legal_name: Rollbar, Inc.
+        anchors:
+          - rollbar
+          - rollbar-react-native
+          - pyrollbar
+          - rollbar/rollbar
+          - github.com/rollbar/rollbar-go
+          - api.rollbar.com
+          - rollbar.com
+          - ROLLBAR_ACCESS_TOKEN
+          - Rollbar.init
+        receives: "Rollbar error and message reporting (browser and server): The error's class, message and
+          stack trace, the source file and line, the code version and environment, the request URL,
+          method and headers where the server integration is used, the caller's IP address and the
+          user agent, and whatever the application attaches as person or custom data. — THE PERSON
+          PAYLOAD IS EXPLICIT FOR THIS VENDOR: the SDKs document a person object carrying an id, a
+          username and an email address, so an integration that fills it discloses a direct
+          identifier with every error. Read the calling code. || What this vendor necessarily learns
+          on every path, regardless of payload: The caller's IP address, the user agent, the
+          destination host and path, and the TLS SNI; for the browser paths, the page URL and the
+          referrer, and the access token, which identifies the operator's own project to the vendor.
+          Art. 4(1) makes an IP address and a stable identifier personal data in their own right, so
+          this floor is a disclosure even where the operator strips every field it controls."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (Rollbar,
+          Inc.) - the entity is named and NO country, state of incorporation or registered address
+          is stated in the document read, so this place rests on the entity suffix alone ||
+          CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the day each
+          document was read: Rollbar, Inc. — United States, on the entity suffix alone; the document
+          states no country, no state of incorporation and no registered address — named in the
+          privacy policy as the party that controls the reader's personal information [read from
+          https://docs.rollbar.com/docs/privacy-policy on 2026-09-02]. || WHICH CANDIDATE APPLIES TO
+          A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE
+          VENDOR. It is read from the order form, the data processing agreement or the invoice that
+          operator actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "The privacy policy names Rollbar, Inc. as the controller of the reader's
+          personal information and names no other entity. No address, no state of incorporation and
+          no European entity appears in the document read, and the place above is therefore weaker
+          than it looks - it is the Vercel treatment in this same file, recorded for the same
+          reason. || https://docs.rollbar.com/docs/privacy-policy (retrieved 2026-09-02) names, for
+          \"The privacy policy names Rollbar, Inc. as the controller of personal information\":
+          \"Your personal information is controlled by Rollbar, Inc.\" [RAW TEXT, fetched directly
+          and converted from HTML in this pass. The URL is the one the vendor's own
+          https://rollbar.com/privacy/ address redirects to, and the final address is cited rather
+          than the redirecting one so that the document quoted and the document named are the
+          same.]"
+      - vendor: BugSnag (SmartBear) — SmartBear Software Inc.
+        legal_name: SmartBear Software Inc.
+        anchors:
+          - "@bugsnag/js"
+          - "@bugsnag/browser"
+          - "@bugsnag/node"
+          - "@bugsnag/plugin-react"
+          - "@bugsnag/expo"
+          - "@bugsnag/"
+          - bugsnag
+          - bugsnag/bugsnag
+          - github.com/bugsnag/bugsnag-go
+          - com.bugsnag
+          - notify.bugsnag.com
+          - sessions.bugsnag.com
+          - bugsnag.com
+          - BUGSNAG_API_KEY
+          - Bugsnag.start
+        receives: "Bugsnag.start and notify (browser and server): The error's class, message and stack
+          trace, the source file and line, the release stage and app version, the breadcrumb trail
+          leading up to the error, the request URL and headers where a server integration is used,
+          the caller's IP address and the user agent, and whatever the application attaches as user
+          or metadata. — THE USER OBJECT IS DOCUMENTED AS CARRYING AN ID, A NAME AND AN EMAIL
+          ADDRESS, so an integration that fills it discloses a direct identifier with every error,
+          and the metadata tabs are free-form and carry whatever the application puts in them. ||
+          What this vendor necessarily learns on every path, regardless of payload: The caller's IP
+          address, the user agent, the destination host and path, and the TLS SNI; for the browser
+          paths, the page URL and the referrer, and the API key, which identifies the operator's own
+          project to the vendor. Art. 4(1) makes an IP address and a stable identifier personal data
+          in their own right, so this floor is a disclosure even where the operator strips every
+          field it controls."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (SmartBear
+          Software Inc., 450 Artisan Way, Somerville, MA 02145, USA) - given as the address for
+          notices under the agreement rather than as a registered office || CANDIDATE CONTRACTING
+          ENTITIES, as the vendor's own documents named them on the day each document was read:
+          SmartBear Software Inc. — United States (450 Artisan Way, Somerville, MA 02145), given as
+          the address for notices under the agreement rather than as a registered office; no state
+          of incorporation is stated — named in the terms of use as the party notices under the
+          agreement are sent to; the document names no separate European entity [read from
+          https://smartbear.com/terms-of-use/ on 2026-09-02]. || WHICH CANDIDATE APPLIES TO A GIVEN
+          OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR.
+          It is read from the order form, the data processing agreement or the invoice that operator
+          actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "GET THE CONTRACTING ENTITY RIGHT RATHER THAN THE BRAND, which is this file's
+          own standing warning and applies here for the second time: BugSnag was acquired by
+          SmartBear, its own legal URLs no longer resolve, and the agreement that governs the
+          product is SmartBear's. A record of processing activities naming BugSnag as the recipient
+          may be naming a company that no longer contracts with anybody. The address quoted is
+          designated for NOTICES and is recorded at that strength; no state of incorporation is
+          stated and no European entity is named in the document read. ||
+          https://smartbear.com/terms-of-use/ (retrieved 2026-09-02) names, for \"The terms of use
+          name SmartBear Software Inc. and give its notice address\": \"The address for notices to
+          SmartBear is: SmartBear Software Inc., 450 Artisan Way, Somerville, MA 02145, USA\" [RAW
+          TEXT, fetched directly and converted from HTML in this pass. Reached after the vendor's
+          own https://www.bugsnag.com/legal/terms-of-service/ address returned HTTP 404, which is
+          itself the evidence that the brand's own legal documents have moved to the acquirer.]"
+      - vendor: Honeybadger — Honeybadger Industries LLC
+        legal_name: Honeybadger Industries LLC
+        anchors:
+          - "@honeybadger-io/js"
+          - "@honeybadger-io/react"
+          - "@honeybadger-io/"
+          - honeybadger
+          - honeybadger-io/honeybadger-laravel
+          - github.com/honeybadger-io/honeybadger-go
+          - api.honeybadger.io
+          - honeybadger.io
+          - HONEYBADGER_API_KEY
+        receives: "Honeybadger error notification (browser and server): The error's class, message and
+          backtrace, the source file and line, the environment and revision, the request URL,
+          parameters and session where a server integration is used, the caller's IP address and the
+          user agent, and whatever the application attaches as context. — REQUEST PARAMETERS AND
+          SESSION CONTENTS ARE THE FIELDS TO READ FIRST for a server-side error reporter: a form
+          submission that fails carries the submitted values into the report unless the
+          integration's own filtering removes them, and what that filtering covers is a
+          configuration fact this detector does not have. || What this vendor necessarily learns on
+          every path, regardless of payload: The caller's IP address, the user agent, the
+          destination host and path, and the TLS SNI; for the browser paths, the page URL and the
+          referrer, and the API key, which identifies the operator's own project to the vendor. Art.
+          4(1) makes an IP address and a stable identifier personal data in their own right, so this
+          floor is a disclosure even where the operator strips every field it controls."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (Honeybadger
+          Industries LLC) - the entity is named and NO country, state of formation or registered
+          address is stated in the documents read, so this place rests on the entity suffix alone ||
+          CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the day each
+          document was read: Honeybadger Industries LLC — United States, on the entity suffix alone;
+          the documents state no country, no state of formation and no registered address — named in
+          the privacy statement as the operator of the website and the services that link to it
+          [read from https://www.honeybadger.io/privacy/ on 2026-09-02]. || WHICH CANDIDATE APPLIES
+          TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF
+          THE VENDOR. It is read from the order form, the data processing agreement or the invoice
+          that operator actually signed; where none of those can be read, the answer for this field
+          is needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "Both the terms and the privacy statement name Honeybadger Industries LLC and
+          neither gives an address, a state of formation or a country. The place above is the Vercel
+          treatment in this same file: it rests on the entity suffix and on the documents being the
+          vendor's own United States-facing pages, not on a stated country. No European entity is
+          named. || https://www.honeybadger.io/privacy/ (retrieved 2026-09-02) names, for \"The
+          privacy statement names Honeybadger Industries LLC as the operator of the site and
+          services\": \"This Privacy Statement applies to the www.honeybadger.io website operated by
+          Honeybadger Industries LLC\" [RAW TEXT, fetched directly and converted from HTML in this
+          pass. The sentence continues to name other sites and services that link to the statement,
+          which is outside the span quoted here.]"
+      - vendor: AppSignal — AppSignal B.V.
+        legal_name: AppSignal B.V.
+        anchors:
+          - "@appsignal/nodejs"
+          - "@appsignal/javascript"
+          - "@appsignal/react"
+          - "@appsignal/"
+          - appsignal
+          - push.appsignal.com
+          - appsignal-endpoint.net
+          - appsignal.com
+          - APPSIGNAL_PUSH_API_KEY
+        receives: "AppSignal error and performance reporting (server and browser): The error's class,
+          message and backtrace, the source file and line, the revision and environment, transaction
+          and request metadata including the path and parameters where the server integration is
+          used, the caller's IP address and the user agent, and whatever the application attaches as
+          tags or sample data. || What this vendor necessarily learns on every path, regardless of
+          payload: The caller's IP address, the user agent, the destination host and path, and the
+          TLS SNI; for the browser paths, the page URL and the referrer, and the push API key, which
+          identifies the operator's own application to the vendor. Art. 4(1) makes an IP address and
+          a stable identifier personal data in their own right, so this floor is a disclosure even
+          where the operator strips every field it controls."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Netherlands (AppSignal B.V.,
+          registered with the Dutch Chamber of in Amsterdam under number 62960407) || CANDIDATE
+          CONTRACTING ENTITIES, as the vendor's own documents named them on the day each document
+          was read: AppSignal B.V. — Netherlands (registered with the Dutch Chamber of in Amsterdam
+          under number 62960407); no registered address is stated in the document read — named in
+          the terms and conditions as the company providing the service [read from
+          https://www.appsignal.com/terms on 2026-09-02]. || WHICH CANDIDATE APPLIES TO A GIVEN
+          OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR.
+          It is read from the order form, the data processing agreement or the invoice that operator
+          actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "THIS IS THE STRONGEST JURISDICTION FACT IN EITHER OF THE TWO LISTS ADDED IN
+          THIS PASS, and it is the only one of the twelve that names a register and a registration
+          number: the vendor's own terms state the company, the register and the number. It is also
+          the only vendor in these two lists established in the European Economic Area on the
+          documents read, which changes the transfer question for an operator in the Union rather
+          than the recipient question. || https://www.appsignal.com/terms (retrieved 2026-09-02)
+          names, for \"The terms and conditions name AppSignal B.V. and its Dutch Chamber of
+          registration number\": \"the company AppSignal B.V. ... registered with the Dutch Chamber
+          of in Amsterdam under number 62960407\" [RAW TEXT, fetched directly and converted from
+          HTML in this pass. The elision skips the vendor's own defined term in curly quotation
+          marks, which sits between the company name and the registration clause.]"
+      - vendor: Raygun — Raygun Limited
+        legal_name: Raygun Limited
+        anchors:
+          - raygun
+          - raygun4js
+          - raygun4py
+          - Mindscape.Raygun4Net
+          - api.raygun.com
+          - api.raygun.io
+          - raygun.com
+          - raygun.io
+          - rg4js
+        receives: "Raygun Crash Reporting (browser, server and mobile): The error's class, message and stack
+          trace, the source file and line, the version and environment, the request URL and headers
+          where a server integration is used, the device and browser details, the caller's IP
+          address, and whatever the application attaches as user or custom data. — THE USER PAYLOAD
+          IS DOCUMENTED AS CARRYING AN IDENTIFIER, A NAME AND AN EMAIL ADDRESS for this vendor as
+          for its peers, so an integration that fills it discloses a direct identifier with every
+          error. || Raygun Real User Monitoring: Page load and navigation timings keyed to the page
+          URL, the browser and device, the caller's IP address and a visitor identifier, for every
+          visitor rather than only for the ones who hit an error. — THE REAL USER MONITORING PATH IS
+          THE ONE THAT RUNS FOR EVERYBODY. An error reporter that only speaks when something breaks
+          and a monitor that reports every page load are two very different disclosures under one
+          vendor name, and the anchors cannot tell them apart. || What this vendor necessarily
+          learns on every path, regardless of payload: The caller's IP address, the user agent, the
+          destination host and path, and the TLS SNI; for the browser paths, the page URL and the
+          referrer, and the API key, which identifies the operator's own application to the vendor.
+          Art. 4(1) makes an IP address and a stable identifier personal data in their own right, so
+          this floor is a disclosure even where the operator strips every field it controls."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: New Zealand (Raygun Limited,
+          New Zealand company number 1899673) || CANDIDATE CONTRACTING ENTITIES, as the vendor's own
+          documents named them on the day each document was read: Raygun Limited — New Zealand
+          (company number 1899673); no registered address is stated in the document read — defined
+          in the terms as the party the customer contracts with, together with its assigns [read
+          from https://raygun.com/terms on 2026-09-02]. || WHICH CANDIDATE APPLIES TO A GIVEN
+          OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR.
+          It is read from the order form, the data processing agreement or the invoice that operator
+          actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: 'The terms define the vendor as Raygun Limited and give a New Zealand company
+          number, and the same document computes business days by reference to public holidays in
+          New Zealand. This is one of two entries in these two lists that names a company register
+          and a number, and the only one outside both the United States and the European Economic
+          Area. || https://raygun.com/terms (retrieved 2026-09-02) names, for "The terms define
+          Raygun as Raygun Limited and give its New Zealand company number": "Raygun, we or us means
+          Raygun Limited (NZ Company number 1899673) and includes its assigns." [RAW TEXT, fetched
+          directly and converted from HTML in this pass. The definitions list this sentence sits in
+          carries zero-width joiner characters between its entries, which the comparison normalises
+          away.]'
+      - vendor: Airbrake — Airbrake Technologies, Inc.
+        legal_name: Airbrake Technologies, Inc.
+        anchors:
+          - "@airbrake/browser"
+          - "@airbrake/node"
+          - "@airbrake/"
+          - airbrake
+          - airbrake-ruby
+          - airbrake/phpbrake
+          - github.com/airbrake/gobrake
+          - api.airbrake.io
+          - airbrake.io
+          - AIRBRAKE_PROJECT_KEY
+          - AIRBRAKE_PROJECT_ID
+        receives: "Airbrake error notification (browser and server): The error's class, message and
+          backtrace, the source file and line, the environment and version, the request URL,
+          parameters, headers and session where a server integration is used, the caller's IP
+          address and the user agent, and whatever the application attaches as context or as a user.
+          — REQUEST PARAMETERS AND SESSION CONTENTS ARE THE FIELDS TO READ FIRST, for the reason the
+          Honeybadger entry gives: a failed form submission carries its submitted values into the
+          report unless the integration's own filtering removes them. || What this vendor
+          necessarily learns on every path, regardless of payload: The caller's IP address, the user
+          agent, the destination host and path, and the TLS SNI; for the browser paths, the page URL
+          and the referrer, and the project identifier and project key, which identify the
+          operator's own project to the vendor. Art. 4(1) makes an IP address and a stable
+          identifier personal data in their own right, so this floor is a disclosure even where the
+          operator strips every field it controls."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (Airbrake
+          Technologies, Inc.) - the entity is named and NO country, state of incorporation or
+          registered address is stated in the documents read, so this place rests on the entity
+          suffix alone || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them
+          on the day each document was read: Airbrake Technologies, Inc. — United States, on the
+          entity suffix alone; the documents state no country, no state of incorporation and no
+          registered address — named in the terms of service as the owner of the service the
+          customer uses [read from https://www.airbrake.io/terms on 2026-09-02]. || WHICH CANDIDATE
+          APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN
+          ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement or
+          the invoice that operator actually signed; where none of those can be read, the answer for
+          this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "The terms of service name Airbrake Technologies, Inc. as the owner of the
+          service and the privacy policy names the same entity. Neither gives an address, a state of
+          incorporation or a country, and neither names a European entity. The place above is the
+          Vercel treatment in this same file, recorded for the same reason. ||
+          https://www.airbrake.io/terms (retrieved 2026-09-02) names, for \"The terms of service
+          name Airbrake Technologies, Inc. as the owner of the service\": \"The Service is owned by
+          Airbrake Technologies, Inc.\" [RAW TEXT, fetched directly and converted from HTML in this
+          pass. The sentence continues into the vendor's own defined terms in curly quotation marks,
+          which are outside the span quoted here.]"

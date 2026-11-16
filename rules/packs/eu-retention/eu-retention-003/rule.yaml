@@ -1,0 +1,598 @@
+id: eu-retention-003
+pack: eu-retention
+short_name: Retention period set in the database or infrastructure
+problem_line:
+  text: "Retention clause: notice or run not found, or mismatched"
+fix_line: State the period where people read it, make stated and enforced periods agree, and check
+  that the clause actually runs.
+title: Retention period or age-based deletion written into a schema, a migration or an
+  infrastructure artefact
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(e), the storage-limitation principle, quoted from
+      the Official Journal text at CELEX 32016R0679. Art. 5(1) opens 'Personal data shall be:' and
+      point (e) reads: 'kept in a form which permits identification of data subjects for no longer
+      than is necessary for the purposes for which the personal data are processed'. Three phrases
+      in that sentence decide what this rule may and may not say, and the first of them decides the
+      whole shape of it. FOR NO LONGER THAN IS NECESSARY - the limit is set by the purpose and not
+      by any number of days, so no period is right or wrong on its face and no detector can compute
+      the permitted period from code. That matters more here than in either sibling rule, because
+      what this detector finds is almost always a FINITE and enforced period: a seven-day window on
+      a trace store, a thirty-day TTL index on an activity collection, a ninety-day object-expiry
+      rule on a bucket. Such a clause is a product doing the thing the principle asks for, and a
+      finding that treated it as a gap would be stating the opposite of the truth. What a candidate
+      here is about is WHERE the period is written and therefore what it applies to and who can see
+      it, never that the number is wrong. KEPT IN A FORM WHICH PERMITS IDENTIFICATION - the duty
+      bites on identifiability rather than on storage as such, so data anonymised past
+      identification is outside the point and pseudonymised data is not. PERSONAL DATA - the subject
+      of the sentence is defined in Art. 4(1), carried as entry 4, and whether any particular table
+      is within it is not a question this detector answers. The point carries its own exception in
+      the same sentence: 'personal data may be stored for longer periods insofar as the personal
+      data will be processed solely for archiving purposes in the public interest, scientific or
+      historical research purposes or statistical purposes in accordance with Article 89(1) subject
+      to implementation of the appropriate technical and organisational measures required by this
+      Regulation in order to safeguard the rights and freedoms of the data subject'. That clause is
+      CONJUNCTIVE - every conjunct has to hold before the longer storage is permitted. The
+      processing must be SOLELY for one of three named purposes and the list is closed: archiving in
+      the public interest, scientific or historical research, or statistics. It must be in
+      accordance with Article 89(1), carried as entry 3. And it must be subject to implementation of
+      the appropriate technical and organisational measures. Note that 'in the public interest'
+      attaches to archiving alone and not to research or statistics. Art. 5(2) is the paragraph this
+      rule leans on hardest and it is the reason the LOCATION of a period is worth reporting at all:
+      'The controller shall be responsible for, and be able to demonstrate compliance with,
+      paragraph 1'. A period compiled into a migration or into a Terraform file is the period that
+      is actually enforced, and it is enforced whether or not it appears anywhere a reviewer, an
+      operator or a data subject would look. Applies since 2018-05-25, Art. 99(2): 'It shall apply
+      from 25 May 2018.'"
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-12
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 39, from the same Official Journal text. Two
+      sentences corroborate Art. 5(1)(e) and neither enacts anything on its own. First: 'This
+      requires, in particular, ensuring that the period for which the personal data are stored is
+      limited to a strict minimum.' Second, and this is the sentence nearest the code shape this
+      rule matches: 'In order to ensure that the personal data are not kept longer than necessary,
+      time limits should be established by the controller for erasure or for a periodic review.'
+      Read that second sentence against what this detector actually finds, because it points the
+      other way from the two sibling rules. A TTL clause on a table, a TTL index on a collection and
+      an object-expiry lifecycle rule are all time limits established for erasure, and they are
+      enforced by the store itself rather than by a job somebody has to remember to run. On the face
+      of it that is the recital being answered rather than breached. Both limbs of the sentence are
+      things a TIME LIMIT is established FOR, so the choice it offers is between two ways of
+      enforcing a limit and never between having a limit and not having one. What is left for a
+      reader to check is therefore not whether a limit exists but three other things, and the
+      context questions ask them in order: whether the limit that exists is the one the product
+      tells people about, whether the artefact carrying it is the live one rather than a superseded
+      migration, and whether the period is reached at all where the clause is guarded by a parameter
+      supplied from outside the file. A recital does not enact a duty; it colours Art. 5(1)(e),
+      which is what this rule cites as its test."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-12
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 89(1), from the same Official Journal text: 'Processing
+      for archiving purposes in the public interest, scientific or historical research purposes or
+      statistical purposes, shall be subject to appropriate safeguards, in accordance with this
+      Regulation, for the rights and freedoms of the data subject.' The paragraph then states what
+      those safeguards have to do: 'Those safeguards shall ensure that technical and organisational
+      measures are in place in particular in order to ensure respect for the principle of data
+      minimisation.' It names two measures and the modal verbs are not interchangeable. 'Those
+      measures may include pseudonymisation provided that those purposes can be fulfilled in that
+      manner.' But 'Where those purposes can be fulfilled by further processing which does not
+      permit or no longer permits the identification of data subjects, those purposes shall be
+      fulfilled in that manner.' Pseudonymisation is permissive; giving up the identifying form
+      altogether is MANDATORY wherever the purposes can be met that way. Carried here because the
+      longer-storage exception in Art. 5(1)(e) is expressly conditioned on this paragraph, so
+      quoting the exception without it would overstate how freely the exception can be relied on. It
+      has a second use in this rule: the stores this detector finds periods on are frequently
+      analytics, telemetry and event stores, which is exactly where an operator is most likely to
+      reach for the statistical-purposes limb, and this paragraph is what that limb costs. Whether a
+      given store is within the archiving, research or statistical purposes, and whether the
+      safeguards are in place, are questions for the adjudicating agent and for the operator;
+      nothing in this detector tests either."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-12
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1), from the same Official Journal text. Personal
+      data 'means any information relating to an identified or identifiable natural person', and the
+      paragraph continues: 'an identifiable natural person is one who can be identified, directly or
+      indirectly, in particular by reference to an identifier such as a name, an identification
+      number, location data, an online identifier or to one or more factors specific to the
+      physical, physiological, genetic, mental, economic, cultural or social identity of that
+      natural person'. Reference only, and carried for a specific reason: this rule matches a
+      MECHANISM written into a schema, a migration or an infrastructure file, and never a
+      determination that the data the mechanism governs is within this definition. A table whose
+      columns or secondary indexes are named for a user, a session or an address may be quoted as
+      corroboration in the context of a finding, and a column name written in a schema is closer to
+      a schema fact than to a product inference, but the definition above is applied by the
+      adjudicating agent or by the person running the scan, and never by a pattern. Nothing in the
+      detector tests this entry, and no pattern in it reads a column name."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-12
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 83(5)(a): infringements of 'the basic principles for
+      processing, including conditions for consent, pursuant to Articles 5, 6, 7 and 9' are 'subject
+      to administrative fines up to 20 000 000 EUR, or in the case of an undertaking, up to 4 % of
+      the total worldwide annual turnover of the preceding financial year, whichever is higher'.
+      Quoted from the same Official Journal text. Article 5 is listed expressly by number, so the
+      storage-limitation principle sits in the upper fining band rather than the Art. 83(4) one, and
+      that is what `severity: high` records. The Journal prints no-break spaces inside '20 000 000';
+      they are rendered as ordinary spaces here, as in eu-consent-016, eu-retention-001 and
+      eu-retention-002. This entry fixes the exposure if a candidate turns out to be a real gap; it
+      says nothing about how likely that is, which is rule_confidence."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-12
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1), from the same Official Journal text. The record
+      of processing activities 'shall contain all of the following information', and point (f) is
+      'where possible, the envisaged time limits for erasure of the different categories of data'.
+      That is the provision a candidate raised by this rule bears on most directly: a TTL clause on
+      a table, a TTL index on a collection or an object-expiry lifecycle rule IS an envisaged time
+      limit for erasure, it is the one that is actually enforced, and Art. 30(1)(f) asks for it to
+      be written in the record as well as in the migration. Two limits on how far that can be taken,
+      and both are in the text. The words 'where possible' are in the provision and are not a
+      formality. And Art. 30(5) exempts smaller organisations, but only conditionally, so the
+      exemption cannot be assumed: 'The obligations referred to in paragraphs 1 and 2 shall not
+      apply to an enterprise or an organisation employing fewer than 250 persons unless the
+      processing it carries out is likely to result in a risk to the rights and freedoms of data
+      subjects, the processing is not occasional, or the processing includes special categories of
+      data as referred to in Article 9(1) or personal data relating to criminal convictions and
+      offences referred to in Article 10.' Those three unless-limbs are disjunctive and the second
+      of them - processing that is not occasional - is met by any product that keeps an event or
+      activity store at all, so a scanned product is very often outside the exemption whatever its
+      headcount. Reference only. Whether this controller keeps a record of processing activities,
+      and what is in it, is not something a scan of source code can see; it is asked of the person
+      running the scan, and it is context_questions[3]."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-12
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.37
+detector:
+  engine: builtin-regex
+  shared_vocabulary:
+    - retention_time_columns
+  vocabulary:
+    interval_units:
+      - SECOND
+      - MINUTE
+      - HOUR
+      - DAY
+      - WEEK
+      - MONTH
+      - QUARTER
+      - YEAR
+      - second
+      - minute
+      - hour
+      - day
+      - week
+      - month
+      - quarter
+      - year
+    time_column_words:
+      - ts
+      - created_at
+      - created_time
+      - createdAt
+      - creationTime
+      - creation_time
+      - timestamp
+      - time
+      - date
+      - datetime
+      - expired_at
+      - expiredAt
+      - expires_at
+      - expiresAt
+      - last_seen
+      - lastSeen
+      - updated_at
+      - updatedAt
+      - modified_at
+      - inserted_at
+      - event_time
+      - eventTime
+      - occurred_at
+      - logged_at
+      - start_time
+      - startTime
+      - age
+      - expire_token
+      - expireToken
+      - expire_time
+      - expireTime
+      - expire_at
+      - expireAt
+  match:
+    - (?<![\w$.])(?:TTL|ttl)[ \t]+[^\n;]{0,140}?\+[ \t]*(?:(?:INTERVAL|interval)[ \t]+[1-9][0-9_]*[
+      \t]*(?&interval_units)S?|toInterval(?:Second|Minute|Hour|Day|Week|Month|Quarter|Year)\([
+      \t]*[1-9][0-9_]*)(?![ \t]*(?:TO[ \t]+(?:DISK|VOLUME)|to[
+      \t]+(?:disk|volume)|RECOMPRESS|recompress|GROUP[ \t]+BY|group[ \t]+by))
+    - (?<![\w$.-])expireAfterSeconds['"]?[ \t]*(?:=>|[:=])[ \t]*[1-9][0-9_]*(?![\w.])
+    - (?<![\w$.-])expireAfterSeconds['"]?[ \t]*(?:=>|[:=])[
+      \t]*(?!(?:0|null|undefined|None|false|true|new)(?![\w$.]))[A-Za-z_$][\w$.]{0,60}(?![\w$(])
+    - (?:DELETE|delete)[ \t]+(?:FROM|from)[
+      \t]+["`']?[\w$.]{1,60}["`']?[^\n]{0,240}?(?:WHERE|where)[^\n]{0,240}?(?<![\w$.])(?:[\w$.]{0,40}[._])?(?&time_column_words)(?![a-z])[\w$.]{0,20}(?![\w$.])[
+      \t]*(?:<=|<)(?![=<>])
+    - (?:^|[^\w$.])(?:IF|if)[
+      \t]+[^\n]{0,60}?(?<![\w$.])[\w$.]{0,30}(?:ttl|TTL)(?![a-z])[\w$._]{0,20}(?![\w$.])[ \t]*>[
+      \t]*0(?![\w.])[^\n]{0,80}?(?:THEN|then)(?![\w])
+    - ^[ \t]*(?:(?:expiration|lifecycle_rule)[ \t]*\{|resource[
+      \t]+"aws_s3_bucket_lifecycle_configuration")
+    - (?<![\w$.-])ExpirationInDays['"]?[ \t]*:[ \t]*['"]?[1-9][0-9]*(?![\w.])
+    - (?<![\w$])(?:PutBucketLifecycleConfiguration|putBucketLifecycleConfiguration|PutBucketLifecycle|putBucketLifecycle|PutLifecycleConfiguration|putLifecycleConfiguration|put_bucket_lifecycle_configuration|set_lifecycle_rules|setLifecycleRules|SetBucketLifecycle|setBucketLifecycle|set_bucket_lifecycle|SetBlobLifecyclePolicy|setBlobLifecyclePolicy|set_blob_lifecycle_policy)
+    - (?:DELETE|delete|Delete)[
+      \t]+(?:FROM|from|From)\b[^\n]{0,100}?\b(?:WHERE|where|Where)\b[^\n]{0,160}?(?<![\w$])(?&retention_time_columns)(?![\w$])[
+      \t]*(?:<=|>=|<|>)[
+      \t]*(?:\?|\$[0-9]{1,2}|:[A-Za-z_]\w{0,30}|@[A-Za-z_]\w{0,30}|%s|(?:NOW|now|CURRENT_TIMESTAMP|current_timestamp|GETDATE|getdate|UNIX_TIMESTAMP)[
+      \t]*(?:\([ \t]*\))?[ \t]*-[ \t]*(?:INTERVAL|interval)[
+      \t]*['"][^'"\n]{1,30}['"]|(?:DATE_SUB|date_sub|DATEADD|dateadd|datetime|DATETIME)[ \t]*\()
+    - (?:DELETE|delete|Delete)[
+      \t]+(?:FROM|from|From)\b[^\n]{0,100}?\b(?:WHERE|where|Where)\b[^\n]{0,160}?(?<![\w$])(?&retention_time_columns)(?![\w$])[
+      \t]*(?:<=|>=|<|>)[
+      \t]*(?:\?|\$[0-9]{1,2}|:[A-Za-z_]\w{0,30}|@[A-Za-z_]\w{0,30}|%s|(?:NOW|now|CURRENT_TIMESTAMP|current_timestamp|GETDATE|getdate|UNIX_TIMESTAMP)[
+      \t]*(?:\([ \t]*\))?[ \t]*-[ \t]*(?:INTERVAL|interval)[
+      \t]*['"][^'"\n]{1,30}['"]|(?:DATE_SUB|date_sub|DATEADD|dateadd|datetime|DATETIME)[
+      \t]*\(|(?:(?:cast|CAST)[ \t]*\([ \t]*(?:strftime|STRFTIME)[ \t]*\([ \t]*['"]%s['"][ \t]*,[
+      \t]*['"]now['"][ \t]*\)[ \t]*(?:as|AS)[ \t]+\w{1,12}[ \t]*\)|(?:strftime|STRFTIME)[ \t]*\([
+      \t]*['"]%s['"][ \t]*,[ \t]*['"]now['"][ \t]*\))(?:[ \t]*-[ \t]*[^\n]{0,60})?)
+    - (?:DELETE|delete|Delete)[
+      \t]+(?:FROM|from|From)\b[^\n]{0,100}?\b(?:WHERE|where|Where)\b[^\n]{0,160}?(?:cast|CAST)[
+      \t]*\([ \t]*(?<![\w$])(?&retention_time_columns)(?![\w$])[ \t]+(?:as|AS)[ \t]+\w{1,12}[
+      \t]*\)[ \t]*(?:<=|>=|<|>)[
+      \t]*(?:\?|\$[0-9]{1,2}|:[A-Za-z_]\w{0,30}|@[A-Za-z_]\w{0,30}|%s|(?:NOW|now|CURRENT_TIMESTAMP|current_timestamp|GETDATE|getdate|UNIX_TIMESTAMP)[
+      \t]*(?:\([ \t]*\))?[ \t]*-[ \t]*(?:INTERVAL|interval)[
+      \t]*['"][^'"\n]{1,30}['"]|(?:DATE_SUB|date_sub|DATEADD|dateadd|datetime|DATETIME)[
+      \t]*\(|(?:(?:cast|CAST)[ \t]*\([ \t]*(?:strftime|STRFTIME)[ \t]*\([ \t]*['"]%s['"][ \t]*,[
+      \t]*['"]now['"][ \t]*\)[ \t]*(?:as|AS)[ \t]+\w{1,12}[ \t]*\)|(?:strftime|STRFTIME)[ \t]*\([
+      \t]*['"]%s['"][ \t]*,[ \t]*['"]now['"][ \t]*\))(?:[ \t]*-[ \t]*[^\n]{0,60})?)
+    - (?:DELETE|delete|Delete)[
+      \t]+(?:FROM|from|From)\b[^\n]{0,200}?\b(?:WHERE|where|Where)\b[^\n]{0,240}?(?<![\w$])(?:[\w$.]{0,40}[._])?(?:datetime|DateTime|DATETIME|Datetime|timestamp|Timestamp|TIMESTAMP|created_at|createdAt|CREATED_AT|last_seen|lastSeen|LAST_SEEN|completion|COMPLETION|inserted|INSERTED|created|Created|CREATED|expires|EXPIRES|expiry|EXPIRY|expire|Expire|EXPIRE|logged|LOGGED|date|Date|DATE|time|Time|TIME|age|Age|AGE)[\w$.]{0,24}(?![\w$.])[^\n]{0,40}?(?:<=|<)(?![=<>])[^\n]{0,60}?(?<![\w$.])(?:System\.currentTimeMillis|System\.nanoTime|Date\.now|time\.Now|datetime\.(?:now|utcnow)|Instant\.now|DateTime\.(?:Now|UtcNow)|Time\.now|Carbon::now|new[
+      \t]+Date|Utc::now|SystemTime::now)[ \t]*\([^\n)]{0,24}\)[^\n]{0,40}?-[^\n]{0,80}?[0-9]
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|<%#|--)
+    - (?<![\w$.-])[\w$.-]{0,40}(?:[Cc]ache|CACHE)[\w$.-]{0,40}(?![\w$.-])
+  also_in_file:
+    - (?:CREATE|create)[ \t]+(?:OR[ \t]+REPLACE[ \t]+|or[ \t]+replace[
+      \t]+)?(?:TABLE|table|MATERIALIZED[ \t]+VIEW|materialized[
+      \t]+view)[\s\S]{0,20000}?(?<![\w$.])(?:TTL|ttl)[ \t]+[^\n;]{0,140}?\+[
+      \t]*(?:(?:INTERVAL|interval)[ \t]+[1-9][0-9_]*[
+      \t]*(?&interval_units)S?|toInterval(?:Second|Minute|Hour|Day|Week|Month|Quarter|Year)\([
+      \t]*[1-9][0-9_]*)
+    - (?:ALTER|alter)[ \t]+(?:TABLE|table)[^\n]{0,200}?(?:MODIFY|modify)[
+      \t]+(?<![\w$.])(?:TTL|ttl)[ \t]+[^\n;]{0,140}?\+[ \t]*(?:(?:INTERVAL|interval)[
+      \t]+[1-9][0-9_]*[
+      \t]*(?&interval_units)S?|toInterval(?:Second|Minute|Hour|Day|Week|Month|Quarter|Year)\([
+      \t]*[1-9][0-9_]*)
+    - (?:createIndex|createIndexes|create_index|ensureIndex|[Ii]ndex|INDEX|key)[\s\S]{0,300}?(?<![\w$.-])expireAfterSeconds['"]?[
+      \t]*(?:=>|[:=])[
+      \t]*(?:[1-9][0-9_]*(?![\w.])|(?!(?:0|null|undefined|None|false|true|new)(?![\w$.]))[A-Za-z_$][\w$.]{0,60}(?![\w$(]))
+    - (?:CREATE|create)[ \t]+(?:OR[ \t]+REPLACE[ \t]+|or[ \t]+replace[
+      \t]+)?(?:PROCEDURE|procedure|FUNCTION|function)[\s\S]{0,20000}?(?:DELETE|delete)[
+      \t]+(?:FROM|from)[
+      \t]+["`']?[\w$.]{1,60}["`']?[^\n]{0,240}?(?:WHERE|where)[^\n]{0,240}?(?<![\w$.])(?:[\w$.]{0,40}[._])?(?&time_column_words)(?![a-z])[\w$.]{0,20}(?![\w$.])[
+      \t]*(?:<=|<)(?![=<>])
+    - (?:CREATE|create)[ \t]+(?:OR[ \t]+REPLACE[ \t]+|or[ \t]+replace[
+      \t]+)?(?:PROCEDURE|procedure|FUNCTION|function)[\s\S]{0,20000}?(?:IF|if)[
+      \t]+[^\n]{0,60}?(?<![\w$.])[\w$.]{0,30}(?:ttl|TTL)(?![a-z])[\w$._]{0,20}(?![\w$.])[ \t]*>[
+      \t]*0(?![\w.])[^\n]{0,80}?(?:THEN|then)(?![\w])[\s\S]{0,8000}?(?:DELETE[ \t]+FROM|delete[
+      \t]+from|DROP[ \t]+TABLE|drop[ \t]+table|DETACH[ \t]+PARTITION|detach[ \t]+partition)
+    - (?:expiration[ \t]*\{[\s\S]{0,400}?(?<![\w-])days(?![\w-])[ \t]*=[
+      \t]*"?[1-9][0-9]*"?|lifecycle_rule[
+      \t]*\{[\s\S]{0,900}?"Delete"[\s\S]{0,900}?(?<![\w-])age(?![\w-])[ \t]*=[
+      \t]*"?[1-9][0-9]*"?|lifecycle_rule[ \t]*\{[\s\S]{0,900}?(?<![\w-])age(?![\w-])[ \t]*=[
+      \t]*"?[1-9][0-9]*"?[\s\S]{0,900}?"Delete")
+    - LifecycleConfiguration[ \t]*:[\s\S]{0,3000}?(?<![\w$.-])ExpirationInDays['"]?[ \t]*:[
+      \t]*['"]?[1-9][0-9]*(?![\w.])
+    - (?<![\w$.-])(?:Expiration|expiration)['"]?[ \t]*:[
+      \t]*\{[\s\S]{0,300}?(?<![\w$.-])(?:Days|days)['"]?[ \t]*:[
+      \t]*(?:[1-9][0-9_]*(?![\w.])|[A-Za-z_$][\w$.]{0,40}(?![\w$(]))
+    - (?:DELETE|delete)[ \t]+(?:FROM|from)[
+      \t]+["`']?[\w$.]{1,60}["`']?[^\n]{0,240}?(?:WHERE|where)[^\n]{0,240}?(?<![\w$.])(?:[\w$.]{0,40}[._])?(?&time_column_words)(?![a-z])[\w$.]{0,20}(?![\w$.])[
+      \t]*(?:<=|<)(?![=<>])[
+      \t]*(?:\$[1-9][0-9]*|\?|:[A-Za-z_]\w{0,40}|@[A-Za-z_]\w{0,40}|%s|%\([A-Za-z_]\w{0,40}\)s)
+    - (?<![\w$.-])(?:Expiration|expiration)['"]?[ \t]*(?::|=)[ \t]*(?:new[
+      \t]+)?[A-Za-z_][\w.]{0,60}[ \t]*\{[\s\S]{0,300}?(?<![\w$.-])(?:Days|days)['"]?[ \t]*(?::|=)[
+      \t]*(?:[1-9][0-9_]*(?![\w.])|[A-Za-z_$][\w$.]{0,40}(?![\w$(]))
+    - (?:CREATE|create)[
+      \t]+(?:(?:TABLE|table|INDEX|index|UNIQUE|unique|MATERIALIZED|materialized|VIEW|view)[
+      \t]+){1,3}(?:IF[ \t]+NOT[ \t]+EXISTS[
+      \t]+)?[^\n]{0,120}[\s\S]{0,1200}?(?<![\w$])(?&retention_time_columns)(?![\w$])
+    - (?:^|\n)[ \t]{0,8}(?:exports\.(?:up|down)[ \t]*=|def[ \t]+(?:up|down|upgrade|downgrade)[
+      \t]*\(|(?:public|async)?[ \t]*(?:function[ \t]+)?(?:up|down)[ \t]*\([^\n)]{0,80}\)[
+      \t]*[:{]|--[ \t]*\+(?:migrate|goose)[ \t]+(?:Up|Down)|<changeSet[ \t]|class[ \t]+\w{1,60}[
+      \t]+extends[ \t]+Migration\b)
+    - (?:CREATE|create|Create)[ \t]+(?:OR[ \t]+REPLACE[ \t]+|or[ \t]+replace[
+      \t]+)?(?:TEMP(?:ORARY)?[ \t]+|temp(?:orary)?[ \t]+)?(?:UNIQUE[ \t]+|unique[
+      \t]+)?(?:TABLE|table|Table|INDEX|index|Index)(?:[ \t]+(?:IF|if)[ \t]+(?:NOT|not)[
+      \t]+(?:EXISTS|exists))?[ \t]*["`'+]?[ \t]*(?:[A-Za-z_$][\w$.]{0,60}|\+)
+  gate_scope: directory
+  join_bracketed_constructs: true
+  shared_path_exclusions:
+    - prose_documents
+context_questions:
+  - "MANDATORY, and the detector did not check it: what store does this clause govern, and what is
+    in it? The clause was matched as a mechanism and the detector reads no column name, by the
+    standing rule that a fact about what data a product handles is asked of the person running the
+    scan or read from their declared documents, and may be corroborated by code but never decided by
+    it. Work outwards from the clause. For a table TTL, read the CREATE TABLE it belongs to and
+    quote its columns and its secondary indexes. For a TTL index, find the collection or model the
+    index is created on and read its fields. For an object-storage lifecycle rule, find what is
+    written into that bucket and quote the code that writes it. Columns or indexes named for a user
+    identifier, a session, an address of the requesting machine, a name or an email address are
+    corroboration worth quoting verbatim, and corroboration is not the determination. Where the
+    ScanProfile or the declared documents answer whether this is personal data within GDPR Art.
+    4(1), say which one you used and quote it; where nothing answers it, return needs_human rather
+    than deciding it from column names. If the store holds no personal data, dismiss the candidate
+    here and say what it holds instead."
+  - Is this artefact the live one? A migrations directory is a history and not a state, and nothing
+    in a line-based reading can tell them apart. Check four things and report each, and do not skip
+    (b) because the clause looks current. (a) Is this file an up-migration, a down-migration or a
+    rollback? (b) Is there a LATER migration in the same directory that alters or drops this TTL,
+    changes the period, or drops the table altogether? This is not a theoretical worry. In the
+    corpus repository this rule's most important spelling came from, migration 0023 creates two
+    tables with a seven-day and a thirty-day TTL and migration 0029 in the same directory is called
+    drop_traces_null_and_amt_tables and drops both of them; its down-file recreates them with the
+    same clauses, which is why the same two periods appear four times. Read the directory in order
+    and say what the current period is. (c) For an infrastructure file, is it deployed or is it an
+    example? The corpus's Terraform and Pulumi programs sit under benchmarks, examples and deploy
+    directories, and a template in a repository may provision nothing. (d) For a stored procedure,
+    is it called by anything? Search for the procedure name. Report the period as it stands after
+    all four checks, and if the answer is that the clause is superseded, dismiss the candidate and
+    say what replaced it.
+  - "Is the period actually reached, and where does its value come from? Three of this rule's limbs
+    match a clause whose period is supplied from OUTSIDE the file, and the detector says so rather
+    than guessing. Where the finding cites a stored-procedure guard of the form IF ttl > 0 THEN, the
+    parameter is passed by a caller and the whole deletion is conditional on it being positive: find
+    the caller, find the configured default, and quote it. In the corpus instance of that shape the
+    default ships at zero and the comment beside it reads that records are never expired, which
+    means the deletion never runs and the observation belongs to eu-retention-001 rather than to
+    this rule. Where the finding cites an expireAfterSeconds bound to a named identifier, or an
+    Expiration Days bound to a function parameter, resolve the name to its shipped value and quote
+    that too. Report the resolved period, or report that you could not resolve it, and say which.
+    ADDED 2026-09-06: there is now a SECOND PLACE TO LOOK and the finding names it. Where the
+    finding carries corroborated_from, that file and that line are the artefact that opened this
+    rule's gate, in a sibling file of the same directory. Open it first: it is the create statement,
+    the index, the procedure, the migration entry point or the lifecycle block that this candidate's
+    own file does not contain, and it is where a period supplied from outside this file is most
+    likely to be written. Say whether the value is in it, and say what joins that file to the cited
+    line, because the engine established only that both are in one directory."
+  - "Does this period appear anywhere the product tells anyone about it, and is it the same number?
+    This is the question this rule is best placed to raise, because a TTL clause is what the
+    database does rather than what a settings page, a README or a privacy policy says - once
+    question 2 has established that this artefact is the live one. Where it has not, the number on
+    the matched line is a historical or an example period and there is nothing yet to compare a
+    stated period against. Look for the number in three places and report each separately: the
+    product's own settings surface, its user-facing documentation and privacy policy, and its record
+    of processing activities if the operator supplies one. GDPR Art. 30(1)(f) asks for the envisaged
+    time limits for erasure of the different categories of data to be in that record, where
+    possible, and Art. 30(5) exempts smaller organisations only conditionally - so do not assume the
+    exemption. Where the enforced period and a stated period differ, that difference is the finding
+    and it should be reported with both numbers and both sources. Where nothing states a period at
+    all, say so; that is an observation about documentation and not a breach of Art. 5(1)(e). ADDED
+    2026-09-06: the number may not be on the cited line at all. Where the finding carries
+    joined_from, the statement was read as one bracket-balanced construct folded from that span and
+    the cited line is only where it opens, so read the whole span before saying what the enforced
+    period is or that none is written here."
+  - "Is this a cache, a queue or a working copy rather than a record store? The criterion is not the
+    name of the key or the collection: it is what the deletion LOSES. If the same fact survives in
+    another durable store and this row, document or object is a copy, it is a cache and the
+    candidate should be dismissed - name the durable copy and quote where it is written. This rule
+    keeps ordinary cache expiry out by surface rather than by vocabulary, because a cache TTL is
+    expressed against a cache client and never inside a schema, but one arrangement defeats that: a
+    cache kept in the durable store itself, as a collection with a TTL index on it. Where the
+    finding is a TTL index, check for that arrangement first. Where it is a bucket lifecycle rule,
+    check whether the bucket holds derived artefacts - thumbnails, exports, temporary uploads -
+    rather than the records themselves."
+  - "Does this clause actually delete anything, and what does the deletion leave behind? A
+    ClickHouse TTL expression can carry more than one action: as well as removing rows it can move a
+    part to another disk or volume, recompress it, or roll it up with a GROUP BY. The detector
+    refuses a clause whose every interval limb is a move, a recompression or a rollup, and raises
+    one where any limb is a deletion - so a tiered clause that moves at thirty days and deletes at
+    four hundred is reported, and reported as the four-hundred-day window it is. Read the whole
+    clause and say what it does to the data, and say which limb the period a reader should care
+    about belongs to. The same question in a different form for the stored-procedure limb: does the
+    statement delete rows, or does it detach or drop a partition that is then archived elsewhere?
+    Where the answer is that nothing is removed, dismiss the candidate and quote the clause."
+  - Does the exception in Art. 5(1)(e) apply, and is the condition attached to it met? The point
+    permits storage for longer periods where the data will be processed solely for archiving
+    purposes in the public interest, scientific or historical research purposes or statistical
+    purposes, and only subject to the safeguards in Art. 89(1). This comes up here more often than
+    in the sibling rules, because the stores this detector finds periods on are frequently
+    analytics, telemetry and event stores, and the statistical-purposes limb is the one an operator
+    will reach for. Two questions follow and they are separate. First, is this store within one of
+    those purposes on the face of the code and of the product's own description - an audit trail
+    kept for accountability is not automatically an archiving purpose in the public interest, and a
+    product analytics store is not automatically a statistical purpose. Second, if it is, are the
+    technical and organisational measures in Art. 89(1) in place? Ask that in the order the
+    paragraph puts them, because its two measures are not equivalent and legal_basis[2] quotes both.
+    Where the purposes CAN be fulfilled by processing that no longer permits identification, Art.
+    89(1) says they SHALL be fulfilled that way, so start by asking whether the purpose could be
+    served by anonymised or aggregated data. Where a separate legal retention duty applies instead,
+    quote the instrument and the period rather than naming it.
+evidence_template: "{file}:{line} is a line this finding points at, in a file where this rule bound
+  a retention clause to the statement it belongs to - a create statement, an index declaration, a
+  stored procedure or a lifecycle block. WHERE THE FINDING CARRIES corroborated_from, THE
+  CORROBORATION IS NOT IN THIS FILE. Added 2026-09-06: this rule's gate is scoped to the DIRECTORY,
+  so it may be opened by another file whose immediate parent directory is this file's own, and when
+  it is, the finding names that file and that line in locations[].corroborated_from. Read that named
+  line BEFORE the cited one. The claim is then the weaker one: the corroborating construct is
+  written somewhere in this directory, not that it and the cited line belong to one statement or to
+  one code path. THE STATEMENT THE CLAUSE BELONGS TO IS THEN NOT IN THIS FILE EITHER - the file's
+  own text is tested first and its result stands, so a corroborated_from can only appear where this
+  file's own twelve artefact branches all failed - and what was established is that this DIRECTORY
+  holds a create statement, an index declaration, a stored procedure, a migration entry point or a
+  lifecycle block, with the cited clause written in a file beside it. A DIRECTORY IS NOT A RELATION.
+  Where the two files are joined at all, it may be by an `import` that the engine did not read and
+  does not know is there, while the directory scope only happens to contain both. Say what joins the
+  named file to the cited line, if anything does. A finding that carries no corroborated_from is
+  unchanged and means exactly what it meant before. WHAT WAS ESTABLISHED. A clause is written in
+  this file that causes stored rows, documents or objects to be removed after a period, and it is
+  written INTO THE STORE OR ITS INFRASTRUCTURE rather than into a product setting. Which clause it
+  is depends on the limb that matched, and each limb establishes a different amount. A ClickHouse
+  table TTL establishes the most - the mechanism, the period and the deletion action are one
+  expression, bound by the gate to a CREATE TABLE, a CREATE MATERIALIZED VIEW or an ALTER TABLE in
+  the same file. A MongoDB TTL index option with a numeric value establishes the mechanism and the
+  period but not which collection the index is created on. An age-based DELETE inside a stored
+  procedure establishes the deletion and that it is keyed to a time column, but NOT the period,
+  which is computed from a procedure parameter. SINCE 2026-08-28 THE SAME DELETION IS ALSO REPORTED
+  WHERE NO STORED PROCEDURE DECLARES IT and the cutoff is a bound parameter instead - $1, a question
+  mark, :name, @name, %s - which is how a named-query file, an ORM raw statement or a migration
+  toolkit writes a deletion routine that a caller runs on a schedule. That limb establishes exactly
+  as much as the stored-procedure one and no more: a keyed age-based deletion exists and its period
+  is supplied from outside this file. What separates it from an ordinary one-off data fix is only
+  that the cutoff is bound rather than written, so if you find the statement is executed once by a
+  migration and never again, say so and dismiss it. Read that sentence as being about THE LINE THAT
+  OPENED THE GATE and no other: the corroboration is evaluated once per file, so a second deletion
+  in the same file becomes a location too, and its own cutoff may be a literal date written into a
+  one-off fix. The fifth point below is what that is for. A stored-procedure guard of the form IF
+  ttl > 0 THEN establishes only that the deletion is conditional on a time-to-live parameter being
+  positive. A Terraform or CloudFormation lifecycle rule establishes an object-expiry period on a
+  bucket. WHAT WAS NOT ESTABLISHED, and each of these is a question rather than a caveat. FIRST, AND
+  MOST IMPORTANTLY, NOTHING HERE SAYS THE PERIOD IS WRONG. Art. 5(1)(e) sets the limit by the
+  purpose and not by a number of days, so no detector can compute the permitted period, and most of
+  what this rule finds is a product enforcing a retention limit rather than failing to. What the
+  candidate is about is where the period is written, what it applies to, and whether it is the
+  period anyone was told about. SECOND, THE ARTEFACT IS NOT ESTABLISHED TO BE THE LIVE ONE, and this
+  is the largest single thing a reader has to check. A migrations directory is a history: an up file
+  and a down file may carry the same clause, a later migration may have changed the period or
+  dropped the table altogether, and an infrastructure file may be an example that deploys nothing.
+  In the repository this rule's most important spelling was drawn from, every matched clause is on a
+  table a later migration in the same directory drops. THIRD, no column was read and nothing here
+  says the store holds personal data. The definition in GDPR Art. 4(1) is applied by the
+  adjudicating agent or by the person running the scan, never by a pattern. FOURTH, where the period
+  is a named identifier or a procedure parameter, THE VALUE WAS NOT SEEN. FIFTH, OPEN THE FILE
+  BEFORE REPORTING ANY SINGLE LOCATION. The corroboration is evaluated once per file and every
+  qualifying line in that file then becomes a location, including a second TTL clause or a second
+  lifecycle block that took no part in opening the gate. ADDED 2026-09-04: THE SAME AGE-BASED
+  DELETION IS ALSO REPORTED WHERE THE COLUMN IS ONE THIS RULE'S OWN time_column_words LIST DOES NOT
+  HOLD - the bare word expire, or an activity or row-lifecycle column such as given, seen_at or
+  created_at - AND WHERE THE CUTOFF IS INTERVAL ARITHMETIC such as NOW() - INTERVAL '3 months'
+  rather than a bound parameter. That limb establishes neither more nor less than the
+  bound-parameter one, with a single difference in the reader's favour: where the cutoff is an
+  interval literal the PERIOD IS ON THE LINE. Its corroboration may also be a fifth kind of
+  artefact, and the opening sentence above does not name either: the file's own CREATE TABLE or
+  CREATE INDEX for the same column, or the fact that the file IS A MIGRATION - an exports.up, an
+  Alembic or Django def up, a goose or Liquibase marker, a Migration subclass. Where the migration
+  entry point is what opened the gate, the statement belongs to a migration and a migration runs
+  once: find out whether anything runs it again, and say so. THE HALF THIS RULE COULD NOT SEE UNTIL
+  2026-09-06 was the same statement split across two physical lines, because the engine matched one
+  line at a time. Since then this rule reads such a statement where it is bracket-balanced, and the
+  last paragraph of this template says on exactly what terms and what is still not read. ADDED
+  2026-09-06: THE SAME AGE-BASED DELETION IS ALSO REPORTED WHERE THE CUTOFF IS THE SQLITE CLOCK -
+  strftime('%s','now'), bare or inside a cast, less a span - OR WHERE THE COLUMN ITSELF IS WRAPPED
+  IN A CAST, as in cast(m_time as integer). Either alone is enough: one limb reads a bare column
+  with that cutoff, the other a cast-wrapped column, and the construct they were built from writes
+  both at once. SQLite has no NOW(), so that pair is how a product keeping its own SQLite store
+  writes the sweep the two limbs above write with a bound parameter or an interval literal; a column
+  declared INTEGER is cast on both sides so that the comparison is arithmetic rather than lexical.
+  Those two limbs establish neither more nor less than the bound-parameter one: a keyed age-based
+  deletion exists in this file and its cutoff is the clock less a span. THE SPAN IS USUALLY NOT ON
+  THE LINE - in the construct these limbs were built from it is a configuration value interpolated
+  into the statement - so where the number is written, resolve it and quote it, and where it is a
+  name, say that the value was not seen. Their corroboration is the same fifth artefact the
+  paragraph above names: the file's own CREATE TABLE or CREATE INDEX for the same column, or the
+  fact that the file is a migration. AND AT LINE SCOPE THESE TWO LIMBS REACH THE ONE-LINE SPELLING
+  OF THAT CONSTRUCT AND NOTHING ELSE - the anchor they were built from is itself written across four
+  physical lines, so on the day they shipped they did not reach it. ADDED 2026-09-06: THE STATEMENT
+  SPLIT ACROSS SEVERAL PHYSICAL LINES IS NOW READ, ON THESE TERMS AND NO OTHERS. This rule declares
+  join_bracketed_constructs, so every limb above is ALSO tested against the whole of the
+  bracket-balanced construct that OPENS on a line - a call, a literal or a parenthesised expression
+  whose brackets close further down - folded onto one string with the physical lines joined by a
+  single space. THE FINDING THEN CITES THE LINE THE CONSTRUCT OPENS ON, AND THAT LINE'S OWN TEXT
+  DOES NOT SHOW WHAT MATCHED: res = conn.execute( says nothing about a deletion, a column or a
+  cutoff. The span it was folded from is in locations[].joined_from and is never absent from such a
+  finding. READ THAT WHOLE SPAN BEFORE JUDGING THE CANDIDATE, because the DELETE, the column, the
+  operator and the cutoff may each be written on a different line of it, and because the file's own
+  text is what an adjudication has to be able to quote. WHAT IS STILL NOT READ, and no answer may
+  assume otherwise: a continuation written with a trailing operator and no bracket, and a backslash
+  continuation, are deliberately not folded; and a construct of more than 40 lines, one that would
+  fold past 4,000 characters, and one whose brackets never close in the file are not folded either,
+  each refusal counted in stats.joined_constructs_refused. A CANDIDATE CARRYING joined_from
+  ESTABLISHES NEITHER MORE NOR LESS THAN THE SAME STATEMENT WRITTEN ON ONE LINE: an age-based
+  deletion keyed to a time column is written in this file with the cutoff its limb matched. It does
+  not establish that the period is ever reached, who set it, that the statement runs on a schedule
+  rather than once, or what the store holds - the context questions are unchanged and every one of
+  them still applies. A finding that carries no joined_from means exactly what it meant before.
+  ADDED 2026-09-08: THE CUTOFF MAY BE COMPUTED IN THE HOST LANGUAGE AND PASTED INTO THE STATEMENT. A
+  product that builds its SQL by string concatenation can work the cutoff out in Java, Go, Python or
+  JavaScript before the database ever sees it - System.currentTimeMillis() less a literal window,
+  Date.now() less a number of milliseconds, time.Now() less a duration - and the statement then
+  carries an arithmetic expression where every limb above expects a bound parameter, a SQL clock
+  function or an interval literal. Such a finding establishes exactly what the bound-parameter limb
+  establishes: a keyed age-based deletion is written in this file and its cutoff is a clock less a
+  span. IT ESTABLISHES ONE THING MORE IN THE READER'S FAVOUR AND ONE THING LESS. More: where the
+  window is a literal, THE PERIOD IS ON THE FOLDED TEXT - seven times twenty-four times three
+  thousand six hundred times a thousand is seven days, and you can read it. Less: the table and the
+  column may both be host-language CONSTANTS rather than names - TABLE_NAME_DOWNLOAD_LOG,
+  KEY_COMPLETION_DATE - so the store and the column this deletion actually touches are one hop away
+  in the same file and must be resolved before the finding is described. Nothing here says the
+  statement runs on a schedule: on the construct this limb was built for the caller is a background
+  worker in another file, and context question 2 is what sends you to it. ADDED THE SAME DAY: THE
+  CORROBORATION MAY NOW BE A BARE CREATE TABLE OR CREATE INDEX in this file, with no TTL clause, no
+  procedure and no lifecycle block. That establishes that the file IS the store's own definition,
+  which is this rule's stated subject, and IT DOES NOT ESTABLISH THAT THE CREATE STATEMENT AND THE
+  DELETION TOUCH THE SAME TABLE - no column list was read and no join was made. Where that matters,
+  the first context question already asks for the create statement to be opened and its columns
+  quoted."
+remediation_template: |
+  WHAT WAS FOUND. A retention period, or the age-based deletion that enforces one, written into a
+  database schema, a migration, a stored procedure, an index definition or an infrastructure file.
+  In most cases this is a product doing the right thing: the store deletes its own rows on a
+  schedule and nobody has to remember to run a job. Read the three questions below before changing
+  any code, because for a well-built product the answer to all three may be that nothing needs to
+  change in the code at all.
+
+  1. IS THIS PERIOD WRITTEN DOWN ANYWHERE A HUMAN READS? The number in this artefact is the number
+     the store enforces WHERE THIS ARTEFACT IS THE LIVE ONE, which context question 2 is there to
+     settle: a later migration in the same directory can alter the period or drop the table
+     altogether, and an infrastructure file may be an example that deploys nothing. Check the
+     privacy policy, the user-facing documentation and the record of processing activities.
+     Art. 5(2) puts the burden of being able to demonstrate the retention position on the
+     controller, and Art. 30(1)(f) asks, where possible, for the envisaged time limits for erasure
+     of the different categories of data to appear in that record. A period that exists only inside
+     a .sql file is undocumented wherever a reviewer would look, whatever it turns out to enforce.
+  2. DOES THE ENFORCED PERIOD MATCH THE STATED ONE? Where the policy says ninety days and the
+     artefact that context question 2 established as the live one says three years, one of the two
+     is wrong and the code is the one that is running. Fix whichever is wrong, and say which you
+     changed.
+  3. DOES THE CLAUSE RUN AT ALL? Where the deletion is guarded by a parameter - a stored procedure
+     taking a time-to-live argument, an index option bound to a configuration value, a lifecycle
+     rule whose period is a function argument - find the shipped value of that parameter. A guard
+     that is never satisfied is a deletion that never happens, and a retention policy that exists
+     only as unreachable code is worse than none, because it reads as a policy.
+
+  IF SOMETHING DOES NEED TO CHANGE, the useful changes are these, in order of how often they are the
+  right one.
+
+  - PUT THE PERIOD WHERE IT CAN BE READ. A one-line comment above the clause naming what the store
+    holds, how long it is kept and why that length is necessary for the purpose costs nothing and is
+    the difference between an enforced period and a demonstrable one.
+  - MAKE THE PERIOD REACHABLE BY THE OPERATOR IF THEY ARE THE CONTROLLER. Where the product is
+    self-hosted, the deployer is usually the controller and the purpose is theirs to set. A period
+    that can only be changed by editing a migration is a period they cannot set.
+  - CHECK THAT EVERY STORE HOLDING THE SAME CATEGORY OF DATA HAS THE SAME PERIOD. A retention rule
+    written per table drifts: an aggregate, a materialised view, an export bucket or a replica can
+    outlive the table the period was written on.
+  - WHERE THE STORE IS KEPT LONGER FOR ARCHIVING, RESEARCH OR STATISTICAL PURPOSES, record which of
+    the three and put the Art. 89(1) safeguards in place. The exception in Art. 5(1)(e) is
+    conjunctive and the purposes are a closed list.
+
+  DO NOT read this as a request to shorten the period. Nothing in this finding says the period is
+  too long, and shortening a retention window without knowing the purpose can destroy records the
+  product or its users are separately required to keep.
+data_categories:
+  - user.behavior
+  - user.device.ip_address
+  - user.unique_id
+  - user.account
+fingerprint_spec: file

@@ -1,0 +1,237 @@
+id: recipients-008
+pack: recipients
+short_name: Browser details sent in the product's own usage events
+problem_line:
+  text: Browser details sent in the product's usage events
+  template: "{data} sent in the product's usage events"
+fix_line: Name who receives these events and what they carry, and list any outside recipient in your
+  record and privacy notice.
+title: First-party telemetry beacon - browser-supplied values assembled into an outbound event body
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - the controller's record of processing
+      activities \"shall contain all of the following information\", including \"the categories of
+      recipients to whom the personal data have been or will be disclosed including recipients in
+      third countries or international organisations\". The operator of the endpoint a first-party
+      beacon posts to is a candidate for that field, and the whole difficulty of this rule is that
+      the code names nobody: the destination is the product's own path on whatever host the
+      deployment serves"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 13(1)(e) - where personal data are collected from the
+      data subject, the controller shall, at the time when personal data are obtained, provide the
+      data subject with "the recipients or categories of recipients of the personal data, if any". A
+      telemetry beacon collects from the data subject's own browser, so the information duty
+      attaches at the moment the beacon fires, and the answer owed is the same category question
+      Art. 30(1)(d) asks of the record
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(9) - \"recipient\" means \"a natural or legal person,
+      public authority, agency or another body, to which the personal data are disclosed, whether a
+      third party or not\". Reference only: a definition establishes no duty of its own. It is cited
+      because the ordinary reading of a first-party beacon is that nothing was disclosed to anybody,
+      and the definition is what decides that question rather than intuition - where the endpoint is
+      the controller's own infrastructure there is no disclosure to a recipient at all, and where
+      the tracker is the hosted service of another party there is"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1) - \"personal data\" means \"any information
+      relating to an identified or identifiable natural person ('data subject'); an identifiable
+      natural person is one who can be identified, directly or indirectly, in particular by
+      reference to an identifier such as a name, an identification number, location data, an online
+      identifier or to one or more factors specific to the physical, physiological, genetic, mental,
+      economic, cultural or social identity of that natural person\". Reference only. It is cited
+      because the payload this rule finds is exactly the borderline the definition is about: a page
+      URL, a referrer and a screen width are not a name, and the singling-out reading Recital 26
+      supports, together with the IP address the receiving server necessarily sees is what decides
+      whether the beacon processes personal data at all"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose "The
+      categories of third parties to whom the business discloses personal information." Sec.
+      1798.130(a)(5)(B) requires the same categories in the privacy policy
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-08-28
+    jurisdiction: US
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: medium
+rule_confidence: 0.55
+detector:
+  engine: builtin-regex
+  match:
+    - (?<![\w$.])(?!location|document|window|history|self|parent|top|screen|navigator)[A-Za-z_$][\w$]*[
+      \t]*(?:\.[ \t]*[A-Za-z_$][\w$]*|\[[^\]\n]{1,40}\]){1,3}[
+      \t]*=(?!=)[^\n]{0,60}(?:(?:window|self|globalThis)[ \t]*\.[ \t]*(?:location[ \t]*\.[
+      \t]*(?:href|pathname|search|hostname)|document[ \t]*\.[ \t]*(?:referrer|title)|screen[ \t]*\.[
+      \t]*(?:width|height)|navigator[ \t]*\.[
+      \t]*(?:userAgent|language|languages)|innerWidth|innerHeight|devicePixelRatio)|(?<![\w$.])(?:location[
+      \t]*\.[ \t]*(?:href|pathname|search|hostname)|document[ \t]*\.[ \t]*(?:referrer|title)|screen[
+      \t]*\.[ \t]*(?:width|height)|navigator[ \t]*\.[
+      \t]*(?:userAgent|language|languages)|innerWidth|innerHeight|devicePixelRatio))
+    - (?:^[ \t]*|[{,][ \t]*)[A-Za-z_$][\w$]*[ \t]*:[ \t]*(?:(?:window|self|globalThis)[ \t]*\.[
+      \t]*(?:location[ \t]*\.[ \t]*(?:href|pathname|search|hostname)|document[ \t]*\.[
+      \t]*(?:referrer|title)|screen[ \t]*\.[ \t]*(?:width|height)|navigator[ \t]*\.[
+      \t]*(?:userAgent|language|languages)|innerWidth|innerHeight|devicePixelRatio)|(?<![\w$.])(?:location[
+      \t]*\.[ \t]*(?:href|pathname|search|hostname)|document[ \t]*\.[ \t]*(?:referrer|title)|screen[
+      \t]*\.[ \t]*(?:width|height)|navigator[ \t]*\.[
+      \t]*(?:userAgent|language|languages)|innerWidth|innerHeight|devicePixelRatio))
+    - (?:(?<![\w$])sendBeacon[ \t]*\(|keepalive[ \t]*:[ \t]*true|new[ \t]+Image[ \t]*\([ \t]*\)[
+      \t]*\.[ \t]*src[ \t]*=)
+    - \.[ \t]*send[ \t]*\([ \t]*JSON[ \t]*\.[ \t]*stringify[ \t]*\(
+    - (?:querySelector[A-Za-z]*|getElementsByTagName)[ \t]*(?:\?\.)?[ \t]*\([^\n]{0,60}canonical
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|<%#|--)
+context_questions:
+  - "MANDATORY, AND IT IS THE QUESTION THE WHOLE FINDING EXISTS TO RAISE: WHO RECEIVES THIS BODY?
+    Read the send call and follow the endpoint back to where it is computed. Four answers occur and
+    they are not the same finding. (a) A PATH ON THE PRODUCT'S OWN ORIGIN, resolved at run time from
+    the script's own source - plausible's tracker builds `new URL(currentScript.src).origin +
+    \"/api/event\"` - in which case the receiving party is whoever operates that deployment, and for
+    a self-hosted install that is the controller itself, so there may be no disclosure to any
+    recipient at all. Say so plainly where it is true; an empty recipient row that is correct is a
+    better answer than a guessed one. (b) THE VENDOR'S OWN HOSTED ENDPOINT, in which case the vendor
+    is the recipient and the record needs it by name. (c) A CONFIGURED ENDPOINT, which is a
+    deployment fact and has to be asked of the operator. (d) A PROXY OR RELAY on the product's own
+    domain that forwards to a vendor - the arrangement exists specifically so that the request looks
+    first-party - in which case the vendor is still the recipient and the code alone will not show
+    it. Whether an address on the product's own domain, or a configured one, passes the data on to a
+    vendor is asked of the person running the scan as `features.own_domain_endpoints` (added
+    2026-10-06), and the answer is in the ScanProfile your brief carries: `forward_to_vendor` makes
+    it (d), `own_instance` makes it (a) or (c) with no third party where nothing in the code
+    contradicts it - and a vendor's own protocol contradicts it: where the body or the endpoint
+    follows a named vendor's protocol (a measurement or property ID, the vendor's collect path such
+    as Google Analytics 4's `/g/collect` or `/mp/collect`, the vendor's own event field names), that
+    vendor is identified, and `own_instance` holds only for a vendor that offers an edition the
+    operator runs itself (recipients-006 context question 3 names the ten read on the vendors' own
+    pages, Plausible Community Edition among them); for any other vendor the place stays kept
+    (`is_the_construct`), with the answer and the line that shows the vendor's protocol both named -
+    and `mixed` or no answer leaves it open - keep the place and name the address and the question.
+    Name which of the four this is, quote the line the endpoint is built on, and if you cannot
+    settle it, return needs_human rather than assuming (a)."
+  - "WHAT IS ACTUALLY IN THE BODY? Enumerate every key, and expect the names to be meaningless: this
+    construct's own corpus case sends `n`, `u`, `d`, `r`, `p`, `i`, `sd`, `e`, `h`, `v` and `w`.
+    Resolve each key to the value assigned to it and report the pair - `u` is `location.href`, `r`
+    is `document.referrer`, `w` is `window.innerWidth`, `d` is the configured site domain. Then say
+    which of them can single out a person: a full page URL carries query parameters and path
+    segments that regularly contain an account name, an order number or a reset token, and a
+    referrer carries the same from another site. The screen width alone does not, and the
+    combination may."
+  - WHAT DOES THE RECEIVING SERVER SEE THAT IS NOT IN THE BODY? Every HTTP request carries the
+    visitor's IP address and User-Agent whether or not the payload names them, so the recipient
+    receives more than the code hands it. Say whether the server-side code that answers this
+    endpoint stores them, hashes them, or drops them - and where it hashes, read the salt's
+    lifetime, because a daily-rotated salt and a fixed one are different retention statements. This
+    question is separate from the payload question and both belong in the finding.
+  - IS THE BEACON GATED, AND CAN IT BE SWITCHED OFF? The detector does not look for a consent check
+    and a beacon inside one matches exactly like a beacon outside one. Quote the call path from page
+    load to the send and say whether any consent state, do-not-track signal, opt-out flag or
+    environment check is read on the way. Then say whether the operator can disable it, and whether
+    that switch is on by default. Where the tracker is the product's own and the visitor is being
+    measured on the product's own site, this is the ePrivacy question as well - but the storage limb
+    of Art. 5(3) belongs to eu-consent-022 and baseline-007, and what this rule found is a
+    transmission, not a store.
+  - "IS THIS CODE SHIPPED TO A BROWSER AT ALL? The same call text is a beacon when a browser runs it
+    and nothing when it does not. Four cases occur: an application bundle, a published documentation
+    sample, a compiled tracker artefact checked into the repository (this corpus has one - a
+    minified `p.js` under `priv/`), and a server-side snippet that may never be emitted. Say which.
+    For the compiled artefact, say whether it is generated from source in the same tree, because a
+    finding on both is one construct and not two."
+evidence_template: "{file}:{line} MATCHED A CONSTRUCT IN WHICH THIS PRODUCT'S OWN CODE COLLECTS
+  SOMETHING THE BROWSER SUPPLIES AND SENDS IT SOMEWHERE. What was established depends on which
+  clause matched, and no clause establishes the whole construct on its own. A BROWSER VALUE ASSIGNED
+  INTO A FIELD, or written as an object-literal entry, establishes that the page URL, the referrer,
+  the viewport size, the user agent or the language is being placed into an object the program is
+  building - it does NOT establish that the object is ever sent, and the object may equally be a
+  component's state or a configuration. A BEACON TRANSPORT - `sendBeacon(`, `keepalive: true`, `new
+  Image().src =` - establishes a send designed to outlive the page, and `keepalive: true` is shared
+  with an HTTP connection-pool option in at least one language, so read the surrounding call before
+  treating it as a beacon. A SERIALISED OBJECT HANDED TO AN XHR SEND establishes a transmission and
+  says nothing about what is in it. A CANONICAL-LINK READ establishes that the reported address is
+  being taken from the document rather than from the address bar. WHAT IS NOT ESTABLISHED, AND THE
+  FIRST OF THESE IS THE POINT OF THE FINDING. FIRST, WHO RECEIVES IT. The destination is ordinarily
+  the product's own path on the product's own origin, so the receiving party is whoever runs the
+  deployment - which for a self-hosted install is the controller itself and no third party at all,
+  and for a hosted one is the vendor. THE JUDGEMENT ABOUT WHETHER THE RECIPIENT IS A THIRD PARTY
+  BELONGS TO LAYER 2, and context_questions[0] names the four answers and asks which. SECOND,
+  WHETHER THE DATA ARE PERSONAL. A page URL, a referrer and a screen width are not a name; a page
+  URL regularly carries an account identifier in a path segment or a query parameter, and the
+  receiving server sees the IP address whether or not the body names it. THIRD, WHETHER THE SEND
+  HAPPENS. The assembly clauses and the transport clauses match different lines, usually in
+  different files, and this rule does not join them - a matched assembly line may belong to an
+  object nothing transmits. FOURTH, WHETHER CONSENT WAS CHECKED: the detector does not look. FIFTH,
+  WHAT ELSE THE TRACKER DOES - a cookie it reads or writes, an opt-out flag it keeps in Web Storage
+  - which is eu-consent-022's and baseline-007's subject and not reported here. TWO ANCHORS WERE
+  DELIBERATELY NOT BUILT and their absence is not an oversight: the event NAME (`pageview` measures
+  1,896 lines across the eight pinned trees) and the collection PATH (a `/api/` literal measures
+  378), both of which travel with the construct without being it."
+remediation_template: >
+  This is a candidate for review against GDPR Art. 30(1)(d) and Art. 13(1)(e), not a determination
+
+  about this code. A first-party beacon is a legitimate and often privacy-preserving design, and the
+
+  usual outcome of this finding is a written answer rather than a code change.
+
+
+  START WITH THE RECIPIENT QUESTION, because everything else follows from it. Where the endpoint is
+
+  the controller's own infrastructure, there is no disclosure to a recipient and the honest record
+
+  row says so - Art. 4(9)'s "whether a third party or not" is what makes that a real answer rather
+
+  than an evasion. Where the endpoint is a vendor's hosted service, or a first-party path that
+
+  forwards to one, the vendor is the recipient, it belongs in field (d) of the record, and it
+  belongs
+
+  in the Art. 13(1)(e) information the visitor is given at collection time. A privacy notice that
+
+  says "we use no third-party analytics" while a first-party path relays to a hosted service is
+
+  wrong about a fact this finding can settle.
+
+
+  THEN WRITE DOWN WHAT TRAVELS, key by key, in the notice and in the record. The payload's own names
+
+  are usually single letters and mean nothing to a reader; the record is owed the fields, not the
+
+  wire format. State the page URL and the referrer explicitly, because they are the two that carry
+
+  more than they appear to.
+
+
+  THE CHANGES THAT ARE ORDINARILY AVAILABLE, in the order they are usually worth making:
+
+
+  1. STRIP WHAT YOU DO NOT NEED FROM THE URL BEFORE SENDING IT. Query parameters and path segments
+     carry account identifiers, order numbers and reset tokens. Sending the path and dropping the
+     query, or normalising identifier-shaped segments, removes the largest single risk in this
+     payload and costs almost nothing in measurement.
+  2. DECIDE THE IP ADDRESS QUESTION AT THE RECEIVING END AND WRITE IT DOWN. Dropping it, truncating
+     it, or hashing it with a salt that rotates are three different retention statements; whichever
+     is chosen belongs in the notice.
+  3. MAKE THE BEACON DISABLEABLE BY THE OPERATOR, and say what the default is.
+
+  4. WHERE THE BEACON IS NOT STRICTLY NECESSARY TO PROVIDE THE SERVICE, gate it on consent. That is
+     the ePrivacy question rather than this rule's, and it arises when the beacon also reads or
+     writes anything on the device.
+  5. DO NOT ANSWER THIS FINDING BY MOVING THE ENDPOINT BEHIND A FIRST-PARTY PATH. A relay that makes
+     a third party's collection look first-party changes nothing about who receives the data and
+     makes the record harder to get right.
+data_categories:
+  - user.behavior
+  - user.device
+  - user.device.ip_address
+fingerprint_spec: project
+reading_class:
+  class: existence

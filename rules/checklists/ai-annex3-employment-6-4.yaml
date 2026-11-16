@@ -1,0 +1,397 @@
+checklist_id: ai-annex3-employment-6-4
+title: AI Act Annex III pt 4 and Article 6(4) - employment/worker-management AI, documentation and
+  registration
+law: Regulation (EU) 2024/1689 (Artificial Intelligence Act)
+source_url: https://publications.europa.eu/resource/celex/02024R1689-20260727
+checked_at: 2026-09-07
+scope_note: "**Scope declaration.** This checklist covers whether a product's own published
+  documents (README, product description, terms of service) disclose, for an Annex III pt 4
+  employment use case, the Article 6(4) self-assessment and its Article 49(2) registration
+  consequence. It does not decide whether the use case is high-risk - Article 6(3) does, and every
+  one of its four derogation conditions and its profiling override is a judgement the checklist
+  cannot make. It does not decide whether the product performs an Annex III pt 4 use case at all -
+  that is the gate below, asked of the person running the scan and never inferred from code. It says
+  nothing about Annex III pts 1, 2, 3, 5, 6, 7 or 8. Pt 3 (education) and pt 5(b),(c)
+  (credit/insurance) are the sibling checklists ai-annex3-education-6-4 and ai-annex3-credit-6-4,
+  and pts 2, 6, 7, 8 have no code signal reachable by this audience and are documented Out on the
+  coverage map. **Pt 1 (biometrics) is not held by anything in this repository for the duties this
+  file checks, and until 2026-08-08 this field said it was.** `ai-prohibited-003` cites Article
+  5(1)(g), the prohibition on biometric categorisation, and does not mention Annex III at all;
+  `ai-transparency-007` cites Article 50(3), the deployer transparency duty for emotion-recognition
+  and biometric-categorisation systems. Neither cites Article 6(4) or Article 49(2). What the
+  coverage map says of pt 1 is that it \"gets no new patterns\", which is a statement about
+  detection that this field had restated as a statement about coverage: a provider of a pt 1 system
+  that concludes under Article 6(3) that it is not high-risk owes exactly the two duties below, and
+  no checklist here asks about them. Whether to build that fifth file is a decision for whoever
+  maintains this pack, recorded in this project's own working notes rather than decided here. It
+  does not touch the Annex III conformity-assessment, technical-documentation or CE-marking duties
+  (Arts. 8-15, 43, 48), which apply only once a system IS high-risk and are a different, larger
+  obligation this checklist does not reach. **The default is high-risk, and the timing splits
+  between this checklist's two items.** Article 6(2) makes an Annex III system high-risk unless the
+  Article 6(3) derogation is made out, and recital 53 treats the non-high-risk outcome as
+  exceptional and says profiling within GDPR Article 4(4) defeats it \"in any case\" - which ranking
+  candidates and scoring applications frequently are. **The gate below is answered from
+  `features.annex_iii_use.hiring_or_worker_management` in the scan profile**, or from the project's
+  own published documents; the `purpose` census facts corroborate or contradict that answer and
+  never decide it. **The timing is not the same for this checklist's two items, and only one of them
+  is preparation.** Article 113, third paragraph, point (c), as replaced by Article 1(40)(b) of
+  **Regulation (EU) 2026/1744** (the adopted Digital Omnibus on AI, OJ L series 2026/1744 of
+  24.7.2026, in force 27 July 2026), defers **Chapter III, Sections 1, 2 and 3** - and nothing else,
+  and within them not Article 6(5), the Commission's duty to publish classification guidelines,
+  which point (c) excepts by name - to 2 December 2027 for AI systems \"classified as high-risk
+  pursuant to Article 6(2) and Annex III\", and to 2 August 2028 for those classified pursuant to
+  Article 6(1) and Annex I. **Article 6(4) is in Section 1**, so `art-6-4-assessment-documented` is
+  deferred on the face of that point and its findings are to be worded as preparation. **Article
+  49(2) is in Section 5** - Articles 40 to 49, headed \"Standards, conformity assessment,
+  certificates, registration\" - which that point does not name, so it applies from the general date
+  in Article 113, second paragraph, \"It shall apply from 2 August 2026\":
+  `art-6-4-registration-noted` is about a duty that already binds, and wording its findings as
+  preparation understates it. **Two things unsettle even the deferred half, and both point the same
+  way.** The deferral is scoped to systems classified as high-risk pursuant to Article 6(2), and a
+  system for which the provider has concluded under Article 6(3) that it is not high-risk is not one
+  of those; and recital 22 of Regulation (EU) 2026/1744 says a provider applying Article 6(3)
+  \"remains obligated to document its assessment before that AI system is placed on the market or
+  put into service\". Neither settles it, so where an item's timing is arguable, say the duty may
+  already bind and never that it does not. **The contrary reading on Article 49(2) is recorded here
+  because it is the reading that would make that item report nothing.** It runs: Article 49(2)'s
+  trigger is a provider having concluded under Article 6(3) that its system is not high-risk,
+  Article 6 sits in a deferred Section, so on that view the trigger cannot be met before December
+  2027. It is not adopted, for three reasons. It proves too much - Article 49(1) and Article 49(3)
+  rest on Article 6(2) and Annex III in the same way, so the whole of Article 49 would be dormant
+  for Annex III systems while Article 71, which establishes the database they feed, is deferred by
+  nothing. Article 113's third paragraph is a closed list of derogations from a stated general date,
+  and it names Chapter III Section 4 without naming Section 5. And the recital 22 sentence just
+  above assumes the opposite, in the instrument that enacts the deferral. Until 2026-08-08 this
+  field said every finding this checklist produces is preparation and named
+  cra-product-information-13-8's items as the model for saying so; that checklist in fact states its
+  date once on its gate and on its timing limb and carries it in a field of its own on only one of
+  its ten items, and that is the shape to copy. **A \"no\" on the provider limb closes these two
+  items and closes nothing else.** Article 6(4) and Article 49(2) bind the provider, so where the
+  person running the scan is genuinely neither the provider, nor the authorised representative, nor
+  a party Article 25(1) reaches, `not-applicable` on both items is the honest record - **but it is a
+  record about two duties and must never be reported as \"the AI Act does not concern you\".** A
+  deployer within Article 3(4) is addressed by name elsewhere in this Regulation, and this checklist
+  examines, tests and clears none of it. **One condition governs every duty named below, and it is
+  stated once here rather than repeated on each: each of them requires the system to BE high-risk**,
+  which for an Annex III system is what Article 6(2) makes it unless the Article 6(3) derogation is
+  made out - and that derogation is the branch these two items are about, so what follows attaches
+  if the classification goes the other way. **The condition is not an exit.** The default-high-risk
+  reading above governs here too; the Article 6(3) conclusion is the provider's own and not a
+  regulator's; and Article 80 gives a market surveillance authority with sufficient reason to
+  consider such a system high-risk the power to evaluate that classification and to require the
+  provider to bring the system into compliance. So carry these as conditional duties, never as
+  disposed of, and never as a reason to stop reading. **Article 26** - Chapter III Section 3,
+  deferred with it to **2 December 2027** - the obligations of deployers of high-risk AI systems:
+  use in accordance with the instructions for use, human oversight, input data, monitoring,
+  log-keeping, under Article 26(7) informing workers' representatives and the affected workers
+  before such a system is used at the workplace, and under Article 26(11) informing the natural
+  persons subject to a decision the system makes or assists. **Article 27(1)** - the same Section,
+  the same **2 December 2027** date - the fundamental-rights impact assessment, owed by deployers
+  that are bodies governed by public law or are private entities providing public services **and by
+  deployers of high-risk AI systems referred to in points 5(b) and (c) of Annex III**. **Article
+  49(3)** - Section 5, which the deferral does not name, so in force since **2 August 2026** - under
+  which deployers that are public authorities, Union institutions, bodies, offices or agencies or
+  persons acting on their behalf register themselves and register their use of the system in the EU
+  database referred to in Article 71. **Article 86** - Chapter IX Section 4, \"Remedies\", which no
+  point of Article 113's third paragraph names, so in force since **2 August 2026** - under which a
+  person subject to a decision the deployer takes on the output of a high-risk Annex III system,
+  where that decision produces legal effects or similarly significantly affects them in a way they
+  consider to have an adverse impact on their health, safety or fundamental rights, has the right to
+  obtain from that deployer \"clear and meaningful explanations of the role of the AI system in the
+  decision-making procedure and the main elements of the decision taken\". **Article 86 has three
+  paragraphs, and this file stated only the first until 2026-08-08.** Article 86(2): \"Paragraph 1
+  shall not apply to the use of AI systems for which exceptions from, or restrictions to, the
+  obligation under that paragraph follow from Union or national law in compliance with Union law.\"
+  Article 86(3): \"This Article shall apply only to the extent that the right referred to in
+  paragraph 1 is not otherwise provided for under Union law.\" **Neither paragraph is a reason to
+  leave Article 86 out of the verdict, and neither is settled by anything in this checklist.** 86(2)
+  bites only where an exception or a restriction follows from Union or national law, so it is a
+  question about the law that applies to this deployer and not a general carve-out; 86(3) makes the
+  Article residual, so where the right is already provided for elsewhere in Union law Article 86 is
+  not the provision that supplies it, and which Union instrument does supply it for the decision in
+  question is a legal question about the deployer's own circumstances that no field of this
+  checklist answers. **So: Article 86 is the one of these that can reach a private deployer today,
+  subject to those two paragraphs, and no field of this file named it until 2026-08-08.** For a
+  private hospital, employer, lender or training company, Articles 26 and 27 are not due until
+  December 2027 and Article 49(3) reaches only public authorities and persons acting on their behalf
+  - so the three articles this paragraph named before today were, for exactly that reader, the
+  sentence it forbids, written out in three articles instead of one. **One duty stands outside the
+  high-risk condition altogether: Article 4**, AI literacy, as replaced by Article 1(5) of
+  Regulation (EU) 2026/1744, which binds \"providers and deployers of AI systems\" whatever their
+  risk class and has applied with Chapter I since 2 February 2025; this product treats it as an
+  organisational duty with no technical trace, to be surfaced in a report and never as a finding,
+  and it covers Article 86 not at all. **Name these in the verdict whenever the provider limb closes
+  the gate, with the condition and the dates**, so that a `does-not-apply` records which two duties
+  were examined rather than reading as an all-clear - and read the list as open: it is what this
+  checklist does not cover, and never a statement that nothing else in this Regulation reaches a
+  deployer. The provider limb was added on 2026-08-07 without this paragraph, and for the reader it
+  most affects - the one who runs somebody else's system - that turned a visible over-report into a
+  silent all-clear. The default-high-risk reading and the timing were missing from every parsed
+  field until 2026-08-04. **Settle Article 2(12) before anything else, and record which way it
+  went.** If the system is released under a free and open-source licence and is not monetised in the
+  sense recital 103 gives, and it is not placed on the market as high-risk and does not fall under
+  Article 5 or 50, this Regulation does not reach it and this checklist produces nothing. Ask; do
+  not infer it from a LICENSE file or from anything the census found. Where it cannot be settled,
+  say so and say that every item below is conditional on it."
+applicability:
+  question: "Two questions, and the gate is answered only when both are. **First, the use case.** Does
+    the product make, or feed into, a decision within AI Act Annex III pt 4: recruiting or selecting
+    people (placing targeted job advertisements, analysing or filtering job applications, evaluating
+    candidates), or making decisions affecting the terms of a work-related relationship - promotion,
+    termination, task allocation based on individual behaviour or personal traits or
+    characteristics, or monitoring and evaluating a worker's performance and behaviour? **Second,
+    whether the duties below are yours.** Article 6(4) and Article 49(2) bind the provider, so a
+    team that only runs somebody else's recruiting system is a deployer within Article 3(4) and owes
+    neither - but Article 25(1), quoted below, makes a distributor, importer, deployer or other
+    third party a provider of a high-risk AI system where it puts its own name or trademark on one
+    already on the market (unless a contract allocates the obligations otherwise), makes a
+    substantial modification to one, or modifies the intended purpose of a system so that the system
+    becomes high-risk, and what it carries then is Article 16, the larger Chapter III set this
+    checklist does not cover, so Article 25(1) reaching you means more is owed and never less.
+    Answer it no only if none of that describes you, and yes wherever any of it is arguable: are you
+    the provider of that system within Article 3(3) - you developed it, or had it developed, and you
+    place it on the market or put it into service under your own name or trademark, and putting it
+    into service for your own use counts - or the authorised representative that Article 49(2) names
+    beside the provider, or a party Article 25(1) reaches?"
+  quote: "Employment, workers’ management and access to self-employment: (a) AI systems intended to be
+    used for the recruitment or selection of natural persons, in particular to place targeted job
+    advertisements, to analyse and filter job applications, and to evaluate candidates; (b) AI
+    systems intended to be used to make decisions affecting terms of work-related relationships, the
+    promotion or termination of work-related contractual relationships, to allocate tasks based on
+    individual behaviour or personal traits or characteristics or to monitor and evaluate the
+    performance and behaviour of persons in such relationships."
+  cite: AI Act Annex III, point 4
+  url: https://publications.europa.eu/resource/celex/02024R1689-20260727
+  checked_at: 2026-08-04
+  ask_the_user: true
+  census_categories:
+    - purpose
+  supporting_quotes:
+    - quote: "High-risk AI systems pursuant to Article 6(2) are the AI systems listed in any of the
+        following areas:"
+      cite: AI Act Annex III, chapeau
+      url: http://publications.europa.eu/resource/celex/32024R1689
+      checked_at: 2026-08-04
+      why: "What point 4 sits under: Annex III is a list of USE CASES, addressed by what the system is
+        used for rather than by what technology it uses. **The Article 3(1) definition is the gate,
+        and it is where a hand-written ranking usually fails**: recital 12 says the definition
+        \"should not cover systems that are based on the rules defined solely by natural persons to
+        automatically execute operations\". Where that definition IS met, though, pt 4(a) does not
+        additionally require machine learning - so the question to ask is Article 3(1)'s, not \"is
+        there a model\". That is a judgement this checklist does not make. This field led with the
+        opposite emphasis until 2026-08-04."
+    - quote: ‘AI system’ means a machine-based system that is designed to operate with varying levels of
+        autonomy and that may exhibit adaptiveness after deployment, and that, for explicit or
+        implicit objectives, infers, from the input it receives, how to generate outputs such as
+        predictions, content, recommendations, or decisions that can influence physical or virtual
+        environments;
+      cite: AI Act Art. 3(1)
+      url: http://publications.europa.eu/resource/celex/32024R1689
+      checked_at: 2026-08-04
+      why: The definitional floor under every use in Annex III. Whether a given ranking or scoring path
+        meets this - rather than being a fixed, non-inferring rule the developer wrote by hand with
+        no adaptiveness - is a judgement about the code the checklist does not make; it is exactly
+        the kind of question the adjudicating agent exists to ask, with the code in front of it.
+    - quote: ‘provider’ means a natural or legal person, public authority, agency or other body that
+        develops an AI system or a general-purpose AI model or that has an AI system or a
+        general-purpose AI model developed and places it on the market or puts the AI system into
+        service under its own name or trademark, whether for payment or free of charge;
+      cite: AI Act Art. 3(3)
+      url: http://publications.europa.eu/resource/celex/32024R1689
+      checked_at: 2026-08-07
+      why: "**Who the two items below are addressed to, quoted here rather than only named.** Both items
+        quote Article 6(4), which binds \"a provider\", and until 2026-08-07 no parsed field of this
+        gate asked whether the person running the scan is one - so a team self-hosting somebody
+        else's applicant-tracking system answered every limb of the gate yes and was handed two
+        duties it does not owe. **Read the second half of the definition before concluding it
+        describes somebody else**: placing on the market is one route into it and putting the system
+        into service under one's own name or trademark is the other, and Article 3(11) below makes
+        putting into service include putting it into service for one's own use. An employer that
+        builds its own candidate-ranking tool and runs it on its own applicants is a provider on
+        that route, and so is an open-source project that publishes one under its own name,
+        \"whether for payment or free of charge\"."
+    - quote: ‘putting into service’ means the supply of an AI system for first use directly to the
+        deployer or for own use in the Union for its intended purpose;
+      cite: AI Act Art. 3(11)
+      url: http://publications.europa.eu/resource/celex/32024R1689
+      checked_at: 2026-08-07
+      why: '**The four words that stop the provider question from becoming an exit: "or for own use".** A
+        reader who has never sold or distributed anything reads Article 3(3) as being about somebody
+        else, and for internal hiring tools that reading is wrong. Quoted because the provider limb
+        is the one limb of this gate whose wrong answer produces silence rather than a visible
+        over-report, and silence is the direction this repository treats as the dangerous one.'
+    - quote: "Any distributor, importer, deployer or other third-party shall be considered to be a
+        provider of a high-risk AI system for the purposes of this Regulation and shall be subject
+        to the obligations of the provider under Article 16, in any of the following circumstances:
+        (a) they put their name or trademark on a high-risk AI system already placed on the market
+        or put into service, without prejudice to contractual arrangements stipulating that the
+        obligations are otherwise allocated; (b) they make a substantial modification to a high-risk
+        AI system that has already been placed on the market or has already been put into service in
+        such a way that it remains a high-risk AI system pursuant to Article 6; (c) they modify the
+        intended purpose of an AI system, including a general-purpose AI system, which has not been
+        classified as high-risk and has already been placed on the market or put into service in
+        such a way that the AI system concerned becomes a high-risk AI system in accordance with
+        Article 6."
+      cite: AI Act Art. 25(1)
+      url: http://publications.europa.eu/resource/celex/32024R1689
+      checked_at: 2026-08-07
+      why: "**The route by which a deployer becomes a provider, and the reason the provider question above
+        is not a switch that turns this checklist off.** Forking somebody else's applicant-tracking
+        system and running it under your own brand is limb (a); rewriting how it ranks candidates is
+        limb (b); pointing a general-purpose AI system already on the market at candidate screening
+        is limb (c). Three limits belong with it, and none of them is a way out. **First, all three
+        limbs concern a high-risk system** - (a) and (b) presuppose one and (c) requires the system
+        to become one - and what Article 25(1) attaches is Article 16: conformity assessment,
+        technical documentation, CE marking and Article 49(1) registration. That is the larger
+        Chapter III set this checklist does not cover, so a party Article 25(1) reaches owes more
+        than the two items below and never less. **Second, Article 25(1) is not the only way in, and
+        it is not the commonest one for this audience.** Article 3(3) above reaches whoever develops
+        the system and puts it into service under their own name, with no need of Article 25 at all;
+        the gate closes on this limb only for a party that is neither. **Third, the intersection
+        with this checklist's own branch is unsettled.** Limb (c) speaks of a system that becomes
+        high-risk in accordance with Article 6, and Article 6(3) is a derogation within that
+        article, so where a modification makes a system an Annex III use case and the Article 6(3)
+        derogation is then made out, whether limb (c) is engaged does not follow from the words. The
+        gate above answers that by staying open on an arguable answer, never by reading the doubt as
+        a no."
+    - quote: This Regulation does not apply to AI systems released under free and open-source licences,
+        unless they are placed on the market or put into service as high-risk AI systems or as an AI
+        system that falls under Article 5 or 50.
+      cite: AI Act Art. 2(12)
+      url: http://publications.europa.eu/resource/celex/32024R1689
+      checked_at: 2026-08-04
+      why: "**The carve-out that can switch this whole checklist off, and it was absent from all four
+        files in this family until 2026-08-04** - through five independent checks, in a scanner
+        whose audience is open-source developers, on the one branch of Article 6 where it bites
+        hardest. `ai-prohibited-001`, `-002` and `-003` already carried this provision; this family
+        did not. **It does not switch the row off for this audience, and the reasons are in the
+        Regulation rather than in this file's judgement** - the seventh independent check found the
+        first version of this note stated them wrongly, and all three corrections are here. **First,
+        it is not the escape it looks like, because recital 103 takes most of this product's
+        audience back out of it.** An AI component \"provided against a price or otherwise
+        monetised, including through the provision of technical support or other services, including
+        through a software platform\" does not benefit from the exception - which is how an
+        open-source product ordinarily earns, so paid support, a hosted tier or a paid platform
+        around the same component puts the provider back inside the Regulation. Making the component
+        available through an open repository is expressly **not** monetisation on its own. Recital
+        103 is quoted in full below. **Second, the three exceptions are not a settled reading and
+        the first version of this note asserted they were.** Article 2(12) excludes systems \"placed
+        on the market or put into service as high-risk AI systems or as an AI system that falls
+        under Article 5 or 50\", and a system reaching this family must be shown not to fall under
+        Article 50 either - a chat surface or an emotion-recognition path in the same product is an
+        Article 50 system, and a provider outside the Regulation for Annex III purposes may be
+        inside it for those. **Third, the question is how the system was released, not what a
+        `LICENSE` file says.** Article 2(12) turns on the terms the system is released under; a file
+        in the repository is evidence about that and never the answer, and neither is anything in
+        the code census. Whether the Article 6(3) derogation is made out is a separate question that
+        must be answered first: **a system placed on the market as high-risk is inside the
+        Regulation however it is licensed.** Both are the reader's, and neither is settled here."
+    - quote: Free and open-source AI components covers the software and data, including models and
+        general-purpose AI models, tools, services or processes of an AI system. Free and
+        open-source AI components can be provided through different channels, including their
+        development on open repositories. For the purposes of this Regulation, AI components that
+        are provided against a price or otherwise monetised, including through the provision of
+        technical support or other services, including through a software platform, related to the
+        AI component, or the use of personal data for reasons other than exclusively for improving
+        the security, compatibility or interoperability of the software, with the exception of
+        transactions between microenterprises, should not benefit from the exceptions provided to
+        free and open-source AI components. The fact of making AI components available through open
+        repositories should not, in itself, constitute a monetisation.
+      cite: AI Act recital 103
+      url: http://publications.europa.eu/resource/celex/32024R1689
+      checked_at: 2026-08-04
+      why: "**What Article 2(12) actually leaves standing for this product's audience.** The exception is
+        lost where the component is \"provided against a price or otherwise monetised, including
+        through the provision of technical support or other services, including through a software
+        platform\" - which describes open-core, paid support and a hosted tier, the ordinary ways an
+        open-source product earns. Two limits cut the other way and both are in the same sentence:
+        publishing on an open repository is expressly **not** monetisation on its own, and
+        transactions between microenterprises are excepted. **Whether a given project is monetised
+        in this sense is the reader's question and nothing in a repository settles it** - a sponsor
+        badge, a pricing page and a paid-support link are evidence about it and never the answer,
+        which is the same treatment the CRA gate gives the identical question under its own Recital
+        18. Added 2026-08-04 after the seventh independent check found the Article 2(12) note
+        stating the carve-out as broader than the Regulation makes it."
+  when_unresolved: 'Record that the gate could not be settled and why - most often that the person
+    running the scan did not answer the profile question this gate asks. Never guess in either
+    direction: assuming an employment-decision use case invents a duty for a product that has none,
+    and assuming there is none for a product that has one leaves a real duty unrecorded. Where the
+    code carries facts of the `purpose` census category naming a hiring- or worker-management-shaped
+    concept (see the census note on the collector) alongside an unanswered profile question, name
+    that fact as something worth asking the person about, and go no further - the fact corroborates
+    or contradicts what a person says; it never decides the question itself. Whether the product
+    recruits or selects people, or makes decisions affecting the terms of a work-related
+    relationship, is a fact about what the product is for, and no repository contains it: it is not
+    inferable from what a source tree imports, links to, names or implements, so an applicant table,
+    a `candidate_id` column, a job-board or HR dependency and a `purpose` fact alike corroborate or
+    contradict an answer and never decide one, and finding none of them is not a no. Whether the
+    person running the scan is the provider, the authorised representative, or a party Article 25(1)
+    reaches is a fact about the business, absent from the tree in the same way and asked the same
+    way. Where either question is unanswered, record `unresolved`, name which one, and walk every
+    item below as conditional on it - a `does-not-apply` read out of an unanswered provider question
+    switches this whole checklist off for someone the Regulation may well reach. **And where the
+    provider limb is answered no rather than left unanswered, the verdict must still carry the
+    deployer duties this checklist does not cover, which `scope_note` names with their articles** -
+    a `does-not-apply` that stops at "you are not the provider" reads to the person running the scan
+    as "the AI Act does not concern you", and that is not what was established. **Settle Article
+    2(12) before anything else, and record which way it went.** If the system is released under a
+    free and open-source licence and is not monetised in the sense recital 103 gives, and it is not
+    placed on the market as high-risk and does not fall under Article 5 or 50, this Regulation does
+    not reach it and this checklist produces nothing. Ask; do not infer it from a LICENSE file or
+    from anything the census found. Where it cannot be settled, say so and say that every item below
+    is conditional on it.'
+items:
+  - id: art-6-4-assessment-documented
+    article: 6(4)
+    quote: A provider who considers that an AI system referred to in Annex III is not high-risk shall
+      document its assessment before that system is placed on the market or put into service.
+    cite: AI Act Art. 6(4), first sentence
+    url: http://publications.europa.eu/resource/celex/32024R1689
+    checked_at: 2026-08-04
+    question: Do the product's own documents (README, product description, developer documentation)
+      state that a written Article 6(3) high-risk assessment exists for this use, or point to where
+      it is kept?
+    applicability_note: "**This item is not about whether the assessment reaches the right conclusion.**
+      It is about whether one was written down at all. Article 6(4) attaches the documentation duty
+      to a provider who \"considers that an AI system referred to in Annex III is not high-risk\" -
+      so the duty this item checks is the one that follows a \"no\". **A \"yes\" is not the same
+      duty and is not lighter**: it carries Chapter III's requirements and Article 49(1)
+      registration, which this checklist does not cover and must not be read as standing in for. A
+      document that says nothing about having assessed the question is the gap, not a document whose
+      stated conclusion this checklist could second-guess. The assessment is normally an internal
+      document rather than a published one; where nothing in the product's own public-facing
+      documents even mentions that a high-risk assessment was carried out, the honest record is
+      `absent`, with the caveat that an unpublished internal document could exist and simply not be
+      visible to this scan."
+    finding_when: absent
+  - id: art-6-4-registration-noted
+    article: 6(4)
+    quote: Such provider shall be subject to the registration obligation set out in Article 49(2). Upon
+      request of national competent authorities, the provider shall provide the documentation of the
+      assessment.
+    cite: AI Act Art. 6(4), second and third sentences
+    url: http://publications.europa.eu/resource/celex/32024R1689
+    checked_at: 2026-08-04
+    question: Do the product's documents show awareness of the Article 49(2) registration obligation for
+      a system placed on the market after concluding it is not high-risk - for instance, by naming
+      an EU database entry, a registration number, or a statement that registration has been
+      completed or is planned?
+    applicability_note: "**The consequence that makes \"we are not high-risk\" a duty rather than an
+      exit.** Article 49(2) reads in full: \"Before placing on the market or putting into service an
+      AI system for which the provider has concluded that it is not high-risk according to Article
+      6(3), that provider or, where applicable, the authorised representative shall register
+      themselves and that system in the EU database referred to in Article 71.\" It names the
+      provider who concluded NOT high-risk, the same provider Article 6(4) addresses, so the two
+      paragraphs describe one duty seen from two angles rather than two separate obligations. A
+      product's documents that address Annex III applicability by asserting \"this is not a
+      high-risk AI system\" and stop there have described half of what the Regulation asks of that
+      conclusion. Registration goes into the **publicly available** section of the EU database:
+      Article 71(4) makes Article 49 registrations \"accessible and publicly available in a
+      user-friendly manner\", carving out only the sections referred to in Article 49(4) and Article
+      60(4), point (c). Article 49(4) covers Annex III points 1, 6 and 7, and Article 60(4), point
+      (c) covers testing in real world conditions outside a regulatory sandbox - neither reaches
+      this checklist. Points 1, 6 and 7 are none of them this checklist's. This file said
+      \"non-public\" until 2026-08-04, which is the Article 49(4) rule for the points it excludes
+      applied to the points it includes. What this item can still not show is that the entry was
+      actually made - a document is a claim about a registry, not the registry - so it checks for
+      documented awareness of the duty."

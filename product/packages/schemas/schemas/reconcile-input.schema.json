@@ -1,0 +1,2483 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/reconcile-input.schema.json",
+  "title": "ReconcileInput (what the CLI settles without judgement)",
+  "description": "Everything a machine can settle about a declaration reconciliation before anyone has to read anything: which documents exist and what was searched for them, what their text is with the line numbers a quotation will cite, what the code does, and which of those facts sit where the code scan already reported something, and - from 2026-09-01 - the mechanical state of each bundled scope gate that ships `limbs`. Nothing here concludes anything about the law. The one field that carries a verdict, `applicability`, holds a mechanical classification of a gate and says in its own description what that is and what it is not; that sentence used to read \"nothing here concludes anything\" and was written when nothing here did. Whether a claim is falsified, whether a fact involves personal data, and whether silence in a document is an omission are questions for the agent, and its answers go in declarations.schema.json. The two are separate files for the same reason findings.json and the evidence log are separate: this half can be regression-tested and the other half cannot.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "reconcile_id",
+    "bundle",
+    "generated_at",
+    "target",
+    "discovery",
+    "documents",
+    "checklists",
+    "checklist_ids",
+    "store_declarations",
+    "store_declarations_unreadable",
+    "census",
+    "pillar1",
+    "stats",
+    "disclaimer"
+  ],
+  "properties": {
+    "reconcile_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identifier for this reconciliation run. The DeclarationsReport produced from this file carries the same value, which is what ties a conclusion to the exact inputs it was drawn from."
+    },
+    "bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version"
+      ],
+      "description": "The compiled rule bundle this run used, which is also where the checklists came from. Recorded so a result can be reproduced later, once the bundle has moved on.",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Bundle version (YYYY.MM.n)."
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "The bundle's content digest: the sha256 of its file list as `sha256sum` writes one (`<sha256>  <name>` per file the manifest lists, sorted by name, newline after each), computed by the CLI from the files it verified at load and never copied from the manifest. A rebuild of the same rules keeps it; any change to a listed file moves it. Written by every run since 2026-10-12; absent from documents written before."
+        },
+        "signature": {
+          "enum": ["unsigned", "not-verified"],
+          "description": "What the CLI could say about the bundle manifest's signature. `unsigned`: the manifest carries the explicit unsigned marker or, in a bundle built before 2026-10-12, `null`. `not-verified`: the manifest carries a signature this CLI has no key to verify. Either way the manifest itself is not authenticated: `sha256` says WHICH rules ran, not WHO published them."
+        }
+      }
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the CLI produced this file. Documents retrieved over the network are pinned individually in documents[].fetched_at; this timestamp is the run, not the reading of any one document."
+    },
+    "target": {
+      "type": "string",
+      "description": "Root of the scanned tree; file paths throughout this document are relative to it."
+    },
+    "discovery": {
+      "$ref": "#/$defs/discoveryReport"
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/extractedDoc"
+      },
+      "description": "The readable text of each document that could be extracted. A document that appears in discovery.found but not here failed extraction and is itemised in discovery.unextractable, so the gap between the two lists is never silent."
+    },
+    "checklists": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/checklist"
+      },
+      "description": "Checklists carried in the bundle, copied in whole so that this file is self-contained: the agent walks the items without needing the bundle that produced them."
+    },
+    "checklist_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "The id of every checklist in checklists[], in the order they are carried. All of them are put in front of the agent and none is selected here: which ones reach the project is decided by each checklist's own applicability gate, which is a legal test the deterministic layer cannot run IN FULL - the mechanical part of it has run here since 2026-09-01 and is emitted as `applicability`, and nothing in that array selects, drops or reorders a checklist in this list. An empty array is written out rather than the field being omitted, so that \"no checklist was walked\" can never be read as \"the checklists found nothing wrong\". Replaced the singular checklist_id on 2026-07-28, which named only the first checklist and made the second one invisible."
+    },
+    "profile": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "The ScanProfile the person running the scan supplied, AS THIS RUN READ IT, or null if none was given. It read the file verbatim until 2026-09-02 and reads it verbatim still wherever the file matches `scan-profile.schema.json`; from that date a field the schema rejects is downgraded to `null` on load (W5) and `profile_validation` names every such path together with the value the file held, so this field is what the reconciliation actually read rather than what was typed, which is the thing a reader of this document needs it to be. Added 2026-08-04: no field of it was reachable by this pipeline until then, so `features.annex_iii_use` in the AI Act Annex III checklists was a schema entry nothing read. Carried whole rather than picked apart, because a future checklist's `ask_the_user` gate may turn on a `features.*` field this schema does not yet name, and hand-copying one field at a time is the defect class recorded against `clause-cover` and `test-reconcile` on 2026-08-04. Since 2026-09-01 it is also an input to the mechanical assessment in `applicability`, where a declared answer can move a limb's state and therefore a verdict; what a declaration does there is stated in `product/packages/cli/src/scope.ts` § THE DECLARATION PATH and is deliberately not restated in this file, and what that assessment is and is not is stated in `applicability`'s own description. **The agent's gate is a different question, and an answer here never decides that on its own** — an answer here corroborates or contradicts what the code and the documents show, the same as any other fact this file carries, and the declaration-reconcile skill is instructed to ask rather than assume where the profile is absent or where its answer conflicts with what the tree shows."
+    },
+    "profile_validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ran",
+        "valid",
+        "unavailable_reason",
+        "profile_treated_as",
+        "violations"
+      ],
+      "description": "What checking the ScanProfile against `scan-profile.schema.json` found, and what this run did about it. THE CHECK NEVER REFUSES AND NEVER NARROWS: a violating field is treated as unanswered, which is the state in which every rule and every gate limb naming it still runs and carries the open question, and a profile that is not an object of answers is discarded whole, which is the state in which nobody was asked anything. Both are widenings, which is what makes it safe to apply to somebody's declaration without asking first. Emitted only where `--profile` was given, because with no profile there is nothing to check: `profile: null` with this absent is a run that was given no profile, and a non-null `profile` with this absent is a document written before 2026-09-02. The violations are questions for the person, in the same put-back discipline `declared_artifacts_reconciliation` uses: this layer never repairs a profile and never rewrites an answer.",
+      "properties": {
+        "ran": {
+          "type": "boolean",
+          "description": "Whether the schema check ran at all. `false` is a disclosure and is never a pass — a machine that cannot load the validator still runs the scan, and what it does not get is silence."
+        },
+        "valid": {
+          "type": "boolean",
+          "description": "Whether the profile matched the schema. Always `false` where `ran` is `false`, because a check that did not run has established nothing."
+        },
+        "unavailable_reason": {
+          "type": "string",
+          "description": "Why the check did not run: the validator could not be loaded, the file could not be read as JSON, or the file is not a JSON object. Empty when the check ran, and never empty when it did not."
+        },
+        "profile_treated_as": {
+          "enum": [
+            "as-written",
+            "fields-downgraded",
+            "discarded"
+          ],
+          "description": "What the run did with the profile as a whole. `as-written` covers THREE states and is read with `ran` AND `valid`, never with either alone: the valid profile (`ran: true`, `valid: true`); the one nothing could check, which is used as written and is exactly why `ran: false` is a disclosure rather than a pass; and the one that WAS checked, is invalid, and had nothing that could be downgraded — a missing required field is absent already, so there is no value to replace (`ran: true`, `valid: false`). Corrected 2026-09-02: this said the first two were told apart by `ran`, which does not separate the third from the first."
+        },
+        "violations": {
+          "type": "array",
+          "description": "Every violation, in the order the validator reported them. Empty where the profile is valid, and empty where the validator could not be loaded. NOT EMPTY WHERE THE CHECK DID NOT RUN AT ALL: a file that is not JSON, and a file that is not a JSON object, each carry one violation at `/` with `ran: false` — those are the loudest cases the block has, and reading `ran: false` as \"nothing to look at\" would skip them. Corrected 2026-09-02 after an independent check measured this description contradicting the code that writes it.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "expected",
+              "found",
+              "treated_as"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "JSON Pointer into the profile, `/` being the profile itself. For a missing required field it is the field the person has to add, not the object it belongs to; for an unknown extra field it is the extra field, not its parent."
+              },
+              "expected": {
+                "type": "string",
+                "description": "What `scan-profile.schema.json` requires at that path, in the validator's own words, with the parameter appended for the keywords whose message names nothing on its own."
+              },
+              "found": {
+                "type": "string",
+                "description": "The value that was there, as JSON, truncated past 200 characters and marked when it is. THIS IS WHERE THE FILE'S OWN ANSWER SURVIVES: the profile carried in the same document is the profile as read, so a downgraded field reads `null` there, and the rejected value is here beside the path it sat at. One profile per run and one record of what it was, rather than two profiles that can disagree."
+              },
+              "treated_as": {
+                "type": "string",
+                "description": "What the run did with it, in a sentence. Never a repair and never a guess: the field becomes unanswered, or — where the whole file is not an object of answers — the profile is treated as absent. A missing required field says that there is nothing to downgrade, because an absent field is already unanswered."
+              }
+            }
+          }
+        }
+      }
+    },
+    "declared_artifacts_reconciliation": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/declaredArtifactReconciliation"
+      },
+      "description": "The profile's `declared_artifacts` answers put beside what this run observed, one entry per kind, all four kinds always present. Added 2026-09-01 (W1 of the pillar-2 plan) because the field was declared in scan-profile.schema.json and READ BY NO CODE: grepped across product/, tools/ and rules/ on 2026-09-01, the only non-documentation hits were the type declaration and its compiled twin, so an operator who answered \"we publish a privacy policy\" was answering into a file nothing opened. NOT REQUIRED, deliberately, and for the same reason `profile`, `excluded_by_walker` and `store_declarations_excluded` are not: a reconcile-input.json written before this field existed is still a valid ReconcileInput, and making it required would retroactively invalidate every one of them. The CLI emits it on every run, so ABSENT means \"produced by a CLI that did not compute this\" while four entries of status `unanswered` mean \"computed, and nobody was asked\" - two different statements, and only the second says anything about the operator. Nothing here suppresses anything: an entry is a question to put to the person, never a verdict, never a reason to skip a checklist item, and never an override of what they answered."
+    },
+    "applicability": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/scopeAssessment"
+      },
+      "description": "One mechanical applicability assessment per bundled gate that carries `limbs`, computed by the same evaluator `scan` runs - `assessScope` in the CLI's scope module - over this run's OWN census facts and its own `profile`. Added 2026-09-01 (W2 of the pillar-2 plan): until then the reconciliation half carried the gates and their limbs and computed nothing from them, so the deterministic part of this question was answered on one side of the product and not on the other. It is the same function rather than a second implementation, so the two sides cannot come to hold different mechanical rules; it is NOT a copy of the scan's answer, because the facts are this run's - a reconcile over a tree no scan walked gets its own assessment, computed the same way. WHAT THESE STATES ARE AND WHAT THEY ARE NOT. THIS IS THE STATEMENT OF RECORD FOR THE RELATIONSHIP BETWEEN THEM AND THE AGENT'S GATE WALK, AND NOTHING ELSE RESTATES IT: SKILL.md step 3a points here. **They are computed evidence handed to the agent, and the agent's step-3a walk remains the judge.** That is not deference, it is what each layer can reach: this layer arrives at a state from the census facts and the profile ALONE - it asks nobody, and it does not read the document text this same file carries in `documents[]` - while a gate marked `ask_the_user`, and any limb whose `decided_by` is `ask` or `documents`, is answerable only by something that can ask a person or read a policy, which is the agent. So a limb in `contradicted-by-declaration` is PUT TO THE PERSON, in the put-back discipline the `declared_artifacts_reconciliation` entries use, and is closed by nobody here. WHERE SUCH A LIMB IS A `decided_by: code` LIMB AND ALSO HOLDS A FACT OF A KIND IN THE GATE'S `code_evidence.supports`, that fact settles the limb on its own (a limb about the product is never settled by a fact, so there the person's answer is what can move the verdict) and the checklist's verdict is the same under either answer, so the question put to the person changes the record and the limbs still open rather than that verdict; the console block says which of the two cases a question is, on the line where it asks, because an ask that does not say so promises more than answering it can do. **The agent never overrides one of these states silently: where its conclusion differs from a state recorded here, its `reasoning` must say why** - in practice, that it asked the person (`asked_the_user`, `user_answer` in declarations.schema.json) or that it read a document this layer cannot. The two vocabularies are not the same and a difference is not automatically a disagreement: `verdict` here has four values and the agent's `ApplicabilityVerdict.status` has three, `likely-applies` having no counterpart there. NOT REQUIRED, deliberately, on the same terms as `profile` and `declared_artifacts_reconciliation`: a reconcile-input.json written before this field existed is still a valid ReconcileInput, and making it required would retroactively invalidate every one of them. The CLI emits it on every run, so ABSENT means \"produced by a CLI that did not compute this\" while an EMPTY ARRAY means \"computed, and no bundled gate carries limbs\" - two different statements. Nothing here removes, suppresses or downgrades anything else in this file, and no item of any checklist may be skipped because of a verdict here: coverage-map row C29 states the reason in terms - this is 'an applicability signal, not a finding'."
+    },
+    "applicability_not_assessed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Bundled checklist gates that carry no `limbs`, so no assessment above is about them. Named rather than dropped, which is the same field and the same reason as findings.schema.json's `applicability_not_assessed`: a run that silently assessed the gates that do carry limbs would look like a run that had considered every instrument in the bundle. Prose-only gates are still walked by the agent: an id here means this layer computed nothing, never that the instrument was set aside."
+    },
+    "census": {
+      "$ref": "#/$defs/censusResult"
+    },
+    "pillar1": {
+      "$ref": "#/$defs/pillar1Status",
+      "description": "Whether the join against a pillar-1 findings.json ran, and what it joined against. Two branches rather than optional fields, because a join that was not run must not look like a join that found nothing: the not-computed branch carries a reason, so an absent --findings argument is legible in the output instead of appearing as zero overlaps."
+    },
+    "stats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "files_walked",
+        "documents_found",
+        "documents_extracted",
+        "referencing_files",
+        "census_facts",
+        "declared_only_dependencies",
+        "facts_with_pillar1_overlap",
+        "facts_on_a_pillar1_line",
+        "store_declarations_found"
+      ],
+      "description": "Coverage of the run. Needed to tell an empty result apart from a run that never looked.",
+      "properties": {
+        "files_walked": {
+          "type": "integer",
+          "description": "Files the walker enumerated and made available to discovery and the census."
+        },
+        "documents_found": {
+          "type": "integer",
+          "description": "Candidate declarations discovery returned, before extraction."
+        },
+        "documents_extracted": {
+          "type": "integer",
+          "description": "Documents whose text could be read. Lower than documents_found when extraction failed; the difference is itemised in discovery.unextractable."
+        },
+        "documents_screened": {
+          "type": "integer",
+          "description": "Files discovery reached and did not offer as candidate declarations - the length of discovery.looked_at.content_scan.screened, which counts two populations: files that carried legal phrases and did not read like a document (a translation catalogue, a record set), and files whose bytes are not text at all, reachable since the name passes stopped consulting a file's extension. Added 2026-09-02 and OPTIONAL so a document written before it still validates; emitted on every run from that date. Kept in stats so a consumer reading documents_found sees, beside it, how many more files were reached and set aside - without it, screening lowers documents_found with no adjacent number to say why. Each screened file is recoverable with --policy."
+        },
+        "documents_declaration_shaped": {
+          "type": "integer",
+          "description": "Found documents whose own NAME is a declaration's name - discovery.found[].name_shape_kinds non-empty - whatever pass reached them. Added 2026-09-02 and OPTIONAL so a document written before it still validates; emitted on every run from that date. It sits beside documents_found because the two answer different questions, and the second real-repository run showed what happens when only the first is available: 165 candidates, of which 7 were named like a declaration, printed as one flat list of 165 rows, and the two rows that decided the run were read past. A statement about names, never an identification."
+        },
+        "referencing_files": {
+          "type": "integer",
+          "description": "Files that point at a document without being one."
+        },
+        "census_facts": {
+          "type": "integer",
+          "description": "Facts the census collected across all collectors."
+        },
+        "declared_only_dependencies": {
+          "type": "integer",
+          "description": "Packages declared in a manifest with no call site found in what the census read (each listed in census.declared_only_dependencies; see declared_only_dependencies_not_read)."
+        },
+        "declared_only_dependencies_not_read": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Of declared_only_dependencies, those carrying call_sites_not_read: lines that could hold their call sites were not read, so whether they are imported is not known. Absent at 0."
+        },
+        "facts_with_pillar1_overlap": {
+          "type": "integer",
+          "description": "Facts sharing a file with a pillar-1 candidate. A loose measure on purpose: a rule with many locations puts most of a repository \"in overlap\", so this number on its own overstates how much pillar 1 already covers. Zero here means something only when pillar1.computed is true."
+        },
+        "facts_on_a_pillar1_line": {
+          "type": "integer",
+          "description": "Facts on the same line as a pillar-1 candidate - the tight measure, reported next to the loose one so neither is read alone. Still not a duplicate count: the same line can carry two unrelated questions, which is what Pillar1Overlap records."
+        },
+        "store_declarations_found": {
+          "type": "integer",
+          "description": "Store declarations parsed, including ones whose problems list is non-empty."
+        }
+      }
+    },
+    "excluded_by_walker": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/walkerExclusion"
+      },
+      "description": "What the walker refused to open, aggregated by reason and directory. Carried here for the same reason as in findings: a file the walker never opens can neither be discovered as a declaration nor produce a census fact, so an exclusion that is wrong is invisible without this list."
+    },
+    "disclaimer": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Statement that the output is informational and not legal advice. Mandatory: this file records what documents exist and what the code does, and nothing in it asserts that a legal requirement has been met or missed."
+    },
+    "store_declarations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/storeDeclaration"
+      },
+      "description": "Store declarations found in the tree (Apple .xcprivacy privacy manifests, Play data safety CSV exports), parsed without judgement. The store half of coverage row A14: the agent reconciles these against the census exactly as it reconciles a policy. Empty where the tree carries none, which for a web-only project is the normal state and not a gap."
+    },
+    "store_declarations_unreadable": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Store-declaration files that exist and could not be read. Reported for the standing reason: a declaration that could not be read and a repository with no declaration are different facts."
+    },
+    "store_declarations_excluded": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "file",
+          "reason"
+        ],
+        "properties": {
+          "file": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string",
+            "description": "The walker's own reason, verbatim - binary-content, size-limit, and so on."
+          }
+        }
+      },
+      "description": "Files that look like a store declaration and that the walker never offered, with the reason it refused. Three real manifests reach this field rather than the one above: a binary plist inside a vendored .framework (binary-content), a Play CSV over the size limit, and anything in a skipped tree. Before 2026-07-28 all three ended in silence - the file was not in the walked set, so nothing looked at it, and the summary said no store declaration was found about a repository that ships one."
+    }
+  },
+  "$defs": {
+    "censusCategory": {
+      "enum": [
+        "recipients",
+        "transfers",
+        "retention",
+        "collection",
+        "distribution",
+        "commercial",
+        "provenance",
+        "purpose"
+      ],
+      "description": "The axis shared between the law and the code census. A checklist item names the categories whose facts bear on it, so the law decides which facts are looked at rather than the census offering up everything it happened to find."
+    },
+    "checklistItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "article",
+        "quote",
+        "cite",
+        "checked_at",
+        "question"
+      ],
+      "description": "One thing a privacy notice is required to contain. Copied verbatim from checklist.schema.json so this file is self-contained; the definition there is the one to change.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable identifier for the item, referenced by ChecklistResult.item_id."
+        },
+        "article": {
+          "type": "string",
+          "description": "Article or sub-paragraph the requirement sits in (e.g. \"Art. 13(1)(e)\")."
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The requirement in the instrument's own words, so the agent reads the law and not a summary of it."
+        },
+        "cite": {
+          "type": "string",
+          "description": "Citation in its official form."
+        },
+        "url": {
+          "type": "string",
+          "description": "Link to the authoritative text of this particular article."
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date",
+          "description": "Date this item's quote was last verified against its source."
+        },
+        "question": {
+          "type": "string",
+          "description": "What to ask of the document. Never phrased as a conclusion about legality."
+        },
+        "census_categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/censusCategory"
+          },
+          "description": "Census categories whose facts bear on this item; absent or empty where the item can be answered from the document alone."
+        },
+        "applicability_note": {
+          "type": "string",
+          "description": "Present where the item's applicability is itself in question, rather than its answer."
+        },
+        "finding_when": {
+          "enum": [
+            "absent",
+            "present"
+          ],
+          "default": "absent",
+          "description": "Which answer to this item's question is the problem. Default `absent`. A few items ask the opposite — whether a prohibited thing is there — and for those the finding is that it is `present`. Copied from checklist.schema.json; the definition there is the one to change."
+        },
+        "quote_anchor": {
+          "type": "string",
+          "description": "Passage occurring exactly once that opens the provision the quote is cited to. Required for any quote that occurs more than once in its source. Copied from checklist.schema.json; the definition there is the one to change."
+        }
+      }
+    },
+    "checklist": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checklist_id",
+        "title",
+        "law",
+        "source_url",
+        "checked_at",
+        "scope_note",
+        "items"
+      ],
+      "description": "A checklist carried in the bundle. Copied verbatim from checklist.schema.json so this file is self-contained; the definition there is the one to change.",
+      "properties": {
+        "checklist_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable identifier, so a stored result can be read against the checklist it was produced from."
+        },
+        "title": {
+          "type": "string",
+          "description": "Name a reader would use for this checklist."
+        },
+        "law": {
+          "type": "string",
+          "description": "The instrument the items are drawn from, named separately so two laws are never merged into one list."
+        },
+        "source_url": {
+          "type": "string",
+          "description": "Link to the authoritative text the quotes were taken from."
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date",
+          "description": "Date the checklist was last verified against source_url."
+        },
+        "scope_note": {
+          "type": "string",
+          "description": "What this checklist does not cover, so a partial list is never read as the whole law."
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/checklistItem"
+          },
+          "description": "The requirements, in the instrument's own order."
+        },
+        "applicability": {
+          "$ref": "#/$defs/applicability",
+          "description": "The scope gate to answer before walking the items. Copied verbatim from checklist.schema.json; the definition there is the one to change."
+        }
+      }
+    },
+    "applicability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "question",
+        "quote",
+        "cite",
+        "checked_at",
+        "when_unresolved"
+      ],
+      "description": "Whether the instrument reaches the scanned project at all. Copied verbatim from checklist.schema.json; the definition there is the one to change.",
+      "properties": {
+        "question": {
+          "type": "string",
+          "description": "What to ask about the project before walking any item."
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The scope provision in the instrument's own words."
+        },
+        "cite": {
+          "type": "string",
+          "description": "Citation of the scope provision in its official form."
+        },
+        "url": {
+          "type": "string",
+          "description": "Link to the authoritative text of the scope provision."
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date",
+          "description": "Date this quote was last verified against its source."
+        },
+        "census_categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/censusCategory"
+          },
+          "description": "Census categories whose code facts bear on the gate."
+        },
+        "supporting_quotes": {
+          "type": "array",
+          "description": "Further provisions the gate turns on, each quoted verbatim. Added to checklist.schema.json on 2026-07-28 and NOT to this copy, so seven of the nine bundled checklists failed validation against the very file that carries them — and nothing caught it, because no gate validated the whole output document. Both are now checked. When one copy changes, change the other.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "quote",
+              "cite",
+              "checked_at"
+            ],
+            "properties": {
+              "quote": {
+                "type": "string",
+                "minLength": 1,
+                "description": "The provision in its own words."
+              },
+              "cite": {
+                "type": "string",
+                "description": "Citation in its official form."
+              },
+              "url": {
+                "type": "string",
+                "description": "Authoritative text this quote was taken from; a gate may depend on a definition in another act."
+              },
+              "checked_at": {
+                "type": "string",
+                "format": "date",
+                "description": "Date this quote was last verified against its source."
+              },
+              "why": {
+                "type": "string",
+                "description": "What this provision contributes to the gate."
+              },
+              "quote_anchor": {
+                "type": "string",
+                "description": "Passage occurring exactly once that opens the provision the quote is cited to. Required for any quote that occurs more than once in its source. Copied from checklist.schema.json; the definition there is the one to change."
+              }
+            }
+          }
+        },
+        "ask_the_user": {
+          "type": "boolean",
+          "description": "True where the gate turns on a fact neither the code nor the documents can show, and the agent has to ask the person running the scan."
+        },
+        "when_unresolved": {
+          "type": "string",
+          "description": "What to record when the gate cannot be settled. Never a guess in either direction."
+        },
+        "quote_anchor": {
+          "type": "string",
+          "description": "Passage occurring exactly once that opens the provision the quote is cited to. Required for any quote that occurs more than once in its source. Copied from checklist.schema.json; the definition there is the one to change."
+        },
+        "limbs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "question",
+              "decided_by",
+              "quote_ref"
+            ],
+            "description": "One requirement the scope provision imposes, asked on its own. A gate has as many limbs as the provision has conditions; splitting them is what stopped a limb from being forgotten silently, which happened twice on 2026-07-29 - GDPR's Article 13-versus-14 routing and the Data Act's Article 31.",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+$",
+                "description": "Stable identifier for this limb, unique within the gate. Named after what it tests, not its position, so reordering does not rename it."
+              },
+              "question": {
+                "type": "string",
+                "description": "The limb as one question. One requirement, not several: an answer that cannot say which of three conditions failed is the defect this field exists to prevent."
+              },
+              "decided_by": {
+                "enum": [
+                  "code",
+                  "documents",
+                  "premise",
+                  "ask",
+                  "either"
+                ],
+                "description": "How this limb is settled. `code` - readable from the repository. `documents` - readable from what the project publishes. `premise` - carried by the pack's standing premise (running the EU pack is the statement that the project is offered into the Union); never asked. `ask` - a fact about the business that no repository contains. `either` - a fact about the product that the person answers or their declared documents state, whichever answers first; the facts its `code_evidence` names are shown beside it as what the code suggests, and they may corroborate or contradict the answer and never decide it, as the CLI's `codeMaySettle` holds (until 2026-11-10 this read 'code or documents, whichever answers first', and the code decided it). `code` is the one value whose limb a census fact may settle: a fact about the code itself. Twice on 2026-07-29 a gate declared a limb unavailable in the tree when the tree answered it, so this field is checked against what a real run actually used."
+              },
+              "quote_ref": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1,
+                "description": "Citations of the provisions this limb rests on, matching a `cite` on the gate's `quote` or on one of its `supporting_quotes`. A limb with no quote behind it is prose asserting a legal test, which is the thing this checklist format exists to replace."
+              },
+              "evidence_categories": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/censusCategory"
+                },
+                "description": "Census categories that bear on this limb specifically. Checked against what the collectors emit, so a gate cannot claim evidence the census does not carry - or deny evidence it does."
+              },
+              "closes_gate_when": {
+                "enum": [
+                  "true",
+                  "false",
+                  "never"
+                ],
+                "description": "Which answer ends the gate. `true` - answering yes puts the project outside (an exemption limb: the EAA microenterprise test, the Data Act Article 31(2) exemption, DSA Article 13's establishment limb). `false` - answering no puts it outside (an ordinary scope limb). `never` - the limb informs the reading without deciding it. Present because a gate whose chapeau says 'all three must be true' while one limb closes the gate when true is inverted, and that was live on 2026-07-29."
+              },
+              "note": {
+                "type": "string",
+                "description": "What to look for, what not to infer, and what a wrong answer costs. Prose, deliberately: this is the part no schema can carry."
+              },
+              "code_evidence": {
+                "type": "object",
+                "additionalProperties": false,
+                "description": "Census fact kinds that bear on this limb, at the resolution the question needs. `evidence_categories` is too coarse to decide anything on its own: `marked_not_published` and `publishable_package` are both `distribution`, and they point in opposite directions. Naming kinds is what lets a scan state which limbs the code bears on and which it does not, without any of it being a judgement about the law. The facts settle a limb only where its `decided_by` is `code`; on every other limb they are shown as what the code suggests. A limb with no `code_evidence` is one the code does not settle, and it is reported unresolved rather than assumed either way.",
+                "properties": {
+                  "supports": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Kinds whose presence is evidence that this limb is met."
+                  },
+                  "opposes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Kinds whose presence is evidence that it is not. Recorded separately and never netted off against `supports`: a scan reports both, because a limb with evidence on both sides is a question for a reader, not an average."
+                  },
+                  "neutral": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Kinds in the limb's evidence categories that say nothing either way about this limb's question: never printed as what the code suggests and never a contradiction of the person's answer (a package marked as not published is no evidence that nothing is supplied, and none that something is)."
+                  }
+                }
+              },
+              "declared_by": {
+                "type": "string",
+                "pattern": "^[a-z_]+(\\.[a-z_]+)*$",
+                "description": "Dotted path into the ScanProfile whose value settles this limb — the answer the person running the scan already gave, e.g. `features.payments.present`. Copied from checklist.schema.json; the definition there is the one to change. **What a declaration does to a verdict is stated in one place and is deliberately not restated here: `product/packages/cli/src/scope.ts` § THE DECLARATION PATH.** Read it there. This description carried a copy of the rule and went stale twice, on 2026-07-30 and again on 2026-08-03."
+              },
+              "declared_answers": {
+                "type": "array",
+                "items": { "type": "boolean" },
+                "minItems": 1,
+                "uniqueItems": true,
+                "description": "Which values of the `declared_by` field answer this limb's question; a value not listed is no answer to the limb. Mirrors checklist.schema.json, which states it; what a declaration does to a verdict is stated in product/packages/cli/src/scope.ts."
+              }
+            }
+          },
+          "description": "The gate's requirements, one entry each, copied verbatim from checklist.schema.json; the definition there is the one to change. Carried into the reconciliation input because the applicability verdict a scan prints is computed from these, not from the prose."
+        }
+      }
+    },
+    "declaredArtifactEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "field"
+      ],
+      "description": "One pointer a reader can check inside this same file. Roles exist so that \"was not read\" never prints as \"is not there\", which is the standing discipline of this pillar - a document that could not be found must not look like a document that does not exist.",
+      "properties": {
+        "role": {
+          "enum": [
+            "store-manifest-parsed",
+            "store-manifest-unread",
+            "store-manifest-vendored",
+            "document-name-shape",
+            "document-kind-not-derivable",
+            "document-supplied-explicitly",
+            "nothing-observed"
+          ],
+          "description": "store-manifest-parsed: a manifest of this kind the parser read; counts as observed. store-manifest-unread: a manifest of this kind that exists and was not read - unreadable, or refused by the walker; COUNTS AS OBSERVED, because the file is in the tree and what is unknown is its contents rather than its existence, and it is a separate role so that a reader is never told it was examined. store-manifest-vendored: a manifest inside a vendored dependency tree (store-declarations.ts isVendoredManifest), which declares what THAT dependency collects and is never the app's own declaration in either direction - a tree carrying only these must never produce observed-but-not-declared against the operator. document-name-shape: a discovered document whose NAME makes it a candidate for this kind - its matched glob's word names the kind and the name carries whatever qualifier that word needs, or the name carries this kind's vocabulary beside the other kind's. A NAME THAT CARRIES BOTH KINDS' WORDS IS A CANDIDATE FOR BOTH, NEVER FOR NEITHER, so a question stays standing whichever of the two fields is answered no. A candidate, never an identification; the rule and its per-token table are stated once, in `nameShapeKinds` in the CLI's reconcile module, and are deliberately not copied here. document-kind-not-derivable: one line counting the discovered documents whose kind this pass could not derive, with the four reasons split out in its `detail` - reached by the sibling, content, explicit or url pass and carrying no matched_glob at all; matched a glob whose word names a document of neither kind; carried the OTHER kind's name shape and is accounted for by that kind's entry; or carried a name that settles no kind, being a word that needs a qualifier the name lacks or a third kind's standing title such as an NDA's. The count is what keeps a document that WAS found from reading as one that does not exist. document-supplied-explicitly: a document the person handed over themselves with --policy, listed as its own evidence rather than only counted inside document-kind-not-derivable. IT NEVER COUNTS AS OBSERVED, deliberately - discovery types nothing, an explicitly supplied document can never acquire a matched_glob, and calling it an observation of this kind would be the classifier this project designed, measured and discarded. What it is for is the put_back: the sentence has to be able to name what the person already gave, beside whatever name shape the run found, so that neither disappears. Added 2026-09-02 after a run supplied the real privacy policy with --policy, discovery separately globbed a 14-character route-wrapper page, and the sentence asked the person to confirm the wrapper without mentioning the document they had just supplied. nothing-observed: nothing of this kind was observed, and this is the pointer to where the looking itself is recorded."
+        },
+        "field": {
+          "type": "string",
+          "description": "Where in this file the pointer resolves - discovery.found[], discovery.looked_at, store_declarations[], store_declarations_unreadable[], store_declarations_excluded[], stats.files_walked. Named rather than copied, so nothing here is a second copy of a list that already exists above."
+        },
+        "path": {
+          "type": "string",
+          "description": "The file this evidence is about, where it is about one file."
+        },
+        "detail": {
+          "type": "string",
+          "description": "The glob that matched, the walker's refusal reason, or the counts behind a summary role."
+        }
+      }
+    },
+    "declaredArtifactReconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "profile_field",
+        "declared",
+        "declared_absent_reason",
+        "observation",
+        "status",
+        "put_back"
+      ],
+      "description": "One `declared_artifacts` answer, beside what this run observed, and the question to put back to the person. Every field is required, `put_back` and `declared_absent_reason` included as an explicit null, so an entry can never be half-written: a missing key and a recorded \"nothing to ask\" would otherwise read alike.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "privacy_policy",
+            "tos",
+            "xcprivacy",
+            "play_data_safety"
+          ],
+          "description": "The declared_artifacts field this entry is about. All four appear in every run."
+        },
+        "profile_field": {
+          "type": "string",
+          "description": "The profile field in full - \"declared_artifacts.privacy_policy\" - so the put_back can name the thing the person would edit rather than describing it."
+        },
+        "declared": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "The person's answer, or null. NULL RATHER THAN OMITTED: \"nobody was asked\" and \"the field is not in this schema\" are different statements, and only the first is true here. Null arises three ways that are all the same statement - no profile was given, the profile carries no declared_artifacts object, or the object does not answer this field - and two more that are not quite: the value is present and is not a boolean, or declared_artifacts is not an object of answers at all, both of which are reachable on any path. A caller that built the profile object itself reaches them through this layer's own type check. On the `--profile` path the value is reported against scan-profile.schema.json as it is read and the field is downgraded, AND THE REASON IS CARRIED FORWARD WITH THE VALUE, so a `declared_artifacts` that is not an object still comes back `declared-artifacts-not-an-object` and the sentence put to the person still quotes what they wrote - a downgrade may not turn one silence into another (W5, 2026-09-02; corrected the same day after an independent check measured it reading `no-declared-artifacts-object`, which is untrue of a file that carries one). NULL IS NEVER READ AS \"no\", by this file or by anything downstream."
+        },
+        "declared_absent_reason": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "no-profile",
+            "no-declared-artifacts-object",
+            "declared-artifacts-not-an-object",
+            "field-not-answered",
+            "field-not-a-boolean",
+            null
+          ],
+          "description": "Which of the five ways `declared` came back null; null itself where an answer was given. The last two are not defensive niceties: a field holding \"yes\", null or 1 reaches this code, and so does a `declared_artifacts` that is a string rather than an object of answers. They were written on 2026-09-01, when scan-profile.schema.json stated in its own description that NOTHING VALIDATED A PROFILE AGAINST IT AT RUNTIME (measured 2026-08-05) and reconcile.ts parsed and cast. Something does validate it from 2026-09-02 (W5) and these five values are unchanged: this check is kept because it is reachable by a caller that never went through the load step, and because on the `--profile` path a rejected value arrives here already downgraded to null and comes back `field-not-a-boolean` exactly as it did. Reading any of those as an answer would be inventing one; reading them as false would be the worse half of that. Both are recorded and the run continues, because a malformed profile must never stop a scan or narrow one."
+        },
+        "observation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "basis",
+            "observed",
+            "evidence",
+            "note"
+          ],
+          "properties": {
+            "basis": {
+              "enum": [
+                "store-manifest-format",
+                "document-name-shape"
+              ],
+              "description": "What the observed side rests on, and therefore how much it may claim. store-manifest-format: the file is recognised by the STORE'S OWN convention rather than by a name its author chose - Apple's .xcprivacy extension names this file and nothing else, and a Play data-safety export is a CSV under the Play Console's data-safety filing name. That identifies the KIND and says nothing about what the file declares; the Play half is the weaker of the two, and its rows are carried uninterpreted (see storeDeclaration.rows). document-name-shape: DISCOVERY DOES NOT TYPE DOCUMENTS (discover.ts: \"It classifies nothing\"), so for a privacy policy or a set of terms there is no identification to be had; what exists is the document's NAME. THE DERIVATION, stated so a reader can check the entries against it. It runs in two stages and its single statement of record is `nameShapeKinds` in the CLI's reconcile module (product/packages/cli/src/reconcile.ts in the source tree, shipped compiled), where the per-token table lives with a rationale on every token - THAT TABLE IS NOT COPIED HERE, because a token list in two places is a list that drifts, and this file would be the copy that goes stale (it already did once: this description stated the pre-qualifier rule for a day after the code stopped following it). STAGE ONE, the glob: the document's `matched_glob` is looked up in a table that says which kind that glob's WORD names, if either. A glob whose word names a document of neither kind - a policy, a legal directory, an imprint, a README, a security file - contributes nothing here, and neither do the sibling, content, explicit and url passes, which produce no glob at all. STAGE TWO, the name itself, read two ways. The whole path is folded (accents decomposed and dropped, every separator removed, lower-cased) so that Polityka_Prywatnosci, polityka-prywatnosci and PolitykaPrywatnosci/page.tsx are one string, and the long vocabulary tokens are looked for in it; the SHORT primary words of each kind - `terms` is five characters - are looked for at word boundaries in the DOCUMENT'S OWN NAME instead, which is its filename without the extension, or the directory that names it where the filename does not (a router's page.tsx). The asymmetry is deliberate: long tokens keep reading the whole path because a directory is already how the globs read a name, while the boundary route is bounded to the name so that a `terms/` folder does not turn every file inside it into a terms candidate. Three questions are then asked. (a) Where the glob's word names no kind ON ITS OWN - Polish `polityka` is `policy`, not `privacy` - the fold must carry the qualifier its language uses, or no kind is claimed; without that stage a cookie policy counted as the privacy policy and an answer of \"yes\" came back `consistent` with no question asked at all. (b) Where the fold carries a THIRD kind's standing title - an `accord de confidentialite` is a confidentiality undertaking, not a privacy notice - no kind is claimed. (c) Where the fold carries BOTH kinds' vocabulary - `terms-and-privacy`, `Podminky ochrany osobnich udaju` - the document is a candidate for BOTH kinds, never for neither: that is the one arrangement under which a question stays standing whichever of the two fields is answered NO. With both answered yes nothing is asked, which is the correct output - the clause is about which errors can silence a question, not a promise that one is always asked. WHAT THIS COSTS, STATED IN THE DIRECTION IT IS ACTUALLY WRONG IN, and correcting a claim this description carried until 2026-09-01 (\"that under-claims and never over-claims\"): NEITHER DIRECTION IS FREE. Claiming a kind the name does not settle silences `declared-but-not-observed` when the answer is yes; withholding one the name does settle silences `observed-but-not-declared` when the answer is no. Every document that reaches neither kind stays visible - it is in discovery.found[], it is counted in the entry's `document-kind-not-derivable` line with the reason it was not attributed, and the put_back says how many declaration-shaped documents were found - so nothing here can make a document that WAS found look like one that does not exist. The alternative to a name-shape rule is a classifier over the document's contents, which this project designed, measured and discarded on 2026-08-04."
+            },
+            "observed": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "How many pieces of evidence count as observing this kind. Vendored manifests are never counted; unread ones are, because the file is in the tree. Zero with a non-empty evidence list is an ordinary state and says what was looked at."
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/declaredArtifactEvidence"
+              },
+              "description": "Pointers, never a second copy: every path here also appears in the list its `field` names."
+            },
+            "note": {
+              "type": "string",
+              "minLength": 1,
+              "description": "What this observation can and cannot say, in one sentence, carried WITH the entry rather than left in a schema a reader may not open. For the two document kinds it says in as many words that shape-match is not identification."
+            }
+          }
+        },
+        "status": {
+          "enum": [
+            "consistent",
+            "declared-but-not-observed",
+            "observed-but-not-declared",
+            "unanswered"
+          ],
+          "description": "The relation between the answer and this run's observation. It is never a statement about whether the artifact exists. consistent: the two do not disagree; nothing to ask. declared-but-not-observed: the answer is yes and this run did not observe one - the scan may simply not have reached it (a policy published only on the website, a manifest the walker refused, a document under a name no glob knows), so the entry asks and concludes nothing. observed-but-not-declared: the answer is no and something of the kind was observed - NOT AN ACCUSATION and not to be worded as one: a repository can carry a document the product does not publish, a name shape is not an identification, and the answer may be about something the tree cannot show. unanswered: nobody was asked, which is never a \"no\" and is never resolved from the code."
+        },
+        "put_back": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "THE STANDARD TALK-BACK SENTENCE, or null where the status is `consistent` and there is nothing to ask. One template, five fills, used verbatim-shaped by the CLI: \"The scan profile field {field} {answers \\\"yes\\\" | answers \\\"no\\\" | is not answered ({which of the five silences it was})}. {what this run observed}. The evidence for that sits in this file's {the fields the entry's evidence points at}. The scanner settles this in neither direction and never answers for the person: whether this product {publishes a privacy policy | publishes terms of service | ships an Apple privacy manifest (PrivacyInfo.xcprivacy) | has filed a Play data-safety form} is a fact about the product, asked of the person running the scan and never inferred from the source. Please answer or confirm {field}, or {the action that can still change the answer}.\" THE LAST FILL IS CHOSEN FROM WHAT THE RUN HAS, not from the kind (corrected 2026-09-01, defect D2): where a file of the kind was observed, it is \"say whether <paths> is the <kind> this field is about\" - asking someone to supply a document this run has just reported finding is an action that cannot change anything; where a document was already handed over with --policy, it is \"say whether the document already supplied with --policy (<paths>) is the one this field is about\", because an explicitly supplied document can never acquire a matched_glob and asking for --policy again would ask the person to repeat what they just did; and only where the run has nothing of the kind at all is it \"point the scan at the document with --policy <path-or-url>\" for the two document kinds, or \"point the scan at a tree that contains the manifest\" / \"... the export\" for the two store kinds. THE TWO FIRST CASES ARE NOT ALTERNATIVES AND BOTH ARE NAMED WHERE BOTH HOLD (corrected 2026-09-02, hole 2 of the first real-repository run). Written as an if/else in that order, a name shape found anywhere in the tree hid the document the person had just supplied: a run passed the real privacy policy with --policy, discovery globbed a 14-character Angular route-wrapper page called privacy-policy-page.html, and the sentence asked the person to confirm the wrapper with no mention that they had supplied anything at all - while this same run's own thin-document check was reporting that wrapper as a shell. So the ask names the observed file AND the supplied document when both exist, joined by \"or\", and where the run's own extraction reports a named file as too thin to be the document, the sentence says so in the same breath rather than leaving the two halves of the tool to contradict each other in one document. WHAT THE TEMPLATE MAY NOT BECOME: \"you said X but actually Y\" - the observation is what this run saw, not what is true; an instruction to change the answer - the scanner never overrides a declaration; a statement about any legal requirement - this file concludes nothing about any law. It names the field so the person can go and edit it, names the evidence so they can check it in this same file, and ends in a question, which is the shape every pillar-2 output has."
+        }
+      }
+    },
+    "scopeAssessment": {
+      "description": "One instrument's mechanical applicability assessment. The producer is `assessScope`, whose emitted TypeScript type - `ScopeAssessmentRecord` - is shared by both documents rather than declared twice.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checklist_id",
+        "law",
+        "source_url",
+        "quote",
+        "cite",
+        "verdict",
+        "because",
+        "limbs",
+        "unresolved_limbs",
+        "contradictions"
+      ],
+      "properties": {
+        "checklist_id": {
+          "type": "string"
+        },
+        "law": {
+          "type": "string"
+        },
+        "source_url": {
+          "type": "string",
+          "description": "The official text the gate was verified against. Its CELEX number is what ties a rule's citation to this assessment."
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The scope provision in its own words, so a verdict is never printed without its basis."
+        },
+        "cite": {
+          "type": "string"
+        },
+        "verdict": {
+          "enum": [
+            "applies",
+            "likely-applies",
+            "does-not-apply",
+            "unresolved"
+          ],
+          "description": "`does-not-apply` requires evidence AGAINST a required limb and none for it; absence of evidence is never enough. An exemption limb can only take a project out when actually resolved, which code never does."
+        },
+        "because": {
+          "type": "string",
+          "description": "Assembled mechanically from the limb states. This layer does not write prose about the law."
+        },
+        "limbs": {
+          "type": "array",
+          "minItems": 1,
+          "description": "At least one, which is checklist.schema.json's own requirement of the gate this is computed from. A gate carrying no limbs is not assessed at all and is named in `applicability_not_assessed`, so an assessment with an empty `limbs` would be a verdict resting on nothing.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "limb_id",
+              "question",
+              "decided_by",
+              "closes_gate_when",
+              "quote_ref",
+              "state",
+              "supporting",
+              "opposing",
+              "bears_on_verdict",
+              "supporting_count",
+              "opposing_count"
+            ],
+            "properties": {
+              "limb_id": {
+                "type": "string"
+              },
+              "question": {
+                "type": "string"
+              },
+              "decided_by": {
+                "enum": [
+                  "code",
+                  "documents",
+                  "premise",
+                  "ask",
+                  "either"
+                ],
+                "description": "Copied verbatim from the checklist limb, and the vocabulary is checklist.schema.json's own. A bare `type: string` here would let a value the checklist forbids reach a reader through the output."
+              },
+              "closes_gate_when": {
+                "enum": [
+                  "true",
+                  "false",
+                  "never"
+                ],
+                "description": "Copied verbatim from the checklist limb. Strings rather than booleans, `never` being the third answer: see `bears_on_verdict`."
+              },
+              "quote_ref": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string"
+                },
+                "description": "At least one, which is checklist.schema.json's own requirement: a limb is answered against quoted text, and a limb citing none would be printed with no basis."
+              },
+              "state": {
+                "enum": [
+                  "supported",
+                  "opposed",
+                  "contested",
+                  "settled-by-premise",
+                  "settled-by-declaration",
+                  "contradicted-by-declaration",
+                  "unresolved"
+                ]
+              },
+              "supporting": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "fact_id",
+                    "kind",
+                    "value",
+                    "file",
+                    "line"
+                  ],
+                  "properties": {
+                    "fact_id": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "file": {
+                      "type": "string",
+                      "pattern": "^(?![/\\\\])(?![A-Za-z]:)(?![\\s\\S]*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$))[\\s\\S]+$",
+                      "description": "Path relative to `target`, on the same terms and with the same pattern as `candidates[].locations[].file`. A fact carries a path a reader opens, so it needs the constraint for the same reason a candidate location does."
+                    },
+                    "line": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "description": "1-indexed, as `candidates[].locations[].start_line` is."
+                    }
+                  }
+                },
+                "description": " CAPPED AT 20 EXAMPLES since 2026-09-03; the exact population is in the count field beside it, and every row remains in the census under its own fact_id."
+              },
+              "opposing": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "fact_id",
+                    "kind",
+                    "value",
+                    "file",
+                    "line"
+                  ],
+                  "properties": {
+                    "fact_id": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "file": {
+                      "type": "string",
+                      "pattern": "^(?![/\\\\])(?![A-Za-z]:)(?![\\s\\S]*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$))[\\s\\S]+$",
+                      "description": "Path relative to `target`, on the same terms and with the same pattern as `candidates[].locations[].file`. A fact carries a path a reader opens, so it needs the constraint for the same reason a candidate location does."
+                    },
+                    "line": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "description": "1-indexed, as `candidates[].locations[].start_line` is."
+                    }
+                  }
+                },
+                "description": "Never netted off against `supporting`: a limb with evidence on both sides is a question for a reader, not an average. CAPPED AT 20 EXAMPLES since 2026-09-03; the exact population is in the count field beside it, and every row remains in the census under its own fact_id."
+              },
+              "bears_on_verdict": {
+                "type": "boolean",
+                "description": "False where `closes_gate_when` is `never`. That is how the owner's 2026-07-29 decision about the addressee limbs is carried in data: the answer annotates and cannot change the verdict."
+              },
+              "declared_by": {
+                "type": "string",
+                "pattern": "^[a-z_]+(\\.[a-z_]+)*$",
+                "description": "Profile field this limb declares it can be settled by, in dotted lower-case as checklist.schema.json requires of the limb this is copied from."
+              },
+              "declared_value": {
+                "type": [
+                  "boolean",
+                  "null"
+                ],
+                "description": "What the person answered, or null where they did not."
+              },
+              "supporting_count": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "EXACT population of `supporting`, computed BEFORE the 20-example cap. Read this, never the array's length. No verdict, limb state or contradiction reads an array's length - all of them are computed from the full sets before the cap."
+              },
+              "opposing_count": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "EXACT population of `opposing`, computed BEFORE the 20-example cap. Read this, never the array's length. No verdict, limb state or contradiction reads an array's length - all of them are computed from the full sets before the cap."
+              }
+            }
+          }
+        },
+        "unresolved_limbs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contradictions": {
+          "type": "array",
+          "description": "Limbs where the person running the scan said no and the tree says yes. Reported, never resolved silently: a declaration that could switch an instrument off by itself would make this a self-assessment form.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "limb_id",
+              "declared_by",
+              "evidence",
+              "evidence_count"
+            ],
+            "properties": {
+              "limb_id": {
+                "type": "string"
+              },
+              "declared_by": {
+                "type": "string",
+                "pattern": "^[a-z_]+(\\.[a-z_]+)*$",
+                "description": "The same profile field as the limb's own `declared_by`, and the same pattern."
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "fact_id",
+                    "kind",
+                    "value",
+                    "file",
+                    "line"
+                  ],
+                  "properties": {
+                    "fact_id": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "file": {
+                      "type": "string",
+                      "pattern": "^(?![/\\\\])(?![A-Za-z]:)(?![\\s\\S]*(?:^|[/\\\\])\\.\\.(?:[/\\\\]|$))[\\s\\S]+$",
+                      "description": "Path relative to `target`, on the same terms and with the same pattern as `candidates[].locations[].file`. A fact carries a path a reader opens, so it needs the constraint for the same reason a candidate location does."
+                    },
+                    "line": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "description": "1-indexed, as `candidates[].locations[].start_line` is."
+                    }
+                  }
+                },
+                "description": " CAPPED AT 20 EXAMPLES since 2026-09-03; the exact population is in the count field beside it, and every row remains in the census under its own fact_id."
+              },
+              "evidence_count": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "EXACT population of `evidence`, computed BEFORE the 20-example cap. Read this, never the array's length. No verdict, limb state or contradiction reads an array's length - all of them are computed from the full sets before the cap."
+              }
+            }
+          }
+        }
+      }
+    },
+    "discoveredDoc": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "kind",
+        "found_by"
+      ],
+      "description": "One candidate declaration. Discovery classifies nothing beyond how the document was reached: a marketing page that turns out not to be a declaration costs the agent one read, while a policy the tool never finds costs the user a finding they will never see and produces no trace at all.",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Path relative to target, or the full URL where kind is \"url\"."
+        },
+        "kind": {
+          "enum": [
+            "file",
+            "url"
+          ],
+          "description": "Whether the document was read from the tree or retrieved over the network."
+        },
+        "found_by": {
+          "enum": [
+            "glob",
+            "sibling",
+            "explicit",
+            "url",
+            "content"
+          ],
+          "description": "Which pass produced this document: an explicit --policy argument, a fetched URL, a glob match, or a neighbour of a glob match. Recorded because the passes differ sharply in precision, and a reader should be able to see which of them is carrying the result."
+        },
+        "matched_glob": {
+          "type": "string",
+          "description": "The glob that matched, present when found_by is \"glob\"."
+        },
+        "sibling_of": {
+          "type": "string",
+          "description": "The glob-matched document whose directory this one was taken from, present when found_by is \"sibling\". A router names the route by the directory and the file by its role, so the neighbours of one legal page are usually the rest of the set."
+        },
+        "markers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The phrases that identified this file as a legal document, when found_by is content."
+        },
+        "name_shape_glob": {
+          "type": "string",
+          "description": "The declaration glob this document's OWN NAME matches, whatever pass reached it. DIFFERENT FROM matched_glob, which says the document was FOUND BY that glob and is present only for the glob pass. The content pass found both correctly, they arrived carrying no name signal at all, and they sat at lines 120 and 121 of a 165-line listing whose other 108 rows were near-identical translation catalogues; the orchestrator read the listing in full, skimmed past both, and told six of seven subagents that no terms-of-service document existed anywhere in the repository. This field is what lets a consumer sort the list by what is likely to decide the run. It changes nothing about which documents are found or by which pass."
+        },
+        "name_shape_kinds": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "privacy_policy",
+              "tos"
+            ]
+          },
+          "description": "Which document kinds this document's NAME makes it a candidate for, derived from matched_glob or, failing that, name_shape_glob, by the same `nameShapeKinds` derivation the declared-artifacts entries use - stated once, in the CLI's reconcile module, and deliberately not copied here. A CANDIDATE, NEVER AN IDENTIFICATION: discovery classifies nothing and neither does this; the field name says `name_shape` because a name is all it reads. Present only where the name settles at least one kind. Absent on a URL document, which has no repository path to read a name from."
+        },
+        "url_pointer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "url",
+            "convention"
+          ],
+          "description": "A STORE-METADATA POINTER: a file whose whole content is one URL naming a document published outside the repository. Added 2026-09-03, where fastlane/metadata_bwpm_prod/default/privacy_url.txt holds exactly https://bitwarden.com/privacy/ - 30 characters, one line - and the run's premise was written as \"this repository carries no privacy policy\". It carries no privacy-policy PROSE, and it states twice where the prose is published. A URL-route run consumes this with --policy <url>. IT CLASSIFIES AND DOES NOT FILTER: the file is still discovered, still extracted, still listed. Decided from the CONTENT (the whole trimmed file is a single http(s) URL); the name only supplies the convention label.",
+          "properties": {
+            "url": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The URL the file names, exactly as written."
+            },
+            "convention": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The store-metadata field the filename belongs to (privacy_url, support_url, marketing_url), or bare-url-file where the name is not one of those and the content is nonetheless a single URL."
+            }
+          }
+        }
+      }
+    },
+    "referencingFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "line",
+        "key",
+        "document",
+        "line_text"
+      ],
+      "description": "A file that points at a declaration without being one - a version log, a route table, a config entry. These match no policy glob and are reachable only from the documents they name, and in trial the most decisive item found was a change log recording a collection practice that neither policy contained.",
+      "properties": {
+        "file": {
+          "type": "string",
+          "description": "Path relative to target."
+        },
+        "line": {
+          "type": "integer",
+          "description": "Line the reference appears on."
+        },
+        "key": {
+          "type": "string",
+          "description": "The reference string that matched - a document's path, or its directory name where the filename only names a role."
+        },
+        "document": {
+          "type": "string",
+          "description": "The discovered document this reference points at."
+        },
+        "line_text": {
+          "type": "string",
+          "description": "The matching line, trimmed and truncated, so the reference can be judged without opening the file."
+        },
+        "from_screened_file": {
+          "type": "boolean",
+          "description": "True when this reference sits in a file the content pass SCREENED (a translation catalogue, a record set) rather than offered as a candidate declaration. Present only when true; absent means an ordinary referencing file. The flag lets a consumer weigh such a row, since a translated link label is a weaker signal than a version log recording a practice a policy omits, without the row disappearing."
+        },
+        "from_discovered_document": {
+          "type": "boolean",
+          "description": "True when this reference sits in a file that is itself one of the discovered documents. Present only when true. Added 2026-09-02 with the extension-agnostic name passes: the rule has always been 'a document is not a reference to ITSELF', and it was implemented as 'a document is not a reference at all', so a page component naming the markdown asset it renders - or a version log inside legal/ naming the policy whose changes it records - lost its row the moment the file itself qualified as a document. Only the self-row is dropped now. The flag is here so a consumer can tell a cross-reference between two declarations from a pointer out of ordinary source, which are different kinds of evidence."
+        }
+      }
+    },
+    "siblingExpansion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "root",
+        "from",
+        "added",
+        "dropped_over_limit"
+      ],
+      "description": "One sibling pass: a glob hit pulled in the documents next to it. Recorded together with what it discarded, because a router directory can be large and a silent truncation would hide documents the run never looked at.",
+      "properties": {
+        "root": {
+          "type": "string",
+          "description": "Directory the neighbours were taken from."
+        },
+        "from": {
+          "type": "string",
+          "description": "The glob-matched document that triggered the expansion."
+        },
+        "added": {
+          "type": "integer",
+          "description": "Neighbours added to the found set."
+        },
+        "dropped_over_limit": {
+          "type": "integer",
+          "description": "Neighbours not added because the per-expansion limit was reached. Non-zero means documents exist that this run did not read. The files themselves are named in not_added, which was added 2026-09-02 because a count is not a record: one run reported 105 dropped neighbours and named none of them."
+        },
+        "candidates_under_root": {
+          "type": "integer",
+          "description": "Files with a declaration extension within the sibling depth of this root, found or not. The denominator of the neighbourhood test."
+        },
+        "declaration_named_under_root": {
+          "type": "integer",
+          "description": "How many of those carry a declaration-shaped NAME. The numerator of the neighbourhood test."
+        },
+        "neighbourhood_confirmed": {
+          "type": "boolean",
+          "description": "Whether this root is read as a neighbourhood of declarations - at least two of the candidates under it carry a declaration-shaped name AND they are at least a quarter of them. The guard that already existed against exactly that shape (`root === \"\"`) only fires at the repository root, and readme/ in that repository is functionally a second root. THE REPAIR IS A CONFIRMING CHECK BESIDE THAT GUARD, not a shallower depth or a smaller limit, and it keeps both cases the pass was built for: a confirmed neighbourhood expands whole exactly as before, and a router-role file (page.tsx and its family, whose text is routinely in an imported component no content test can see) is added from any root at all. Everything else is left to the content pass, which reads every walked file whatever it is called."
+        },
+        "not_added": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "file",
+              "reason"
+            ],
+            "properties": {
+              "file": {
+                "type": "string",
+                "description": "Path relative to target."
+              },
+              "reason": {
+                "enum": [
+                  "over-the-per-directory-limit",
+                  "not-a-declaration-neighbourhood"
+                ],
+                "description": "over-the-per-directory-limit: the per-expansion cap was already reached. not-a-declaration-neighbourhood: the root did not confirm itself as a place where legal pages live AND this file reaches none of the three individual routes either - it is not a router-role file, its own name is not a declaration's name, and it does not carry a legal phrase inside something that reads like a document. The gate applies to the WHOLESALE SWEEP and never to an individually declaration-shaped file; that distinction was added 2026-09-02 after the run-2 verification demonstrated a genuine cookie notice, carrying fewer than the content pass's three markers in a directory scoring 1 of 22, reaching the found set by no route at all."
+              }
+            }
+          },
+          "description": "Every neighbour this pass reached and did NOT add, named with its reason. A declined neighbour is not a file nobody looked at: the content pass reads every walked file whatever it is called and offers it on its own merits, and --policy <path> reads any of them in full as a supplied document. Named rather than counted on the same principle as excluded_by_walker and content_scan.screened - a file the tool did not offer must not look like a file that is not there."
+        }
+      }
+    },
+    "discoveryReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "found",
+        "referencing_files",
+        "looked_at",
+        "fetch_failures",
+        "unextractable"
+      ],
+      "description": "What discovery found, and what it searched. The second half is not optional and is the whole point of the shape: a document the tool failed to find must never look like a document that does not exist.",
+      "properties": {
+        "found": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/discoveredDoc"
+          },
+          "description": "Every candidate declaration, in order of how it was reached."
+        },
+        "referencing_files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/referencingFile"
+          },
+          "description": "Files that mention a discovered document without being one. Reachable only after a document has been found, which is why an empty reference_keys list makes this list meaningless rather than empty."
+        },
+        "looked_at": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "globs",
+            "extensions",
+            "files_walked",
+            "files_with_declaration_extension",
+            "sibling_expansions",
+            "reference_keys",
+            "unreadable",
+            "content_scan"
+          ],
+          "description": "What the search actually consisted of, reported next to what it returned, on the same principle as excluded_by_walker in findings.",
+          "properties": {
+            "globs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Glob patterns tried against the walked paths."
+            },
+            "extensions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The conventional document formats, REPORTED AS A COST LABEL AND CONSULTED BY NOTHING. What an extension may still do is display and cost - this list, the count beside it, and the console's cluster keys - plus a physical-readability filter, which is a statement about bytes and not about meaning. What the restriction cost while it stood: a repository's real Terms and Privacy Policy, TypeScript route handlers named terms.ts and privacy.ts whose bodies are rendered Markdown legal documents, were never tested by name at all."
+            },
+            "files_walked": {
+              "type": "integer",
+              "description": "Files discovery was given to search."
+            },
+            "files_tested_by_name": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "How many paths the name passes tested against the globs - every walked file, since 2026-09-02. THIS IS THE NUMBER THAT SAYS WHAT THE NAME SEARCH REACHED, and it replaces files_with_declaration_extension in that role. Optional so that an input written before that date still validates; emitted on every run from 2026-09-02."
+            },
+            "files_with_declaration_extension": {
+              "type": "integer",
+              "description": "How many walked files carry one of the conventional document extensions. A FORMAT STATISTIC, and since 2026-09-02 no longer the reach of the name search - see files_tested_by_name for that. Kept required because removing a required field breaks every reader of an input pack already written."
+            },
+            "sibling_expansions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/siblingExpansion"
+              },
+              "description": "Each sibling pass that ran, with what it added and what it dropped."
+            },
+            "reference_keys": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The strings the reference pass searched for. An empty list means no document was found first, so no reference search was possible at all."
+            },
+            "unreadable": {
+              "type": "array",
+              "description": "Files that could not be opened during the reference pass. Listed so that a read failure is never counted as an absence of references.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "file",
+                  "error"
+                ],
+                "properties": {
+                  "file": {
+                    "type": "string"
+                  },
+                  "error": {
+                    "type": "string",
+                    "description": "Why it could not be read, in words a reader can act on."
+                  }
+                }
+              }
+            },
+            "content_scan": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "files_read",
+                "marker_threshold",
+                "matched"
+              ],
+              "description": "The name-independent pass. Reported so that 'nothing was found' reads as 'N files were read and none said anything a legal document says', rather than as 'this project has no policy'.",
+              "properties": {
+                "files_read": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "marker_threshold": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "matched": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/contentMatch"
+                  },
+                  "description": "Files that cleared the marker threshold AND read like a document, which are the ones offered as candidate declarations in `found`."
+                },
+                "screened": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/contentMatch"
+                  },
+                  "description": "Every file discovery reached and did not offer as a candidate declaration, with the reason. TWO POPULATIONS, ONE LIST: a file that cleared the marker threshold and did not read like a document carries its phrases and the numbers that decided it in `shape`; a file that could not be read as text at all - reachable since 2026-09-02, when the name passes stopped consulting the extension and a name match like privacy.png began to arrive here - carries `screened_reason` and no shape, because nothing about its content was measured. THIS LIST IS THE WHOLE OF WHAT MAKES EITHER SCREEN AN ADDITION RATHER THAN A SUBTRACTION: a screened file is named here, so a reader can see that it was reached, what it said and why it was not offered as a declaration - and --policy <path> puts any of them back into the run as an explicitly supplied document, which is the recovery path a hard extension exclusion would not have. Emitted on every run from 2026-09-02, empty list included; optional so that an input written before that date still validates, and absent means the document predates the shape test rather than that nothing was screened."
+                }
+              }
+            }
+          }
+        },
+        "fetch_failures": {
+          "type": "array",
+          "description": "A URL that could not be retrieved. Reported rather than dropped, so that an unreachable policy is never read as \"no policy\".",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "url",
+              "error"
+            ],
+            "properties": {
+              "url": {
+                "type": "string"
+              },
+              "error": {
+                "type": "string",
+                "description": "Transport or status error, kept verbatim so the failure can be reproduced."
+              }
+            }
+          }
+        },
+        "unextractable": {
+          "type": "array",
+          "description": "Documents that were found but whose text could not be obtained - unreadable, or over the size limit. This is where the difference between discovery.found and documents[] is explained instead of being left to arithmetic.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "reason"
+            ],
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string",
+                "description": "Why extraction did not happen, in words."
+              }
+            }
+          }
+        }
+      }
+    },
+    "extractedLine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "line",
+        "text"
+      ],
+      "description": "One line of readable text with the source line number it came from. The number is the contract: a quotation in a finding must land on the line a reader opens.",
+      "properties": {
+        "line": {
+          "type": "integer",
+          "description": "Line number in the source document, not in the extracted text."
+        },
+        "text": {
+          "type": "string",
+          "description": "The readable text of that line, with markup removed."
+        }
+      }
+    },
+    "extractedDoc": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "doc_path",
+        "kind",
+        "extractor",
+        "sha256",
+        "read_at",
+        "bytes",
+        "lines",
+        "stats"
+      ],
+      "description": "A declaration's readable text, with the line numbers a quotation will cite.",
+      "properties": {
+        "doc_path": {
+          "type": "string",
+          "description": "Path relative to target, or the full URL, matching the DiscoveredDoc this text came from."
+        },
+        "kind": {
+          "enum": [
+            "file",
+            "url"
+          ],
+          "description": "Whether the source was a file in the tree or a fetched URL."
+        },
+        "extractor": {
+          "enum": [
+            "tsx",
+            "markdown",
+            "html",
+            "text"
+          ],
+          "description": "Which extractor produced the text. A policy rendered from a TSX component and one written in Markdown need different handling, and knowing which one ran is what explains an empty or mangled extraction."
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "Digest of the source as read. This is what pins a later finding to a version of the text, which matters here and not in a code scan: a hosted policy changes without the repository changing."
+        },
+        "read_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the text was read, from disk or from the fetched response."
+        },
+        "fetched_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the URL was retrieved, present only where kind is \"url\". Separate from read_at because a fetched response can be read some time after it arrived."
+        },
+        "bytes": {
+          "type": "integer",
+          "description": "Size of the source as read, before extraction."
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/extractedLine"
+          },
+          "description": "The readable text. Empty where the extractor found no prose, which is a result to be looked at rather than a failure to be hidden."
+        },
+        "stats": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "source_lines",
+            "text_lines",
+            "characters"
+          ],
+          "description": "Lines in, lines out, characters of text. The ratio is how an extraction that silently produced almost nothing gets noticed.",
+          "properties": {
+            "source_lines": {
+              "type": "integer",
+              "description": "Lines in the source document."
+            },
+            "text_lines": {
+              "type": "integer",
+              "description": "Lines that carried readable text."
+            },
+            "characters": {
+              "type": "integer",
+              "description": "Characters of extracted text."
+            }
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What a reader has to know about THIS extraction, in words, present only when there is something to say. Added 2026-09-02 with the extension-agnostic name passes: a document is now reached by its name whatever format it is in, so the masker that runs on it can be a guess from an extension that decides nothing, and the failure mode that matters is an extraction that produced NOTHING out of a file that plainly has content. The document is still emitted, with its digest and its byte count, and this field says what happened - an empty lines[] beside no explanation is indistinguishable from a document that says nothing."
+        }
+      }
+    },
+    "censusCallSite": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "line",
+        "line_text"
+      ],
+      "description": "Where a declared package is actually imported or called. A package with no call site is not a recipient of anything.",
+      "properties": {
+        "file": {
+          "type": "string",
+          "description": "Path relative to target."
+        },
+        "line": {
+          "type": "integer"
+        },
+        "line_text": {
+          "type": "string",
+          "description": "The importing or calling line, so the call can be judged without opening the file."
+        }
+      }
+    },
+    "pillar1Overlap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finding_id",
+        "rule_id",
+        "same_line",
+        "locations_in_file"
+      ],
+      "description": "A pillar-1 candidate sitting where a reconciliation item sits. Annotation only, never suppression: the same line can carry two unrelated questions - a secret-in-a-URL rule and an undisclosed-recipient finding fire on the identical line and ask different things - so a suppressor keyed on line overlap would delete real findings.",
+      "properties": {
+        "finding_id": {
+          "type": "string",
+          "pattern": "^fp_[a-f0-9]{16}$",
+          "description": "The pillar-1 candidate, copied verbatim from its findings.json so the two documents can be joined. Where the row covers a split group this is its FIRST part and `group_id` names the group; it is always the id of a candidate that exists in that document."
+        },
+        "group_id": {
+          "type": "string",
+          "pattern": "^fp_[a-f0-9]{16}$",
+          "description": "Present ONLY where this row covers a group the scanner split because it carried more locations than one adjudicating agent reads (findings.json `candidates[].group_part`). One overlap row is one QUESTION, never one part of one: a file whose locations straddle a part boundary would otherwise appear twice for one rule, each row carrying a fraction of `locations_in_file`, and the reader of an overlap is asking whether the code scan already reports this rule here - which one row answers. `finding_id` above names the first part, so it is always an id some candidate really carries; this names the group all the parts share."
+        },
+        "rule_id": {
+          "type": "string",
+          "description": "Rule that raised the pillar-1 candidate."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of that rule, copied in so the overlap reads on its own."
+        },
+        "first_context_question": {
+          "type": "string",
+          "description": "The pillar-1 rule's first context question, carried so a reader can see what that rule is asking without loading the rule, and decide whether it is the same question this finding asks."
+        },
+        "same_line": {
+          "type": "boolean",
+          "description": "True when the pillar-1 candidate is on the exact same line. Evidence about location only: same line is never on its own evidence that the two are the same question."
+        },
+        "locations_in_file": {
+          "type": "integer",
+          "description": "How many places in this file the pillar-1 candidate matched."
+        },
+        "declared_inapplicable_preconditions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "The applicability_preconditions of the OVERLAPPING PILLAR-1 RULE that the person's ScanProfile answered in a way that puts that rule out of scope, copied verbatim from the candidate's own declared_inapplicable_preconditions in findings.json. Present only when non-empty. THE OVERLAP IS QUALIFIED, NOT UNQUALIFIED: the code scan raised this candidate although the person declared the rule's subject out of scope, and an overlap arriving without this field tells the reader that pillar 1 reports the construct here flatly. IT QUALIFIES AND NEVER SUPPRESSES, exactly as the overlap itself does: not a reason to drop, downgrade or defer anything on either side. AND IT IS NOT FOR THE AGENT TO RESOLVE FROM THE CODE - whether the product carries the feature is a fact about the product and is asked of the person, so the agent records the disagreement and hands it back."
+        }
+      }
+    },
+    "censusFact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fact_id",
+        "collector",
+        "kind",
+        "categories",
+        "value",
+        "file",
+        "line",
+        "line_text",
+        "depends_on_runtime_config"
+      ],
+      "description": "One thing the code does. A fact, not a suspicion: whether it involves personal data, and whether the declaration covers it, are questions for the agent and not for the census.",
+      "properties": {
+        "fact_id": {
+          "type": "string",
+          "pattern": "^cf_[a-f0-9]{16}$",
+          "description": "Fingerprint over collector, file, line and value. Stable across runs, so a fact can be tracked between them, and it is what DeclarationFinding.fact_refs points at."
+        },
+        "collector": {
+          "type": "string",
+          "description": "Which collector produced the fact (outbound hosts, third-party tags, permissions, jobs, regions, dependencies). Kept so that a whole class of facts can be judged, or discounted, in one decision."
+        },
+        "kind": {
+          "type": "string",
+          "description": "What the collector decided this particular match is (e.g. \"url_literal\", \"deletion_path\", \"region_env_default\"). Free text rather than an enum because collectors add kinds as they learn to tell their own matches apart."
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/censusCategory"
+          },
+          "description": "Which parts of a notice this fact bears on. This is the axis a checklist item joins on."
+        },
+        "value": {
+          "type": "string",
+          "description": "The captured value - the hostname, the package name, the region string. The census needs what was matched and not merely that something matched, because the value is what a document is checked against."
+        },
+        "file": {
+          "type": "string",
+          "description": "Path relative to target."
+        },
+        "line": {
+          "type": "integer"
+        },
+        "line_text": {
+          "type": "string",
+          "description": "The matching line, so the fact can be judged without opening the file."
+        },
+        "depends_on_runtime_config": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Environment variables named on the same line. A gated path is a conditional and not a fact, and any finding drawn from one has to be phrased as conditional."
+        },
+        "call_sites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/censusCallSite"
+          },
+          "description": "Where the package is imported or called, for facts the dependency collector produced."
+        },
+        "pillar1_overlaps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/pillar1Overlap"
+          },
+          "description": "Pillar-1 candidates in the same file at or near this fact. Present only where the join ran."
+        }
+      }
+    },
+    "declaredOnlyDependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package",
+        "version",
+        "declared_in"
+      ],
+      "description": "A package that is declared and never imported. Not a fact and not a recipient - reporting one as a recipient of personal data is a false statement about a real company - but recorded, because \"we looked and found no call site\" is a different thing from silence. Where call_sites_not_read is present, lines that could hold its call site were not read: whether it is imported is NOT KNOWN, and it is still not a recipient.",
+      "properties": {
+        "package": {
+          "type": "string",
+          "description": "Package name as declared."
+        },
+        "version": {
+          "type": "string",
+          "description": "Version constraint as declared."
+        },
+        "declared_in": {
+          "type": "string",
+          "description": "Manifest the declaration was read from."
+        },
+        "call_sites_not_read": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "lines_past_ceiling",
+            "files"
+          ],
+          "description": "Present where lines that could hold this package's call site were not read: see the dependency inventory entry's field of the same name. This package is then not known to be unimported.",
+          "properties": {
+            "lines_past_ceiling": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Lines past the line ceiling, emptied before the import pass, in files it read."
+            },
+            "files": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Files not read to their end by the import pass: holding those lines, stopped for time before it ended, or not readable."
+            }
+          }
+        }
+      }
+    },
+    "censusResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "facts",
+        "declared_only_dependencies",
+        "stats"
+      ],
+      "description": "What the code does, collected mechanically. The three parts are the facts, the things that looked like facts and were not, and what the collectors covered.",
+      "properties": {
+        "facts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/censusFact"
+          },
+          "description": "Every fact collected, sorted so two runs over the same tree produce the same order."
+        },
+        "declared_only_dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/declaredOnlyDependency"
+          },
+          "description": "Packages declared in a manifest's `dependencies` or `optionalDependencies` block that nothing imports, held apart from facts so they can never be reported as recipients. THE TWO RUNTIME BLOCKS ONLY, unlike `dependency_inventory` below, which reads all four since 2026-08-28: a build-time package nothing imports is not a vendor this instrument was ever going to name, and widening this list would have moved packages into a record whose whole purpose is the anti-false-accusation half of the dependency question."
+        },
+        "dependency_inventory": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dependencyInventoryEntry"
+          },
+          "description": "Every package a `package.json` declares in its `dependencies`, `optionalDependencies`, `devDependencies` or `peerDependencies` block, called or not, in one ordered list, each declaration labelled with the `field` it came from — a superset of `facts`' dependency rows and `declared_only_dependencies` above, in a shape a consumer reads without joining them. THE SURPLUS OVER THE OTHER TWO POPULATIONS IS EXACTLY THE DEV AND PEER DECLARATIONS: `facts` and `declared_only_dependencies` were left on the two runtime blocks, because a `facts` dependency row is categorised `recipients` and moving a build-time package into it would be a change to what the scanner detects rather than to what this array carries. `field` is what lets a reconciler tell the two apart without joining anything. `bundledDependencies` is still not read: it is an array of names rather than a declaration map, and npm requires its members to be declared in one of the four blocks anyway. WHY PILLAR 2 GETS IT, decided 2026-08-28 rather than assumed: this instrument's whole job is diffing what a team DECLARES against what the code DOES, and the inventory is the declaration side of the dependency question in one place. It also carries two facts nothing else in this document does — the declared VERSION of a package that HAS call sites (a `facts` dependency row carries the name and the first call site and no version at all) and the EXACT call-site count (a fact's `call_sites` is truncated at five with the total discarded). ITS COST IS REAL AND IS STATED RATHER THAN HIDDEN: the entries restate names that `facts` and `declared_only_dependencies` already carry, so this document pays for a package name twice. Measured 2026-08-28 over the eight pinned pass-1 trees. COMPATIBILITY: added 2026-08-28 and OPTIONAL, so a reconcile input written before that date still validates; a document written on or after it is invalid against a copy of this schema pinned before it, because censusResult sets additionalProperties: false. A SECOND BREAK LANDED LATER THE SAME DAY AND RUNS BOTH WAYS: `dependencyDeclaration.field` is REQUIRED, so an input written in the hours between the two changes — inventory present, no field — is INVALID here, and one written after it is invalid against a copy of this schema pinned before it. Required rather than optional for the reason `declared_only` is written on every entry: an optional label a producer stopped writing would validate silently. Present even when empty."
+        },
+        "outbound_hosts_without_a_request_construct": {
+          "type": "array",
+          "description": "Files whose outbound-host rows sit in a file that carries no request construct at all, grouped one entry per file. THE SAME DISCIPLINE `declared_only_dependencies` ALREADY HAS, APPLIED TO THE OTHER COLLECTOR THAT NEEDS IT (2026-09-02, hole 3 of the first real-repository pillar-2 run). A declared dependency with no call site is not a recipient, and the census keeps those out of `facts` for that reason; a hostname in a static comparison table of OTHER COMPANIES' products, in a \"featured on\" logo carousel, or in a unit test's fixture data is the same shape of false signal. NOTHING IS MOVED OUT OF `facts` AND NO VERDICT CHANGES. Removing a row would be subtraction, and a bare hostname in a quoted string is exactly the shape the loose patterns exist for - a host whose scheme is added elsewhere, a CSP connect-src allowance, `aiplatform.googleapis.com`. This is an annotation that says which rows have no call site IN THEIR OWN FILE, so a reader or an agent knows which ones to find a call site for before naming a company as a recipient or counting a row as scope-gate evidence. WHAT IT DOES NOT SAY: it is a statement about the file and not about the program, so a host whose request is built two modules away is listed here and is still a real recipient. It is a reason to look, never a reason to drop. Grouped per file because the file is the unit a reader judges, and `fact_ids` is carried so that an applicability[] limb's ScopeEvidence.fact_id joins straight to an entry; the hostnames are not repeated here because `facts` already holds them. Present on every run from 2026-09-02, empty list included; optional so an input written before that date still validates.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "file",
+              "facts",
+              "distinct_values",
+              "fact_ids",
+              "test_or_fixture_file"
+            ],
+            "properties": {
+              "file": {
+                "type": "string",
+                "description": "Path relative to target."
+              },
+              "facts": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Outbound-host rows this file contributed."
+              },
+              "distinct_values": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Distinct hostnames among them."
+              },
+              "fact_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^cf_[a-f0-9]{16}$"
+                },
+                "minItems": 1,
+                "description": "Every row's fact_id, sorted, so a supporting-fact reference resolves without a scan."
+              },
+              "test_or_fixture_file": {
+                "type": "boolean",
+                "description": "Whether the path reads as a test, spec, mock or fixture file. Recorded separately because a hostname in a unit test's fixture data is a different kind of non-recipient from a hostname in a static product-comparison list, and a reader weighs them differently."
+              },
+              "long_lines_not_read": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Lines of this file past the line ceiling, not read by the request-construct pass: no request construct anywhere in the file is then not known for them. Named in files_long_lines_not_read. Absent at 0."
+              }
+            }
+          }
+        },
+        "files_stopped_for_time": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Files the census did not read whole because the file's time budget was spent, each with the stage it stopped in. PRESENT ONLY WHEN IT HAS A MEMBER, as manifests_not_usable is and for the same reason. What the census raised from such a file before the stop is kept; each file is also named in the findings document's files_partially_read.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "file",
+              "stage",
+              "budget_ms",
+              "elapsed_ms"
+            ],
+            "properties": {
+              "file": {
+                "type": "string",
+                "minLength": 1
+              },
+              "stage": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Where the census stopped: binary-check, long-line-ceiling, line-split, probe:<kind>, swift-manifests, package-manifest, comment-blanking, imports, collector:<name> or request-construct."
+              },
+              "budget_ms": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "The file's time budget, in milliseconds (--file-budget)."
+              },
+              "elapsed_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "What the census had spent on the file when it read its clock and stopped."
+              },
+              "lines_read": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "For a stage that reads line by line: the lines it read before the stop."
+              },
+              "lines_total": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "For a stage that reads line by line: the file's lines."
+              }
+            }
+          }
+        },
+        "files_long_lines_not_read": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Files the census read without the lines longer than the line ceiling, each line named. The census reads every file through the engine's own ceiling (blankLongLines, MINIFIED_LINE_LIMIT characters on a line ended by a line feed), so no pattern is handed a longer line and one unit of its work is bounded; each line here was emptied in place and the census raised nothing from it. PRESENT ONLY WHEN IT HAS A MEMBER, as manifests_not_usable is. In a scan the findings document names the same lines in files_partially_read (or the file in files_not_read).",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "file",
+              "threshold",
+              "lines"
+            ],
+            "properties": {
+              "file": {
+                "type": "string",
+                "minLength": 1
+              },
+              "threshold": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "The line ceiling the lines exceeded, in characters."
+              },
+              "lines": {
+                "type": "array",
+                "minItems": 1,
+                "description": "Every line not read, 1-based as in the file, in ascending order, with the characters it held.",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "line",
+                    "length"
+                  ],
+                  "properties": {
+                    "line": {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    "length": {
+                      "type": "integer",
+                      "minimum": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "manifests_not_usable": {
+          "type": "array",
+          "description": "Refusals the census recorded while reading manifests, each named with its file and reason: `parse-failed` for a package.json that is not JSON as this runtime reads it (a UTF-8 BOM is enough, and npm itself accepts one), `block-not-an-object` for one whose `dependencies`, `optionalDependencies`, `devDependencies` or `peerDependencies` value is a string, a number or an array. ONE ROW PER REFUSAL, NOT PER FILE, and the block-level refusal is per block — a manifest whose `devDependencies` is malformed still contributes every package its `dependencies` block declares, and `detail` names the block that was refused. PRESENT ONLY WHEN IT HAS A MEMBER, which is the one place in this document that asymmetry is taken: an empty array on every tree would rewrite two golden census documents to say nothing, and what this closes is the case where something DID go wrong and the output said nothing. Added 2026-08-28, because `dependency_inventory: []` from a manifest that could not be read was indistinguishable from `dependency_inventory: []` from a tree with no npm manifest at all. Measured over the 3,507 package.json files of the 98-tree corpus: 0 fail JSON.parse and 0 carry a BOM, so it is absent on every tree read so far. `findings.json`'s `stats.manifests_not_usable` carries the count.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "file",
+              "reason",
+              "detail"
+            ],
+            "properties": {
+              "file": {
+                "type": "string",
+                "description": "Path relative to the scan root, exactly as the walker produced it."
+              },
+              "reason": {
+                "enum": [
+                  "parse-failed",
+                  "block-not-an-object",
+                  "no-dependency-block"
+                ],
+                "description": "parse-failed: JSON.parse refused the file. block-not-an-object: the file parsed and a runtime dependency block held something that is not an object, so `Object.entries` over it would have produced one entry per character of a string - six packages named 0 to 5 out of `\"dependencies\": \"stripe\"`, each marked declared_only. `no-dependency-block` (2026-09-03) is a `Package.resolved` that parses as JSON and carries no `pins` array in either the v1 (`object.pins`) or the v2/v3 (`pins`) position: a manifest this census opened and took nothing from, which is a different sentence from a tree with no lockfile."
+              },
+              "detail": {
+                "type": "string",
+                "maxLength": 300,
+                "description": "What the runtime said, or which block held what shape. Cut at 300 characters."
+              }
+            }
+          }
+        },
+        "stats": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "files_read",
+            "files_matched",
+            "by_collector",
+            "packages_declared",
+            "packages_with_call_sites",
+            "identifiers_not_requests",
+            "manifests_marked_not_published"
+          ],
+          "description": "What the census covered. Needed to tell a clean repository apart from a census that did not run.",
+          "properties": {
+            "files_read": {
+              "type": "integer",
+              "description": "Files the census opened."
+            },
+            "files_matched": {
+              "type": "integer",
+              "description": "Files that produced at least one fact."
+            },
+            "by_collector": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "description": "Facts produced per collector, keyed by collector name. A collector sitting at zero is either a clean repository or a broken pattern, and this is the only place in the output where that difference is visible."
+            },
+            "packages_declared": {
+              "type": "integer",
+              "description": "Packages declared in a `dependencies` or `optionalDependencies` block. THE RUNTIME POPULATION, NOT `dependency_inventory`'s, which also carries `devDependencies` and `peerDependencies` since 2026-08-28 and is therefore longer on most npm trees. The narrower count is kept because this minus `packages_with_call_sites` is `declared_only_dependencies.length`, an identity the next field states and a consumer can check."
+            },
+            "packages_with_call_sites": {
+              "type": "integer",
+              "description": "Of those, how many anything actually imports. The gap is declared_only_dependencies."
+            },
+            "packages_declared_only_not_read": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Of declared_only_dependencies, those carrying call_sites_not_read. Absent at 0."
+            },
+            "identifiers_not_requests": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "URLs that name a vocabulary rather than a destination (JSON-LD contexts, XML namespaces). Counted rather than dropped in silence, so that a suppression stays checkable."
+            },
+            "manifests_marked_not_published": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Manifests in the tree marked unpublishable. Only the shallowest few reach the facts list: in a monorepo a nested private workspace package says nothing about whether the product is supplied, and one repository produced 476 of them. The total is here so the cap is countable rather than silent."
+            },
+            "files_not_text": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Files the census opened and refused because their bytes are not text - a NUL inside the first 4096 characters, the walker's own test, imported rather than restated. Since 2026-09-03 no collector asks about a file's extension, so this readability check is the only capability test left in front of them. ABSENT WHERE IT IS 0, which is every tree the shipped pipeline scans, since the walker has already applied the identical test; emitted when it fires, because a refusal nobody can count is a refusal nobody can check."
+            }
+          }
+        }
+      }
+    },
+    "pillar1Status": {
+      "description": "Whether the pillar-1 join ran, expressed as two mutually exclusive branches so that the not-computed case has to carry a reason.",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "computed",
+            "source",
+            "scan_id",
+            "target",
+            "candidates",
+            "locations"
+          ],
+          "description": "The join ran, against the findings file named here.",
+          "properties": {
+            "computed": {
+              "const": true
+            },
+            "source": {
+              "type": "string",
+              "description": "Path of the findings.json that was read."
+            },
+            "scan_id": {
+              "type": "string",
+              "description": "Scan those findings came from, so the two halves can be shown to belong to the same investigation."
+            },
+            "target": {
+              "type": "string",
+              "description": "Root that scan was run against. A value differing from this run's target means the two halves are describing different trees, and the overlaps mean nothing."
+            },
+            "candidates": {
+              "type": "integer",
+              "description": "QUESTIONS in the findings file, not rows of its `candidates` array. A group the scanner split because it carried more locations than one adjudicating agent reads is one candidate emitted as several records, and counting the records makes this number move on an unchanged repository the day the bound ships. `candidate_records` is the other number."
+            },
+            "candidate_records": {
+              "type": "integer",
+              "description": "Rows of the findings file's `candidates` array. Equal to `candidates` unless a group was split, and present so a reader who counts the rows can reconcile the two rather than guess which one this document means. Optional: a document written before the split existed carries only `candidates`, and the two were the same number then."
+            },
+            "locations": {
+              "type": "integer",
+              "description": "Locations across those candidates - the number of places that could possibly overlap."
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "computed",
+            "reason"
+          ],
+          "description": "The join did not run. The reason is mandatory so that this state is never mistaken for a join that found no overlaps.",
+          "properties": {
+            "computed": {
+              "const": false
+            },
+            "reason": {
+              "type": "string",
+              "description": "Why the join did not run, in words - typically that no --findings argument was supplied, or that the file named could not be read."
+            }
+          }
+        }
+      ]
+    },
+    "walkerExclusion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reason",
+        "dir",
+        "files",
+        "examples"
+      ],
+      "description": "One exclusion the walker made, aggregated by reason and directory.",
+      "properties": {
+        "reason": {
+          "enum": [
+            "generated-directory",
+            "non-production-directory",
+            "hidden-directory",
+            "non-production-file",
+            "generated-file",
+            "size-limit",
+            "binary-extension",
+            "binary-content",
+            "extension-not-scanned",
+            "named-pipe",
+            "socket",
+            "device",
+            "link-to-folder",
+            "link-to-nothing",
+            "link-to-outside",
+            "could-not-open",
+            "link-not-followed",
+            "name-not-utf8",
+            "link-path-too-long",
+            "git-lfs-pointer"
+          ]
+        },
+        "dir": {
+          "type": "string",
+          "description": "Directory the exclusion applies to, relative to the scan root."
+        },
+        "files": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Files excluded, or null where the tree was skipped without descending, so that \"not counted\" is never read as \"none\"."
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A few example paths, so the exclusion can be judged without re-running the walk."
+        }
+      }
+    },
+    "contentMatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "markers"
+      ],
+      "description": "A file discovery reached, with the phrases that matched it. Used for both populations: `content_scan.matched` holds the ones that were offered as candidate declarations, and `content_scan.screened` the ones that were not - either because they cleared the marker threshold and did not read like a document, or because their bytes are not text.",
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "markers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The phrases that matched. EMPTY where the file was screened before it was ever read for phrases - a file whose bytes are not text carries no markers, and `minItems: 1` was removed on 2026-09-02 so that such an entry can be written down rather than dropped for failing validation."
+        },
+        "shape": {
+          "$ref": "#/$defs/contentShape"
+        },
+        "screened_reason": {
+          "type": "string",
+          "description": "Why a file was screened when no shape was measured, in words a reader can act on. It carries ONE OF THREE DIFFERENT STATEMENTS AND THEY MUST NOT BE READ AS ONE (corrected 2026-09-03): the bytes were read and hold a NUL, so the file is not text; the walker refused the file for its EXTENSION and never opened it, so nothing here says anything about its bytes; or the file is over the walker's size ceiling and was not read, which usually means readable text this run does not have. None of the three is a statement about what the file IS, which is why each is written down rather than acted on silently, and --policy <path> still reads the file as a supplied document."
+        },
+        "screened_label": {
+          "type": "string",
+          "description": "The same decision in two or three words, for a listing: 'not text', 'not read (binary extension - the bytes were never opened)', 'not read (over the size ceiling)'. Present only where screened_reason is. It exists so that a console line and the JSON cannot come to describe one refusal differently - the first version of the console printed 'not text' for all three, which stated a byte fact about a decision taken from a name."
+        }
+      }
+    },
+    "contentShape": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lines",
+        "prose_char_ratio",
+        "markers_with_prose_nearby",
+        "markers_matched",
+        "document_shaped",
+        "reason"
+      ],
+      "description": "What the content pass measured about a file that cleared the marker threshold, and which confirming route decided whether it is a document or a file that mentions legal phrases. THE REPAIR IS A CONFIRMING CLAUSE BESIDE THE THRESHOLD, never a narrower threshold and never an extension exclusion, because subtraction is the only operation that can create a miss and this project has built a fixture for a real policy kept in a message catalogue and has not yet observed one in a scanned repository. A file must clear the threshold AND be document-shaped, and document-shaped has three independent routes of which any one is enough: the file is mostly sentences, or every marker sits beside sentences, or the file is short enough that reading it costs nothing. Measured over the fourteen catalogues and five real documents, prose_char_ratio is 0.024-0.049 on the catalogues and 0.455-0.930 on the documents. A SCREENED FILE IS NOT DROPPED: it is named in content_scan.screened[] with these numbers and its markers, and --policy <path> puts it back into the run as an explicitly supplied document. Emitted on every run from 2026-09-02; optional so that an input written before that date still validates, and absent means the file was never measured rather than measured and found shapeless.",
+      "properties": {
+        "lines": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Lines in the file."
+        },
+        "prose_char_ratio": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Characters of prose divided by characters in the file. A prose line is one that, with markup tags removed, is at least 40 characters long and holds at least 8 words - a sentence rather than a label, a key, a tag or a record separator - or, in a script that does not separate words with spaces, a dense enough run of its characters. FROM 2026-09-02 A PROSE LINE THAT IS A CATALOGUE RECORD DOES NOT COUNT TOWARDS THE NUMERATOR (hole 3 of the second real-repository run). `\"legal.intro\": \"...a full sentence...\"`, `msgstr \"...\"`, `<source>...</source>`, or a whole minified object of such pairs, is a record whatever its value says, and a file made of them is a record set. The denominator is untouched, so a real document's ratio does not move - measured on that repository, every declaration's ratio is identical to three decimals and every locale catalogue's falls from 0.19-0.99 to 0.00. THE DISCOUNT IS CONFINED TO THIS FIELD: the neighbourhood and passage routes read the undiscounted prose lines, which is what keeps a policy kept INSIDE a message catalogue and what keeps the space-less-script repair of the same day intact."
+        },
+        "record_value_lines": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Sentence-length lines that are a key and a quoted value and nothing else, and therefore do not count towards prose_char_ratio. Emitted so the ratio can be disputed from the record: a catalogue of full sentences reports hundreds of these beside a ratio near zero, and a real document reports none. Emitted on every run from 2026-09-02; optional so that an input written before that date still validates, and absent means the file predates the record-shape discount rather than having been measured and found to hold no records."
+        },
+        "markers_with_prose_nearby": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Markers whose line has a prose line within ten lines either side of it."
+        },
+        "markers_matched": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Markers this file matched, which is what markers_with_prose_nearby is out of."
+        },
+        "document_shaped": {
+          "type": "boolean",
+          "description": "Whether at least one confirming route held. False means the file is named in content_scan.screened[] instead of being offered as a candidate declaration."
+        },
+        "reason": {
+          "type": "string",
+          "description": "Which route decided it, or why none did, in words a reader can act on."
+        }
+      }
+    },
+    "storeDeclaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "format",
+        "tracking_domains",
+        "collected",
+        "accessed_api_types",
+        "problems"
+      ],
+      "description": "One store declaration, in the store's own taxonomy. Unknown identifiers pass through verbatim with no label - the parser never invents a meaning.",
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "format": {
+          "enum": [
+            "apple-xcprivacy",
+            "play-data-safety-csv"
+          ]
+        },
+        "tracking": {
+          "type": "boolean",
+          "description": "Apple's NSPrivacyTracking. Absent where the key is missing - missing is not false."
+        },
+        "tracking_domains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Domains the app declares it contacts for tracking. The census's outbound hosts are the code-side counterpart."
+        },
+        "collected": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/storeCollectedType"
+          }
+        },
+        "accessed_api_types": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "reasons"
+            ],
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "description": "Play CSV only: the raw rows. Column meanings are deliberately not interpreted by the deterministic layer, because a guessed mapping that is wrong would put words in the developer's declaration."
+        },
+        "problems": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What could not be understood in THIS file: a malformed plist, a documented key holding the wrong kind of value, an entry with no identifier. Non-empty is a fact about the declaration, not an error of the run, and is meant to be usable as \"look at this one\"."
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Decisions the parser made that are true of every file of the kind and say nothing about this one - Play rows carried uninterpreted, an unrecognised identifier passed through with no label, a manifest found inside a vendored dependency tree. Split out of `problems` on 2026-07-28, because one note emitted on every Play CSV ever parsed made `problems.length > 0` true of all of them and therefore useless as an attention signal."
+        }
+      }
+    },
+    "storeCollectedType": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "purposes",
+        "categories"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "The store's own identifier, verbatim."
+        },
+        "label": {
+          "type": "string",
+          "description": "Human-readable name, present only where the identifier is a known one."
+        },
+        "linked": {
+          "type": "boolean"
+        },
+        "tracking": {
+          "type": "boolean"
+        },
+        "purposes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/censusCategory"
+          },
+          "description": "The census axis this declared collection bears on: collection, plus recipients where the entry is declared as tracking."
+        }
+      }
+    },
+    "dependencyDeclaration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "line",
+        "version",
+        "field",
+        "ecosystem"
+      ],
+      "description": "One manifest's statement about one package: the version it names, the line it names it on, and the block it names it in.",
+      "properties": {
+        "file": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The manifest, relative to the scan root."
+        },
+        "line": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "The line the package's key is written on, 1-based. 1 where the key could not be located in the file's text."
+        },
+        "version": {
+          "type": "string",
+          "description": "The version range AS DECLARED. Not resolved, not normalised, not compared with anything."
+        },
+        "field": {
+          "type": "string",
+          "enum": [
+            "dependencies",
+            "optionalDependencies",
+            "devDependencies",
+            "peerDependencies",
+            "spm-dependencies",
+            "spm-resolved",
+            "pods",
+            "pods-resolved",
+            "xcodegen-packages"
+          ],
+          "description": "WHICH BLOCK OF THAT MANIFEST DECLARES IT. Owner ruling, 2026-08-28: the census reads all four blocks and every declaration says which one it came from, so a package declared in `dependencies` and again in `devDependencies` carries two entries with two lines and two versions. A FACT ABOUT THE MANIFEST, NOT A VERDICT ABOUT THE PACKAGE — a build-time package's data flows happen at build or CI time, which is a different moment from the product's runtime and not an absent one. `bundledDependencies` is not a value here because it is not read: it is an array of names rather than a name-to-version map, and its members are declared in one of the four above anyway. SWIFT/APPLE BLOCKS ADDED 2026-09-03: `spm-dependencies` (a `Package.swift` `dependencies:` list), `pods` (a `Podfile`'s `pod` lines) and `xcodegen-packages` (an XcodeGen `project*.yml` `packages:` block) are DIRECT declarations, what a developer wrote, and are read exactly as `dependencies` is. `spm-resolved` (`Package.resolved`) and `pods-resolved` (`Podfile.lock`) are a RESOLVER'S OUTPUT over the whole transitive graph and reach this inventory and nothing else: `declared_only_dependencies` and the `facts` dependency rows are drawn from the direct blocks only, because \"declared and imported from nowhere\" is the ordinary state of a transitive pin and publishing that sentence about each one would turn the anti-false-accusation half of this record into a machine for making false statements about a developer's code."
+        },
+        "ecosystem": {
+          "type": "string",
+          "enum": [
+            "npm",
+            "swiftpm",
+            "cocoapods"
+          ],
+          "description": "WHICH MANIFEST FAMILY this declaration was read from. A label on the record, never an input to any judgement. It exists so an empty inventory is readable as a statement about the formats that were parsed: before 2026-09-03 only `package.json` was, and a pure Swift/SwiftPM tree produced an empty inventory that a reader could not tell from a product declaring nothing."
+        }
+      }
+    },
+    "dependencyInventoryEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package",
+        "declared",
+        "call_site_count",
+        "declared_only"
+      ],
+      "description": "One declared dependency, as the manifest and the tree state it. Facts only: no severity, no confidence, no vendor classification beyond the name the manifest writes. A declaration is not a transfer; the absence of a call site is not the absence of use; and only package.json is parsed, so an empty inventory is a statement about npm manifests and never about the product.",
+      "properties": {
+        "package": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The package name, exactly as the manifest writes it."
+        },
+        "declared": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/dependencyDeclaration"
+          },
+          "description": "Every declaration of it, in walk order: one entry per manifest AND per block. More than one in a monorepo, and they can name different versions."
+        },
+        "call_site_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Call sites found, EXACT, counted before call_sites is truncated."
+        },
+        "declared_only": {
+          "type": "boolean",
+          "description": "true where call_site_count is 0. Written on every entry rather than only where it is true, so the marker cannot be confused with a producer that stopped writing it. READ IT BESIDE declared[].field, ALWAYS. Since 2026-09-03 this inventory also carries RESOLVED declarations - spm-resolved (Package.resolved) and pods-resolved (Podfile.lock) - which are a resolver's output over the whole TRANSITIVE graph, and for most of a transitive graph \"declared and imported from nowhere\" is the ORDINARY state rather than an observation (15 of one real iOS tree's 21 rows, all 39 of another's). declared_only_dependencies and the facts dependency rows are drawn from the DIRECT blocks only for that reason, and this boolean is the one place the resolved rows still carry the sentence. It is a fact about call sites, never an accusation about a package: a consumer that reports \"declared and unused\" from this field without filtering on `field` will publish that sentence about packages nobody claimed to import. Where call_sites_not_read is present beside it, lines that could hold a call site were not read and the absence is not known."
+        },
+        "call_sites_not_read": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "lines_past_ceiling",
+            "files"
+          ],
+          "description": "Present only where declared_only is true and lines that could hold a call site were not read: the import pass reads every readable file, so a line past the line ceiling anywhere in the tree (named in files_long_lines_not_read), a file the per-file budget stopped before its import pass ended (named in files_stopped_for_time) or a file that could not be read leaves the absence NOT KNOWN. No call site was found in what was read; whether the package is imported is not known, and a reader says not read, never not imported. Absent where every such line was read.",
+          "properties": {
+            "lines_past_ceiling": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Lines past the line ceiling, emptied before the import pass, in files it read."
+            },
+            "files": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Files not read to their end by the import pass: holding those lines, stopped for time before it ended, or not readable."
+            }
+          }
+        },
+        "call_sites": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "description": "Up to three call sites, file and line only. A sample, never the count.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "file",
+              "line"
+            ],
+            "properties": {
+              "file": {
+                "type": "string",
+                "minLength": 1
+              },
+              "line": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

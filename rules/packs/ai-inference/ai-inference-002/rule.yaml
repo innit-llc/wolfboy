@@ -1,0 +1,160 @@
+id: ai-inference-002
+pack: ai-inference
+short_name: Setting that adds user identity to AI model requests
+problem_line:
+  text: User identity added to AI model requests
+  template: "{data} added to AI model requests"
+fix_line: Prefer an off default or a pseudonymous ID over name and e-mail, and record a model vendor
+  as a recipient.
+title: User-identity-forwarding toggle adds identity headers to an inference or image-generation request
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - Art. 30(1) requires each controller to
+      maintain a record of processing activities, and 'That record shall contain all of the
+      following information', including 'the categories of recipients to whom the personal data have
+      been or will be disclosed including recipients in third countries or international
+      organisations'. The field asks for CATEGORIES, which is what makes it answerable for a
+      destination the code does not name: the category is established by what the recipient does
+      with the data, and the identity is supplied by the operator"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(9) - 'recipient' means 'a natural or legal person,
+      public authority, agency or another body, to which the personal data are disclosed, whether a
+      third party or not'. Reference only: a definition establishes no duty of its own"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 25(2) - 'The controller shall implement appropriate
+      technical and organisational measures for ensuring that, by default, only personal data which
+      are necessary for each specific purpose of the processing are processed. That obligation
+      applies to the amount of personal data collected, the extent of their processing, the period
+      of their storage and their accessibility.' Reference only: a toggle's shipped default is the
+      fact this provision is about, and this detector reads a call site rather than a default"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 44 - 'Any transfer of personal data which are
+      undergoing processing or are intended for processing after transfer to a third country or to
+      an international organisation shall take place only if, subject to the other provisions of
+      this Regulation, the conditions laid down in this Chapter are complied with by the controller
+      and processor, including for onward transfers of personal data from the third country or an
+      international organisation to another third country or to another international organisation.'
+      Reference only: this detector does not establish that a transfer occurs, only that a construct
+      for forwarding identity exists; whether the destination sits outside the EEA is an operator
+      fact"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose "The
+      categories of third parties to whom the business discloses personal information." The
+      obligation is owed on a verifiable consumer request under Sec. 1798.110(b), and Sec.
+      1798.130(a)(5)(B) requires the same categories in the privacy policy
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-08-31
+    jurisdiction: US
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.3
+applicability_preconditions:
+  - features.llm.present
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  resolve_import_aliases: true
+  vocabulary:
+    identity_header_toggle:
+      - ENABLE_FORWARD_USER_INFO_HEADERS
+      - FORWARD_USER_INFO_HEADERS
+      - SEND_USER_INFO_HEADERS
+      - FORWARD_USER_HEADERS
+      - PASS_USER_INFO_HEADERS
+      - forward_user_info_headers
+      - forwardUserInfoHeaders
+      - sendUserInfoHeaders
+      - forwardUserHeaders
+    identity_header_injector:
+      - include_user_info_headers
+      - add_user_info_headers
+      - with_user_headers
+      - withUserHeaders
+      - addUserInfoHeaders
+      - includeUserInfoHeaders
+  match:
+    - (?&identity_header_toggle)[^\n]{0,60}(?:\band\s+user\b|&&\s*user\b|\band\s+current_user\b)
+    - (?&identity_header_injector)\s*\(\s*[A-Za-z_$][A-Za-z0-9_$.]*\s*,\s*\$?(?:user|current_user|currentUser)\b
+    - (?:^|[^A-Za-z0-9_])(?:if|elif|when|unless|&&|\|\||and|or)\s*\(?\s*!?(?&identity_header_toggle)
+    - (?:^|[^A-Za-z0-9_])(?:if|elif|when|unless|&&|\|\||and|or)\s+not\s+\(?\s*(?&identity_header_toggle)
+    - (?:^|[^A-Za-z0-9_])(?:config|settings|env|ENV|environ|options|opts|getenv|Getenv|GetEnv)[A-Za-z0-9_.]{0,24}\s*[\(\[.]\s*['"]?(?&identity_header_toggle)
+context_questions:
+  - "READ THE HEADER-INJECTOR FUNCTION ITSELF BEFORE ANYTHING ELSE - it is a level of indirection
+    this match cannot see through. Quote what it actually places in the headers: a name and an email
+    in plain headers, a numeric id only, or a signed token (a JWT) that bundles several identity
+    fields into one opaque value. These are materially different disclosures and the remediation
+    differs: a header carrying a bare numeric id is a smaller disclosure than one carrying a name
+    and an email in the clear."
+  - WHAT IS THE DEFAULT - does this toggle ship ON or OFF? Quote the default from the settings or
+    environment definition, not from this call site. Art. 25(2) requires that by default only
+    personal data necessary for each specific purpose are processed; a boolean that ships `false`
+    and needs deliberate operator action to enable is a materially different posture from one that
+    ships `true`, and the finding should say which this deployment's shipped default is rather than
+    only that the code path exists.
+  - DOES THIS FIRE FOR A SELF-HOSTED ENDPOINT TOO? The anchors this rule is modelled on share one
+    function used by both a hosted-vendor call path and a self-hosted-runtime call path in the same
+    codebase. A self-hosted destination the operator runs themselves is not a third-party recipient
+    - cross-check `features.llm.providers` in the scan profile (see the sibling rule
+    `ai-inference-001`, context question 1) before recording one.
+  - IS THIS THE SAME DISCLOSURE AS THE SIBLING RULE, OR A SEPARATE ONE? Where `ai-inference-001` and
+    this rule both fire on the same call site, they are two views of one outbound request and the
+    record should carry one row, not two. Where only this rule fires - identity in a header, with no
+    identity field in the body - it is the whole of the disclosure and should be recorded as such.
+  - WHICH OF THE FOUR CLAUSES MATCHED, AND DOES THE LINE DESCRIBE A CALL OR A SETTING? A toggle read
+    out of a settings or environment object is the declaration of the knob and tells you what the
+    default is; a toggle inside a conditional beside an injector call is the disclosure happening.
+    Both are useful and they answer different questions, so quote the line and say which it is
+    rather than treating a settings line as evidence that anything was sent.
+evidence_template: "{file}:{line} matched a named boolean toggle whose own name says user
+  information is forwarded in request headers, or a call to the header-injection function such a
+  toggle gates, or the settings line where that toggle is read. This establishes only that THE CODE
+  HAS A CONSTRUCT for conditionally forwarding user identity in request headers. It does not
+  establish which fields the injector actually writes - read the injector function; on the anchor
+  this rule is modelled on it writes a name, a numeric id, an email and a role into four separate
+  headers, or mints a signed JWT carrying the same four fields, depending on whether a signing
+  secret is configured, which is two materially different shapes behind one toggle. It does not
+  establish whether the toggle defaults on or off in this codebase - read the settings or
+  environment default, not the call site; on that same anchor the shipped default is off. And it
+  does not establish whether the destination reached in this deployment is a vendor or
+  infrastructure the operator runs themselves, which is context question 3 and is asked of the
+  operator rather than read out of a host name."
+remediation_template: |
+  Read the header-injector function named at the match site before writing anything: what it places
+  in the headers determines the size of the disclosure, and two codebases naming the same toggle can
+  inject different fields.
+  Confirm the default. Where the toggle ships OFF and an administrator must deliberately enable it,
+  that is a materially better starting posture under Art. 25(2) than one shipping ON, and the
+  finding should say which this deployment's shipped default is - not only that the code path
+  exists.
+  Where the destination is a named vendor, add the recipient category to the Art. 30(1)(d) record
+  alongside, and not duplicating, any entry already created for the sibling body-embedded construct
+  (`ai-inference-001`) on the same call. Where the destination is infrastructure the operator runs
+  themselves, this closes with no recipient row.
+  If the header only needs to carry a rate-limiting or abuse-monitoring signal, consider replacing
+  the plain name and email with a stable pseudonymous identifier - a hashed user id - as the
+  minimisation fix, rather than only documenting that the toggle exists.
+data_categories:
+  - user.contact.email
+  - user.name
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 5
+      class: per-location

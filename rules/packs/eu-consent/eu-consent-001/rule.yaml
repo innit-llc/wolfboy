@@ -1,0 +1,184 @@
+id: eu-consent-001
+pack: eu-consent
+short_name: Google Tag Manager or Analytics may run before consent
+problem_line:
+  text: Google tag or Analytics contacted, no consent gate found
+fix_line: Deny Consent Mode defaults before any Google tag, gate noscript iframes, and decide how a
+  server relay treats consent.
+title: GTM/GA4 host, wrapper package or container id referenced (script, noscript iframe,
+  preconnect, allow-list, manifest, import or call) - Consent Mode default needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC): storing
+      information, or gaining access to information already stored, in a user's terminal equipment
+      \"is only allowed on condition that the subscriber or user concerned has given his or her
+      consent, having been provided with clear and comprehensive information\""
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-28
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) (replaces Art. 5(3) of Directive 2002/58/EC: the 2002
+      wording offered only a right to refuse, the replacement wording requires prior consent) and
+      Art. 4 (Member State transposition deadline 25 May 2011)"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: GDPR Art. 4(11) and Art. 7 (definition of consent; conditions for valid consent)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-21
+    jurisdiction: EU
+  - cite: CNIL Deliberation no. 2020-091 of 17 September 2020 adopting guidelines on the application of
+      Art. 82 of the French Data Protection Act (the national transposition of ePrivacy Art. 5(3))
+      to read and write operations in a user's terminal, notably cookies and other trackers —
+      consent is to be obtained before non-exempt trackers are placed or read
+    url: https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000042388179
+    checked_at: 2026-07-22
+    jurisdiction: FR
+  - cite: "CNIL, Sanctions and corrective measures: the CNIL's actions in 2025 (published 9 February
+      2026) — enforcement evidence rather than an instrument: 21 organisations were sanctioned over
+      cookies and other trackers, including for storage without the user's consent"
+    url: https://www.cnil.fr/en/sanctions-and-corrective-measures-cnils-actions-2025
+    checked_at: 2026-07-22
+effective_date: 2011-05-25
+severity: high
+rule_confidence: 0.85
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  match:
+    - googletagmanager\.com
+    - "[\"'`](?:@next/third-parties(?:/google)?|nuxt-gtag|vue-gtag|vue-gtag-next|react-ga4|react-gt\
+      m-module|@analytics/google-tag-manager|gatsby-plugin-google-gtag|@nuxtjs/google-tag-manager|s\
+      velte-gtag|angular-google-tag-manager)[\"'`]"
+    - (?:^|[^A-Za-z0-9])(?:GoogleTagManager|GoogleAnalytics|sendGTMEvent|sendGAEvent|GTM_ID|gtmId|gtm_id|gtagId|initGTM)\b
+    - google-analytics\.com
+    - (?:^|[^A-Za-z0-9])(?:GoogleTagManager|GoogleAnalytics)[A-Za-z0-9_]+
+context_questions:
+  - What is the tag load conditioned on? Quote the condition itself, not merely that the load is
+    dynamic. A hostname, environment or feature-flag check is the operator's own configuration and
+    is not the end user's consent; only a condition that reads a recorded user decision counts.
+  - "Before this tag loads, is there a check that the visitor gave consent — and is the default
+    state denial, so that nothing is set before the visitor acts? A gtag('consent', 'default', ...)
+    call is evidence, and since 2026-07-27 the detector no longer searches for it, so finding one is
+    a real contribution rather than a repeat of the search that produced this candidate. It is not
+    sufficient on its own. Quote the call, then answer: (a) is every category it sets 'denied' —
+    ad_storage, analytics_storage, ad_user_data, ad_personalization — since an omitted key or a
+    'granted' value leaves that category on; (b) does it run on this page's load path and strictly
+    before the line in the evidence? A default set in one layout does not cover a page rendered from
+    another, and a default that runs after the tag has loaded is too late."
+  - Is prior consent achieved by some other means — a CMP the tag is registered with, a server-side
+    gate, a cookieless mode, a consent cookie read before the tag is written? Name it and quote it.
+  - "Beware a name collision that has produced a wrong dismissal here: a component or route called
+    consent, ConsentGate, consent-status or re-agree is very often a terms-of-service or
+    privacy-policy re-acceptance flow, which is a contract question and NOT consent under ePrivacy
+    Art. 5(3). Read what it actually gates before treating it as a consent mechanism, and check
+    whether it can even run before the tag loads."
+  - "Does an apparent suppression really suppress? For Google tags specifically:
+    send_page_view:false disables only the automatic page_view event — gtag('config') still writes
+    the _ga cookies, and many apps re-send page_view by hand afterwards. anonymize_ip does not
+    remove the terminal-equipment access either."
+  - "Is this page or app served to users in the EU? Read ScanProfile.distribution_regions, which is
+    supplied with this candidate. A region that is not in the list may not have been asked: that
+    question is open, not answered no. If it is absent, say so and return needs_human rather than
+    guessing — this question decides whether the obligation exists at all."
+  - "IF THE MATCH IS A PACKAGE NAME OR A COMPONENT RATHER THAN THE HOST (clauses 2 and 3, added
+    2026-09-02), THREE THINGS ARE OUTSTANDING AND TWO OF THEM ARE NOT IN THIS REPOSITORY. First, and
+    it IS here: trace the wiring. Which component or initialiser call site uses the package, on
+    which pages is it mounted, and is any of them reachable before the visitor authenticates or
+    before a consent decision is recorded? Quote the mount. Name the package and the exact pinned
+    version from the manifest or lock file, and say plainly that the vendor host strings live inside
+    that package and not in this tree, so the absence of a host literal here means nothing either
+    way. Second, and it is NOT here: whether the tag loads in a given deployment at all. The
+    commonest wiring renders the component only when a container-id environment variable is set, so
+    the load is a deployment fact and the person running the scan is who can answer it. Third, and
+    it is the one that decides what the finding MEANS: A TAG CONTAINER'S CONTENTS ARE CONFIGURED IN
+    THE VENDOR'S OWN INTERFACE AND ARE ABSENT FROM EVERY REPOSITORY BY CONSTRUCTION. One container
+    is a page-view counter, the next carries a full advertising pixel, and no line of code in any
+    tree separates them. Ask what the container holds; do not infer it, and do not let the answer be
+    inferred from the package name."
+evidence_template: "{file}:{line} names the host googletagmanager.com, or imports the framework
+  wrapper package through which that host is reached. Where it is the host, that string is the whole
+  of what this detector matched, and it appears in four shapes of which only two load a tag: a
+  script src or a framework Script component, and a noscript iframe. A preconnect or dns-prefetch
+  hint opens a connection and sets no storage; a Content-Security-Policy directive or another
+  allow-list entry declares that the host is permitted somewhere rather than loading it. The same
+  string also occurs in prose, in documentation and in a consent platform's own vendor list. Read
+  the matched line and name its shape before treating it as a load. WHERE IT IS THE PACKAGE OR ITS
+  CALL SITE - a fifth shape, added 2026-09-02 - what is established is narrower still and different
+  in kind: the dependency is imported in this repository and wired to a component or an event call,
+  and NOTHING ELSE. The vendor host literals live inside that package, so nothing here says a
+  request left a visitor's browser, which usually depends on a container-id environment variable
+  being set in a deployment; and nothing in any repository says which tags the container fires or
+  what they collect, because that is configured in the vendor's own interface. Name the package and
+  its pinned version, quote the mount, and take both of those limbs to context question 7 rather
+  than reading them off the import. Whether a Consent Mode default-denied initialisation exists, and
+  whether it covers this load path, is not decided by the detector: see the context questions A
+  SIXTH SHAPE, ADDED 2026-09-09: the ingestion host google-analytics.com given as a configured
+  endpoint URL for a relay the product's own backend posts to, or an identifier built on the
+  vendor's product name such as GoogleAnalyticsClientImpl. On this shape the vendor's code does not
+  run in a browser at all, so none of the five shapes above describes it and THERE MAY BE NO CLIENT
+  ARTEFACT TO GATE. A Consent Mode default-denied call is a browser-side instruction, so where the
+  relay is server-side the remediation below may have no analogue anywhere in this code; what stands
+  in its place, if anything, is for the reader to decide from the deployment and is not decided
+  here. What is established is that the host or the identifier is named at this line. Whether the
+  endpoint is ever reached is a deployment fact - the measurement id is ordinarily read from
+  configuration - and it is the same limb context question 7 already asks about for the
+  wrapper-package shape."
+remediation_template: >
+  Read the matched line first, because this rule matches the string googletagmanager.com and that
+
+  string reaches the page in four different shapes, and two of them load the tag. A <script> src or
+
+  a framework Script component is one of the two, and everything below applies to it. A <noscript>
+
+  <iframe> is the other, and no JavaScript-side default can gate it - that one is fixed by not
+
+  rendering the element until a decision is recorded, or by dropping it. A <link rel="preconnect">
+  or
+
+  "dns-prefetch" is a network hint rather than a tag: it opens a connection to Google and sets no
+
+  storage, so the change there is to remove the hint alongside whatever load it was warming, not to
+
+  add a consent default. A Content-Security-Policy directive or another allow-list entry naming the
+
+  host is a declaration that the tag is permitted somewhere, not a place where it loads; find the
+
+  actual load and answer for that line instead.
+
+  Set the Consent Mode v2 defaults to denied before the first gtag call, then send an update once
+  the CMP records consent:
+
+  gtag('consent', 'default', { ad_storage: 'denied', analytics_storage: 'denied', ad_user_data:
+  'denied', ad_personalization: 'denied' });
+
+  In Next.js, place this inline in the shared layout as <Script strategy="beforeInteractive"> at the
+  very top.
+
+  If such a call already exists, check the two things it is routinely wrong about rather than
+  treating its presence as the answer: every category must be 'denied' (an omitted ad_user_data or
+  ad_personalization leaves that category on), and it must run on the same load path as this line
+  and before it — a default in one layout does not cover a page rendered from another.
+
+  A SIXTH SHAPE WAS ADDED 2026-09-09 AND THE PARAGRAPHS ABOVE DO NOT APPLY TO IT UNCHANGED: the
+
+  ingestion host google-analytics.com configured as the endpoint of a relay the product's own
+
+  backend posts to, or an identifier built on the vendor's product name. There is no script, no
+
+  iframe and no gtag call on that path, so there may be no client artefact to gate and no place a
+
+  Consent Mode default could be set. Read the matched line and decide which case you are in before
+
+  applying anything above. Where the relay is server-side, what would stand in place of a
+
+  browser-side default is a decision about the deployment - whether a recorded decision is read on
+
+  the request path before the event is assembled, and who is in a position to record one at all -
+
+  and this finding does not make that decision or assert that any particular answer is required.
+data_categories:
+  - user.behavior
+  - user.unique_id
+fingerprint_spec: default

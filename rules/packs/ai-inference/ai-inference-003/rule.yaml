@@ -1,0 +1,246 @@
+id: ai-inference-003
+pack: ai-inference
+short_name: MCP tools that can give personal data to an AI assistant
+problem_line:
+  text: Personal data available to AI clients through MCP tools
+  template: "{data} available to AI clients through MCP tools"
+fix_line: Use the product's API authorisation on each tool or scope it to the caller's records, and
+  record the client category.
+title: Model Context Protocol tool surface that can answer a connecting AI client with personal data
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - the record of processing activities 'shall
+      contain all of the following information', including 'the categories of recipients to whom the
+      personal data have been or will be disclosed including recipients in third countries or
+      international organisations'. A tool endpoint answers whichever client connects to it, so the
+      recipient category - and not a named recipient - is the field this construct has to be able to
+      fill in
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(f) - personal data shall be 'processed in a manner
+      that ensures appropriate security of the personal data, including protection against
+      unauthorised or unlawful processing and against accidental loss, destruction or damage, using
+      appropriate technical or organisational measures'. Cited because a tool surface is a second
+      read path over the same store, reached by a different credential from the product's own API,
+      and the question it raises is who may call it
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 32(1)(b) - the measures a controller and processor
+      implement include, inter alia as appropriate, 'the ability to ensure the ongoing
+      confidentiality, integrity, availability and resilience of processing systems and services'.
+      Reference only: this detector establishes no security failure and cannot. It marks a read path
+      whose authorisation model has to be read, not a defect in one"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 25(2) - 'The controller shall implement appropriate
+      technical and organisational measures for ensuring that, by default, only personal data which
+      are necessary for each specific purpose of the processing are processed. That obligation
+      applies to the amount of personal data collected, the extent of their processing, the period
+      of their storage and their accessibility.' Reference only: the shipped default of the switch
+      that turns the surface on is the fact this provision is about, and a match on a registration
+      line does not read that default"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 15(1) - the data subject has the right to obtain access
+      to the personal data and to information including '(c) the recipients or categories of
+      recipient to whom the personal data have been or will be disclosed, in particular recipients
+      in third countries or international organisations'. Reference only: the same categories the
+      record carries are owed to the person on request, so a tool surface with no recipient category
+      recorded also has none to disclose"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose \"The
+      categories of third parties to whom the business discloses personal information.\" The
+      obligation is owed on a verifiable consumer request under Sec. 1798.110(b), and Sec.
+      1798.110(c)(4), disclosed pursuant to Sec. 1798.130(a)(5)(B), requires the same categories in
+      the privacy policy. PINPOINT CORRECTED 2026-09-01 (D11, independent adversarial verification):
+      the earlier wording routed the privacy-policy limb through Sec. 1798.130(a)(5)(B) alone, which
+      read on its own enumerates categories of personal INFORMATION rather than categories of third
+      parties. NOT MACHINE-VERIFIED AND SAID SO: this rule's quote-verification receipt marks this
+      span unverifiable, because Californian law is outside the fetch path of the tool that checks
+      quotations against official texts; the correction is from knowledge of the statute rather than
+      from a fetched text, and it should be confirmed against the code or by a lawyer before it is
+      treated as settled"
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-08-31
+    jurisdiction: US
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.35
+applicability_preconditions:
+  - features.llm.present
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  resolve_import_aliases: true
+  vocabulary:
+    mcp_server_symbols:
+      - NewMCPServer
+      - NewSSEServer
+      - McpServer
+      - McpAsyncServer
+      - McpSyncServer
+      - McpServerFeatures
+      - FastMCP
+      - StdioServerTransport
+      - SSEServerTransport
+      - StreamableHTTPServerTransport
+      - HttpServletStreamableServerTransportProvider
+    mcp_module_paths:
+      - modelcontextprotocol
+      - mcp-go/server
+      - mcp-go/mcp
+      - mcp.server.fastmcp
+      - mcp.server.lowlevel
+      - fastmcp
+    mcp_tool_registration:
+      - ListToolsRequestSchema
+      - CallToolRequestSchema
+      - AsyncToolSpecification
+      - SyncToolSpecification
+      - "@mcp.tool"
+    mcp_tool_registration_prefixing:
+      - AddTool
+      - registerTool
+      - add_tool
+    person_returning_tool_names:
+      - get_user
+      - get_users
+      - getUser
+      - getUsers
+      - list_users
+      - listUsers
+      - search_users
+      - find_user
+      - get_user_details
+      - user_details
+      - get_profile
+      - getProfile
+      - get_me
+      - whoami
+      - current_user
+      - currentUser
+      - get_person
+      - get_member
+      - get_members
+      - list_members
+      - get_employee
+      - list_employees
+      - get_customer
+      - list_customers
+      - get_contacts
+      - list_contacts
+      - get_accounts
+      - list_accounts
+      - device-position
+      - device_position
+      - getDevicePosition
+  vocabulary_matching:
+    person_returning_tool_names:
+      separator_insensitive: true
+  match:
+    - (?:^|[^A-Za-z0-9_])(?:new\s+)?(?&mcp_server_symbols)\s*[\(\.]
+    - (?:["'`][^"'`\n]{0,80}|(?:^|[^A-Za-z0-9_])(?:import|from|require|use)\s[^\n]{0,80})(?&mcp_module_paths)
+    - (?:^|[^A-Za-z0-9_])(?&mcp_tool_registration)
+    - (?:^|[^A-Za-z0-9_])(?&mcp_tool_registration_prefixing)(?![Bb]ar|[Tt]ip|[Bb]ox|[Ss]trip|[Cc]hain)
+    - (?:(?:^|[^A-Za-z0-9_"'`])(?:list_tools|call_tool)|["'`](?:list_tools|call_tool)(?!["'`]))
+    - (?:^|[^A-Za-z0-9_])(?:NewTool|newTool|registerTool|AddTool|add_tool|tool|name)\s*[\(:=]\s*[^\n]{0,40}["'`](?&person_returning_tool_names)
+    - (?:^|[^A-Za-z0-9_$])[A-Za-z_$][A-Za-z0-9_$]*\s*\[\s*[A-Za-z0-9_$.?\[\]]{0,60}params\??\.name\s*\]
+    - (?:(?:^|[^A-Za-z0-9_])[A-Za-z0-9_]{0,24}(?:MCP|Mcp)(?![0-9])[A-Za-z0-9_]{0,24}\s*(?:=[^=]|:=|=>)|["'`][A-Za-z0-9_.\-]{0,32}(?:mcp|MCP|Mcp)(?![0-9])[A-Za-z0-9_.\-]{0,32}["'`]|(?:getBoolean|GetBool|get_bool|isEnabled|is_enabled)\s*\([^\n]{0,40}(?:MCP|Mcp|mcp)(?![0-9]))
+    - "[\"'`]tools[/](?:list|call)[\"'`]"
+context_questions:
+  - WHO CONNECTS TO THIS SURFACE? This is the question the detector cannot answer and the reason the
+    finding exists. A Model Context Protocol server answers whichever client dials it; which AI
+    clients are configured against this deployment is an operator fact, not a source fact, and it is
+    asked of the person running the scan rather than read out of the tree. Record the answer as a
+    recipient category (a hosted assistant vendor, a desktop client on an employee's machine, the
+    product's own assistant) and say where the answer came from. Where nothing answers it, say so
+    and return needs_human rather than naming a recipient the code does not name.
+  - IS THE SURFACE SWITCHED ON IN THIS DEPLOYMENT, AND WHAT IS THE SHIPPED DEFAULT? Both trees this
+    rule was modelled on mount the server only when an operator enables it. Quote the configuration
+    key and its default from the settings definition, not from the registration site. A surface that
+    ships off and needs a deliberate administrative action is a materially different posture under
+    Art. 25(2) from one that ships on, and the finding should say which this codebase's default is
+    rather than only that the registration exists.
+  - "OPEN EVERY TOOL HANDLER AND SAY WHAT IT RETURNS. The registration line names a tool; it does
+    not carry the record. Quote the handler's query or serialiser and list the fields that leave the
+    process: a whole person row, a display name only, a live location, a financial balance. This is
+    the difference between a finding about a build-metadata tool and a finding about a person-record
+    tool, and only the handler decides it."
+  - "WHAT AUTHORISATION STANDS IN FRONT OF THE TOOL, AND IS IT THE SAME ONE THE PRODUCT'S OWN API
+    USES? Quote the authentication filter or middleware on the tool route and say whose identity it
+    establishes: an API key belonging to the installation, a per-user token, or nothing. Say in
+    particular whether a tool answers with data belonging to users OTHER than the caller, because a
+    tool surface scoped to the caller's own record and a tool surface that can be asked about anyone
+    are different disclosures with the same registration line."
+  - IS THIS FILE THE SERVER OR A CLIENT? The clause that reads a module declaration cannot tell them
+    apart, because a codebase that CONNECTS to somebody else's tool surface imports the same
+    protocol package as one that STANDS ONE UP, and both spellings live under the same module root.
+    Say which this file is and quote the line that decides it - a server or transport being
+    constructed and tools being attached, against a client session being opened against a configured
+    endpoint. A client is a different construct and belongs with `ai-inference-001`'s question of
+    what the product sends outward, not with this one.
+  - "IS THIS THE SAME DISCLOSURE AS ONE OF THE SIBLING RULES, OR A SEPARATE ONE? Where this rule and
+    `ai-inference-001` or `-002` both fire in one codebase, they are usually two different flows and
+    not one: this rule is a model client READING the product, the siblings are the product SENDING
+    to a model endpoint. Where a codebase is both - a product whose own assistant calls its own tool
+    surface and then hands the result to a configured provider - say so explicitly and record the
+    onward step, because that is the path by which a tool result reaches a third party."
+evidence_template: "{file}:{line} matched a Model Context Protocol construct: a server or transport
+  being constructed, the protocol's module being imported, a tool being attached to a server, a tool
+  named for a person-returning operation, or the configuration switch that mounts the surface. This
+  establishes only that THE CODEBASE STANDS UP, OR DECLARES, A TOOL ENDPOINT THAT AI CLIENTS CAN
+  CALL. It does not establish that any client is configured against this deployment - that is an
+  operator fact and is context question 1. It does not establish that the surface is switched on: on
+  both trees this rule was modelled on the server is mounted only under operator configuration, and
+  the shipped default is written in the settings file rather than at this line. It does not
+  establish what any tool returns; the registration names a tool and the handler holds the record,
+  which is context question 3. It does not establish who may call the tool or whose records the
+  answer may cover, which is context question 4. And where the matched line is a module import
+  rather than a construction or a registration, it does not establish that this codebase is the
+  SERVER at all: a codebase that connects to somebody else's tool surface imports the same package,
+  and context question 5 is how that is settled."
+remediation_template: |
+  Open the tool handlers before writing anything. The registration line says a tool exists; what
+  leaves the process is decided by the handler's query and serialiser, and two codebases with the
+  same registration line can return a display name or a whole person row.
+  Record the recipient CATEGORY, not a recipient. A tool endpoint answers whichever client
+  connects, so the Art. 30(1)(d) row cannot name a company; it can name what kind of party is
+  configured against this deployment, and the operator is the one who knows. Where the product's
+  own assistant calls the surface and then forwards the result to a model provider, that onward
+  step is a second recipient and belongs in the record separately.
+  State the shipped default of the switch that mounts the surface. Where it ships off, say so -
+  it is the fact Art. 25(2) is about, and it is invisible at the registration site.
+  Where a tool can be asked about users other than the caller, scope it to the caller's own
+  records, or put the same authorisation in front of it that the product's primary API uses. A
+  second read path with a weaker authorisation model than the first is the specific engineering
+  gap this finding is for.
+data_categories:
+  - user.name
+  - user.contact.email
+  - user.unique_id
+  - user.location
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 1
+      class: existence
+    - question: 3
+      class: enumeration
+      item: tool handler
+      item_source: reading
+    - question: 5
+      class: per-location

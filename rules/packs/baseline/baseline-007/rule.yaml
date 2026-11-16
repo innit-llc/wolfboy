@@ -1,0 +1,118 @@
+id: baseline-007
+pack: baseline
+short_name: Token kept in browser storage that scripts can read
+problem_line:
+  text: Token kept in browser storage any page script can read
+fix_line: Move the session to an HttpOnly, Secure cookie, or else use short-lived, rotated tokens
+  kept out of long-lived storage.
+title: Token-named value written to Web Storage (localStorage / sessionStorage), or through a
+  setItem call with no receiver on the line
+jurisdiction:
+  - EU
+  - US
+  - JP
+legal_basis:
+  - cite: GDPR Art. 32 (security of processing; Web Storage is readable by any script on the origin,
+      which makes XSS a token-theft path)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-21
+    jurisdiction: EU
+  - cite: "Japan APPI (Act on the Protection of Personal Information, Act No. 57 of 2003), Art. 23
+      (security control measures — necessary and appropriate measures for the security control of
+      personal data). The PPC Guidelines (General Rules), Annex on the security control measures to
+      be taken, place access control and identification and authentication of those who access an
+      information system handling personal data under this duty. General basis: no Japanese
+      instrument addresses Web Storage, and Art. 23 reaches this finding through the personal data
+      the stolen token would open"
+    url: https://laws.e-gov.go.jp/law/415AC0000000057
+    checked_at: 2026-07-22
+    jurisdiction: JP
+  - cite: California Civil Code Sec. 1798.100(e) (CCPA as amended by Proposition 24, operative 1 January
+      2023) — a business that collects a consumer's personal information shall implement reasonable
+      security procedures and practices appropriate to the nature of the personal information, in
+      accordance with Sec. 1798.81.5. Sec. 1798.140(v)(1)(A) and (aj) bring a unique personal
+      identifier — a persistent identifier that recognises a consumer over time — inside personal
+      information, which is what a stored session token is. State scope only, applying to businesses
+      that meet the CCPA thresholds, and a reasonableness standard rather than a named control. Note
+      that a bearer token is not the username-plus-password combination that Sec. 1798.81.5(d)(1)(B)
+      defines, so the narrower breach-notification definition is not the hook here
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=1798.100&lawCode=CIV
+    checked_at: 2026-07-22
+    jurisdiction: US
+  - cite: "United States, FTC Act Sec. 5 (15 U.S.C. Sec. 45(a)(1) and (n)) — unfair acts or practices in
+      or affecting commerce, the authority behind the Federal Trade Commission's data-security line
+      (failure to employ reasonable security causing or likely to cause substantial injury to
+      consumers, not reasonably avoidable and not outweighed by countervailing benefits). General
+      basis: no federal statute names a storage location for a session token"
+    url: https://www.govinfo.gov/content/pkg/USCODE-2023-title15/html/USCODE-2023-title15-chap2-subchapI-sec45.htm
+    checked_at: 2026-07-22
+    jurisdiction: US
+severity: medium
+rule_confidence: 0.65
+detector:
+  engine: builtin-regex
+  resolve_local_values: true
+  shared_vocabulary:
+    - web_storage_writers
+    - project_local_storage_wrappers
+  match:
+    - (?:localStorage|sessionStorage|window\.localStorage|window\.sessionStorage)\s*\.\s*setItem\s*\(\s*["'`](?:jwt|JWT|token|Token|access_token|accessToken|id_token|idToken|refresh_token|refreshToken|session_token|sessionToken|auth_token|authToken|authorization|Authorization|auth|bearer|Bearer|api_key|apiKey|apikey|access_key|accessKey|secret|Secret|password|passwd|credential|credentials|private_key|privateKey|client_secret|clientSecret|session|sessionId|session_id|sid)(?:[_-][A-Za-z0-9_-]*)?["'`]
+    - (?:localStorage|sessionStorage|window\.localStorage|window\.sessionStorage)\s*\.\s*setItem\s*\([^,]*,\s*[\w$.?\[\]()"'`<%={}!@\s-]*\b(?:jwt|JWT|token|Token|access_token|accessToken|id_token|idToken|refresh_token|refreshToken|session_token|sessionToken|auth_token|authToken|authorization|Authorization|auth|bearer|Bearer|api_key|apiKey|apikey|access_key|accessKey|secret|Secret|password|passwd|credential|credentials|private_key|privateKey|client_secret|clientSecret|session|sessionId|session_id|sid)(?:[_-][A-Za-z0-9_-]*)?\b
+    - (?:localStorage|sessionStorage|window\.localStorage|window\.sessionStorage)\s*(?:\.\s*(?:jwt|JWT|token|Token|access_token|accessToken|id_token|idToken|refresh_token|refreshToken|session_token|sessionToken|auth_token|authToken|authorization|Authorization|auth|bearer|Bearer|api_key|apiKey|apikey|access_key|accessKey|secret|Secret|password|passwd|credential|credentials|private_key|privateKey|client_secret|clientSecret|session|sessionId|session_id|sid)(?:[_-][A-Za-z0-9_-]*)?\s*=(?!=)|\[\s*["'`](?:jwt|JWT|token|Token|access_token|accessToken|id_token|idToken|refresh_token|refreshToken|session_token|sessionToken|auth_token|authToken|authorization|Authorization|auth|bearer|Bearer|api_key|apiKey|apikey|access_key|accessKey|secret|Secret|password|passwd|credential|credentials|private_key|privateKey|client_secret|clientSecret|session|sessionId|session_id|sid)(?:[_-][A-Za-z0-9_-]*)?["'`]\s*\]\s*=(?!=))
+    - (?:localStorage|sessionStorage|window\.localStorage|window\.sessionStorage)\s*\.\s*setItem\s*\(\s*["'`][A-Za-z0-9_.$-]*(?:[Jj][Ww][Tt]|JWT|[Tt]oken|TOKEN|[Aa]uth|AUTH|[Ss]ession|SESSION|[Cc]redential|CREDENTIAL|[Ss]ecret|SECRET|[Bb]earer|BEARER|[Pp]assword|PASSWORD|[Aa]pi_?[Kk]ey|API_?KEY|[Aa]ccess_?[Kk]ey|ACCESS_?KEY)[A-Za-z0-9_.$-]*["'`]
+    - \(\s*[^()]*(?:localStorage|sessionStorage)[^()]*\)\s*\.\s*setItem\s*\(\s*(?:["'`][A-Za-z0-9_.$-]*(?:[Jj][Ww][Tt]|JWT|[Tt]oken|TOKEN|[Aa]uth|AUTH|[Ss]ession|SESSION|[Cc]redential|CREDENTIAL|[Ss]ecret|SECRET|[Bb]earer|BEARER|[Pp]assword|PASSWORD|[Aa]pi_?[Kk]ey|API_?KEY|[Aa]ccess_?[Kk]ey|ACCESS_?KEY)|[^,)]*,\s*[^)]*(?:[Jj][Ww][Tt]|JWT|[Tt]oken|TOKEN|[Aa]uth|AUTH|[Ss]ession|SESSION|[Cc]redential|CREDENTIAL|[Ss]ecret|SECRET|[Bb]earer|BEARER|[Pp]assword|PASSWORD|[Aa]pi_?[Kk]ey|API_?KEY|[Aa]ccess_?[Kk]ey|ACCESS_?KEY))
+    - (?<![A-Za-z0-9_$])(?<!\.\s*)(?<!(?:function|def|fn|sub|func)\s{1,4})setItem\s*\(\s*(?:["'`][A-Za-z0-9_.$-]*(?:[Jj][Ww][Tt]|JWT|[Tt]oken|TOKEN|[Aa]uth|AUTH|[Ss]ession|SESSION|[Cc]redential|CREDENTIAL|[Ss]ecret|SECRET|[Bb]earer|BEARER|[Pp]assword|PASSWORD|[Aa]pi_?[Kk]ey|API_?KEY|[Aa]ccess_?[Kk]ey|ACCESS_?KEY)[A-Za-z0-9_.$-]*["'`]|(?:[A-Za-z_$][A-Za-z0-9_.$]*|["'`][^"'`]*["'`])\s*,\s*[^;{}]*(?:[Jj][Ww][Tt]|JWT|[Tt]oken|TOKEN|[Aa]uth|AUTH|[Ss]ession|SESSION|[Cc]redential|CREDENTIAL|[Ss]ecret|SECRET|[Bb]earer|BEARER|[Pp]assword|PASSWORD|[Aa]pi_?[Kk]ey|API_?KEY|[Aa]ccess_?[Kk]ey|ACCESS_?KEY))
+    - (?<![A-Za-z0-9_$])(?<!\.\s*)(?<!(?:function|def|fn|sub|func)\s{1,4})(?:(?&web_storage_writers)|(?&project_local_storage_wrappers))\s*\(\s*(?:["'`][A-Za-z0-9_.$-]*(?:[Jj][Ww][Tt]|JWT|[Tt]oken|TOKEN|[Aa]uth|AUTH|[Ss]ession|SESSION|[Cc]redential|CREDENTIAL|[Ss]ecret|SECRET|[Bb]earer|BEARER|[Pp]assword|PASSWORD|[Aa]pi_?[Kk]ey|API_?KEY|[Aa]ccess_?[Kk]ey|ACCESS_?KEY)[A-Za-z0-9_.$-]*["'`]|(?:[A-Za-z_$][A-Za-z0-9_.$]*|["'`][^"'`]*["'`])\s*,\s*[^;{}]*(?:[Jj][Ww][Tt]|JWT|[Tt]oken|TOKEN|[Aa]uth|AUTH|[Ss]ession|SESSION|[Cc]redential|CREDENTIAL|[Ss]ecret|SECRET|[Bb]earer|BEARER|[Pp]assword|PASSWORD|[Aa]pi_?[Kk]ey|API_?KEY|[Aa]ccess_?[Kk]ey|ACCESS_?KEY))
+    - (?:localStorage|sessionStorage|window\.localStorage|window\.sessionStorage)\s*(?:\.\s*[A-Za-z0-9_$]*(?:[Jj][Ww][Tt]|JWT|[Tt]oken|TOKEN|[Aa]uth|AUTH|[Ss]ession|SESSION|[Cc]redential|CREDENTIAL|[Ss]ecret|SECRET|[Bb]earer|BEARER|[Pp]assword|PASSWORD|[Aa]pi_?[Kk]ey|API_?KEY|[Aa]ccess_?[Kk]ey|ACCESS_?KEY)[A-Za-z0-9_$]*\s*=(?!=)|\[\s*["'`][A-Za-z0-9_.$-]*(?:[Jj][Ww][Tt]|JWT|[Tt]oken|TOKEN|[Aa]uth|AUTH|[Ss]ession|SESSION|[Cc]redential|CREDENTIAL|[Ss]ecret|SECRET|[Bb]earer|BEARER|[Pp]assword|PASSWORD|[Aa]pi_?[Kk]ey|API_?KEY|[Aa]ccess_?[Kk]ey|ACCESS_?KEY)[A-Za-z0-9_.$-]*["'`]\s*\]\s*=(?!=))
+context_questions:
+  - "Is a token stored here at all? On a second-shape match the value expression only NAMES a token,
+    and what is written may be derived from one rather than be one; settle that before anything
+    else, and where nothing token-like is stored, say so and stop. Where a token is stored: What
+    does this token grant access to? Reaching into personal data or payment operations raises the
+    impact sharply — name the API surface it opens."
+  - This question applies once the review has settled that a session token is stored here, and not
+    before; where the matched line stores no session, record that and skip it. Can the session move
+    to an HttpOnly cookie in this architecture? An SPA talking to a same-origin (or same-site) API
+    usually can.
+  - This question applies only where the matched line is a BARE `setItem(...)` call with no receiver
+    on it. Where does that helper write? Find its definition, quote the line that touches the
+    browser API, and say whether it reaches localStorage or sessionStorage. A helper of this name
+    that writes to an application-private store instead - React Native's AsyncStorage, an in-memory
+    map, a server-side cache - carries none of the exposure this rule is about, and that is a
+    dismissal with a reason rather than a finding.
+evidence_template: "{file}:{line} matched a Web Storage write in ONE OF TWO SHAPES, and which one it
+  is has to be read off the line first. FIRST SHAPE - a value written under a TOKEN-NAMED KEY:
+  setItem with a literal key drawn from the vocabulary this rule lists, or the same write spelled as
+  a property or subscript assignment. SECOND SHAPE - a write whose KEY CARRIES NO INFORMATION, a
+  constant or a template, where what matched is a token-named identifier in the VALUE position. The
+  two are read differently. On the first, the key name is the evidence, and the open question is
+  whether the stored value is an auth token rather than something the key name only makes look like
+  one. On the second, the key name is not evidence and the clause was written to ignore it, so do
+  not weigh it: what matched is an identifier inside the value expression, and a value DERIVED from
+  a token is written the same way as a token itself - a boolean recording whether a token exists is
+  a match of this shape and stores no credential. Web Storage being readable by any script on the
+  origin, which is what turns an XSS into a token-theft path, is a property of the browser API
+  rather than a fact established here: this detector matched the call text alone and carries no
+  comment suppression and no path suppression at all, so the same text inside a code sample in
+  published documentation matched exactly as executing code does, and there nothing runs and there
+  is no origin. Read the matched line, say which shape it is and whether it executes, then settle
+  what is actually stored. ADDED 2026-09-02, and the two shapes above are unchanged: three further
+  spellings of those same two shapes now match, and one of them carries a limb this detector does
+  not establish. A key whose token word sits INSIDE it rather than at its start
+  (`enablebanking_auth_state`) is a first-shape match and is read exactly as a first-shape match. A
+  receiver picked at run time (`(isSession ? sessionStorage : localStorage).setItem(...)`) is Web
+  Storage in both branches and is read as before. THE THIRD IS DIFFERENT: a BARE `setItem(...)` call
+  with no receiver on the line is the call site of a project-local helper of the same name, and
+  WHETHER THAT HELPER REACHES WEB STORAGE IS NOT ON THIS LINE. On such a match, open the helper and
+  quote its body before saying anything about exposure - if it writes to localStorage or
+  sessionStorage the finding is the ordinary one, and if it writes somewhere application-private
+  instead, this rule is the wrong rule and the candidate should be dismissed with that reason"
+remediation_template: |
+  This is a candidate for review against GDPR Art. 32 (security of processing), not a determination
+  about this code. The changes below apply where the review confirms it.
+  Move the session to an HttpOnly, Secure cookie.
+  Where that is not available, reduce the window with short token lifetimes plus rotation, and keep
+  the token out of long-lived storage.
+data_categories:
+  - user.authorization.credentials
+fingerprint_spec: default

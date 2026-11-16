@@ -1,0 +1,345 @@
+id: acting-as-subject-001
+pack: acting-as-subject
+short_name: Actions sent in a person's name while they are not there
+problem_line:
+  text: Acts in a person's name while they are absent or uninvolved
+fix_line: Tell the person what will be sent in their name, to whom and when, and give them a record
+  and a way to undo it.
+title: Outbound action carried out under a person's own identity while that person is absent or uninvolved
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(a) - personal data shall be 'processed lawfully,
+      fairly and in a transparent manner in relation to the data subject'. This is the operative
+      provision and the fairness limb is the one that bites: an action that carries a person's
+      identity to somebody else, performed at a moment the person is by construction not present, is
+      a statement made in their name that they have no opportunity to see, correct or withhold"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 6(1) - 'Processing shall be lawful only if and to the
+      extent that at least one of the following applies', the first ground being that 'the data
+      subject has given consent to the processing of his or her personal data for one or more
+      specific purposes' and the sixth that processing is 'necessary for the purposes of the
+      legitimate interests pursued by the controller or by a third party, except where such
+      interests are overridden by the interests or fundamental rights and freedoms of the data
+      subject which require protection of personal data, in particular where the data subject is a
+      child.' The same subparagraph adds that 'Point (f) of the first subparagraph shall not apply
+      to processing carried out by public authorities in the performance of their tasks.' The point
+      this rule turns on is that the act performed in the person's name needs a ground of its own:
+      consenting to hold an account is not consenting to have messages, follow requests or signed
+      activities issued under one's identity while one is away"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1) - 'personal data' means 'any information relating
+      to an identified or identifiable natural person'. Reference only: a definition establishes no
+      duty of its own. It is carried because it is what makes the outbound artefact this rule finds
+      - a notice under a person's nick, a follow request keyed to their account, an activity signed
+      with their key - personal data about that person and not merely a message the system sent"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(d) - personal data shall be 'accurate and, where
+      necessary, kept up to date; every reasonable step must be taken to ensure that personal data
+      that are inaccurate, having regard to the purposes for which they are processed, are erased or
+      rectified without delay'. Reference only, and cited for the shape of the harm rather than for
+      a duty this detector establishes: a record on the receiving server that attributes an act to a
+      person who did not perform it is inaccurate personal data about them, held by a controller
+      this installation does not operate and cannot rectify"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.3
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    subject_absence_predicate:
+      - is_user_attached
+      - is_user_online
+      - is_user_connected
+      - is_user_present
+      - user_attached
+      - user_online
+      - user_away
+      - user_detached
+      - min_clients_connected
+      - clients_connected
+      - has_attached_client
+      - has_active_client
+      - attached_client_count
+      - client_count
+    bare_presence_predicate:
+      - is_online
+      - is_offline
+      - is_away
+      - is_idle
+      - is_attached
+      - is_detached
+      - is_connected
+      - is_present
+      - online
+      - offline
+      - away
+      - detached
+      - idle
+    subject_noun:
+      - user
+      - account
+      - actor
+      - member
+      - subscriber
+      - profile
+      - client
+      - owner
+      - person
+      - subject
+      - buddy
+      - contact
+      - session
+    speaks_for_absent_user:
+      - auto_reply
+      - auto_responder
+      - auto_response
+      - away_message
+      - away_reply
+      - auto_away
+      - simple_away
+      - vacation_message
+      - vacation_responder
+      - vacation_reply
+      - out_of_office
+      - auto_greeting
+      - canned_reply
+      - auto_answer
+    remote_identity_assertion:
+      - render_move
+      - handle_move
+      - process_move
+      - on_move_account
+      - post_move_process
+      - account_move
+      - move_worker
+      - move_distribution
+      - move_followers
+      - migration_move
+      - moved_to_account
+      - moved_to_uri
+      - also_known_as
+      - profile_migration
+      - account_migration
+      - user_migration
+    local_relationship_write:
+      - create_follow_job
+      - create_unfollow_job
+      - create_delayed_unfollow_job
+      - rewrite_follows
+      - queue_follow_unfollows
+      - unfollow_old_account
+      - carry_blocks_over
+      - carry_mutes_over
+      - copy_blocking
+      - copy_mutings
+      - copy_blocks
+      - copy_mutes
+      - copy_followers
+      - adjust_following_counts
+      - re_follow
+      - send_follow
+    subject_key_fetch:
+      - get_user_keypair
+      - get_account_keypair
+      - get_actor_keypair
+      - user_keypair
+      - account_keypair
+      - actor_keypair
+      - signing_keypair
+      - private_key_of
+      - keypair_of
+      - fetch_keypair
+    subject_private_key:
+      - private_key
+      - private_key_pem
+      - keypair
+      - signing_key
+    signed_outbound_call:
+      - signed_post
+      - signed_get
+      - signed_request
+      - send_signed_object
+      - send_signed
+      - sign_and_send
+      - http_signature
+      - sign_request
+      - signed_activity
+  vocabulary_matching:
+    subject_absence_predicate:
+      case_insensitive: true
+      separator_insensitive: true
+    bare_presence_predicate:
+      case_insensitive: true
+      separator_insensitive: true
+    subject_noun:
+      case_insensitive: true
+      separator_insensitive: true
+    speaks_for_absent_user:
+      case_insensitive: true
+      separator_insensitive: true
+    remote_identity_assertion:
+      case_insensitive: true
+      separator_insensitive: true
+    local_relationship_write:
+      case_insensitive: true
+      separator_insensitive: true
+    subject_key_fetch:
+      case_insensitive: true
+      separator_insensitive: true
+    subject_private_key:
+      case_insensitive: true
+      separator_insensitive: true
+    signed_outbound_call:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?:!|\bnot\s+|\bunless\s+)[^\n]{0,40}(?&subject_absence_predicate)|(?&subject_absence_predicate)[^\n]{0,40}\b(?:return|continue|next)\b
+    - (?:!|\bnot\s+|\bunless\s+)[^\n]{0,30}(?&subject_noun)[^\n]{0,25}(?&bare_presence_predicate)|(?&subject_noun)[^\n]{0,25}(?&bare_presence_predicate)[^\n]{0,40}\b(?:return|continue|next)\b|(?&subject_noun)[^\n]{0,40}(?:[Pp]resence|[Ss]tatus|[Ss]tate|[Aa]vailability)\s*(?:!==|!=|<>)\s*['"]?(?:online|Online|ONLINE|available|Available|active|Active|attached|Attached|present|Present)
+    - (?&speaks_for_absent_user)
+    - (?&remote_identity_assertion)
+    - (?&local_relationship_write)\s*[(!?]
+    - (?&subject_key_fetch)\s*\(|(?&subject_noun)\s*(?:\.|->|::|\[['"])\s*(?&subject_private_key)
+    - (?&signed_outbound_call)\s*[.(:]
+context_questions:
+  - "MANDATORY, AND THE DETECTOR DID NOT CHECK IT: DID THE PERSON TURN THIS ON, AND WERE THEY TOLD
+    IT SPEAKS FOR THEM? This is a fact about the product and the deployment, not about the code, and
+    it is asked of the person running the scan rather than inferred from any line. Three answers are
+    genuinely different and the finding changes with each: the person enabled it themselves and the
+    interface said what it would send in their name; the person enabled it and the interface
+    described it as a convenience without saying an outbound message would carry their identity; or
+    an operator or a default enabled it for everybody. Quote the setting, its shipped default, and
+    the words the person actually sees. Where nothing in the product says what goes out under their
+    name, record that as the gap."
+  - IS THE MODULE OR SERVICE THAT CARRIES THIS LOADED IN THIS DEPLOYMENT? A plug-in that ships in
+    the tree and is not enabled sends nothing. Establish from the deployment's own configuration -
+    not from the presence of the file - whether the auto-responder module is loaded, whether the
+    migration handler is reachable, whether the signing path runs. Where it is not enabled anywhere,
+    the finding is about a capability the product has, and should say so in those words.
+  - "WHOSE IDENTITY DOES THE OUTPUT ACTUALLY CARRY? This is the boundary that decides whether the
+    candidate is this type at all. Read the outbound artefact: the sender field, the signing key,
+    the account the relationship row is keyed to. Where the output carries the OPERATOR's identity -
+    an administrator acting visibly as an administrator over somebody's data - this is the
+    operator-route class and not this one. Where it carries a third-party client's identity under a
+    grant, it is the delegation class. This rule's construct requires the output to go out under the
+    SUBJECT's own identity."
+  - WHAT EXACTLY IS SENT, AND TO WHOM? Read the payload rather than the method name. An auto-reply
+    carries a short text to one person who wrote in; an account-migration announcement carries two
+    actor URIs to every follower and every relay; a moderation forward carries a reporter's own
+    free-text comment to the server of the person being reported, which is a disclosure about a
+    third party as well as about the subject. These are very different sizes of disclosure behind
+    three lines that look alike, and the severity of the finding turns on which one is in front of
+    you.
+  - "IS THIS A SCHEDULED ACTION ON THE PERSON'S OWN CONTEMPORANEOUS CONFIGURATION? A post the person
+    wrote, scheduled by the person, published at the time the person chose is not this type - it is
+    the person acting, with a delay. What makes the scheduler form count is that attribution or
+    timing detaches from the person's own act: the content is composed by the system, or the trigger
+    is somebody else's event, or the configuration that authorised it is old enough that the person
+    could not now say what it will send. Say which of those, if any, applies, and where the
+    configuration lives."
+  - "IF THE MATCH IS A KEY OR A SIGNING CALL, WHICH DIRECTION DOES IT RUN AND WHAT PATH REACHED IT?
+    Two questions in one, and the first is cheap: a signature being VERIFIED on something a remote
+    server sent is not this construct at all, and some spellings of the helper serve both
+    directions. Then read the caller. A person signing their own outbound post with their own key is
+    the ordinary operation of the protocol; the construct here is a MODERATION, SUSPENSION, DELETION
+    OR ADMINISTRATIVE path that fetches the person's key and signs in their name - so that a
+    receiving server records the person as having announced their own removal. Name the enclosing
+    method and say which it is."
+  - "CAN THE PERSON SEE, AND UNDO, WHAT WAS DONE IN THEIR NAME? Look for two things and record both:
+    a record the person can read of what went out under their identity while they were absent, and a
+    way to reverse it. In the migration form the practical question is concrete - after a remote
+    Move assertion, each local follower is following an account on a server they never chose; can
+    they see that this happened, and unfollow? Where neither exists, that is the finding, and it is
+    a fairness point under Art. 5(1)(a) before it is anything else."
+evidence_template: "{file}:{line} matched one of seven shapes, in three groups, and which group it
+  is decides what was established. GROUP A - ABSENCE-TRIGGERED SPEECH: an absence test on a
+  predicate naming the subject, a bare presence word beside a subject noun in a negation or an early
+  return, or an automatic responder named directly. GROUP B - A REMOTE ASSERTION ACTED IN LOCAL
+  NAMES: a handler for a claim by another server about who a person now is, or a relationship-row
+  rewrite called by name. GROUP C - SIGNING WITH THE SUBJECT'S KEY: a signing key fetched by a
+  person's id or read off a person-shaped record, or a signed outbound call named. THIS ESTABLISHES
+  ONLY THAT THE CODE HAS A CONSTRUCT for performing an attributable action under a person's
+  identity, and in the absence group, for performing it at a moment the person is by construction
+  not present. THE ENGINE READS ONE LINE AT A TIME, so a single match is usually ONE HALF of the
+  construct: the guard without the send it guards, or the migration handler without the follow jobs
+  it queues. Because this rule keys its findings per FILE, the other half is in the same candidate's
+  locations array wherever it exists - read the locations together before deciding, and where only
+  one half is present say so. WHAT IS NOT ESTABLISHED, and each of these is a question rather than a
+  caveat. FIRST, NOBODY HAS ESTABLISHED THAT THE PERSON CONFIGURED THIS OR WAS TOLD IT SPEAKS FOR
+  THEM - that is a fact about the product, it is context question 1, and no pattern here decides it.
+  SECOND, WHETHER THE MODULE IS LOADED IN THIS DEPLOYMENT is not read from the tree; a plug-in
+  present and not enabled sends nothing (context question 2). THIRD, WHOSE IDENTITY THE OUTPUT
+  CARRIES was not read - an administrator acting visibly as an administrator, and a third-party
+  client acting under a grant, are two different recorded classes and neither is this one (context
+  question 3). FOURTH, THE PAYLOAD WAS NOT OPENED: a short auto-reply, a two-URI migration
+  announcement and a moderation report carrying a third party's free text are three different
+  disclosures (context question 4). FIFTH, FOR GROUP C, THE DIRECTION AND THE CALLER WERE NOT READ -
+  a signature being verified on an inbound request is not this construct, and a person signing their
+  own post is the protocol working normally (context question 6)."
+remediation_template: >
+  Establish first whether the output goes out under the person's own identity, because that is what
+
+  makes this construct what it is. Where the sender, the signing key or the relationship row belongs
+
+  to an operator or to a third-party client instead, this belongs to the delegation or
+  operator-route
+
+  classes and the finding closes here.
+
+  Then write down what the person was told. The ordinary defect in this construct is not that the
+
+  product acts for somebody - it is that nothing anywhere says what will be sent in their name, to
+
+  whom, and on what trigger. Put that in the interface where the behaviour is switched on, in the
+
+  words a person would use, and record the shipped default.
+
+  Give the person a record and a reversal. Anything issued under someone's identity while they were
+
+  absent should be visible to them afterwards, and undoable: an auto-reply log they can read, a list
+
+  of relationships that a remote migration created for them, an unfollow that works.
+
+  Treat a remote assertion about identity as a claim to be checked rather than as an instruction to
+
+  execute. Where another server's Move claim causes rows keyed to your own users to be rewritten and
+
+  requests to be issued in their names, decide deliberately whether that should happen without the
+
+  person's involvement, and record the decision and its basis.
+
+  On the signing path, separate the two cases. A person's own outbound activity signed with their
+  own
+
+  key is the protocol working as intended. A moderation, suspension or deletion activity signed with
+
+  the subject's key makes the receiving server record the person as having announced their own
+
+  removal; if that is the intended behaviour, say so where the person can read it, and check the
+
+  lawful basis for it separately from the basis for the account itself.
+
+  Record all of this in the record of processing activities as processing carried out in the data
+
+  subject's name, with its own purpose and its own ground under Art. 6(1) - not folded into the
+
+  purpose of the feature the person signed up for.
+data_categories:
+  - user.account
+  - user.content
+  - user.unique_id
+  - user.behavior
+fingerprint_spec: file

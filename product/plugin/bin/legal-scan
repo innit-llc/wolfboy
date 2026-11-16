@@ -1,0 +1,99 @@
+#!/bin/bash -p
+# The plugin's launcher: every skill runs the program through it. The program is the CLI package this plugin was
+# installed with, found from this file's own folder (node-choice.bash, "The program"): the plugin's own folder where
+# it holds the package (an installed plugin: the npm package carries the plugin), else the source checkout's
+# product/packages/cli beside product/plugin (development with --plugin-dir). Never a program on PATH. A plugin and a
+# program of different versions are refused.
+#
+# THE RULE: THIS FILE'S OWN PLACE, AND EVERY PATH THAT FOLLOWS FROM IT, COMES FROM THE FILE SYSTEM, NEVER FROM A
+# VARIABLE. A scanned repository's own .claude/settings.json can set any
+# environment variable for the session this launcher runs in, BASH_SOURCE included (bash takes that one from the
+# environment when it is set there). So this file's folder comes from $0, the path this file was started by, which only
+# the command line gives; it is resolved physically (cd -P, pwd -P), so a link to the plugin's folder leads to the
+# plugin itself and never to what stands beside the link; and it reaches node-choice.bash as that file's argument.
+# A start that names no folder (bash found the file on PATH or in the working folder by its bare name) and a launcher
+# that is itself a symbolic link are refused, since neither says where the plugin is. The program finds the plugin the
+# same way (seat-effort.ts `pluginRoot`, from its own file), and the commands it tells the orchestrator to run name this
+# launcher by that path (scanner-command.ts), never by CLAUDE_PLUGIN_ROOT.
+#
+# WHAT A PROJECT'S SETTINGS CAN AND CANNOT CHANGE HERE. Closed, each by a named mechanism:
+# - the shell itself: `/bin/bash -p` is named by its absolute path (so no `bash` a project puts on PATH runs), and
+#   privileged mode reads no BASH_ENV, imports no exported function and ignores SHELLOPTS, BASHOPTS, CDPATH and
+#   GLOBIGNORE from the environment; TMOUT (a timeout on every `read`) and FUNCNEST (a limit that aborts a function
+#   call), which it does read, are unset first; BASH_SOURCE and every other variable are never read for a path (the
+#   rule above), and only shell builtins run before the node does;
+# - the program's environment and the `node` that runs it: node-choice.bash, shared with the hooks' shim (bin/legal-hook)
+#   - LEGAL_BUNDLE_DIR, every PRODUCT_CLI_* and every NODE_* but NODE_EXTRA_CA_CERTS removed; every OPENSSL_* (among
+#   them OPENSSL_CONF, OPENSSL_CONF_INCLUDE, OPENSSL_MODULES and OPENSSL_ENGINES, which make Node load an OpenSSL
+#   configuration and the native provider or engine it names before the program's first line), CTLOG_FILE and RANDFILE
+#   removed; GCONV_PATH and LOCPATH (the folders glibc loads conversion modules, native code, and locale data from)
+#   removed, so `node` does not inherit them; every name matched in any case, as native Windows reads them; and the
+#   first `node` on PATH outside both CLAUDE_PROJECT_DIR and the working folder chosen.
+# Not closed: a `node` in a folder outside the project that the settings put first on PATH (and likewise the `git` and
+# Claude Code executable the program starts, held to the same outside-the-project rule); variables the dynamic loader
+# and the C library read when bash itself starts, before any script line runs (LD_PRELOAD, LD_LIBRARY_PATH, DYLD_*,
+# and glibc's GCONV_PATH and LOCPATH, which bash reads as it sets its locale up);
+# and variables that hold data or settings the program, Node or its libraries read and that load no code:
+# SSL_CERT_FILE and SSL_CERT_DIR (certificates, read by Node only under a flag nothing here can set; kept for the
+# `git` the program starts), NODE_EXTRA_CA_CERTS, TZ, HOME, TMPDIR and the like. LANG and the LC_* variables choose a
+# locale, whose files glibc reads: among the system's own locales once LOCPATH is gone, which is how `node` starts;
+# bash reads them with LOCPATH and GCONV_PATH still set, the open case above. None of them names the program or a
+# command it prints. A project
+# that sets such variables on purpose can define hooks of its own anyway, which run any command, so no launcher closes a
+# hostile project; what this closes is the project that sets them by accident (its own NODE_OPTIONS, its own `node` on
+# PATH) and every way a variable could choose the program or the launcher it names.
+#
+# NATIVE WINDOWS. There the shell is Git Bash, whose bash is MSYS's,
+# and this file is started by a path in any of the spellings Windows and Git Bash write for it: `C:\...\bin\legal-scan`
+# (the one the program tells, built with the platform's separator), `C:/.../bin/legal-scan`, `/c/.../bin/legal-scan`
+# (Git Bash's own name for it), or `\` and `/` mixed (a Windows folder with `/bin/legal-scan` after it). MSYS's bash is
+# told apart by `pwd -W`, a builtin only that bash has (it prints the Windows form of a folder), never by a variable
+# (bash takes OSTYPE from the environment where it is set there). Only there is `\` a separator and a path that starts
+# with a drive letter or with two separators absolute; anywhere else `$0` is read exactly as before. And only there is
+# the program handed to node in its Windows form (node-choice.bash, LEGAL_CLI_NODE_DIR): node is a Windows program,
+# which reads `/c/...` as a folder `c` on the current drive, and MSYS converts such a path for it only where the path
+# holds no `'` and MSYS_NO_PATHCONV is unset. Until this change the launcher refused a `$0` with no `/` (every told
+# command on native Windows), a `C:/...` one failed at its `cd`, and a `/c/...` one handed node a path it could not
+# open.
+set -euo pipefail
+unset TMOUT FUNCNEST
+legal_msys=""
+if (cd / && pwd -W) >/dev/null 2>&1; then legal_msys=1; fi
+legal_named_by=""
+case "$0" in
+  */*) legal_named_by=1 ;;
+  *\\*) legal_named_by="$legal_msys" ;;
+esac
+if [ -z "$legal_named_by" ]; then
+  echo "legal-scan: started as \"$0\", with no folder in its path, so it cannot tell where its plugin is and nothing was run. Run it by its path: <plugin folder>/bin/legal-scan." >&2
+  exit 2
+fi
+if [ -L "$0" ]; then
+  echo "legal-scan: $0 is a symbolic link, so it cannot tell where its plugin is and nothing was run. Run the plugin's own bin/legal-scan by its path." >&2
+  exit 2
+fi
+if [ -n "$legal_msys" ]; then
+  SCRIPT_DIR="${0%[\\/]*}"
+  case "$SCRIPT_DIR" in /* | [\\/][\\/]* | [A-Za-z]:[\\/]*) ;; "" | [A-Za-z]:) SCRIPT_DIR="$SCRIPT_DIR/" ;; *) SCRIPT_DIR="./$SCRIPT_DIR" ;; esac
+else
+  SCRIPT_DIR="${0%/*}"
+  case "$SCRIPT_DIR" in /*) ;; "") SCRIPT_DIR=/ ;; *) SCRIPT_DIR="./$SCRIPT_DIR" ;; esac
+fi
+unset legal_msys legal_named_by
+SCRIPT_DIR="$(cd -P -- "$SCRIPT_DIR" && pwd -P)"
+. "$SCRIPT_DIR/node-choice.bash" "$SCRIPT_DIR"
+CLI="$LEGAL_CLI_DIR/dist/index.js"
+if [ -z "$LEGAL_CLI_DIR" ] || [ ! -f "$CLI" ]; then
+  echo "legal-scan: this plugin's program is missing (no dist/index.js in ${LEGAL_CLI_DIR:-$LEGAL_PLUGIN_ROOT}). Reinstall the plugin; in a source checkout, build the CLI first: (cd product && pnpm install && pnpm -r build)" >&2
+  exit 2
+fi
+legal_cli_refusal
+if [ -n "$LEGAL_CLI_REFUSAL" ]; then
+  echo "$LEGAL_CLI_REFUSAL" >&2
+  exit 2
+fi
+if [ -z "$LEGAL_NODE" ]; then
+  echo "legal-scan: no node found on PATH outside the project being scanned ($LEGAL_PROJECT). Install Node.js where PATH finds it, outside the project." >&2
+  exit 2
+fi
+exec "$LEGAL_NODE" "$LEGAL_CLI_NODE_DIR/dist/index.js" "$@"

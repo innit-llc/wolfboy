@@ -1,0 +1,256 @@
+id: federation-001
+pack: federation
+short_name: Reports or moved-account data sent to other servers
+problem_line:
+  text: Personal data sent to other servers the protocol selects
+  template: "{data} sent to {recipient}"
+fix_line: Record servers the protocol selects as a recipient category, with what each payload
+  carries and its legal basis.
+title: Report or migration payload delivered to a remote inbox chosen by protocol data - candidate
+  recipient
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - Art. 30(1) requires each controller to
+      maintain a record of processing activities, and 'That record shall contain all of the
+      following information', including 'the categories of recipients to whom the personal data have
+      been or will be disclosed including recipients in third countries or international
+      organisations'. The field asks for CATEGORIES, which is what makes it answerable for a
+      destination the code resolves at run time rather than names: the category is established by
+      what the recipient does with the data, and its members are supplied by protocol data rather
+      than by the operator"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(9) - 'recipient' means 'a natural or legal person,
+      public authority, agency or another body, to which the personal data are disclosed, whether a
+      third party or not'. Reference only: a definition establishes no duty of its own"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 44 - 'Any transfer of personal data which are
+      undergoing processing or are intended for processing after transfer to a third country or to
+      an international organisation shall take place only if, subject to the other provisions of
+      this Regulation, the conditions laid down in this Chapter are complied with by the controller
+      and processor, including for onward transfers of personal data from the third country or an
+      international organisation to another third country or to another international organisation.'
+      Reference only: this detector does not establish that a transfer occurs or where the
+      destination is established - only an operator, tracing which servers this installation has
+      actually federated with, can say that"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 6(1)(f) - processing is lawful where 'necessary for the
+      purposes of the legitimate interests pursued by the controller or by a third party, except
+      where such interests are overridden by the interests or fundamental rights and freedoms of the
+      data subject which require protection of personal data, in particular where the data subject
+      is a child.' The same subparagraph adds that 'Point (f) of the first subparagraph shall not
+      apply to processing carried out by public authorities in the performance of their tasks.'
+      Reference only: which ground applies is an operator fact, and this detector establishes none
+      of the balancing test"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 26(1) - 'Where two or more controllers jointly determine
+      the purposes and means of processing, they shall be joint controllers. They shall in a
+      transparent manner determine their respective responsibilities for compliance with the
+      obligations under this Regulation, in particular as regards the exercising of the rights of
+      the data subject and their respective duties to provide the information referred to in
+      Articles 13 and 14, by means of an arrangement between them unless, and in so far as, the
+      respective responsibilities of the controllers are determined by Union or Member State law to
+      which the controllers are subject.' Reference only, cited to mark that the operator of a
+      remote federated server may be a separate and independent controller, or a joint one, rather
+      than a processor - a question this detector cannot settle
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-31
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose "The
+      categories of third parties to whom the business discloses personal information." The
+      obligation is owed on a verifiable consumer request under Sec. 1798.110(b), and Sec.
+      1798.130(a)(5)(B) requires the same categories in the privacy policy
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-08-31
+    jurisdiction: US
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.3
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    federation_context_marker:
+      - ActivityPub
+      - "Fasp::"
+      - inbox_url
+      - shared_inbox_url
+      - WebFinger
+      - actor
+      - XMPP
+      - xmpp
+      - FMUC
+      - DomainPair
+      - RemoteServerManager
+      - OutgoingServerSession
+      - getServiceDomain
+      - remoteDomain
+      - federation
+      - Federated
+      - ld+json
+      - COAR
+      - Notify
+      - ldn
+  match:
+    - ActivityPub::DeliveryWorker\.(?:perform_async|push_bulk)\s*\(
+    - Fasp::Announce\w+Worker\.perform_async\s*\(
+    - \bforward_to_origin[!?]?\b
+    - "[Pp]acketRouter\\s*(?:\\(\\s*\\))?\\s*\\.\\s*(?:route|routePacket|route_packet)\\s*\\("
+    - \.\s*setTo\s*\([^\n]{0,80}\.\s*getPeer\s*\(\s*\)
+    - (?:^|[^A-Za-z0-9_])(?:routeToRemoteDomain|OutgoingSessionPromise|OutgoingServerSession|createOutgoingSession|ServerDialback|RemoteServerManager|RemoteServerConfiguration)\b
+    - (?:^|[^A-Za-z0-9_])(?:propagate(?:Outbound|Inbound)|forwardToOrigin|forwardToRemote|deliverToRemote)\s*\(
+    - (?:^|[^A-Za-z0-9_])(?:deliverToFollowers|deliverToUser|deliverToUsers|deliverToRelays|deliverToInbox|deliverToSharedInbox|deliverActivity|sendActivity|send_activity|submit_activity|sendSignedObject|signedPost|postToInbox|sendToInbox|forwardToInbox)\s*\(|(?:^|[^A-Za-z0-9_])(?:ApDeliverManagerService|apDeliverManagerService|ApRequestService|apRequestService|SendActivityTask|ActivityChannel)\b
+    - "[.:]\\s*(?:deliver|deliverAll|prepare|post|send|enqueue|push|route)\\s*\\([^\\n]{0,140}(?:[I\
+      i]nbox|shared_inbox)"
+    - (?:^|[^A-Za-z0-9_])(?:renderFlag|renderMove|renderDelete|renderFollow|renderAccept|renderReject|renderUndo|renderAnnounce|renderUpdate)\s*\(|(?:^|[^A-Za-z0-9_])(?:ApRendererService|apRendererService)\b|ActivityPub::[A-Za-z]*Serializer
+    - (?:^|[^=!<>~+*/%&|^-])=(?!=)\s*[^\n]{0,120}?(?:\.\s*[Gg]et(?:Shared)?Inbox\s*\(\s*\)|\[\s*["'](?:shared_?inbox|sharedInbox|inbox|inbox_url|shared_inbox_url)["']\s*\]|\.\s*(?:sharedInbox|SharedInbox|shared_inbox|inbox|Inbox|inbox_url|shared_inbox_url)(?![A-Za-z0-9_]))
+  also_in_file:
+    - (?&federation_context_marker)
+context_questions:
+  - WHICH WAY, AND TO HOW MANY, DO THE ARROWS POINT - is the destination protocol-addressed (an
+    inbox resolved from a stored remote-account or provider row, a peer resolved from a room's
+    federation configuration, a domain resolved from the recipient half of a message address) or an
+    admin-configured webhook URL sitting in the product's own settings table? This distinguishes the
+    construct here from the ALREADY-COVERED webhook fan-out shape, which is `recipients-003`'s.
+    Quote where the destination is read from and confirm it traces to protocol or account data, not
+    to a settings field a customer typed in. Where it is the latter, this is not this rule's
+    construct at all.
+  - WHAT ACTUALLY TRAVELS? Read the serialised payload before assuming its size. One anchor's own
+    `payload` method serialises a full moderation report - the target account, the reported status
+    ids, the reporter's comment - through a dedicated serialiser; a sibling construct in the same
+    codebase passes only a bare URI string per event, naming neither the account nor its content;
+    and in the XMPP sphere what travels is the room's own message and presence stanzas, which carry
+    the participants' addresses and everything they typed. These are very different disclosures
+    behind the same delivery shape; name the fields actually serialised, do not infer them from the
+    class name.
+  - IS THE SET OF POSSIBLE DESTINATIONS BOUNDED AT ALL, AND HOW? Write the record category by the
+    RULE that selects the destination, not by an enumerable list - and the rule differs between
+    protocols, so say which you are describing. An any-to-any protocol gives "any server
+    implementing this protocol that has an inbox for an account this installation already knows
+    about", which is genuinely open-ended and changes without any code or configuration change. A
+    room-federation protocol like XMPP's FMUC gives something narrower - two mutually configured
+    peers per room, enabled by a per-room setting - while plain server-to-server federation in the
+    same product is open-ended again. Do not carry one protocol's answer across to another.
+  - WHAT IS THE LAWFUL BASIS FOR SENDING THIS TO A SERVER OPERATED BY SOMEONE ELSE? The ordinary
+    answer for moderation cooperation between independent servers is Art. 6(1)(f), legitimate
+    interests - quote what, if anything, the product's own privacy policy or terms say about this,
+    and record the gap if nothing does. Note that Art. 6(1) removes that ground entirely from public
+    authorities acting in the performance of their tasks, which matters where the installation is
+    run by one.
+  - IS THE REMOTE SERVER'S OPERATOR A SEPARATE CONTROLLER RATHER THAN A PROCESSOR? The ordinary
+    reading of an interoperable federation protocol is that each server's operator independently
+    decides the purposes and means of processing for the data it receives, which points towards a
+    controller-to-controller disclosure rather than a controller-processor relationship - meaning an
+    Art. 28 contract is very likely the wrong ask here, unlike the vendor-endpoint constructs
+    elsewhere in this scanner. Art. 26(1)'s joint-controller arrangement is the other reading and it
+    turns on whether the two servers JOINTLY determine purposes and means, which two independently
+    operated instances of the same software ordinarily do not. ASK THE OPERATOR how they in fact
+    treat other instances rather than assuming any of the three from the code.
+  - IS THE DESTINATION'S JURISDICTION KNOWABLE BEFORE THE FACT? Unlike a named vendor, whose
+    registered address can be looked up once, this destination is resolved per interaction from data
+    this installation's own users generate. There is no fixed country to write into a transfer
+    record in advance; the honest record states that the recipient set is open-ended and
+    protocol-determined, and revisits the transfer question in light of which servers this
+    installation has actually exchanged data with, if that is tracked at all.
+  - "IF THE MATCH IS A ROUTING OR TRANSPORT CALL RATHER THAN A FEDERATION-SPECIFIC ONE, WHICH CALLER
+    REACHED IT? The XMPP clauses reach the server's own packet router, and the same router delivers
+    to a session on this machine and to a session on somebody else's. Read the enclosing method: a
+    local delivery is not a disclosure to anybody and produces no record row. An import line or a
+    field declaration naming the server-to-server machinery is evidence that this product SPEAKS the
+    protocol, which is worth recording as a capability and is not evidence that anything was sent."
+  - "IF THE MATCH IS AN INBOX BEING READ INTO A VARIABLE (shape xi), WHAT HAPPENS TO THAT VARIABLE?
+    The detector matched an assignment, not a transmission. Follow the variable to its next use and
+    say which of three it is: it is handed to an HTTP request, a queue or a delivery helper, in
+    which case this is a send and the payload question (question 2) applies; it is written to a log,
+    a database column or a template, in which case a remote address is being stored or displayed and
+    nothing left this product on this path; or it is used to decide something and discarded. Where
+    it is a send, quote the request line beside the assignment so the record carries both. AND ASK
+    WHO CHOSE THE ADDRESS: an inbox taken from an arriving protocol object is chosen by whoever sent
+    that object, which is not the same fact as an address an operator configured - the source of the
+    address is a deployment and protocol question this detector does not answer."
+evidence_template: "{file}:{line} matched a call, a decision method or a named class through which
+  this product hands data to a REMOTE COUNTERPART SERVER whose address is resolved from protocol or
+  account data rather than from configuration, corroborated by a federation-protocol marker
+  elsewhere in the same file. THAT IS THE WHOLE OF WHAT IS ESTABLISHED: a delivery mechanism exists
+  whose destination is read from a data record rather than from static configuration. Eleven shapes
+  reach this rule and they are not equally strong. (i) A background delivery worker being dispatched
+  with an inbox URL - the strongest, because the class name says what it does and the destination is
+  an argument on the line. (ii) A lifecycle worker carrying a bare URI, which names neither the
+  account nor its content and is a much smaller disclosure behind the same shape. (iii) The method
+  that DECIDES whether to forward, which shows the condition rather than the transmission. (iv) A
+  packet routed through the server's own router - the LOOSEST shape here, because the same router
+  delivers locally and remotely and only the enclosing method says which. (v) A stanza addressed at
+  a resolved federation peer. (vi) The server-to-server machinery named - a class, an import, a
+  field - which is evidence that this product speaks the protocol and is NOT evidence that anything
+  was sent. (vii) A room-federation propagation method. (viii) A delivery method whose NAME says who
+  it delivers to - to an account's followers, to a relay set, to a named inbox - or the delivery
+  machinery named as a class, an import or an injected field, which is the same standing as shape
+  (vi) and is evidence of capability rather than of transmission. (ix) A generic delivery, queue or
+  HTTP call whose ARGUMENT LIST carries an inbox or shared inbox: the argument is what makes it this
+  rule's construct, because an inbox is resolved from a stored remote-account row rather than typed
+  by an operator. (x) The outbound payload BEING COMPOSED - a Flag, Move, Delete, Follow, Accept,
+  Reject, Undo, Announce or Update activity being rendered, or a named ActivityPub serialiser -
+  which establishes WHAT would travel and not that anything travelled. (xi) AN INBOX READ ONE
+  STATEMENT BEFORE THE SEND - an inbox or shared-inbox accessor on the right-hand side of an
+  assignment, which is the same construct as shape (ix) written as two statements instead of one.
+  What this shape establishes is the READ and not the send: the line shows an inbox address being
+  taken out of a protocol or account object into a variable, and whether that variable is then
+  handed to a request is on another line this detector did not match. HOW THE FILE'S FEDERATION
+  CONTEXT WAS ESTABLISHED IS ALSO PART OF THE READING: the corroboration list carries protocol media
+  types and protocol names as well as actor identifiers, so a file may satisfy it because it
+  serialises a Linked Data Notifications or COAR Notify payload rather than because it names an
+  actor - and, because the list is matched as plain text, an ordinary word can satisfy it inside a
+  longer identifier. Check what actually corroborated the file before treating the corroboration as
+  protocol evidence. WHAT THIS DETECTOR DOES NOT ESTABLISH: that the destination is a third party in
+  the ordinary vendor sense (context question 5); what the destination's jurisdiction is (context
+  question 6); how large the disclosure is (context question 2); or, for shapes (iv), (vi), (viii)
+  and (x), that any remote delivery happens on this path at all (context question 7). Read the
+  payload and the caller before writing a record row, and say which of the eleven shapes the line
+  is."
+remediation_template: |
+  Confirm the destination is genuinely protocol-resolved (context question 1) before treating this
+  as the federation construct at all - if it traces to operator or tenant configuration instead, it
+  belongs to the existing webhook and outbound-host recipient rule, not this one. If the match is a
+  routing or transport call, read the enclosing method first (context question 7): a local delivery
+  is not a disclosure to anybody and the finding closes there.
+  Read the serialised payload and record what it actually carries, not what the class name suggests.
+  A full moderation report, a bare content-lifecycle URI and a room's own message stanzas are three
+  different rows.
+  Write the recipient category by its rule, not by an enumerable membership - "any server
+  implementing this protocol holding an inbox this installation has resolved through ordinary
+  federation activity" - and state plainly, where true, that the set is unbounded and changes with
+  no deployment change. Where the protocol bounds it instead, say what bounds it and where that
+  setting lives.
+  Record the likely lawful basis (Art. 6(1)(f) for moderation cooperation between independent
+  servers) and check it against what the product's own privacy policy or terms actually say; note
+  the gap where the policy is silent on inter-server data sharing.
+  Do not default to treating the remote operator as a processor requiring an Art. 28(3) contract.
+  Ask the operator whether they in fact regard other federated servers as independent, separately
+  controlling parties - which is the ordinary shape of an interoperable protocol - before drafting
+  any agreement, and consider Art. 26(1) only where the two servers genuinely determine purposes and
+  means together, which two independent instances of the same software ordinarily do not.
+  Where a report is retained locally past the normal retention period because of an ongoing dispute
+  or appeal, Art. 17(3)(e)'s legal-claims ground is the one to check before treating that retention
+  as an erasure question on its own.
+data_categories:
+  - user.account
+  - user.content
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: existence

@@ -1,0 +1,287 @@
+id: safeguard-reach-001
+pack: safeguard-reach
+short_name: '"Delete everything" promise beside the code that does it'
+problem_line:
+  text: Total-deletion claim wider than the routine it describes
+fix_line: Extend the routine to everything the message names, above all identifying records, or say
+  what is kept and how long.
+title: Total deletion, clearing or reset claim served beside the routine that answers it
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(a) - personal data shall be 'processed lawfully,
+      fairly and in a transparent manner in relation to the data subject'. This is the operative
+      provision for this rule and the transparency limb is the one that bites. A product that tells
+      a person every statistic for a website will be deleted, or that a file is being deleted from
+      all of their devices, has made a statement about what happens to their data; where the routine
+      behind the message reaches a narrower set of records than the message names, the person has
+      been told something that is not so about the processing of their own data, and the gap between
+      the two is the finding. The two product messages just described are paraphrased rather than
+      quoted, deliberately: the only quoted words in this field are the Regulation's own, so that
+      every quotation mark here marks something a reader can find in the Official Journal text.
+      Nothing in this detector establishes that the gap exists - it establishes only that a total
+      claim is made in a file that also carries a deletion or clearing routine."
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(e), the storage-limitation principle. Art. 5(1)
+      opens 'Personal data shall be:' and point (e) reads: 'kept in a form which permits
+      identification of data subjects for no longer than is necessary for the purposes for which the
+      personal data are processed'. Carried because the records a shortfalling control leaves behind
+      are records the controller is still keeping, and the period for which they are kept is set by
+      the purpose and not by the existence of a delete button. Read the words exactly: FOR NO LONGER
+      THAN IS NECESSARY means no duration is right or wrong on its face and a detector cannot
+      compute the permitted period from code, and KEPT IN A FORM WHICH PERMITS IDENTIFICATION means
+      data anonymised past identification is outside the point altogether. This entry is why the
+      finding is about a store that keeps identifying records the operator believes it has erased,
+      rather than only about a message being wrong. Reused in substance from `eu-retention-001`,
+      which cites the same point with the same quoted spans."
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 17(1): 'The data subject shall have the right to obtain
+      from the controller the erasure of personal data concerning him or her without undue delay and
+      the controller shall have the obligation to erase personal data without undue delay where one
+      of the following grounds applies', the first ground being that 'the personal data are no
+      longer necessary in relation to the purposes for which they were collected or otherwise
+      processed'. Carried to fix a boundary rather than to test one. Where the string this rule
+      matches sits on the path a person uses to erase their own data, a routine that reaches less
+      than the message names is an erasure that has not been completed; where the string sits on an
+      operator's maintenance path, Art. 17 is not engaged at all and Art. 5(1)(a) and 5(1)(e) carry
+      the finding on their own. Which of the two it is, is context question 4. Reused verbatim in
+      substance from `eu-retention-001` and `eu-dsr-001`, both of which quote this paragraph."
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(2): 'The controller shall be responsible for, and be
+      able to demonstrate compliance with, paragraph 1'. Reference only, and carried for one reason:
+      it puts the burden of showing the position on the controller. A candidate raised by this rule
+      is a question the operator is in a position to answer and the reader is not - which records
+      the routine reaches, and which it does not - and Art. 5(2) is why the absence of an answer is
+      itself worth recording. It establishes no duty this detector tests."
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.25
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    total_scope_word:
+      - all
+      - every
+      - everything
+      - everywhere
+      - entire
+      - entirely
+      - completely
+      - permanent
+      - permanently
+      - forever
+      - whole
+      - irreversibly
+      - irrevocably
+    erasure_verb:
+      - delete
+      - deleted
+      - deletes
+      - deleting
+      - deletion
+      - cleared
+      - clears
+      - clearing
+      - remove
+      - removed
+      - removes
+      - removing
+      - removal
+      - erase
+      - erased
+      - erases
+      - erasing
+      - erasure
+      - wipe
+      - wiped
+      - wipes
+      - wiping
+      - purge
+      - purged
+      - purges
+      - purging
+      - reset
+      - resets
+      - resetting
+      - destroy
+      - destroyed
+      - destroys
+      - destroying
+      - discard
+      - discarded
+      - discards
+  vocabulary_matching:
+    total_scope_word:
+      case_insensitive: true
+    erasure_verb:
+      case_insensitive: true
+  match:
+    - \b(?:(?:(?&total_scope_word)|[Cc][Oo][Mm][Pp][Ll][Ee][Tt][Ee](?=[
+      _-]{0,2}(?&erasure_verb))|[Cc][Oo][Mm][Pp][Ll][Ee][Tt][Ee](?=[
+      _-]{0,2}(?:(?:[Uu]ser|USER|[Cc]ustomer|CUSTOMER|[Aa]ccount|ACCOUNT|[Pp]ersonal|PERSONAL|[Mm]ember|MEMBER)[
+      _-]{0,2})?(?:[Dd]ata|DATA|[Rr]ecords?|RECORDS?|[Pp]rofiles?|PROFILES?|[Hh]istory|HISTORY|[Ii]nformation|INFORMATION)\b))|(?:[Aa][Nn][Yy](?![
+      \t]*(?:\[\])?[ \t]*(?:[>)\];,|&}=]|$))|(?<![:<|&][ \t]{0,3})(?<!\bas[
+      \t])[Aa][Nn][Yy]|ANY))\b[^\n]{0,60}\b(?:(?&erasure_verb)|(?<!\b[Aa]ll[ \t])(?<!\bALL[
+      \t])[Cc][Ll][Ee][Aa][Rr]|CLEAR)\b
+    - \b(?:(?&erasure_verb)|(?<!\b[Aa]ll[ \t])(?<!\bALL[
+      \t])[Cc][Ll][Ee][Aa][Rr]|CLEAR)\b[^\n]{0,60}\b(?:(?:(?&total_scope_word)|[Cc][Oo][Mm][Pp][Ll][Ee][Tt][Ee](?=[
+      _-]{0,2}(?&erasure_verb))|[Cc][Oo][Mm][Pp][Ll][Ee][Tt][Ee](?=[
+      _-]{0,2}(?:(?:[Uu]ser|USER|[Cc]ustomer|CUSTOMER|[Aa]ccount|ACCOUNT|[Pp]ersonal|PERSONAL|[Mm]ember|MEMBER)[
+      _-]{0,2})?(?:[Dd]ata|DATA|[Rr]ecords?|RECORDS?|[Pp]rofiles?|PROFILES?|[Hh]istory|HISTORY|[Ii]nformation|INFORMATION)\b))|(?:[Aa][Nn][Yy](?![
+      \t]*(?:\[\])?[ \t]*(?:[>)\];,|&}=]|$))|(?<![:<|&][ \t]{0,3})(?<!\bas[ \t])[Aa][Nn][Yy]|ANY))\b
+    - \b(?:(?&erasure_verb)|(?<!\b[Aa]ll[ \t])(?<!\bALL[ \t])[Cc][Ll][Ee][Aa][Rr]|CLEAR)[
+      _-]{0,2}(?:(?:(?&total_scope_word)|[Cc][Oo][Mm][Pp][Ll][Ee][Tt][Ee](?=[
+      _-]{0,2}(?&erasure_verb))|[Cc][Oo][Mm][Pp][Ll][Ee][Tt][Ee](?=[
+      _-]{0,2}(?:(?:[Uu]ser|USER|[Cc]ustomer|CUSTOMER|[Aa]ccount|ACCOUNT|[Pp]ersonal|PERSONAL|[Mm]ember|MEMBER)[
+      _-]{0,2})?(?:[Dd]ata|DATA|[Rr]ecords?|RECORDS?|[Pp]rofiles?|PROFILES?|[Hh]istory|HISTORY|[Ii]nformation|INFORMATION)\b))|(?:[Aa][Nn][Yy](?![
+      \t]*(?:\[\])?[ \t]*(?:[>)\];,|&}=]|$))|(?<![:<|&][ \t]{0,3})(?<!\bas[
+      \t])[Aa][Nn][Yy]|ANY))(?![a-z])
+    - \b(?:[Nn]o|NO|[Nn]one|NONE|[Nn]othing|NOTHING)\b[^\n]{0,40}\b(?:[Cc]opies|COPIES|[Cc]opy|COPY|[Bb]ackups|BACKUPS|[Tt]races|TRACES|[Rr]ecords|RECORDS)\b[^\n]{0,40}\b(?:[Rr]emain|REMAIN|[Rr]emains|[Rr]emaining|[Kk]ept|KEPT|[Rr]etained|RETAINED|[Ll]eft|LEFT|[Pp]reserved|PRESERVED)\b
+  also_in_file:
+    - \b(?:(?&erasure_verb)|[Cc][Ll][Ee][Aa][Rr]|CLEAR)[A-Za-z_]{0,40}[ \t]*\(
+    - (?:^|\r?\n)[
+      \t]*["']?[\w.$-]{0,40}(?:(?&erasure_verb)|[Cc][Ll][Ee][Aa][Rr]|CLEAR)[\w.$-]{0,40}["']?[
+      \t]*(?:=>|[:=])
+    - \b(?:DELETE|[Dd]elete)[ \t]+(?:FROM|from)[ \t]+["'\[]?[A-Za-z_][\w.$]{0,60}["'\]]?[
+      \t]*(?:WHERE|where|;)|\b(?:TRUNCATE|[Tt]runcate)[ \t]+(?:TABLE|table)\b|\b(?:DROP|[Dd]rop)[
+      \t]+(?:TABLE|table)\b
+  match_without:
+    - ^(?:(?!\b(?:[Dd]elet(?:e|ed|es|ing|ion)|DELET(?:E|ED|ES|ING|ION)|[Cc]lear(?:ed|s|ing)|CLEAR(?:ED|S|ING)|[Rr]emov(?:e|ed|es|ing|al)|REMOV(?:E|ED|ES|ING|AL)|[Ee]ras(?:e|ed|es|ing|ure)|ERAS(?:E|ED|ES|ING|URE)|[Ww]ip(?:e|ed|es|ing)|WIP(?:E|ED|ES|ING)|[Pp]urg(?:e|ed|es|ing)|PURG(?:E|ED|ES|ING)|[Rr]eset(?:s|ting)?|RESET(?:S|TING)?|[Dd]estroy(?:ed|s|ing)?|DESTROY(?:ED|S|ING)?|[Dd]iscard(?:ed|s)?|DISCARD(?:ED|S)?)\b)[^\n]){0,400}?\b(?:[Nn]ot|NOT|[Nn]ever|NEVER)(?:<[^<>\n]{0,60}>|&lt;[^;\n]{0,10};|[
+      \t]){0,6}(?:be(?:<[^<>\n]{0,60}>|&lt;[^;\n]{0,10};|[
+      \t]){0,6}|been(?:<[^<>\n]{0,60}>|&lt;[^;\n]{0,10};|[
+      \t]){0,6}|get(?:<[^<>\n]{0,60}>|&lt;[^;\n]{0,10};|[
+      \t]){0,6})?(?:[Dd]elet(?:e|ed|es|ing|ion)|DELET(?:E|ED|ES|ING|ION)|[Cc]lear(?:ed|s|ing)|CLEAR(?:ED|S|ING)|[Rr]emov(?:e|ed|es|ing|al)|REMOV(?:E|ED|ES|ING|AL)|[Ee]ras(?:e|ed|es|ing|ure)|ERAS(?:E|ED|ES|ING|URE)|[Ww]ip(?:e|ed|es|ing)|WIP(?:E|ED|ES|ING)|[Pp]urg(?:e|ed|es|ing)|PURG(?:E|ED|ES|ING)|[Rr]eset(?:s|ting)?|RESET(?:S|TING)?|[Dd]estroy(?:ed|s|ing)?|DESTROY(?:ED|S|ING)?|[Dd]iscard(?:ed|s)?|DISCARD(?:ED|S)?)\b
+    - ^(?:(?!\b(?:[Dd]elet(?:e|ed|es|ing|ion)|DELET(?:E|ED|ES|ING|ION)|[Cc]lear(?:ed|s|ing)|CLEAR(?:ED|S|ING)|[Rr]emov(?:e|ed|es|ing|al)|REMOV(?:E|ED|ES|ING|AL)|[Ee]ras(?:e|ed|es|ing|ure)|ERAS(?:E|ED|ES|ING|URE)|[Ww]ip(?:e|ed|es|ing)|WIP(?:E|ED|ES|ING)|[Pp]urg(?:e|ed|es|ing)|PURG(?:E|ED|ES|ING)|[Rr]eset(?:s|ting)?|RESET(?:S|TING)?|[Dd]estroy(?:ed|s|ing)?|DESTROY(?:ED|S|ING)?|[Dd]iscard(?:ed|s)?|DISCARD(?:ED|S)?)\b)[^\n]){0,400}?\b(?:[Dd]o|DO|[Dd]oes|DOES|[Dd]id|DID|[Ww]o|WO|[Ww]ould|WOULD|[Ss]hould|SHOULD|[Cc]ould|COULD|[Ii]s|IS|[Aa]re|ARE|[Ww]as|WAS|[Ww]ere|WERE|[Hh]as|HAS|[Hh]ave|HAVE|[Hh]ad|HAD|[Mm]ust|MUST)n['’]t(?:<[^<>\n]{0,60}>|&lt;[^;\n]{0,10};|[
+      \t]){0,6}(?:be(?:<[^<>\n]{0,60}>|&lt;[^;\n]{0,10};|[
+      \t]){0,6}|been(?:<[^<>\n]{0,60}>|&lt;[^;\n]{0,10};|[
+      \t]){0,6}|get(?:<[^<>\n]{0,60}>|&lt;[^;\n]{0,10};|[
+      \t]){0,6})?(?:[Dd]elet(?:e|ed|es|ing|ion)|DELET(?:E|ED|ES|ING|ION)|[Cc]lear(?:ed|s|ing)|CLEAR(?:ED|S|ING)|[Rr]emov(?:e|ed|es|ing|al)|REMOV(?:E|ED|ES|ING|AL)|[Ee]ras(?:e|ed|es|ing|ure)|ERAS(?:E|ED|ES|ING|URE)|[Ww]ip(?:e|ed|es|ing)|WIP(?:E|ED|ES|ING)|[Pp]urg(?:e|ed|es|ing)|PURG(?:E|ED|ES|ING)|[Rr]eset(?:s|ting)?|RESET(?:S|TING)?|[Dd]estroy(?:ed|s|ing)?|DESTROY(?:ED|S|ING)?|[Dd]iscard(?:ed|s)?|DISCARD(?:ED|S)?)\b
+    - (?<!\band[ \t])\bfrom[ \t]+(?:your|this|the[ \t]+current)[
+      \t]+(?:device|computer|browser|phone|machine|handset)\b
+context_questions:
+  - "MANDATORY, AND THE DETECTOR DID NOT CHECK IT: DOES THE ROUTINE REACH THE RECORDS THE CLAIM
+    NAMES? This is the whole question and no pattern in this rule answers any part of it. Read the
+    routine the claim sits beside and enumerate what it touches, then read the claim and enumerate
+    what it names. Four shortfalls have been recorded in real trees and each is invisible to a
+    pattern: a second store that no deletion path addresses at all; a clearing call bound to the
+    default instance of a library whose substantive content is in a named instance; a predicate that
+    cannot match the rows left at the shipped default; and a removal that writes a flag while the
+    blob or the buffer persists. Where the two enumerations agree, say so - a control that reaches
+    what it claims is the answer this rule most often gets, and recording it is what makes the rule
+    usable."
+  - "IS THE SECOND STORE CONFIGURED IN THIS DEPLOYMENT? Where the shortfall depends on a store that
+    a deployment may or may not run - an analytics warehouse behind an environment variable, an
+    offline store created only in the browser - the size of the escaping population is a deployment
+    fact and not a code fact. Establish from the deployment's own configuration whether it is
+    running. Where it is not, the finding is about a capability the product ships and should say so
+    in those words. Where the second store is REQUIRED rather than optional, say that too: it means
+    no deployment choice even sizes the escape."
+  - "WHAT DOES THE PERSON ACTUALLY SEE, AND WHERE IS THE STRING RENDERED? A matched string is not
+    necessarily shown to anybody: a message key can be dead, a modal can be behind a feature flag, a
+    status line can be reachable only by an operator. Find the render site. Then quote the sentence
+    the person reads in full, including any qualification that follows it - a message whose own next
+    clause names its limits ('but your settings will remain intact', 'for this network only') is a
+    narrower claim than the first clause alone, and the canon's boundary puts a control whose own
+    text discloses its limits ADJACENT to this type rather than inside it."
+  - IS THIS AN ERASURE PATH FOR A PERSON, OR AN OPERATOR MAINTENANCE PATH? The two carry different
+    provisions and the finding changes with the answer. A control the data subject reaches - delete
+    my account, clear my history, reset my data - engages Art. 17(1) as well as Art. 5(1)(a) and
+    5(1)(e). An operator's maintenance command engages the storage-limitation principle and the
+    fairness of what the operator was told, and not the erasure right at all. Name the route and who
+    can reach it.
+  - "WHOSE DATA IS IN THE PART THAT ESCAPES? The severity of a shortfall is set by what is left
+    behind, not by the size of the claim. Read the leftover store and name the categories: message
+    bodies, document blobs, visit counters, credentials, special-category data. A buffer of chat
+    lines and a table of page-view counts are very different residues behind two claims that read
+    alike."
+  - IS THERE A CONTRAST ANCHOR IN THE SAME TREE? Products that overstate one control often describe
+    another honestly, and the honest one is the best evidence of what the operator knows. For
+    example, two delete dialogs may say that the visitor analytics are removed too, while a third
+    says that they are kept for historical reporting. Look for the sibling message that admits what
+    is kept, quote it, and say whether the two can both be true.
+  - WAS ANYTHING MEASURED, OR IS THIS A READING? Say plainly which parts of the answer come from
+    running the code and which from reading it. A deletion path can be exercised - delete a record,
+    then look for it in every store the product writes to - and where that was done the finding
+    should carry the result rather than an argument. Where it was not done, say so.
+evidence_template: "{file}:{line} carries a claim that data will be deleted, cleared, reset, removed
+  or wiped, quantified as total - all, every, everything, permanently, from all devices, or no
+  copies remaining - in a file that also carries a deletion or clearing routine, a key naming such
+  an action, or an SQL erasure statement. THIS ESTABLISHES ONLY THAT THE CLAIM AND A ROUTINE ARE IN
+  THE SAME FILE. It does not establish that the routine reaches less than the claim names, which is
+  the construct and which nothing in this detector can see: that is a whole-tree question about a
+  second store, a second index, a NULL predicate or a blob left behind, and it is context question
+  1. FOUR FURTHER THINGS ARE NOT ESTABLISHED. FIRST, WHETHER A SECOND STORE IS EVEN CONFIGURED in
+  this deployment - a deployment fact, context question 2. SECOND, WHETHER THE STRING IS SHOWN TO
+  ANYBODY: a message key can be dead and a modal can be behind a flag (context question 3). THIRD,
+  WHETHER THE QUALIFICATION THAT FOLLOWS THE SENTENCE NARROWS IT - the canon puts a control whose
+  own text discloses its limits ADJACENT to this type, not inside it, so a message that names its
+  own scope is not this construct (context question 3). FOURTH, WHETHER THIS IS A DATA-SUBJECT
+  ERASURE PATH OR AN OPERATOR MAINTENANCE PATH, which decides whether Art. 17(1) is engaged at all
+  (context question 4). Read the claim and the routine together before deciding, and where the
+  routine reaches everything the claim names, record that as the answer."
+remediation_template: >
+  Start by enumerating both sides in writing, because the whole of this construct is the difference
+
+  between them. List what the routine touches: every table, every index, every bucket, every named
+
+  browser store, every device that holds a copy. Then list what the message names. Put the two lists
+
+  beside each other.
+
+  Where the routine reaches everything the message names, nothing needs changing and the record of
+
+  that comparison is worth keeping, because the next person to read the message will ask the same
+
+  question.
+
+  Where it does not, there are two honest repairs and the choice between them is a product decision
+
+  rather than a legal one. Either extend the routine to reach what the message names - the second
+
+  store, the named instance, the rows left at the shipped default, the blob behind the flag - or
+
+  narrow the message to what the routine reaches, in the words a person would use, naming what is
+
+  kept and for how long.
+
+  Prefer extending the routine wherever the leftover records are identifying, because a narrower
+
+  message does not shorten the period for which those records are kept, and the storage-limitation
+
+  principle applies to the store whatever the interface says.
+
+  Where the leftover store is one the product does not control on this deletion path - a warehouse
+
+  written by a different service, a copy on a device that is offline - say so in the message and
+  give
+
+  the person a way to see the state of it. An honest description of a partial deletion is a
+  different
+
+  thing from a total claim that is not met, and the recorded in-tree contrast anchor shows a product
+
+  writing one of each in the same directory.
+
+  Record the outcome in the record of processing activities as the retention position of the store
+
+  that keeps the residue, with its own period and its own purpose, rather than folding it into the
+
+  period the deleted store carries.
+data_categories:
+  - user.account
+  - user.content
+  - user.behavior
+fingerprint_spec: file

@@ -1,0 +1,163 @@
+sets:
+  test_directories:
+    question: >
+      Is this file inside a directory whose name says the code in it exists to exercise the product
+      — a test runner's tree, an end-to-end suite, a mock package?
+    patterns:
+      - pattern: (^|/)(?:__tests__|__mocks__|tests?|e2e|cypress|playwright|testing)(/|$)
+        excludes: >
+          Any path with one of those names as a whole segment, and also a FILE with one of those
+          names and no extension, because the segment may be the last one.
+    near_misses:
+      - rules:
+          - ai-prohibited-002
+          - ai-prohibited-004
+        pattern: (^|/)(?:tests?|spec|specs|testing|__tests__|__mocks__|e2e|cypress|playwright)/
+        differs_by: Ten directory names — the eight above plus `spec` and `specs`, which both spellings
+          carried until 2026-09-11 — closed by "/" instead of "(/|$)", so a FILE named `tests` with
+          no extension was read by those two rules and not by the twelve. It is promoted separately
+          as `test_directories_path_prefixed` rather than merged, because merging would take that
+          file away from those two rules. The promoted set dropped `spec` and `specs` on 2026-09-11
+          and THIS RECORDED PATTERN KEEPS THEM, because it is the record of what those two rules
+          spelled and not a second copy of the set.
+      - rules:
+          - ai-prohibited-001
+        pattern: (^|/)(test|tests|spec|specs|__tests__|__mocks__|mocks|e2e|cypress|playwright|stories|\.storybook)/
+        differs_by: >
+          Adds `mocks`, `stories`, `.storybook` and — since 2026-09-11, when they left this set —
+          `spec` and `specs`; drops `testing`; closes with "/". Neither a subset nor a superset. One
+          rule spells it; it stays in that rule.
+      - rules:
+          - eu-accessibility-001
+        pattern: (^|/)(tests?|specs?|e2e|cypress|playwright|fixtures|mocks)/
+        differs_by: >
+          Folds fixture directories into the same clause, adds `spec` and `specs` — which left this
+          set on 2026-09-11 — and drops `__tests__`, `__mocks__` and `testing`, which that rule
+          carries in two further clauses of its own.
+  test_filenames:
+    question: >
+      Is this file's NAME the JavaScript or TypeScript ecosystem's spelling for a test, a spec or a
+      Storybook story?
+    patterns:
+      - pattern: \.(?:test|spec|stories|cy)\.[cm]?[jt]sx?$
+        excludes: >
+          `x.test.ts`, `x.spec.js`, `x.stories.tsx`, `x.cy.jsx` and their
+          `.mjs`/`.cjs`/`.mts`/`.cts` spellings.
+    near_misses:
+      - rules:
+          - ai-prohibited-002
+          - ai-prohibited-004
+        pattern: (^|/)(?:test_[^/]+|conftest)\.py$|_test\.py$|\.(?:test|spec|stories|cy)\.[cm]?[jt]sx?$
+        differs_by: >
+          Carries this set's alternation verbatim as its third branch and adds Python's `test_*.py`,
+          `conftest.py` and `*_test.py` in the same clause. Promoted whole as
+          `python_and_js_test_filenames`; splitting it would leave those two rules naming two sets
+          where they wrote one clause, and the split is not what makes the copies stop drifting.
+  fixture_directories:
+    question: >
+      Is this file inside a directory of DATA written so that a test can run — a fixture, a recorded
+      snapshot, a seed, a factory?
+    patterns:
+      - pattern: (^|/)(?:fixtures|__fixtures__|mocks|__snapshots__|testdata|test-data|seeds?|factories)(/|$)
+        excludes: >
+          Any path with one of those names as a whole segment, and a file so named with no extension.
+    near_misses:
+      - rules:
+          - ai-prohibited-002
+          - ai-prohibited-004
+        pattern: (^|/)(?:fixtures?|__fixtures__|testdata|test_data|mocks?|__snapshots__)/
+        differs_by: >
+          Adds the singular `fixture`, `mock` and the underscored `test_data`; drops `seeds`, `seed`
+          and `factories`; closes with "/". Neither a subset nor a superset. Promoted separately as
+          `fixture_directories_path_prefixed`.
+      - rules:
+          - ai-prohibited-001
+        pattern: (^|/)(fixtures|__fixtures__|__snapshots__|testdata|test-data|sample-data)/
+        differs_by: |
+          Adds `sample-data`, drops `mocks`, `seeds` and `factories`, closes with "/".
+  test_surface:
+    question: >
+      Is this file a test — by the directory it sits in, by the name it carries, or by being the
+      data a test reads?
+    includes:
+      - test_directories
+      - test_filenames
+      - fixture_directories
+  seed_data_filenames:
+    question: >
+      Is this file a database seed script, by the name it carries rather than the directory it sits
+      in?
+    patterns:
+      - pattern: (^|/)seed(?:s|-data)?\.[cm]?[jt]sx?$
+        excludes: "`seed.ts`, `seeds.js`, `seed-data.mjs` and their siblings, anywhere in the tree."
+    near_misses:
+      - rules:
+          - eu-minors-001
+        pattern: (^|/)seed(?:s|-data)?\.[a-z]+$
+        differs_by: >
+          Any lower-case extension rather than the JavaScript and TypeScript family, so it also
+          removes `seed.sql`, `seed.rb` and `seed.py`. A superset; adopting this set would not
+          change what that rule reads, but the wider clause would then be written twice.
+  polyglot_test_filenames:
+    question: >
+      Is this file's name a test filename in a language whose convention is not the JavaScript
+      `*.test.js` one — Go, Python, Ruby, PHP, Elixir, Rust, Java, Kotlin, C# — reading a `Spec`
+      suffix as a test name in Kotlin, C# and PHP but not in Java?
+    patterns:
+      - pattern: _(?:test|spec)\.(?:go|py|rb|php|exs|rs|java|kt)$|(^|/)test_[^/]*\.py$|(?:Test|Tests)\.(?:java|kt|cs|php)$|Spec\.(?:kt|cs|php)$
+        excludes: >
+          `foo_test.go`, `foo_spec.rb`, Python's `test_foo.py`, the JVM/C# `FooTest.java` and
+          `FooTests.kt` convention, and a `Spec` suffix in Kotlin, C# and PHP — `FooSpec.kt`,
+          `FooSpec.cs`, `FooSpec.php`. It does NOT exclude `FooSpec.java`.
+    near_misses:
+      - rules:
+          - eu-dsa-001
+          - eu-dsr-001
+        pattern: (^|/)test_[^/]*\.py$|(^|/)[A-Za-z0-9_]*Tests?\.(java|kt|cs)$
+        differs_by: >
+          Python and the JVM only, and it anchors the JVM branch to a whole filename where this set
+          matches the suffix anywhere. Promoted separately as `python_jvm_test_filenames`.
+  python_jvm_test_filenames:
+    question: |
+      Is this file a Python or JVM test, by a filename anchored to the start of its own segment?
+    patterns:
+      - pattern: (^|/)test_[^/]*\.py$|(^|/)[A-Za-z0-9_]*Tests?\.(java|kt|cs)$
+        excludes: "`test_foo.py`, `FooTest.java`, `FooTests.kt`, `FooTest.cs`."
+  mock_data_filenames:
+    question: >
+      Is this file's name the word for stand-in data — a mock, a fixture, a stub, a seed, a sample —
+      used as the middle component of a JavaScript filename?
+    patterns:
+      - pattern: \.(mock|mocks|fixture|fixtures|stub|seed|sample)\.[cm]?[jt]sx?$
+        excludes: "`users.mock.ts`, `payload.fixture.js`, `reply.stub.mjs`, `data.sample.tsx`."
+    near_misses:
+      - rules:
+          - eu-dsa-002
+        pattern: "[-_.](?:mock|mocks|stub|stubs|fake|fakes|dummy)\\.[cm]?[jt]sx?$"
+        differs_by: >
+          Accepts `-` and `_` as the separator as well as `.`, adds `fakes` and `dummy`, and drops
+          `fixture`, `seed` and `sample`. Neither a subset nor a superset. One rule spells it.
+  test_directories_path_prefixed:
+    question: >
+      Is this file inside a test directory — same eight names as `test_directories`, but required to
+      be followed by a "/" and therefore never matching a file that merely carries the name?
+    patterns:
+      - pattern: (^|/)(?:tests?|testing|__tests__|__mocks__|e2e|cypress|playwright)/
+        excludes: Any path with one of those names as a directory segment.
+  fixture_directories_path_prefixed:
+    question: >
+      Is this file inside a fixture, mock or snapshot directory — the singular-tolerant spelling,
+      required to be followed by a "/"?
+    patterns:
+      - pattern: (^|/)(?:fixtures?|__fixtures__|testdata|test_data|mocks?|__snapshots__)/
+        excludes: >
+          `fixture/`, `fixtures/`, `__fixtures__/`, `testdata/`, `test_data/`, `mock/`, `mocks/`,
+          `__snapshots__/`.
+  python_and_js_test_filenames:
+    question: >
+      Is this file's name a Python test, a `conftest.py`, or one of the JavaScript test and story
+      spellings — the three asked in one clause?
+    patterns:
+      - pattern: (^|/)(?:test_[^/]+|conftest)\.py$|_test\.py$|\.(?:test|spec|stories|cy)\.[cm]?[jt]sx?$
+        excludes: |
+          `test_foo.py`, `conftest.py`, `foo_test.py`, and everything `test_filenames` excludes.

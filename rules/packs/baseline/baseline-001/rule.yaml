@@ -1,0 +1,160 @@
+id: baseline-001
+pack: baseline
+short_name: A password or key written to the logs
+problem_line:
+  text: Password or key written to a log or console
+  template: "{data} written to a log or console"
+fix_line: Drop the secret from the log call or log a masked form, and set up redaction in the shared
+  logger where one is used.
+title: Secret- or credential-named value given to a log or print call
+jurisdiction:
+  - EU
+  - US
+  - JP
+legal_basis:
+  - cite: GDPR Art. 5(1)(f) and Art. 32 (integrity and confidentiality; security of processing)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-21
+    jurisdiction: EU
+  - cite: Japan APPI (Act on the Protection of Personal Information, Act No. 57 of 2003), Art. 23
+      (security control measures — duty to take necessary and appropriate measures for the security
+      control of personal data)
+    url: https://laws.e-gov.go.jp/law/415AC0000000057
+    checked_at: 2026-07-22
+    jurisdiction: JP
+  - cite: Japan APPI (Act on the Protection of Personal Information, Act No. 57 of 2003), Art. 26
+      (reporting of leakage etc. — the separate duty to report a leakage of personal data to the
+      Personal Information Protection Commission and to notify the data subject)
+    url: https://laws.e-gov.go.jp/law/415AC0000000057
+    checked_at: 2026-07-22
+    jurisdiction: JP
+  - cite: "United States, FTC Act Sec. 5 (15 U.S.C. Sec. 45(a)(1) and (n)) — unfair acts or practices in
+      or affecting commerce. This is the authority the Federal Trade Commission uses for its
+      data-security line, where a failure to employ reasonable security causes or is likely to cause
+      substantial injury to consumers that is not reasonably avoidable and not outweighed by
+      countervailing benefits. General basis: the United States has no federal statute setting a
+      security requirement for application logging, so this is an enforcement theory of general
+      application rather than a named control"
+    url: https://www.govinfo.gov/content/pkg/USCODE-2023-title15/html/USCODE-2023-title15-chap2-subchapI-sec45.htm
+    checked_at: 2026-07-22
+    jurisdiction: US
+  - cite: "California Civil Code Sec. 1798.81.5(b) — a business that owns, licenses or maintains
+      personal information about a California resident shall implement and maintain reasonable
+      security procedures and practices appropriate to the nature of the information. Sec.
+      1798.81.5(d)(1)(B) counts a username or email address together with a password (or a security
+      question and answer) permitting access to an online account as personal information, which is
+      the class of value this rule looks for. State scope only: this is California law rather than a
+      nationwide requirement, and it states a reasonableness standard rather than a named control"
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?sectionNum=1798.81.5&lawCode=CIV
+    checked_at: 2026-07-22
+    jurisdiction: US
+severity: high
+rule_confidence: 0.7
+detector:
+  engine: builtin-regex
+  resolve_local_values: true
+  shared_vocabulary:
+    - log_sinks_dotted
+    - log_sinks_bare
+  match:
+    - console\.(?:log|info|debug|warn|error)\(.*\$\{[^{}]*\b(?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|(?!(?:has|is|no|any|should|can|use|with|require)(?:[A-Z]|_))[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?)(?:_(?!(?:MIN|MAX|LEN|LENGTH|REGEX|PATTERN|FIELD|LABEL|NAME|PLACEHOLDER|ERROR|MESSAGE|REQUIRED|ENABLED|DISABLED|HEADER|PARAM|COOKIE|PREFIX|SUFFIX|TYPE|MODE|ID)\b)[A-Z0-9]+)*)s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\s*\)*\s*(?:(?:\|\||\?\?)\s*[^{}]*)?\}
+    - console\.(?:log|info|debug|warn|error)\(\s*[\w$.?\[\]({]*\b(?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|(?!(?:has|is|no|any|should|can|use|with|require)(?:[A-Z]|_))[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?)(?:_(?!(?:MIN|MAX|LEN|LENGTH|REGEX|PATTERN|FIELD|LABEL|NAME|PLACEHOLDER|ERROR|MESSAGE|REQUIRED|ENABLED|DISABLED|HEADER|PARAM|COOKIE|PREFIX|SUFFIX|TYPE|MODE|ID)\b)[A-Z0-9]+)*)s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\b
+    - console\.(?:log|info|debug|warn|error)\((?:\x27[^\x27]*\x27|"[^"]*"|\x60[^\x60]*\x60|[^\x27"\x60])*?[,+{]\s*[\w$.?\[\]({]*\b(?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|(?!(?:has|is|no|any|should|can|use|with|require)(?:[A-Z]|_))[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?)(?:_(?!(?:MIN|MAX|LEN|LENGTH|REGEX|PATTERN|FIELD|LABEL|NAME|PLACEHOLDER|ERROR|MESSAGE|REQUIRED|ENABLED|DISABLED|HEADER|PARAM|COOKIE|PREFIX|SUFFIX|TYPE|MODE|ID)\b)[A-Z0-9]+)*)s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\b
+    - console\.(?:log|info|debug|warn|error)\((?:\x27[^\x27]*\x27|"[^"]*"|\x60[^\x60]*\x60|[^\x27"\x60])*?\[\s*[\x27"\x60](?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|(?!(?:has|is|no|any|should|can|use|with|require)(?:[A-Z]|_))[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?)(?:_(?!(?:MIN|MAX|LEN|LENGTH|REGEX|PATTERN|FIELD|LABEL|NAME|PLACEHOLDER|ERROR|MESSAGE|REQUIRED|ENABLED|DISABLED|HEADER|PARAM|COOKIE|PREFIX|SUFFIX|TYPE|MODE|ID)\b)[A-Z0-9]+)*)s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?[\x27"\x60]\s*\]
+    - ^(?=.*(?:(?<![\w$.])(?:print|pprint|puts|echo|error_log|syslog|var_dump|print_r|var_export|NSLog|println!|eprintln!)\s*[\s(]|(?<![\w$.])(?:console|logger|logging|log|Log|LOG|Logger|LOGGER|slog|mlog|zlog|klog|glog|fmt|Rails|Console|Timber|syslog)\s*(?:\.|->|::)|(?:\$this->|self\.|this\.|\$|(?<![A-Za-z0-9])_)log(?:ger)?\s*\??\s*(?:\.|->)|System\.(?:out|err)\.print))(?=.*(?:\$\{|#\{|\{)[^{}]*\b(?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|(?!(?:has|is|no|any|should|can|use|with|require)(?:[A-Z]|_))[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?)(?:_(?!(?:MIN|MAX|LEN|LENGTH|REGEX|PATTERN|FIELD|LABEL|NAME|PLACEHOLDER|ERROR|MESSAGE|REQUIRED|ENABLED|DISABLED|HEADER|PARAM|COOKIE|PREFIX|SUFFIX|TYPE|MODE|ID)\b)[A-Z0-9]+)*)s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\s*\)*\s*(?:(?:\|\||\?\?)\s*[^{}]*)?\})
+    - ^(?=.*(?:(?<![\w$.])(?:print|pprint|puts|echo|error_log|syslog|var_dump|print_r|var_export|NSLog|println!|eprintln!)\s*[\s(]|(?<![\w$.])(?:console|logger|logging|log|Log|LOG|Logger|LOGGER|slog|mlog|zlog|klog|glog|fmt|Rails|Console|Timber|syslog)\s*(?:\.|->|::)|(?:\$this->|self\.|this\.|\$|(?<![A-Za-z0-9])_)log(?:ger)?\s*\??\s*(?:\.|->)|System\.(?:out|err)\.print))(?=.*[,(+.%]\s*[\w$@:>\[\]().*&-]*\b(?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|(?!(?:has|is|no|any|should|can|use|with|require)(?:[A-Z]|_))[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?)(?:_(?!(?:MIN|MAX|LEN|LENGTH|REGEX|PATTERN|FIELD|LABEL|NAME|PLACEHOLDER|ERROR|MESSAGE|REQUIRED|ENABLED|DISABLED|HEADER|PARAM|COOKIE|PREFIX|SUFFIX|TYPE|MODE|ID)\b)[A-Z0-9]+)*)s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\b)
+    - ^(?=.*(?:(?<![\w$.])(?:print|pprint|puts|echo|error_log|syslog|var_dump|print_r|var_export|NSLog|println!|eprintln!)\s*[\s(]|(?<![\w$.])(?:console|logger|logging|log|Log|LOG|Logger|LOGGER|slog|mlog|zlog|klog|glog|fmt|Rails|Console|Timber|syslog)\s*(?:\.|->|::)|(?:\$this->|self\.|this\.|\$|(?<![A-Za-z0-9])_)log(?:ger)?\s*\??\s*(?:\.|->)|System\.(?:out|err)\.print))(?=.*\$\{?(?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|(?!(?:has|is|no|any|should|can|use|with|require)(?:[A-Z]|_))[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?)(?:_(?!(?:MIN|MAX|LEN|LENGTH|REGEX|PATTERN|FIELD|LABEL|NAME|PLACEHOLDER|ERROR|MESSAGE|REQUIRED|ENABLED|DISABLED|HEADER|PARAM|COOKIE|PREFIX|SUFFIX|TYPE|MODE|ID)\b)[A-Z0-9]+)*)s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\b)
+    - ^(?=.*(?:(?<![\w$.])(?:print|pprint|puts|echo|error_log|syslog|var_dump|print_r|var_export|NSLog|println!|eprintln!)\s*[\s(]|(?<![\w$.])(?:console|logger|logging|log|Log|LOG|Logger|LOGGER|slog|mlog|zlog|klog|glog|fmt|Rails|Console|Timber|syslog)\s*(?:\.|->|::)|(?:\$this->|self\.|this\.|\$|(?<![A-Za-z0-9])_)log(?:ger)?\s*\??\s*(?:\.|->)|System\.(?:out|err)\.print))(?=.*[,({]\s*[\x27"`](?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|(?!(?:has|is|no|any|should|can|use|with|require)(?:[A-Z]|_))[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?)(?:_(?!(?:MIN|MAX|LEN|LENGTH|REGEX|PATTERN|FIELD|LABEL|NAME|PLACEHOLDER|ERROR|MESSAGE|REQUIRED|ENABLED|DISABLED|HEADER|PARAM|COOKIE|PREFIX|SUFFIX|TYPE|MODE|ID)\b)[A-Z0-9]+)*)s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?[\x27"`]\s*[,:)])
+    - ^(?=.*(?<![\w$])(?:(?&log_sinks_dotted)|(?&log_sinks_bare)\s*[\s(]))(?=.*(?<![\w-])[A-Za-z0-9_]*(?:PRIVATE_KEY|SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|TOKEN|CREDENTIALS?|private_key|secret|password|passwd|passphrase|api_key|apikey|access_token|refresh_token|auth_token|token|credentials?)[
+      \t]*=[ \t]*[{$])
+    - '^(?=(?:\x27[^\x27]*\x27|"[^"]*"|[^\x27"])*?(?<![\w$])[A-Z][A-Z0-9_]{2,11}\s*\(.*(?:%[-+
+      #0-9.]*(?:hh|ll|[hlLzjt])?[sdiuxXofgeEpc]|\{\}))(?=.*[,(+.%]\s*[\w$@:>\[\]().*&-]*\b(?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|(?!(?:has|is|no|any|should|can|use|with|require)(?:[A-Z]|_))[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?)(?:_(?!(?:MIN|MAX|LEN|LENGTH|REGEX|PATTERN|FIELD|LABEL|NAME|PLACEHOLDER|ERROR|MESSAGE|REQUIRED|ENABLED|DISABLED|HEADER|PARAM|COOKIE|PREFIX|SUFFIX|TYPE|MODE|ID)\b)[A-Z0-9]+)*)s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\b)'
+    - ^(?=.*(?:(?<![\w$.])(?:print|pprint|puts|echo|error_log|syslog|var_dump|print_r|var_export|NSLog|println!|eprintln!)\s*[\s(]|(?<![\w$.])(?:console|logger|logging|log|Log|LOG|Logger|LOGGER|slog|mlog|zlog|klog|glog|fmt|Rails|Console|Timber|syslog)\s*(?:\.|->|::)|(?:\$this->|self\.|this\.|\$|(?<![A-Za-z0-9])_)log(?:ger)?\s*\??\s*(?:\.|->)|System\.(?:out|err)\.print|(?<![\w$])(?:(?&log_sinks_dotted)|(?&log_sinks_bare)\s*[\s(])))(?=.*[\x27"](?:[^\x27"]*[^A-Za-z0-9_])?(?:[Kk]ey|KEY|[Pp]ass(?:word|wd|phrase)|PASS(?:WORD|WD|PHRASE)|[Tt]oken|TOKEN|[Ss]ecret|SECRET|[Cc]redential|CREDENTIAL)s?[
+      \t]*(?:=>|[:=])?[ \t]*[\x27"]\s*[+.]\s*[A-Za-z_$@(])
+    - ^(?=.*(?:(?<![\w$.])(?:print|pprint|puts|echo|error_log|syslog|var_dump|print_r|var_export|NSLog|println!|eprintln!)\s*[\s(]|(?<![\w$.])(?:console|logger|logging|log|Log|LOG|Logger|LOGGER|slog|mlog|zlog|klog|glog|fmt|Rails|Console|Timber|syslog)\s*(?:\.|->|::)|(?:\$this->|self\.|this\.|\$|(?<![A-Za-z0-9])_)log(?:ger)?\s*\??\s*(?:\.|->)|System\.(?:out|err)\.print))(?=.*(?:\$\{|#\{|\{)[^{}]*\b(?:[A-Za-z0-9_$]*[Pp]wds?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\b|[A-Z0-9]+_PWD\b|[Cc]reds\b|CREDS\b|[A-Za-z0-9_$]*[Ss]igning[_-]?[Kk]eys?\b|[A-Z0-9_]*SIGNING_KEY\b|[A-Za-z0-9_$]*[Jj][Ww][Tt]s?(?![\w.(]))\s*\)*\s*(?:(?:\|\||\?\?)\s*[^{}]*)?\})
+    - ^(?=.*(?:(?<![\w$.])(?:print|pprint|puts|echo|error_log|syslog|var_dump|print_r|var_export|NSLog|println!|eprintln!)\s*[\s(]|(?<![\w$.])(?:console|logger|logging|log|Log|LOG|Logger|LOGGER|slog|mlog|zlog|klog|glog|fmt|Rails|Console|Timber|syslog)\s*(?:\.|->|::)|(?:\$this->|self\.|this\.|\$|(?<![A-Za-z0-9])_)log(?:ger)?\s*\??\s*(?:\.|->)|System\.(?:out|err)\.print))(?=.*[,(+.%]\s*[\w$@:>\[\]().*&-]*\b(?:[A-Za-z0-9_$]*[Pp]wds?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\b|[A-Z0-9]+_PWD\b|[Cc]reds\b|CREDS\b|[A-Za-z0-9_$]*[Ss]igning[_-]?[Kk]eys?\b|[A-Z0-9_]*SIGNING_KEY\b|[A-Za-z0-9_$]*[Jj][Ww][Tt]s?(?![\w.(]))\b)
+    - ^(?=.*(?:(?<![\w$.])(?:print|pprint|puts|echo|error_log|syslog|var_dump|print_r|var_export|NSLog|println!|eprintln!)\s*[\s(]|(?<![\w$.])(?:console|logger|logging|log|Log|LOG|Logger|LOGGER|slog|mlog|zlog|klog|glog|fmt|Rails|Console|Timber|syslog)\s*(?:\.|->|::)|(?:\$this->|self\.|this\.|\$|(?<![A-Za-z0-9])_)log(?:ger)?\s*\??\s*(?:\.|->)|System\.(?:out|err)\.print))(?=.*\$\{?(?:[A-Za-z0-9_$]*[Pp]wds?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\b|[A-Z0-9]+_PWD\b|[Cc]reds\b|CREDS\b|[A-Za-z0-9_$]*[Ss]igning[_-]?[Kk]eys?\b|[A-Z0-9_]*SIGNING_KEY\b|[A-Za-z0-9_$]*[Jj][Ww][Tt]s?(?![\w.(]))\b)
+    - ^(?=.*(?:(?<![\w$.])(?:print|pprint|puts|echo|error_log|syslog|var_dump|print_r|var_export|NSLog|println!|eprintln!)\s*[\s(]|(?<![\w$.])(?:console|logger|logging|log|Log|LOG|Logger|LOGGER|slog|mlog|zlog|klog|glog|fmt|Rails|Console|Timber|syslog)\s*(?:\.|->|::)|(?:\$this->|self\.|this\.|\$|(?<![A-Za-z0-9])_)log(?:ger)?\s*\??\s*(?:\.|->)|System\.(?:out|err)\.print))(?=.*[,({]\s*[\x27"`](?:[A-Za-z0-9_$]*[Pp]wds?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\b|[A-Z0-9]+_PWD\b|[Cc]reds\b|CREDS\b|[A-Za-z0-9_$]*[Ss]igning[_-]?[Kk]eys?\b|[A-Z0-9_]*SIGNING_KEY\b|[A-Za-z0-9_$]*[Jj][Ww][Tt]s?(?![\w.(]))[\x27"`]\s*[,:)])
+    - console\.(?:log|info|debug|warn|error)\((?:\x27[^\x27]*\x27|"[^"]*"|\x60[^\x60]*\x60|[^\x27"\x60])*?\[\s*[\x27"\x60](?:[A-Za-z0-9_$]*[Pp]wds?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\b|[A-Z0-9]+_PWD\b|[Cc]reds\b|CREDS\b|[A-Za-z0-9_$]*[Ss]igning[_-]?[Kk]eys?\b|[A-Z0-9_]*SIGNING_KEY\b|[A-Za-z0-9_$]*[Jj][Ww][Tt]s?(?![\w.(]))[\x27"\x60]\s*\]
+    - ^(?=.*(?<![\w$.])(?:errors|xerrors|eris|pkgerrors)\s*\.\s*(?:New|Errorf|Wrapf?|WithMessagef?)\s*\()(?=.*[,(+.%]\s*[\w$@:>\[\]().*&-]*\b(?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|(?!(?:has|is|no|any|should|can|use|with|require)(?:[A-Z]|_))[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?)(?:_(?!(?:MIN|MAX|LEN|LENGTH|REGEX|PATTERN|FIELD|LABEL|NAME|PLACEHOLDER|ERROR|MESSAGE|REQUIRED|ENABLED|DISABLED|HEADER|PARAM|COOKIE|PREFIX|SUFFIX|TYPE|MODE|ID)\b)[A-Z0-9]+)*)s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\b)
+  match_without:
+    - ^\s*(?://|\*|/\*)
+    - //[^\x27"\x60]*\bconsole\s*\.\s*(?:log|info|debug|warn|error)\s*\(.*\b(?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?))s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\b
+    - \bBoolean\s*\(\s*[\w$.?\[\]]*\b(?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?))s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\b
+    - '\b(?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?))s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\b[\w$.?()\[\]\s!=<>&|]*\?\s*[\x27"\x60][^\x27"\x60]*[\x27"\x60]\s*:'
+    - \b(?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?))s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\s*(?:\?\.)?\.(?:slice|substring|substr)\(
+    - \b(?:mask|redact|sanitiz|obfuscat|anonymiz|scrub)[A-Za-z0-9_$]*\(\s*[\w$.?\[\]]*\b(?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?))s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\b
+    - \b(?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?))s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\s*\)*\s*(?:\?\.)?\.(?:length|size|count)\b
+    - \bObject\.keys\(\s*[\w$.?\[\]]*\b(?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?))s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?\s*\)
+    - \b(?:errors|touched|dirtyFields|formState|validation|fieldErrors|invalidFields)\s*(?:\?\.)?\[\s*[\x27"\x60](?:password|passwd|passphrase|token|apikey|Password|Passwd|Passphrase|Token|ApiKey|APIKey|AccessToken|RefreshToken|AuthToken|PrivateKey|ClientSecret|Credential|[A-Za-z0-9_$]*[Ss]ecret|apiKey|api_key|accessToken|access_token|refreshToken|refresh_token|authToken|auth_token|privateKey|private_key|credential|[A-Z0-9_]*(?:SECRET|PASSWORD|PASSWD|PASSPHRASE|API_KEY|APIKEY|TOKEN|ACCESS_TOKEN|REFRESH_TOKEN|AUTH_TOKEN|PRIVATE_KEY|CREDENTIALS?))s?(?:_(?:confirmation|confirm|repeat|hash|digest|plaintext|plain|raw))?[\x27"\x60]
+context_questions:
+  - "Does the secret-named value reach the log or print call at all? On the four whole-line clauses
+    - the ones asking only that a log or print sink appear somewhere on the line and a secret-named
+    expression somewhere else on it, in any language and JavaScript included, since their sink list
+    carries `console` too - the sink and the secret-named expression are found independently of each
+    other, so quote the call and say which argument position the value occupies, or record that it
+    occupies none. Where it does reach the call: does the logged expression carry an actual secret
+    or personal data? The identifier name alone proves nothing — the value may already be masked
+    upstream. Trace the value back to where it is assigned and quote that line."
+  - Does this log survive a production build, or is it behind a development-only guard (NODE_ENV
+    check, debug flag, build-time strip)?
+  - Is console output forwarded to a log-collection backend (Sentry, Datadog, CloudWatch) that would
+    persist the value off-host?
+evidence_template: "{file}:{line} matched one of this rule's eight clauses, and the two families
+  they fall into do not establish the same thing. Four clauses anchor on a console call (log, info,
+  debug, warn, error) and verify the coupled construct: the secret-named expression sits inside that
+  call's own parentheses, in argument, interpolation or subscript position. The other four are the
+  weaker family, and what separates them is mechanism rather than language: each is a pair of
+  independent whole-line lookaheads that asks only that a log or print sink appear somewhere on the
+  line and that a secret-named expression appear somewhere else on it, with no coupling between the
+  two. Their sink list is language-blind and includes `console` itself alongside the Python, Ruby,
+  PHP, Go, Java, Kotlin, C#, Rust, Swift and shell forms, so they fire on JavaScript and TypeScript
+  lines as readily as on any other - which language the file is written in tells you nothing about
+  which family fired. The looser coupling is a deliberate trade, recorded in the detector. So on
+  those four the detector established only that both things appear on the same line, and the known
+  look-alikes are exactly that shape: a key-derivation or HMAC call taking the secret while a print
+  call on the same line prints something else; a secret-named object literal handed to a different
+  function beside a genuine console.error; the prefix `Rails.` counted as the logging idiom, because
+  the pattern asks for `Rails` followed by a dot rather than for `Rails.logger`; a `print(` inside a
+  string literal hundreds of characters further along a fenced documentation block collapsed onto
+  one line; and a template data-binding attribute in a tutorial whose placeholder name ends in
+  Secret. Read the matched line, say which family fired, and name the argument position the value
+  occupies in the sink - or record that it occupies none, which settles the candidate before context
+  questions 2 and 3, both of which assume a call that receives it. Whether the value itself is a
+  secret rather than one already masked upstream is context question 1 A NINTH CLAUSE WAS ADDED
+  2026-09-04, and the count of eight above predates it exactly as baseline-004's own template says
+  of its four. It belongs to the WEAKER family, which is now five: it asks that a log or print sink
+  appear somewhere on the line - the process output streams `stdout.write` and `stderr.write` among
+  them, which no earlier sink list held - together with a credential-named key immediately followed
+  by `=` and the opening of an interpolation, which is the shape a freshly generated key is printed
+  in as an environment assignment. It couples the two no more tightly than the other four of that
+  family do, so read it the same way: say whether the sink actually receives the value, or record
+  that it does not. TWO MORE CLAUSES WERE ADDED 2026-09-08, and the counts of eight and nine above
+  are left as they were written, exactly as this template already leaves the eight. Both belong to
+  the WEAKER family, which is now seven, and both are read the same way. THE TENTH asks that an
+  ALL-CAPS identifier of three to twelve characters be called on the line, outside any string
+  literal, with a printf conversion or a brace placeholder after it, and a credential-named value in
+  argument position. That is the shape of a project's OWN logging macro - LOGP and DBGP in one tree,
+  ESP_LOGI, RTE_LOG or ZF_LOGI in another, and the house macro of any C or C++ project - which no
+  list of sink names can hold, because each project defines its own. What it does not establish is
+  that the identifier is a logging macro at all, or where the macro writes: open the macro's own
+  definition and say which stream, file or ring buffer it reaches, because a macro that formats into
+  a buffer the program never emits is a different fact from one that writes to the system log, and
+  neither fact is on the matched line. THE ELEVENTH reads the message instead of the value: a log
+  sink on the line, a quoted literal whose last word is a credential label - key, password, token,
+  secret or credential, with only a colon, an equals sign or spaces allowed after it before the
+  closing quote - and a value concatenated after that quote. Here the credential word sits in the
+  text the programmer wrote while the value beside it is an ordinary accessor such as a getter, so
+  the question the other clauses put to the identifier is answered by opening that accessor instead.
+  Two further facts are not on the line and belong to the operator rather than to the code: whether
+  the deployment's configured log level emits the line at all, since a debug-level call under a
+  logger configured at info level writes nothing, and whether the build strips it."
+remediation_template: |
+  This is a candidate for review against GDPR Art. 32 (security of processing), not a determination
+  about this code. The changes below apply where the review confirms it.
+  Drop the secret from the log call, or log a masked form (leading characters only, or a hash).
+  Where a structured logger is in use, configure its redaction rules (pino `redact` paths and
+  equivalents) so the field is stripped centrally rather than at each call site.
+data_categories:
+  - user.authorization.credentials
+fingerprint_spec: default

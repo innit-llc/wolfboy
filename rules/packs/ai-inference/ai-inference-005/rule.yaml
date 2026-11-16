@@ -1,0 +1,208 @@
+id: ai-inference-005
+pack: ai-inference
+short_name: AI picks where a request with the user's credentials goes
+problem_line:
+  text: AI model chooses where a request with user data is sent
+fix_line: Record user-registered endpoints as a recipient category, and limit the hosts and
+  arguments the model may use.
+title: Model chooses an outbound request whose host comes from a user-created row, with the user's
+  credentials
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - the record of processing activities 'shall
+      contain all of the following information', including 'the categories of recipients to whom the
+      personal data have been or will be disclosed including recipients in third countries or
+      international organisations'. This is the provision the construct is hardest against: the
+      record asks for CATEGORIES, and a destination composed at request time out of a user's own row
+      has no name to write, so the category is all there is to record"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(f) - personal data shall be 'processed in a manner
+      that ensures appropriate security of the personal data, including protection against
+      unauthorised or unlawful processing and against accidental loss, destruction or damage, using
+      appropriate technical or organisational measures'. Cited because what leaves the process is
+      decided by a model from conversation content, and because a credential belonging to the user
+      is attached to the request that carries it
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 32(1) - 'Taking into account the state of the art, the
+      costs of implementation and the nature, scope, context and purposes of processing as well as
+      the risk of varying likelihood and severity for the rights and freedoms of natural persons,
+      the controller and the processor shall implement appropriate technical and organisational
+      measures to ensure a level of security appropriate to the risk'. Reference only: this detector
+      establishes no security failure. It marks a request-composition path whose destination and
+      payload are not fixed at build time, which is a fact the risk assessment needs rather than a
+      defect in one"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 25(2) - 'The controller shall implement appropriate
+      technical and organisational measures for ensuring that, by default, only personal data which
+      are necessary for each specific purpose of the processing are processed. That obligation
+      applies to the amount of personal data collected, the extent of their processing, the period
+      of their storage and their accessibility.' Reference only: the amount of conversation content
+      a model may place in an outbound body is not bounded at the call site, and what bounds it is a
+      design decision this line does not carry"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 44 - 'Any transfer of personal data which are
+      undergoing processing or are intended for processing after transfer to a third country or to
+      an international organisation shall take place only if, subject to the other provisions of
+      this Regulation, the conditions laid down in this Chapter are complied with by the controller
+      and processor, including for onward transfers of personal data from the third country or an
+      international organisation to another third country or to another international organisation.'
+      Reference only, and cited for the specific reason that makes this construct unusual: the
+      destination is not knowable in advance by anybody, including the operator, because it is
+      whatever host a user put in a row. A transfer assessment that assumes a fixed destination list
+      does not describe this path"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose \"The
+      categories of third parties to whom the business discloses personal information.\" The
+      obligation is owed on a verifiable consumer request under Sec. 1798.110(b), and Sec.
+      1798.110(c)(4), disclosed pursuant to Sec. 1798.130(a)(5)(B), requires the same categories in
+      the privacy policy. PINPOINT CORRECTED 2026-09-01 (D11, independent adversarial verification):
+      the earlier wording routed the privacy-policy limb through Sec. 1798.130(a)(5)(B) alone, which
+      read on its own enumerates categories of personal INFORMATION rather than categories of third
+      parties. NOT MACHINE-VERIFIED AND SAID SO: this rule's quote-verification receipt marks this
+      span unverifiable, because Californian law is outside the fetch path of the tool that checks
+      quotations against official texts; the correction is from knowledge of the statute rather than
+      from a fetched text, and it should be confirmed against the code or by a lawyer before it is
+      treated as settled"
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-08-31
+    jurisdiction: US
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.4
+applicability_preconditions:
+  - features.llm.present
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  resolve_import_aliases: true
+  vocabulary:
+    schema_to_tool_conversion:
+      - openapiToFunctions
+      - openApiToFunctions
+      - openapi_to_functions
+      - openApiToTools
+      - openapiToTools
+      - schemaToFunctions
+      - schemaToTools
+      - toolsFromSchema
+      - convertOpenApiToTools
+      - specToTools
+    user_supplied_request_headers:
+      - custom_headers
+      - customHeaders
+      - customHeader
+      - user_headers
+      - userHeaders
+      - auth_headers
+      - authHeaders
+      - toolHeaders
+      - tool_headers
+    model_tool_call_plumbing:
+      - tool_calls
+      - toolCalls
+      - toolCall
+      - tool_call_id
+      - function_call
+      - functionCall
+      - tool_choice
+      - toolChoice
+    model_argument_path_composition:
+      - pathTemplate
+      - path_template
+      - routeMap
+      - route_map
+      - parsedArgs
+      - parsed_args
+      - toolArguments
+      - tool_arguments
+      - argumentsString
+  match:
+    - (?:(?:^|[^A-Za-z0-9_])(?&schema_to_tool_conversion)\s*\(|(?:JSON\.parse|json\.loads|json_decode|JSON\.decode)\s*\(\s*[A-Za-z_$][A-Za-z0-9_$]*\.(?:schema|spec|openapi|definition)\b)
+    - (?:^|[^A-Za-z0-9_])[A-Za-z0-9_$]*(?:[Ss]chema|[Ss]pec|[Tt]ool|[Ee]ndpoint)[A-Za-z0-9_$]*(?:\.(?:info\.server|servers|url|baseUrl|base_url|host)\b|\[\s*["'](?:info["']\s*\]\s*\[\s*["'])?(?:url|server|servers|baseUrl|base_url|host)["'])
+    - (?:^|[^A-Za-z0-9_$])(?:[A-Za-z0-9_$]*[a-z0-9_$])?(?:[Ss]chema|[Ss]pec|[Tt]ool|[Ee]ndpoint)[A-Za-z0-9_$]*\.(?:info\.server|servers|url|baseUrl|base_url|host)\b
+    - (?:^|[^A-Za-z0-9_])(?&user_supplied_request_headers)\b
+    - (?:(?:^|[^A-Za-z0-9_$])(?:[A-Za-z0-9_$]*[a-z0-9_$])?(?:[Ss]chema|[Ss]pec|[Tt]ool|[Ee]ndpoint)s?(?:[A-Z_$][A-Za-z0-9_$]*)?(?:\.(?:(?&user_supplied_request_headers)|[Hh]eaders?)\b|\[\s*["'](?:(?&user_supplied_request_headers)|[Hh]eaders?)["'])|^(?=[^\n]*(?:^|[^A-Za-z0-9_])(?:(?&user_supplied_request_headers)|[Hh]eaders?)\b)(?=[^\n]*(?:^|[^A-Za-z0-9_])(?:(?&model_tool_call_plumbing)\b|(?&schema_to_tool_conversion)\s*\()))
+    - (?:^|[^A-Za-z0-9_])(?&model_tool_call_plumbing)\b
+    - ^(?=[^\n]*(?:^|[^A-Za-z0-9_])(?&model_tool_call_plumbing)\b)(?=[^\n]*(?:(?:^|[^A-Za-z0-9_])(?:(?&schema_to_tool_conversion)\s*\(|(?&user_supplied_request_headers)\b|(?&model_argument_path_composition)\b)|(?:^|[^A-Za-z0-9_$])(?:[A-Za-z0-9_$]*[a-z0-9_$])?(?:[Ss]chema|[Ss]pec|[Tt]ool|[Ee]ndpoint)[A-Za-z0-9_$]*\.(?:info\.server|servers|url|baseUrl|base_url|host)\b))
+    - (?:^|[^A-Za-z0-9_])(?&model_argument_path_composition)\b
+    - ^(?=[^\n]*(?:^|[^A-Za-z0-9_])(?&model_argument_path_composition)\b)(?=[^\n]*(?:(?:^|[^A-Za-z0-9_])(?:(?&model_tool_call_plumbing)\b|(?&schema_to_tool_conversion)\s*\()|(?:^|[^A-Za-z0-9_$])(?:[A-Za-z0-9_$]*[a-z0-9_$])?(?:[Ss]chema|[Ss]pec|[Tt]ool|[Ee]ndpoint)[A-Za-z0-9_$]*\.(?:info\.server|servers|url|baseUrl|base_url|host)\b))
+context_questions:
+  - "WHERE DOES THE DESTINATION COME FROM, AND CAN ANYONE ENUMERATE IT? This is the question the
+    detector cannot answer and the reason the finding exists. Trace the host back: a literal in the
+    source, a deployment environment variable, or a column of a row a user created. Where it is the
+    third, say so in terms - the recipient set is whatever hosts this deployment's users have
+    registered, it changes without a code change, and neither the record of processing nor a
+    transfer assessment can list it from the repository. Then ask the operator whether the
+    registered destinations can be enumerated from the database at all, and record the answer."
+  - WHAT IS ATTACHED TO THE OUTBOUND REQUEST BESIDES THE PAYLOAD? Open the header construction and
+    quote it. A request carrying a credential the USER supplied for a host the USER chose is a
+    different disclosure from one carrying the product's own service key, and it changes who the
+    counterparty believes they are talking to. Say which this is, and say whether the credential is
+    stored in plaintext in the row it came from.
+  - WHAT DOES THE MODEL ACTUALLY GET TO PUT IN THE REQUEST? Read the path composition and the body
+    construction and quote them. Say whether the model's arguments are interpolated into the URL
+    path, the query string, the body, or all three, and whether anything bounds what may be placed
+    there. Conversation content that reaches a body is personal data leaving to a destination chosen
+    at request time, and the size of that is a design fact, not a pattern fact.
+  - WHAT COMES BACK, AND WHERE DOES IT GO? Follow the response. In the construct this rule was
+    modelled on the response body is pushed back into the message list and handed to the model on a
+    second call, which means data fetched from a user's own third-party host becomes prompt content
+    sent to the model provider. Quote that step if it exists; it is a second recipient and belongs
+    in the record separately.
+  - "IS THIS ONE FLOW OR TWO, WITH RESPECT TO THE SIBLING RULES? A file that carries this construct
+    almost always also calls a model directly, so `ai-inference-001` may fire on the same file. They
+    are different disclosures: the sibling is about what the product sends to the model, and this
+    rule is about what the model then causes the product to send somewhere else. Record them as two
+    rows, and say which line belongs to which."
+evidence_template: "{file}:{line} matched a construct for letting a language model choose and
+  compose an outbound request: an OpenAPI-style document being converted into model tool
+  definitions, a destination host read out of such a document, a user-supplied header set attached
+  to the call, the tool-calling protocol's own decision plumbing, or the model's arguments being
+  interpolated into a request path. This establishes only that THE MECHANISM EXISTS. It establishes
+  NO RECIPIENT, and no clause of this rule names or looks for one: on the construct this rule was
+  modelled on the host is a column of a row the user created, so the destination is not in the
+  repository at all and cannot be recovered by reading further. It does not establish that any
+  request has been made, nor what the model may place in the path or the body, which is context
+  question 3. It does not establish whether the credentials attached are the user's or the
+  product's, which is context question 2. And where the response is fed back to the model, that
+  onward step is a separate disclosure the match does not cover."
+remediation_template: |
+  Write the record entry as a CATEGORY, because there is no name to write. The Art. 30(1)(d) row
+  for this path reads something like third-party HTTP endpoints registered by users and chosen at
+  request time - and then say, in the same row, that the set is not enumerable from the source.
+  A record that omits the path because no vendor could be named is the specific gap this finding
+  is for.
+  Ask whether the registered destinations can be listed from the database. Where they can, that
+  list is the closest thing to a recipient inventory this construct admits, and it should be
+  produced periodically rather than assumed to be small.
+  Bound what the model may place in the request. An allowlist of hosts per user, a schema-validated
+  argument set, and a body built from named fields rather than from whatever the model emitted are
+  the three engineering changes that make the outbound payload describable.
+  Where the response is fed back into the conversation, treat the model provider as a recipient of
+  whatever that response contained, and say so alongside the entry for the endpoint itself.
+  Where the credential attached belongs to the user, check how it is stored: a per-user secret held
+  to be replayed against a third-party host is a credential store, and it needs the handling one.
+data_categories:
+  - user.behavior
+  - user.authorization.credentials
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: existence

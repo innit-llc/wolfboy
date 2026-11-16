@@ -1,0 +1,198 @@
+id: eu-dsr-009
+pack: eu-dsr
+short_name: Claimed separation of a submitter from what they submitted
+problem_line:
+  text: Declared submitter anonymity may not hold as stated
+fix_line: Close each correlation channel or narrow the claim, and state the threshold and whom the
+  design does not protect.
+title: "Declared unlinkability: a schema that severs submitter from submission, and its correlation
+  channels"
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 11(1) - 'If the purposes for which a controller
+      processes personal data do not or do no longer require the identification of a data subject by
+      the controller, the controller shall not be obliged to maintain, acquire or process additional
+      information in order to identify the data subject for the sole purpose of complying with this
+      Regulation.' Art. 11(2) adds that where the controller can demonstrate it is not in a position
+      to identify the data subject, 'Articles 15 to 20 shall not apply except where the data
+      subject, for the purpose of exercising his or her rights under those articles, provides
+      additional information enabling his or her identification' - which is the consequence a
+      severance claim carries for the access, rectification and erasure rights, and the reason the
+      claim has to be true
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(a) - personal data shall be 'processed lawfully,
+      fairly and in a transparent manner in relation to the data subject'. Cited because this
+      construct is a statement made TO data subjects about what the product cannot do; where the
+      statement and the storage disagree, the disagreement is a fairness and transparency question
+      before it is anything else
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(c) - personal data shall be 'adequate, relevant and
+      limited to what is necessary in relation to the purposes for which they are processed'. A
+      schema that stores no link is the minimisation principle implemented in DDL, and the question
+      this rule raises is whether every read path honours it
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 25(1) - the controller shall 'implement appropriate
+      technical and organisational measures, such as pseudonymisation, which are designed to
+      implement data-protection principles, such as data minimisation, in an effective manner and to
+      integrate the necessary safeguards into the processing in order to meet the requirements of
+      this Regulation and protect the rights of data subjects'. This construct is such a measure
+      taken at the schema level; the rule asks whether it is effective across every path, which is
+      what 'in an effective manner' requires
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 32(1)(a) - among the measures appropriate to the risk,
+      the controller and processor shall implement as appropriate 'the pseudonymisation and
+      encryption of personal data'. Reference only, and cited to mark a distinction rather than a
+      duty: severing a link in the schema is a stronger operation than pseudonymisation, which by
+      definition retains additional information capable of re-attribution, so a product doing the
+      former should not be recorded as doing the latter"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1) - 'personal data' means any information relating
+      to an identified or identifiable natural person, and an identifiable person is one who can be
+      identified 'directly or indirectly'. Recital 26 states that to determine identifiability
+      'account should be taken of all the means reasonably likely to be used, such as singling out,
+      either by the controller or by another person to identify the natural person directly or
+      indirectly', and that the principles 'should therefore not apply to anonymous information'.
+      Reference only: whether a severed submission is still personal data is exactly the question
+      this construct raises, it turns on the correlation channels this rule names, and no detector
+      can settle it"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.35
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  match:
+    - (?:^|[^A-Za-z0-9_])(?:anonymous_(?:ballot|poll|vote|stance|survey|response|submission)[A-Za-z0-9_]*|Anonymous(?:Ballot|Poll|Vote|Stance|Survey|Response|Submission)[A-Za-z0-9_]*|detached_anonymous[A-Za-z0-9_]*|DetachedAnonymous[A-Za-z0-9_]*)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:voting_system|votingSystem|VotingSystem|ballot_mode|ballotMode|anonymity_mode|anonymityMode|anonymisation_mode|anonymization_mode)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:add_check_constraint|check_constraint|CONSTRAINT_NAME|CONSTRAINT|CHECK|constraint|check)(?![A-Za-z0-9_])[^\n]{0,120}?(?:anonymous|anonymised|anonymized|ballot)
+    - (?:anonymous|anonymised|anonymized|ballot)[A-Za-z0-9_]*[^\n]{0,120}?(?:^|[^A-Za-z0-9_])(?:add_check_constraint|check_constraint|CONSTRAINT_NAME|CONSTRAINT|constraint)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:(?:[A-Z][A-Z0-9_]*)?VOTES_MIN|(?:[A-Z][A-Z0-9_]*)?MIN_VOTES|(?:[A-Z][A-Z0-9_]*_)?MIN_(?:VOTERS|PARTICIPANTS|RESPONSES)|participation_status_votes_min|min_votes|minimum_votes|minimum_voters|minimum_participants|minimum_respondents|disclosure_threshold|DISCLOSURE_THRESHOLD|k_anonymity|kAnonymity|KAnonymity|K_ANONYMITY[A-Z0-9_]*|k_anonymity[a-z0-9_]*)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:anonymous|anonymised|anonymized|detached|ballot)[A-Za-z0-9_]*(?![A-Za-z0-9_])[^\n]{0,100}?(?:^|[^A-Za-z0-9_])(?:last_read_at|read_receipt|readReceipt|search_index|searchable|search_data|indexable|reindex|export|exports|serializer|serialize|serialise|notification|notify|timeline|chatbot)
+    - (?:^|[^A-Za-z0-9_])(?:last_read_at|read_receipt|readReceipt|search_index|searchable|search_data|indexable|reindex|export|exports|serializer|serialize|serialise|notification|notify|timeline|chatbot)[A-Za-z0-9_]*[^\n]{0,100}?(?:^|[^A-Za-z0-9_])(?:anonymous|anonymised|anonymized|detached_anonymous)
+    - (?:ballot[ _-]to[ _-]voter|voter[ _-]to[ _-]ballot|vote[ _-]to[ _-]voter|BALLOT[ _-]TO[
+      _-]VOTER|unlinkab(?:ility|le|ly)|[Uu]nlinkab|UNLINKAB)
+    - (?:^|[^A-Za-z0-9_])create_table[
+      \t]+[:'"]?[A-Za-z0-9_]*(?:ballot|anonymous)[A-Za-z0-9_]*[^\n]{0,80}?id:[
+      \t]*(?::uuid|false)(?![A-Za-z0-9_])
+  match_without:
+    - ^\s*(?:\*|//|/\*|<!--|<%#)
+context_questions:
+  - "MANDATORY, AND IT IS THE QUESTION THE RULE EXISTS FOR: WHAT EXACTLY IS DECLARED, AND WHERE IS
+    THE DECLARATION? Find the product's own statement of the property - an in-repo specification, a
+    help page, a tooltip shown at the moment of submission, a privacy policy paragraph - and quote
+    it. Then say precisely what it claims: that the controller cannot link submission to person,
+    that other participants cannot, that administrators cannot, or that the claim is bounded (many
+    such specifications state openly that an operator with raw database access is NOT protected
+    against). A finding here is the distance between that claim and the schema, so the claim has to
+    be written down first."
+  - DOES THE SCHEMA ACTUALLY SEVER, OR ONLY HIDE? Open the migration or DDL and answer three things
+    separately. (a) Is there any column, join table or foreign key that holds submitter and
+    submission together? (b) Does the submission row carry a timestamp, a sequence, an
+    auto-incrementing id or any other ordering that could be aligned with a participation record?
+    (c) Is there a database constraint enforcing the severance, or only application code that could
+    be bypassed by the next feature? A schema with a nullable link column that the application
+    happens not to fill is HIDING, not severing, and that difference is the finding.
+  - "WALK THE CORRELATION CHANNELS ONE BY ONE AND SAY WHICH ARE CLOSED. This is the audit the rule
+    exists to prompt, and it cannot be done from a single matched line. At minimum: read receipts
+    and last-read timestamps; search indexing of the submitted content; user-facing exports and
+    administrative exports; backup and portability archives; notifications and activity feeds;
+    live-update or websocket payloads; participation counts and quorum displays; and any move, merge
+    or re-parent operation that could carry a row into a context where its neighbours identify it.
+    For each, quote the code that suppresses it or record that nothing does."
+  - "IS THE THRESHOLD REAL, AND IS IT ENOUGH FOR THIS DEPLOYMENT? Where a minimum-participants
+    constant gates a disclosure, quote its value and find every read path that consults it -
+    including after the poll or survey closes, which is the case commonly missed. Then ask the
+    operator-facing question the code cannot answer: how large are the groups in the actual
+    deployment? A threshold of three is a different protection in a group of four than in a group of
+    four hundred, and a small group can defeat the severance by arithmetic alone."
+  - WHO IS THE THREAT MODEL AGAINST, AND DOES THE RECORD SAY SO? Most such designs protect
+    participants from each other and from the coordinator, and explicitly do NOT protect against an
+    operator with database or backup access, or against correlation inside a single transaction.
+    That is a legitimate design; what is not legitimate is a user-facing statement that implies
+    more. Compare the in-repo threat model with the words shown to the person at the moment they
+    submit, and report the gap. This is declaration-reconciliation material and it should be
+    recorded as such.
+  - GIVEN THE ANSWERS ABOVE, WHAT DOES THE PRODUCT OWE UNDER ART. 11 AND ART. 15 TO 20? If the
+    severance genuinely holds, the controller cannot identify the submitter and Art. 11(2) means the
+    access, rectification and erasure rights do not apply to the severed submission unless the
+    person supplies information enabling identification - and the product should be able to explain
+    that to someone who asks, rather than reporting a successful erasure it did not perform. If the
+    severance does NOT hold, the submissions are ordinary personal data and every right applies to
+    them in full. Say which of the two situations this deployment is in, and quote the evidence.
+evidence_template: "{file}:{line} matched a schema-level severance of a person from what they
+  submitted, a declared minimum-participants threshold, a suppression site, or the product's own
+  statement of an unlinkability property. THAT IS THE WHOLE OF WHAT IS ESTABLISHED. THIS IS NOT A
+  REPORT THAT SOMETHING IS SAFE, AND IT IS NOT A MITIGATION CREDIT: it is the observation that this
+  product has made a claim about what it cannot do, and a claim that does not hold is worse than no
+  claim, because people submit things on the strength of it. EIGHT SHAPES REACH THIS RULE. (i) The
+  severed store by name - the strongest, because a table named for anonymous ballots beside a table
+  naming the electorate IS the construct. (ii) An anonymity-mode column or enum, which says a given
+  row may be severed or not and which a reader must consult to know which. (iii) A database check
+  constraint naming an anonymity mode - the strongest kind of declaration, because the database
+  itself refuses. (iv) A declared minimum-participants threshold, which is the k of a k-anonymity
+  claim written into code. (v) and (vi) A suppression site - an anonymity word beside a read,
+  search, export, serialisation or notification word - THE LOOSEST GROUP, which also reaches
+  ordinary conditionals mentioning anonymity. (vii) The declared property in the product's own
+  prose; this rule deliberately reads documentation paths, because the declaration is half the
+  construct. (viii) The severance written in DDL as a UUID-keyed or primary-key-less table. WHAT
+  THIS DETECTOR DOES NOT ESTABLISH: that the declared unlinkability holds in the deployed build.
+  That is decided by walking the correlation channels in context question 3 - receipts, search,
+  exports, backups, notifications, live updates, participation counts, thread moves - and by nothing
+  else."
+remediation_template: |
+  Do not record this as a mitigation. Record it as a declared property with an audit attached.
+  Write down the claim first, in the product's own words and from the place the person actually sees
+  it at the moment they submit (context question 1), then check the schema against it: a nullable
+  link column the application happens not to fill is hiding rather than severing, and a severance
+  with no database constraint behind it survives only until the next feature.
+  Walk every correlation channel in context question 3 and record, for each, the code that closes it
+  or the fact that nothing does. Read receipts, search indexing, exports and backups, notifications
+  and live updates, and participation or quorum counts are the ones that recur; a move or merge
+  operation that carries a row into a new context is the one most often missed.
+  Where a minimum-participants threshold exists, state its value and state the group sizes in the
+  deployment beside it. A threshold protects nobody in a group barely larger than itself, and that
+  is an operator fact rather than a code fact.
+  State the threat model explicitly and honestly, including whom it does NOT protect against.
+  Where the design does not protect against an operator with database or backup access - which is
+  usual and legitimate - make sure no user-facing wording implies otherwise. That comparison is
+  declaration-reconciliation work and belongs in that record.
+  Settle the Art. 11 consequence before answering any request. If the severance holds, say plainly
+  that the controller cannot identify the submitter and cannot act on the submission, rather than
+  reporting an erasure that did not happen. If it does not hold, treat the submissions as ordinary
+  personal data and apply Arts. 15 to 20 to them in full.
+data_categories:
+  - user.account
+  - user.content
+  - user.behavior
+fingerprint_spec: project
+reading_class:
+  class: existence
+  elements:
+    - name: joint_link
+      question: 2
+      text: (a) any column, join table or foreign key that holds submitter and submission together
+    - name: ordering_signal
+      question: 2
+      text: (b) a timestamp, a sequence, an auto-incrementing id or any other ordering that could be
+        aligned with a participation record
+    - name: database_constraint
+      question: 2
+      text: (c) a database constraint enforcing the severance, or only application code that could be
+        bypassed by the next feature

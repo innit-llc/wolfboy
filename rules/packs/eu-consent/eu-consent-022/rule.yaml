@@ -1,0 +1,257 @@
+id: eu-consent-022
+pack: eu-consent
+short_name: Data stored on the visitor's device (cookie or storage)
+problem_line:
+  text: Non-essential data stored on device, no consent check found
+fix_line: Write this value only after recorded consent, unless it is strictly necessary for the
+  service the user asked for.
+title: Value written to the visitor's terminal equipment - Web Storage, IndexedDB or a cookie
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "ePrivacy Directive 2002/58/EC, Art. 5(3) as amended by Directive 2009/136/EC, quoted from the
+      consolidated Official Journal text at CELEX 02002L0058-20091219. The paragraph opens: 'Member
+      States shall ensure that the storing of information, or the gaining of access to information
+      already stored, in the terminal equipment of a subscriber or user is only allowed on condition
+      that the subscriber or user concerned has given his or her consent, having been provided with
+      clear and comprehensive information, in accordance with Directive 95/46/EC, inter alia, about
+      the purposes of the processing.' TWO THINGS IN THAT SENTENCE DECIDE THE WHOLE SHAPE OF THIS
+      RULE. First, what brings the Article into play is THE STORING, or the gaining of access to
+      what is already stored - not what the stored value means, not whether it identifies anybody,
+      and not whether it is a cookie: 'information' is the word the text uses and 'terminal
+      equipment' is the place, so a preference, a theme, a dismissal flag and a tracking identifier
+      are all inside the trigger. That is why this rule matches the WRITE and reads no key name.
+      Second, the paragraph carries its own exemption in its next sentence, and THAT limb is decided
+      entirely by purpose: 'This shall not prevent any technical storage or access for the sole
+      purpose of carrying out the transmission of a communication over an electronic communications
+      network, or as strictly necessary in order for the provider of an information society service
+      explicitly requested by the subscriber or user to provide the service.' The exemption is
+      written as a SOLE PURPOSE for the first limb and as STRICT NECESSITY for the second, and both
+      are narrow: a store that is convenient is not strictly necessary, and a store that serves two
+      purposes at once is not a sole purpose. So the trigger is the write and the exemption is the
+      purpose - a split this rule cannot resolve from a line of code and does not try to, which is
+      what the evidence template and context_questions[0] hand to the reader."
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-08-28
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) and Art. 4. Art. 2(5) replaces Art. 5(3) of Directive
+      2002/58/EC, and the replacement is what turned a right to refuse into a requirement of prior
+      consent: the 2002 wording required only that the user be offered the right to refuse the
+      storage, and the wording quoted in entry 1 is the replacement. Art. 4 sets the Member State
+      transposition deadline at 25 May 2011, which is what `effective_date` records. Reference only:
+      the operative text is quoted at entry 1, and the national transposition rather than the
+      Directive is what binds a controller."
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: EDPB Guidelines 2/2023 on the technical scope of Art. 5(3) of the ePrivacy Directive, Version
+      2.0, adopted 7 October 2024. Three parts of it bear directly on this rule and none of them is
+      quoted here as verified text, because this tool does not fetch EDPB documents. Para. 44 treats
+      a web browser's local storage as information stored in the terminal equipment, which is what
+      puts `localStorage` and `sessionStorage` inside Art. 5(3) on the same footing as a cookie
+      rather than outside it. Section 3.5 and para. 63 treat client-side code instructing the
+      browser to send a stored identifier as a gaining of access within the Article, which is why a
+      READ is inside the duty even though this rule does not report reads. And the Guidelines are
+      clear that the technology is irrelevant to the trigger - the Article is not a cookie rule -
+      which is the proposition this rule's whole design rests on. Reference only, and the operative
+      test is the Directive text at entry 1.
+    url: https://www.edpb.europa.eu/our-work-tools/our-documents/guidelines/guidelines-22023-technical-scope-art-53-eprivacy-directive_en
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2011-05-25
+sunset: null
+superseded_by: null
+severity: medium
+rule_confidence: 0.72
+detector:
+  engine: builtin-regex
+  shared_vocabulary:
+    - web_storage_writers
+    - cookie_writers
+  match:
+    - (?<![\w$])setItem[ \t]*\(
+    - (?:localStorage|sessionStorage)[ \t]*(?:\.[ \t]*[A-Za-z_$][\w$]*|\[[^\]\n]{1,80}\])[ \t]*=(?!=)
+    - document[ \t]*\.[ \t]*cookie[ \t]*=(?!=)
+    - (?<![\w$.])(?:setcookie|set_cookie|SetCookie|setrawcookie)[
+      \t]*\(|(?<![\w.])(?:res|reply|response|ctx|c|w|conn|Plug\.Conn|Conn)[ \t]*(?:\.|->)[
+      \t]*(?:cookie|setCookie|SetCookie|set_cookie|put_resp_cookie)[ \t]*\(|(?<![\w$.])[Cc]ookies[
+      \t]*\.[ \t]*[Ss]et[ \t]*\(|cookieStore[ \t]*\.[ \t]*set[ \t]*\(|http\.SetCookie[ \t]*\(
+    - (?<![\w$])indexedDB[ \t]*\.[ \t]*open[ \t]*\(|\.[ \t]*createObjectStore[ \t]*\(|\.[
+      \t]*transaction[ \t]*\([^\n]{0,60}?["'`]readwrite["'`]
+    - (?<![\w$])(?&web_storage_writers)[ \t]*\(
+    - (?<![\w.])(?&cookie_writers)[ \t]*(?:\.|->)[
+      \t]*(?:cookie|setCookie|SetCookie|set_cookie|put_resp_cookie)[ \t]*\(
+    - (?<![\w$.])(?&cookie_writers)(?<=[({])|[.>][ \t]*(?&cookie_writers)(?<=addCookie)[ \t]*\(
+    - (?<![\w$])(?:from|require|import)[ \t]*\(?[
+      \t]*["'](?:(?:pinia-plugin-persistedstate|vuex-persistedstate|redux-persist)(?:/[\w./-]*)?|zustand/middleware)["']|(?<![\w$])(?:piniaPluginPersistedstate|createPersistedState|persistReducer|persistStore)[
+      \t]*[(,)]|^[ \t]*["']?persist["']?[ \t]*:[ \t]*(?:true|\{)
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|<%#|--)
+context_questions:
+  - "MANDATORY, and it is the question the whole finding exists to raise: IS THIS STORAGE STRICTLY
+    NECESSARY IN ORDER TO PROVIDE A SERVICE THE USER EXPLICITLY REQUESTED? ePrivacy Art. 5(3)
+    attaches the consent requirement to the STORING, and then exempts storage whose SOLE purpose is
+    carrying out the transmission of a communication, or that is STRICTLY NECESSARY for a service
+    the subscriber or user explicitly requested. Both limbs are narrow and neither is satisfied by
+    convenience. Work through it in this order. What is stored - read the key and the value at the
+    call site, and follow the value back to where it is computed. Who asked for it - is the storage
+    a consequence of something the user did, or does it happen on arrival? What breaks without it -
+    if the answer is that a preference resets, that is a strong case for the exemption; if the
+    answer is that a measurement is lost, it is not. Report the answer as one of three: within the
+    exemption and why, outside it and why, or needs_human because the purpose is not readable from
+    the code."
+  - IS A CONSENT DECISION CHECKED BEFORE THIS LINE RUNS? The detector does not look, and a write
+    inside a consent gate matches exactly like one outside it. Quote the call path from the entry
+    point to this line and say whether any consent state is read on the way. If a consent management
+    platform is present, name it and say whether this write is registered with it or bypasses it. If
+    the write is unconditional, say so plainly. Where the storage turns out to be within the
+    strict-necessity exemption, this question does not arise and you should say that instead of
+    answering it.
+  - "DOES THIS CODE RUN IN A VISITOR'S BROWSER? The same call text is a write to terminal equipment
+    when a browser executes it and nothing at all when it does not. Four cases occur and they are
+    not equivalent: executing application code, a code sample inside published documentation, a
+    server-rendered snippet that may never be emitted, and a native or desktop shell where the
+    device is the user's but the 'terminal equipment of a subscriber or user' analysis differs. Say
+    which this is. For a server-side cookie call, say whether the response it writes to is actually
+    sent on this path."
+  - "WHAT IS THE LIFETIME, AND WHAT ELSE CAN READ IT? Web Storage has no expiry at all - a value
+    written there persists until the code or the user removes it, which is a longer retention than
+    most cookies and is worth stating in the finding. For a cookie, read the attributes on the call
+    and report `max-age` or `expires`, `Domain`, `Path`, `SameSite` and whether it is `HttpOnly`.
+    Then say what else on the origin can read the value: any script on the page can read Web
+    Storage, and a cookie without `HttpOnly` is readable by script too. Neither fact decides Art.
+    5(3), and both belong in the finding because they are what a reader needs to judge
+    proportionality and to answer the storage-limitation question separately."
+  - IS THE SAME VALUE ALSO WRITTEN SOMEWHERE THIS RULE DID NOT MATCH? A product usually writes the
+    same preference through one helper and reads it in twenty places, so a single candidate can be
+    the whole of a storage surface or one call of many. Find the wrapper if there is one, name every
+    caller, and say how many distinct KEYS the surface writes. Where the key is computed rather than
+    literal - a domain-scoped key, a per-site key, a key built from a subscription id - resolve the
+    template and report the shape of the key rather than a single example, because the finding
+    otherwise understates what is stored.
+evidence_template: "{file}:{line} WRITES A VALUE INTO A STORE THAT LIVES ON THE VISITOR'S DEVICE.
+  That act, and not the meaning of the value, is what ePrivacy Art. 5(3) attaches its consent
+  requirement to: the paragraph speaks of the storing of information, or the gaining of access to
+  information already stored, in the terminal equipment of a subscriber or user. WHAT WAS
+  ESTABLISHED depends on which clause matched. A `setItem(` CALL establishes a Web Storage write in
+  the API's own vocabulary - and the receiver is deliberately NOT part of the pattern, because most
+  projects write through a wrapper of their own, so the line by itself does not establish that the
+  receiver is Web Storage: any object carrying a method of that name, such as a cache or a Map
+  wrapper, satisfies it. Read the receiver. A PROPERTY OR SUBSCRIPT ASSIGNMENT ON `localStorage` OR
+  `sessionStorage` establishes the receiver and the write together. AN ASSIGNMENT TO
+  `document.cookie` establishes a cookie written from script and has no other meaning. A SERVER-SIDE
+  COOKIE-SETTING CALL establishes that the response is being told to set a cookie, which lands on
+  the same device; whether the response is sent on this path is not established. AN INDEXEDDB
+  DATABASE OR OBJECT-STORE CREATION establishes that durable space is provisioned on the device, and
+  not that anything has been put into it. WHAT WAS NOT ESTABLISHED, and the first of these is the
+  whole point of the finding. FIRST, WHETHER CONSENT WAS NEEDED. The same paragraph exempts storage
+  whose sole purpose is carrying out the transmission of a communication, and storage strictly
+  necessary in order for the provider of an information society service explicitly requested by the
+  user to provide the service. A dismissal flag, a theme, a page-size preference and a tracking
+  identifier are all writes to terminal equipment and the exemption reaches some of them and not
+  others; the difference is PURPOSE, which is not readable from this line and which
+  context_questions[0] asks first. SECOND, WHETHER CONSENT WAS OBTAINED: the detector does not look
+  for a consent gate, and a write wrapped in one matched exactly like a write that is not. THIRD,
+  WHETHER THIS CODE RUNS AT ALL - this rule carries no path exclusion of its own, so a code sample
+  in published documentation matched exactly as executing code did. FOURTH, WHAT ELSE IS STORED: a
+  product usually writes many keys through one helper, and one candidate may be one call of twenty.
+  THIS RULE REPORTS WRITES ONLY. A read - `getItem`, a subscript in a condition - is inside Art.
+  5(3) as a gaining of access and is deliberately not matched here, and `removeItem` is matched by
+  nothing because deleting a key neither stores nor accesses anything. A COOKIE DELETION IS AN
+  EXCEPTION TO THAT LAST SENTENCE, AND THE REASON IS MECHANICAL RATHER THAN A DIFFERENT VIEW OF ART.
+  5(3). There is no `removeCookie` operation: the only way to delete a cookie is to WRITE one, with
+  an empty value or an expiry in the past, so `setcookie('CATS_SP_TEMP_FILE', '')` and
+  `document.cookie = \"a=; expires=Thu, 01 Jan 1970 00:00:00 GMT\"` are writes to terminal equipment
+  on their face, and this rule reports them as such - two of the fifty-seven locations it raises
+  over the corpus it was built against are of that class. Web Storage differs only in that its API
+  gives deletion its own name, so the line itself says which operation it is; the cookie API does
+  not, so the line cannot say and the reader must. IF THIS LINE WRITES AN EMPTY VALUE OR AN EXPIRY
+  IN THE PAST, SAY SO AND SAY WHAT IT IS FOR. A deletion is how a product HONOURS a withdrawal of
+  consent, and recording it as a storage candidate without reading it would put a compliance
+  mechanism in a finding about storage; an expiry in the past is also how a cookie is rotated, and
+  the two are one character apart. ADDED 2026-09-08. A SERVER-SIDE COOKIE-SETTING CALL, described
+  above as though it were one statement, MAY BE TWO. In the Java Servlet convention the cookie is
+  CONSTRUCTED on one line - `new Cookie(name, value)`, `Cookie.cookie(name, value)`, `new
+  HttpCookie(`, `NewCookie(`, or Go's `&http.Cookie{...}` struct literal - and handed to a
+  separately named write, `response.addCookie(cookie)`, ten lines later or in another method. EITHER
+  HALF NOW MATCHES ON ITS OWN, and which half you are holding changes what has been established. On
+  the WRITE half the finding is what it has always been: the response is being told to set a cookie.
+  On the CONSTRUCTION half it is weaker - a cookie VALUE has been built here, and whether it is ever
+  written to a response is not established by this line. Three kinds of construction match and only
+  the first is a write to terminal equipment: one that is handed to a write, one that is built and
+  discarded or built only to be read back by a test, and one that is built to be sent as a REQUEST
+  header to somebody else's server, which stores nothing on any visitor's device. Find the write,
+  quote it with its file and line, and if there is none, say so - the finding is then about a value
+  that was assembled and not about anything stored. ADDED 2026-09-08 AND IT IS NOT A WRITE AT ALL:
+  THE STORE MAY BE DECLARED TO PERSIST RATHER THAN WRITTEN TO. A front-end state library can be told
+  once, in a declaration, that a store's contents survive a reload - `persist: true` on a Pinia
+  store with `pinia-plugin-persistedstate` installed, `persistReducer`/`persistStore` with
+  `redux-persist`, `persist(...)` from `zustand/middleware`, `createPersistedState()` with
+  `vuex-persistedstate` - and the plugin's own runtime then calls `setItem` on every change. WHEN
+  THAT IS HOW A PRODUCT IS BUILT THERE IS NO WRITE ANYWHERE IN ITS OWN SOURCE for the clauses above
+  to match, and a search for `localStorage.` or `sessionStorage.` across the whole front end returns
+  nothing while every value in the store is on the visitor's device. What such a line establishes is
+  the DECLARATION and no more. It does not establish WHAT is stored: the store's state is declared
+  elsewhere, usually at the top of the same file, and the fields are what the finding is actually
+  about - open the store's state and list them, naming any that identify a person, and say which
+  storage backend the plugin is configured with, because these libraries default to `localStorage`
+  but every one of them can be pointed at `sessionStorage`, a cookie or an in-memory stub. ONE OF
+  THE THREE POSITIONS THIS CLAUSE MATCHES IS A HOMONYM AND IS DISCLOSED RATHER THAN EXCLUDED: a bare
+  `persist` key set to `true` at the start of a line also occurs in toast and snackbar options,
+  where it means that the message is not dismissed automatically and nothing is stored at all. Read
+  what encloses the line: if it is an argument to a notification call rather than an option of a
+  store, nothing is written to any device by it, and say so."
+remediation_template: >
+  This is a candidate for review against ePrivacy Directive 2002/58/EC Art. 5(3) as nationally
+
+  transposed, not a determination about this code. The steps below apply where the review confirms
+
+  that this storage is outside the strict-necessity exemption.
+
+
+  START BY ANSWERING THE EXEMPTION QUESTION, because for a large share of what this rule finds the
+
+  answer is that nothing needs to change. Art. 5(3) does not require consent for storage whose sole
+
+  purpose is carrying out the transmission of a communication, or that is strictly necessary in
+  order
+
+  to provide a service the user explicitly requested. A shopping basket, an authenticated session, a
+
+  security token, a load-balancing marker and a user's own explicit choice of language or theme are
+
+  the ordinary cases. Convenience is not strict necessity, and a value stored for two purposes at
+
+  once is not stored for a sole purpose.
+
+
+  WHERE THE STORAGE IS NOT EXEMPT, in order of how often each is the right change:
+
+
+  1. STORE ONLY AFTER CONSENT IS RECORDED. Move the write behind the consent decision rather than
+     writing first and deleting later - the storage has already happened by then, which is what the
+     Article prohibits.
+  2. IF THE WRITE COMES FROM AN SDK, use that SDK's consent API or opt-out configuration rather than
+     wrapping the loader, so that the vendor's own storage is gated too.
+  3. CONSIDER WHETHER THE VALUE HAS TO BE STORED ON THE DEVICE AT ALL. A preference belonging to a
+     signed-in account can live in that account's server-side record, where Art. 5(3) does not reach
+     and where it also survives a device change.
+  4. GIVE IT A LIFETIME. Web Storage has no expiry: a value written there stays until code or the
+     user removes it. Where a cookie would do, a cookie with a proportionate `max-age` is the more
+     limited instrument, and where Web Storage is right, write the expiry into the value and honour
+     it on read.
+  5. MAKE WITHDRAWAL WORK. Where consent is the basis, removing it has to remove the storage:
+     `removeItem`, `delete`, or an expired cookie, for every key the surface writes.
+
+  DO NOT read this finding as a request to stop storing preferences. Most of what it reports is a
+
+  product remembering what a person chose, and the useful outcome is usually a written answer to the
+
+  exemption question rather than a code change.
+data_categories:
+  - user.behavior
+  - user.unique_id
+  - user.device
+fingerprint_spec: file

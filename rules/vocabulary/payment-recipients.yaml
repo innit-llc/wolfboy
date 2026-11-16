@@ -1,0 +1,813 @@
+lists:
+  payment_recipients:
+    kind: recipient
+    purpose: "Payment vendors that receive personal data from the scanned product, for the rules that
+      ask who the recipients of the data are — GDPR Art. 30(1)(d)'s field (d) of the record of
+      processing activities, and the equivalent data-inventory field in US state privacy law and in
+      Japan's APPI. Every anchor is a spelling the vendor owns: an SDK package name, an import
+      specifier, a registry coordinate or an API hostname. A match is evidence that the vendor's
+      code or endpoint is named in the tree; it is not, on its own, evidence that anything was
+      disclosed to that vendor, which is what the importing rule's context questions are for."
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: Stripe — Stripe Payments Europe, Limited (Ireland)
+        legal_name: Stripe Payments Europe, Limited
+        anchors:
+          - "@stripe/stripe-js"
+          - "@stripe/react-stripe-js"
+          - "@stripe/stripe-react-native"
+          - "@stripe/terminal-js"
+          - "@stripe/stripe-terminal-react-native"
+          - "@stripe/react-connect-js"
+          - "@stripe/crypto"
+          - "@stripe/stripe-identity-react-native"
+          - "@stripe/firestore-stripe-payments"
+          - "@stripe/agent-toolkit"
+          - "@stripe/ui-extension-sdk"
+          - "@stripe/mcp"
+          - "@stripe/sync-engine"
+          - stripe/stripe-php
+          - Stripe.net
+          - com.stripe
+          - com.stripe:stripe-android
+          - com.stripe:paymentsheet
+          - com.stripe:payments-core
+          - com.stripe:stripecardscan
+          - com.stripe:financial-connections
+          - com.stripe:identity
+          - com.stripe:connect
+          - github.com/stripe/stripe-go/v82
+          - github.com/stripe/stripe-go/v83
+          - api.stripe.com
+          - js.stripe.com
+          - checkout.stripe.com
+          - hooks.stripe.com
+          - connect-js.stripe.com
+          - crypto-js.stripe.com
+          - b.stripecdn.com
+          - buy.stripe.com
+          - donate.stripe.com
+          - book.stripe.com
+          - verify.stripe.com
+          - q.stripe.com
+          - payments.stripe.com
+          - errors.stripe.com
+          - com.stripe.android
+          - github.com/stripe/stripe-go
+          - "@stripe/"
+        receives: "Checkout Session (hosted): customer_email, customer_details.email, customer_details.name,
+          customer_details.individual_name, customer_details.business_name,
+          customer_details.address, customer_details.phone, customer_details.tax_ids,
+          shipping_details, consent / consent_collection, phone_number_collection | PaymentIntent +
+          Payment Element / Elements: payment_method.billing_details.name,
+          payment_method.billing_details.email, payment_method.billing_details.phone,
+          payment_method.billing_details.address, card data tokenised in the browser by
+          js.stripe.com | Radar / fraud signals: client IP address, browser and device signals [NOT
+          established first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          Ireland || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the
+          day each document was read: Stripe Payments Europe, Limited — Ireland, as the research
+          pass recorded it; the quoted table row names the entity without stating its country —
+          named in the contracting-entity table for merchants contracting from the European Economic
+          Area, and again in the Gibraltar, Switzerland and United Kingdom row [read from
+          https://stripe.com/en-jp/legal/ssa on 2026-08-24]; Stripe Technology Europe, Limited —
+          Ireland, as the research pass recorded it; the quoted table row names the entity without
+          stating its country — named as an additional party in the European Economic Area row of
+          the same table [read from https://stripe.com/en-jp/legal/ssa on 2026-08-24]; Stripe
+          Payments UK Ltd — United Kingdom, as the research pass recorded it; the quoted table row
+          names the entity without stating its country — named as an additional party in the
+          Gibraltar, Switzerland and United Kingdom row of the same table [read from
+          https://stripe.com/en-jp/legal/ssa on 2026-08-24]; Stripe, LLC — United States, as the
+          research pass recorded it — recorded from the United States row of the same table; that
+          row falls outside the passage quoted in this entry [read from
+          https://stripe.com/en-jp/legal/ssa on 2026-08-24]; Stripe Payments Company — no country
+          was recorded for this entity in this pass — recorded as an additional United States party
+          from the same table; that row falls outside the passage quoted in this entry [read from
+          https://stripe.com/en-jp/legal/ssa on 2026-08-24]; Stripe, Inc. — United States, as the
+          research pass recorded it — named in the privacy statement as the entity complying with
+          the EU-U.S. Data Privacy Framework, so a further leg to the United States group can exist
+          behind an Irish contracting entity [read from https://stripe.com/en-jp/privacy on
+          2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT
+          OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order
+          form, the data processing agreement or the invoice that operator actually signed; where
+          none of those can be read, the answer for this field is needs_human. Do not choose a
+          candidate because it is the largest, the nearest, the one with the most familiar name or
+          the only one left. Every date above is the day that document was read and nothing in this
+          repository re-reads it, so this list ages into an INCOMPLETE list and never into a false
+          statement — a candidate may have been renamed, acquired or added since."
+        jurisdiction_source: "https://stripe.com/en-jp/legal/ssa (retrieved 2026-08-24) names, for
+          \"EEA/UK/US contracting entities\": \"European Economic Area: Austria, Belgium, ... Sweden
+          | Stripe Payments Europe, Limited | Stripe Technology Europe, Limited*   Gibraltar,
+          Switzerland, United Kingdom | Stripe Payments Europe, Limited | Stripe Payments UK Ltd*\"
+          || https://stripe.com/en-jp/privacy (retrieved 2026-08-25) names, for \"US entity and DPF
+          reliance\": \"Stripe, Inc. complies with the EU-U.S. Data Privacy Framework (\"EU-U.S.
+          DPF\"), the UK Extension to the EU-U.S. DPF, and the Swiss-U.S. Data Privacy Framework as
+          set forth by the U.S. Department of and as applicable.\" [corrected 2026-08-25: the prior
+          quote ('Stripe, Inc. (US operations, complying with EU-US Data Privacy Framework)') was
+          not present verbatim anywhere on this page (found by); re-fetched raw (not a summarising
+          fetch) and replaced with the vendor's actual DPF-compliance sentence, which supports the
+          same underlying fact (a US entity relying on the DPF for the onward transfer) - see an
+          internal record]"
+      - vendor: PayPal — PayPal (Europe) S.a r.l. et Cie, S.C.A.
+        legal_name: PayPal (Europe) S.a r.l. et Cie, S.C.A.
+        anchors:
+          - "@paypal/paypal-server-sdk"
+          - "@paypal/paypal-js"
+          - "@paypal/react-paypal-js"
+          - "@paypal/checkout-server-sdk"
+          - paypal-rest-sdk
+          - "@paypal/payouts-sdk"
+          - "@paypal/checkout-components"
+          - "@paypal/paypalhttp"
+          - "@paypal/fastlane-sdk-loader"
+          - "@paypal/accelerated-checkout-loader"
+          - "@paypal/messaging-components"
+          - "@paypal/installments"
+          - "@paypal/card-components"
+          - "@paypal/applepay-components"
+          - "@paypal/sdk-client"
+          - "@paypal/smart-payment-buttons"
+          - "@paypal/agent-toolkit"
+          - "@paypal/mcp"
+          - paypal-server-sdk
+          - paypalrestsdk
+          - paypalhttp
+          - paypal-checkout-serversdk
+          - paypal-checkout-sdk
+          - paypal-payouts-sdk
+          - paypal-sdk-rest
+          - paypal-sdk-core
+          - paypal-sdk-merchant
+          - paypal-sdk-invoice
+          - paypal-sdk-permissions
+          - paypal-sdk-buttonmanager
+          - paypal-sdk-adaptivepayments
+          - paypal-sdk-adaptiveaccounts
+          - paypal/paypal-server-sdk
+          - paypal/paypal-checkout-sdk
+          - paypal/rest-api-sdk-php
+          - paypal/paypal-payouts-sdk
+          - paypal/paypalhttp
+          - paypal/sdk-core-php
+          - paypal/merchant-sdk-php
+          - paypal/invoice-sdk-php
+          - paypal/permissions-sdk-php
+          - paypal/buttonmanager-sdk-php
+          - paypal/adaptivepayments-sdk-php
+          - paypal/adaptiveaccounts-sdk-php
+          - PayPalCheckoutSdk
+          - com.paypal.sdk
+          - com.paypal.sdk:paypal-server-sdk
+          - com.paypal.sdk:checkout-sdk
+          - com.paypal.sdk:payouts-sdk
+          - com.paypal.sdk:paypal-android-sdk
+          - com.paypal.sdk:rest-api-sdk
+          - api-m.paypal.com
+          - api-m.sandbox.paypal.com
+          - www.paypal.com
+          - www.sandbox.paypal.com
+          - www.paypalobjects.com
+          - https://www.paypal.com/sdk/js
+          - "@paypal/"
+        receives: "Orders v2 (Checkout) - payer object: payer.name, payer.emailAddress, payer.payerId,
+          payer.phone, payer.birthDate, payer.address, payer.taxInfo | Orders v2 - shipping:
+          shippingDetails.name, shippingDetails.emailAddress, shippingDetails.phoneNumber,
+          shippingDetails.address | JS SDK button (browser): the buyer authenticates on PayPal's own
+          domain; the merchant page loads www.paypal.com/sdk/js, so PayPal observes the buyer's IP
+          and user agent on every page bearing the button, whether or not a payment is started"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          Luxembourg || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on
+          the day each document was read: PayPal (Europe) S.a r.l. et Cie, S.C.A. — Luxembourg
+          (22-24 Boulevard Royal, L-2449 Luxembourg; R.C.S. Luxembourg B 118 349) — named as the
+          contracting entity for merchants in the European Economic Area [read from
+          https://www.paypal.com/ie/legalhub/useragreement-full on 2026-08-24]; PayPal, Inc. —
+          United States, as the research pass recorded it — named in the privacy statement as the
+          group's United States entity [read from https://www.paypal.com/ie/legalhub/privacy-full on
+          2026-08-24]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT
+          OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order
+          form, the data processing agreement or the invoice that operator actually signed; where
+          none of those can be read, the answer for this field is needs_human. Do not choose a
+          candidate because it is the largest, the nearest, the one with the most familiar name or
+          the only one left. Every date above is the day that document was read and nothing in this
+          repository re-reads it, so this list ages into an INCOMPLETE list and never into a false
+          statement — a candidate may have been renamed, acquired or added since."
+        jurisdiction_source: 'https://www.paypal.com/ie/legalhub/useragreement-full (retrieved 2026-08-24)
+          names, for "EEA contracting entity": "Our services are provided by PayPal (Europe) S.à
+          r.l.et Cie, S.C.A. (R.C.S. Luxembourg B 118 349) to registered users in the European
+          Economic Area." || https://www.paypal.com/ie/legalhub/useragreement-full (retrieved
+          2026-08-24) names, for "independent controllers": "you and PayPal will each be an
+          independent data controller (and not joint controllers), meaning we will each separately
+          determine the purposes and means of processing such personal data" ||
+          https://www.paypal.com/ie/legalhub/privacy-full (retrieved 2026-08-24) names, for "EEA
+          DPO/controller contact entity": "Albania PayPal (Europe) S.a.r.l. et Cie, S.C.A. 22-24
+          Boulevard Royal L-2449 Luxembourg" || https://www.paypal.com/ie/legalhub/privacy-full
+          (retrieved 2026-08-24) names, for "US entity": "PayPal, Inc. and our subsidiaries and
+          affiliated companies ("we," "our," "us," "PayPal", "PayPal corporate group") provide this
+          Privacy Statement"'
+      - vendor: Braintree (a PayPal service) — PayPal (Europe) S.a r.l. et Cie, S.C.A.
+        legal_name: PayPal (Europe) S.a r.l. et Cie, S.C.A.
+        anchors:
+          - braintree
+          - braintree-web
+          - braintree-web-drop-in
+          - "@braintree/asset-loader"
+          - "@braintree/browser-detection"
+          - "@braintree/class-list"
+          - "@braintree/destructor"
+          - "@braintree/event-emitter"
+          - "@braintree/extended-promise"
+          - "@braintree/iframer"
+          - "@braintree/sanitize-url"
+          - "@braintree/uuid"
+          - "@braintree/wrap-promise"
+          - "@braintree/jsdoc-template"
+          - braintree/braintree_php
+          - braintree/braintreehttp
+          - Braintree
+          - com.braintreepayments.gateway
+          - com.braintreepayments
+          - com.braintreepayments.gateway:braintree-java
+          - com.braintreepayments:card-form
+          - com.braintreepayments:browser-switch
+          - api.braintreegateway.com
+          - api.sandbox.braintreegateway.com
+          - payments.braintree-api.com
+          - payments.sandbox.braintree-api.com
+          - assets.braintreegateway.com
+          - js.braintreegateway.com
+          - "@braintree/"
+        receives: "Drop-in UI / Hosted Fields (braintree-web): card number, expiry, CVV and postal code
+          entered directly into Braintree-hosted iframes served from assets.braintreegateway.com,
+          tokenisation request to payments.braintree-api.com, client IP and browser signals | Server
+          SDK transaction.sale: customer first/last name, email, phone, billing address, shipping
+          address, company [NOT established first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          Luxembourg || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on
+          the day each document was read: PayPal (Europe) S.a r.l. et Cie, S.C.A. — Luxembourg
+          (22-24 Boulevard Royal, L-2449 Luxembourg; R.C.S. Luxembourg B 118 349) — named as the
+          contracting entity for Braintree in the European Economic Area; Braintree itself is not a
+          separate contracting entity there, so a record listing Braintree and PayPal as two
+          recipients lists one legal entity twice [read from
+          https://www.paypal.com/ie/legalhub/braintree/payment-services-agreement on 2026-08-24]. ||
+          WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT
+          AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing
+          agreement or the invoice that operator actually signed; where none of those can be read,
+          the answer for this field is needs_human. Do not choose a candidate because it is the
+          largest, the nearest, the one with the most familiar name or the only one left. Every date
+          above is the day that document was read and nothing in this repository re-reads it, so
+          this list ages into an INCOMPLETE list and never into a false statement — a candidate may
+          have been renamed, acquired or added since."
+        jurisdiction_source: 'https://www.paypal.com/ie/legalhub/braintree/payment-services-agreement
+          (retrieved 2026-08-24) names, for "EEA contracting entity for Braintree": "This Braintree
+          Payment Services Agreement ... is entered into by and between PayPal (Europe) S.à r.l. et
+          Cie, S.C.A. ("Braintree," "PayPal," "we" or "our"), and the entity or individual who
+          enters into this Agreement" ||
+          https://www.paypal.com/ie/legalhub/braintree/payment-services-agreement (retrieved
+          2026-08-24) names, for "regulatory notice / EEA scope": "For merchants with seats in the
+          European Union, Liechtenstein, Vatican City, Isle of Man, Guernsey, Jersey and San Marino
+          or Norway, Braintree is provided by PayPal (Europe) S.à.r.l. et Cie, S.C.A., (R.C.S.
+          Luxembourg B 118 349)" ||
+          https://www.paypal.com/ie/legalhub/braintree/payment-services-agreement (retrieved
+          2026-08-24) names, for "governing law": "The Parties choose Luxembourg law as the
+          governing law of this Agreement. The competent courts of Luxembourg City shall have
+          non-exclusive jurisdiction"'
+      - vendor: Adyen — Adyen N.V.
+        legal_name: Adyen N.V.
+        anchors:
+          - "@adyen/api-library"
+          - "@adyen/adyen-web"
+          - "@adyen/react-native"
+          - "@adyen/adyen-platform-experience-web"
+          - "@adyen/adyen-salesforce-pwa"
+          - "@adyen/kyc-components"
+          - "@adyen/openbankingsdk"
+          - "@adyen/mcp"
+          - Adyen
+          - adyen-ruby-api-library
+          - adyen/php-api-library
+          - adyen/module-payment
+          - adyen/payment
+          - adyen/adyen-shopware6
+          - adyen/adyen-shopware5
+          - adyen/adyen-magento2-expresscheckout
+          - adyen/module-hyva-checkout
+          - adyen/php-webhook-module
+          - com.adyen
+          - com.adyen:adyen-java-api-library
+          - github.com/adyen/adyen-go-api-library/v21
+          - checkout-test.adyen.com
+          - pal-test.adyen.com
+          - checkoutshopper-live.adyen.com
+          - checkoutshopper-test.adyen.com
+          - checkoutshopper-live.cdn.adyen.com
+          - checkoutanalytics-live.adyen.com
+          - balanceplatform-api-live.adyen.com
+          - balanceplatform-api-test.adyen.com
+          - management-live.adyen.com
+          - management-test.adyen.com
+          - ca-live.adyen.com
+          - ca-test.adyen.com
+          - kyc-test.adyen.com
+          - terminal-api-live.adyen.com
+          - terminal-api-test.adyen.com
+          - device-api-test.adyen.com
+          - adyenpayments.com
+          - github.com/adyen/adyen-go-api-library
+          - "@adyen/"
+        receives: "Checkout /payments (PaymentRequest): shopperEmail, shopperIP, shopperName,
+          shopperReference, shopperLocale, billingAddress, deliveryAddress, dateOfBirth,
+          telephoneNumber, socialSecurityNumber, bankAccount, browserInfo, deviceFingerprint,
+          shopperTaxInfo, accountInfo, mandate, fundOrigin | Checkout /sessions (Drop-in /
+          Components): shopperEmail, shopperIP, shopperName, shopperReference, shopperLocale,
+          billingAddress, deliveryAddress, dateOfBirth, telephoneNumber, socialSecurityNumber,
+          accountInfo, fundOrigin"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          Netherlands || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on
+          the day each document was read: Adyen N.V. — Netherlands (Simon Carmiggeltstraat 6-50,
+          1011 DJ Amsterdam; Dutch Chamber of number 34259528) — named as the contracting entity,
+          with Dutch law and the courts of Amsterdam [read from
+          https://www.adyen.com/legal/terms-and-conditions on 2026-08-24]. || WHICH CANDIDATE
+          APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN
+          ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement or
+          the invoice that operator actually signed; where none of those can be read, the answer for
+          this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: 'https://www.adyen.com/legal/terms-and-conditions (retrieved 2026-08-24) names,
+          for "contracting entity, registration and seat": "Adyen N.V., a company registered with
+          the Dutch Chamber of under number 34259528 and having its seat at Simon Carmiggeltstraat
+          6-50, 1011 DJ in Amsterdam, the Netherlands." ||
+          https://www.adyen.com/legal/terms-and-conditions (retrieved 2026-08-24) names, for
+          "governing law and forum": "governed by Dutch law ... any dispute ... shall be submitted
+          to the exclusive jurisdiction of the competent courts of Amsterdam the Netherlands" ||
+          https://www.adyen.com/policies-and-disclaimer/privacy-policy (retrieved 2026-08-24) names,
+          for "prudential supervision": "Adyen N.V. is supervised by the Dutch Central Bank as a
+          regulated bank under Dutch law." [read via summarising fetch, not raw text]'
+      - vendor: Square — Squareup International Limited
+        legal_name: Squareup International Limited
+        anchors:
+          - square
+          - "@square/web-sdk"
+          - "@square/web-payments-sdk-types"
+          - squareup
+          - square.rb
+          - square/square
+          - square/connect
+          - Square
+          - com.squareup.sdk
+          - com.squareup.sdk:point-of-sale-sdk
+          - com.squareup.sdk:register-sdk
+          - github.com/square/square-go-sdk
+          - connect.squareup.com
+          - connect.squareupsandbox.com
+          - web.squarecdn.com
+          - sandbox.web.squarecdn.com
+          - app.squareup.com
+          - com.squareup
+        receives: "Payments API CreatePayment: buyerEmailAddress, buyerPhoneNumber, billingAddress,
+          shippingAddress, customerId, customerDetails, note, verificationToken | Customers API:
+          givenName, familyName, companyName, nickname, emailAddress, phoneNumber, address,
+          birthday, note, taxIds, referenceId | Web Payments SDK (browser): card data entered into
+          Square-hosted iframes served from web.squarecdn.com; buyer IP and browser signals observed
+          by Square"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          Ireland || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the
+          day each document was read: Squareup International Limited — Ireland (70 Sir John
+          Rogerson's Quay, Dublin 2; Irish company number 583287) — named as the party the General
+          Terms of Service are an agreement with, on the Irish regional version of that document
+          [read from https://squareup.com/ie/en/legal/general/ua on 2026-08-24]; Block, Inc. — no
+          country is stated for this entity in the passage the research pass recorded — appears in a
+          copyright line rather than in any statement of who contracts; recorded by the research
+          pass as the group's United States parent [read from
+          https://squareup.com/ie/en/legal/general/ua on 2026-08-24]; Squareup Pte. Ltd. — no
+          country is stated for this entity in the passage the research pass recorded — appears in
+          the same copyright line; the document does not say which customers it contracts with [read
+          from https://squareup.com/ie/en/legal/general/ua on 2026-08-24]. || WHICH CANDIDATE
+          APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN
+          ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement or
+          the invoice that operator actually signed; where none of those can be read, the answer for
+          this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "https://squareup.com/ie/en/legal/general/ua (retrieved 2026-08-24) names, for
+          \"EEA contracting entity\": \"These General Terms of Service ('General Terms') are an
+          agreement between you ... and Squareup International Limited, a company incorporated in
+          Ireland with company number 583287 whose registered office is at 70 Sir John Rogerson's
+          Quay, Dublin 2, Ireland ('Square', 'we', 'our' or 'us').\" ||
+          https://squareup.com/ie/en/legal/general/ua (retrieved 2026-08-24) names, for \"regulator
+          and parent\": \"(c) 2026 Block, Inc., Squareup Pte. Ltd. Squareup International Limited,
+          trading as Square, is regulated by the Central Bank of Ireland.\""
+      - vendor: Klarna — Klarna Bank AB (publ)
+        legal_name: Klarna Bank AB (publ)
+        anchors:
+          - "@klarna/react-native-klarna-network-payment"
+          - "@klarna/react-native-klarna-network-messaging"
+          - "@klarna/react-native-klarna-network-core"
+          - klarna/kco_rest
+          - klarna/checkout
+          - klarna/module-kco-post-nl
+          - api.klarna.com
+          - api.playground.klarna.com
+          - api-na.klarna.com
+          - api-na.playground.klarna.com
+          - api-oc.klarna.com
+          - api-oc.playground.klarna.com
+          - x.klarnacdn.net
+          - "@klarna/"
+        receives: "Klarna Payments / Checkout session (REST): billing_address.given_name,
+          billing_address.family_name, billing_address.email, billing_address.phone,
+          billing_address.title, billing_address.street_address, billing_address.street_address2,
+          billing_address.postal_code, billing_address.city, billing_address.region,
+          billing_address.country, shipping_address (same shape), customer.date_of_birth,
+          customer.national_identification_number, order_lines (purchased items)"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          Sweden || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the
+          day each document was read: Klarna Bank AB (publ) — Sweden (Sveavagen 46, 111 34
+          Stockholm; Swedish Companies Registration Office number 556737-0431) — named as the data
+          controller of the consumer's personal data [read from
+          https://cdn.klarna.com/1.0/shared/content/legal/terms/0/en_gb/privacy on 2026-08-24];
+          Klarna Financial Services UK Limited — United Kingdom (10 York Road, London SE1 7ND;
+          Companies House number 14290857) — named as the United Kingdom entity [read from
+          https://cdn.klarna.com/1.0/shared/content/legal/terms/0/en_gb/privacy on 2026-08-24];
+          Klarna Technologies AB — Sweden (Sveavagen 46, 111 34 Stockholm; Swedish company number
+          556566-7796) — recorded by the research pass for the telecommunications offering [NOT
+          CONFIRMED FROM A DOCUMENT IN THIS PASS: the research pass recorded this entity under
+          legal_entities.other and cited no document for it, so which customers it contracts with
+          was not established]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT
+          OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order
+          form, the data processing agreement or the invoice that operator actually signed; where
+          none of those can be read, the answer for this field is needs_human. Do not choose a
+          candidate because it is the largest, the nearest, the one with the most familiar name or
+          the only one left. Every date above is the day that document was read and nothing in this
+          repository re-reads it, so this list ages into an INCOMPLETE list and never into a false
+          statement — a candidate may have been renamed, acquired or added since."
+        jurisdiction_source: 'https://cdn.klarna.com/1.0/shared/content/legal/terms/0/en_gb/privacy
+          (retrieved 2026-08-24) names, for "controller entity, registration and seat": "Klarna Bank
+          AB (publ), registered with the Swedish Companies Registration Office under company number
+          556737-0431 and with registered office at Sveavägen 46, 111 34 Stockholm" ||
+          https://cdn.klarna.com/1.0/shared/content/legal/terms/0/en_gb/privacy (retrieved
+          2026-08-24) names, for "controller role": ""Klarna", "we", "our" or "us"), is the data
+          controller of your personal data in accordance with the EU Data Protection Regulation (the
+          "GDPR") and UK data protection laws" ||
+          https://cdn.klarna.com/1.0/shared/content/legal/terms/0/en_gb/privacy (retrieved
+          2026-08-24) names, for "UK entity": "Klarna Financial Services UK Limited registered at
+          Companies House under company number 14290857, 10 York Road, London SE1 7ND, United
+          Kingdom"'
+      - vendor: Mollie — Mollie B.V.
+        legal_name: Mollie B.V.
+        anchors:
+          - "@mollie/api-client"
+          - mollie-api-python
+          - mollie-api-ruby
+          - mollie/mollie-api-php
+          - mollie/laravel-mollie
+          - mollie/laravel-cashier-mollie
+          - mollie/magento2
+          - mollie/magento
+          - mollie/oauth2-mollie-php
+          - mollie/opencart
+          - mollie/mollie-oxid
+          - mollie/mollie-oxid7
+          - mollie/reseller-api
+          - mollie/ideal-php
+          - api.mollie.com
+        receives: "Payments API create: billingEmail, billingAddress, shippingAddress, consumerName,
+          consumerAccount (IBAN), cardHolder, locale, customerId, description, dueDate"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          Netherlands || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on
+          the day each document was read: Mollie B.V. — Netherlands (Amsterdam) — named as the
+          controller, and as the entity licensed and registered with the Dutch Central Bank as an
+          electronic money institution [read from https://www.mollie.com/legal/privacy on
+          2026-08-24]; Mollie UK Ltd — United Kingdom, as the research pass recorded it — recorded
+          as the group's United Kingdom entity, an FCA payment institution with firm reference
+          number 977968 [NOT CONFIRMED FROM A DOCUMENT IN THIS PASS: the research pass recorded this
+          entity under legal_entities.uk and cited no document for it]. || WHICH CANDIDATE APPLIES
+          TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF
+          THE VENDOR. It is read from the order form, the data processing agreement or the invoice
+          that operator actually signed; where none of those can be read, the answer for this field
+          is needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: 'https://www.mollie.com/legal/privacy (retrieved 2026-08-24) names, for "entity
+          and licence": "Mollie B.V. is licensed and registered as an electronic money institution
+          with the Dutch Central Bank (relationship number: F0038). Mollie UK Ltd is licensed and
+          registered with the Financial Conduct Authority as a payment institution in the UK (FRN:
+          977968)." || https://www.mollie.com/legal/privacy (retrieved 2026-08-24) names, for
+          "controller role": "For all activities and purposes mentioned in this Privacy Statement,
+          Mollie acts as the controller as referred to in the EU General Data Protection Regulation
+          2016/679 ("GDPR") and UK GDPR." || https://www.mollie.com/legal/privacy (retrieved
+          2026-08-24) names, for "processor exception": "Mollie functions solely as a processor for
+          users of its Invoicing product. If a customer utilizes the Mollie Invoicing product, they
+          will be the exclusive controller of all processing activities related to it."'
+      - vendor: "Paddle — Paddle.com Market Limited, 30 Old Bailey, London, United Kingdom, EC4M 7AU /
+          Paddle.com Inc., 3811 Ditmars Blvd, #1071 Astoria, New York, 11105-1803, USA / Paddle
+          Payments Limited, The Academy, 42 Pearse Street, Dublin 2, D02 HV59, Ireland / Paddle.com
+          Canada Ltd, 22 Adelaide Street West, Suite 3400, Toronto, Canada"
+        legal_name: Paddle.com Market Limited / Paddle.com Inc. / Paddle Payments Limited / Paddle.com
+          Canada Ltd
+        anchors:
+          - "@paddle/paddle-node-sdk"
+          - "@paddle/paddle-js"
+          - paddle-python-sdk
+          - paddlehq/paddle-php-sdk
+          - paddlehq/openapi-validator
+          - github.com/PaddleHQ/paddle-go-sdk
+          - api.paddle.com
+          - sandbox-api.paddle.com
+          - cdn.paddle.com
+          - classic.paddle.com
+          - "@paddle/"
+          - paddle-sdk
+          - paddle_plan_id
+          - paddle_subscription_id
+          - paddle_api
+        receives: "Customer entity: email, name, locale, marketingConsent, customData | Address entity:
+          firstLine, secondLine, city, postalCode, region, countryCode | Business entity: name,
+          companyNumber, taxIdentifier, contacts | Transaction: customerId, addressId, businessId,
+          customerIpAddress"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          Ireland (Paddle Payments Limited); the group's primary entity Paddle.com Market Limited is
+          UK-established || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them
+          on the day each document was read: Paddle.com Market Limited — United Kingdom (30 Old
+          Bailey, London, EC4M 7AU) — named as one of four controllers in one list; the document
+          does not say which of the four contracts for a given merchant [read from
+          https://www.paddle.com/legal/privacy on 2026-08-24]; Paddle.com Inc. — United States (3811
+          Ditmars Blvd, #1071 Astoria, New York, 11105-1803) — named as one of four controllers in
+          the same list, with the same silence about which one contracts [read from
+          https://www.paddle.com/legal/privacy on 2026-08-24]; Paddle Payments Limited — Ireland
+          (The Academy, 42 Pearse Street, Dublin 2, D02 HV59) — named as one of four controllers in
+          the same list, with the same silence about which one contracts [read from
+          https://www.paddle.com/legal/privacy on 2026-08-24]; Paddle.com Canada Ltd — Canada (22
+          Adelaide Street West, Suite 3400, Toronto) — named as one of four controllers in the same
+          list, with the same silence about which one contracts [read from
+          https://www.paddle.com/legal/privacy on 2026-08-24]. || WHICH CANDIDATE APPLIES TO A GIVEN
+          OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR.
+          It is read from the order form, the data processing agreement or the invoice that operator
+          actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: 'https://www.paddle.com/legal/privacy (retrieved 2026-08-24) names, for "the
+          four controller entities and their addresses": "There are several Paddle entities that act
+          as Controllers for the purposes of this Privacy Notice. For the purposes of this Notice,
+          the relevant Controllers are: Paddle.com Market Limited with address at 30 Old Bailey,
+          London, United Kingdom, EC4M 7AU  Paddle.com Inc. with address at 3811 Ditmars Blvd, #1071
+          Astoria, New York, 11105-1803, USA  Paddle Payments Limited with address at The Academy,
+          42 Pearse Street, Dublin 2, D02 Hv59, Ireland  Paddle.com Canada Ltd with address at 22
+          Adelaide Street West, Suite 3400, Toronto"'
+      - vendor: Lemon Squeezy — Sold through Link, LLC (formerly known as Lemon Squeezy LLC)
+        legal_name: Sold through Link, LLC
+        anchors:
+          - "@lemonsqueezy/lemonsqueezy.js"
+          - lemonsqueezy/laravel
+          - lemonsqueezy/plain-ui-components
+          - api.lemonsqueezy.com
+          - app.lemonsqueezy.com
+          - lemonsqueezy
+        receives: "Checkout create (checkout_data): email, name, billing_address (country, zip), tax_number,
+          discount_code, custom"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          United States (Utah or Delaware — the vendor's own terms contradict; governing law is Utah
+          in both places; no EEA entity found) || CANDIDATE CONTRACTING ENTITIES, as the vendor's
+          own documents named them on the day each document was read: Sold through Link, LLC
+          (formerly known as Lemon Squeezy LLC) — United States; the vendor's own terms give two
+          different states for this one entity, a Utah limited liability company in one passage and
+          a Delaware limited liability company in another, and the governing law is Utah in both
+          places — named as the party the agreement is between; no entity established in the
+          European Economic Area was found in this pass [read from
+          https://www.lemonsqueezy.com/terms on 2026-08-24]. || WHICH CANDIDATE APPLIES TO A GIVEN
+          OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR.
+          It is read from the order form, the data processing agreement or the invoice that operator
+          actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: 'https://www.lemonsqueezy.com/terms (retrieved 2026-08-24) names, for "entity
+          name and state - version A": "is by and between Sold through Link, LLC f/k/a Lemon Squeezy
+          LLC, a Utah limited liability company ("Lemon Squeezy"), and the customer identified in
+          the signature block below" || https://www.lemonsqueezy.com/terms (retrieved 2026-08-24)
+          names, for "entity name and state - version B, CONTRADICTS version A": "UNDER WHICH YOU
+          WILL BE AUTHORIZED TO USE THE LEMON SQUEEZY SERVICE PROVIDED BY SOLD THROUGH LINK, LLC, A
+          DELAWARE LIMITED LIABILITY COMPANY ("LEMON SQUEEZY")" ||
+          https://www.lemonsqueezy.com/terms (retrieved 2026-08-24) names, for "governing law":
+          "This Agreement shall be governed by the laws of State of Utah (excluding conflicts of
+          laws provisions). The parties submit to the exclusive jurisdiction and venue of Utah State
+          and federal courts" || https://www.lemonsqueezy.com/privacy (retrieved 2026-08-24) names,
+          for "controller/processor role and data location": "We, Lemon Squeezy, located at the
+          address provided in our Contact Us section, are a Data Controller and/or Processor with
+          respect to the personal information you provide" || https://www.lemonsqueezy.com/privacy
+          (retrieved 2026-08-24) names, for "data stored in the US": "The personal information we
+          collect is stored and/or processed in United States, or where we or our partners,
+          affiliates, and third-party providers maintain facilities." ||
+          https://www.lemonsqueezy.com/privacy (retrieved 2026-08-24) names, for "trading identity":
+          "(c)2026 Sold through Link, LLC f/k/a Lemon Squeezy LLC"'
+      - vendor: Polar — Polar Software Inc.
+        legal_name: Polar Software Inc.
+        anchors:
+          - "@polar-sh/sdk"
+          - "@polar-sh/checkout"
+          - "@polar-sh/nextjs"
+          - "@polar-sh/better-auth"
+          - "@polar-sh/express"
+          - "@polar-sh/hono"
+          - "@polar-sh/fastify"
+          - "@polar-sh/elysia"
+          - "@polar-sh/astro"
+          - "@polar-sh/nuxt"
+          - "@polar-sh/remix"
+          - "@polar-sh/sveltekit"
+          - "@polar-sh/tanstack-start"
+          - "@polar-sh/supabase"
+          - "@polar-sh/ingestion"
+          - "@polar-sh/adapter-utils"
+          - polar-sdk
+          - github.com/polarsource/polar-go
+          - api.polar.sh
+          - sandbox-api.polar.sh
+          - polar.sh
+          - polar_sdk
+          - "@polar-sh/"
+        receives: "Checkout create/update: customerEmail, customerName, customerBillingAddress,
+          customerBillingName, customerIpAddress, customerTaxId, customerExternalId,
+          customerMetadata"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          United States (Delaware law; no EEA entity found) || CANDIDATE CONTRACTING ENTITIES, as
+          the vendor's own documents named them on the day each document was read: Polar Software
+          Inc. — United States; Delaware law governs and the document read gives no registered
+          address — named as the legal entity, with 'Polar' defined as Polar Software Inc. and its
+          Affiliates; no entity established in the European Economic Area was found in this pass
+          [read from https://polar.sh/legal/master-services-terms on 2026-08-24]. || WHICH CANDIDATE
+          APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN
+          ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement or
+          the invoice that operator actually signed; where none of those can be read, the answer for
+          this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: 'https://polar.sh/legal/master-services-terms (retrieved 2026-08-24) names, for
+          "legal entity": ""Polar" means Polar Software Inc. and its Affiliates" ||
+          https://polar.sh/legal/master-services-terms (retrieved 2026-08-24) names, for "governing
+          law and arbitration seat": "The seat of arbitration shall be Delaware, and Delaware law
+          (without regard to conflicts of law principles) shall govern this Agreement." ||
+          https://polar.sh/legal/privacy-policy (retrieved 2026-08-24) names, for "controller
+          statement": "Polar Software will be the controller of your Personal Data processed in
+          connection with the Services." || https://polar.sh/legal/privacy-policy (retrieved
+          2026-08-24) names, for "conflicting processor designation": "Under the GDPR, we are
+          designated as a Processor with respect to information collected or processed to provide
+          the Services. We are designated as a Controller with respect to all other information
+          collected through our website or customer-facing activities." ||
+          https://polar.sh/legal/privacy-policy (retrieved 2026-08-24) names, for "transfers outside
+          the EEA": "We may transfer to, and store the data we collect about you, in countries other
+          than the country in which the data was originally collected, including the United States,
+          Canada or other destinations outside the EEA and the UK."'
+  payment_recipients_cased:
+    kind: recipient
+    purpose: "Payment vendors whose spelling must be matched CASE FOR CASE, moved out of
+      payment_recipients above because folding their case reads an ordinary English word rather than
+      the vendor. The same question as that list — who receives personal data from the scanned
+      product, GDPR Art. 30(1)(d)'s field (d) and its equivalents — over spellings that list can no
+      longer carry: `stripe` folded matches `stripE`, the verb `strip` before a camelCase word. The
+      case forms are written out one by one because this list does not fold case, and a match here
+      is evidence that the vendor's code or endpoint is named in the tree, never on its own evidence
+      that anything was disclosed to it."
+    entries:
+      - vendor: Stripe — Stripe Payments Europe, Limited (Ireland)
+        legal_name: Stripe Payments Europe, Limited
+        anchors:
+          - stripe
+          - Stripe
+          - STRIPE
+        receives: "Checkout Session (hosted): customer_email, customer_details.email, customer_details.name,
+          customer_details.individual_name, customer_details.business_name,
+          customer_details.address, customer_details.phone, customer_details.tax_ids,
+          shipping_details, consent / consent_collection, phone_number_collection | PaymentIntent +
+          Payment Element / Elements: payment_method.billing_details.name,
+          payment_method.billing_details.email, payment_method.billing_details.phone,
+          payment_method.billing_details.address, card data tokenised in the browser by
+          js.stripe.com | Radar / fraud signals: client IP address, browser and device signals [NOT
+          established first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          Ireland || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the
+          day each document was read: Stripe Payments Europe, Limited — Ireland, as the research
+          pass recorded it; the quoted table row names the entity without stating its country —
+          named in the contracting-entity table for merchants contracting from the European Economic
+          Area, and again in the Gibraltar, Switzerland and United Kingdom row [read from
+          https://stripe.com/en-jp/legal/ssa on 2026-08-24]; Stripe Technology Europe, Limited —
+          Ireland, as the research pass recorded it; the quoted table row names the entity without
+          stating its country — named as an additional party in the European Economic Area row of
+          the same table [read from https://stripe.com/en-jp/legal/ssa on 2026-08-24]; Stripe
+          Payments UK Ltd — United Kingdom, as the research pass recorded it; the quoted table row
+          names the entity without stating its country — named as an additional party in the
+          Gibraltar, Switzerland and United Kingdom row of the same table [read from
+          https://stripe.com/en-jp/legal/ssa on 2026-08-24]; Stripe, LLC — United States, as the
+          research pass recorded it — recorded from the United States row of the same table; that
+          row falls outside the passage quoted in this entry [read from
+          https://stripe.com/en-jp/legal/ssa on 2026-08-24]; Stripe Payments Company — no country
+          was recorded for this entity in this pass — recorded as an additional United States party
+          from the same table; that row falls outside the passage quoted in this entry [read from
+          https://stripe.com/en-jp/legal/ssa on 2026-08-24]; Stripe, Inc. — United States, as the
+          research pass recorded it — named in the privacy statement as the entity complying with
+          the EU-U.S. Data Privacy Framework, so a further leg to the United States group can exist
+          behind an Irish contracting entity [read from https://stripe.com/en-jp/privacy on
+          2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT
+          OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order
+          form, the data processing agreement or the invoice that operator actually signed; where
+          none of those can be read, the answer for this field is needs_human. Do not choose a
+          candidate because it is the largest, the nearest, the one with the most familiar name or
+          the only one left. Every date above is the day that document was read and nothing in this
+          repository re-reads it, so this list ages into an INCOMPLETE list and never into a false
+          statement — a candidate may have been renamed, acquired or added since."
+        jurisdiction_source: "https://stripe.com/en-jp/legal/ssa (retrieved 2026-08-24) names, for
+          \"EEA/UK/US contracting entities\": \"European Economic Area: Austria, Belgium, ... Sweden
+          | Stripe Payments Europe, Limited | Stripe Technology Europe, Limited*   Gibraltar,
+          Switzerland, United Kingdom | Stripe Payments Europe, Limited | Stripe Payments UK Ltd*\"
+          || https://stripe.com/en-jp/privacy (retrieved 2026-08-25) names, for \"US entity and DPF
+          reliance\": \"Stripe, Inc. complies with the EU-U.S. Data Privacy Framework (\"EU-U.S.
+          DPF\"), the UK Extension to the EU-U.S. DPF, and the Swiss-U.S. Data Privacy Framework as
+          set forth by the U.S. Department of and as applicable.\" [corrected 2026-08-25: the prior
+          quote ('Stripe, Inc. (US operations, complying with EU-US Data Privacy Framework)') was
+          not present verbatim anywhere on this page (found by); re-fetched raw (not a summarising
+          fetch) and replaced with the vendor's actual DPF-compliance sentence, which supports the
+          same underlying fact (a US entity relying on the DPF for the onward transfer) - see an
+          internal record]"
+  payment_sdk_names_cra_scope:
+    kind: term
+    purpose: The payment-SDK spellings eu-cra-001 reads as evidence of commercial activity under CRA
+      Art. 3(22)'s second limb, which Recital 15 characterises by charging a price or an intention
+      to monetise. A different question from payment_recipients above, over a strict subset of the
+      same spellings.
+    entries:
+      - term: Payment SDK package or npm scope named in a dependency declaration or an import
+        anchors:
+          - "@paddle/"
+          - paddle-sdk
+          - lemonsqueezy
+          - "@polar-sh/"
+          - "@adyen/"
+          - braintree-web
+        note: "These six spellings are exactly what rules/packs/eu-cra/eu-cra-001/rule.yaml match[4] carried
+          inline before V2b, and moving them here changed that rule's matching by no character. They
+          are a strict subset of payment_recipients above, and they are written twice on purpose: a
+          rule imports a whole list and cannot import part of one, so eu-cra-001 splicing
+          payment_recipients would widen a CRA scope rule from six spellings to every anchor in the
+          table, which is a change to that rule's detection approach and not this phase's to take.
+          Neither copy is hand-maintained: both are projected from one declaration in the generator
+          of this file, which refuses to write this file if a spelling here is not an anchor of an
+          entry above."

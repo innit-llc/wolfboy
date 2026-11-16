@@ -1,0 +1,392 @@
+checklist_id: dsa-terms-moderation-14
+title: DSA Article 14 - terms and conditions on restrictions and content moderation
+law: Regulation (EU) 2022/2065 (Digital Services Act)
+source_url: http://publications.europa.eu/resource/celex/32022R2065
+checked_at: 2026-07-28
+scope_note: "This checklist records what the project's terms and conditions say about the
+  restrictions it imposes on what recipients may provide, and about how it moderates. It does not
+  decide whether the moderation actually carried out is diligent, objective or proportionate -
+  Article 14(4) is about conduct, not about a document, and nothing here can see conduct. It leaves
+  out the two paragraphs that bind only very large platforms and search engines (14(5) and 14(6)),
+  which reach no project this pack is built for; if a project ever crosses the Article 33 threshold,
+  this checklist stops being complete for it. **The code half of this row is not built, and the
+  artefact says so where the agent reads it.** No collector yet emits user-generated-content or
+  moderation-path facts, so the code-versus-terms comparison this row exists for cannot yet be made
+  from the census: the moderation paths the gate below names are found by reading the tree, and
+  their absence from the census facts handed to the adjudicating agent is not evidence of their
+  absence from the tree. The coverage map has carried that sentence since this checklist was drafted
+  and this file carried no equivalent until 2026-09-01, which left an agent unable to tell \"this
+  tree has no moderation paths\" from \"nothing in this product looks for them\". **That is also why
+  no item below declares `census_categories`.** Under the schema an empty field says the item is
+  answered from the document alone; here it says something narrower and worth stating plainly - the
+  shared axis has eight categories, and not one of them can name a content-moderation path or
+  user-generated content, so empty is the honest declaration rather than a claim that the code has
+  nothing to say about these items. **Two documents, one verdict.** Where the terms incorporate
+  another document by reference - guidelines, community rules, a content policy - that document is
+  part of the terms and conditions for every item below, and each item takes one verdict across the
+  documents read, naming the document that answers it: where one of them answers an item and another
+  is silent, the answer stands and the reasoning says which document carried it. Where a document's
+  extracted text was flagged thin or unusable, that document cannot carry an `absent` for any item -
+  record `unresolved` and name the document, because the text never arrived."
+applicability:
+  question: "Two things have to be true before any item below is worth asking, and they are the same
+    two the contact-point checklist asks. First, is the project an intermediary service - an
+    information society service (one normally provided for remuneration, at a distance, by
+    electronic means and at the individual request of a recipient) that **transmits** information
+    provided by a recipient of the service in a communication network, or **provides access** to
+    such a network, or **caches** that information - stores it automatically, intermediately and
+    temporarily, for the sole purpose of making its onward transmission to other recipients, upon
+    their request, more efficient - or **stores** information provided by a recipient at that
+    recipient's request? **\"For remuneration\" does not mean the user pays**: a service funded by
+    advertising, or offered free of charge as part of an economic activity, is an information
+    society service. The words carried into the first two limbs on 2026-09-01 are the enacted
+    definition's own, and the sentence read \"transmits information in a network, or caches it\"
+    until then: that reads a VPN, a wireless access point or a DNS resolver out of limb (i) -
+    Recital 29's own examples of it, and a definition whose second half is the provision of access
+    to a communication network - and it reads any project with a caching tier into limb (ii),
+    including one whose cache holds the provider's own pages for its own visitors, which limb (ii)
+    does not reach because the storage there is of a recipient's information and the purpose is that
+    information's onward transmission to other recipients. Second, is it offered to recipients who
+    are established or located in the Union?"
+  quote: This Regulation shall apply to intermediary services offered to recipients of the service
+    that have their place of establishment or are located in the Union, irrespective of where the
+    providers of those intermediary services have their place of establishment.
+  cite: DSA Art. 2(1)
+  url: http://publications.europa.eu/resource/celex/32022R2065
+  checked_at: 2026-07-28
+  ask_the_user: false
+  supporting_quotes:
+    - quote: "'intermediary service' means one of the following information society services: (i) a 'mere
+        conduit' service, consisting of the transmission in a communication network of information
+        provided by a recipient of the service, or the provision of access to a communication
+        network; (ii) a 'caching' service, consisting of the transmission in a communication network
+        of information provided by a recipient of the service, involving the automatic, intermediate
+        and temporary storage of that information, performed for the sole purpose of making more
+        efficient the information's onward transmission to other recipients upon their request;
+        (iii) a 'hosting' service, consisting of the storage of information provided by, and at the
+        request of, a recipient of the service;"
+      cite: DSA Art. 3(g)
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-07-28
+      why: '**All three limbs, because Article 14 binds all three.** The first draft of this gate quoted
+        limb (iii) alone and told the agent that a service storing nothing its users supply gives
+        this checklist "nothing to ask" - which is an exclusion the Article does not contain.
+        Article 14(1) is addressed to "providers of intermediary services", and a mere conduit - a
+        VPN, a DNS resolver - stores nothing a recipient supplied and still routinely restricts what
+        may be transmitted through it. **A caching provider is not an example of storing nothing**:
+        limb (ii) is defined as temporary storage, and a content delivery network is its paradigm
+        case. Saying otherwise, as an earlier draft of this note did, would push a CDN out of the
+        limb it squarely sits in - the opposite of what this correction is for. Corrected
+        2026-07-29.'
+    - quote: "'information society service' means a 'service' as defined in Article 1(1), point (b), of
+        Directive (EU) 2015/1535;"
+      cite: DSA Art. 3(a)
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-07-28
+      why: The head of the definition above; every limb of Article 3(g) is qualified by it. Dropped from
+        the first draft of this gate, which is the same defect the contact-point checklist was
+        repaired for.
+    - quote: any Information Society service, that is to say, any service normally provided for
+        remuneration, at a distance, by electronic means and at the individual request of a
+        recipient of services.
+      cite: Directive (EU) 2015/1535, Art. 1(1)(b)
+      url: http://publications.europa.eu/resource/celex/32015L1535
+      checked_at: 2026-07-28
+      why: What "information society service" means. This is why software installed and run on the
+        customer's own premises, and an internal admin tool, are outside the definition however much
+        storing or transmitting they do.
+    - quote: information society services are not solely restricted to services giving rise to on-line
+        contracting but also, in so far as they represent an economic activity, extend to services
+        which are not remunerated by those who receive them, such as those offering on-line
+        information or commercial communications
+      cite: Directive 2000/31/EC, Recital 18
+      url: http://publications.europa.eu/resource/celex/32000L0031
+      checked_at: 2026-07-28
+      why: What "normally provided for remuneration" means. A free forum and a free social application are
+        this Article's paradigm subjects; a gate that lets them out at the first limb would report
+        nothing about the services whose terms this Article was written to reach.
+    - quote: Whether a specific service constitutes a 'mere conduit', 'caching' or 'hosting' service
+        depends solely on its technical functionalities, which might evolve in time, and should be
+        assessed on a case-by-case basis.
+      cite: DSA Recital 29
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-07-28
+      why: The classification does not turn on what the product is marketed as, and it is not a blanket
+        answer either - which limb applies is decided case by case, and any of the three puts the
+        provider inside Article 14.
+    - quote: In contrast, mere technical accessibility of a website from the Union cannot, on that ground
+        alone, be considered as establishing a substantial connection to the Union.
+      cite: DSA Recital 8
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-07-28
+      why: The limit on the territorial limb. The same recital lists what does count - language, currency,
+        a relevant top-level domain, availability in a national application store, advertising or
+        customer service in a Member State language - and most of that is visible in a repository.
+        It is the limit on a term the two definitions below state.
+    - quote: This Regulation shall not apply to any service that is not an intermediary service or to any
+        requirements imposed in respect of such a service, irrespective of whether the service is
+        provided through the use of an intermediary service.
+      cite: DSA Art. 2(2)
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-09-01
+      why: "**What this Regulation does not reach, quoted because this gate is walked against a repository
+        and a repository is not a service.** The paragraph beside the primary quote above was
+        missing from this gate until 2026-09-01. It matters wherever one project ships more than one
+        thing: a service that is not an intermediary service is outside the Regulation, and so are
+        requirements imposed in respect of it, whether or not it is delivered over an intermediary
+        service. So the answer to the first limb names which service is the intermediary one, and
+        the items below are read against that service's terms."
+    - quote: "'to offer services in the Union' means enabling natural or legal persons in one or more
+        Member States to use the services of a provider of intermediary services that has a
+        substantial connection to the Union;"
+      cite: DSA Art. 3(d)
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-09-01
+      why: The enacted definition of the territorial limb, which this gate quoted the limit on and never
+        stated until 2026-09-01. Recital 8 above says what a substantial connection to the Union is
+        not; this is the term it is about, and the standing premise stands in for the answer to
+        *this* test rather than for a bare question about Union visitors.
+    - quote: "'substantial connection to the Union' means a connection of a provider of intermediary
+        services with the Union resulting either from its establishment in the Union or from
+        specific factual criteria, such as: - a significant number of recipients of the service in
+        one or more Member States in relation to its or their population; or - the targeting of
+        activities towards one or more Member States;"
+      cite: DSA Art. 3(e)
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-09-01
+      why: "The threshold Article 3(d) refers to, in the Regulation's own words: establishment in the
+        Union, or the factual criteria listed here. Quoted for the same reason as Article 3(d) - a
+        gate that quotes what does not establish a substantial connection, and never what does,
+        hands a reader a limit on a concept it does not state."
+  when_unresolved: "Take the two limbs separately. **The service limb is answered by reading the code,
+    and any one of the three kinds is enough - by reading it, and not from the census.** No
+    collector in this product emits a user-generated-content or moderation fact, so the facts handed
+    to the adjudicating agent carry none of the constructs named below, and finding none of them
+    there says nothing about the tree: look in the tree itself. This field claimed the limb was
+    \"answered from the code\" with no such caveat until 2026-09-01, on a checklist whose own
+    coverage row records that the code half is not built. Storage of information supplied by users
+    at their request - posts, comments, uploaded files, shared documents - is limb (iii) and is
+    visible in a schema, an upload route or a storage bucket. Transmission of information provided
+    by a recipient, or the provision of access to a network, is limb (i): a proxy, a relay, a
+    messaging transport, a VPN, a DNS resolver. Automatic, intermediate and temporary storage of a
+    recipient's information, performed for the sole purpose of making that information's onward
+    transmission to other recipients upon their request more efficient, is limb (ii): a content
+    delivery network or a caching tier in front of someone else's content. A cache holding the
+    provider's own content for the provider's own pages is not limb (ii) on any reading - both
+    halves of the definition are load-bearing, the information stored has to be a recipient's and
+    the purpose has to be its onward transmission to other recipients. **Do not record \"nothing to
+    ask\" because the service stores nothing a recipient supplied** - Article 14 binds all three,
+    and a conduit's terms routinely restrict what may be transmitted through it. Note that a caching
+    service does store: limb (ii) is defined as temporary storage, so a content delivery network is
+    inside limb (ii) rather than being an example of storing nothing. Then look for what this
+    checklist is really about, which is the *other* half of the same code: the paths that restrict
+    what recipients provide. Deletion, hiding, demotion, suspension, banning, shadow-banning,
+    automated classification, a moderation queue, a report handler, an appeal endpoint, an
+    acceptable-use enforcement job. **Those paths existing is what makes the items below
+    answerable**, and their existence in code while the terms say nothing is exactly the mismatch
+    this row is built to surface. Look for them by reading the tree, for the reason given at the
+    head of this field, and read a fact the census filed elsewhere for what it is: a deletion path a
+    moderator invokes is retention to the collector that found it and an Article 14(1) measure here,
+    and the collector's label is not this Article's. What is genuinely outside is a service that is
+    not an information society service at all - software installed and run on the customer's own
+    premises, an internal tool - and information the operator records about its own activity rather
+    than information a recipient provided. **Those are worked examples and not the test**, and a
+    real corpus produces shapes neither of them fits: a browser extension with a hosted backend, a
+    service whose users' input is an instruction to it rather than material kept for them. Where no
+    example fits, run Article 3(g)'s three definitions against what the service actually does with
+    what its users supply, and note two things that are not ways out - storage kept for the
+    recipient is limb (iii) whether or not anybody else can read it, and what the service is
+    marketed as decides nothing (Recital 29). **Which service, where a project ships more than
+    one.** Article 2(2), quoted above, puts a service that is not an intermediary service outside
+    this Regulation, together with requirements imposed in respect of it, whether or not it is
+    delivered over an intermediary one. So a repository carrying a user-generated-content forum
+    beside a business application that stores nothing its users supply owes Article 14 for the
+    forum: name which service the answer is about, and read the items below against that service's
+    terms rather than against everything the project publishes. The territorial limb **is settled by
+    the pack's standing premise**: running the EU pack is treated as the statement that the service
+    is offered into the Union, so do not ask about Union recipients; Recital 8 stays quoted because
+    it is what the premise stands in for, and Article 3(d) and Article 3(e) - quoted beside it since
+    2026-09-01 - are the test it stands in for: offering services in the Union means enabling
+    persons in one or more Member States to use a service whose provider has a substantial
+    connection to the Union, and that connection is establishment in the Union or the factual
+    criteria Article 3(e) lists. Where the service limb stays unsettled, record the gate as
+    unresolved, name what was missing, and say that Article 14 was not examined: the seven items
+    below are then not walked and none of them is recorded as answered, because a skipped check
+    prints the same as a passed one. Do not guess in either direction. **On size**: nothing in the
+    Regulation exempts anyone from Article 14. Do not reach that from where the Article sits: the
+    verified contact-point checklist records that Article 15(2) exempts micro and small enterprises
+    from a duty in the same Section 1, so \"Section 1 has no size exemptions\" is false. The three
+    size exclusions this Regulation has - Article 15(2), Article 19(1) for Section 3 except Article
+    24(3), and Article 29 for Section 4 - are each written out, and none of them reaches Article 14.
+    Paragraphs 14(5) and 14(6) bind only very large online platforms and search engines and are
+    deliberately not in this list."
+items:
+  - id: art-14-1-restrictions-stated
+    article: 14(1)
+    quote: Providers of intermediary services shall include information on any restrictions that they
+      impose in relation to the use of their service in respect of information provided by the
+      recipients of the service, in their terms and conditions.
+    cite: DSA Art. 14(1)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Do the terms state what restrictions the provider imposes on the information recipients
+      may provide?
+    applicability_note: 'This is the base limb: what may not be posted. Almost every set of terms has
+      something here, so the useful judgement is whether it describes restrictions on *user-provided
+      information* rather than on conduct generally. A prohibition on "abusing the service" is not a
+      statement about information; a list of prohibited content is.'
+  - id: art-14-1-moderation-described
+    article: 14(1)
+    quote: That information shall include information on any policies, procedures, measures and tools
+      used for the purpose of content moderation, including algorithmic decision-making and human
+      review, as well as the rules of procedure of their internal complaint handling system.
+    cite: DSA Art. 14(1)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Do the terms describe the policies, procedures, measures and tools used for content moderation?
+    applicability_note: "Saying that content \"may be removed\" is a restriction, not a description of
+      how moderation works. This item asks for the second. It is the item most often absent in an
+      otherwise complete set of terms, and the one most likely to be contradicted by the code: a
+      repository with a moderation queue, a classifier and a ban path, whose terms describe none of
+      it, is the finding this row exists for. **On the quote**: it is the whole of Article 14(1)'s
+      second sentence, and this item is about the words before *including*. The words after them
+      belong to the two items that follow - algorithmic decision-making and human review to
+      `art-14-1-algorithmic-and-human`, the internal complaint-handling system to
+      `art-14-1-complaint-procedure` - so do not mark this item down for a missing complaint
+      procedure that the item after next asks about, and do not let this item's verdict answer for
+      either of them. The sentence is quoted whole rather than cut at *including* because the short
+      forms of it recur elsewhere in the instrument, and a receipt that locates a quote in a recital
+      when the item cites an Article is a citation nobody can check; the sibling item's note records
+      the same reason for the same choice. This note said none of that until 2026-09-01, on the item
+      whose quote over-reaches furthest. **When `partial` is the word**: where the terms name a step
+      or a measure without describing how moderation works - \"reported content is reviewed\", and
+      nothing about what happens next - record `partial` and quote it. That is the commonest honest
+      answer on real terms, and this item offered only a present-or-absent contrast until 2026-09-01
+      while `art-14-1-algorithmic-and-human`, the item after it, carried the `partial` instruction.
+      A right reserved (\"we may remove any content at our discretion\") is a restriction rather
+      than a description, so it does not lift this item off `absent` by itself."
+  - id: art-14-1-algorithmic-and-human
+    article: 14(1)
+    quote: used for the purpose of content moderation, including algorithmic decision-making and human
+      review, as well as the rules of procedure of their internal complaint handling system.
+    cite: DSA Art. 14(1)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Do the terms describe the part algorithmic decision-making plays in moderation and the
+      part human review plays - which decisions are taken which way, and at what stage?
+    applicability_note: '**The paragraph asks for information on the tools, not for a yes-or-no
+      disclosure**, and an earlier draft of this question asked only whether decisions are
+      automated, human or both. A sentence saying "some decisions are automated" answers that binary
+      and still tells a recipient nothing about which decisions or at what stage; record it as
+      partial and quote it. This item is separated from the one above because it is the limb the
+      code can most often contradict on its own: an automated classifier, a spam filter, a scoring
+      model or a third-party moderation API in the repository, with terms that mention no automated
+      decision-making at all, is a concrete mismatch a reader can check. The reverse also counts:
+      terms promising human review where no review path exists in the code. **On the quote**: it is
+      deliberately longer than the words this item is about, because the short form ("including
+      algorithmic decision-making and human review") occurs in Recital 45 as well, and a receipt
+      that locates a quote in a recital when the item cites an Article is a citation nobody can
+      check.'
+  - id: art-14-1-complaint-procedure
+    article: 14(1)
+    quote: as well as the rules of procedure of their internal complaint handling system.
+    cite: DSA Art. 14(1)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Do the terms set out the rules of procedure of the provider's internal complaint-handling
+      system?
+    applicability_note: "Rules of procedure means how a complaint is made, what happens to it and in
+      what order - not merely that complaints are accepted. An address to write to is a contact
+      point, which is a different Article. Note that Article 20's full internal complaint-handling
+      system binds online platforms specifically; what Article 14(1) requires here is that whatever
+      system the provider has is described in the terms. Three routes, and the difference between
+      them is the whole point: **`not-applicable`** only where it is established that the provider
+      operates no internal complaint-handling system - which needs the person running the scan to
+      say so, because a report button in an application the scanner cannot see is not visible here.
+      **`absent`** where a complaint or appeal path *is* visible in the code and the terms describe
+      none of it, which is the mismatch this row exists to surface. **`unresolved`** where the
+      documents were read, they describe no such system, and nobody has said whether one exists off
+      the page - which is the commonest case and the one an earlier draft wrongly routed to
+      `not-applicable`, asserting that the requirement does not reach a provider it may well reach."
+  - id: art-14-1-plain-language
+    article: 14(1)
+    quote: It shall be set out in clear, plain, intelligible, user-friendly and unambiguous language,
+      and shall be publicly available in an easily accessible and machine-readable format.
+    cite: DSA Art. 14(1)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Is that information written in clear, plain, intelligible, user-friendly and unambiguous
+      language - and, separately, is it published in an easily accessible and machine-readable
+      format, or is that something the material in front of you cannot show?
+    applicability_note: "Two things in one sentence, and a document can fail either, so the question
+      asks them separately and the reasoning answers both. Plain language is a judgement a reader
+      can make from the text. \"Machine-readable format\" is a property of how the page is published
+      rather than of its words: where the document was read out of a source tree, the served page is
+      not in front of you and the publication limb cannot be established either way - say that, and
+      give the language limb its own answer beside it. **The status word must not be made to carry a
+      shortfall this pillar cannot see.** Where the language is plain and the publication limb is
+      simply unobservable, `partial` is this item's ceiling by construction, and the reasoning has
+      to say which of the two limbs the word is about; a reader must not be left to read a limit of
+      the tooling as a defect in the document. This paragraph was added on 2026-09-01, after a
+      verification pass found `partial` pinned on both sides of this checklist's own fixture for
+      exactly that reason, with nothing on the item saying so - the same error this file identified
+      and repaired one item below, for Article 14(2). Where the document did arrive as a served page
+      rather than out of the tree, the limb is observable and worth answering: a page whose text
+      only appears after the browser runs scripts is worth naming under this item, and so is one
+      served as a wall of markup with no structure. Where the extraction of this document was thin
+      or arrived as a single enormous line, say so here rather than treating it as a language
+      failure."
+  - id: art-14-2-significant-changes
+    article: 14(2)
+    quote: Providers of intermediary services shall inform the recipients of the service of any
+      significant change to the terms and conditions.
+    cite: DSA Art. 14(2)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Do the terms say anything about how recipients are informed of a significant change to them?
+    applicability_note: "**Article 14(2) is a duty to inform recipients, not a duty to write the
+      mechanism into the terms.** Nothing in the paragraph requires the document to say how it will
+      be done, so silence here is not a shortfall against the Article - it is an absence of evidence
+      about conduct this pillar cannot see. An earlier draft instructed that \"we may change these
+      terms at any time\" be recorded as `absent`, which reads a document that says something as one
+      that fails a duty (corrected 2026-07-29), and the draft after it sent the same clause to
+      `unresolved`; both are corrected by the routing below. What this item is for: where the terms
+      **do** describe a mechanism (\"we will email you\", \"we will post a notice thirty days
+      beforehand\"), that is a statement the code can be read against, and terms promising email
+      notice in a repository with no such mailing exist as a concrete mismatch - record `present`. A
+      version history or a \"last updated\" date is not an answer, though it is worth quoting.
+      **Three status words, one for each of the three shapes a real document takes.** Where the
+      terms say nothing about informing recipients of a change, record `absent` - the document was
+      read and it is silent, which is a settled reading - and put the Article 14(2) point in the
+      reasoning. Where the terms say something that bears on informing recipients without describing
+      how it is done, record `partial`, quote the clause, and say that the document goes part of the
+      way and no further: a right reserved (\"we may change these terms at any time\", with or
+      without \"the current version is the one on this page\") is the provider telling the recipient
+      to come and look, and a promise that recipients will be told in advance with no channel named
+      is a commitment this pillar cannot check. Both are weak answers to the question above rather
+      than silence, and both were unroutable here until 2026-09-01. `unresolved` says the agent
+      could not settle its own reading, which is untrue of any of the three. **Corrected
+      2026-09-01**, and what it corrects is a routing that graded the vaguer document more leniently
+      than the silent one: this note sent \"we may change these terms at any time\" to `unresolved`
+      and silence to `absent`, its own fixture pinned that clause `absent` and explained it as
+      `unresolved`, and three copies of one rule had drifted apart. The rule is stated here, and the
+      fixture's ledger and its `silent_candidates` entry now say the same thing."
+  - id: art-14-3-minors
+    article: 14(3)
+    quote: Where an intermediary service is primarily directed at minors or is predominantly used by
+      them, the provider of that intermediary service shall explain the conditions for, and any
+      restrictions on, the use of the service in a way that minors can understand.
+    cite: DSA Art. 14(3)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Where the service is **primarily** directed at minors or is predominantly used by them, do
+      the terms explain the conditions and restrictions in a way minors can understand?
+    applicability_note: "**The trigger is the Article's, and the word \"primarily\" is part of it.** A
+      general-audience service with a section aimed at teenagers is directed at minors in part and
+      is not primarily directed at them, and Article 14(3) does not reach it; this question dropped
+      the word until 2026-09-01, while the quote above it and the sentence that follows both carried
+      it. Whether a service is primarily directed at minors, or predominantly used by them, is not a
+      question a document or a repository answers - it is about an audience. Record this item as
+      not-applicable only where the person running the scan says the service is not in that
+      position, and as unresolved where nobody has said. An age gate in the code is a signal that
+      the question is live, not an answer to it."

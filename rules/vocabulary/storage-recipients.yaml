@@ -1,0 +1,1162 @@
+lists:
+  storage_recipients:
+    kind: recipient
+    purpose: "Cloud object-storage vendors that receive uploaded file content and its metadata from the
+      scanned product, for the rules that ask who the recipients of the data are — GDPR Art.
+      30(1)(d)'s field (d) of the record of processing activities, and the equivalent data-inventory
+      field in US state privacy law and in Japan's APPI. Every anchor is a spelling the vendor owns:
+      an SDK package name, an import specifier, a registry coordinate or an API hostname. A match is
+      evidence that the vendor's code or endpoint is named in the tree; it is not, on its own,
+      evidence that anything was disclosed to that vendor, which is what the importing rule's
+      context questions are for."
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: Amazon Web Services — S3 — Amazon Web Services EMEA SARL
+        legal_name: Amazon Web Services EMEA SARL
+        anchors:
+          - aws-sdk
+          - "@aws-sdk/client-s3"
+          - boto3
+          - aws-sdk-s3
+          - aws/aws-sdk-php
+          - AWSSDK.S3
+          - software.amazon.awssdk
+          - com.amazonaws
+          - software.amazon.awssdk:s3
+          - com.amazonaws:aws-java-sdk-s3
+          - github.com/aws/aws-sdk-go-v2/service/s3
+          - github.com/aws/aws-sdk-go
+          - aws-config
+          - aws-credential-types
+          - reqsign-aws-v4
+          - s3.amazonaws.com
+          - com.amazonaws.services.s3
+          - software.amazon.awssdk.services.s3
+        receives: "PutObject (REST API, direct or via SDK): Key — object key/path, quoted from AWS's own
+          docs: \"Object key for which the PUT action was initiated.\" Frequently carries filenames
+          or application-chosen identifiers (which themselves often embed a user id)., x-amz-meta-*
+          — arbitrary user-defined metadata headers set by the calling application, e.g. AWS's own
+          worked example \"x-amz-meta-author: Janet\"., Content-Type, Content-Disposition — the
+          latter can carry an original filename via an attachment;filename= directive., ACL grantee
+          headers (x-amz-grant-*) — historically could carry a grantee's email address; AWS's own
+          docs state Email Grantee ACLs were discontinued as of October 1, 2025 in several regions.
+          | S3 server access logs / CloudTrail: Remote IP — quoted verbatim: \"The apparent IP
+          address of the requester.\" (example given: 192.0.2.3), Requester — \"The canonical user
+          ID of the requester, or a - for unauthenticated requests\" (or the assumed IAM role ARN),
+          Key — the object key of the request, example given: /photos/2019/08/puppy.jpg, Referer,
+          User-Agent — standard HTTP headers, logged verbatim"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          region-dependent; no single EEA entity — see legal_entities || CANDIDATE CONTRACTING
+          ENTITIES, as the vendor's own documents named them on the day each document was read:
+          Amazon Web Services EMEA SARL — Luxembourg (38 Avenue John F. Kennedy, L-1855, Luxembourg)
+          — named for a customer whose declared AWS Account Country is any country within Europe,
+          the Middle East or Africa, excluding South Africa [read from
+          https://aws.amazon.com/agreement/ on 2026-08-25]; Amazon Web Services, Inc. — United
+          States (410 Terry Avenue North, Seattle, WA 98109-5210) — named for a customer whose
+          declared AWS Account Country is not listed in any other row of the same table [read from
+          https://aws.amazon.com/agreement/ on 2026-08-25]; Amazon Web Services Australia Pty Ltd —
+          no country is stated for this entity in the passage the research pass recorded — named in
+          a further row of the same Account-Country table; the research pass recorded the entity
+          name without that row's country list [read from https://aws.amazon.com/agreement/ on
+          2026-08-25]; Amazon Web Services Canada, Inc. — no country is stated for this entity in
+          the passage the research pass recorded — named in a further row of the same
+          Account-Country table; the research pass recorded the entity name without that row's
+          country list [read from https://aws.amazon.com/agreement/ on 2026-08-25]; Amazon AWS
+          Serviços Brasil Ltda. — no country is stated for this entity in the passage the research
+          pass recorded — named in a further row of the same Account-Country table; the research
+          pass recorded the entity name without that row's country list [read from
+          https://aws.amazon.com/agreement/ on 2026-08-25]; Amazon Web Services Japan G.K. — no
+          country is stated for this entity in the passage the research pass recorded — named in a
+          further row of the same Account-Country table; the research pass recorded the entity name
+          without that row's country list [read from https://aws.amazon.com/agreement/ on
+          2026-08-25]; Amazon Web Services India Private Limited — no country is stated for this
+          entity in the passage the research pass recorded — named in a further row of the same
+          Account-Country table; the research pass recorded the entity name without that row's
+          country list [read from https://aws.amazon.com/agreement/ on 2026-08-25]; Amazon Web
+          Services Mexico, S. de R.L. de C.V. — no country is stated for this entity in the passage
+          the research pass recorded — named in a further row of the same Account-Country table; the
+          research pass recorded the entity name without that row's country list [read from
+          https://aws.amazon.com/agreement/ on 2026-08-25]; Amazon Web Services Singapore Private
+          Limited — no country is stated for this entity in the passage the research pass recorded —
+          named in a further row of the same Account-Country table; the research pass recorded the
+          entity name without that row's country list [read from https://aws.amazon.com/agreement/
+          on 2026-08-25]; Amazon Web Services Korea LLC — no country is stated for this entity in
+          the passage the research pass recorded — named in a further row of the same
+          Account-Country table; the research pass recorded the entity name without that row's
+          country list [read from https://aws.amazon.com/agreement/ on 2026-08-25]; PT Amazon Web
+          Services Indonesia — no country is stated for this entity in the passage the research pass
+          recorded — named in a further row of the same Account-Country table; the research pass
+          recorded the entity name without that row's country list [read from
+          https://aws.amazon.com/agreement/ on 2026-08-25]; Amazon Web Services Taiwan Limited — no
+          country is stated for this entity in the passage the research pass recorded — named in a
+          further row of the same Account-Country table; the research pass recorded the entity name
+          without that row's country list [read from https://aws.amazon.com/agreement/ on
+          2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT
+          OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order
+          form, the data processing agreement or the invoice that operator actually signed; where
+          none of those can be read, the answer for this field is needs_human. Do not choose a
+          candidate because it is the largest, the nearest, the one with the most familiar name or
+          the only one left. Every date above is the day that document was read and nothing in this
+          repository re-reads it, so this list ages into an INCOMPLETE list and never into a false
+          statement — a candidate may have been renamed, acquired or added since."
+        jurisdiction_source: "https://aws.amazon.com/agreement/ (retrieved 2026-08-25) names, for \"EMEA and
+          default contracting parties by region\": \"Any country within Europe, the Middle East, or
+          Africa (excluding South Africa) ... Amazon Web Services EMEA SARL ... 38 Avenue John F.
+          Kennedy, L-1855, Luxembourg ... Any country/territory that is not listed in this table
+          above. Amazon Web Services, Inc. ... 410 Terry Avenue North, Seattle, WA 98109-5210
+          U.S.A.\" [The AWS Contracting Party table, quoted in the page's own row order with the
+          author's elisions marked. The previous value of this field rendered the table into a
+          sentence of the researcher's own (\"X serves Y; Z serves W\") and presented it as a
+          quotation; the facts were right and the words were not in the page. Re-fetched raw
+          2026-08-25 (HTTP 200, 530,490 bytes) and every fragment above confirmed verbatim. Read
+          raw, not via a summarising fetch.]"
+      - vendor: Google Cloud Storage — Google Cloud EMEA Limited (named as "Google" in a third-party
+          authorized-reseller's copy of the Google Cloud Platform Customer Agreement structure — see
+          citation)
+        legal_name: Google Cloud EMEA Limited
+        anchors:
+          - "@google-cloud/storage"
+          - google-cloud-storage
+          - google/cloud-storage
+          - Google.Cloud.Storage.V1
+          - com.google.cloud
+          - com.google.cloud:google-cloud-storage
+          - cloud.google.com/go/storage
+          - google_api_storage
+          - storage.googleapis.com
+          - google.cloud.storage
+          - com.google.cloud.storage
+        receives: "Objects: insert (JSON API, direct or via SDK): name — object key/path. Google's own doc
+          text: \"The name of the object. Required if not specified by URL parameter.\", metadata
+          (object) — \"User-provided metadata, in key/value pairs\", set via the X-Goog-Meta-KEY
+          custom header on resumable uploads., contentType — \"Content-Type of the object data. If
+          an object is stored without a Content-Type, it is served as application/octet-stream.\" |
+          Cloud Audit Logs (Data Access logs): callerIp (protoPayload.requestMetadata.callerIp) —
+          confirmed as a real field name via a raw fetch of Google's own audit-logging page, which
+          states: \"Data Access logs generated from authenticated browser downloads have their
+          principalEmail and callerIp fields redacted when the download occurs outside of the Google
+          Cloud console.\" This confirms the field exists and is sometimes, not always, redacted.,
+          principalEmail — the authenticated caller's account, per the same quote."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          Ireland (Google Cloud EMEA Limited) — WEAKER EVIDENCE, see note [JURISDICTION NOT
+          ESTABLISHED in the research pass; treat as unconfirmed — see note] || CANDIDATE
+          CONTRACTING ENTITIES, as the vendor's own documents named them on the day each document
+          was read: Google Cloud EMEA Limited — Ireland, as the research pass recorded it; the
+          quoted passage names the entity without stating its country — named as the entity called
+          'Google' in a third-party authorised reseller's copy of the Google Cloud Platform Customer
+          Agreement structure. This is corroborating evidence and not Google's own
+          contracting-entity page, which is a JavaScript-rendered application that returned no text
+          to two fetches and a raw request [read from https://sada.com/agreements/gcp/gcp-uki-v1.pdf
+          on 2026-08-25]; Google LLC — United States, as the research pass recorded it — recorded by
+          the research pass as the group's United States entity [NOT CONFIRMED FROM A DOCUMENT IN
+          THIS PASS: the research pass recorded this entity under legal_entities.us_entity and cited
+          no document for it in this pass]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT
+          ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the
+          order form, the data processing agreement or the invoice that operator actually signed;
+          where none of those can be read, the answer for this field is needs_human. Do not choose a
+          candidate because it is the largest, the nearest, the one with the most familiar name or
+          the only one left. Every date above is the day that document was read and nothing in this
+          repository re-reads it, so this list ages into an INCOMPLETE list and never into a false
+          statement — a candidate may have been renamed, acquired or added since."
+        jurisdiction_source: "https://sada.com/agreements/gcp/gcp-uki-v1.pdf (retrieved 2026-08-25) names,
+          for \"Google Cloud EMEA Limited is the entity referred to as \"Google\" in an EMEA
+          reseller agreement\": \"This Agreement establishes the terms under which SADA, as an
+          authorized reseller of Google Cloud EMEA Limited (\"Google\"), will provide Customer with
+          access to the Google Cloud Platform services set forth in the Ordering Document.\" [This
+          is SADA IT Services Limited Ireland's own reseller agreement (\"SADA Ireland GCP Customer
+          Agreement v1 04.21.22\"), NOT fetched from a Google-owned domain. It quotes Google's own
+          TOS-defined term (Section 1.3: \"The Google TOS are fixed, non-negotiable and may not be
+          revised by either Party\", incorporating https://cloud.google.com/terms). Weaker evidence
+          than a citation read directly from the vendor's own page; recorded as such rather than
+          silently upgraded.]"
+      - vendor: Microsoft Azure Blob Storage — Microsoft Ireland Operations Limited
+        legal_name: Microsoft Ireland Operations Limited
+        anchors:
+          - "@azure/storage-blob"
+          - azure-storage-blob
+          - microsoft/azure-storage-blob
+          - Azure.Storage.Blobs
+          - com.azure
+          - com.azure:azure-storage-blob
+          - github.com/Azure/azure-sdk-for-go
+          - azure_storage_blobs
+          - blob.core.windows.net
+          - azure.storage.blob
+          - com.azure.storage.blob
+          - "@azure/storage-"
+        receives: "Put Blob (REST API, direct or via SDK): Container/blob path in the request URI (e.g.
+          https://{account}.blob.core.windows.net/{container}/{blob}) — the object key, quoted from
+          Microsoft's own request-syntax example., x-ms-meta-name:value — \"Optional. Name-value
+          pairs associated with the blob as metadata.\", x-ms-blob-content-disposition — can carry
+          an original filename, e.g. Microsoft's own example `attachment; filename=\"fname.ext\"`.,
+          Content-Type, x-ms-blob-content-type | Storage Analytics / diagnostic (resource) logs:
+          callerIpAddress — e.g. \"192.168.0.1:11111\" in the JSON-format resource logs.,
+          requester-ip-address — the equivalent field in the older, classic Storage Analytics
+          semicolon-delimited log format. [NOT established first-hand in the research pass; treat as
+          unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          Ireland (Microsoft Ireland Operations Limited) || CANDIDATE CONTRACTING ENTITIES, as the
+          vendor's own documents named them on the day each document was read: Microsoft Ireland
+          Operations Limited — Ireland, as the research pass recorded it; the quoted definition
+          names the entity without stating its country — named as the processor established in the
+          European Economic Area, inside the definition of Microsoft's 2021 Standard Contractual
+          Clauses [read from https://www.shl.com/assets/documents/microsoft-azure-sccs.pdf on
+          2026-08-25]; Microsoft Corporation — United States, as the research pass recorded it; the
+          quoted definition names the entity without stating its country — named as the other party
+          to those same clauses, that is, the processor established in a third country [read from
+          https://www.shl.com/assets/documents/microsoft-azure-sccs.pdf on 2026-08-25]. || WHICH
+          CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT
+          AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement
+          or the invoice that operator actually signed; where none of those can be read, the answer
+          for this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "https://www.shl.com/assets/documents/microsoft-azure-sccs.pdf (retrieved
+          2026-08-25) names, for \"Microsoft Ireland Operations Limited (EEA) and Microsoft
+          Corporation (US), named together in the SCC definition\": \"\"2021 Standard Contractual
+          Clauses\" means the standard data protection clauses (processor-to-processor module)
+          between Microsoft Ireland Operations Limited and Microsoft Corporation for the transfer of
+          personal data from processors in the EEA to processors established in third countries
+          which do not ensure an adequate level of data protection, as described in Article 46 of
+          the GDPR and approved by the European Commission in decision 2021/914/EC, dated 4 June
+          2021.\" [This is Microsoft's own \"Microsoft Products and Services Data Protection
+          Addendum\" (Volume Licensing, Worldwide English), last updated September 15, 2022, read
+          raw via PDF text extraction (not a summarising fetch). The document may not be the CURRENT
+          version of Microsoft's DPA (Microsoft revises this document periodically); the entity
+          names themselves are stable and well-documented, but the exact defined-term wording quoted
+          here is dated 2022-09-15. THE HOST IS NOT MICROSOFT'S, and that caveat is written here
+          because the same weakness was treated differently one entry away: this PDF was retrieved
+          from www.shl.com, a third party's copy of Microsoft's document, while Google Cloud
+          Storage's establishment rests on sada.com, a reseller's own agreement, and carries the
+          fixed tag JURISDICTION NOT ESTABLISHED for exactly that reason. The two are not identical
+          - a third party hosting a vendor's OWN standard addendum is better evidence than a
+          reseller's own contract, and the Microsoft entity names are independently well known - but
+          the difference is a judgement and it is recorded rather than left implicit. Anyone
+          re-deriving this should fetch the current DPA from microsoft.com and replace this citation
+          with it. Added 2026-08-25 by the final repair round, on RECOMMENDED 3 of the independent
+          legal re-check; the establishment itself is unchanged and nothing was removed.]"
+      - vendor: Cloudinary — Cloudinary Ltd. (Israel)
+        legal_name: Cloudinary Ltd.
+        anchors:
+          - cloudinary
+          - "@cloudinary/url-gen"
+          - cloudinary/cloudinary_php
+          - CloudinaryDotNet
+          - com.cloudinary
+          - com.cloudinary:cloudinary-android
+          - com.cloudinary:kotlin-url-gen
+          - com.cloudinary:cloudinary-http5
+          - cloudinary.com
+          - "@cloudinary/"
+        receives: "Upload API (direct REST call or via SDK): public_id — \"The identifier that's used for
+          accessing and delivering the uploaded asset\", up to 255 characters, frequently derived
+          from or equal to the original filename., display_name — a user-friendly asset name shown
+          in Cloudinary's own Media Library UI., context — \"a pipe-separated list of the key-value
+          pairs of contextual metadata to attach to an uploaded asset\" (e.g. alt text, captions) —
+          up to 1000 pairs., filename_override — \"Sets the original filename metadata header\",
+          explicitly for \"advanced search by filename\" and attachment delivery., tags —
+          comma-separated free-text tags on the uploaded asset., headers — can carry an
+          Authorization header when Cloudinary is told to fetch a file FROM a protected remote URL
+          on the developer's behalf, meaning a credential can be relayed through Cloudinary in that
+          integration path."
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          none named — see chapter_v_note [JURISDICTION NOT ESTABLISHED in the research pass; treat
+          as unconfirmed — see note] || CANDIDATE CONTRACTING ENTITIES, as the vendor's own
+          documents named them on the day each document was read: Cloudinary Ltd. — Israel, as the
+          research pass recorded it; the quoted clause states the law of the State of Israel as the
+          default rather than naming this entity — the default of three affiliates, applying where
+          neither of the other two contracted; the terms make the governing law depend on which
+          affiliate contracted and never say which one applies to which customer [read from
+          https://cloudinary.com/tou on 2026-08-25]; Cloudinary Inc. — United States (a Delaware
+          corporation; the terms bring the law of the State of California where it contracted) —
+          named in the terms as the affiliate whose contracting brings the law of the State of
+          California [read from https://cloudinary.com/tou on 2026-08-25]; Cloudinary UK Ltd. —
+          United Kingdom, as the research pass recorded it; the terms bring the law of England and
+          Wales where it contracted — named in the terms as the affiliate whose contracting brings
+          the law of England and Wales [read from https://cloudinary.com/tou on 2026-08-25]. ||
+          WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT
+          AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing
+          agreement or the invoice that operator actually signed; where none of those can be read,
+          the answer for this field is needs_human. Do not choose a candidate because it is the
+          largest, the nearest, the one with the most familiar name or the only one left. Every date
+          above is the day that document was read and nothing in this repository re-reads it, so
+          this list ages into an INCOMPLETE list and never into a false statement — a candidate may
+          have been renamed, acquired or added since."
+        jurisdiction_source: 'https://cloudinary.com/tou (retrieved 2026-08-25) names, for "three possible
+          contracting entities and the governing-law split between them": "These Terms...will be
+          governed solely by: (i) the laws of the State of Israel or, (ii) if the Cloudinary
+          affiliate with which you (or the distributor or seller from whom you acquired the
+          Services) contracted is Cloudinary Inc. a Delaware corporation, the laws of the State of
+          California, USA, or (iii) if the Cloudinary affiliate with which you (or the distributor
+          or seller from whom you acquired the Services) contracted is Cloudinary UK Ltd., the laws
+          of England and Wales" [read via summarising fetch, not independently re-verified against
+          raw HTML — lower reliability than a raw-text quote, though the specific sentence returned
+          reads as a direct extraction rather than a paraphrase.]'
+      - vendor: DigitalOcean Spaces — DigitalOcean, LLC
+        legal_name: DigitalOcean, LLC
+        anchors:
+          - digitaloceanspaces.com
+        receives: "PUT object (S3-compatible API — Spaces has no native API of its own; every integration
+          path is the generic S3 PUT/multipart-upload/presigned-URL shape, authenticated against a
+          DigitalOcean-issued Spaces access key): [NOT independently re-fetched from DigitalOcean's
+          own Spaces API reference in this pass; reasoned from DigitalOcean's own confirmed
+          statement that Spaces exposes an S3-compatible API — treat the object-key-and-x-amz-meta-*
+          shape as unconfirmed for Spaces specifically, even though it is well-established for AWS
+          S3 itself above] [NOT established first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          none — United States (state of registration NOT ESTABLISHED in this research pass; see
+          unconfirmed_fields) || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named
+          them on the day each document was read: DigitalOcean, LLC — United States; the state of
+          registration was not established in this research pass — named as the party the Data
+          Processing Agreement is an addendum between. No entity established in the European
+          Economic Area, Switzerland or the United Kingdom is named, although that agreement's own
+          scope clause covers personal data from all three [read from
+          https://digitalocean-legal.nyc3.cdn.digitaloceanspaces.com/DigitalOcean_Data_Processing_A\
+          greement_11.30.2021.pdf on 2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS
+          A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read
+          from the order form, the data processing agreement or the invoice that operator actually
+          signed; where none of those can be read, the answer for this field is needs_human. Do not
+          choose a candidate because it is the largest, the nearest, the one with the most familiar
+          name or the only one left. Every date above is the day that document was read and nothing
+          in this repository re-reads it, so this list ages into an INCOMPLETE list and never into a
+          false statement — a candidate may have been renamed, acquired or added since."
+        jurisdiction_source: 'https://digitalocean-legal.nyc3.cdn.digitaloceanspaces.com/DigitalOcean_Data_Processing_Agreement_11.30.2021.pdf
+          (retrieved 2026-08-25) names, for "contracting entity": "This Data Processing Agreement
+          ("DPA") is an addendum to the Customer Terms of Service ("Agreement") between
+          DigitalOcean, LLC ("DigitalOcean") and the Customer." [Raw PDF text extraction (Read tool,
+          not a WebFetch summarising pass), from a URL DigitalOcean itself hosts. Document is titled
+          "Last Updated on November 30, 2021" — recorded as dated evidence, not confirmed as the
+          current version.] ||
+          https://digitalocean-legal.nyc3.cdn.digitaloceanspaces.com/DigitalOcean_Data_Processing_Agreement_11.30.2021.pdf
+          (retrieved 2026-08-25) names, for "DPA scope covers EEA/EU/Switzerland/UK personal data":
+          "This DPA applies where and only to the extent that DigitalOcean processes Personal Data
+          on behalf of the Customer in the course of providing the Services and such Personal Data
+          is subject to Data Protection Laws of the appropriate jurisdiction, including the State of
+          California, the European Union, the European Economic Area and/or its member states,
+          Switzerland and/or the United Kingdom."'
+      - vendor: Cloudflare R2 — Cloudflare, Inc.
+        legal_name: Cloudflare, Inc.
+        anchors:
+          - wrangler
+          - "@cloudflare/workers-types"
+          - cloudflare
+          - r2.cloudflarestorage.com
+          - R2Bucket
+        receives: "R2Bucket.put() (native Workers binding, e.g. env.MY_BUCKET.put(key, value)): key — the
+          object key/path, the first argument to .put()/.get()/.delete()., [NOT independently
+          confirmed which further metadata/HTTP-header fields the binding API accepts beyond the key
+          and body — the R2Bucket TypeScript interface was confirmed to exist and expose
+          put/get/delete via WebSearch, but its full method signature (custom metadata options,
+          httpMetadata, etc.) was not independently read from the type definition file itself] |
+          S3-compatible PUT (direct or via AWS SDK against r2.cloudflarestorage.com): [NOT
+          independently re-fetched from Cloudflare's own R2 S3-compatible API reference in this
+          pass; reasoned from Cloudflare's own statement that R2's S3-compatible API accepts
+          \"existing S3 SDKs and tools\" — the AWS S3 PutObject field shape above (Key,
+          x-amz-meta-*) is the plausible analogue but is NOT confirmed for R2 specifically] [NOT
+          established first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          none — United States (per this DPA; see gaps) || CANDIDATE CONTRACTING ENTITIES, as the
+          vendor's own documents named them on the day each document was read: Cloudflare, Inc. —
+          United States, as the research pass recorded it — named as the sole contracting party in
+          Cloudflare's own Data Processing Addendum; no separate entity established in the European
+          Economic Area is named in that document [read from
+          https://www.cloudflare.com/resources/images/slt3lc6tev37/1M1j5uuFDuLTYiZJJDPBag/0350a7dfd\
+          6cd923d2e7485831ff4bc75/Customer_DPA_v.3_1_Oct_2020.docx.pdf on 2026-08-25]. || WHICH
+          CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT
+          AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement
+          or the invoice that operator actually signed; where none of those can be read, the answer
+          for this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "https://www.cloudflare.com/resources/images/slt3lc6tev37/1M1j5uuFDuLTYiZJJDPB\
+          ag/0350a7dfd6cd923d2e7485831ff4bc75/Customer_DPA_v.3_1_Oct_2020.docx.pdf (retrieved
+          2026-08-25) names, for \"contracting entity\": \"Cloudflare, Inc. (\"Cloudflare\") and the
+          counterparty agreeing to these terms (\"Customer\") have entered into an Enterprise
+          Subscription Agreement, Self-Serve Subscription Agreement or other written or electronic
+          agreement for the Services provided by Cloudflare (the \"Main Agreement\").\" [Raw PDF
+          text extraction (Read tool). Document is \"Cloudflare, Inc. Data Processing Addendum,
+          Version 3.0, 1 October 2020\" — recorded as dated evidence; Cloudflare's DPA has almost
+          certainly been revised since 2020 and the current version was not separately fetched.]"
+      - vendor: Uploadthing — T3 Tools, Inc.
+        legal_name: T3 Tools, Inc.
+        anchors:
+          - uploadthing
+          - "@uploadthing/react"
+          - "@uploadthing/solid"
+          - "@uploadthing/svelte"
+          - ufs.sh
+          - utfs.io
+          - uploadthing.com
+          - "@uploadthing/"
+        receives: "Server-side upload handler (onUploadComplete callback, and the file object returned to
+          the developer's own backend): name, key, url, size, type, customId — the standard
+          file-object fields returned after upload completes., metadata — an arbitrary object the
+          DEVELOPER'S OWN middleware attaches (frequently including an application user id), which
+          UploadThing relays back to the developer's callback and which, by the shape of the
+          callback mechanism, appears to also be retained by UploadThing's own backend as part of
+          the upload record. [NOT established first-hand in the research pass; treat as
+          unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          none — United States || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents
+          named them on the day each document was read: T3 Tools, Inc. — United States (2261 Market
+          Street #5309, San Francisco, CA 94114) — named as the entity behind the privacy policy; no
+          entity established in the European Economic Area is named anywhere in it [read from
+          https://uploadthing.com/info/privacy-policy on 2026-08-25]. || WHICH CANDIDATE APPLIES TO
+          A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE
+          VENDOR. It is read from the order form, the data processing agreement or the invoice that
+          operator actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: 'https://uploadthing.com/info/privacy-policy (retrieved 2026-08-25) names, for
+          "legal entity and address": "T3 Tools, Inc. ... 2261 Market Street #5309 San Francisco, CA
+          94114" [read via summarising fetch, not independently re-verified against raw HTML] ||
+          https://uploadthing.com/info/privacy-policy (retrieved 2026-08-25) names, for
+          "international processing": "Your personal information will be subject to United States
+          law and processed in the United States or in other countries." [read via summarising
+          fetch, not independently re-verified against raw HTML]'
+      - vendor: Backblaze B2 — Backblaze, Inc.
+        legal_name: Backblaze, Inc.
+        anchors:
+          - b2sdk
+          - com.backblaze.b2
+          - com.backblaze.b2:b2-sdk-core
+          - com.backblaze.b2:b2-sdk-httpclient
+          - github.com/Backblaze/blazer
+          - backblazeb2.com
+        receives: 'b2_upload_file (B2 Native API, direct or via the official Python/Java SDK):
+          X-Bz-File-Name — "The name of the file, in percent-encoded UTF-8." The object key/path.,
+          X-Bz-Info-* — "The * part of the header name is replaced with the name of a custom field.
+          The value is an arbitrary UTF-8 string" — arbitrary developer-defined metadata, e.g.
+          X-Bz-Info-src_last_modified_millis., X-Bz-Content-Sha1 — a checksum of the uploaded
+          content (not personal data itself, but confirms the exact bytes uploaded)., Content-Type'
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. What the research pass recorded as this vendor's establishment IN the European
+          Economic Area (a different question from which entity a given operator contracts with):
+          none — United States (California) || CANDIDATE CONTRACTING ENTITIES, as the vendor's own
+          documents named them on the day each document was read: Backblaze, Inc. — United States
+          (California; the terms of service give 2261 Market Street, STE 81006, San Francisco, CA
+          94114) — named as the data importer in the vendor's own agreement for residents of the
+          European Economic Area and the European Union; no entity established there is named [read
+          from https://www.backblaze.com/company/policy/dpa-for-eea-eu-residents on 2026-08-25]. ||
+          WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT
+          AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing
+          agreement or the invoice that operator actually signed; where none of those can be read,
+          the answer for this field is needs_human. Do not choose a candidate because it is the
+          largest, the nearest, the one with the most familiar name or the only one left. Every date
+          above is the day that document was read and nothing in this repository re-reads it, so
+          this list ages into an INCOMPLETE list and never into a false statement — a candidate may
+          have been renamed, acquired or added since."
+        jurisdiction_source: "https://www.backblaze.com/company/policy/dpa-for-eea-eu-residents (retrieved
+          2026-08-25) names, for \"Backblaze, Inc. named as the data importer\": \"The data importer
+          is Backblaze, Inc.\" [from Annex I.A of Backblaze's own DPA for EEA/EU residents, read via
+          WebFetch raw extraction] ||
+          https://www.backblaze.com/company/policy/dpa-for-eea-eu-residents (retrieved 2026-08-25)
+          names, for \"personal data transferred outside the EEA, SCCs used\": \"Personal data
+          provided by Customer to Backblaze in Customer's Files provided to Backblaze as part of the
+          Services will be transferred outside of the EEA\" ||
+          https://www.backblaze.com/company/policy/terms-of-service (retrieved 2026-08-25) names,
+          for \"registered address\": \"Backblaze, Inc., 2261 Market Street, STE 81006, Attn: Legal
+          Department, San Francisco, CA 94114\" [Same street address (\"2261 Market Street\", San
+          Francisco) as Uploadthing/T3 Tools, Inc.'s address recorded above. This is almost
+          certainly a shared mail-forwarding/registered-agent facility used by many unrelated small
+          SF companies, not any corporate relationship between Backblaze and T3 Tools — recorded as
+          observed, not interpreted further.]"
+  delivery_recipients:
+    kind: recipient
+    purpose: Push-notification, real-time-relay and outbound-webhook-delivery vendors that receive
+      message/event payloads — and, for push specifically, device tokens and notification content —
+      from the scanned product, for the rules that ask who the recipients of the data are — GDPR
+      Art. 30(1)(d)'s field (d) of the record of processing activities, and the equivalent
+      data-inventory field in US state privacy law and in Japan's APPI. Every anchor is a spelling
+      the vendor owns EXCEPT Apple Push Notification service's third_party_libraries-provenance
+      anchors, which are corroborating-only spellings a non-Apple library author owns — flagged as
+      such in that entry's note, per method.apns_special_case in the research. A match is evidence
+      that the vendor's code or endpoint is named in the tree; it is not, on its own, evidence that
+      anything was disclosed to that vendor, which is what the importing rule's context questions
+      are for.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: Firebase Cloud Messaging (Google) — (see note for the entities the research recorded)
+        anchors:
+          - firebase
+          - firebase-admin
+          - "@firebase/messaging"
+          - FirebaseAdmin
+          - com.google.firebase:firebase-admin
+          - com.google.firebase:firebase-messaging
+          - com.google.firebase:firebase-messaging-ktx
+          - firebase.google.com/go/v4
+          - fcm.googleapis.com
+          - firebase/messaging
+          - com.google.firebase.messaging
+          - firebase_admin.messaging
+          - firebase-admin/messaging
+        receives: "Send call — Admin SDK Message (Node/Python/Java/Go/.NET Admin SDKs, or the FCM HTTP v1
+          REST API directly): fid (Firebase Installation ID) or token (legacy per-device
+          registration token — the Node Admin SDK's own type definitions mark TokenMessage as
+          deprecated in favour of FidMessage, but both remain live targeting fields), topic (a topic
+          name a device has subscribed to) or condition (a boolean expression over topic names),
+          notification.title, notification.body, notification.imageUrl, data (an arbitrary
+          application-defined string-to-string map — the calling application decides its contents,
+          which can include a person's name or other message content) | Relay to Apple devices via
+          FCM's own ApnsConfig field (Firebase forwards into APNs on the caller's behalf, without
+          the caller talking to Apple directly): ApnsConfig.payload — a nested native APNs 'aps'
+          payload (alert.title/body, badge, sound; see the APNs entry for the full key set Apple
+          defines), ApnsConfig.headers (raw APNs HTTP/2 headers) | Caller identity / delivery
+          metadata: the calling server's IP address and OAuth2 service-account identity, at the
+          API-transport layer [NOT established first-hand in the research pass; treat as
+          unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Multi-entity, \"as
+          applicable\": Google LLC (Delaware/California, USA), Google Ireland Limited (Ireland),
+          Google Asia Pacific Pte. Ltd. (Singapore). No single fixed place established for FCM
+          specifically in this pass. [JURISDICTION NOT ESTABLISHED in the research pass; treat as
+          unconfirmed — see note] || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents
+          named them on the day each document was read: Google LLC (formerly known as Google Inc.) —
+          United States (Delaware or California), as the research pass recorded it; the quoted
+          clause names the entity without stating its country — one of three entities the Firebase
+          data-processing terms name as possible counterparties 'as applicable'; the terms do not
+          say which one binds a given customer, and they extend the same clause to any other entity
+          under common control with Google LLC [read from
+          https://firebase.google.com/terms/data-processing-terms on 2026-08-25]; Google Ireland
+          Limited — Ireland, as the research pass recorded it; the quoted clause names the entity
+          without stating its country — the second of the three entities named 'as applicable' in
+          the same clause, with the same silence about which one binds a given customer [read from
+          https://firebase.google.com/terms/data-processing-terms on 2026-08-25]; Google Asia
+          Pacific Pte. Ltd. — Singapore, as the research pass recorded it; the quoted clause names
+          the entity without stating its country — the third of the three entities named 'as
+          applicable' in the same clause, with the same silence about which one binds a given
+          customer [read from https://firebase.google.com/terms/data-processing-terms on
+          2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT
+          OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order
+          form, the data processing agreement or the invoice that operator actually signed; where
+          none of those can be read, the answer for this field is needs_human. Do not choose a
+          candidate because it is the largest, the nearest, the one with the most familiar name or
+          the only one left. Every date above is the day that document was read and nothing in this
+          repository re-reads it, so this list ages into an INCOMPLETE list and never into a false
+          statement — a candidate may have been renamed, acquired or added since."
+        jurisdiction_source: "https://firebase.google.com/terms/data-processing-terms (retrieved 2026-08-25)
+          names, for \"contracting entities for Firebase Services\": \"Google LLC (formerly known as
+          Google Inc.), Google Ireland Limited, Google Asia Pacific Pte. Ltd., or any other entity
+          that directly or indirectly controls, is controlled by, or is under common control with
+          Google LLC (as applicable, \"Google\")\" [read via summarising fetch, not raw text. A
+          first fetch of this same URL additionally reported 'Google Ireland Limited is located at
+          Gordon House, Barrow Street, Dublin 4, Ireland, and serves as a further processor in
+          connection with each Firebase Agreement' and stated Firebase Cloud Messaging is explicitly
+          named among covered services; a second, differently-prompted fetch of the identical URL
+          could NOT re-confirm the FCM-specific sentence and reported 'Firebase and Firebase Cloud
+          Messaging are not mentioned anywhere in the provided content' when asked about a different
+          clause. This inconsistency across two fetches of the same document is recorded rather than
+          silently resolved in either direction — see gaps.]"
+      - vendor: Apple Push Notification service (APNs) — Apple Inc., a California corporation with its
+          principal place of business at One Apple Park Way, Cupertino, California 95014, U.S.A.
+        legal_name: Apple Inc.
+        anchors:
+          - api.push.apple.com
+          - api.sandbox.push.apple.com
+          - gateway.push.apple.com
+          - gateway.sandbox.push.apple.com
+          - apn
+          - apns2
+          - apnotic
+          - pushok
+          - com.eatthepath:pushy
+          - github.com/sideshow/apns2
+          - com.eatthepath.pushy
+        receives: "Send a notification — HTTP/2 POST /3/device/{deviceToken}: aps.alert.title,
+          aps.alert.subtitle, aps.alert.body (or aps.alert as a bare string), aps.badge (app icon
+          badge count), aps.sound, aps.content-available (background-update flag), aps.category
+          (notification type, drives which action buttons show), aps.thread-id (app-defined grouping
+          identifier), any custom top-level JSON keys the sending application adds — Apple's own
+          documentation warns developers, in the page cited below, \"Do not include customer
+          information or any sensitive data in your payload unless that data is encrypted or useless
+          outside of the context of your app.\" That is a warning Apple thought worth giving about
+          this field; it is not evidence about what any particular application puts there, which is
+          a question for the code in front of the reader, apns-topic, apns-collapse-id,
+          apns-push-type HTTP/2 headers, and the device token in the URL path itself, the calling
+          server's authentication: a JWT (ES256, tied to a Team ID/Key ID) or a per-app TLS client
+          certificate | Device token issuance: the device token itself, issued by iOS/the OS to the
+          app and then relayed by the app's own server to Apple on every send [NOT established
+          first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (California)
+          as the primary Developer Program contracting entity; Ireland (Apple Distribution
+          International Ltd./Limited) for the EEA/UK/Switzerland relationship and as GDPR controller
+          for individuals in those regions. || CANDIDATE CONTRACTING ENTITIES, as the vendor's own
+          documents named them on the day each document was read: Apple Inc. — United States (a
+          California corporation with its principal place of business at One Apple Park Way,
+          Cupertino, California 95014) — named as 'Apple' in the Developer Program Licence
+          Agreement, which is the agreement a developer enters into to use the push service at all
+          [read from
+          https://developer.apple.com/support/downloads/terms/apple-developer-program/Apple-Develop\
+          er-Program-License-Agreement-English.pdf on 2026-08-25]; Apple Distribution International
+          Ltd. — no country is stated for this entity in the passage the research pass recorded —
+          named in the same agreement's definition of the 'European Relationship' as an entity whose
+          relationship with the developer covers applications delivered to end users in the European
+          Union. Note the suffix: this document spells it 'Ltd.' and the privacy policy below spells
+          it 'Limited' [read from
+          https://developer.apple.com/support/downloads/terms/apple-developer-program/Apple-Develop\
+          er-Program-License-Agreement-English.pdf on 2026-08-25]; Apple Distribution International
+          Limited — Ireland — named in Apple's privacy policy as the controller of personal data
+          relating to individuals in the European Economic Area, the United Kingdom and Switzerland.
+          That is a statement about individuals rather than about the developer's own contract [read
+          from https://www.apple.com/legal/privacy/en-ww/ on 2026-08-25]. || WHICH CANDIDATE APPLIES
+          TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF
+          THE VENDOR. It is read from the order form, the data processing agreement or the invoice
+          that operator actually signed; where none of those can be read, the answer for this field
+          is needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "https://developer.apple.com/support/downloads/terms/apple-developer-program/A\
+          pple-Developer-Program-License-Agreement-English.pdf (retrieved 2026-08-25) names, for
+          \"Apple Push Notification Service / APN definition, and primary contracting entity\":
+          \"\"Apple\" means Apple Inc., a California corporation with its principal place of
+          business at One Apple Park Way, Cupertino, California 95014, U.S.A. ... \"Apple Push
+          Notification Service\" or \"APN\" means the Apple Push Notification service that Apple may
+          provide to You to enable You to transmit Push Notifications to Your Application or via the
+          MDM Protocol or for use as otherwise permitted herein. \"APN API\" means the Documented
+          API that enables You to use the APN to deliver a Push Notification to Your Application or
+          for use as otherwise permitted herein.\" [read RAW from the downloaded PDF via the Read
+          tool (pages 1-8 of the Apple Developer Program License Agreement), not a summarising fetch
+          — the highest-reliability tier used in this research pass.] ||
+          https://developer.apple.com/support/downloads/terms/apple-developer-program/Apple-Develop\
+          er-Program-License-Agreement-English.pdf (retrieved 2026-08-25) names, for \"the
+          EEA-relevant Apple entity for the developer relationship\": \"\"European Relationship\"
+          means the relationship of Apple and/or Apple Distribution International Ltd. with You,
+          whether arising out of this Agreement, the Apple Software, Apple hardware or otherwise, in
+          relation to (i) any Application, Licensed Application and/or Custom Application insofar as
+          delivered to, or intended for delivery to, end users through the App Store in an EU
+          country or region; and/or (ii) any Application, Licensed Application and/or Custom
+          Application, other software (including but not limited to Covered Products and/or
+          Corresponding Products) and/or non-Apple hardware, insofar as used, or intended for use,
+          on iOS or with iOS devices by end users located in the EU.\" [read raw from the same PDF,
+          page 5.] || https://www.apple.com/legal/privacy/en-ww/ (retrieved 2026-08-25) names, for
+          \"GDPR controller entity for EEA/UK/Switzerland individuals generally\": \"Personal data
+          relating to individuals in the European Economic Area, the United Kingdom, and Switzerland
+          is controlled by Apple Distribution International Limited in Ireland.\" [read via
+          summarising fetch, not raw text — the source page is Apple's general (whole-of-Apple)
+          privacy statement, not an APNs-specific document; Apple publishes no APNs-specific DPA for
+          individual developers (see gaps).]"
+      - vendor: Pusher (Channels + Beams) — a Bird (formerly MessageBird) company — (see note for the
+          entities the research recorded)
+        anchors:
+          - pusher-js
+          - "@pusher/push-notifications-server"
+          - pusher/pusher-php-server
+          - PusherServer
+          - com.pusher
+          - com.pusher:pusher-http-java
+          - com.pusher:pusher-java-client
+          - com.pusher:pusher-websocket-android
+          - com.pusher:push-notifications-android
+          - com.pusher:push-notifications-server-java
+          - com.pusher:pusher-rest-java
+          - com.pusher:chatkit-android
+          - com.pusher:chatkit-core
+          - com.pusher:pusher-platform-core
+          - com.pusher:pusher-platform-android
+          - com.pusher:pusher-platform
+          - github.com/pusher/pusher-http-go/v5
+          - pusher.com
+          - pushnotifications.pusher.com
+          - sockjs.pusher.com
+          - stats.pusher.com
+          - pusherapp.com
+          - Pusher::Client
+          - com.pusher.client
+          - github.com/pusher/pusher-http-go
+        receives: "Trigger/publish event — Channels HTTP API, POST /apps/{app_id}/events: channels/channel
+          (destination channel name(s), up to 100), name (event name), data (arbitrary
+          application-defined JSON payload, up to 10KB), socket_id (optional, excludes the
+          originating connection from receiving its own event) | Channel/user authentication — the
+          app's own server calls Pusher's client library, which the app then exposes at its own
+          /pusher/auth or /pusher/user-auth endpoint: socket_id (request), auth string and user_data
+          (response), id — a required, non-empty user identifier (for authenticateUser), user_info —
+          optional additional user details (Pusher's own docs give 'name' as the example) shared
+          with other members of a presence channel, watchlist — an optional array of user IDs,
+          described by Pusher's own docs as 'a circle of interest (e.g., friends or followers) whose
+          online/offline presence can be exposed to the user' | Beams push notification publish:
+          device token or interest-subscription identifier, notification title/body (same general
+          shape as FCM/APNs/OneSignal) [NOT established first-hand in the research pass; treat as
+          unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Best available current
+          reading: United Kingdom (MessageBird UK Limited) for the \"Push Notifications API\" line
+          of business named in Bird's current Terms; historically England & Wales (Pusher Limited)
+          before the 2020 acquisition. Genuinely unresolved which current Bird entity governs
+          Channels specifically versus Beams — see gaps. [JURISDICTION NOT ESTABLISHED in the
+          research pass; treat as unconfirmed — see note] || CANDIDATE CONTRACTING ENTITIES, as the
+          vendor's own documents named them on the day each document was read: MessageBird UK
+          Limited — United Kingdom (3 More London Riverside, 4th Floor, London SE1 2AQ) — named in
+          Bird's current Terms specifically for the 'Push Notifications API' line of business [read
+          from https://bird.com/legal/terms on 2026-08-25]; Pusher Limited — England and Wales
+          (registered number 07489873; Eighth Floor 6 New Street Square, New Fetter Lane, London
+          EC4A 3AQ) — the contracting entity before the 2020 acquisition, read from an archived
+          privacy policy the vendor itself marks superseded. It is here because a record written
+          before the acquisition may still name it [read from
+          https://pusher.com/legal-archived/privacy-policy/ on 2026-08-25]; Bird B.V. — Netherlands
+          (Keizersgracht 268, 1016 EV Amsterdam) — recorded from Bird's 2024 Terms as the global
+          default entity, excluding the United States [NOT CONFIRMED FROM A DOCUMENT IN THIS PASS:
+          the research pass recorded this entity under
+          legal_entities.current_bird_entities_named_2024_terms; the passage it quoted covers only
+          the Push Notifications API row, so which entity governs Channels as distinct from Beams
+          was not established]; Bird.com Inc. — United States (4701 Sangamore Road, Suite 200N-139,
+          Bethesda MD 20816) — recorded from Bird's 2024 Terms as the entity for United States
+          customers of Email and Email Analytics only [NOT CONFIRMED FROM A DOCUMENT IN THIS PASS:
+          the research pass recorded this entity under
+          legal_entities.current_bird_entities_named_2024_terms and quoted no passage naming it];
+          Bird Pay B.V. — Netherlands (Amsterdam) — recorded from Bird's 2024 Terms as a further
+          group entity [NOT CONFIRMED FROM A DOCUMENT IN THIS PASS: the research pass recorded this
+          entity under legal_entities.current_bird_entities_named_2024_terms and quoted no passage
+          naming it]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S
+          OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data
+          processing agreement or the invoice that operator actually signed; where none of those can
+          be read, the answer for this field is needs_human. Do not choose a candidate because it is
+          the largest, the nearest, the one with the most familiar name or the only one left. Every
+          date above is the day that document was read and nothing in this repository re-reads it,
+          so this list ages into an INCOMPLETE list and never into a false statement — a candidate
+          may have been renamed, acquired or added since."
+        jurisdiction_source: "https://pusher.com/legal-archived/privacy-policy/ (retrieved 2026-08-25)
+          names, for \"historical (pre-2022, now superseded) contracting entity\": \"Pusher Limited,
+          an English company ... Eighth Floor 6 New Street Square, New Fetter Lane, London, England,
+          EC4A 3AQ ... Pusher Limited is a company registered in England and Wales (No. 07489873)\"
+          [This page states explicitly it is archived and applied before 28 February 2022; also
+          states 'Pusher is now a Bird company.' Superseded — kept only as the pre-acquisition
+          record.] || https://bird.com/legal/terms (retrieved 2026-08-25) names, for \"current Bird
+          entity named specifically for Push Notifications API\": \"MessageBird UK Limited, 3 More
+          London Riverside, 4th Floor, London SE1 2AQ, United Kingdom.\" [Re-fetched raw 2026-08-25
+          (HTTP 200, 463,726 bytes) and confirmed verbatim; the previous value wrapped the address
+          in the researcher's own framing (an em dash, inner quotation marks and a parenthetical)
+          and so was not a span of the document. Section 15 of Bird's current General Terms and
+          Conditions, last updated 21 November 2024. Reached via a 301 redirect chain:
+          pusher.com/legal/ -> messagebird.com/legal/terms-and-conditions ->
+          messagebird.com/legal/terms -> bird.com/legal/terms (final, 200). The phrase 'Push
+          Notifications API' IS in the document verbatim: Bird's own contracting-entity table
+          carries the row 'Push Notifications API Services ... MessageBird UK Limited', re-confirmed
+          here on 2026-08-25 (HTTP 200, 463,726 bytes, read raw). What is INFERRED is the
+          CORRESPONDENCE between that service name and Pusher Beams/Channels — no document found in
+          this pass ties the word \"Pusher\" itself to one specific current Bird legal entity; see
+          gaps. [Wording corrected 2026-08-25 by the final repair round, on NOTE 2 of the
+          independent legal re-check. The previous sentence read as though the phrase itself were
+          absent from the page, which is not so; the inference is about what the phrase refers to,
+          and only that.]] || https://registry.npmjs.org/pusher-js/latest and
+          https://registry.npmjs.org/pusher/latest (retrieved 2026-08-25) names, for \"current
+          registered npm-package maintainer identity, corroborating the Bird relationship\":
+          \"maintainer \"jeremy.goldstein\", alongside \"pushercom\"\" [raw registry JSON, not a
+          legal document, but directly corroborates that Pusher's official SDKs are now maintained
+          under a bird.com identity.]"
+      - vendor: OneSignal — OneSignal, Inc. and its affiliates
+        legal_name: OneSignal, Inc.
+        anchors:
+          - react-onesignal
+          - "@onesignal/node-onesignal"
+          - onesignal-python-api
+          - onesignal
+          - onesignal/onesignal-php-api
+          - Com.OneSignal
+          - OneSignalApi
+          - OneSignalSDK.DotNet
+          - OneSignalSDK.Xamarin
+          - com.onesignal
+          - com.onesignal:OneSignal
+          - com.onesignal:core
+          - com.onesignal:notifications
+          - com.onesignal:location
+          - com.onesignal:in-app-messages
+          - api.onesignal.com
+          - onesignal.com/api/v1
+          - com.onesignal.OneSignal
+        receives: 'Create Notification — REST API POST /notifications: app_id, target_channel ("push",
+          "email", or "sms"), include_aliases (targets specific users via external_id, onesignal_id,
+          or a custom alias — up to 20,000 per request) OR included_segments OR filters (custom
+          audience logic), contents (the push/SMS message body text), email_subject and email_body
+          (for the email channel), send_after / delayed_option / delivery_time_of_day (scheduling) |
+          Device/player registration (client SDK): device push token, subscription/player
+          identifier, device attributes [NOT established first-hand in the research pass; treat as
+          unconfirmed]'
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (California)
+          || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the day
+          each document was read: OneSignal, Inc. — United States (California; 201 S. B St., Suite
+          200, San Mateo, CA 94401) — named as the processor entity, together with its affiliates,
+          which the document does not enumerate [read from https://onesignal.com/dpa on 2026-08-25].
+          || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN
+          CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data
+          processing agreement or the invoice that operator actually signed; where none of those can
+          be read, the answer for this field is needs_human. Do not choose a candidate because it is
+          the largest, the nearest, the one with the most familiar name or the only one left. Every
+          date above is the day that document was read and nothing in this repository re-reads it,
+          so this list ages into an INCOMPLETE list and never into a false statement — a candidate
+          may have been renamed, acquired or added since."
+        jurisdiction_source: "https://onesignal.com/dpa (retrieved 2026-08-25) names, for
+          \"contracting/processor entity and address\": \"OneSignal, Inc. and its affiliates ... 201
+          S. B St., Suite 200, San Mateo, CA 94401\" [read via summarising fetch, not raw text.] ||
+          https://onesignal.com/dpa (retrieved 2026-08-25) names, for \"EU-U.S. Data Privacy
+          Framework transfer basis\": \"a transfer of Customer Personal Data from the EU, UK or
+          Switzerland to Provider in the United States subject to the EU-U.S. Data Privacy
+          Framework...shall not constitute a Restricted Transfer so long as Provider maintains an
+          active certification\" [same summarising fetch; corroborated independently by OneSignal's
+          public listing at https://www.dataprivacyframework.gov/participant/6776 (seen in WebSearch
+          results, not independently fetched).]"
+      - vendor: PubNub — PubNub Inc., its subsidiaries, affiliates, and its group of companies
+        legal_name: PubNub Inc.
+        anchors:
+          - pubnub
+          - pubnub/pubnub
+          - Pubnub
+          - com.pubnub
+          - com.pubnub:pubnub-chat
+          - com.pubnub:pubnub-chat-jvm
+          - com.pubnub:pubnub-chat-api
+          - com.pubnub:pubnub-kotlin-api
+          - github.com/pubnub/go/v7
+          - ps.pndsn.com
+          - h2.pubnubapi.com
+          - com.pubnub.api
+        receives: "Publish — channel message: channel (destination channel ID), message payload (any
+          JSON-serializable data — object/array/string/number — entirely application-defined, which
+          can include a person's name or message content), uuid/user_id (set once at client
+          initialisation, identifies the publishing user or device to PubNub for every subsequent
+          call), meta (optional filtering metadata object), custom_message_type (optional
+          business-defined label) | Presence: which uuid is subscribed/online on which channel — an
+          online/offline signal PubNub necessarily observes as part of providing the Presence
+          feature [NOT established first-hand in the research pass; treat as unconfirmed] | Mobile
+          Push Gateway (PubNub's own FCM/APNs-bridging add-on): device push tokens, registered with
+          PubNub so it can forward messages into FCM/APNs on the caller's behalf [NOT established
+          first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (California)
+          || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the day
+          each document was read: PubNub Inc. — United States (California; 95 Third Street, 2nd
+          Floor, San Francisco, CA 94103) — named as the contracting entity, together with its
+          subsidiaries, affiliates and group of companies, which the document does not enumerate
+          [read from https://www.pubnub.com/trust/legal/privacy-policy/ on 2026-08-25]. || WHICH
+          CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT
+          AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement
+          or the invoice that operator actually signed; where none of those can be read, the answer
+          for this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: 'https://www.pubnub.com/trust/legal/privacy-policy/ (retrieved 2026-08-25)
+          names, for "contracting entity and address": "PubNub Inc., its subsidiaries, affiliates,
+          and its group of companies ... 95 Third Street, 2nd Floor, San Francisco, CA 94103" [read
+          via summarising fetch, not raw text. State of incorporation (vs. principal place of
+          business) not separately stated in the fetched content.] ||
+          https://www.pubnub.com/trust/legal/privacy-policy/ (retrieved 2026-08-25) names, for
+          "cross-border transfer mechanism": "Standard Contractual Clauses pursuant to article 46 of
+          the General Data Protection Regulation (GDPR)" [same summarising fetch; also states
+          certification under the EU-U.S., UK Extension, and Swiss-U.S. Data Privacy Frameworks.]'
+      - vendor: Svix — Svix Inc.
+        legal_name: Svix Inc.
+        anchors:
+          - svix
+          - svix/svix
+          - Svix
+          - com.svix
+          - com.svix:svix
+          - github.com/svix/svix-webhooks/go
+          - api.svix.com
+          - api.us.svix.com
+          - api.eu.svix.com
+          - api.in.svix.com
+          - api.ca.svix.com
+          - api.au.svix.com
+        receives: "Message create — svix.message.create(appId, { eventType, payload, ... }) (the
+          Node/Python/Go/Java/... SDKs, or the equivalent REST call): eventType, payload (arbitrary
+          JSON — entirely defined by the sending application, and can carry any personal data that
+          application chooses to relay through Svix, per its own controller/processor split above),
+          eventId | Webhook delivery — outbound HTTP POST from Svix to the CUSTOMER'S OWN configured
+          endpoint: the destination URL itself (chosen by Svix's customer, i.e. the scanned
+          product's own operator or its end customers, not by Svix), svix-id, svix-timestamp,
+          svix-signature headers (HMAC signing per the Standard Webhooks specification), the message
+          payload from the create call above, delivery receipts / attempt logs — Svix necessarily
+          records and exposes delivery success/failure and HTTP response codes back to the sending
+          application, per its dashboard/API design"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (California)
+          || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the day
+          each document was read: Svix Inc. — United States (California; 2261 Market Street #4239,
+          San Francisco, CA 94114) — named as the entity the website and service are owned and
+          operated by, or on behalf of [read from https://www.svix.com/legal/privacy/ on
+          2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT
+          OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order
+          form, the data processing agreement or the invoice that operator actually signed; where
+          none of those can be read, the answer for this field is needs_human. Do not choose a
+          candidate because it is the largest, the nearest, the one with the most familiar name or
+          the only one left. Every date above is the day that document was read and nothing in this
+          repository re-reads it, so this list ages into an INCOMPLETE list and never into a false
+          statement — a candidate may have been renamed, acquired or added since."
+        jurisdiction_source: "https://www.svix.com/legal/privacy/ (retrieved 2026-08-25) names, for
+          \"contracting entity and address\": \"This Website is owned and operated by, or on behalf
+          of, Svix Inc. (\"Svix\", \"we\", \"our\" or \"us\"). ... Svix Inc., 2261 Market Street
+          #4239, San Francisco, CA 94114\" [read via summarising fetch, not raw text.] ||
+          https://www.svix.com/legal/privacy/ (retrieved 2026-08-25) names, for \"controller vs.
+          processor role — directly relevant to how a rule should characterise Svix as a
+          recipient\": \"We are the data controller in respect of personal information of our users
+          based in the European Union. In the case of the private information processed by Svix
+          during the use of the service (\"Customer PI\"), we are a data processor.\" [Re-fetched
+          raw 2026-08-25 (HTTP 200, 125,253 bytes) and confirmed verbatim. The previous value read
+          \"personal data\" where Svix writes \"personal information\" — the GDPR term of art put
+          into a vendor's mouth where the vendor used the ordinary phrase; every other word of the
+          span was and is verbatim. This is a meaningful split: Svix is a PROCESSOR for the webhook
+          payload content a customer's application sends through it (the personal data a rule would
+          actually care about), and separately a CONTROLLER only for its own dashboard/account
+          users.] || https://www.svix.com/legal/privacy/ (retrieved 2026-08-25) names, for
+          \"subprocessor list\": \"Such providers include: Amazon Web Services, Auth0, Stripe,
+          Google Apps, Slack, Mailgun, DocuSign, Close.\" [same summarising fetch.]"
+  delivery_recipients_word_end:
+    kind: recipient
+    purpose: "Push-delivery vendor spellings that are ordinary short words, moved out of
+      delivery_recipients above because that list cannot carry a trailing word boundary for all of
+      its anchors — six of them are npm scopes ending in a slash. The same question as that list —
+      who receives personal data from the scanned product, GDPR Art. 30(1)(d)'s field (d) and its
+      equivalents — over the spellings that need the importing rule to end the match at a word end:
+      unbounded, they are read inside a2dp, a2enmod and longer identifiers. A match here is evidence
+      that the vendor's code or endpoint is named in the tree, never on its own evidence that
+      anything was disclosed to it."
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: Apple Push Notification service (APNs) — Apple Inc., a California corporation with its
+          principal place of business at One Apple Park Way, Cupertino, California 95014, U.S.A.
+        legal_name: Apple Inc.
+        anchors:
+          - a2
+          - pigeon
+          - houston
+        receives: "Send a notification — HTTP/2 POST /3/device/{deviceToken}: aps.alert.title,
+          aps.alert.subtitle, aps.alert.body (or aps.alert as a bare string), aps.badge (app icon
+          badge count), aps.sound, aps.content-available (background-update flag), aps.category
+          (notification type, drives which action buttons show), aps.thread-id (app-defined grouping
+          identifier), any custom top-level JSON keys the sending application adds — Apple's own
+          documentation warns developers, in the page cited below, \"Do not include customer
+          information or any sensitive data in your payload unless that data is encrypted or useless
+          outside of the context of your app.\" That is a warning Apple thought worth giving about
+          this field; it is not evidence about what any particular application puts there, which is
+          a question for the code in front of the reader, apns-topic, apns-collapse-id,
+          apns-push-type HTTP/2 headers, and the device token in the URL path itself, the calling
+          server's authentication: a JWT (ES256, tied to a Team ID/Key ID) or a per-app TLS client
+          certificate | Device token issuance: the device token itself, issued by iOS/the OS to the
+          app and then relayed by the app's own server to Apple on every send [NOT established
+          first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (California)
+          as the primary Developer Program contracting entity; Ireland (Apple Distribution
+          International Ltd./Limited) for the EEA/UK/Switzerland relationship and as GDPR controller
+          for individuals in those regions. || CANDIDATE CONTRACTING ENTITIES, as the vendor's own
+          documents named them on the day each document was read: Apple Inc. — United States (a
+          California corporation with its principal place of business at One Apple Park Way,
+          Cupertino, California 95014) — named as 'Apple' in the Developer Program Licence
+          Agreement, which is the agreement a developer enters into to use the push service at all
+          [read from
+          https://developer.apple.com/support/downloads/terms/apple-developer-program/Apple-Develop\
+          er-Program-License-Agreement-English.pdf on 2026-08-25]; Apple Distribution International
+          Ltd. — no country is stated for this entity in the passage the research pass recorded —
+          named in the same agreement's definition of the 'European Relationship' as an entity whose
+          relationship with the developer covers applications delivered to end users in the European
+          Union. Note the suffix: this document spells it 'Ltd.' and the privacy policy below spells
+          it 'Limited' [read from
+          https://developer.apple.com/support/downloads/terms/apple-developer-program/Apple-Develop\
+          er-Program-License-Agreement-English.pdf on 2026-08-25]; Apple Distribution International
+          Limited — Ireland — named in Apple's privacy policy as the controller of personal data
+          relating to individuals in the European Economic Area, the United Kingdom and Switzerland.
+          That is a statement about individuals rather than about the developer's own contract [read
+          from https://www.apple.com/legal/privacy/en-ww/ on 2026-08-25]. || WHICH CANDIDATE APPLIES
+          TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF
+          THE VENDOR. It is read from the order form, the data processing agreement or the invoice
+          that operator actually signed; where none of those can be read, the answer for this field
+          is needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "https://developer.apple.com/support/downloads/terms/apple-developer-program/A\
+          pple-Developer-Program-License-Agreement-English.pdf (retrieved 2026-08-25) names, for
+          \"Apple Push Notification Service / APN definition, and primary contracting entity\":
+          \"\"Apple\" means Apple Inc., a California corporation with its principal place of
+          business at One Apple Park Way, Cupertino, California 95014, U.S.A. ... \"Apple Push
+          Notification Service\" or \"APN\" means the Apple Push Notification service that Apple may
+          provide to You to enable You to transmit Push Notifications to Your Application or via the
+          MDM Protocol or for use as otherwise permitted herein. \"APN API\" means the Documented
+          API that enables You to use the APN to deliver a Push Notification to Your Application or
+          for use as otherwise permitted herein.\" [read RAW from the downloaded PDF via the Read
+          tool (pages 1-8 of the Apple Developer Program License Agreement), not a summarising fetch
+          — the highest-reliability tier used in this research pass.] ||
+          https://developer.apple.com/support/downloads/terms/apple-developer-program/Apple-Develop\
+          er-Program-License-Agreement-English.pdf (retrieved 2026-08-25) names, for \"the
+          EEA-relevant Apple entity for the developer relationship\": \"\"European Relationship\"
+          means the relationship of Apple and/or Apple Distribution International Ltd. with You,
+          whether arising out of this Agreement, the Apple Software, Apple hardware or otherwise, in
+          relation to (i) any Application, Licensed Application and/or Custom Application insofar as
+          delivered to, or intended for delivery to, end users through the App Store in an EU
+          country or region; and/or (ii) any Application, Licensed Application and/or Custom
+          Application, other software (including but not limited to Covered Products and/or
+          Corresponding Products) and/or non-Apple hardware, insofar as used, or intended for use,
+          on iOS or with iOS devices by end users located in the EU.\" [read raw from the same PDF,
+          page 5.] || https://www.apple.com/legal/privacy/en-ww/ (retrieved 2026-08-25) names, for
+          \"GDPR controller entity for EEA/UK/Switzerland individuals generally\": \"Personal data
+          relating to individuals in the European Economic Area, the United Kingdom, and Switzerland
+          is controlled by Apple Distribution International Limited in Ireland.\" [read via
+          summarising fetch, not raw text — the source page is Apple's general (whole-of-Apple)
+          privacy statement, not an APNs-specific document; Apple publishes no APNs-specific DPA for
+          individual developers (see gaps).]"
+  delivery_recipients_camel_s:
+    kind: recipient
+    purpose: The push-delivery vendor spelling that needs a right bound admitting an English plural,
+      moved out of delivery_recipients above for the same reason as the list before it and kept
+      apart from it because its bound differs. The same question as delivery_recipients — who
+      receives personal data from the scanned product, GDPR Art. 30(1)(d)'s field (d) and its
+      equivalents — over a spelling whose importing rule must admit `pushers` and `PusherBeams`
+      while refusing the camelCase verb form in `PushError` and `pushErroredRoute`. A match here is
+      evidence that the vendor's code or endpoint is named in the tree, never on its own evidence
+      that anything was disclosed to it.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: Pusher (Channels + Beams) — a Bird (formerly MessageBird) company — (see note for the
+          entities the research recorded)
+        anchors:
+          - pusher
+        receives: "Trigger/publish event — Channels HTTP API, POST /apps/{app_id}/events: channels/channel
+          (destination channel name(s), up to 100), name (event name), data (arbitrary
+          application-defined JSON payload, up to 10KB), socket_id (optional, excludes the
+          originating connection from receiving its own event) | Channel/user authentication — the
+          app's own server calls Pusher's client library, which the app then exposes at its own
+          /pusher/auth or /pusher/user-auth endpoint: socket_id (request), auth string and user_data
+          (response), id — a required, non-empty user identifier (for authenticateUser), user_info —
+          optional additional user details (Pusher's own docs give 'name' as the example) shared
+          with other members of a presence channel, watchlist — an optional array of user IDs,
+          described by Pusher's own docs as 'a circle of interest (e.g., friends or followers) whose
+          online/offline presence can be exposed to the user' | Beams push notification publish:
+          device token or interest-subscription identifier, notification title/body (same general
+          shape as FCM/APNs/OneSignal) [NOT established first-hand in the research pass; treat as
+          unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Best available current
+          reading: United Kingdom (MessageBird UK Limited) for the \"Push Notifications API\" line
+          of business named in Bird's current Terms; historically England & Wales (Pusher Limited)
+          before the 2020 acquisition. Genuinely unresolved which current Bird entity governs
+          Channels specifically versus Beams — see gaps. [JURISDICTION NOT ESTABLISHED in the
+          research pass; treat as unconfirmed — see note] || CANDIDATE CONTRACTING ENTITIES, as the
+          vendor's own documents named them on the day each document was read: MessageBird UK
+          Limited — United Kingdom (3 More London Riverside, 4th Floor, London SE1 2AQ) — named in
+          Bird's current Terms specifically for the 'Push Notifications API' line of business [read
+          from https://bird.com/legal/terms on 2026-08-25]; Pusher Limited — England and Wales
+          (registered number 07489873; Eighth Floor 6 New Street Square, New Fetter Lane, London
+          EC4A 3AQ) — the contracting entity before the 2020 acquisition, read from an archived
+          privacy policy the vendor itself marks superseded. It is here because a record written
+          before the acquisition may still name it [read from
+          https://pusher.com/legal-archived/privacy-policy/ on 2026-08-25]; Bird B.V. — Netherlands
+          (Keizersgracht 268, 1016 EV Amsterdam) — recorded from Bird's 2024 Terms as the global
+          default entity, excluding the United States [NOT CONFIRMED FROM A DOCUMENT IN THIS PASS:
+          the research pass recorded this entity under
+          legal_entities.current_bird_entities_named_2024_terms; the passage it quoted covers only
+          the Push Notifications API row, so which entity governs Channels as distinct from Beams
+          was not established]; Bird.com Inc. — United States (4701 Sangamore Road, Suite 200N-139,
+          Bethesda MD 20816) — recorded from Bird's 2024 Terms as the entity for United States
+          customers of Email and Email Analytics only [NOT CONFIRMED FROM A DOCUMENT IN THIS PASS:
+          the research pass recorded this entity under
+          legal_entities.current_bird_entities_named_2024_terms and quoted no passage naming it];
+          Bird Pay B.V. — Netherlands (Amsterdam) — recorded from Bird's 2024 Terms as a further
+          group entity [NOT CONFIRMED FROM A DOCUMENT IN THIS PASS: the research pass recorded this
+          entity under legal_entities.current_bird_entities_named_2024_terms and quoted no passage
+          naming it]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S
+          OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data
+          processing agreement or the invoice that operator actually signed; where none of those can
+          be read, the answer for this field is needs_human. Do not choose a candidate because it is
+          the largest, the nearest, the one with the most familiar name or the only one left. Every
+          date above is the day that document was read and nothing in this repository re-reads it,
+          so this list ages into an INCOMPLETE list and never into a false statement — a candidate
+          may have been renamed, acquired or added since."
+        jurisdiction_source: "https://pusher.com/legal-archived/privacy-policy/ (retrieved 2026-08-25)
+          names, for \"historical (pre-2022, now superseded) contracting entity\": \"Pusher Limited,
+          an English company ... Eighth Floor 6 New Street Square, New Fetter Lane, London, England,
+          EC4A 3AQ ... Pusher Limited is a company registered in England and Wales (No. 07489873)\"
+          [This page states explicitly it is archived and applied before 28 February 2022; also
+          states 'Pusher is now a Bird company.' Superseded — kept only as the pre-acquisition
+          record.] || https://bird.com/legal/terms (retrieved 2026-08-25) names, for \"current Bird
+          entity named specifically for Push Notifications API\": \"MessageBird UK Limited, 3 More
+          London Riverside, 4th Floor, London SE1 2AQ, United Kingdom.\" [Re-fetched raw 2026-08-25
+          (HTTP 200, 463,726 bytes) and confirmed verbatim; the previous value wrapped the address
+          in the researcher's own framing (an em dash, inner quotation marks and a parenthetical)
+          and so was not a span of the document. Section 15 of Bird's current General Terms and
+          Conditions, last updated 21 November 2024. Reached via a 301 redirect chain:
+          pusher.com/legal/ -> messagebird.com/legal/terms-and-conditions ->
+          messagebird.com/legal/terms -> bird.com/legal/terms (final, 200). The phrase 'Push
+          Notifications API' IS in the document verbatim: Bird's own contracting-entity table
+          carries the row 'Push Notifications API Services ... MessageBird UK Limited', re-confirmed
+          here on 2026-08-25 (HTTP 200, 463,726 bytes, read raw). What is INFERRED is the
+          CORRESPONDENCE between that service name and Pusher Beams/Channels — no document found in
+          this pass ties the word \"Pusher\" itself to one specific current Bird legal entity; see
+          gaps. [Wording corrected 2026-08-25 by the final repair round, on NOTE 2 of the
+          independent legal re-check. The previous sentence read as though the phrase itself were
+          absent from the page, which is not so; the inference is about what the phrase refers to,
+          and only that.]] || https://registry.npmjs.org/pusher-js/latest and
+          https://registry.npmjs.org/pusher/latest (retrieved 2026-08-25) names, for \"current
+          registered npm-package maintainer identity, corroborating the Bird relationship\":
+          \"maintainer \"jeremy.goldstein\", alongside \"pushercom\"\" [raw registry JSON, not a
+          legal document, but directly corroborates that Pusher's official SDKs are now maintained
+          under a bird.com identity.]"

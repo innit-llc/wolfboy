@@ -1,0 +1,437 @@
+id: eu-special-categories-003
+pack: eu-special-categories
+short_name: Origin, belief, union or sexuality data named in the code
+problem_line:
+  text: "Origin, belief, union, sexuality data: no Art. 9 basis named"
+fix_line: Name the GDPR Art. 9 exception relied on, or drop the field and keep the value out of logs
+  and analytics.
+title: Racial or ethnic origin, political opinions, religion or belief, trade union, sex life or
+  sexual orientation named
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(1): 'Processing of personal data revealing racial or
+      ethnic origin, political opinions, religious or philosophical beliefs, or trade union
+      membership, and the processing of genetic data, biometric data for the purpose of uniquely
+      identifying a natural person, data concerning health or data concerning a natural person's sex
+      life or sexual orientation shall be prohibited.' Quoted verbatim from the Official Journal
+      text (CELEX 32016R0679), retrieved 2026-07-30 from the Publications Office cellar
+      (publications.europa.eu/resource/celex/32016R0679; eur-lex.europa.eu itself returns an empty
+      WAF challenge); the apostrophe in 'person's' is ASCII U+0027 in the Journal text. WHAT THIS
+      RULE COVERS: the four categories Art. 9(1) introduces with the word 'revealing' - racial or
+      ethnic origin, political opinions, religious or philosophical beliefs, trade union membership
+      - together with its final limb, 'data concerning a natural person's sex life or sexual
+      orientation'. Genetic data, biometric data and data concerning health are
+      eu-special-categories-004, -002 and -001. No count of the listed categories is given anywhere
+      in this file, and the omission is deliberate: the file carried such a count until 2026-08-03
+      and it was arithmetically inconsistent, counting sex life and sexual orientation as two
+      categories in the numerator and as one in the denominator, while the sibling rule -004 used
+      the eight-limb count in the same pack on the same day. The Art. 9(1) list can be read as eight
+      limbs or as nine depending on that choice, nothing in the Regulation settles it, and no legal
+      consequence turns on it. WHAT IS NOT ON THE LIST: the word gender does not appear in Art. 9(1)
+      at all, and the word sex appears in it only inside the two phrases 'sex life' and 'sexual
+      orientation'. Exactly one thing follows from that, and it is stated narrowly because the wider
+      version is unsound once C-184/20 is read correctly (see the next entry): a plain sex or gender
+      column is not itself one of the listed categories, which is why the detector's vocabulary does
+      not contain the bare words gender and sex. Whether a particular gender-identity or
+      trans-status field is liable INDIRECTLY to reveal a person's sex life or sexual orientation is
+      a different question, it is not answered by the absence of the words from the list, and it is
+      context question 3. ADDRESSEE. Art. 9(1) names none. Art. 4(7) defines the controller as
+      '‘controller’ means the natural or legal person, public authority, agency or other body which,
+      alone or jointly with others, determines the purposes and means of the processing of personal
+      data', and Art. 4(8) defines the processor as '‘processor’ means a natural or legal person,
+      public authority, agency or other body which processes personal data on behalf of the
+      controller'. A processor's activity is itself processing, so the prohibition binds it too;
+      what is controller-shaped is most of Art. 9(2). Contrast Art. 5(2), where the Regulation does
+      name an addressee expressly: 'The controller shall be responsible for, and be able to
+      demonstrate compliance with, paragraph 1'. THE PROHIBITED ACT. Art. 4(2): '‘processing’ means
+      any operation or set of operations which is performed on personal data or on sets of personal
+      data, whether or not by automated means, such as collection, recording, organisation,
+      structuring, storage, adaptation or alteration, retrieval, consultation, use, disclosure by
+      transmission, dissemination or otherwise making available, alignment or combination,
+      restriction, erasure or destruction'. Storing one of these categories in a first-party table
+      with no onward transmission is squarely inside that list, which is why this detector requires
+      no sink. Art. 9 has applied since 2018-05-25: Art. 99(2) reads 'It shall apply from 25 May
+      2018.' All quoted verbatim from the same Official Journal text; the Art. 4(2), 4(7), 4(8) and
+      5(2) spans were added on 2026-08-03 and re-fetched that day, and each defined term inside them
+      carries the Journal's own U+2018/U+2019 marks rather than ASCII substitutes."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+  - cite: "CJEU, Case C-184/20, OT v Vyriausioji tarnybinės etikos komisija, judgment of the Grand
+      Chamber of 1 August 2022 (CELEX 62020CJ0184). WHAT THE COURT HOLDS: personal data liable
+      INDIRECTLY to reveal a special category are inside Art. 9(1), and the Court refuses to draw
+      any distinction between the categories introduced by 'revealing' and those introduced by
+      'concerning'. Para. 127: 'Consequently, those provisions cannot be interpreted as meaning that
+      the processing of personal data that are liable indirectly to reveal sensitive information
+      concerning a natural person is excluded from the strengthened protection regime prescribed by
+      those provisions, if the effectiveness of that regime and the protection of the fundamental
+      rights and freedoms of natural persons that it is intended to ensure are not to be
+      compromised.' Operative part, point 2: 'Article 8(1) of Directive 95/46 and Article 9(1) of
+      Regulation 2016/679 must be interpreted as meaning that the publication, on the website of the
+      public authority responsible for collecting and checking the content of declarations of
+      private interests, of personal data that are liable to disclose indirectly the sexual
+      orientation of a natural person constitutes processing of special categories of personal data,
+      for the purpose of those provisions.' THE CATEGORY AT ISSUE WAS SEXUAL ORIENTATION, which Art.
+      9(1) introduces with 'data concerning' and not with 'revealing' - so the holding is about the
+      'concerning' limb, and it cannot be read as a proposition about the 'revealing' limb alone.
+      THE READING THE COURT REJECTS, quoted because this file previously cited it as if it were the
+      holding. Para. 123 reports the Advocate General: 'As the Advocate General has observed, in
+      essence, in point 85 of his Opinion, whilst the use, in those provisions, of the verb ‘reveal’
+      is consistent with the taking into account of processing not only of inherently sensitive
+      data, but also of data revealing information of that nature indirectly, following an
+      intellectual operation involving deduction or cross-referencing, the preposition ‘concerning’
+      seems, on the other hand, to signify the existence of a more direct and immediate link between
+      the processing and the data concerned, viewed inherently.' Para. 124 then discards it: 'Such
+      an interpretation, which would result in a distinction being drawn according to the type of
+      sensitive data at issue, would not, however, be consistent with a contextual analysis of those
+      provisions, in particular with Article 4(15) of the GDPR, according to which ‘data concerning
+      health’ are personal data related to the physical or mental health of a natural person,
+      including the provision of health care services, which ‘reveal’ information about his or her
+      health status, and with recital 35 of that regulation, which states that personal data
+      concerning health should include all data pertaining to the health status of a data subject
+      which ‘reveal’ information relating to the past, current or future physical or mental health
+      status of the data subject.' Para. 125 adds the first of two further reasons: 'Furthermore, a
+      wide interpretation of the terms ‘special categories of personal data’ and ‘sensitive data’ is
+      confirmed by the objective of Directive 95/46 and the GDPR, noted in paragraph 61 of the
+      present judgment, which is to ensure a high level of protection of the fundamental rights and
+      freedoms of natural persons, in particular of their private life, with respect to the
+      processing of personal data concerning them'. Para. 126 adds the second: 'The contrary
+      interpretation would, moreover, run counter to the purpose of Article 8(1) of Directive 95/46
+      and Article 9(1) of the GDPR, namely to ensure enhanced protection as regards processing
+      which, because of the particular sensitivity of the data processed, is liable to constitute,
+      as follows from recital 33 of Directive 95/46 and recital 51 of the GDPR, a particularly
+      serious interference with the fundamental rights to respect for private life and to the
+      protection of personal data, guaranteed by Articles 7 and 8 of the Charter'. THE CONCRETE
+      PROXY in the case, para. 119: it was possible 'to deduce from the name-specific data relating
+      to the spouse, cohabitee or partner of the declarant certain information concerning the sex
+      life or sexual orientation of the declarant and his or her spouse, cohabitee or partner.'
+      Quoted verbatim from the Publications Office cellar text (CELEX 62020CJ0184, Accept:
+      application/xhtml+xml and Accept-Language: eng required), re-fetched and re-checked character
+      by character on 2026-08-03; the judgment prints its inner quotation marks as U+2018 and U+2019
+      and they are reproduced as such above, where this file previously substituted ASCII U+0022
+      without saying so."
+    url: http://publications.europa.eu/resource/celex/62020CJ0184
+    checked_at: 2026-07-30
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(2): 'Paragraph 1 shall not apply if one of the
+      following applies: (a) the data subject has given explicit consent to the processing of those
+      personal data for one or more specified purposes, except where Union or Member State law
+      provide that the prohibition referred to in paragraph 1 may not be lifted by the data subject;
+      (b) processing is necessary for the purposes of carrying out the obligations and exercising
+      specific rights of the controller or of the data subject in the field of employment and social
+      security and social protection law in so far as it is authorised by Union or Member State law
+      or a collective agreement pursuant to Member State law providing for appropriate safeguards
+      for the fundamental rights and the interests of the data subject; (c) processing is necessary
+      to protect the vital interests of the data subject or of another natural person where the data
+      subject is physically or legally incapable of giving consent; (d) processing is carried out in
+      the course of its legitimate activities with appropriate safeguards by a foundation,
+      association or any other not-for-profit body with a political, philosophical, religious or
+      trade union aim and on condition that the processing relates solely to the members or to
+      former members of the body or to persons who have regular contact with it in connection with
+      its purposes and that the personal data are not disclosed outside that body without the
+      consent of the data subjects; (e) processing relates to personal data which are manifestly
+      made public by the data subject; (f) processing is necessary for the establishment, exercise
+      or defence of legal claims or whenever courts are acting in their judicial capacity; (g)
+      processing is necessary for reasons of substantial public interest, on the basis of Union or
+      Member State law which shall be proportionate to the aim pursued, respect the essence of the
+      right to data protection and provide for suitable and specific measures to safeguard the
+      fundamental rights and the interests of the data subject; (h) processing is necessary for the
+      purposes of preventive or occupational medicine, for the assessment of the working capacity of
+      the employee, medical diagnosis, the provision of health or social care or treatment or the
+      management of health or social care systems and services on the basis of Union or Member State
+      law or pursuant to contract with a health professional and subject to the conditions and
+      safeguards referred to in paragraph 3; (i) processing is necessary for reasons of public
+      interest in the area of public health, such as protecting against serious cross-border threats
+      to health or ensuring high standards of quality and safety of health care and of medicinal
+      products or medical devices, on the basis of Union or Member State law which provides for
+      suitable and specific measures to safeguard the rights and freedoms of the data subject, in
+      particular professional secrecy; (j) processing is necessary for archiving purposes in the
+      public interest, scientific or historical research purposes or statistical purposes in
+      accordance with Article 89(1) based on Union or Member State law which shall be proportionate
+      to the aim pursued, respect the essence of the right to data protection and provide for
+      suitable and specific measures to safeguard the fundamental rights and the interests of the
+      data subject.' Art. 9(3), which conditions point (h): 'Personal data referred to in paragraph
+      1 may be processed for the purposes referred to in point (h) of paragraph 2 when those data
+      are processed by or under the responsibility of a professional subject to the obligation of
+      professional secrecy under Union or Member State law or rules established by national
+      competent bodies or by another person also subject to an obligation of secrecy under Union or
+      Member State law or rules established by national competent bodies.' Art. 9(4): 'Member States
+      may maintain or introduce further conditions, including limitations, with regard to the
+      processing of genetic data, biometric data or data concerning health.' Note the scope of 9(4):
+      it names genetic, biometric and health data only, so it does not reach the categories this
+      rule covers. All quoted verbatim from the same Official Journal text, retrieved 2026-07-30."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1): '‘personal data’ means any information relating
+      to an identified or identifiable natural person (‘data subject’); an identifiable natural
+      person is one who can be identified, directly or indirectly, in particular by reference to an
+      identifier such as a name, an identification number, location data, an online identifier or to
+      one or more factors specific to the physical, physiological, genetic, mental, economic,
+      cultural or social identity of that natural person'. In the Official Journal text both the
+      defined term 'personal data' and the term 'data subject' inside the definition are wrapped in
+      U+2018/U+2019 curly quotation marks. CORRECTED 2026-08-03: this file previously substituted
+      ASCII U+0022 for the marks around 'data subject' inside the quoted span, while its own note
+      about curly marks described only the defined term outside it - a reader was told a true fact
+      about the wrong words. Quoted from the same Official Journal text, retrieved 2026-07-30."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 51, first and second sentences: 'Personal data which
+      are, by their nature, particularly sensitive in relation to fundamental rights and freedoms
+      merit specific protection as the context of their processing could create significant risks to
+      the fundamental rights and freedoms. Those personal data should include personal data
+      revealing racial or ethnic origin, whereby the use of the term ‘racial origin’ in this
+      Regulation does not imply an acceptance by the Union of theories which attempt to determine
+      the existence of separate human races.' The U+2018/U+2019 curly quotation marks around 'racial
+      origin' are the Journal's own and are reproduced above; this file previously substituted ASCII
+      U+0022 for them, which it disclosed but did not fix, and it was fixed on 2026-08-03. Quoted
+      from the same Official Journal text, retrieved 2026-07-30."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 83(5)(a): infringements of 'the basic principles for
+      processing, including conditions for consent, pursuant to Articles 5, 6, 7 and 9' are 'subject
+      to administrative fines up to 20 000 000 EUR, or in the case of an undertaking, up to 4 % of
+      the total worldwide annual turnover of the preceding financial year, whichever is higher'.
+      Art. 9 is listed expressly, so for this rule the tier is a direct listing rather than an
+      inference from 'basic principles'. Quoted from the same Official Journal text, retrieved
+      2026-07-30."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-07-30
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  match:
+    - "[Rr]eligio|RELIGIO|[Ee]thnicit|ETHNICIT|[Ee]thnic(?![A-Za-z])|ETHNIC(?![A-Z])|[Ee]thnic[_\\-
+      ]?(?:[Oo]rigin|[Gg]roup|[Bb]ackground)|ETHNIC[_\\-
+      ]?(?:ORIGIN|GROUP|BACKGROUND)|[Ss]exual[_\\- ]?[Oo]rientation|SEXUAL[_\\-
+      ]?ORIENTATION|[Ss]exuality|SEXUALITY|[Hh]omosexual|HOMOSEXUAL|[Hh]eterosexual|HETEROSEXUAL|[B\
+      b]isexual|BISEXUAL|(?<![A-Za-z])LGBTQ?|(?<=[a-z])LGBTQ?(?![A-Za-z0-9])|(?<![A-Za-z])[Ll]gbtq?\
+      (?![a-z])|(?<=[a-z])Lgbtq?(?![a-z])|[Qq]ueer|QUEER|[Ss]ex[_\\- ]?[Ll]ife|SEX[_\\-
+      ]?LIFE|[Tt]rade[_\\- ]?[Uu]nion|TRADE[_\\- ]?UNION|[Ll]abou?r[_\\- ]?[Uu]nion|LABOU?R[_\\-
+      ]?UNION|[Uu]nion[_\\-
+      ]?(?:[Mm]embership|[Mm]ember|[Aa]ffiliat|[Ss]tatus|[Dd]ues|[Rr]ep\\b|[Ii]nvolvement)|UNION[_\
+      \\-
+      ]?(?:MEMBERSHIP|MEMBER|AFFILIAT|STATUS|DUES|REP\\b|INVOLVEMENT)|[Uu]nionis(?:ed|ation|m)|[Uu]\
+      nioniz(?:ed|ation|m)|UNIONIS(?:ED|ATION|M)|UNIONIZ(?:ED|ATION|M)|[Ss]yndicalis|SYNDICALIS|[Pp\
+      ]olitical[_\\-
+      ]?(?:[Oo]pinion|[Aa]ffiliation|[Pp]arty|[Vv]iew|[Ll]eaning|[Oo]rientation|[Bb]elief|[Ss]tance\
+      |[Pp]reference)|POLITICAL[_\\-
+      ]?(?:OPINION|AFFILIATION|PARTY|VIEW|LEANING|ORIENTATION|BELIEF|STANCE|PREFERENCE)|[Pp]olitics\
+      (?![A-Za-z])|POLITICS(?![A-Z])|[Pp]olitical(?![A-Za-z])|POLITICAL(?![A-Z])|[Ii]deolog|IDEOLOG\
+      |[Pp]artisan|PARTISAN|[Pp]hilosophical[_\\- ]?[Bb]elief|PHILOSOPHICAL[_\\-
+      ]?BELIEF|[Ww]orldview|WORLDVIEW|[Ss]ectarian|SECTARIAN"
+    - (?:(?<![A-Za-z0-9])(?:race|races)|Race|(?<![A-Z])RACE(?![A-Z])|[Rr]acial|RACIAL|(?<![A-Za-z0-9])belief|Belief|BELIEF|[Ff]aith(?!ful)|FAITH(?!FUL)|(?<![A-Za-z0-9])creed(?![A-Za-z])|Creed(?![A-Za-z])|(?<![A-Z])CREED(?![A-Z])|[Dd]enomination|DENOMINATION|[Ww]orship|WORSHIP|(?<![A-Za-z0-9])[Aa]ncestry|(?<![A-Z])ANCESTRY)[^\n]{0,60}(?:CharField|TextField|VarChar|varchar|VARCHAR|TEXT\b|@Column|Column\(|db\.Column|sa\.Column|models\.[A-Za-z]*Field\b|DataTypes\.STRING|z\.string|z\.enum|z\.nativeEnum|Mapped\[|CHAR\(|ENUM\()
+    - (?:t\.string|t\.text|->string\(|->text\(|add_column)[^\n]{0,60}(?:(?<![A-Za-z0-9])(?:race|races)|Race|(?<![A-Z])RACE(?![A-Z])|[Rr]acial|(?<![A-Za-z0-9])belief|Belief|[Ff]aith(?!ful)|(?<![A-Za-z])[Cc]reed(?![A-Za-z])|[Dd]enomination|[Ww]orship)
+    - (?:[Nn]ame|htmlFor|[Ff]or|[Kk]ey|[Ff]ield|[Cc]olumn|[Ii]d)\s*(?:=>|[:=])\s*["'](?:race|Race|belief|beliefs|faith|creed|worship|ancestry)["']|["'](?:race|Race|RACE|belief|beliefs|faith|creed|worship|ancestry)["']\s*\]?\s*(?:=>|[:=])|(?<![A-Za-z0-9_.$'"])(?:race|belief|faith(?!ful)|creed|worship)\s*[?!]?:\s*|[Dd]enomination\s*[?!]?:\s*(?:string|str\b|String)
+    - (?:[Uu]ser|USER|[Pp]rofile|PROFILE|[Mm]ember|[Pp]erson|[Ss]ubject|[Aa]pplicant|[Ee]mployee|[Cc]ustomer|[Cc]andidate|[Vv]oter|[Cc]itizen|[Rr]espondent|[Aa]ttendee|[Cc]ontact|[Aa]ccount|[Pp]atient|[Dd]emographics|DEMOGRAPHICS|[Dd]emographic|[Aa]ttributes|ATTRIBUTES|[Dd]etections?|[Pp]redictions?|[Rr]esults?|[Aa]nalysis|[Oo]utput|formData|form_data|req\.body|request\.body)\s*(?:\.|\[\s*["'])\s*(?:[A-Za-z]{0,10}[_\-]){0,2}(?:race|Race|RACE|races|racial|ethnicity|Ethnicity|ETHNICITY|ethnic_origin|ethnicOrigin|ethnicGroup|ethnic_group|ancestry|Ancestry|religion|Religion|RELIGION|religious_belief|religiousBelief|belief|beliefs|faith|creed|worship|worldview|politics|political_opinion|politicalOpinion|political_affiliation|politicalAffiliation|political_party|politicalParty|political_views?|politicalViews?|ideology|sexual_orientation|sexualOrientation|sexuality|sex_life|sexLife|trade_union|tradeUnion|union_membership|unionMembership|union_member|unionMember|union_status|unionStatus)(?![A-Za-z])
+    - (?:type|interface|enum|class|struct)\s+[A-Za-z]{0,16}(?:Race(?![a-z]*(?:track|way|course|[Cc]ondition))|Racial|Ethnic|Religio|Politic|Ideolog|Partisan|Sexual|Belief|Faith|Worldview|Creed|TradeUnion|UnionMember)|(?<![A-Z])(?:RACE|BELIEF|FAITH|CREED)_(?:CHOICES|OPTIONS|LABELS|VALUES|LIST|ENTRIES)|(?<![A-Za-z])[Rr]ace[_\-]?(?:[Cc]hoices|[Oo]ptions|[Vv]alues|[Ll]abels|[Ll]ist|[Ee]ntries)|[Bb]elief[_\-]?(?:[Cc]hoices|[Oo]ptions|[Vv]alues)|[Ff]aith[_\-]?(?:[Cc]hoices|[Oo]ptions)
+    - (?:console\.(?:log|info|warn|error|debug)|(?<![A-Za-z0-9_.$])log(?:ger)?\.(?:info|warn|error|debug|log)|log\.(?:Info|Error|Warn|Printf|Println)|print\(|fmt\.Print|Rails\.logger|captureException|captureMessage|setContext|setExtra|setUser|setTag|addBreadcrumb|(?:track|capture|identify|logEvent|recordEvent|gtag|dataLayer\.push)\s*\()[^\n]{0,90}(?:(?<![A-Za-z0-9])races?(?![A-Za-z])|Race(?![a-z]*(?:track|way|course))|(?<![A-Z])RACE(?![A-Z])|[Rr]acial|(?<![A-Za-z0-9])belief|Belief|[Ff]aith(?!ful)|(?<![A-Za-z0-9])creed(?![A-Za-z])|Creed(?![A-Za-z])|[Ww]orship|[Aa]ncestry)
+    - "[Dd]ominant[_\\-]?(?:[Rr]ace|[Ee]thnicity)|DOMINANT_(?:RACE|ETHNICITY)"
+    - (?:[Pp]redict|[Ii]nfer|[Dd]educ|[Cc]lassif|[Ee]stimat|[Dd]etect|[Dd]eriv|[Ss]cor|[Gg]uess|[Ii]dentif|[Cc]ategori[sz]|[Aa]naly[sz]|[Rr]ecogni|[Ll]abel|[Tt]ag)[A-Za-z]{0,10}[_\-]?(?:(?<![A-Za-z0-9])race|Race|RACE|[Rr]acial|[Aa]ncestr|(?<![A-Za-z0-9])belief|Belief|BELIEF|[Ff]aith(?!ful)|(?<![A-Za-z0-9])creed|Creed|[Ww]orship|[Dd]enomination)
+    - (?:(?<![A-Za-z0-9])race|Race|(?<![A-Z])RACE(?![A-Z])|[Rr]acial|[Aa]ncestr|(?<![A-Za-z0-9])belief|Belief|[Ff]aith(?!ful)|(?<![A-Za-z0-9])creed|Creed|[Ww]orship)[A-Za-z]{0,12}[_\-]?(?:[Cc]lassif|[Mm]odel\b|[Pp]redict|[Ss]core|SCORE|[Ll]ogits|[Ll]abel|[Ii]nference|[Bb]ucket|[Ss]egment|[Bb]reakdown|[Dd]istribution)
+    - (?<![A-Za-z0-9_.$'"])[A-Za-z]{0,12}(?:Race(?![a-z])|Racial|Belief|Faith(?!ful)|Creed|Worship|Ancestry)\s*[?!]?:\s*|(?:Race(?![a-z])|Racial|Belief|Faith(?!ful)|Creed|Worship|Ancestry)\s+(?:string|String)(?![A-Za-z])|(?:String|string)\s+(?:races?|racial|beliefs?|faith(?!ful)|creed|worship|ancestry|Race(?![a-z])|Racial|Belief|Faith(?!ful)|Creed|Worship|Ancestry)\s*[;=){]|(?<![A-Za-z0-9_])[A-Za-z_][A-Za-z0-9_]{0,20}\.(?:Race(?![a-z])|Racial|Ancestry|Beliefs?|Faith(?!ful)|Creed|Worship)(?![A-Za-z])
+    - (?<![A-Za-z0-9_.$'"])(?:[A-Z][A-Z0-9]{0,12}_)?(?:RACES?|RACIAL|BELIEFS?|FAITH(?!FUL)|CREED|WORSHIP|ANCESTRY)(?![A-Za-z])\s*[?!]?:\s*
+    - (?<![A-Za-z])(?:[Rr]elig|RELIG|[Ee]thn|ETHN|[Pp]olit|POLIT)(?![A-Za-z])|[Ss]exual[_\-
+      ]?[Oo]rient(?![A-Za-z])|SEXUAL[_\- ]?ORIENT(?![A-Z])|[Uu]nion[_\-
+      ]?(?:[Ff]lag|[Cc]ode|[Cc]d(?![A-Za-z])|[Ii]ndicator)|UNION[_\-
+      ]?(?:FLAG|CODE|CD(?![A-Z])|INDICATOR)
+    - (?:(?<![A-Za-z0-9])(?:race|races)|Race|(?<![A-Z])RACE(?![A-Z])|[Rr]acial|RACIAL|(?<![A-Za-z0-9])belief|Belief|BELIEF|[Ff]aith(?!ful)|FAITH(?!FUL)|(?<![A-Za-z0-9])creed(?![A-Za-z])|Creed(?![A-Za-z])|(?<![A-Z])CREED(?![A-Z])|[Dd]enomination|DENOMINATION|[Ww]orship|WORSHIP|(?<![A-Za-z0-9])[Aa]ncestry|(?<![A-Z])ANCESTRY)[^\n]{0,60}(?:character\s+varying|CHARACTER\s+VARYING)
+    - (?<![A-Za-z])[Pp]ol[_\- ]?[Pp]art(?:y|ies)(?![A-Za-z])|(?<![A-Z])POL[_\-
+      ]?PART(?:Y|IES)(?![A-Z])
+    - (?:(?<![A-Za-z0-9])race|Race(?![a-z])|(?<![A-Z])RACE(?![A-Z])|[Rr]acial|RACIAL|[Aa]ncestr|ANCESTR|(?<![A-Za-z0-9])belief|Belief|BELIEF|[Ff]aith(?!ful)|FAITH(?!FUL)|(?<![A-Za-z0-9])creed|Creed|CREED|[Ww]orship|WORSHIP|[Dd]enomination|[Ee]thnic|ETHNIC|[Rr]eligio|RELIGIO|[Ii]deolog|IDEOLOG)[A-Za-z]{0,12}[_\-]?(?:[Ss]ignal|SIGNAL|[Tt]ag(?![A-Za-z])|TAG(?![A-Z])|[Hh]int|HINT|[Ee]stimate|ESTIMATE|[Gg]uess|GUESS|[Pp]robabilit|PROBABILIT|[Cc]onfidence|CONFIDENCE|[Ii]ndicator|INDICATOR)
+    - (?<![A-Za-z0-9_])[A-Za-z_][A-Za-z0-9_]{0,20}\.(?:races?|racial|ancestry|beliefs?|faith(?!ful)|creed|worship|RACES?|RACIAL|ANCESTRY|BELIEFS?|FAITH(?!FUL)|CREED|WORSHIP)(?![A-Za-z])
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|--\s)
+    - "[Rr]ace[_\\s\\-]?[Cc]ondition|RACE_CONDITION|[Dd]ata[_\\s\\-]?race"
+    - "[Rr]ace(?:track|way|course|[Tt]rack|[Ww]ay|[Cc]ourse)|[Rr]ace[_\\-]?(?:[Dd]ay|[Tt]ime|[Bb]ib\
+      |[Nn]umber|[Dd]istance|[Ss]tart|[Ff]inish|[Ww]inner|[Pp]ace|[Ss]plit|[Ee]vent|[Ss]eries|[Dd]a\
+      te)|[Mm]arathon|[Tt]riathlon|[Rr]acecar|[Rr]acing|[Hh]orse|NASCAR|[Ff]ormula ?1|[Gg]rand
+      ?[Pp]rix|[Ll]eaderboard|[Pp]odium|[Aa]rms[_\\s\\-]?race|[Rr]at[_\\s\\-]?race"
+    - (?:[Ll]abels|[Cc]lasses|[Cc]ategories)["']?\s*(?:=>|[:=])\s*["'`]
+    - "[Bb]elief[_\\s\\-]?(?:[Pp]ropagation|[Ss]tate|[Ss]pace|[Uu]pdate|[Nn]etwork|[Bb]ase|[Mm]ap)|\
+      [Bb]ayesian"
+context_questions:
+  - "Is the matched value about an identified or identifiable natural person at all (GDPR Art. 4(1),
+    quoted in this rule's legal_basis)? Four content shapes recur and none of them is personal data:
+    a dictionary or lexicon gloss ABOUT the word (measured in a real tree: `meaningEn: 'religion;
+    sect; denomination; main point'` in a kanji-teaching dataset - the detector fires there
+    deliberately and this question is where that candidate is dismissed); an i18n/translation
+    catalogue or UI copy naming the category; a content-topic taxonomy or moderation-policy string
+    ('politics', 'sexual content') that classifies CONTENT rather than a person; and a demo/sample
+    dataset with no person behind it. TWO FURTHER SHAPES RECUR AND NEITHER IS ABOUT A PERSON EITHER.
+    The same spelling used in another technical domain, where no category of anybody is named: a
+    concurrency race condition written as `race:` inside a log message, a GraphQL union member type
+    in application code or in a parser grammar, a subword entry in an embedding model's tokenizer
+    vocabulary, an entry in a random-word list used to generate display names. And one of these
+    words inside a sentence of ordinary prose - a code of conduct, a governance or policy document,
+    a README. Where that is what the line is, say so and dismiss the candidate here; a collision is
+    a cost of casting wide rather than a defect to argue around. Quote the surrounding schema, type
+    or record and say what the row is keyed on - a person identifier, or a word, article, product or
+    nothing."
+  - "Which of the six categories this rule covers does the value fall in - racial or ethnic origin,
+    political opinions, religious or philosophical beliefs, trade union membership, sex life, sexual
+    orientation - and does it actually fall in one? The Art. 9(1) list is closed: the bare words
+    gender and sex are NOT on it, an allergen or dietary attribute of a product is not a
+    characteristic of a person, and a device's screen orientation is not an orientation of anybody.
+    WHERE NOTHING MAPS DIRECTLY, DO NOT STOP HERE - GO ON TO QUESTION 3, and that instruction is the
+    correction that matters most in this question, because stopping here is how this rule would
+    dismiss the field shape this area produces most often. That instruction is for a field that IS
+    about a person and names no listed category; it does not apply where question 1 has already
+    established that the matched spelling is not about a person at all - a homonym from another
+    technical domain, a word list, a model vocabulary or a sentence of prose - and such a candidate
+    closes at question 1 without reaching question 3. A gender-identity or trans-status field is not
+    itself one of the listed categories, and that answers only the direct question; whether it is
+    liable INDIRECTLY to reveal a person's sex life or sexual orientation is a different question,
+    it is not answered by the absence of the words from the list, and this rule's own legal_basis
+    routes it to question 3 (C-184/20, quoted there, holds that data liable indirectly to reveal a
+    special category are inside Art. 9(1), whichever limb the category sits in). The same goes for
+    any other field that names no category outright. So record here that nothing maps directly, say
+    so in those words, and answer question 3 before closing anything; 'not on the list' is a finding
+    about the words, never a conclusion about the data. And answer the inversion explicitly, because
+    the neighbouring AI Act rule decides it the other way: a SELF-DECLARED value - a form entry, a
+    survey answer, an onboarding selection - stays squarely inside Art. 9 (the AI Act Art. 5(1)(g)
+    rule ai-prohibited-003 excludes self-declared values because its provision prohibits deducing
+    from biometric data; Art. 9 contains no such condition). 'The user typed it themselves' keeps
+    the finding, never dismisses it."
+  - "If the field does not name a category directly, is it liable to reveal one INDIRECTLY? CJEU
+    C-184/20, quoted at length in this rule's legal_basis, holds that personal data liable
+    indirectly to reveal a special category are inside Art. 9(1). Read the holding carefully before
+    applying it, because it is easy to get backwards: the Court considered the argument that the
+    verb 'reveal' covers indirect deduction while the preposition 'concerning' requires 'a more
+    direct and immediate link', and it REJECTED that argument at paragraph 124 as inconsistent with
+    a contextual reading. The category actually at issue was sexual orientation, which Art. 9(1)
+    introduces with 'data concerning'. So the rule to apply is: data liable indirectly to reveal a
+    special category are inside Art. 9(1), whichever limb the category sits in, and there is no
+    category on the list for which indirect revelation is a weaker test. In that case the proxy was
+    name-specific data about the declarant's spouse, cohabitee or partner, from which sexual
+    orientation could be deduced. Shapes that carry this question: a partner or spouse field next to
+    names; a gender-identity or trans-status field, which is the shape this area produces most often
+    and which the absence of the words 'gender' and 'sex' from Art. 9(1) does not answer; membership
+    of a named organisation whose aim is political, religious or trade-union, where the
+    organisation's name reveals the affiliation; an advertising or content interest segment named
+    after one of the categories; donation or dues records to such an organisation. Quote the field
+    and say what an ordinary reader could deduce from it about a specific person, or record that
+    nothing is deducible and stop."
+  - "Which Art. 9(2) exception, if any, does the processing rest on? Nine of the ten are invisible
+    to this scanner - they turn on organisational facts, national law, or how a value reached the
+    system - so answer from the repository and its documentation, in this order for these
+    categories: (d) is the processing carried out by a foundation, association or other
+    not-for-profit body with a political, philosophical, religious or trade union aim, solely for
+    its members, former members or regular contacts, without disclosure outside the body? This is
+    the exception most likely to apply to an open-source repository - a union's, parish's or party's
+    own membership system - and the repository itself (name, README, deployment target) may be the
+    only evidence. (e) was the value manifestly made public by the data subject themselves - trace
+    how it reached the system, and note that scraping a public profile is not the subject making
+    anything public. (a) explicit consent for one or more specified purposes - a consent checkbox
+    near the field is a lead, never an answer: 'explicit' and 'specified purposes' are what must be
+    shown. Then (b) employment and social-security law (a works-council or union-dues field in HR
+    software turns on national law and collective agreements), (f) legal claims, (g) substantial
+    public interest on a named legal basis, (j) archiving/research/statistics under Art. 89(1).
+    Quote what you find, or record explicitly that you looked and the code shows nothing either
+    way."
+  - Where does the value go? Trace it and quote each hop. A first-party database write is still
+    processing - this rule fires on it deliberately, and 'it never leaves our Postgres' is an answer
+    to a different question. A log line, an analytics event, an error-tracker context, an LLM prompt
+    or any third-party payload each add their own questions on top of Art. 9 - integrity and
+    confidentiality under Art. 5(1)(f) for logs, and the Chapter V transfer rules in Arts. 44-49
+    where the recipient is outside the EEA. Neither provision is quoted in this file and neither is
+    assessed by this rule; they are named so that a reader knows to take them elsewhere, not so that
+    this finding decides them. Say which sinks exist and which do not.
+  - Who is the controller for this processing, and is it the party whose repository this is? A
+    library, SDK, form-builder or integration connector that carries an Art. 9-shaped field through
+    to a caller is not thereby the controller. Where the repository is a component rather than a
+    deployed service, record the finding against the integrating application and say so plainly.
+  - "WHO ANSWERS WHICH ART. 9(2) CONDITION THE ORGANISATION RELIES ON? Whether the organisation that
+    runs this product has a condition under Art. 9(2) for the special-category data it keeps, and
+    has it written down, is a fact about that organisation: the person running the scan is asked it
+    as the Art 9 condition question, ScanProfile.operator.special_category_condition, and the code
+    never decides it. Where the matched value is special-category data about an identifiable person
+    and what remains open is that condition - the Art. 9(2) question above - write the finding as
+    waiting on operator.special_category_condition, whether or not it has been answered, and let the
+    program apply the answer. The leads the Art. 9(2) question asks you to quote from the repository
+    corroborate or contradict the answer; where they contradict it, say so in the reasoning. The
+    answer settles that condition and nothing else: whether the value is special-category data at
+    all, directly or indirectly, whom it concerns, and whether the condition covers the use this
+    finding is about stay yours, so where one of those decides the finding, answer it instead of
+    waiting. An answer that the organisation has a condition never says that it covers a particular
+    use: each condition is tied to its purpose (Art. 9(2)(a) consent is given for one or more
+    specified purposes), so each onward use the code shows - the value sent to a log or an error
+    tracker, an analytics, marketing or session-replay SDK or another tracker, a language model or
+    another third-party API, or an export - is yours to judge on its own line, with the transfer,
+    minimisation and integrity questions it raises, and is never written as waiting on this answer."
+evidence_template: "{file}:{line} carries a string from this rule's Art. 9(1) vocabulary - racial or
+  ethnic origin, political opinions, religious or philosophical beliefs, trade union membership, sex
+  life or sexual orientation - which the clauses look for as a field, column, form control, key,
+  enum, per-person read, label set or logged value. THE STRING IS THE WHOLE OF WHAT WAS MATCHED, AND
+  THE ROLE IS NOT: several clauses match a bare word, and the punctuation the others require is
+  written inside log messages, JSON data and prose as well as inside declarations, so that list says
+  what the clauses aim at rather than what this line was shown to be. Four look-alike classes have
+  been met on real code, each of them satisfying a clause while naming no category of anybody. THE
+  SAME WORD IN ANOTHER TECHNICAL SENSE: `race` as a concurrency race condition inside a log message,
+  which reads as corroborated because the line really is a logging call; `union member` as a GraphQL
+  union member type, both in application code and in a parser grammar. AN ORDINARY ENGLISH WORD:
+  `political` in a random-word list used to generate display names, between `polite` and `poor`. A
+  MODEL VOCABULARY: the same word as a subword entry in an embedding model's tokenizer, where the
+  entry is a JSON key and the key shape therefore reads as satisfied. AND PROSE: a code of conduct,
+  a policy document, a translation catalogue or documentation, where the word sits in a sentence and
+  none of the syntactic roles listed above is present at all. Say which of these the line is, or
+  that it is none of them, before going further. Then check whether the value relates to an
+  identifiable person, whether it is liable indirectly to reveal one of these categories (C-184/20,
+  which applies that test to every limb of Art. 9(1)), and which Art. 9(2) exception, if any, covers
+  the processing"
+remediation_template: |
+  This is a candidate for review against the GDPR Art. 9(1) prohibition on processing special
+  categories of personal data, not a determination about this code. Art. 9 has applied since
+  2018-05-25 and is named expressly in the Art. 83(5)(a) tier (administrative fines up to
+  20 000 000 EUR or, for an undertaking, up to 4 % of total worldwide annual turnover, whichever
+  is higher).
+  Two facts decide most candidates, so establish them first:
+  1. Is the value personal data at all (Art. 4(1))? A dictionary gloss, a translation catalogue,
+     a survey question bank, a content-topic taxonomy and a moderation-policy string name these
+     words without relating them to an identifiable person. Where the row is keyed on a word,
+     an article or a product rather than a person, record that and move on.
+  2. Which Art. 9(1) category does it fall in? The list is closed, and the words gender and sex
+     are not on it - but that settles less than it looks. Under C-184/20 data liable indirectly to
+     reveal a special category are inside Art. 9(1), and the Court refused at paragraph 124 to draw
+     any distinction between the categories introduced by 'revealing' and those introduced by
+     'concerning'; the category in that case was sexual orientation, which is a 'concerning' one.
+     So a proxy field - a partner's name, a gender-identity or trans-status field, membership of a
+     named organisation, an interest segment - needs the same review as a field that names the
+     category outright. Unlike AI Act Art. 5(1)(g), a self-declared value is NOT out of scope: the
+     data subject's own form entry is squarely inside Art. 9(1).
+  If both hold, the question becomes which Art. 9(2) exception the processing rests on, and that
+  is an organisational fact this scan does not assess. For these categories the exceptions most
+  likely to be live are (d) - a foundation, association or other not-for-profit body with a
+  political, philosophical, religious or trade union aim, processing solely its members' and
+  regular contacts' data without outside disclosure (a union's, church's or party's own
+  membership system answers this rule by naming (d) and its scope, not by deleting the field) -
+  (e) - personal data manifestly made public by the data subject - and (a) - explicit consent to
+  one or more specified purposes, which a bare checkbox does not by itself show. Record the
+  exception and its factual basis next to the processing so the answer is legible to a reviewer.
+  Where no exception can be named, the engineering changes that remove the subject matter are:
+  drop the field, column, form control or label set, and deal with values already stored - which
+  is a separate question under Art. 17 that this rule neither quotes nor assesses;
+  stop writing the value into logs, analytics events and error-tracker contexts (Art. 5(1)(f),
+  and Arts. 44-49 where a recipient is outside the EEA, add their own questions); and where the
+  value arrives from a classifier's output, note that AI Act Art. 5(1)(g) runs in parallel with
+  its own rule (ai-prohibited-003), its own exceptions and its own remediation - answering one
+  duty does not answer the other.
+data_categories:
+  - user.demographic.race_ethnicity
+  - user.demographic.religious_belief
+  - user.demographic.political_opinion
+  - user.demographic.trade_union_membership
+  - user.demographic.sexual_orientation
+fingerprint_spec: file

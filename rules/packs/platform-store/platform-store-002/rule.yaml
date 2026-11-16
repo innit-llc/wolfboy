@@ -1,0 +1,178 @@
+id: platform-store-002
+pack: platform-store
+short_name: App's private data allowed into the device's cloud backup
+problem_line:
+  text: App data allowed into the device's cloud backup
+fix_line: Narrow the backup to what should follow the person, excluding secrets and tokens, or
+  require an encrypted backup.
+title: A declaration authorising the platform's backup service to copy the app's private data off
+  the device
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(c) - personal data shall be 'adequate, relevant
+      and limited to what is necessary in relation to the purposes for which they are processed'. A
+      whole-directory or whole-preference-store backup declaration is by construction not limited:
+      it copies whatever the application happens to store, including values added by later versions
+      that nobody re-examined against this declaration"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(e) - personal data shall be 'kept in a form which
+      permits identification of data subjects for no longer than is necessary for the purposes for
+      which the personal data are processed'. The platform copy has its own lifetime, set by the
+      platform and by the device owner's account settings, and it is not the lifetime the
+      application's own retention logic implements
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 17(1) - 'The data subject shall have the right to
+      obtain from the controller the erasure of personal data concerning him or her without undue
+      delay and the controller shall have the obligation to erase personal data without undue delay
+      where one of the following grounds applies'. In-app deletion never reaches the platform copy:
+      the application can delete its own row and the copy taken last night remains in the device
+      owner's platform account until the platform expires it"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 32(1)(a) - among the measures a controller and
+      processor shall implement, 'the pseudonymisation and encryption of personal data'. Reference
+      only, and it applies to the subset of declarations that make the copy conditional on
+      client-side encryption: a declaration whose own attribute requires an end-to-end encrypted
+      backup is a materially different posture from one that does not, and the finding should say
+      which of the two this line is"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 28(1) - 'Where processing is to be carried out on
+      behalf of a controller, the controller shall use only processors providing sufficient
+      guarantees to implement appropriate technical and organisational measures in such a manner
+      that processing will meet the requirements of this Regulation and ensure the protection of the
+      rights of the data subject.' Reference only, and it is cited as the open question rather than
+      as an answer: what the platform operator IS in this arrangement - a processor acting on the
+      developer's behalf, or a controller in its own right serving the device owner - is not settled
+      by the code, and context_questions[3] asks the operator rather than asserting either reading"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 26(1) - 'Where two or more controllers jointly determine
+      the purposes and means of processing, they shall be joint controllers.' Reference only, and
+      the alternative reading to the entry above; which of the two describes a platform backup
+      service is a question this detector does not answer
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 44 - 'Any transfer of personal data which are
+      undergoing processing or are intended for processing after transfer to a third country or to
+      an international organisation shall take place only if, subject to the other provisions of
+      this Regulation, the conditions laid down in this Chapter are complied with by the controller
+      and processor'. Reference only: the copy follows the DEVICE OWNER platform account, so where
+      it lands is decided by that account rather than by anything in this repository, and this
+      detector establishes no transfer"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.7
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  match:
+    - android:(?:allowBackup|fullBackupContent|dataExtractionRules|backupAgent|restoreAnyVersion|backupInForeground)\b
+    - \b(?:BackupAgentHelper|SharedPreferencesBackupHelper|FileBackupHelper|FullBackupDataOutput|BackupDataOutput|BackupDataInput)\b
+    - \bBackupAgent\b|\bonFullBackup\s*\(|\bonRestoreFinished\s*\(|\baddHelper\s*\(
+    - <\s*(?:full-backup-content|data-extraction-rules|cloud-backup|device-transfer)\b
+    - <\s*(?:include|exclude)\s+domain\s*=
+    - \b(?:requireFlags|disableIfNoEncryptionCapabilities)\s*=
+    - \bNSURLIsExcludedFromBackupKey\b|\bisExcludedFromBackup\b|\bNSUbiquitousKeyValueStore\b|\bNSUbiquitousContainers\b
+    - com\.apple\.developer\.(?:icloud-container-identifiers|icloud-services|ubiquity-kvstore-identifier)
+context_questions:
+  - "WHAT HAPPENS FOR THE PARTS OF THIS APPLICATION THAT DECLARE NOTHING? This is the limb the
+    detector cannot reach and it must be asked, not inferred: on Android the platform backup default
+    is ON, so an application or a library module that ships no declaration at all is being copied,
+    and there is no line anywhere for a scanner to match. Establish, from the merged manifest rather
+    than from any single file, whether this application ends up with a declaration; where it does
+    not, record that the platform default governs and say what that default does on the platform
+    versions this application supports."
+  - "WHICH WAY DOES THE MATCHED DECLARATION POINT, AND WHAT IS INSIDE WHAT IT COVERS? Quote the
+    attribute's value or the element's contents. There are four materially different answers and the
+    matched line alone distinguishes none of them: the copy is on for everything; the copy is off;
+    the copy is on but conditional on an end-to-end encrypted backup; or the copy is on for some
+    domains and off for others. Then open what it covers - a whole preference store or a whole data
+    directory is not a list of fields, and the question is what has accumulated in it, including
+    values added by versions written after this declaration."
+  - IS THERE A RUNTIME BRANCH THAT DECIDES WHETHER THE COPY HAPPENS? One anchor for this rule
+    implements a backup agent whose full-backup method calls the platform's implementation only when
+    the application's own database encryption is off, and skips it otherwise. That branch is
+    invisible in the manifest and changes the answer completely, so read the agent class named by
+    the manifest attribute rather than stopping at the attribute.
+  - "WHAT IS THE PLATFORM OPERATOR HERE, AND WHAT HAS BEEN AGREED WITH IT? Art. 28(1) and Art. 26(1)
+    are cited above as the two competing readings and this detector settles neither. Ask the
+    operator: is the platform's backup service treated as a processor acting on your behalf, or as a
+    controller serving the device owner directly; what is written down about it; and does the
+    product's own privacy statement mention the platform copy at all? The last part of that is
+    declaration-reconciliation material rather than a code question."
+  - DOES THE APPLICATION'S OWN DELETION PATH SAY ANYTHING ABOUT THE COPY? In-app deletion cannot
+    reach it. Check whether the product tells a person deleting their account that a platform backup
+    may still hold their data, and how long it holds it, or whether the deletion confirmation is
+    written as though the application's own storage were the whole of it.
+evidence_template: "{file}:{line} matched a declaration governing whether the operating system's own
+  backup service may copy this application's private data off the device - a manifest attribute, a
+  backup-agent class or its methods, a backup rule document's element or one of its three decisive
+  attributes, or the iOS and macOS counterpart keys. WHAT THIS ESTABLISHES is that this repository
+  contains an answer to the platform-backup question at this line. IT DOES NOT ESTABLISH WHICH
+  ANSWER: the attribute is matched and the value is not, deliberately, so a declaration turning the
+  copying OFF and one turning it ON both reach here and only reading the value distinguishes them.
+  It does not establish what is inside the directory or preference store the declaration covers,
+  which is the whole of the disclosure and is context_questions[1]. It does not establish that a
+  copy has ever been taken, which is a runtime and device-owner fact. AND THE LIMIT THAT MATTERS
+  MOST, stated here because no line can carry it: AN APPLICATION THAT DECLARES NOTHING AT ALL IS
+  STILL BACKED UP, because the platform default is on, and an absence of a declaration is not
+  something any line-matching detector can find. Silence from this rule is therefore not evidence
+  that the platform copy is not happening - it is evidence that nobody in this repository wrote down
+  a decision about it, which is context_questions[0] and is asked of the operator."
+remediation_template: |
+  Read the value, then read what it covers. A whole-preference-store or whole-data-directory
+  declaration is a standing authorisation over storage whose contents change with every release,
+  so the question is not what was in it when the declaration was written but what is in it now:
+  service URLs, API secrets, refresh tokens, one-time-password seeds, telephone numbers and a
+  person's name commonly accumulate in a preference store nobody re-examined.
+  Where the copy is wanted, narrow what it covers rather than switching it off wholesale: the
+  rule-document formats take per-domain and per-path include and exclude entries, and the newer
+  format takes an attribute that makes the copy conditional on the device having an end-to-end
+  encrypted backup. Excluding the credential and identifier paths while keeping the person's own
+  content is usually the arrangement that survives review.
+  Where any part of the application declares nothing, decide deliberately rather than inheriting the
+  platform default, and make sure the decision survives a library module being added: manifests are
+  merged at build time, and a dependency's own declaration can reintroduce what the application
+  turned off.
+  Write the platform copy into the deletion story. A person told that deleting their account removed
+  their data should not be told that by a product whose data was copied into the device owner's
+  platform account last night; say what remains, where, and for how long.
+data_categories:
+  - system.credentials
+  - user.unique_id
+  - user.name
+  - user.contact
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 1
+      class: existence
+    - question: 2
+      class: enumeration
+      item: declaration with the attribute's value
+      item_source: sub_shape
+    - question: 3
+      class: per-location
+    - question: 4
+      class: existence
+    - question: 5
+      class: existence

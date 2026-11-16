@@ -1,0 +1,248 @@
+id: ai-prohibited-002
+pack: ai-prohibited
+short_name: "Face recognition database: where the images come from"
+problem_line:
+  text: Face templates indexed from untargeted web or camera images
+fix_line: Limit the source to consenting subjects or keep no face templates or identity index;
+  delete any index already built.
+title: Face template call, SDK or collection named, screened against AI Act Art. 5(1)(e) - image
+  source and store need review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 5(1)(e) — a prohibited practice, not a
+      transparency duty: 'the placing on the market, the putting into service for this specific
+      purpose, or the use of AI systems that create or expand facial recognition databases through
+      the untargeted scraping of facial images from the internet or CCTV footage'. Addressee: Art.
+      5(1)(e) binds providers (Art. 3(3)) and deployers (Art. 3(4)) alike, and this is where it
+      differs from the transparency rules — Art. 50(1)-(2) address providers only and Art. 50(3)-(4)
+      deployers only, whereas Art. 5(1)(e) prohibits three acts at once: placing on the market and
+      putting into service for this specific purpose (provider acts) and use (a deployer act). An
+      operator that builds the pipeline and also runs it holds both roles. Applicable since
+      2025-02-02 (Art. 113(a): Chapters I and II apply from that date; Art. 5 sits in Chapter II)."
+    url: https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-5
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "Commission Guidelines on prohibited artificial intelligence practices established by
+      Regulation (EU) 2024/1689 (AI Act), C(2025) 5052 final, 29.7.2025 — para. 225: 'The
+      prohibition, therefore, applies to both providers and deployers of AI systems, each within
+      their respective responsibilities'; para. 224 sets four cumulative conditions — (i) placing on
+      the market, putting into service for this specific purpose or use of an AI system, (ii) for
+      the purpose of creating or expanding facial recognition databases, (iii) populated through AI
+      tools for untargeted scraping, (iv) images sourced from the internet or CCTV footage; para.
+      226: 'database' means any collection organised for rapid search and retrieval, may be
+      temporary, centralised or decentralised, and it is enough that it can be used for facial
+      recognition; paras 227-228: 'scraping' covers crawlers and bots extracting content
+      automatically, 'untargeted' is vacuum-cleaner collection with no specific focus on a given
+      individual or group, and respecting robots.txt does not make collection targeted; paras
+      229-231: collection limited to specific individuals or a pre-defined group is outside the
+      prohibition, step-by-step selection whose end result is the same as one broad sweep is not,
+      and where targeted and untargeted searches are combined the untargeted part is caught; para.
+      232: publishing one's own face on a social platform is not consent to inclusion in a facial
+      recognition database; para. 233: reverse image search from a supplied photo counts as
+      targeted; para. 234 (out of scope): untargeted collection of non-facial biometrics such as
+      voice samples, collection in which no AI system is involved, and facial image sets used for
+      model training or testing where the persons are not identified; para. 235: harvesting to build
+      generative models of fictitious persons is out of scope; para. 236: an existing set that is
+      not further expanded is governed by Union data protection law instead"
+    url: https://ai-act-service-desk.ec.europa.eu/sites/default/files/2025-08/guidelines_on_prohibited_artificial_intelligence_practices_established_by_regulation_eu_20241689_ai_act_english_ied3r5nwo50xggpcfmwckm3nuc_112367-1.PDF
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "EU AI Act Art. 99(3) — the penalty tier for the Art. 5 prohibitions, borne by the providers
+      and deployers engaging in the practice: administrative fines of up to EUR 35 000 000 or, if
+      the offender is an undertaking, up to 7 % of its total worldwide annual turnover for the
+      preceding financial year, whichever is higher. Art. 99(6) reverses the comparison for SMEs
+      including start-ups: whichever of the two is lower. The penalties chapter has applied since
+      2025-08-02 while the prohibition itself has applied since 2025-02-02, so between those dates
+      the prohibition bound operators without a fining regime attached (Guidelines C(2025) 5052
+      final paras 430-431). Reference only: this establishes the consequence, not the obligation the
+      detector tests"
+    url: https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-99
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "EU AI Act Art. 3(4) and Art. 2(10) (personal non-professional use) and Art. 2(12) (free and
+      open-source licences), read with Commission Guidelines C(2025) 5052 final paras 34-36 — Art.
+      3(4) excludes from the definition of deployer a person 'using an AI system under its authority
+      except where the AI system is used in the course of a personal non-professional activity', and
+      Art. 2(10) disapplies deployer obligations for natural persons acting that way; Guidelines
+      para. 34 treats any regular economic benefit and any professional, business, trade,
+      occupational or freelance use as professional, and para. 35 confines the exclusion to deployer
+      obligations, leaving the provider side untouched; para. 36 records that the Art. 2(12)
+      free-and-open-source exclusion does not extend to systems placed on the market or put into
+      service as an Art. 5 prohibited practice. Reference only: these narrow who the rule can reach,
+      they do not establish the obligation"
+    url: https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-2
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2025-02-02
+severity: high
+rule_confidence: 0.4
+detector:
+  engine: builtin-regex
+  match:
+    - \bface_recognition\.[\w.]*\s*\(|\b(?:face_encodings|face_landmarks|face_locations|batch_face_locations|compare_faces|face_distance)\s*\(|\bknown_face_(?:encodings|names|ids)\b
+    - \bface_recognition\s*\.
+    - \bdlib\.(?:face_recognition_model_v1|get_frontal_face_detector|cnn_face_detection_model_v1|shape_predictor|full_object_detection)\s*\(|\bcompute_face_descriptor\s*\(|shape_predictor_68_face_landmarks|dlib_face_recognition_resnet
+    - \bFaceAnalysis\s*\(|\bnormed_embedding\b|\binsightface\.[\w.]*\s*\(|['"](?:buffalo_[lsm]|antelopev2|glintr100|w600k_r50)['"]
+    - \bDeepFace\.(?:represent|find|verify|stream|extract_faces)\s*\(|['"](?:ArcFace|AdaFace|CosFace|SphereFace|MagFace|Facenet512|Facenet|VGG-Face|OpenFace|DeepID|SFace|GhostFaceNet)['"]
+    - \bMTCNN\s*\(|\bInceptionResnetV1\s*\(|\bRetinaFace\.[\w]+\s*\(|\bFaceNet\s*\(|\bkeras_facenet\b|\bfacenet_pytorch\b|\bface_alignment\.[\w]*\s*\(
+    - \bcv2\.face\.[\w]+\s*\(|\b(?:LBPH|Eigen|Fisher)FaceRecognizer(?:_create)?\s*\(|haarcascade_frontalface|\bdetectMultiScale\s*\(
+    - \bmediapipe\b|\bmp\.solutions\.face_(?:mesh|detection)\b|\bFaceMesh\s*\(|\bFaceLandmarker\b|\bFaceDetector\s*\(|\bface_mesh\b
+    - \bblazeface\b|\bfaceLandmarksDetection\b|\bMediaPipeFaceMesh\b|\bfaceMesh\b|\bestimateFaces\s*\(
+    - \b[Ff]ace[Aa]pi\.[\w.]*\s*\(|\b(?:computeFaceDescriptor|detectAllFaces|detectSingleFace|withFaceDescriptors?|withFaceLandmarks|FaceMatcher|LabeledFaceDescriptors)\s*\(|\bnew\s+(?:[\w@./-]+\.)?Human\s*\(|\bhuman\.(?:detect|similarity|distance|match)\b
+    - \brekognition\.[\w]+\s*\(|\bRekognitionClient\b|\b(?:index_faces|indexFaces|search_faces_by_image|searchFacesByImage|search_faces|searchFaces|list_faces|listFaces|detect_faces|detectFaces)\s*\(|\b(?:IndexFaces|SearchFacesByImage|SearchFaces|ListFaces|DetectFaces)\w*\b
+    - \b(?:PersonGroupPerson|LargePersonGroup|LargeFaceList|FaceAdministrationClient|FaceListClient)\b|\b(?:personGroupPerson|largePersonGroupPerson|personDirectory)\s*[.(]|\bPersonDirectory\s*\.|['"/]persondirectory\b|\badd_face_from_(?:url|stream)\s*\(|\baddFaceFrom(?:Url|Stream)\s*\(|\bAddFaceFrom(?:Url|Stream)\b|\.face\.detect_with_(?:url|stream)\s*\(
+    - \b(?:face_detection|faceDetection)\s*\(|\bFACE_DETECTION\b|\b(?:face_annotations|faceAnnotations)\b
+    - \b[Ff]ace[_-]?(?:[Ee]mbedding|[Ee]ncoding|[Dd]escriptor|[Tt]emplate|[Vv]ector|[Ss]ignature|[Pp]rint|[Ff]eature)s?\b|\b(?:facial|biometric)[_-](?:embedding|template|signature|recognition|vector|feature)s?\b|\bfacial[Rr]ecognition\b
+    - \b(?:[Ff]acial|[Bb]iometric)[_-]?(?:[Ee]mbedding|[Ee]ncoding|[Tt]emplate|[Ss]ignature|[Rr]ecognition|[Vv]ector|[Ff]eature|[Dd]escriptor)s?
+    - \b(?:enrol|enroll|recogni[sz]e|identify|match|search|index|embed|encode|register|compare|lookup)[_]?[Ff]aces?\s*\(|\b[Ff]ace(?:Recogni[sz]er|Recognition|Index|Gallery|Bank|DB|Database|Store|Search|Match(?:er|ing)?|Embedder|Encoder|Enrol(?:l)?ment|Identity)\b|\bface_(?:index|gallery|bank|db|store|search|match|recognizer|enrolment|enrollment|identity)\b
+    - ^\s*(?:import|from)\s+(?:face_recognition|dlib|insightface|deepface|retinaface|mtcnn|facenet_pytorch|keras_facenet|mediapipe|face_alignment)\b
+    - "['\"](?:face-api\\.js|@vladmandic/face-api|@vladmandic/human|@tensorflow-models/(?:blazeface\
+      |face-landmarks-detection|face-detection)|@mediapipe/(?:face_mesh|face_detection|tasks-vision\
+      )|@aws-sdk/client-rekognition|@azure/cognitiveservices-face|@azure-rest/ai-vision-face|face-r\
+      ecognition|@google-cloud/vision)['\"]|github\\.com/Kagami/go-face|cognitiveservices\\.vision\
+      \\.faceapi|aws-sdk-rekognition"
+    - \bgetattr\s*\(\s*(?:[\w.]*\.)?(?:face_recognition|dlib|insightface|deepface|retinaface|mtcnn|mediapipe|face_alignment|cv2)\s*,
+  match_without:
+    - ^\s*(?:#|//|\*|<!--)
+    - (?:[Bb]lur|[Aa]nonymi[sz]|[Pp]ixel(?:ate|ise|ize|Ate|Ise|Ize)|[Rr]edact|[Mm]osaic|[Oo]bfuscat|[Dd]e[_-]?[Ii]dentif|[Ss]crub[_-]?[Ff]ace|[Mm]ask[_-]?[Ff]ace)[\w]*\s*\(
+  resolve_import_aliases: true
+context_questions:
+  - "Trace the pipeline out of this file before answering anything else, because the detector is not
+    required to have seen all of it. One face signal in one file raises this candidate — a template
+    call, a face-SDK import, a face collection identifier — and a real pipeline is normally split
+    across files (a fetcher, an embedder, a store) or across a package boundary. From the matched
+    location, follow the images backwards to where they are obtained and the vectors forwards to
+    where they are written, naming the files you read. If the images are already in hand and nothing
+    persistent is written, say so and stop: that answer disposes of the candidate."
+  - What happens to each face after it is detected? This is the question that separates the
+    prohibition from its commonest look-alikes. Blurring, pixelating, redacting, cropping, counting,
+    autofocus, AR masks and liveness checks all detect faces and then destroy or discard them,
+    storing pixels or integers and never a template. Creating or expanding a facial recognition
+    database means a face template is computed and kept in a form organised for search and retrieval
+    — a vector index of face embeddings, a cloud face collection or person group, an embeddings
+    table keyed to people. A whole-image embedding of an already-blurred picture reaching a vector
+    store is the anonymisation shape, not this one. Quote the write path and the shape of what is
+    stored; note that a temporary, decentralised or single-file store still counts, and that being
+    usable for recognition is enough — the set does not have to exist only for it.
+  - "Is the image source genuinely untargeted, in the sense of collection with no specific focus on
+    a given individual or a pre-defined group, rather than a consented or contractually scoped set?
+    Quote the code that decides which images are collected: seed URLs, search queries, camera or
+    RTSP lists, link-following or sitemap logic, and any allowlist of subjects. Collection
+    restricted to named individuals or a defined group sits outside this provision; an employer's
+    own staff directory, a user's own uploaded album or an enrolment flow the subject went through
+    are the ordinary scoped cases, and each needs quoted evidence rather than an inference from a
+    variable name. Do not accept a comment as evidence in either direction: a sentence saying the
+    product never scrapes is not the allowlist, and a sentence saying it does is not the crawler.
+    Two traps to check explicitly — honouring robots.txt does not make collection targeted, and a
+    sequence of narrow passes whose end result matches one broad sweep is not targeted either."
+  - Do the images come from the internet or from CCTV footage, which is the fourth cumulative
+    condition, and is an AI system involved in the collection at all? Quote the fetch or capture
+    path. Images the party already held, images supplied by their own subjects, or a licensed
+    dataset delivered as a file are a different fact pattern from harvesting the open web or camera
+    feeds, and the provision does not reach untargeted collection of non-facial biometrics such as
+    voice samples.
+  - "Which limb of Art. 5(1)(e) does the scanned party's conduct engage, if any: placing this
+    pipeline on the market or putting it into service for this specific purpose (provider acts, Art.
+    3(3)), or running it (a deployer act, Art. 3(4))? The provision reaches providers and deployers
+    alike, and one operator can hold both roles at once, so answer from the repository — is the
+    pipeline packaged, published or offered to others, run in-house, or both — and quote the entry
+    point, packaging metadata or deployment configuration that shows it."
+  - "Do the repository's stated purpose and its dataset provenance change the answer? Facial image
+    sets used to train or test models, where the persons are not identified, and harvesting used to
+    build generative models of fictitious persons, both sit outside this provision — but the label a
+    repository puts on itself does not settle it, so check what the artifact can actually do: are
+    identities, source URLs or names carried alongside the vectors, is there a search or match
+    endpoint, is the index shipped or published? Record where the images came from and under what
+    licence or terms, and whether an existing index is only being read, or reduced by an erasure
+    path, rather than expanded — the provision reaches creation and expansion, and a set built
+    before 2025-02-02 that is not further expanded is governed by data protection law instead."
+  - "Is the scanned party a natural person acting in a purely personal, non-professional capacity?
+    Art. 3(4) excludes such use from the definition of deployer and Art. 2(10) disapplies deployer
+    obligations for it, so a hobby repository must not be reported at this tier on the deployer
+    limb. Any regular economic benefit, and any professional, business, trade, occupational or
+    freelance use, takes it outside the exclusion. Two limits to state when applying it: the
+    exclusion covers deployer obligations only and says nothing about the provider limb, and
+    releasing under a free and open-source licence does not remove an Art. 5 practice from the
+    Regulation (Art. 2(12)). Quote what the repository shows about who runs this and why — licence,
+    funding, packaging, deployment target, employer attribution."
+evidence_template: "{file}:{line} matched one of this rule's face-biometrics strings — a face
+  template call, a face SDK or model identifier, a face collection identifier, or a module specifier
+  naming one of those packages. What the detector established is that a listed string occurs at this
+  location, and one of those strings is a family name rather than a face-specific one: the bare word
+  mediapipe reaches every package MediaPipe ships, so @mediapipe/selfie_segmentation — background
+  segmentation, which separates a person from the background for a blur effect and computes no face
+  template — matches it, and so does @mediapipe/tasks-vision, the general vision bundle whose face
+  landmarker is one task beside object detection, image classification, gesture, hand and pose. A
+  second look-alike is positional rather than lexical: a dependency key in package.json or a build
+  variable in a Makefile records that a package is declared, and the tree may contain no call to it
+  anywhere. Read the matched line first and say which of the four shapes it is, or that it names no
+  face surface at all. Whether this is Art. 5(1)(e) conduct turns on where the images come from and
+  where the templates go, and both may be in other files"
+remediation_template: >
+  Art. 5(1)(e) is a prohibition rather than a transparency duty, so unlike the Art. 50 rules there
+  is no
+
+  notice, banner or consent screen that changes the answer here: what has to change is what the
+  pipeline
+
+  does, not what it tells people.
+
+  This candidate is raised on one face signal, so the first step is to establish whether there is a
+
+  pipeline at all. Write the three facts an adjudicator needs down next to the code. (1) Where the
+  images
+
+  come from: open web or camera feeds, or a defined set of subjects reached through an enrolment
+  flow or
+
+  a contract. (2) Whether the persisted vectors are face templates forming an index able to match a
+
+  person, or embeddings of something else — or whether nothing is persisted at all, which is the
+  ordinary
+
+  answer for blurring, counting, cropping and AR. (3) Which limb applies — placing on the market or
+
+  putting into service for this specific purpose (provider, Art. 3(3)) or running it (deployer,
+
+  Art. 3(4)); the provision reaches both, and an operator that builds and runs the pipeline holds
+  both
+
+  roles.
+
+  If collection is untargeted over open-web or CCTV imagery and the store holds face templates, the
+
+  changes that remove the practice are, cheapest first: restrict the source to a defined set of
+  subjects
+
+  who consented, and enforce that allowlist in code rather than in documentation; or stop persisting
+
+  templates at all — detect, use, discard, keep no vector; or keep the corpus and remove identity
+
+  indexing, so that no per-face vector index, match endpoint or identity label beside a vector
+  remains.
+
+  Deleting the code path alone does not undo an index already built: the stored set has to go too,
+
+  because the provision reaches the expansion of a set as well as its creation.
+
+  If the pipeline is targeted or consented, put the evidence in the repository — the source
+  allowlist,
+
+  the enrolment flow, the contract or the consent record — so the next scan and the next reviewer
+  reach
+
+  the same answer instead of re-deriving it from variable names.
+
+  Dates for planning: the prohibition has applied since 2025-02-02 and the penalty regime since
+
+  2025-08-02. Releasing under a free and open-source licence does not take an Art. 5 practice out of
+  the
+
+  Regulation (Art. 2(12)).
+data_categories:
+  - user.biometric
+fingerprint_spec: file

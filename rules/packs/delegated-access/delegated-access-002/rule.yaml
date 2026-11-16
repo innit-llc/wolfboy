@@ -1,0 +1,425 @@
+id: delegated-access-002
+pack: delegated-access
+short_name: The product logs in for the person at another service
+problem_line:
+  text: Product stands in the person's place at their institution
+fix_line: Use the institution's redirect flow if offered; else encrypt held credentials and give
+  each held value a deletion rule.
+title: "Product stands in the person's place at their institution: credential custody and relayed
+  authentication"
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 6(1) - 'Processing shall be lawful only if and to the
+      extent that at least one of the following applies', the first ground being that 'the data
+      subject has given consent to the processing of his or her personal data for one or more
+      specific purposes' and the second that 'processing is necessary for the performance of a
+      contract to which the data subject is party or in order to take steps at the request of the
+      data subject prior to entering into a contract'. Which of the two carries the credential
+      custody itself, as distinct from the account data it is used to fetch, is the question this
+      construct raises
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(c) - personal data shall be 'adequate, relevant and
+      limited to what is necessary in relation to the purposes for which they are processed'. A
+      sign-in name, a password, the answers to security questions and the address a request came
+      from are held here in order to reach an account, and each has to be justified against what the
+      product actually needs to do
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 32(1) - the controller and the processor 'shall
+      implement appropriate technical and organisational measures to ensure a level of security
+      appropriate to the risk, including inter alia as appropriate', and point (a) of that paragraph
+      names 'the pseudonymisation and encryption of personal data'. The risk here is set by what is
+      held rather than by the volume: a credential in this product's custody opens the person's
+      account at a third party"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: Directive (EU) 2015/2366 (PSD2), Art. 67(2) - the account information service provider shall
+      'provide services only where based on the payment service user's explicit consent'; shall
+      'ensure that the personalised security credentials of the payment service user are not, with
+      the exception of the user and the issuer of the personalised security credentials, accessible
+      to other parties and that when they are transmitted by the account information service
+      provider, this is done through safe and efficient channels'; shall 'access only the
+      information from designated payment accounts and associated payment transactions'; and shall
+      'not use, access or store any data for purposes other than for performing the account
+      information service explicitly requested by the payment service user, in accordance with data
+      protection rules'. This is the regime that explains the ceremony, and point (b) is the
+      provision the credential-custody shape sits directly against
+    url: https://publications.europa.eu/resource/celex/32015L2366
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "Directive (EU) 2015/2366 (PSD2), Art. 94(2) - 'Payment service providers shall only access,
+      process and retain personal data necessary for the provision of their payment services, with
+      the explicit consent of the payment service user.' Reference only for this detector: it
+      establishes the standard the operator is held to and not a fact this rule can read from a line
+      of code"
+    url: https://publications.europa.eu/resource/celex/32015L2366
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Directive (EU) 2015/2366 (PSD2), Art. 97 - Member States shall ensure that a payment service
+      provider applies strong customer authentication where the payer 'accesses its payment account
+      online', 'initiates an electronic payment transaction' or 'carries out any action through a
+      remote channel which may imply a risk of payment fraud or other abuses', and that providers
+      'have in place adequate security measures to protect the confidentiality and integrity of
+      payment service users' personalised security credentials'. Art. 97(4) adds that those
+      paragraphs apply 'when the information is requested through an account information service
+      provider'. Reference only: this is why the ceremony the code relays exists at all"
+    url: https://publications.europa.eu/resource/celex/32015L2366
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: Directive (EU) 2015/2366 (PSD2), Art. 66(3)(b) - a payment initiation service provider shall
+      'ensure that the personalised security credentials of the payment service user are not, with
+      the exception of the user and the issuer of the personalised security credentials, accessible
+      to other parties and that they are transmitted by the payment initiation service provider
+      through safe and efficient channels'. Reference only, and cited beside Art. 67(2)(b) because a
+      product that both reads accounts and initiates payments is under both
+    url: https://publications.europa.eu/resource/celex/32015L2366
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Commission Delegated Regulation (EU) 2018/389 (the regulatory technical standards under
+      Directive (EU) 2015/2366), Art. 22 - 'Payment service providers shall ensure the
+      confidentiality and integrity of the personalised security credentials of the payment service
+      user, including authentication codes, during all phases of the authentication.' Art. 22(2)
+      requires that 'personalised security credentials are masked when displayed and are not
+      readable in their full extent when input by the payment service user during the
+      authentication', that 'personalised security credentials in data format, as well as
+      cryptographic materials related to the encryption of the personalised security credentials are
+      not stored in plain text', and that 'secret cryptographic material is protected from
+      unauthorised disclosure'. Art. 22(4) adds that providers shall ensure that 'the processing and
+      routing of personalised security credentials and of the authentication codes generated in
+      accordance with Chapter II take place in secure environments in accordance with strong and
+      widely recognised industry standards'. This is the provision the relayed ceremony sits
+      directly against: the product renders the institution's prompt in its own interface, holds
+      what the person types into it, and routes it onward"
+    url: https://publications.europa.eu/resource/celex/32018R0389
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "Commission Delegated Regulation (EU) 2018/389, Art. 30(2)(c) - the interface shall ensure
+      that 'the integrity and confidentiality of the personalised security credentials and of
+      authentication codes transmitted by or through the payment initiation service provider or the
+      account information service provider shall be ensured'. Art. 30(2)(b) is the neighbouring
+      requirement that 'communication sessions between the account servicing payment service
+      provider, the account information service provider, the payment initiation service provider
+      and any payment service user concerned shall be established and maintained throughout the
+      authentication'. Reference only: Art. 30's duties are addressed to the institution that
+      operates the access interface rather than to the product this rule scans, and it is cited
+      because it names the relay in terms and because the session it describes is what a stored
+      session identifier belongs to"
+    url: https://publications.europa.eu/resource/celex/32018R0389
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Commission Delegated Regulation (EU) 2018/389, Arts. 31 and 33(4)-(5) - Art. 31 is the fork
+      itself: institutions shall establish the access interface 'by means of a dedicated interface
+      or by allowing the use by the payment service providers referred to in Article 30(1) of the
+      interfaces used for authentication and communication with the account servicing payment
+      service provider'. Art. 33(4) is the contingency route in which third-party providers 'shall
+      be allowed to make use of the interfaces made available to the payment service users for the
+      authentication and communication with their account servicing payment service provider', and
+      Art. 33(5) attaches the conditions on which that is permitted, including that they 'take the
+      necessary measures to ensure that they do not access, store or process data for purposes other
+      than for the provision of the service as requested by the payment service user' and 'log the
+      data that are accessed through the interface operated by the account servicing payment service
+      provider for its payment service users'. Reference only: this is what separates a lawful
+      fallback from screen-scraping, and which of the two a given deployment is doing is an operator
+      fact"
+    url: https://publications.europa.eu/resource/celex/32018R0389
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Commission Delegated Regulation (EU) 2018/389, Art. 34 - 'For the purpose of identification,
+      as referred to in Article 30(1)(a), payment service providers shall rely on qualified
+      certificates for electronic seals as referred to in Article 3(30) of Regulation (EU) No
+      910/2014 or for website authentication as referred to in Article 3(39) of that Regulation.'
+      Art. 34(3) requires those certificates to carry additional attributes including 'the role of
+      the payment service provider'. Reference only for this detector: Art. 34 is the provision
+      behind the certificate and role tokens this rule matches, and a matched token is evidence that
+      the product handles such a certificate rather than evidence that it holds a valid one"
+    url: https://publications.europa.eu/resource/celex/32018R0389
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Regulation (EU) No 910/2014 (eIDAS), Art. 3(30) and Art. 3(39) - a 'qualified certificate for
+      electronic seal' means 'a certificate for an electronic seal, that is issued by a qualified
+      trust service provider and meets the requirements laid down in Annex III', and a 'qualified
+      certificate for website authentication' means 'a certificate for website authentication, which
+      is issued by a qualified trust service provider and meets the requirements laid down in Annex
+      IV'. Reference only, and DEFINITIONAL ONLY: these two definitions name the two certificate
+      kinds this detector matches by name, and they are what Art. 34 of Commission Delegated
+      Regulation (EU) 2018/389 cross-refers to. This Regulation is NOT cited as the source of any
+      custody duty - its operative obligations run to trust service providers, the party that issues
+      such a certificate, and not to a product that holds one"
+    url: https://publications.europa.eu/resource/celex/32014R0910
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: Gramm-Leach-Bliley Act, 15 U.S.C. Sec. 6801(b) - each agency shall establish standards for the
+      financial institutions subject to its jurisdiction "to insure the security and confidentiality
+      of customer records and information", "to protect against any anticipated threats or hazards
+      to the security or integrity of such records" and "to protect against unauthorized access to
+      or use of such records or information which could result in substantial harm or inconvenience
+      to any customer". Whether the operator is a financial institution for this purpose is a fact
+      about the product and not about the code, which is what context question 4 asks
+    url: https://www.law.cornell.edu/uscode/text/15/6801
+    checked_at: 2026-09-01
+    jurisdiction: US
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.4
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    institution_access_providers:
+      - sophtron
+      - Sophtron
+      - enablebanking
+      - enable_banking
+      - EnableBanking
+      - plaid
+      - Plaid
+      - truelayer
+      - TrueLayer
+      - gocardless
+      - GoCardless
+      - saltedge
+      - SaltEdge
+      - salt_edge
+      - yodlee
+      - Yodlee
+      - finicity
+      - Finicity
+      - nordigen
+      - Nordigen
+      - api.mx.com
+      - mx-platform
+      - tink.com
+      - tink_link
+      - TinkLink
+  match:
+    - (?:^|[^A-Za-z0-9_])(?:bank_username|bank_password|bankUsername|bankPassword|bank_login|institution_username|institution_password|institutionUsername|institutionPassword|security_answers?|securityAnswers?|security_question_answer|captcha_input|captchaInput|token_input|tokenInput|token_choice|tokenChoice|bankLeitZahl|BankingCredentials|banking_credentials)\b
+    - (?:^|[^A-Za-z0-9_])(?:chip[Tt][Aa][Nn]|photo[Tt][Aa][Nn]|push[Tt][Aa][Nn]|smart[Tt][Aa][Nn]|CHIPTAN|PHOTOTAN|PUSHTAN|TANMETHOD|TANMEDIA|tanMethod|tanMedium|tanMedia|tan_method|tan_medium|optical_tan|opticalTan)\w*\b|(?:^|[^A-Za-z0-9_])(?:sca|SCA|tan|TAN|mfa|MFA|psu|PSU)_(?:method|methods|challenge|challenges|type|status|approach|flicker)\b|(?:^|[^A-Za-z0-9_])(?:sca|tan|mfa)(?:Method|Challenge|Type|Status|Approach|Flicker)\b
+    - (?:^|[^A-Za-z0-9])[Ff]licker\w*[^\n]{0,40}(?:[Cc]hallenge|CHALLENGE|(?:^|[^A-Za-z0-9])(?:TAN|Tan|tan)(?![A-Za-z0-9]))|(?:[Cc]hallenge|CHALLENGE|(?:^|[^A-Za-z0-9])(?:TAN|Tan|tan)(?![A-Za-z0-9]))[^\n]{0,40}[^A-Za-z0-9][Ff]licker\w*
+    - (?:^|[^A-Za-z0-9_])(?:[Pp]su[-_][Ii]p[-_][Aa]ddress|PSU-IP-Address|psu_ip|last_psu_ip|psuIp|[Pp]su[-_][Ii][Dd]|PSU-ID|[Pp]su[-_][Uu]ser[-_][Aa]gent|psu_type|psu_types|aspsp|ASPSP|AISP|PISP|ASPSPs)\w*\b|(?:^|[^A-Za-z0-9_])(?:eIDAS|EIDAS|QWAC|QSEALC|QSealC|qwac|qsealc)\b|(?:^|[^A-Za-z0-9_])(?:encrypts|encrypted|attr_encrypted|add_column|serialize)[^\n]{0,40}client_certificate\b|\bclient_certificate\b[^\n]{0,60}(?:aspsp|ASPSP|psu|PSU|eIDAS|QWAC|QSEALC)
+    - (?:^|[^A-Za-z0-9_])(?:FinTS|fints|HBCI|hbci|HBCIVersion|HBCICallback|AqBanking|aqbanking|AQBANKING|EBICS|ebics|GWEN_Gui|GWEN_GUI)\w*\b
+    - (?:^|[^A-Za-z0-9_])(?:GWEN_GUI_INPUT_FLAGS_TAN|AB_BANKING_TANMETHOD_[A-Z_]+|NEED_PT_TAN|NEED_PT_PHOTOTAN|NEED_PT_TANMEDIA|NEED_PT_PIN|NEED_PT_SECMECH|HAVE_PT_TAN|GWEN_Gui_SetGetPasswordFn|AbstractHBCICallback)\b
+    - (?&institution_access_providers)[^\n]{0,80}(?:credential|Credential|password|Password|consent|Consent|session_id|sessionId|certificate|Certificate|security_answer|mfa|MFA|challenge)|(?:credential|Credential|password|Password|consent|Consent|session_id|sessionId|certificate|Certificate|security_answer|mfa|MFA|challenge)[^\n]{0,80}(?&institution_access_providers)
+    - (?:^|[^A-Za-z0-9_])(?:IMAP|imap|Imap|POP3|pop3|Pop3|SMTP|smtp|Smtp|CALDAV|CalDAV|caldav|CARDDAV|CardDAV|carddav|WEBDAV|WebDAV|webdav|EWS|XMPP|xmpp|SIP|sip|FTP|ftp|SFTP|sftp)(?![A-Za-z0-9])[^\n]{0,60}(?:[Pp]assword|PASSWORD|[Pp]asswd|[Uu]sername|USERNAME|[Cc]redential|CREDENTIAL|[Ss]ecret)|(?:[Pp]assword|PASSWORD|[Pp]asswd|[Uu]sername|USERNAME|[Cc]redential|CREDENTIAL|[Ss]ecret)[^\n]{0,60}(?:^|[^A-Za-z0-9_])(?:IMAP|imap|Imap|POP3|pop3|Pop3|SMTP|smtp|Smtp|CALDAV|CalDAV|caldav|CARDDAV|CardDAV|carddav|WEBDAV|WebDAV|webdav|EWS|XMPP|xmpp|SIP|sip|FTP|ftp|SFTP|sftp)(?![A-Za-z0-9])|(?:\.|->|::)\s*(?:login|Login|authenticate|Authenticate|connect|Connect)\s*\([^\n]{0,100}(?:(?:[Pp]ass(?:word|wd|wort|w\u00f6rter|phrase|code)|[Pp]asse(?![A-Za-z])|[Pp]ass(?![A-Za-z]))|[Cc]redential|[Ss]ecret)
+    - (?:^|[^A-Za-z0-9_])["'`]Basic ["'`]\s*(?:\+|\.\s*\$|\.\s+[A-Za-z_])|["'`]Basic
+      (?:\$\{|\$[A-Za-z_]|#\{|%s|\{)|(?:^|[^A-Za-z0-9_])(?:Credentials\.basic|BasicCredentials|UsernamePasswordCredentials|PasswordAuthentication|Http[Bb]asicAuth|HTTPBasicAuth|[Ss]etBasicAuth|BasicAuthenticator)\s*\(|(?:^|[^A-Za-z0-9_])AuthenticationHeaderValue\s*\(\s*["'`]Basic|(?:^|[^A-Za-z0-9_])[Bb]asic[_-]?[Aa]uth\w*[^\n]{0,80}(?:(?:[Pp]ass(?:word|wd|wort|w\u00f6rter|phrase|code)|[Pp]asse(?![A-Za-z])|[Pp]ass(?![A-Za-z]))|PASSWORD|[Ss]ecret|SECRET|[Cc]redential|CREDENTIAL)|(?:(?:[Pp]ass(?:word|wd|wort|w\u00f6rter|phrase|code)|[Pp]asse(?![A-Za-z])|[Pp]ass(?![A-Za-z]))|PASSWORD|[Ss]ecret|SECRET|[Cc]redential|CREDENTIAL)[^\n]{0,80}(?:^|[^A-Za-z0-9_])[Bb]asic[_-]?[Aa]uth|(?:[Bb]ase[_-]?64|b64encode|btoa|BASE64)[^\n]{0,80}(?:[Uu]ser|USER|[Ll]ogin[_]?[Nn]ame|[Aa]ccount|[Ss]ubscriber|[Mm]ember)[^\n]{0,30}[:+.,][^\n]{0,40}(?:(?:[Pp]ass(?:word|wd|wort|w\u00f6rter|phrase|code)|[Pp]asse(?![A-Za-z])|[Pp]ass(?![A-Za-z]))|PASSWORD|[Ss]ecret)
+    - "[\"'`][^\\n\"'`]{0,100}/(?:(?:authentication|authenticate|auth|login|log-in|signin|sign-in)[\
+      ._-]v?[0-9]{1,3}|(?:authentication|authenticate|auth|login|log-in|signin|sign-in|sessions|ses\
+      sion)(?![a-z_])[a-z0-9._-]{0,15})/(?:%[0-9]{0,2}\\$?[sdv]|\\{\\}|\\{[0-9]\\})[^\\n]{0,150}(?:\
+      [Uu]ser|USER|[Ll]ogin[_]?[Nn]ame|[Aa]ccount|[Ss]ubscriber|[Mm]ember)|[\"'`][^\\n\"'`]{0,100}/\
+      (?:(?:authentication|authenticate|auth|login|log-in|signin|sign-in)[._-]v?[0-9]{1,3}|(?:authe\
+      ntication|authenticate|auth|login|log-in|signin|sign-in|sessions|session)(?![a-z_])[a-z0-9._-\
+      ]{0,15})/(?:\\{(?:[Uu]ser|USER|[Ll]ogin[_]?[Nn]ame|[Aa]ccount|[Ss]ubscriber|[Mm]ember)[A-Za-z\
+      0-9_]{0,20}\\}|\\$\\{(?:[Uu]ser|USER|[Ll]ogin[_]?[Nn]ame|[Aa]ccount|[Ss]ubscriber|[Mm]ember)[\
+      A-Za-z0-9_.]{0,20}\\}|:(?:[Uu]ser|USER|[Ll]ogin[_]?[Nn]ame|[Aa]ccount|[Ss]ubscriber|[Mm]ember\
+      )[A-Za-z0-9_]{0,20}|<(?:[Uu]ser|USER|[Ll]ogin[_]?[Nn]ame|[Aa]ccount|[Ss]ubscriber|[Mm]ember)[\
+      A-Za-z0-9_]{0,20}>|\\$(?:[Uu]ser|USER|[Ll]ogin[_]?[Nn]ame|[Aa]ccount|[Ss]ubscriber|[Mm]ember)\
+      [A-Za-z0-9_]{0,20})|[\"'`][^\\n\"'`]{0,100}/(?:\\{(?:[Uu]ser|USER|[Ll]ogin[_]?[Nn]ame|[Aa]cco\
+      unt|[Ss]ubscriber|[Mm]ember)[A-Za-z0-9_]{0,20}\\}|\\$\\{(?:[Uu]ser|USER|[Ll]ogin[_]?[Nn]ame|[\
+      Aa]ccount|[Ss]ubscriber|[Mm]ember)[A-Za-z0-9_.]{0,20}\\}|:(?:[Uu]ser|USER|[Ll]ogin[_]?[Nn]ame\
+      |[Aa]ccount|[Ss]ubscriber|[Mm]ember)[A-Za-z0-9_]{0,20}|<(?:[Uu]ser|USER|[Ll]ogin[_]?[Nn]ame|[\
+      Aa]ccount|[Ss]ubscriber|[Mm]ember)[A-Za-z0-9_]{0,20}>|\\$(?:[Uu]ser|USER|[Ll]ogin[_]?[Nn]ame|\
+      [Aa]ccount|[Ss]ubscriber|[Mm]ember)[A-Za-z0-9_]{0,20})/(?:authentication|authenticate|login|l\
+      og-in|signin|sign-in)(?![A-Za-z_])|[\"'`][^\\n\"'`]{0,80}/(?:(?:authentication|authenticate|a\
+      uth|login|log-in|signin|sign-in)[._-]v?[0-9]{1,3}|(?:authentication|authenticate|auth|login|l\
+      og-in|signin|sign-in|sessions|session)(?![a-z_])[a-z0-9._-]{0,15})/?[\"'`]\\s*[+.]\\s*[^\\n]{\
+      0,40}(?:[Uu]ser|USER|[Ll]ogin[_]?[Nn]ame|[Aa]ccount|[Ss]ubscriber|[Mm]ember)"
+context_questions:
+  - "WHOSE CREDENTIAL IS THE PRODUCT HOLDING? This is the fork the whole rule turns on. A token the
+    institution minted FOR THIS PRODUCT, revocable by the person from the institution's own screen,
+    is the ordinary scoped-import shape and is not this construct. The person's OWN sign-in name and
+    password - the ones they would type at the institution's own site - are. Read the field the
+    value comes from and say which it is; where it is the first, the finding closes there. WHERE THE
+    MATCHED LINE IS AN HTTP BASIC CREDENTIAL BEING ASSEMBLED, OR A REQUEST BUILT FOR ANOTHER
+    SERVICE'S OWN SIGN-IN ENDPOINT, THE VALUE'S ORIGIN IS USUALLY NOT ON THAT LINE: follow it back
+    to the setting, the preference store or the file it was read from, and answer from there. A
+    THIRD ANSWER IS POSSIBLE AND IT IS NOT THE SECOND - an integration account the operator created
+    at the other service and configured once, which nobody signs in with personally. Say so where
+    that is what you find, because it changes who the account holder is and what question 3 has to
+    trace."
+  - DOES THE PRODUCT PARTICIPATE IN THE INSTITUTION'S AUTHENTICATION, OR ONLY REDIRECT TO IT?
+    Redirecting the person to the institution's own page and receiving them back is participation by
+    neither party. Rendering the institution's security questions, its one-time code prompt, its
+    optical or photo transaction number or its captcha inside this product's own interface,
+    collecting the answer and relaying it, is the product completing an authentication the
+    institution believes the person is completing. Say which, and where the relayed values are held
+    between the prompt and the reply.
+  - "WHERE DOES EACH HELD VALUE LIVE, FOR HOW LONG, AND ENCRYPTED WITH WHAT? Trace every value the
+    previous two questions surfaced: the credential, the answers, the session identifier, the
+    certificate and its private key, and the address the request came from. For each, name the
+    column or store, the encryption if any, and the deletion rule. A value with no deletion rule is
+    the ordinary finding here, and it is worth checking whether the project has already written
+    itself a note about one."
+  - "IS THE OPERATOR ACTING IN A REGULATED ROLE, AND UNDER WHOSE AUTHORISATION? Reading a person's
+    account at their institution on their behalf is a licensed activity in several jurisdictions,
+    and the code cannot say whether the operator holds the licence, relies on an intermediary that
+    does, or neither. ASK THE OPERATOR: who is the authorised party, in which jurisdiction, and what
+    does the arrangement with the intermediary say about who is controller for the account data? The
+    certificate custody in the code is evidence about how the role is exercised and not about
+    whether it is held."
+  - WHAT IS THE CONSENT'S SCOPE AND EXPIRY, AS THE INSTITUTION SEES IT? The regulated regimes attach
+    an explicit consent to the access with a validity window and a designated set of accounts, and
+    the institution enforces both. Read what the product stores about that consent - which accounts
+    it names, when it expires, what happens on expiry - and check it against what the product tells
+    the person. A consent the person believes is for one account and which in fact covers all of
+    them is a mismatch this construct produces easily.
+  - "WHAT IS FORWARDED ABOUT THE PERSON THAT IS NOT ACCOUNT DATA? Several of these regimes require
+    or permit technical context to travel with the request: the address the person's own request
+    came from, the identifier the institution knows them by, their user-agent. That is personal data
+    about the person's device and location, held and forwarded for a protocol reason rather than a
+    product one, and it needs its own record entry and its own retention rule."
+  - "IS THIS CUSTODY OR ONLY CAPABILITY? Some shapes reach this rule without anything being held: a
+    protocol name in a dependency declaration, a menu label, a version string, a constant in a
+    header file. Those establish that the product speaks a retail-banking protocol, which is worth
+    recording, and they are not evidence that a credential is in its custody. Say which the matched
+    line is."
+evidence_template: "{file}:{line} matched a construct through which this product STANDS IN A
+  PERSON'S PLACE AT AN INSTITUTION WHERE THEY HOLD AN ACCOUNT - by holding the person's own sign-in
+  credentials, by relaying the institution's live authentication ceremony, or by exercising a
+  regulated third-party-access role. THAT IS THE WHOLE OF WHAT IS ESTABLISHED. Seven shapes reach
+  this rule. (i) An institution credential field by name, where the distinguishing word is the
+  institution and not the credential: a password belonging to somebody else's system that this
+  product is holding. (ii) The authentication ceremony itself - a transaction-number method, a
+  security-question or one-time-code challenge, a captcha relay. (iii) The regulated-role apparatus:
+  protocol headers carrying the person's own address and identifier, the licensed-role names, and
+  the certificate kinds a licensed party holds. (iv) A retail-banking protocol name, WHICH ALSO
+  REACHES A DEPENDENCY DECLARATION, A MENU LABEL AND A VERSION STRING and is then capability
+  evidence rather than custody evidence. (v) A callback shape through which a protocol library asks
+  this product's own interface for a password or a transaction number. (vi) An access provider named
+  beside a credential, consent, session or certificate construct - never a bare provider name,
+  because the same providers serve the plain scoped-import class this rule is the complement of.
+  (vii) THE SAME CUSTODY OUTSIDE THE FINANCIAL SECTOR: a sign-in credential for somebody else's
+  service named after the service rather than after the credential - a mailbox, a calendar, a file
+  store, a telephony account - or a session being opened with such a held value. This is shape (i)
+  in a non-financial spelling. TWO FURTHER SPELLINGS OF SHAPE (vii) WERE ADDED ON 2026-09-09 and
+  reach services that are neither a bank nor one of the eleven protocols named above: an HTTP Basic
+  credential being ASSEMBLED - a scheme whose value is, by its own definition, a sign-in name and a
+  password - and the sign-in ceremony itself, a request built for another service's own
+  authentication endpoint with the account holder's identifier standing in the path. Neither
+  establishes that the value assembled is stored anywhere, and neither reads the store: where each
+  held value lives and for how long is question 3. Questions 5 and 6 have no object on a plain
+  protocol account - there is no institution-enforced consent record and no protocol header carrying
+  the person's own address - and layer 2 answers both 'not applicable'. QUESTION 4 STAYS WITH THE
+  OPERATOR: whether they act in a regulated role is a fact about them and not about this line, and a
+  protocol word cannot decide it. The rest of the questions apply in full. IT REACHES AN OPERATOR'S
+  OWN SERVICE ACCOUNT AS READILY AS A PERSON'S, because the two are spelled identically, which is
+  exactly what question 1 is for. WHOSE CREDENTIAL THIS IS - the account holder's own sign-in name
+  and password, or an integration account the operator configured for the product to use - IS A
+  DEPLOYMENT FACT THIS FINDING DOES NOT ANSWER. The two are written identically in code and no line
+  separates them. The answer settles which ground under Art. 6(1) the custody itself would have to
+  rest on, and THIS DETECTOR DOES NOT CHOOSE BETWEEN THEM: it leaves that question standing exactly
+  where this rule's own Art. 6(1) entry leaves it. Read the setting or the store the value is
+  entered in, say which of the two it is, and let the rest follow from that answer (question 1).
+  WHAT THIS DETECTOR DOES NOT ESTABLISH: whether the credential is the person's own or a token the
+  institution minted for the product, which is the fork the whole rule turns on (context question
+  1); whether the product participates in the authentication or only redirects to it (question 2);
+  where each held value lives, for how long, and under what encryption (question 3); whether the
+  operator holds a regulated authorisation, which is a fact about the operator and not about the
+  code (question 4); or, for shape (iv), that anything is held at all (question 7). THIS RULE
+  DELIBERATELY KEEPS TEST AND FIXTURE PATHS: a real credential for a real person's account carries
+  the same exposure inside a fixture as anywhere else."
+remediation_template: >
+  Settle the fork first (context question 1). A token the institution minted for this product,
+
+  revocable by the person at the institution, is the ordinary scoped-import shape and this rule's
+
+  concerns do not apply to it. Where the product holds the person's own sign-in name and password,
+
+  everything below does.
+
+  Where the person's own credentials are held, ask whether they need to be. Several institutions and
+
+  intermediaries offer a redirected flow in which the person authenticates at the institution and
+
+  the product never sees the credential; where that flow exists for the institutions the product
+
+  supports, moving to it removes the exposure rather than protecting it.
+
+  Trace every value held on the person's behalf - credential, security answers, one-time code,
+
+  session identifier, certificate and private key, and the address the request came from - and give
+
+  each a store, an encryption decision and a deletion rule. Values kept only to complete a ceremony
+
+  should not survive it.
+
+  For the sign-in credential, the security answers and the one-time codes, the encryption decision
+
+  has one answer. Where the payment regime governs this handling, Art. 22(2) of Delegated Regulation
+
+  (EU) 2018/389 asks that credentials in data format, and the key material that encrypts them, are
+
+  not stored in plain text, that the secret key material is protected from unauthorised disclosure,
+
+  and that credentials are masked when displayed; and PSD2 Art. 67(2)(b) and 66(3)(b) ask that they
+
+  are accessible to nobody but the person and the issuer and travel only over safe channels. So:
+
+  encrypt them at rest with keys held apart from the data, keep them out of logs, error reports,
+
+  analytics events and support tooling, mask them on screen, and send them only over an encrypted
+
+  channel. Outside that regime, GDPR Art. 32(1) asks for security appropriate to the risk and names
+
+  encryption among the measures, and a value that opens the person's account somewhere else is the
+
+  high end of that risk, so handle it the same way unless the record says why not.
+
+  Where the code carries a note to the effect that a retention policy is still to be implemented for
+
+  one of these values, treat that note as the finding rather than as documentation.
+
+  Ask the operator who holds the regulated authorisation, in which jurisdiction, and what the
+
+  arrangement with any intermediary says about who is controller for the account data. Record the
+
+  answer; it is not derivable from the code.
+
+  Read what the product stores about the consent the institution enforces - which accounts, what
+
+  expiry, what happens when it lapses - and check it against what the person was told they were
+
+  agreeing to.
+
+  Give the technical context forwarded for protocol reasons - the person's own address, the
+
+  identifier the institution knows them by, the user-agent - its own record entry and its own
+
+  retention rule; it is personal data held for a reason the person never asked for.
+
+  Where the matched line is a dependency declaration, a menu label or a protocol constant, record
+  the
+
+  capability and close the finding there.
+data_categories:
+  - user.authorization.credentials
+  - user.account
+  - user.unique_id
+  - user.device.ip_address
+  - user.financial
+  - user.financial.bank_account
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 1
+      class: existence
+    - question: 3
+      class: enumeration
+      item: held value
+      item_source: reading
+    - question: 7
+      class: per-location

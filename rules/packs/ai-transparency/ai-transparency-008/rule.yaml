@@ -1,0 +1,621 @@
+id: ai-transparency-008
+pack: ai-transparency
+short_name: "AI-written content: telling people it is AI-made"
+problem_line:
+  text: "AI-written public-interest text: disclosure not found"
+fix_line: Label the text as AI-made on every surface readers see it, unless a human reviewed it with
+  editorial responsibility.
+title: Language-model call, publishing surface or generated-content wording - AI-origin disclosure
+  to readers needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 50(4) second subparagraph — addressed to
+      deployers (Art. 3(4)), not to providers (Art. 3(3)): 'Deployers of an AI system that generates
+      or manipulates text which is published with the purpose of informing the public on matters of
+      public interest shall disclose that the text has been artificially generated or manipulated.
+      This obligation shall not apply where the use is authorised by law to detect, prevent,
+      investigate or prosecute criminal offences or where the AI-generated content has undergone a
+      process of human review or editorial control and where a natural or legal person holds
+      editorial responsibility for the publication of the content.' Two exemption limbs sit in the
+      second sentence, and the second limb is itself conjunctive: review or editorial control ALONE
+      does not exempt unless a natural or legal person also holds editorial responsibility for the
+      publication. Art. 50(5) fixes the manner and the moment for the disclosure required by
+      paragraphs 1 to 4: 'The information referred to in paragraphs 1 to 4 shall be provided to the
+      natural persons concerned in a clear and distinguishable manner at the latest at the time of
+      the first interaction or exposure. The information shall conform to the applicable
+      accessibility requirements.' Art. 50 sits in Chapter IV, which none of the Art. 113 carve-outs
+      (a), (b) or (c) reaches, so the general application date governs: 'It shall apply from 2
+      August 2026.'"
+    url: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Recital 134, last sentence — kept for interpretation
+      only, because a recital creates no obligation: 'In addition, it is also appropriate to
+      envisage a similar disclosure obligation in relation to AI-generated or manipulated text to
+      the extent it is published with the purpose of informing the public on matters of public
+      interest unless the AI-generated content has undergone a process of human review or editorial
+      control and a natural or legal person holds editorial responsibility for the publication of
+      the content.' The 'similar' points back to the deep-fake sentence earlier in the same recital,
+      which asks deployers to 'clearly and distinguishably disclose that the content has been
+      artificially created or manipulated by labelling the AI output accordingly and disclosing its
+      artificial origin'. Recital 133, by contrast, is the rationale for the Art. 50(2)
+      provider-side marking duty and is not the recital for this rule."
+    url: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 2(12) — the free and open-source exclusion, cited
+      here because it does NOT switch this rule off and because a reader of an AI Act finding whose
+      own product is open source reaches for it first. Art. 2(12): 'This Regulation does not apply
+      to AI systems released under free and open-source licences, unless they are placed on the
+      market or put into service as high-risk AI systems or as an AI system that falls under Article
+      5 or 50.' Article 50 is named inside that proviso alongside Article 5, so the Art. 50(4)
+      second subparagraph duty — the duty this rule tests — survives however the system is licensed.
+      That is the same disposal ai-prohibited-001, -002 and -003 make one article over, on the
+      identical words. How the project is funded does not reopen the question either. The conditions
+      recital 103 attaches — that a component provided against a price or otherwise monetised does
+      not benefit, that making a component available through an open repository is not in itself a
+      monetisation, and that transactions between microenterprises are excepted — qualify the
+      exceptions this Regulation provides to free and open-source AI components, and the recital
+      says exceptions in the plural: Art. 2(12) here, and elsewhere Art. 25(4), Art. 53(2) and Art.
+      54(6). Microenterprise there is a defined term, tested by Commission Recommendation
+      2003/361/EC rather than by self-description. An Article 50 system is outside the Art. 2(12)
+      exclusion before any of those conditions is reached, and none of the other three exceptions
+      reaches an Article 50 duty at all. So being unmonetised, being a microenterprise and
+      publishing on a public repository change nothing here, in either direction. Commission
+      Guidelines C(2026) 5054 final — draft approval, not yet applicable, interpretation only — say
+      the same at para. 23 of the Annex: providers and deployers of open-source AI systems within
+      the scope of Article 50 still have to meet their respective transparency obligations. Its
+      footnote 11 anchors the free and open-source release on recital 102, not on recital 103.
+      Neither of those two Guidelines propositions is quoted here or carries a quote receipt: the
+      quote checker does not fetch guidance documents, and this entry's url resolves to the
+      Regulation, which does not contain them — the Guidelines have a separate entry in this rule's
+      legal_basis, carrying their own source link and their own not-yet-applicable status. Only the
+      single-quoted Art. 2(12) sentence above is machine-verified against the Official Journal. How
+      the system was released is a question for the person running the scan rather than for a
+      detector, read from the terms the system is actually released under, and a LICENSE file is
+      evidence about it rather than the answer. The Art. 2(12) quotation above is the text the four
+      ai-annex3 Article 6(4) checklists carry, re-verified against the same Official Journal source
+      on 2026-08-04. Those four quote recital 103 in full as well, because the Art. 2(12) exclusion
+      becomes available on an Annex III row only once the Article 6(4) derogation takes the system
+      out of high-risk — the proviso names high-risk systems first, so until then the exclusion is
+      as unavailable there as it is here — and the monetisation test then decides whether it
+      applies; on an Article 50 row it decides nothing, which is why it is not repeated here.
+      Reference only: a scope provision establishes no duty of its own, and this one removes none
+      from this rule."
+    url: http://publications.europa.eu/resource/celex/32024R1689
+    checked_at: 2026-08-04
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Commission Guidelines on the implementation of the transparency obligations for certain AI
+      systems under Article 50 of Regulation (EU) 2024/1689, C(2026) 5054 final, 20.7.2026 — STATUS:
+      DRAFT APPROVAL, NOT YET ADOPTED AND NOT YET APPLICABLE. The two-page Communication that
+      carries the Annex states that 'The Guidelines will be formally adopted by the Commission at a
+      later date, when all language versions are available. It is only from that moment that these
+      Guidelines will be applicable.' Cited for interpretation only; it establishes no obligation,
+      which rests entirely on Art. 50(4) above. By the precedent of the Art. 5 family (C(2025) 884
+      final draft -> C(2025) 5052 final adopted) the adopted version is likely to carry a different
+      C() number and its paragraph numbering may shift, so this entry needs re-checking before the
+      rule ships. Content relied on, all from section 6.2 of the Annex unless stated: para. 130
+      (three cumulative conditions — an AI system, used to generate or manipulate text published
+      with the purpose of informing the public on matters of public interest, and no exception
+      applies); para. 131(i) ('published' means the text is accessible by an indeterminate, fairly
+      large number of unrelated, potential readers simultaneously and/or successively, whether or
+      not against payment; text is not published where access is restricted to a closed, private
+      group, and private interpersonal correspondence and organisation-internal texts such as
+      publications on internal corporate networks are outside); para. 131(ii) ('informing the
+      public' entails that the text intends to communicate knowledge, opinions or facts, so short
+      texts that do not materially do so are outside); para. 131(iii) ('matters of public interest'
+      covers matters relevant to society at large at local, national, Union or international level
+      and meriting public debate or scrutiny, including politics and democratic processes, public
+      administration and services, the administration of justice and law enforcement, the protection
+      of fundamental rights, public security, public health, environmental protection, consumer
+      safety, and any economic, financial, political, scientific or cultural development that may be
+      a relevant subject of public debate); the worked examples after para. 131 (in scope: an
+      AI-generated summary of a human-authored article on a newspaper's website about a town council
+      decision, AI-manipulated parts of a lifestyle-website article on diets and disease,
+      AI-manipulated corporate reports with investor information on a listed company's website, an
+      AI-generated storm warning on a meteorological institute's social media profile; out of scope:
+      AI-generated fantasy novels, AI-manipulated advertisement or product-description text without
+      health, consumer-safety or sustainability claims, a news summary generated by a chatbot and
+      visible only to the user who prompted it, and AI-manipulated client advice by a consultant);
+      para. 132 (the disclosure means labelling the AI output and disclosing its artificial origin,
+      and 'labelling or disclosure methods (including disclaimers) applied in accordance with
+      Article 50(4), second subparagraph, AI Act should also be clear and perceivable by natural
+      persons (e.g. visible or audible measures) without them needing to rely on any specific
+      technical tools or performing dedicated actions'); para. 133 (the exception has two cumulative
+      conditions); paras 134-135 (human review means deliberate examination of the substance by one
+      or more natural persons with relevant knowledge and professional judgement, with fact-checking
+      a minimum requirement; editorial control means control exercised in practice by a responsible
+      editorial entity with authority to approve, alter or reject the substance on substantive
+      grounds; superficial, solely formal or procedural checks such as spell-checking, the mere
+      existence of an editorial policy, automated review processes and cursory approval without
+      substantive engagement do not qualify); para. 136 (where AI systems modify, supplement or
+      reformulate content AFTER editorial sign-off, the result is treated as AI-generated and any
+      substantive AI intervention after review causes the exception to become void); para. 138
+      (editorial responsibility means holding the ultimate legal responsibility over the
+      publication, and the identity and contact details of the person or function holding it should
+      be publicly available in an easily findable location); para. 139 with paras 46-48 (the
+      law-enforcement exception; 'authorised by law' comprises Union law and national law adopted in
+      compliance with it, the authorising law must clearly specify the purposes and circumstances of
+      permitted use and provide safeguards, and transparency continues to apply where the same
+      system is deployed for other purposes); para. 140 (editorial responsibility is to be read in
+      line with the media acquis, cf. Art. 2(8) EMFA, Regulation (EU) 2024/1083, while remaining a
+      distinct and broader concept); paras 141-143 in section 7 (Art. 50(5): information is clear
+      where noticeable, easy to understand and accessible, and distinguishable where easy to
+      identify as separate from the surrounding content; it is NOT clear and distinguishable where
+      it can be easily overlooked, for example only in a manual, hidden under layers of menu
+      options, or part of terms of use that are often not read; for Art. 50(4) content the
+      obligation applies to each output with respect to any natural person exposed, and the worked
+      example for first exposure is 'at the start of an AI-generated or manipulated text publication
+      on matters of public interest'); para. 152 in section 8.3 (the Art. 99(4) fine ceiling, with
+      the SME rule); para. 154 in section 8.4 (text AI-generated and published before 2026-08-02
+      need not be labelled retroactively, but 'if texts that have been generated or manipulated
+      before 2 August 2026 are published on or after that date, they need to be labelled'); paras
+      146-147 (adherence to a code of practice assessed as adequate under Art. 50(7) is a way for
+      deployers to demonstrate compliance with this disclosure duty, and supervision of signatories
+      focuses on adherence to it). Downloaded and read on 2026-07-27 from the Commission library
+      page below (Communication: newsroom document 131214, 2 pp.; Annex: 131215, 51 pp.)."
+    url: https://digital-strategy.ec.europa.eu/en/library/guidelines-transparency-obligations-providers-and-deployers-ai-systems
+    checked_at: 2026-09-07
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Code of Practice on Transparency of AI-generated Content, published 10 June 2026, drawn up in
+      a multi-stakeholder process facilitated by the AI Office, in two working groups with
+      independent academic chairs and vice-chairs. 38 pages, in two sections, whose own headings
+      name Article 50(2) and (5) for Section 1 - providers, marking and detection - and Article
+      50(4) and (5) for Section 2 - deployers, labelling of deep fakes and of AI-generated or
+      manipulated published text. STATUS: VOLUNTARY, AND THE SOURCE OF NO DUTY. WHAT THE CODE CAN BE
+      ASSESSED AGAINST IS FIXED BY STATUTE, AND IT IS NARROWER THAN SOME OF THE QUOTATIONS BELOW. AI
+      Act Art. 50(7), as replaced by Art. 1(20) of Regulation (EU) 2026/1744, CELEX 32026R1744,
+      provides that the Commission, taking utmost account of the opinion of the Board, 'shall assess
+      whether adherence to those codes of practice is adequate to ensure compliance with the
+      obligations laid down in paragraphs 2 and 4 of this Article, in accordance with the procedure
+      laid down in Article 56(6)'. So the statutory adequacy assessment runs to Art. 50(2) and Art.
+      50(4). Art. 50(5) is the horizontal manner-of-provision requirement attaching to the
+      information those two paragraphs require, and the Commission's own Art. 50 guidance states the
+      code route just as narrowly, at Article 50(2) and (4), in the para. 146 quotation further
+      down. Where a Commission document quoted below words the Code's reach over paragraphs 2, 4 and
+      5, that is that document's wording and is attributed to it here; the enacted paragraph is what
+      fixes the scope of the assessment. The Commission page for the Code states that 'Even though
+      adherence to the code is voluntary, the transparency requirements under article 50 of the AI
+      Act are legal obligations.', and reports that 'By the end of July 2026, about 190 companies
+      organisations have signed the code.' - the missing conjunction is the source's, quoted as it
+      stands. By Commission Opinion C(2026) 4839 final of 8.7.2026, on the assessment of the Code in
+      accordance with Articles 50(7) and 56(6) of Regulation (EU) 2024/1689, the Commission
+      concluded at para. 52 that the Code 'adequately covers the obligations provided for in
+      Articles 50(2), (4) and (5) AI Act and facilitates their effective implementation', that
+      providers and deployers inside the scope of those obligations 'may rely on the Code as the
+      EU-wide recognised instrument that is considered adequate to ensure compliance with their
+      respective obligations, regardless of their place of establishment, operation or competent
+      market surveillance authority', and that all of this holds 'while recognising that adherence
+      to the Code does not constitute conclusive evidence of compliance with these obligations'.
+      Commission Guidelines C(2026) 5054 final Annex para. 146 - the same draft-approval document
+      cited above in this rule, interpretation only - records that 'Providers and deployers of AI
+      systems falling within the scope of Article 50(2) and (4) AI Act may demonstrate compliance
+      with their respective transparency obligations for AI-generated content under those provisions
+      by adhering to a code of practice that is assessed as adequate pursuant to Article 50(7) AI
+      Act', and para. 147 records that for signatories the Commission and the competent market
+      surveillance authorities 'will focus their supervisory activities on assessing whether those
+      signatories have adhered to the code of practice and implemented the measures contained
+      therein'. For this rule Section 2 is the Section in point: it covers the Art. 50(4) labelling
+      duty on deployers, and for this rule that is the second subparagraph - AI-generated or
+      manipulated text published to inform the public on matters of public interest. Section 1
+      covers the Art. 50(2) provider duty, which this rule does not test. WHAT THIS ENTRY CHANGES,
+      and what it does not: it changes how a finding on this rule is worded and which evidence the
+      reader is asked for. It never changes whether a candidate is reported, and it establishes no
+      duty of its own - the duty is in Art. 50, in the entries above. Whether the scanned party is a
+      signatory is a fact about the operator, read from the Commission signatory list or from the
+      party's own declarations and never inferred from source vocabulary; the matching question is
+      in context_questions. Downloaded and read on 2026-09-07: the Code from newsroom document
+      129555, the Commission Opinion from newsroom document 130913, both linked from the page this
+      entry names. Reference only."
+    url: https://digital-strategy.ec.europa.eu/en/policies/code-practice-ai-generated-content
+    checked_at: 2026-09-07
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), definitional and scoping provisions that fix who this
+      rule is about, kept for reference because none of them creates an obligation on its own. Art.
+      3(4): a deployer is 'a natural or legal person, public authority, agency or other body using
+      an AI system under its authority except where the AI system is used in the course of a
+      personal non-professional activity'. Art. 3(3): a provider is 'a natural or legal person,
+      public authority, agency or other body that develops an AI system or a general-purpose AI
+      model or that has an AI system or a general-purpose AI model developed and places it on the
+      market or puts the AI system into service under its own name or trademark, whether for payment
+      or free of charge'. The distinction decides whether this rule reaches the scanned party at
+      all: Art. 50(4) is a deployer duty, so a party that merely ships a text-generation library, an
+      SDK or a CMS plugin to others is not the addressee — the deployer is whoever runs it over its
+      own publication. Art. 2(10): the Regulation 'does not apply to obligations of deployers who
+      are natural persons using AI systems in the course of a purely personal non-professional
+      activity'; the text carries no comma between 'purely personal' and 'non-professional', which
+      is what supports reading 'purely' as qualifying the whole phrase so that both limbs must hold
+      (Commission Guidelines C(2026) 5054 final para. 19). Recital 13 glosses Art. 3(4) in the same
+      terms."
+    url: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 99(4) and Art. 99(4)(g) — the penalty tier this
+      rule sits in, kept for reference because a penalty provision does not create the disclosure
+      duty: non-compliance with 'transparency obligations for providers and deployers pursuant to
+      Article 50' is 'subject to administrative fines of up to EUR 15 000 000 or, if the offender is
+      an undertaking, up to 3 % of its total worldwide annual turnover for the preceding financial
+      year, whichever is higher'. Art. 99(6) reverses that for SMEs including start-ups: 'each fine
+      referred to in this Article shall be up to the percentages or amount referred to in paragraphs
+      3, 4 and 5, whichever thereof is lower'. Quoted from the same Official Journal text as the
+      entries above, read 2026-07-27."
+    url: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 50(1), Art. 50(2) and Art. 50(4) first
+      subparagraph — the boundary of this rule, kept for reference because this rule tests none of
+      them and must not be read as covering them. Art. 50(1) (informing a natural person that they
+      are interacting with an AI system) is a PROVIDER duty and is tested by ai-transparency-001.
+      Art. 50(2) (marking synthetic audio, image, video or text outputs 'in a machine-readable
+      format and detectable as artificially generated or manipulated') is also a PROVIDER duty, and
+      it is the paragraph that C2PA-style content credentials and embedded metadata answer;
+      ai-transparency-003 and -004 test its image/video and audio halves. Its synthetic-TEXT half is
+      not covered by any rule in this pack. The two duties are not interchangeable in this
+      direction: Commission Guidelines C(2026) 5054 final para. 132 requires the Art. 50(4)
+      disclosure to be 'clear and perceivable by natural persons (e.g. visible or audible measures)
+      without them needing to rely on any specific technical tools or performing dedicated actions',
+      and para. 117 states the same point for deep fakes, so machine-readable provenance on a
+      published text does not by itself discharge what this rule tests. Art. 50(4) first
+      subparagraph (deep-fake image, audio or video) is a deployer duty adjudicated on the
+      generation paths of ai-transparency-003 and -004."
+    url: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2026-08-02
+severity: high
+rule_confidence: 0.2
+applicability_preconditions:
+  - features.llm.present
+detector:
+  engine: builtin-regex
+  match:
+    - (?:chat\.)?completions\.create\s*\(|responses\.create\s*\(
+    - messages\.(?:create|stream)\s*\(
+    - generateText\s*\(|streamText\s*\(|generateObject\s*\(|streamObject\s*\(
+    - generate(?:_c|C)ontent\s*\(|[Gg]enerativeModel\s*\(
+    - cohere\.(?:generate|chat)\s*\(|[Cc]ohereClient|[Mm]istral(?:Client|AI)\s*\(|new\s+Mistral\s*\(
+    - InvokeModelCommand|InvokeModelWithResponseStreamCommand|ConverseCommand|ConverseStreamCommand|bedrock-runtime
+    - "[Oo]llama\\.(?:generate|chat)\\s*\\(|:11434|llama[_\\-]?cpp|(?<![A-Za-z])vllm(?![A-Za-z])|[T\
+      t]ext[Gg]eneration[Pp]ipeline"
+    - api\.openai\.com|api\.anthropic\.com|openai\.azure\.com|generativelanguage\.googleapis\.com|api\.cohere\.(?:com|ai)|api\.mistral\.ai|openrouter\.ai|api\.groq\.com|api\.together\.xyz|api\.deepseek\.com|api\.perplexity\.ai
+    - (?:from|require|import)\s*\(?\s*["'](?:npm:|jsr:)?(?:openai|@anthropic-ai/[^"']+|@google/gen[^"']*|@mistralai/[^"']+|cohere-ai|@ai-sdk/[^"']+|ai|ai/[^"']*|@langchain/[^"']+|langchain[^"']*|llamaindex|ollama|groq-sdk|@aws-sdk/client-bedrock-runtime)["']
+    - ^\s*(?:from\s+(?:openai|anthropic|cohere|mistralai|litellm|ollama|google\.generativeai|google\.genai|langchain[\w.]*|llama_index[\w.]*|transformers)(?:\.[\w.]+)?\s+import\s|import\s+(?:openai|anthropic|cohere|mistralai|litellm|ollama|langchain[\w.]*|llama_index[\w.]*|transformers)(?:[.\s,]|$))
+    - "[\"'`](?:gpt-[0-9o]|gpt4|claude-[0-9a-z]|gemini-[0-9]|mistral-[a-z]|llama-?[0-9]|command-r|d\
+      eepseek-|grok-[0-9]|o[0-9]-mini)"
+    - ^\s*["']?(?:openai|anthropic|@anthropic-ai/sdk|@ai-sdk/[\w.\-]+|@google/generative-ai|@google/genai|cohere[-_.]?ai|mistralai|@mistralai/[\w.\-]+|litellm|langchain|langchain[-_.][\w.\-]+|llama[-_.]?index|ollama|groq[-_.]?sdk|python[-_.]?frontmatter)(?:\[[\w.,\s-]+\])?["']?\s*[:=><~^]|^\s*["'][\w@/.\-]+["']\s*:\s*["'](?:npm|jsr):(?:openai|anthropic|@anthropic-ai/[\w.\-]+|@ai-sdk/[\w.\-]+|@google/generative-ai|@google/genai|cohere-ai|@mistralai/[\w.\-]+|mistralai|litellm|langchain|langchain-[\w.\-]+|llama-index|llamaindex|ollama|groq-sdk)@
+    - api\.contentful\.com|createEntry\s*\(|\.sanity\.io|createOrReplace\s*(?:\(|["'`]\s*\]\s*\()|strapi\.(?:entityService|documents)|(?<![A-Za-z0-9_$])entityService\s*\.\s*(?:create|update|publish)\s*\(|(?:from|require|import)\s*\(?\s*["'](?:npm:|jsr:)?(?:contentful-management|contentful|@contentful/app-sdk|@sanity/client|@strapi/client|@tryghost/(?:admin-api|content-api|admin-x-framework/api/(?:posts|pages))|@payloadcms/(?:next|graphql)|@directus/sdk|microcms-js-sdk)(?:/[^"']*)?["']
+    - /ghost/api/admin|payload\.(?:create|update)\s*\(|(?:(?<![A-Za-z0-9_$.])|(?<=[\w@][\w.\-]{0,60}[:/][\w.\-]{0,60}\.))createItems?\s*\(|[Mm]icro[Cc][Mm][Ss]|/wp-json/wp/v2/|wp_insert_post\s*\(|wp_update_post\s*\(
+    - astro:content|defineCollection\s*\(|(?:(?<![A-Za-z0-9_$.])|(?<=[\w@][\w.\-]{0,60}[:/][\w.\-]{0,60}\.))getCollection\s*\(|gray-matter|matter\.stringify\s*\(|[Ff]ront[_\-]?matter
+    - "[\"'`][^\"'`\\n]{0,80}(?:content|_posts|_drafts|_articles|posts|articles|blog|news)/[^\"'`\\\
+      n]{0,80}\\.(?:mdx?|markdown)[\"'`]"
+    - hugo\.(?:toml|yaml|yml)|(?<![A-Za-z])jekyll(?![A-Za-z])|_config\.yml|eleventy\.config|\.eleventy\.js|astro\.config|next-mdx-remote|contentlayer
+    - application/(?:rss|atom)\+xml|[Rr]ss[_\-.]?[Ff]eed|[Ff]eed[_\-.]?[Gg]enerat|feedgen|rss\.xml|atom\.xml|feed\.xml|<rss(?![A-Za-z])
+    - (?:[Pp]ublish|[Ss]chedul)[a-z]{0,4}[_\-.]?(?:[Pp]ost|[Aa]rticle|[Ee]ntry|[Bb]log|[Nn]ews|[Ss]tory|[Cc]ontent|[Dd]raft)
+    - (?:[Pp]ost|[Aa]rticle|[Ee]ntry|[Bb]log|[Nn]ews|[Ss]tory|[Dd]raft|[Rr]ecord)[_\-.]?(?:[Pp]ublish|[Ss]cheduler)
+    - (?<![A-Za-z])[Aa][Ii][_\-.
+      ]?(?:[Gg]enerated|[Ww]ritten|[Aa]uthored|[Dd]rafted|[Ss]ummari[sz]ed|[Tt]ranslated|[Dd]isclosure|[Bb]yline)
+    - (?:[Gg]enerat|[Dd]raft|[Ww]rit|[Cc]ompos|[Aa]uthor|[Ss]ummari[sz]|[Rr]ewrit|[Pp]araphras)[a-z]{0,4}[_\-.]?(?:[Aa]rticle|[Bb]log|[Pp]ost|[Nn]ews|[Ss]tor(?:y|ies)|[Hh]eadline|[Bb]ulletin|[Nn]ewsletter|[Pp]ress[_\-.]?[Rr]elease|[Rr]eport|[Dd]igest)
+    - (?:[Aa]rticle|[Bb]log|[Pp]ost|[Nn]ews|[Hh]eadline|[Cc]ontent|(?<![Hh]i)[Ss]tory)[_\-.]?(?:[Gg]enerator|[Gg]eneration|[Ww]riter|[Bb]ots?(?![a-z])|[Aa]utomation|[Pp]ipeline)
+    - "[Aa]uto(?:matic|mated)?[_\\-.]?(?:[Bb]log|[Pp]ost|[Pp]ublish|[Aa]rticle|[Nn]ews|[Jj]ournalis\
+      |[Ss]ummar)"
+    - "[Cc]ontent(?:[_\\-]|(?<![A-Za-z0-9_$]\\.[A-Za-z]{0,16})\\.)?(?:[Ff]actory|[Ff]arm)|[Nn]ews[_\
+      \\-.]?[Bb]ot|[Bb]log[_\\-.]?[Bb]ot|[Gg]host[_\\-.]?[Ww]riter"
+    - "[Nn]ewsroom|[Pp]ress[_\\-.]?[Rr]elease|[Ee]ditorial[_\\-.]?(?:[Bb]oard|[Pp]olicy|[Ww]orkflow\
+      |[Rr]eview)"
+    - ^[
+      \t]*(?:[Oo][Pp][Ee][Nn][Aa][Ii]|[Aa][Nn][Tt][Hh][Rr][Oo][Pp][Ii][Cc]|[Cc][Oo][Hh][Ee][Rr][Ee]|[Mm][Ii][Ss][Tt][Rr][Aa][Ll][Aa][Ii]|[Ll][Ii][Tt][Ee][Ll][Ll][Mm]|[Oo][Ll][Ll][Aa][Mm][Aa]|[Tt][Rr][Aa][Nn][Ss][Ff][Oo][Rr][Mm][Ee][Rr][Ss]|[Ll][Aa][Nn][Gg][Cc][Hh][Aa][Ii][Nn](?:[-_.][A-Za-z0-9_.-]+)?|[Ll][Ll][Aa][Mm][Aa][-_.]?[Ii][Nn][Dd][Ee][Xx]|[Gg][Oo][Oo][Gg][Ll][Ee][-_.](?:[Gg][Ee][Nn][Ee][Rr][Aa][Tt][Ii][Vv][Ee][Aa][Ii]|[Gg][Ee][Nn][Aa][Ii]))[
+      \t]*(?:[=<>!~]=|[<>]|@|\[|;|\r?$)
+    - (?<![A-Za-z])AI[_\-.
+      ]?(?:GENERATED|WRITTEN|AUTHORED|DRAFTED|SUMMARI[SZ]ED|TRANSLATED|DISCLOSURE|BYLINE)|(?<![A-Za-z])(?:[Mm]achine|MACHINE|(?<![A-Za-z0-9_$]\.)[Mm]odel|(?<![A-Za-z0-9_$]\.)MODEL|[Bb]ot|BOT|[Rr]obot|ROBOT|[Ss]ynthetic|SYNTHETIC|[Ll][Ll][Mm]|[Aa]utomat(?:ic|ed)|AUTOMAT(?:IC|ED))[_\-.
+      ]?(?:[Gg]enerated|GENERATED|[Ww]ritten|WRITTEN|[Aa]uthored|AUTHORED|[Dd]rafted|DRAFTED|[Ss]ummari[sz]ed|[Tt]ranslated)
+    - (?<![A-Za-z])(?:[Jj][Ee][Kk][Yy][Ll][Ll]|[Ee][Ll][Ee][Vv][Ee][Nn][Tt][Yy]|[Hh][Uu][Gg][Oo][-_.](?:[Tt][Oo][Mm][Ll]|[Yy][Aa][Mm][Ll]|[Yy][Mm][Ll])|[Ff][Rr][Oo][Nn][Tt][-_.]?[Mm][Aa][Tt][Tt][Ee][Rr])(?![A-Za-z])
+    - (?:[Cc]reat|[Pp]roduc|[Ss]pin|[Ss]ynthesi[sz]|[Gg]hostwrit)[a-z]{0,4}[_\-.]?(?:[Aa]rticle|[Bb]log|[Pp]ost|[Nn]ews|[Ss]tor(?:y|ies)|[Hh]eadline|[Bb]ulletin|[Nn]ewsletter|[Pp]ress[_\-.]?[Rr]elease|[Rr]eport|[Dd]igest|[Cc]opy|[Ww]riteup|[Ww]rite[_\-.]?[Uu]p)(?![A-Za-z])
+    - (?:[Ss]hip|[Ee]mit|[Rr]eleas|[Ss]yndicat|[Pp]ush|[Gg]o[_\-.]?[Ll]ive|[Bb]roadcast)[a-z]{0,4}[_\-.]?(?:[Pp]ost|[Aa]rticle|[Ee]ntry|[Bb]log|[Nn]ews|[Ss]tory|[Cc]ontent|[Dd]raft|[Ww]riteup|[Ww]rite[_\-.]?[Uu]p|[Bb]rief|[Dd]igest|[Cc]overage|[Oo]verview)(?![A-Za-z])|(?:[Pp]ost|[Aa]rticle|[Ee]ntry|[Bb]log|[Nn]ews|[Ss]tory|[Dd]raft|[Ww]riteup|[Bb]rief)[_\-.]?(?:[Ss]hipper|[Ss]hip|[Ee]mitter|[Rr]eleaser|[Ss]yndicator|[Pp]usher|[Bb]roadcaster)(?![A-Za-z])
+    - (?:[Aa]uto(?:matic|mated)?|[Hh]ands[_\-.]?[Ff]ree|[Uu]nattended|[Ss]elf[_\-.]?(?:[Rr]unning|[Ss]erve|[Ss]erving))[_\-.]?(?:[Bb]log|[Pp]ost|[Pp]ublish|[Aa]rticle|[Nn]ews|[Jj]ournalis|[Ss]ummar|[Rr]eport|[Dd]igest|[Bb]rief|[Cc]overage|[Oo]verview|[Ii]tem|[Uu]pdate[_\-.]?(?:[Bb]log|[Pp]ost|[Aa]rticle|[Nn]ews|[Ss]tor(?:y|ies)|[Cc]ontent|[Dd]igest|[Ff]eed|[Hh]eadline)|[Ss]hip|[Ss]tory|[Cc]ontent|[Ww]riteup)(?![A-Za-z])|(?:[Cc]ontent|[Aa]rticle|[Nn]ews|[Bb]log|[Ss]tory|[Mm]aterial|[Cc]opy)(?:[_\-]|(?<![A-Za-z0-9_$]\.[A-Za-z]{0,16})\.)?(?:[Ff]actory|[Ff]arm|[Rr]anch|[Mm]ill|[Ww]orkshop|[Ff]orge|[Ee]ngine)(?![A-Za-z])|(?:[Gg]host|[Ss]hadow|[Rr]obot|[Bb]ot)[_\-.]?(?:[Ww]riter|[Ss]cribe|[Aa]uthor|[Jj]ournalist)(?![A-Za-z])|(?:[Aa]rticle|[Bb]log|[Pp]ost|[Nn]ews|[Hh]eadline|[Cc]ontent|[Ss]tory|(?:[Cc]ontent|[Nn]ews|[Bb]log|[Aa]rticle|[Ss]tory|[Pp]ost)[_\-.]?[Ii]tem|(?:[Cc]ontent|[Nn]ews|[Bb]log|[Aa]rticle|[Ss]tory|[Pp]ost)[_\-.]?[Uu]pdate|[Bb]rief|[Nn]ote|[Tt]itle|[Ww]riteup|[Mm]aterial)(?:[_\-]|(?<![A-Za-z0-9_$]\.[A-Za-z]{0,16})\.)?(?:[Rr]obot|[Ss]cribe|[Mm]aker|[Cc]reation|[Rr]outine|[Ww]orkflow|[Ff]actory)(?![A-Za-z])
+    - (?<![A-Za-z0-9_$])(?:openai\.chat\.completions|openai\.responses|openai\.images|anthropic\.messages|[A-Za-z_$][\w$]{0,20}\.(?:responses|completions|chat\.completions))[
+      \t]*(?:\r?$|\.[ \t]*\r?$)
+    - (?:const|let|var)[ \t]*\{[^}\n]{0,80}\}[ \t]*=[
+      \t]*[A-Za-z_$][\w$]{0,20}\.(?:responses|completions|messages|chat|images|audio)(?![A-Za-z0-9_$])
+  match_without:
+    - ^\s*(?:\*|//|<!--)
+  resolve_import_aliases: true
+context_questions:
+  - "Which role does the scanned party hold for the text-generating system — provider (AI Act Art.
+    3(3)) or deployer (Art. 3(4))? Art. 50(4) second subparagraph is owed by the DEPLOYER: the party
+    using the system under its own authority, which for a hosted model API is whoever calls it on
+    its own credentials to produce text it then publishes. Answer from the codebase, because the
+    same repository can be neither. A repository that ships a CMS plugin, an SDK, an integration
+    catalogue, a template or a client library exposing text generation to its own users is a
+    conduit: it exposes no reader to any published text of its own, and the deployer is whoever
+    installs and runs it downstream. A repository that develops a text-generation system and puts it
+    on the market under its own name or trademark is a provider, and providers carry Art. 50(1) and
+    Art. 50(2) instead, which are ai-transparency-001 and the (uncovered) synthetic-text half of
+    Art. 50(2), not this rule. Quote the credential handling, the call path and the publishing
+    surface that settle which role this repository holds, and say plainly if the answer is neither
+    because nothing here ever reaches a reader."
+  - "Is the text this code produces actually PUBLISHED, in the sense of Commission Guidelines
+    C(2026) 5054 final para. 131(i) — accessible by an indeterminate, fairly large number of
+    unrelated potential readers, simultaneously or successively, whether or not against payment?
+    Trace the delivery path from the generation call to the surface a reader reaches and quote both
+    ends. Several near neighbours are outside: text restricted to a closed, private group; private
+    interpersonal correspondence including professional correspondence; organisation-internal texts
+    such as posts on an internal corporate network or a staff wiki; a chatbot answer visible only to
+    the user who prompted it, which the Guidelines list as an out-of-scope example even when it
+    summarises the news; drafts held for review that never leave the editor; and internal reports,
+    log summaries and commit messages. A subscription paywall does NOT take a text outside, and
+    neither does a small readership on its own."
+  - Does the published text aim to INFORM THE PUBLIC ON MATTERS OF PUBLIC INTEREST? This is the
+    judgement the detector cannot make and the main reason a candidate here is often dismissed.
+    Commission Guidelines para. 131(ii) asks whether the text intends to communicate knowledge,
+    opinions or facts, so short strings that do not materially do so are outside. Para. 131(iii)
+    describes matters of public interest as those relevant to society at large at local, national,
+    Union or international level and meriting public debate or scrutiny, and lists politics and
+    democratic processes, public administration and services, the administration of justice and law
+    enforcement, the protection of fundamental rights, public security, public health, environmental
+    protection, consumer safety, and economic, financial, political, scientific or cultural
+    developments that may be a relevant subject of public debate. The Commission's own in-scope
+    examples are an AI-generated summary of a newspaper article about a town council decision,
+    AI-manipulated parts of a lifestyle-website article on diets and disease, AI-manipulated
+    corporate reports carrying investor information on a listed company's website, and an
+    AI-generated storm warning on a meteorological institute's social media profile. Its
+    out-of-scope examples are AI-generated fantasy novels, AI-manipulated advertisement or
+    product-description text that makes no health, consumer-safety or sustainability claim, and a
+    consultant's AI-manipulated client advice. Marketing copy, release notes, SEO landing pages,
+    product descriptions, changelogs and support articles will usually sit outside — but say which
+    side the evidence puts this text on and quote the topic, the audience and the publication
+    surface rather than assuming.
+  - "Does the editorial exemption in the second half of the paragraph apply? It has TWO CUMULATIVE
+    conditions and each has to be evidenced separately: (i) the AI-generated or manipulated text has
+    undergone a process of human review or editorial control, AND (ii) a natural or legal person
+    holds editorial responsibility for the publication. Review on its own is not enough. Commission
+    Guidelines paras 134-135 read human review as deliberate examination of the substance by one or
+    more natural persons with relevant knowledge and professional judgement, with fact-checking as a
+    minimum, and editorial control as control exercised in practice by a responsible editorial
+    entity with authority to approve, alter or reject the substance on substantive grounds; they
+    exclude superficial, solely formal or procedural checks such as spell-checking or grammatical
+    correction, the mere existence of an editorial policy, automated review processes, and cursory
+    approval without substantive engagement. Para. 136 adds that where an AI system modifies,
+    supplements or reformulates content AFTER editorial sign-off the result is treated as
+    AI-generated again and the exemption becomes void, so look at the order of operations in the
+    pipeline: a scheduled rewrite, a translation pass or an SEO pass running after approval defeats
+    it. Para. 138 reads editorial responsibility as ultimate legal responsibility over the
+    publication, whose holder's identity and contact details should be publicly available in an
+    easily findable place. In the code this shows up as an approval state machine with a named human
+    approver, a review queue with a substantive decision recorded, an editor role with reject
+    authority, or a masthead or colophon page — not as a `status: published` column or an
+    auto-approve default. Quote what you find, in the order it runs, and record which of the two
+    conditions is unevidenced if either is."
+  - "Does the law-enforcement exemption apply — is the use authorised by law to detect, prevent,
+    investigate or prosecute criminal offences? Read it narrowly. Commission Guidelines para. 139
+    routes this to paras 46-48: 'authorised by law' comprises Union law and national law adopted in
+    compliance with it, the authorising law must clearly specify the purposes and circumstances of
+    the permitted use and provide appropriate safeguards for the rights and freedoms of third
+    parties, and where the same system is also deployed for ordinary purposes the transparency duty
+    continues to apply to those. The Commission's own example is an AI-generated police warning
+    about a terrorist threat published on social media. Commercial fraud messaging, content
+    moderation, abuse reporting and a general security framing do not reach it. Quote whatever is
+    being relied on."
+  - 'Is the fact that this text was artificially generated actually communicated to the READER of
+    the published page, in a clear and distinguishable manner (Art. 50(5)), or does the codebase
+    only record it internally? The detector performs no absence check at all — it raises the
+    candidate on the generation and publication paths and leaves this entire question to you — so
+    the search is yours to do and yours to report. Look in the places a label ships from rather than
+    the places a flag is stored: post and article templates, the layout and byline components that
+    wrap every item, MDX and front-matter renderers, feed and newsletter serialisers, AMP, print and
+    social-card templates, i18n and locale bundles, and the CMS field definitions that feed them.
+    Follow the render path rather than the data path, because the label usually sits in the layout
+    rather than in the file that generated the text. Then weigh what you found against Commission
+    Guidelines paras 132 and 142: the disclosure must be clear, distinguishable and perceivable by a
+    natural person without specific technical tools or dedicated actions, and information that can
+    be easily overlooked under normal exposure — only in a manual, hidden under layers of menu
+    options, or buried in terms of use — does not meet that standard. Three shapes look like a
+    disclosure and are not, and all three appear in real repositories: an internal flag such as an
+    `ai_generated` or `is_ai` boolean, a `generated_by` or `model` column or a metadata key that no
+    template renders, which records the fact for the operator and tells the reader nothing;
+    machine-readable provenance such as a C2PA or Content Credentials manifest, a schema.org or Open
+    Graph property or an HTML meta tag, which answers the separate Art. 50(2) provider duty and is
+    precisely the specific technical tool para. 132 says a reader must not need; and an identifier
+    or i18n key named for a disclosure — `AiDisclosureBadge`, `AIGeneratedLabel`,
+    `t("post.aiNotice")` — whose rendered string you have not read, where a two-word `AI-generated`
+    badge on a published article and the `<option>AI-generated</option>` of an admin filter listing
+    model-written posts are indistinguishable until you open the surrounding surface. Quote the
+    string that ships to the reader and where it renders, or record the absence together with the
+    places searched.'
+  - If a disclosure exists, does it reach the reader in the right manner and at the right moment?
+    Art. 50(5) requires the information in a clear and distinguishable manner at the latest at the
+    time of first exposure, and to conform to the applicable accessibility requirements. Commission
+    Guidelines para. 143 gives the worked example for this paragraph as disclosure 'at the start of
+    an AI-generated or manipulated text publication on matters of public interest', and applies the
+    duty to each output with respect to any natural person exposed to it — so a label rendered on
+    the article page but stripped from the RSS item, the AMP page, the newsletter send, the
+    syndication feed or the social card is a partial answer, and one that only appears after a click
+    or below the fold may be missed. Quote where the label renders and where it does not.
+  - When was this text generated, and when is it published? Commission Guidelines para. 154 records
+    that text AI-generated and published before 2026-08-02 does not need to be labelled
+    retroactively, but that text generated or manipulated before that date and published on or after
+    it does. For a scheduled queue, a backfill job or a static site rebuilt from an existing content
+    directory, the publication date is the one that matters. Quote the scheduling or build path if
+    either exists.
+  - "CODE OF PRACTICE, AND WHO ANSWERS THIS. Is the scanned party a signatory of the Code of
+    Practice on Transparency of AI-generated Content, and if it is, does the marking or labelling in
+    this code follow the Code measures it signed up to? SOURCE CODE CANNOT ANSWER THE FIRST HALF,
+    and no detector should try: whether a party has signed is a fact about the operator, held on the
+    Commission signatory list and in the party's own declarations, not in its source vocabulary. Ask
+    the person running the scan, or read it from the operator's declared documents. THE ANSWER
+    CHANGES ONLY HOW THIS FINDING IS WORDED, NEVER WHETHER THIS CANDIDATE IS REPORTED. A signatory
+    has an EU-wide recognised way of demonstrating compliance with the Art. 50(2) and Art. 50(4)
+    duties, because enacted AI Act Art. 50(7) confines the adequacy assessment to 'the obligations
+    laid down in paragraphs 2 and 4 of this Article'. Commission Opinion C(2026) 4839 final para. 52
+    words its own conclusion over Articles 50(2), (4) and (5); that is the Opinion's wording and not
+    the statutory scope, and Art. 50(5) is in any case the manner-of-provision requirement attaching
+    to the information Art. 50(2) and (4) require rather than a separate duty. Ask a signatory which
+    Code measures the code path here implements; a non-signatory is expected to show that its own
+    means are adequate. The Commission concluded that adherence to the Code is not conclusive
+    evidence of compliance either way, so neither answer disposes of the finding. If the answer is
+    not known, say so and word the finding without it."
+  - "WHO ANSWERS WHETHER SUCH TEXT IS PUBLISHED AT ALL? Whether the organisation that runs this
+    product publishes text that AI generated or manipulated, with the purpose of informing the
+    public on matters of public interest, is a fact about that organisation: the person running the
+    scan is asked it as the AI text question, ScanProfile.operator.ai_text_public_interest, and the
+    code never decides it. Where the finding stands or falls on that fact - context questions 2 and
+    3 - write it as waiting on operator.ai_text_public_interest, whether or not it has been
+    answered, and let the program apply the answer; quote what the code shows about publication and
+    subject matter, and where it contradicts the person's answer, say so in the reasoning. The
+    answer settles context questions 2 and 3 and nothing else: the editorial exemption (question 4),
+    the law-enforcement exemption (question 5) and whether and how the reader is told (questions 6
+    and 7) stay yours, so where one of those decides the finding, answer it instead of waiting. The
+    answer concerns the text limb of Art. 50(4), the only limb this rule tests, and says nothing
+    about deep fakes, which are the paragraph's first subparagraph."
+evidence_template: "{file}:{line} matched one of this rule's 26 patterns. They fall into three
+  groups and the detector matches each group on its own: a language-model call, SDK import, endpoint
+  host, model name or dependency declaration; a publishing surface - a headless-CMS write call, a
+  content collection, front matter, a markdown content path, a site-generator configuration or a
+  feed; or wording that names generated content, an automated publishing pipeline, or a newsroom or
+  editorial function. Nothing joins the three: this rule declares no same-file corroboration,
+  deliberately, so a match on any one group alone raises the candidate and the detector did not
+  establish that AI-generated text reaches a published surface. READ THE LOCATIONS BEFORE ACCEPTING
+  THE HEADLINE - this rule raises one finding per repository, and a candidate can rest entirely on
+  the publishing group with no model call anywhere in it, or the other way round. The detector makes
+  no finding about whether a disclosure exists and none about the subject matter — whether the
+  reader is told is context question 6, and whether the text informs the public on matters of public
+  interest is context question 3"
+remediation_template: >
+  Settle the role first. AI Act Art. 50(4) second subparagraph is owed by the deployer (Art. 3(4)) —
+
+  the party using the text-generating system under its own authority over its own publication — and
+
+  not by the vendor whose model is called, nor by a project that only ships a CMS plugin, an SDK or
+  a
+
+  template for others to run. A natural person publishing in a purely personal non-professional
+
+  activity sits outside deployer obligations altogether (Art. 2(10)).
+
+  Then settle whether the text is in scope at all, because the paragraph is narrow: it reaches text
+
+  that is published to an indeterminate readership AND aims to inform the public AND concerns
+  matters
+
+  of public interest. Marketing copy, product descriptions without health, safety or sustainability
+
+  claims, fiction, and a chatbot answer visible only to the person who asked are outside it. Where
+  the
+
+  answer is yes, the two engineering routes are these, and only one of them ends in a label.
+
+  Route A - keep the human in the loop, and keep them there last. The exemption needs both limbs:
+
+  substantive human review or editorial control (a named person with relevant knowledge examining
+  the
+
+  substance, fact-checking included; a spell-check, an auto-approve default or an editorial policy
+
+  document does not reach it) and a natural or legal person holding editorial responsibility for the
+
+  publication, whose identity and contact details are findable — a masthead, colophon or imprint
+  page.
+
+  Order matters more than most teams expect: any AI step that modifies, supplements or reformulates
+
+  the text after sign-off puts the text back in scope, so a post-approval rewrite, translation or
+  SEO
+
+  pass belongs before the review gate rather than after it.
+
+  Route B - label the output where the reader meets it. Put the disclosure in the layout or byline
+
+  component that wraps every published item rather than in one template, and carry it into every
+
+  surface the same item reaches: the article page, the RSS and Atom items, the newsletter send, the
+
+  AMP and print views, the syndication payload and the social card. What ships is a sentence a
+  reader
+
+  sees - "This article was generated by AI", "This summary was written using a language model",
+  "This
+
+  text has been artificially generated" - rendered next to the byline or at the head of the item,
+  not
+
+  a name in the code. Art. 50(5) asks for it clearly and distinguishably, at the latest at first
+
+  exposure, conforming to the applicable accessibility requirements. Four things that look like the
+
+  answer and are not: a boolean column such as ai_generated or is_ai, or a generated_by / model
+  field,
+
+  that no template reads; a C2PA or Content Credentials manifest, a schema.org property or an HTML
+
+  meta tag, which is machine-side and answers the separate Art. 50(2) duty instead; a component or
+
+  i18n key named AiDisclosure or aiGeneratedLabel whose string is never rendered; and a paragraph in
+
+  the terms of use, which is where the Commission's guidance says information gets missed. Keeping
+
+  machine-readable provenance is still worthwhile, and it may answer Art. 50(2) if this party is
+  also
+
+  the provider of the generating system.
+
+  One migration note: text generated before 2026-08-02 but published on or after it needs the label,
+
+  so a scheduled queue, a backfill or a static rebuild from an existing content directory is the
+  case
+
+  to check first. Art. 50 applies to EU-facing deployments from 2026-08-02, at the Art. 99(4)(g)
+  tier.
+
+  Releasing this under a free and open-source licence does not remove the duty: Art. 2(12) withholds
+  that
+
+  exclusion from AI systems placed on the market or put into service as systems falling under
+  Article 5 or 50,
+
+  and Article 50 is the article this finding sits under. Neither does the way the project is funded.
+  Recital
+
+  103's monetisation test narrows the Art. 2(12) exclusion, and an Article 50 system does not have
+  that
+
+  exclusion to narrow, so being unmonetised, being a microenterprise and publishing on a public
+  repository
+
+  leave this duty exactly where it is.
+data_categories: []
+fingerprint_spec: project
+reading_class:
+  class: existence
+  elements:
+    - name: generation_call
+      question: 2
+      text: the generation call, one end of the delivery path this question says to quote
+    - name: published_surface
+      question: 2
+      text: the surface a reader reaches, the other end of the delivery path
+    - name: disclosure_at_first_exposure
+      question: 7
+      text: the information in a clear and distinguishable manner at the latest at the time of first
+        exposure (Art. 50(5)) - where the label renders
+    - name: rss_item
+      question: 7
+      text: the RSS item, where a label rendered on the article page may be stripped
+    - name: amp_page
+      question: 7
+      text: the AMP page, where a label rendered on the article page may be stripped
+    - name: newsletter_send
+      question: 7
+      text: the newsletter send, where a label rendered on the article page may be stripped
+    - name: syndication_feed
+      question: 7
+      text: the syndication feed, where a label rendered on the article page may be stripped
+    - name: social_card
+      question: 7
+      text: the social card, where a label rendered on the article page may be stripped

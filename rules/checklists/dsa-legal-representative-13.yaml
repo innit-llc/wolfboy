@@ -1,0 +1,518 @@
+checklist_id: dsa-legal-representative-13
+title: DSA Article 13 - legal representative for providers established outside the Union
+law: Regulation (EU) 2022/2065 (Digital Services Act)
+source_url: http://publications.europa.eu/resource/celex/32022R2065
+checked_at: 2026-07-28
+scope_note: "This checklist records whether the project's published documents name a legal
+  representative in a Member State, state what that representative may be addressed on, and publish
+  the details Article 13(4) requires. It does not decide whether the provider is established in the
+  Union - that is the gate below, and the answer comes from the person running the scan, or from the
+  provider's own declared documents where one of them states where the business is established.
+  Neither the source tree nor a document that says nothing about it settles that question: a census
+  fact or a repository artefact may corroborate the answer and it may never decide it, and silence
+  in either is not an answer in either direction. It says nothing about whether the representative
+  was actually designated in writing, whether the mandate under Article 13(2) exists or is adequate,
+  whether the provider gave that representative the necessary powers and sufficient resources
+  Article 13(2)'s second sentence requires - a duty named in one item's note and missing from this
+  list until 2026-09-01, where a reader meets a list that reads as closed - or whether the Digital
+  Services Coordinator was notified: those happen off the page, and a document cannot show them. It
+  does not touch Article 13(3), which provides that it shall be possible for the designated
+  representative to be held liable for non-compliance with obligations under this Regulation,
+  without prejudice to the liability of the provider itself and to legal actions against the
+  provider - a consequence of the designation rather than anything a provider publishes, and a
+  possibility the Article requires to exist rather than a liability it imposes."
+applicability:
+  question: "Three questions, and they do not all open the gate on the same answer: what each answer
+    does is written beside the limb that asks it, and a direction must not be carried over from one
+    limb to the next. The first two are the same ones the contact-point checklist asks. First, is
+    the project an intermediary service - an information society service (one normally provided for
+    remuneration, at a distance, by electronic means and at the individual request of a recipient)
+    that transmits information provided by a recipient of the service in a communication network
+    **or provides access to one**, or caches that information for the sole purpose of making its
+    onward transmission to other recipients, upon their request, more efficient, or stores
+    information provided by a recipient at that recipient's request? The access half of limb (i) is
+    in the enacted definition quoted below and was missing from this sentence until 2026-08-08,
+    which reads a VPN, a wireless access point or a DNS resolver - Recital 29's own examples - as
+    outside the limb. Whose information travels, and what the caching is for, were missing until
+    2026-09-01, and both are in the same enacted definition: limb (i) is the transmission of
+    information provided by a recipient of the service, so a service transmitting only its own is
+    outside it, and limb (ii) is temporary storage of a recipient's information performed for the
+    sole purpose of making that information's onward transmission to other recipients more
+    efficient, so a cache of the provider's own pages for the provider's own visitors is not it.
+    **\"For remuneration\" does not mean the user pays**: a service funded by advertising, or
+    offered free of charge as part of an economic activity, is an information society service, and
+    answering this limb \"no\" because the service is free is the commonest way to fall out of scope
+    wrongly. A \"yes\" to this limb keeps the gate open. Second, is it offered to recipients
+    established or located in the Union? A \"yes\" to this limb keeps the gate open, and running the
+    EU pack is treated as that \"yes\". Third - and only this one is specific to Article 13, and it
+    runs the other way from the two above. Article 13(1) binds providers \"which do not have an
+    establishment in the Union\", so a provider established in any Member State owes nothing in this
+    checklist, and for it the gate is `does-not-apply` with every item `not-applicable`. The gate
+    opens only where the provider is established outside the Union and has an establishment in no
+    Member State, together with a \"yes\" to the first two limbs. It is asked below as a place and
+    not as a negative, because a person answering \"does the provider have no establishment in the
+    Union\" can mean either of two things by \"no\", and because a place is the answer a person can
+    give without first working out which way a negative runs. **It is not asked because an item
+    below needs it**: Article 13(1) ties the representative's Member State to where the provider
+    offers its services, not to where the provider is established, so the provider's own country
+    feeds no item here, and `art-13-1-member-state` asks for **the representative's** Member State
+    and must never be answered with the provider's. This field gave that wrong reason until
+    2026-08-08. The price of asking the limb as a place is that a \"yes\" to it **closes** the gate
+    where a \"yes\" to the first two limbs keeps it open, which is why both directions are written
+    out here. The answer comes from the person running the scan, or from their own declared
+    documents, and **never from anything in the source tree**: where a business is established is a
+    fact about the business, no repository states it, and it is not inferable from what a source
+    tree imports, links, names or implements. A census fact, or anything else read out of that tree,
+    may corroborate the answer or contradict it, and may never decide it. A declared document is not
+    in that position - it is the second of the two routes just named - so where the provider's own
+    declared document **states where the business is established**, that statement is an answer:
+    \"we are established in X\", \"our registered office is in X\", \"because we are not established
+    in the Union we have designated a representative\" all say it. **What makes it an answer is the
+    statement, not the document it sits in and not an address printed beside it.** A postal address
+    in an imprint, in a set of terms or in a page footer is not one - an address says where post
+    reaches a company, and a company can be reached at an address in a country it is not established
+    in - and an address string a collector found in the tree is not one either, for the reason the
+    sentence before this one gives. **Two things decide whether a document's words are that
+    statement: what they assert, and whose establishment they assert it of.** A label naming a place
+    is not the test. \"Registered address\", \"registered company address\", \"physical address\",
+    \"location\", \"head office\", the address row of a statutory trader disclosure, the address
+    field a marketplace requires for trader status - each of them names a place, and the question is
+    whether the words say that place is where the business is established. Read the words beside the
+    label, in whatever language the document is written in, and ask whose place they name: one
+    document routinely uses one label for the provider's own address, for where data is held, and
+    for a third-party processor's country, so a test that matches the label alone finds several
+    places and more than one subject. An address field required for trader status under another
+    instrument is a display duty of that instrument, and it states establishment only where its
+    words say so. This paragraph was added on 2026-09-01, after four real applications were walked
+    and not one of their establishment-shaped statements matched either of the lists above. **And
+    the establishment asked about is the provider's own.** A subsidiary or a parent established in
+    the Union is not the provider: Recital 44's worked example of this very Article is a provider
+    established in a third country that appoints an EU-established company of its own group as its
+    Article 13 representative, so having a group company inside the Union is not an answer of
+    \"inside the Union\" and closes nothing. It has to state establishment and not something
+    adjacent: a designated legal representative is not it, for the reason Article 13(5) below gives.
+    Neither a silent document nor a silent tree is an answer. So, last: **where is the provider
+    established, and is any of those places inside the Union**?"
+  quote: This Regulation shall apply to intermediary services offered to recipients of the service
+    that have their place of establishment or are located in the Union, irrespective of where the
+    providers of those intermediary services have their place of establishment.
+  cite: DSA Art. 2(1)
+  url: http://publications.europa.eu/resource/celex/32022R2065
+  checked_at: 2026-07-28
+  ask_the_user: true
+  supporting_quotes:
+    - quote: "'intermediary service' means one of the following information society services: (i) a 'mere
+        conduit' service, consisting of the transmission in a communication network of information
+        provided by a recipient of the service, or the provision of access to a communication
+        network; (ii) a 'caching' service, consisting of the transmission in a communication network
+        of information provided by a recipient of the service, involving the automatic, intermediate
+        and temporary storage of that information, performed for the sole purpose of making more
+        efficient the information's onward transmission to other recipients upon their request;
+        (iii) a 'hosting' service, consisting of the storage of information provided by, and at the
+        request of, a recipient of the service;"
+      cite: DSA Art. 3(g)
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-07-28
+      why: '**The limb this gate did not have at all until 2026-07-28.** The first draft asked only where
+        the provider was established, and treated the answer "not established in the Union" as
+        settling the gate - so a Delaware company running a static brochure site with no EU users
+        answered "not established" and was walked through four items it does not owe. Article 13
+        binds providers of *intermediary services*, and that question has to be asked first.'
+    - quote: "'information society service' means a 'service' as defined in Article 1(1), point (b), of
+        Directive (EU) 2015/1535;"
+      cite: DSA Art. 3(a)
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-07-28
+      why: The head of the definition above; every limb of Article 3(g) is qualified by it.
+    - quote: any Information Society service, that is to say, any service normally provided for
+        remuneration, at a distance, by electronic means and at the individual request of a
+        recipient of services.
+      cite: Directive (EU) 2015/1535, Art. 1(1)(b)
+      url: http://publications.europa.eu/resource/celex/32015L1535
+      checked_at: 2026-07-28
+      why: 'What "information society service" means. "For remuneration" does not mean the user pays: a
+        free service that is part of an economic activity is inside.'
+    - quote: Providers of intermediary services which do not have an establishment in the Union but which
+        offer services in the Union shall designate, in writing, a legal or natural person to act as
+        their legal representative in one of the Member States where the provider offers its
+        services.
+      cite: DSA Art. 13(1)
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-07-28
+      why: "The duty, and the third limb of the gate: no establishment in the Union, but services offered
+        in it. Quoted here rather than as the gate's primary quote because the primary quote should
+        be the provision that decides who this Regulation reaches at all."
+    - quote: The designation of a legal representative within the Union pursuant to paragraph 1 shall not
+        constitute an establishment in the Union.
+      cite: DSA Art. 13(5)
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-07-28
+      why: '**A named representative does not answer the establishment question in either direction.** It
+        does not create an establishment, so it is not evidence that the provider has one; and
+        nothing stops a provider that does have an establishment from naming a representative
+        anyway, so it is not evidence that the provider lacks one either. An earlier draft of this
+        note said a provider that has designated one "is still outside the Union", which asserts as
+        settled the very fact this gate exists to ask about, and contradicts the guidance fifteen
+        lines below. Corrected 2026-07-28.'
+    - quote: In contrast, mere technical accessibility of a website from the Union cannot, on that ground
+        alone, be considered as establishing a substantial connection to the Union.
+      cite: DSA Recital 8
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-07-28
+      why: "The limit on the \"offers services in the Union\" limb. The same recital lists what **does**
+        count towards a substantial connection to the Union, on the basis of all relevant
+        circumstances and **including factors such as** - the list is open, and this note rendered
+        it as closed until 2026-09-01 - a language or a currency generally used in that Member
+        State, the possibility of ordering products or services, a relevant top-level domain,
+        availability in the relevant national application store, local advertising or advertising in
+        a language used there, customer service in a language generally used there, and a further
+        route the recital adds beside those factors: activities directed to one or more Member
+        States within the meaning of Article 17(1), point (c), of Regulation (EU) No 1215/2012. All
+        of it belongs to that second limb, which Article 3(d) and (e) define and which this gate
+        quotes below. None of it bears on the third limb, where the provider is established, and the
+        instruction below about those signals is therefore a prohibition on the third limb rather
+        than a caution about weighing them. This note said the opposite until 2026-08-07: it
+        attached the recital's list to the establishment instruction and downgraded that instruction
+        to \"do not treat those signals as conclusive\"."
+    - quote: "'to offer services in the Union' means enabling natural or legal persons in one or more
+        Member States to use the services of a provider of intermediary services that has a
+        substantial connection to the Union;"
+      cite: DSA Art. 3(d)
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-09-01
+      why: "**The enacted words of the second limb, which this file described in Article 2(1)'s language
+        and never quoted until 2026-09-01.** Article 13(1) binds providers \"which offer services in
+        the Union\", and that is a defined term with a threshold in it, not a question about whether
+        anyone in the Union can reach the site."
+    - quote: "'substantial connection to the Union' means a connection of a provider of intermediary
+        services with the Union resulting either from its establishment in the Union or from
+        specific factual criteria, such as: - a significant number of recipients of the service in
+        one or more Member States in relation to its or their population; or - the targeting of
+        activities towards one or more Member States;"
+      cite: DSA Art. 3(e)
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-09-01
+      why: "The threshold Article 3(d) refers to. It matters most on this checklist: **its first branch,
+        establishment in the Union, is unavailable by definition for every provider Article 13
+        reaches**, so the factual criteria are the only route into the duty, and the recital quoted
+        above is the limit on this term rather than the term itself."
+  when_unresolved: "Three limbs, three different kinds of answer, and they do not all open the gate on
+    the same answer - the question above writes out what each answer does. **Is it an intermediary
+    service?** The classification - conduit, caching or hosting - depends solely on the service's
+    technical functionalities and is assessed case by case (Recital 29, two sentences of which the
+    contact-point checklist quotes; this field said \"quoted in full\" until 2026-08-08 and the
+    recital is longer than either fragment), and the code may settle it - **from the enacted
+    definition quoted above, and not from a summary of it written here.** Article 3(g)(iii) reads
+    \"consisting of the storage of information provided by, and at the request of, a recipient of
+    the service\", and every part of that is the discriminator: what is stored has to be information
+    a recipient provided, it has to be stored at that recipient's request, and it has to be what the
+    service consists of. Output the service itself produces for a customer, and what the operator
+    records about its own running, are not information provided by a recipient at that recipient's
+    request. **The worked examples that decide the ordinary cases are stated once, in
+    `dsa-contact-points-11-12`'s `when_unresolved`, and deliberately not restated here**: what limb
+    (iii) covers, Recital 29's examples, what Article 3(i)'s \"minor and purely ancillary feature\"
+    does and does not attach to, and the negative list. That checklist ships in the same bundle as
+    this one, so read that field before answering this limb, and do not answer it from the sentence
+    you are reading now. Until 2026-09-01 this field carried a one-sentence copy of it instead -
+    \"storage of what users supply is limb (iii), transmission or network access is limb (i),
+    caching for onward transmission is limb (ii)\" - which had already lost the half that says no:
+    walked against four real applications it returned limb (iii) on all four, including two whose
+    stored artefacts are the service's own output. One limb, one text: a second copy drifts, and the
+    copy is the one that loses the discriminator. Two parts of this limb the code may not settle.
+    The first is whether the supply is part of an economic activity, which is a fact about the
+    business. The second is what the product is: \"this is a static brochure site\", \"this is a
+    marketing page\" and \"this is an on-premise installation\" are statements about the product,
+    and such a statement is made by the person running the scan or read from their own declared
+    documents. Where one of them is made, the gate is `does-not-apply` with every item
+    `not-applicable` and no item below is asked. **Where the tree shows none of the three functions
+    and nobody has said what the product is, that is not that statement** - record the gate as
+    unresolved and say that the service limb is the one that was not answered, because a
+    `does-not-apply` read out of the tree alone switches all five items off for a service Article 13
+    may well reach, and a skipped check prints the same as a passed one. **Is it offered to
+    recipients in the Union?** Settled by the pack's standing premise: running the EU pack is
+    treated as the statement that the service is offered into the Union, so do not ask; Recital 8
+    stays quoted because it is what the premise stands in for, and **Article 3(d) and Article 3(e) -
+    quoted beside it since 2026-09-01 - are the test it stands in for**. The enacted limb is not a
+    presence test: offering services in the Union means enabling natural or legal persons in one or
+    more Member States to use the service of a provider that has a substantial connection to the
+    Union, and that connection is establishment in the Union or the factual criteria Article 3(e)
+    lists - a significant number of recipients in one or more Member States in relation to their
+    population, or the targeting of activities towards one or more Member States. This field
+    described the limb in Article 2(1)'s words and quoted only Recital 8's limit on a term it never
+    stated; for the providers this checklist is about, who have no establishment in the Union at
+    all, Article 3(e)'s factual criteria are the only route in, so the premise stands in for an
+    answer to that test and not to a question about Union visitors. **Is the provider established in
+    the Union?** This one is a legal fact about the provider, not a property of the code, and no
+    pattern finds it. Where the provider is established is a fact about the business, and such a
+    fact is asked of the person running the scan or read from their declared documents; it is
+    **never inferred from source vocabulary**. **One kind of document does settle it, and three
+    things that sit beside such a document do not.** A document the person running the scan declares
+    as their own, which **states in terms where the business is established** - \"we are established
+    in X\", \"our registered office is in X\", \"because we are not established in the Union we have
+    designated a representative\" - is an answer, and a document the person declares as their own
+    stands beside the person as a permitted source for a fact about the business. An imprint is such
+    a document when it says that, and is not one when it carries only an address. **What decides
+    that is what the words assert and whose establishment they assert it of, never the label above
+    them.** \"Registered address\", \"registered company address\", \"physical address\",
+    \"location\", \"head office\", the address row of a statutory trader disclosure and the address
+    field a marketplace requires for trader status all name a place, and no such label is by itself
+    on the accepting or the refusing list in the question above - its own words decide: ask whether
+    they say the business is established there, and ask whose place they name, because one document
+    routinely carries one such label for the provider, for where data is held and for a third-party
+    processor's country. Read them in whatever language the document is written in. **And the
+    provider's own establishment is the subject**: a subsidiary or a parent established in the Union
+    is not the provider, and Recital 44's worked example is a provider established in a third
+    country appointing an EU-established company of its own group as its Article 13 representative,
+    so a group entity in the Union answers nothing here. Both paragraphs were added on 2026-09-01,
+    after four real applications produced four establishment-shaped statements and no label on
+    either list. **And note what the person can actually declare today**: the scan profile's
+    declared artefacts are a privacy policy, a set of terms and the two store declarations, so an
+    imprint or a statutory disclosure page reaches this gate as a document that was found and read,
+    never as one the profile marks as theirs. Treat it as their own where they say it is theirs;
+    where nobody has said, that route is not available and the limb is answered by asking. **A short
+    imprint is not an unusable one.** A statutory disclosure table is short because it is a table,
+    so where such a document was flagged as thin and its rows did arrive, read them: the
+    thin-document rule is for text that never arrived, and where the text genuinely did not arrive -
+    rows rendered as placeholders, an empty extraction - that is not silence about establishment, it
+    is a document nobody has read, so ask the person running the scan rather than reading anything
+    into it. That is about this gate limb only: what a thin document does to an item's verdict is
+    the runtime skill's rule and is unchanged by it. Three things in the repository bear on the limb
+    and none of them settles it: a postal address in an imprint or terms, which is where post
+    reaches the provider rather than a statement of where it is established; a named legal
+    representative, which shows only that somebody was designated - Article 13(5) says that creates
+    no establishment, and a provider with an establishment may name one regardless; and a
+    governing-law or choice-of-forum clause, which names the law the provider wants applied and not
+    the place the provider is established. So read the declared documents for a statement of
+    establishment; where one is there, that is the answer and the limb is settled, and where none
+    is, ask the person running the scan, in one question: is your business established in the Union?
+    **Do not settle the establishment limb from any of these** - the language of the site or a
+    language file in the tree, the currency or a currency code, the top-level domain, a hosting or
+    deployment region constant, or an address string found anywhere in the tree. None of those
+    establishes where a provider is established, and a provider established in Berlin can perfectly
+    well run an English-language site priced in dollars out of a region named `us-east-1`. **The
+    line is what a source says, not where it was found, and it has to be read in both directions.**
+    A declared document that states where the business is established answers this limb, wherever it
+    was discovered from: a declared document is normally found by walking the tree, and being found
+    there does not demote it to a census fact. A postal address does not answer it, wherever it
+    appears - in the source tree, in a footer, or in that same declared imprint - because an address
+    is not a statement about establishment at all. Reading only the first half turns any imprint
+    into an answer; reading only the second leaves a provider whose own imprint says \"we are not
+    established in the Union\" recorded as `unresolved`, which makes the gate `unresolved` and
+    leaves all five items unexamined on a provider Article 13 reaches. This field carried only the
+    second half until 2026-08-08 while the question above carried only the first. Recital 8's list
+    of a language, a currency, a relevant top-level domain and a national application store is
+    evidence of activities targeted at a Member State, which is the second limb, and it bears on the
+    third not at all. **Article 13 binds only a provider with no establishment in the Union**, so a
+    provider that has one owes nothing in this checklist: **record that outcome as `does-not-apply`,
+    with every item `not-applicable`, and say in the reasoning that the provider is established in
+    the Union.** **A representative named on a closed gate is recorded, never upgraded.** The
+    runtime skill's economy rule - ask the person only where the answer would change the outcome,
+    and terms that already name an EU representative settle that item without anyone being asked -
+    is about when to ask, and it neither makes a named representative an answer to this limb, which
+    Article 13(5) forbids, nor reopens an item on a gate the answer has closed. Where the provider
+    is established in the Union the gate is closed and all five items take `not-applicable`
+    together; where the documents also name a representative, say so in the reasoning, because a
+    provider inside the Union may name one and owes nothing in this checklist for having done so.
+    That instruction was missing until 2026-07-29 — the service limb named its `does-not-apply`
+    branch and this limb named none, so an agent told the provider *is* established in the Union had
+    a clear legal answer and nowhere to put it, and the nearest available label, `unresolved`, would
+    have been wrong: nothing was unsettled. Note what asking this limb as a place rather than as a
+    negative costs, and why it is asked that way anyway. It costs the polarity: \"does the provider
+    have no establishment in the Union\" is the phrasing whose \"yes\" runs the same way as \"yes\"
+    in the first two limbs, and the place phrasing's \"yes\" runs the other way and closes the gate.
+    It is asked as a place because a person answering a negative question \"no\" can mean either of
+    two things, and because a place is the answer a person can give without first working out which
+    way a negative runs. **It is not asked because an item below needs it**: Article 13(1) ties the
+    representative's Member State to where the provider offers its services, not to where the
+    provider is established, so the provider's own country feeds no item here, and
+    `art-13-1-member-state` asks for **the representative's** Member State and must never be
+    answered with the provider's - this checklist's own fixture is a provider operated from Canada
+    whose representative is in the Netherlands, so the two answers are different countries. **This
+    field gave that wrong reason until 2026-08-08**, one parsed field away from the question above,
+    which recorded the same reason as wrong on that date and left this one standing. The price is
+    paid in the question above, which writes out what each of the two answers to this limb does.
+    **This note had the two phrasings the wrong way round until 2026-08-07**: it named the negative
+    phrasing as the one that inverts, when it is the place phrasing that does, and the question
+    above then opened by saying that every limb had to be true. Where any limb is unanswered, record
+    the gate as unresolved, say which limb, and say that Article 13 was not examined."
+items:
+  - id: art-13-1-representative-named
+    article: 13(1)
+    quote: Providers of intermediary services which do not have an establishment in the Union but which
+      offer services in the Union shall designate, in writing, a legal or natural person to act as
+      their legal representative in one of the Member States where the provider offers its services.
+    cite: DSA Art. 13(1)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Do the documents name a legal representative - a person or a company acting as the
+      provider's representative in a Member State?
+    applicability_note: "A representative is a named person or company, not a role or an address. \"Our
+      EU representative can be contacted at eu@example.com\" names nobody, and is worth recording as
+      partial with the wording quoted. A representative named under a different instrument - the
+      GDPR Article 27 representative is the common case - is not automatically this one, because the
+      mandate in Article 13(2) is different; where the documents name a GDPR representative and
+      nothing else, say so rather than treating it as an answer. **The DSA's own points of contact
+      are the second confusable and this file named neither until 2026-08-08**: an Article 11 point
+      of contact for authorities and an Article 12 point of contact for recipients are different
+      designations with different duties, and an imprint naming one of them names no Article 13
+      representative. **Three more, added 2026-09-01 after real documents supplied them.** The third
+      is a designation the DSA itself points at: Article 2(4)(j) leaves this Regulation without
+      prejudice to \"a Directive laying down harmonised rules on the appointment of legal
+      representatives for the purpose of gathering evidence in criminal proceedings\", and a
+      representative appointed for that purpose is not this one. The fourth is not a designation at
+      all: in a set of terms the words \"legal representative\" are commonly a minor's statutory
+      guardian - \"the applicant shall obtain the consent of a legal representative\" is a clause
+      about capacity to contract, and it names nobody under Article 13 - and a real project puts
+      exactly that sentence in front of this item in its English terms. The fifth is a number rather
+      than a word: a bare \"Article 27\" in a document is often the provider's own numbering of its
+      own terms and not the GDPR article, so read what the heading numbers before treating it as a
+      cross-reference. Recital 44 does contemplate the overlap - \"It should be possible for the
+      legal representative to also function as a point of contact, provided the relevant
+      requirements of this Regulation are complied with\" - so one person may hold both roles; what
+      settles this item is whether the documents designate an Article 13 representative, never
+      whether a contact exists. `dsa-contact-points-11-12` is the checklist that walks Articles 11
+      and 12."
+  - id: art-13-1-member-state
+    article: 13(1)
+    quote: to act as their legal representative in one of the Member States where the provider offers
+      its services.
+    cite: DSA Art. 13(1)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Do the documents show which Member State that representative is in?
+    applicability_note: "The Member State has to be one where the provider offers its services. Whether
+      it is cannot be settled from a document alone; record the state the documents name, and leave
+      the question of whether services are offered there to the person running the scan. **What
+      `absent` means here, and what it does not.** Article 13(1) requires the designation to be
+      *made* in one of those Member States and requires nothing about it to be published; the
+      publication duty is Article 13(4)'s second sentence, and what it makes public is the four
+      details, among which the postal address is normally what shows the state. So `absent` here
+      says the documents do not show which Member State the representative is in, and it is never a
+      shortfall against Article 13(1) - the reasoning must say so, and must not report the same
+      missing postal address twice, once here and once under `art-13-4-details-published`. This
+      clause is the one `art-13-2-mandate-stated` has carried since 2026-08-08, written for this
+      item on 2026-09-01: three of the five items are quoted to a duty that is not a publication
+      duty, and this was the one with no guard on it. **Where no representative is named at all** -
+      `art-13-1-representative-named` is `absent`, which is the ordinary case for the providers this
+      row is about - there is no representative for this item to locate. Record `absent` with that
+      stated: the documents show no Member State because they name nobody to place in one.
+      `unresolved` would say the reading could not be settled, which is untrue, and `not-applicable`
+      belongs to a closed gate, where all five items carry it together because the provider is
+      established in the Union."
+  - id: art-13-2-mandate-stated
+    article: 13(2)
+    quote: Providers of intermediary services shall mandate their legal representatives for the purpose
+      of being addressed in addition to or instead of such providers, by the Member States'
+      competent authorities, the Commission and the Board, on all issues necessary for the receipt
+      of, compliance with and enforcement of decisions issued in relation to this Regulation.
+    cite: DSA Art. 13(2)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Do the documents say that the representative may be addressed by the Member States'
+      competent authorities, the Commission and the Board, in addition to or instead of the
+      provider, on everything needed for the receipt of, compliance with and enforcement of
+      decisions issued in relation to this Regulation?
+    applicability_note: "**Article 13(2) imposes no publication duty, so this item can never produce a
+      shortfall against it.** The paragraph requires the provider to *mandate* the representative
+      and to give it powers and resources; what must be made public is in Article 13(4), and that is
+      the four contact details, not the mandate's scope. So the only honest verdicts here are
+      `present` (the provider has published such a statement, which is useful because it
+      distinguishes a DSA representative from a GDPR Article 27 one) and `absent` (no such statement
+      is published, which breaches nothing). **On an open gate, `not-applicable` is not one of
+      them.** In this checklist that verdict belongs to a closed gate - a provider established in
+      the Union owes nothing here, and a closed gate carries that verdict on all five items at once
+      - and writing it where the gate is open and a document is simply silent records a null result
+      as a statement about the law's reach. `absent` says the statement was looked for and is not
+      there, which is what happened. This sentence said `not-applicable` until 2026-08-08, four
+      sentences above two others saying `absent` is the right word for exactly that state, and
+      beside a fixture that pins this item `present / absent`. **Never write the ABSENCE of a
+      published statement into a report as a gap or as a shortfall against Article 13(2)**: a
+      provider that has mandated its representative in writing and published all four Article 13(4)
+      details has done everything these two items check, and would still receive a finding citing
+      Article 13(2) that the Article does not support. Two duties sit outside those two items and
+      outside that sentence - Article 13(2)'s second sentence, the powers and resources the provider
+      must give the representative, and Article 13(4)'s first sentence, the notification to the
+      Digital Services Coordinator - and both are handled below and in item 4 rather than here.
+      **What may be reported is a published statement narrower than the Article.** Where the
+      documents do state a mandate but a smaller one - \"our EU representative may be addressed by
+      the Commission on takedown notices\" names one addressee where the Article names the Member
+      States' competent authorities, the Commission and the Board, and one subject matter where the
+      Article names the receipt of, compliance with and enforcement of decisions - the provider's
+      own declaration and the enacted scope disagree, and that is this pillar's own case. The
+      question above asks for both the addressees and the subject matter, so a narrower statement
+      genuinely answers it no: record it, quote it, and set it beside the Article's words instead of
+      rounding it up to `present` or silencing it under the sentence above. **`absent` is available
+      and is the right word for one thing only** - that the statement is not published - and the
+      sentences below say what it does and does not mean. Until 2026-08-08 this field also said
+      \"Never record `absent`\", four sentences above saying that `absent` is the honest record
+      where the documents name a representative and say nothing about what it may be addressed on;
+      an agent that obeyed the first sentence contradicted the second and failed this checklist's
+      own fixture, which pins this item as `present / absent`. The prohibition that survives is on
+      the report, not on the word. The mandate itself is a private instrument between the provider
+      and the representative, and **nothing here can show whether it exists or whether it is
+      adequate**. What a document sometimes does show is the provider stating the mandate publicly -
+      an imprint that says \"our EU legal representative may be addressed by supervisory authorities
+      on all matters relating to the Digital Services Act\" is that statement, and it is worth
+      recording where it is there. `absent` here therefore means the statement is not published,
+      never that the mandate is missing, and the reasoning must say so. Where the documents name a
+      representative and say nothing about what it may be addressed on, `absent` with that
+      distinction stated is the honest record. **Read the scope as the Article writes it.** The
+      mandate runs to *decisions issued in relation to* this Regulation — their receipt, compliance
+      with them, and their enforcement — not to compliance questions at large, and an earlier
+      version of this question dropped \"receipt of\" and widened the rest. Note too that the
+      paragraph has a second sentence, on powers and resources, which no item asks and which no
+      document shows - it is in the `scope_note`'s list of what this checklist says nothing about,
+      where it was missing until 2026-09-01. And be careful with vocabulary: a statement that names
+      *supervisory* authorities is GDPR wording, and the sibling item exists to stop a GDPR Article
+      27 statement being read as an Article 13 answer."
+  - id: art-13-4-details-published
+    article: 13(4)
+    quote: Providers of intermediary services shall notify the name, postal address, email address and
+      telephone number of their legal representative to the Digital Services Coordinator in the
+      Member State where that legal representative resides or is established. They shall ensure that
+      that information is publicly available, easily accessible, accurate and kept up to date.
+    cite: DSA Art. 13(4)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Do the documents give all four of the representative's details - name, postal address,
+      email address and telephone number?
+    applicability_note: "**Both sentences of the paragraph are quoted, on purpose.** The list of four
+      details is in the first sentence, which is a duty to notify the Digital Services Coordinator -
+      something that happens off the page and that no document can show. The duty this item can
+      actually check is in the second sentence, which makes \"that information\" - the same four
+      details - publicly available. Quoting only the first, as an earlier draft did, hangs a
+      question about a published document on a sentence about a regulator filing. Four details, and
+      a document that gives three is partial rather than present: say which one is missing. The
+      telephone number is the one most often absent. **The four details are the representative's,
+      and a provider's own block of four is not them.** A statutory disclosure page or an imprint
+      typically gives the provider's name, address, telephone number and email, often three of the
+      four with the telephone withheld until requested - which is the same shape as the worked
+      example above and answers a different question. The question field says \"the
+      representative's\" and it is the field that decides; this sentence was added on 2026-09-01
+      because the worked example on its own invited the provider's block to be graded here. **Where
+      no representative is named at all** - `art-13-1-representative-named` is `absent` - record
+      `absent` here and say that the details are missing because nobody is designated to have them,
+      rather than describing four fields as omitted from a document about somebody who does not
+      appear in it. **No status in this item says anything about whether the Digital Services
+      Coordinator was notified**, and a report must not imply otherwise."
+  - id: art-13-4-publicly-available
+    article: 13(4)
+    quote: They shall ensure that that information is publicly available, easily accessible, accurate
+      and kept up to date.
+    cite: DSA Art. 13(4)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Is that information published where a reader would find it, rather than only held internally?
+    applicability_note: "\"Easily accessible\" is about where the information sits. Details buried in
+      the middle of a long terms document, with nothing in an imprint or a contact page, are worth
+      recording as partial with the location quoted. Whether the information is accurate and kept up
+      to date cannot be read from a document at all, and no status here speaks to it. **Where no
+      representative is named at all** - `art-13-1-representative-named` is `absent` - there is
+      nothing for this item to locate: record `absent`, and say that the information is unpublished
+      because nobody is designated, not that it is published badly. Added 2026-09-01, with the same
+      clause on the two items above, after a walk on four real applications found that case on all
+      four and no instruction for it in this file. **A document the provider says it does not
+      publish is evidence about this item and not an answer to it.** Where a candidate document is
+      marked in the project's own materials as internal or as working material, quote that marking
+      beside the finding: an item about whether information is publicly available cannot count an
+      unpublished file as the publication, and the run has no field to record that marking in."

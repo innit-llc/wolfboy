@@ -1,0 +1,332 @@
+id: device-telemetry-002
+pack: device-telemetry
+short_name: Records from a person's device uploaded with their identity
+problem_line:
+  text: Device records uploaded stamped with the person's identity
+fix_line: Keep only the fields the purpose needs, set a retention limit, end attribution when access
+  ends, and tell the person.
+title: Flow records generated on the person's own device, stamped with their identity and uploaded
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(c) - personal data shall be 'adequate, relevant and
+      limited to what is necessary in relation to the purposes for which they are processed'. This
+      is the provision the construct turns on hardest. A flow record is produced for every
+      connection the data plane carries, so the volume is set by the person's ordinary use of their
+      machine and not by any purpose; and the record's own fields decide how revealing it is - a
+      destination address alone is one thing, a resolved domain name beside a timestamp and a device
+      serial is another
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(e) - personal data shall be 'kept in a form which
+      permits identification of data subjects for no longer than is necessary for the purposes for
+      which the personal data are processed'. Carried as an operative provision rather than a
+      reference because the construct's storage side is where it bites: these records are ordinarily
+      written to a partitioned table with a retention window expressed as a number of days, which is
+      exactly the form this principle is about, and because an attribution stamp whose validity
+      outlives the authorisation that produced it keeps the record identifying for longer than the
+      relationship lasted"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 6(1)(f) - processing is lawful to the extent that
+      'processing is necessary for the purposes of the legitimate interests pursued by the
+      controller or by a third party, except where such interests are overridden by the interests or
+      fundamental rights and freedoms of the data subject which require protection of personal
+      data'. Carried because this is the basis a connection-logging feature is ordinarily defended
+      on, and because the balancing is what a finding here should actually be about: the interest is
+      usually real - security investigation - and the question is whether a record of every
+      connection, attributed by name, kept for a fixed window and searchable, is what that interest
+      needs"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 13(1) - 'Where personal data relating to a data subject
+      are collected from the data subject, the controller shall, at the time when personal data are
+      obtained, provide the data subject with all of the following information: (a) the identity and
+      the contact details of the controller and, where applicable, of the controller's
+      representative; (b) the contact details of the data protection officer, where applicable'.
+      Art. 14(1) carries the parallel duty where the data were not obtained from the subject. Both
+      are carried because which of the two applies is genuinely unsettled for this construct and
+      matters: the records are produced by software running on the person's own machine, which looks
+      like collection from the subject, and the person ordinarily never sees them, which is the
+      situation Art. 14 was written for"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "ePrivacy Directive 2002/58/EC (as amended, consolidated text), Art. 5(1) - 'Member States
+      shall ensure the confidentiality of communications and the related traffic data by means of a
+      public communications network and publicly available electronic communications services,
+      through national legislation. In particular, they shall prohibit listening, tapping, storage
+      or other kinds of interception or surveillance of communications and the related traffic data
+      by persons other than users, without the consent of the users concerned, except when legally
+      authorised to do so in accordance with Article 15(1).' Art. 6(1) adds that 'Traffic data
+      relating to subscribers and users processed and stored by the provider of a public
+      communications network or publicly available electronic communications service must be erased
+      or made anonymous when it is no longer needed for the purpose of the transmission of a
+      communication'. WHAT DECIDES WHETHER EITHER REACHES A GIVEN DEPLOYMENT IS ART. 3, the
+      Directive's own scope article, and not the addressees named inside the two provisions above:
+      Art. 3, 'Services concerned' - 'This Directive shall apply to the processing of personal data
+      in connection with the provision of publicly available electronic communications services in
+      public communications networks in the Community, including public communications networks
+      supporting data collection and identification devices.' Read against Art. 3, a private access
+      network an organisation operates for its own members is outside this Directive entirely, while
+      a communications service sold to the public is inside it - which is why this entry is carried
+      rather than dropped: the same construct appears in both kinds of product and a reviewer of the
+      second needs to see the citation. Note for a later reader: Art. 2 reads its definitions
+      through Directive 2002/21/EC, replaced by Directive (EU) 2018/1972, which widened 'electronic
+      communications service' to include number-independent interpersonal communications services
+      but left Art. 3's 'publicly available' and 'public communications networks' qualifiers
+      untouched. Which of the two a given deployment is remains a fact about the deployment and is
+      context question 4"
+    url: https://publications.europa.eu/resource/celex/02002L0058-20091219
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 88, quoted across both operative paragraphs because the
+      first enables and the second is the one that binds. Art. 88(1): 'Member States may, by law or
+      by collective agreements, provide for more specific rules to ensure the protection of the
+      rights and freedoms in respect of the processing of employees' personal data in the employment
+      context, in particular for the purposes of the recruitment, the performance of the contract of
+      employment, including discharge of obligations laid down by law or by collective agreements,
+      management, planning and organisation of work, equality and diversity in the workplace, health
+      and safety at work, protection of employer's or customer's property and for the purposes of
+      the exercise and enjoyment, on an individual or collective basis, of rights and benefits
+      related to employment, and for the purpose of the termination of the employment relationship.'
+      Art. 88(2), which names this construct in terms: 'Those rules shall include suitable and
+      specific measures to safeguard the data subject's human dignity, legitimate interests and
+      fundamental rights, with particular regard to the transparency of processing, the transfer of
+      personal data within a group of undertakings, or a group of enterprises engaged in a joint
+      economic activity and monitoring systems at the work place.' HOW TO READ THE PAIR: paragraph 1
+      states no duty of its own - it authorises Member States to legislate, and names 'protection of
+      employer's or customer's property' as one of the purposes such rules may serve, which is the
+      purpose an employer defending fleet or network monitoring would ordinarily rely on. Paragraph
+      2 is the constraint on any such national rule, and 'monitoring systems at the work place' is
+      the exact construct this detector finds. WHAT REMAINS OPEN, and it is not a doubt about these
+      words: which national law binds a given employer, and what that law requires. That is a fact
+      about the deployment and about the Member States it reaches; it is asked as a context question
+      and is outside this repository's quote-verification fetch path"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.4
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    flow_record:
+      - flow_log
+      - flow_record
+      - flow_tracker
+      - flow_entry
+      - conntrack
+      - connection_tracker
+      - connection_log
+      - netflow
+      - sflow
+      - ipfix
+      - session_record
+      - per_flow
+    self_attribution:
+      - initiator_actor
+      - initiator_device
+      - initiator_auth
+      - initiator_client
+      - actor_email
+      - actor_identity
+      - originator_user
+      - connecting_user_email
+      - flow_actor
+    flow_source_field:
+      - src_ip
+      - source_ip
+      - src_port
+      - source_port
+      - src_addr
+      - source_address
+    inner_tuple_field:
+      - inner_src_ip
+      - inner_dst_ip
+      - inner_src_port
+      - inner_dst_port
+      - inner_source_ip
+      - inner_destination_ip
+      - inner_src_addr
+      - inner_dst_addr
+    flow_destination_field:
+      - dst_ip
+      - destination_ip
+      - dst_port
+      - destination_port
+      - dst_addr
+      - destination_address
+      - remote_addr
+    identity_claim:
+      - ingest_token
+      - attribution_claim
+      - token_claims
+      - jwt_claims
+      - subject_claim
+      - actor_id
+      - user_email
+      - account_email
+      - device_serial
+      - device_uuid
+      - bearer
+      - claims
+    flow_upload_route:
+      - ingest_token
+      - attribution_claim
+      - attribution_token
+      - ingestion/flow
+      - flow_logs_ingest
+      - flow_log_upload
+      - flow_log_writer
+      - flow_log_token
+      - ingest_flow
+      - flow_spool
+      - netflow_collector
+  vocabulary_matching:
+    flow_record:
+      case_insensitive: true
+      separator_insensitive: true
+    self_attribution:
+      case_insensitive: true
+      separator_insensitive: true
+    flow_source_field:
+      case_insensitive: true
+      separator_insensitive: true
+    flow_destination_field:
+      case_insensitive: true
+      separator_insensitive: true
+    inner_tuple_field:
+      case_insensitive: true
+      separator_insensitive: true
+    identity_claim:
+      case_insensitive: true
+      separator_insensitive: true
+    flow_upload_route:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?&flow_record)
+    - (?&self_attribution)
+    - (?&flow_source_field)[^\n]{0,80}(?&flow_destination_field)|(?&flow_destination_field)[^\n]{0,80}(?&flow_source_field)
+    - (?&inner_tuple_field)
+    - (?:(?&flow_source_field)|(?&flow_destination_field))[^\n]{0,80}(?&identity_claim)|(?&identity_claim)[^\n]{0,80}(?:(?&flow_source_field)|(?&flow_destination_field))
+    - (?&flow_upload_route)
+context_questions:
+  - WHOSE OPERATOR RECEIVES THESE RECORDS, AND WHAT IS THEIR RELATIONSHIP TO THE PERSON? Asked of
+    the person running the scan, never read out of the code. An organisation's access network
+    recording its own staff, a household product recording its own household, and a service
+    recording customers who chose it are three different postures. Where the operator is the
+    person's employer, national employment-context rules made under Art. 88 may apply on top of
+    everything else - Art. 88(2) requires any such national rule to carry specific safeguards with
+    particular regard to 'monitoring systems at the work place', which is what this construct is.
+    What that leaves for you is not whether the Article bears on it, but WHICH Member State's
+    implementing law binds this deployment and what it requires; name the states the workforce sits
+    in rather than treating the GDPR's own text as the whole answer.
+  - WHAT IS IN ONE RECORD? List the fields, from the schema rather than from the record's name. The
+    difference between a five-tuple with a timestamp and the same record carrying a resolved domain
+    name, a device serial, an operating-system version and the person's email address is the whole
+    of the minimisation question, and it is decided in a schema file rather than at any call site.
+  - "HOW LONG IS IT KEPT, AND HOW LONG DOES THE ATTRIBUTION REMAIN VALID? Two separate numbers and
+    they are frequently different. Quote the retention window from the partition-maintenance code or
+    the deletion job. Then quote the validity of whatever the attribution is read from: where the
+    identity is carried by a signed token, check whether its acceptance window extends beyond its
+    stated expiry - a grace period means records keep being attributed to a person after the
+    authorisation that named them has ended, which is a statement about them outliving the
+    relationship."
+  - "IS THE DEPLOYMENT A PUBLIC COMMUNICATIONS NETWORK OR A PUBLICLY AVAILABLE ELECTRONIC
+    COMMUNICATIONS SERVICE? This is the question the ePrivacy entry in this rule's legal basis turns
+    on, and it is not answered by the code. Art. 3 of that Directive limits the whole instrument to
+    publicly available electronic communications services in public communications networks: a
+    private access network an organisation runs for its own members is outside it, and a
+    communications service sold to the public is inside it. Answer which this deployment is,
+    explicitly, and record which way it went - the citation is carried precisely because both kinds
+    of product show this construct and only one of them is reached."
+  - CAN THE PERSON SEE THEIR OWN RECORDS, AND CAN THE RECORDING BE TURNED OFF? Check both. Whether
+    there is any surface where the person sees what was recorded about them, and whether the upload
+    is controlled by a switch - and if so, at what level it sits, what it defaults to, and who can
+    change it. A per-policy switch that defaults on is a materially different posture from one an
+    administrator must deliberately enable, and it is the fact an Art. 13 or Art. 14 notice would
+    have to describe.
+evidence_template: "{file}:{line} matched one of five shapes: a per-connection record type by name,
+  a self-attribution field that puts a person on such a record, a source field beside a destination
+  field, a tuple field beside an identity claim, or an upload route or spool named for flows. This
+  establishes only that THE CODE HAS A CONSTRUCT for generating per-connection records on a device
+  and carrying them to an operator with an identity attached. It does not establish who the operator
+  is or what their relationship to the person is, which is a fact about the product and is context
+  question 1. It does not establish what one record contains, how long it is kept, or how long the
+  attribution stays valid - all three are read from the schema, the retention job and the token
+  verification rather than from the matched line. And it does not establish whether the deployment
+  falls within the ePrivacy Directive at all: Art. 3 of that Directive limits it to publicly
+  available electronic communications services in public communications networks, so a private
+  access network an organisation runs for its own members is outside it while a communications
+  service sold to the public is inside it. That is a fact about the product, is context question 4,
+  and the ePrivacy entry is carried as reference only - it establishes no duty this detector tests."
+remediation_template: >
+  Write down three numbers before anything else: the fields in one record, the retention window, and
+
+  the validity window of whatever carries the attribution. A finding that has not established all
+
+  three has not described the construct, and the third is the one most often missed - where the
+
+  identity travels in a signed token, an acceptance grace beyond the stated expiry means records
+  keep
+
+  being attributed to a person after their authorisation ended.
+
+  Look at the record's fields against the stated purpose. Security investigation is an ordinary
+
+  legitimate interest and the balancing under Art. 6(1)(f) is usually winnable for a five-tuple with
+
+  a timestamp; it is a different argument for the same record carrying a resolved domain name, a
+
+  device serial and an email address, and the fields are ordinarily easier to change than the
+
+  feature.
+
+  Establish which of Art. 13 and Art. 14 applies and make sure something actually says it. Records
+
+  produced by software on the person's own machine look like collection from the subject, and the
+
+  person ordinarily never sees them, so both provisions have a claim - and a deployment with neither
+
+  notice is in the same position under either reading.
+
+  Record where the on/off switch sits, what it defaults to, and who can change it. A per-policy
+
+  switch defaulting on is the shape to name explicitly in a notice.
+
+  Answer the ePrivacy scope question explicitly and record which way it went. Art. 3 of that
+
+  Directive is the article that decides it - publicly available services on public networks - and a
+
+  private access network run for an organisation's own members is outside the instrument altogether.
+
+  A deployment that is inside it acquires a separate erasure duty over traffic data under Art. 6(1),
+
+  on top of everything the GDPR requires.
+data_categories:
+  - user.device.ip_address
+  - user.behavior
+  - user.device
+  - user.contact.email
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: existence
+  elements:
+    - name: retention_window
+      question: 3
+      text: the retention window from the partition-maintenance code or the deletion job
+    - name: attribution_validity
+      question: 3
+      text: the validity of whatever the attribution is read from - where the identity is carried by a
+        signed token, whether its acceptance window extends beyond its stated expiry

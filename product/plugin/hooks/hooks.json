@@ -1,0 +1,203 @@
+{
+  "description": "wolfboy: every entry runs bin/legal-hook with its event's name (the Bash group with `PreToolUse Bash`), by /bin/bash -p: the shim picks the node that runs the CLI's one hook entry by the launcher's rule (bin/node-choice.bash) and passes on the entry's own answer (exit 0 or 2). Every other outcome is a hook that did not run, and it fails closed, with one fixed sentence, only where a guard is due: while a scan is under way in the project (the program's marker .legal/launch/scan-under-way.json stands), and at any time for a Bash call that may name the pre-launch step's --shape or --previous; elsewhere the call goes ahead and the person is told once, at the session's start. onFailure block (Claude Code v2.1.295 or later: the shim itself cannot start, or times out) is set only on the events that cannot block (SessionStart, SubagentStart, PostToolUse, PostToolUseFailure, PermissionDenied): on PreToolUse and UserPromptExpansion it would block every call outside a scan too, and Claude Code does not apply it on SubagentStop (a stop refused because the hook cannot run would be refused at every attempt). PreToolUse and UserPromptExpansion set onFailure continue, which is what Claude Code does on a failure there anyway on every system but one: on Windows without Git Bash, Claude Code runs these bash commands in PowerShell, where they do not start, and with onFailure unset it would block every tool call in every project. With continue, a session there runs without the plugin's guards, and legal-scan session names Git Bash for the Claude Code it starts (CLAUDE_CODE_GIT_BASH_PATH) or refuses to start a scan. The hook entry reads the event from stdin and acts only on this plugin's own seats (their answers at SubagentHandback and SubagentStop, and, while a scan run is active, their Read of a file the launch list names and every Read, Grep or Glob of theirs that reaches under the run's .legal, which only a file their own launch entry names passes), on writes into the run's record directories while a scan run is active in the session (relay item 3), on writes, moves and deletes of the declaration's files (.legal/profile.json, .legal/profile-record.json, and the declaration's question, answer and ledger records, kept in the person's state folder) and of the two files that decide these windows (the active-run marker in .legal/launch and the active-run history in the person's state folder), from every scan in the session to the end of the run that follows it (relay item 7), on the run-shape and declaration questions (the AskUserQuestion groups: the orchestrator's question checked, character by character, against the program's and passed as it is, and the person's answer written) and on a Bash call naming the pre-launch step's --shape or --previous, and, while a scan run is active in the session, on every Agent launch, every agent that starts, and every SendMessage, Skill and Workflow call, the other calls that can put text into a seat, and every ScheduleWakeup and CronCreate call, which schedule a prompt for the session (from every scan in the session to the end of its run, one that holds any slash command is refused, as is a SendMessage to main that holds one: the hook cannot tell such a prompt from the person's), and, from every scan in the session to the end of its run, every Bash call (one that names Claude Code as a program - claude as a word or as a path's last part, its install path or its npm package, never the letters inside a path such as ~/.claude/ - or runs the plugin's session command, is refused), and on a launch Claude Code's auto mode did not allow (PermissionDenied on Agent: the run stops launching, and the person is told) and every typed command expanded in that session (UserPromptExpansion: only the command named wolfboy:legal-scan lifts that stop; a submitted prompt never does, whatever its text, so the plugin takes no UserPromptSubmit); its Stop entry, while a scan run is active in the session, blocks the main conversation's stop once where something of the run will come due and nothing will wake the conversation (no listed seat running, no relay live), giving the one command to run in the background (legal-scan wait-next), and lets every other stop through, a stop it already blocked once included, and a stop that finds what was due unchanged since its last block; it never fails closed (the entry ends in exit 0 whatever the shim does, and no onFailure is set); its SessionStart entry only exports the session id the run's marker records and its verdict on the scan launch profile, read from the session's own environment. Groups are keyed by tool name so that no call matches two groups; the Read group (Read, Grep and Glob) makes every such call start the entry, which starts no second process unless a seat or another agent reads or searches during a run. The Bash group also matches the VS Code extension's own code tool, mcp__ide__executeCode (its tool_input.code read as text, best effort). In every session, whether or not a scan, a run or a deeper check is under way, a command or code that names a deeper check's folder .legal/deep or the test name of a check on record in the person's state folder, and a Write, Edit, MultiEdit or NotebookEdit of a path under .legal/deep or of such a name, is refused, so that a check's test is copied, run and deleted only in the person's own terminal. The deeper check's seat (legal-deep-checker) is launched only with its launch entry's input, and its answer taken into the check's own folder, only while the check's marker .legal/deep/active.json stands for the session.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" SessionStart",
+            "timeout": 30,
+            "onFailure": "block"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" Stop; exit 0",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "SubagentHandback",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" PreToolUse; c=$?; case $c in 0|2) exit $c;; esac; d=\"$CLAUDE_PROJECT_DIR\"; f=$d/.legal/launch/scan-under-way.json; if [ -n \"$d\" ] && { [ -e \"$f\" ] || [ -L \"$f\" ] || { [ -d \"$d\" ] && [ ! -x \"$d\" ]; } || { [ -d \"$d/.legal\" ] && [ ! -x \"$d/.legal\" ]; } || { [ -d \"$d/.legal/launch\" ] && [ ! -x \"$d/.legal/launch\" ]; }; }; then echo \"wolfboy: this plugin's hook could not start, so its check did not take place and is not treated as passed. A scan is under way in this project (its .legal/launch/scan-under-way.json stands); if none is, a scan that stopped left that file: delete it outside Claude Code. Repair the plugin's install (its folder and /bin/bash), or disable the plugin.\" >&2; exit 2; fi; exit 0",
+            "timeout": 60,
+            "onFailure": "continue"
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" PreToolUse; c=$?; case $c in 0|2) exit $c;; esac; d=\"$CLAUDE_PROJECT_DIR\"; f=$d/.legal/launch/scan-under-way.json; if [ -n \"$d\" ] && { [ -e \"$f\" ] || [ -L \"$f\" ] || { [ -d \"$d\" ] && [ ! -x \"$d\" ]; } || { [ -d \"$d/.legal\" ] && [ ! -x \"$d/.legal\" ]; } || { [ -d \"$d/.legal/launch\" ] && [ ! -x \"$d/.legal/launch\" ]; }; }; then echo \"wolfboy: this plugin's hook could not start, so its check did not take place and is not treated as passed. A scan is under way in this project (its .legal/launch/scan-under-way.json stands); if none is, a scan that stopped left that file: delete it outside Claude Code. Repair the plugin's install (its folder and /bin/bash), or disable the plugin.\" >&2; exit 2; fi; exit 0",
+            "timeout": 30,
+            "onFailure": "continue"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|PowerShell|Monitor|mcp__ide__executeCode",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" PreToolUse Bash; c=$?; case $c in 0|2) exit $c;; esac; d=\"$CLAUDE_PROJECT_DIR\"; f=$d/.legal/launch/scan-under-way.json; if [ -n \"$d\" ] && { [ -e \"$f\" ] || [ -L \"$f\" ] || { [ -d \"$d\" ] && [ ! -x \"$d\" ]; } || { [ -d \"$d/.legal\" ] && [ ! -x \"$d/.legal\" ]; } || { [ -d \"$d/.legal/launch\" ] && [ ! -x \"$d/.legal/launch\" ]; }; }; then echo \"wolfboy: this plugin's hook could not start, so its check did not take place and is not treated as passed. A scan is under way in this project (its .legal/launch/scan-under-way.json stands); if none is, a scan that stopped left that file: delete it outside Claude Code. Repair the plugin's install (its folder and /bin/bash), or disable the plugin.\" >&2; exit 2; fi; i=; while IFS= read -r l; do i=$i$l; done; i=$i$l; set -f; s=; case $i in *'\\u'*) s=1;; esac; IFS='\\\"'\"'\"'$n'; set -- $i; IFS=; v=\"$*\"; case $v in *--shape*|*--previous*) s=1;; esac; IFS='\\\"n'; set -- $i; IFS=; v=\"$*\"; case $i in *'\\\\'*) case $v in *\"\\$'\"*) s=1;; esac;; esac; if [ -n \"$s\" ]; then echo \"wolfboy: this plugin's hook could not start, so its check did not take place and is not treated as passed. This Bash command may name the pre-launch step's --shape or --previous, which the hook checks whether or not a scan is under way. Repair the plugin's install (its folder and /bin/bash), or disable the plugin.\" >&2; exit 2; fi; exit 0",
+            "timeout": 30,
+            "onFailure": "continue"
+          }
+        ]
+      },
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" PreToolUse; c=$?; case $c in 0|2) exit $c;; esac; d=\"$CLAUDE_PROJECT_DIR\"; f=$d/.legal/launch/scan-under-way.json; if [ -n \"$d\" ] && { [ -e \"$f\" ] || [ -L \"$f\" ] || { [ -d \"$d\" ] && [ ! -x \"$d\" ]; } || { [ -d \"$d/.legal\" ] && [ ! -x \"$d/.legal\" ]; } || { [ -d \"$d/.legal/launch\" ] && [ ! -x \"$d/.legal/launch\" ]; }; }; then echo \"wolfboy: this plugin's hook could not start, so its check did not take place and is not treated as passed. A scan is under way in this project (its .legal/launch/scan-under-way.json stands); if none is, a scan that stopped left that file: delete it outside Claude Code. Repair the plugin's install (its folder and /bin/bash), or disable the plugin.\" >&2; exit 2; fi; exit 0",
+            "timeout": 30,
+            "onFailure": "continue"
+          }
+        ]
+      },
+      {
+        "matcher": "SendMessage|Skill|Workflow",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" PreToolUse; c=$?; case $c in 0|2) exit $c;; esac; d=\"$CLAUDE_PROJECT_DIR\"; f=$d/.legal/launch/scan-under-way.json; if [ -n \"$d\" ] && { [ -e \"$f\" ] || [ -L \"$f\" ] || { [ -d \"$d\" ] && [ ! -x \"$d\" ]; } || { [ -d \"$d/.legal\" ] && [ ! -x \"$d/.legal\" ]; } || { [ -d \"$d/.legal/launch\" ] && [ ! -x \"$d/.legal/launch\" ]; }; }; then echo \"wolfboy: this plugin's hook could not start, so its check did not take place and is not treated as passed. A scan is under way in this project (its .legal/launch/scan-under-way.json stands); if none is, a scan that stopped left that file: delete it outside Claude Code. Repair the plugin's install (its folder and /bin/bash), or disable the plugin.\" >&2; exit 2; fi; exit 0",
+            "timeout": 30,
+            "onFailure": "continue"
+          }
+        ]
+      },
+      {
+        "matcher": "ScheduleWakeup|CronCreate",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" PreToolUse; c=$?; case $c in 0|2) exit $c;; esac; d=\"$CLAUDE_PROJECT_DIR\"; f=$d/.legal/launch/scan-under-way.json; if [ -n \"$d\" ] && { [ -e \"$f\" ] || [ -L \"$f\" ] || { [ -d \"$d\" ] && [ ! -x \"$d\" ]; } || { [ -d \"$d/.legal\" ] && [ ! -x \"$d/.legal\" ]; } || { [ -d \"$d/.legal/launch\" ] && [ ! -x \"$d/.legal/launch\" ]; }; }; then echo \"wolfboy: this plugin's hook could not start, so its check did not take place and is not treated as passed. A scan is under way in this project (its .legal/launch/scan-under-way.json stands); if none is, a scan that stopped left that file: delete it outside Claude Code. Repair the plugin's install (its folder and /bin/bash), or disable the plugin.\" >&2; exit 2; fi; exit 0",
+            "timeout": 30,
+            "onFailure": "continue"
+          }
+        ]
+      },
+      {
+        "matcher": "AskUserQuestion",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" PreToolUse; c=$?; case $c in 0|2) exit $c;; esac; d=\"$CLAUDE_PROJECT_DIR\"; f=$d/.legal/launch/scan-under-way.json; if [ -n \"$d\" ] && { [ -e \"$f\" ] || [ -L \"$f\" ] || { [ -d \"$d\" ] && [ ! -x \"$d\" ]; } || { [ -d \"$d/.legal\" ] && [ ! -x \"$d/.legal\" ]; } || { [ -d \"$d/.legal/launch\" ] && [ ! -x \"$d/.legal/launch\" ]; }; }; then echo \"wolfboy: this plugin's hook could not start, so its check did not take place and is not treated as passed. A scan is under way in this project (its .legal/launch/scan-under-way.json stands); if none is, a scan that stopped left that file: delete it outside Claude Code. Repair the plugin's install (its folder and /bin/bash), or disable the plugin.\" >&2; exit 2; fi; exit 0",
+            "timeout": 30,
+            "onFailure": "continue"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Grep|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" PreToolUse; c=$?; case $c in 0|2) exit $c;; esac; d=\"$CLAUDE_PROJECT_DIR\"; f=$d/.legal/launch/scan-under-way.json; if [ -n \"$d\" ] && { [ -e \"$f\" ] || [ -L \"$f\" ] || { [ -d \"$d\" ] && [ ! -x \"$d\" ]; } || { [ -d \"$d/.legal\" ] && [ ! -x \"$d/.legal\" ]; } || { [ -d \"$d/.legal/launch\" ] && [ ! -x \"$d/.legal/launch\" ]; }; }; then echo \"wolfboy: this plugin's hook could not start, so its check did not take place and is not treated as passed. A scan is under way in this project (its .legal/launch/scan-under-way.json stands); if none is, a scan that stopped left that file: delete it outside Claude Code. Repair the plugin's install (its folder and /bin/bash), or disable the plugin.\" >&2; exit 2; fi; exit 0",
+            "timeout": 30,
+            "onFailure": "continue"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" PostToolUse",
+            "timeout": 30,
+            "onFailure": "block"
+          }
+        ]
+      },
+      {
+        "matcher": "AskUserQuestion",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" PostToolUse",
+            "timeout": 30,
+            "onFailure": "block"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" PostToolUseFailure",
+            "timeout": 30,
+            "onFailure": "block"
+          }
+        ]
+      }
+    ],
+    "PermissionDenied": [
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" PermissionDenied",
+            "timeout": 30,
+            "onFailure": "block"
+          }
+        ]
+      }
+    ],
+    "UserPromptExpansion": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" UserPromptExpansion; c=$?; case $c in 0|2) exit $c;; esac; d=\"$CLAUDE_PROJECT_DIR\"; f=$d/.legal/launch/scan-under-way.json; if [ -n \"$d\" ] && { [ -e \"$f\" ] || [ -L \"$f\" ] || { [ -d \"$d\" ] && [ ! -x \"$d\" ]; } || { [ -d \"$d/.legal\" ] && [ ! -x \"$d/.legal\" ]; } || { [ -d \"$d/.legal/launch\" ] && [ ! -x \"$d/.legal/launch\" ]; }; }; then echo \"wolfboy: this plugin's hook could not start, so its check did not take place and is not treated as passed. A scan is under way in this project (its .legal/launch/scan-under-way.json stands); if none is, a scan that stopped left that file: delete it outside Claude Code. Repair the plugin's install (its folder and /bin/bash), or disable the plugin.\" >&2; exit 2; fi; exit 0",
+            "timeout": 30,
+            "onFailure": "continue"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" SubagentStart",
+            "timeout": 30,
+            "onFailure": "block"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash -p \"${CLAUDE_PLUGIN_ROOT}/bin/legal-hook\" SubagentStop",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}

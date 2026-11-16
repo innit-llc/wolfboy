@@ -1,0 +1,181 @@
+id: remote-actuation-002
+pack: remote-actuation
+short_name: Remote control of someone's computer, with a hidden mode
+problem_line:
+  text: Remote viewing and control of another person's computer
+fix_line: Remove a hiding mode or give it an indicator it cannot suppress, and ask consent per
+  session where possible.
+title: Remote observation and control of another person's machine, with a mode that hides it from them
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(a) - personal data shall be 'processed lawfully,
+      fairly and in a transparent manner in relation to the data subject'. This is the operative
+      provision and the blinding limb goes straight to it: a mechanism whose purpose is that the
+      observed person cannot tell they are being observed is the negation of the transparency limb,
+      and fairness is engaged whatever the observer's reason"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 6(1) - 'Processing shall be lawful only if and to the
+      extent that at least one of the following applies'. Cited for the question rather than for an
+      answer: everything on the observed screen is being processed by whoever is watching, and which
+      of the six grounds covers that - and covers it for the observed person rather than for the
+      account holder who installed the software - is what the deployment has to establish"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 9(1) - 'Processing of personal data revealing racial or
+      ethnic origin, political opinions, religious or philosophical beliefs, or trade union
+      membership, and the processing of genetic data, biometric data for the purpose of uniquely
+      identifying a natural person, data concerning health or data concerning a natural person's sex
+      life or sexual orientation shall be prohibited.' Reference only: the observer sees whatever is
+      on the screen, and a screen carries whatever the person had open, so a special-category
+      category is reached by accident rather than by design. That is a reason to bound the
+      mechanism, not evidence that any particular capture contained such data"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 32(1) - 'the controller and the processor shall
+      implement appropriate technical and organisational measures to ensure a level of security
+      appropriate to the risk'. A channel that carries screen, audio and input in both directions
+      between two machines through a third-party rendezvous point is a processing system whose
+      security level has to be set by what an unauthorised session would obtain, which is everything
+      on the machine
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 13(1) - 'Where personal data relating to a data subject
+      are collected from the data subject, the controller shall, at the time when personal data are
+      obtained, provide the data subject with all of the following information'. Reference only, and
+      it is the provision the blinding limb makes impossible to satisfy at the moment it matters:
+      information owed at the time the data are obtained cannot be given to somebody whose display
+      has been blanked so that they do not know data are being obtained"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 12(1) - the controller shall provide the information
+      'in a concise, transparent, intelligible and easily accessible form, using clear and plain
+      language'. Reference only, and cited beside the entry above because the form of the notice is
+      the practical question here: a consent prompt that appears once at install time is not an
+      easily accessible form of information about a session that starts unattended six months later"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 88(1) - 'Member States may, by law or by collective
+      agreements, provide for more specific rules to ensure the protection of the rights and
+      freedoms in respect of the processing of employees' personal data in the employment context'.
+      REFERENCE ONLY, AND CONDITIONAL ON A FACT THIS DETECTOR CANNOT ESTABLISH: whether the observed
+      person is an employee of whoever deployed the software is a deployment fact, asked of the
+      operator and never inferred from source vocabulary. Where the answer is yes, member-state
+      employment rules sit on top of everything else in this list, and they are not uniform across
+      the Union"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "ePrivacy Directive (Directive 2002/58/EC), Art. 5(3) - Member States shall ensure that 'the
+      storing of information, or the gaining of access to information already stored, in the
+      terminal equipment of a subscriber or user is only allowed on condition that the subscriber or
+      user concerned has given his or her consent'. REFERENCE ONLY AND CARRIED AS AN OPEN QUESTION:
+      whether reading what is currently displayed on a screen, and injecting input into it, amounts
+      to gaining access to information already stored in the terminal equipment within the meaning
+      of this provision is not settled by its own text, and this entry must not be read as a finding
+      that it is. It is here so that the question is asked rather than missed. THE PROVISION CARRIES
+      ITS OWN EXEMPTION AND IT IS NAMED HERE BECAUSE IT IS THE HALF THAT SPLITS THIS RULE'S TWO
+      CASES: the paragraph does not prevent technical storage or access 'as strictly necessary in
+      order for the provider of an information society service explicitly requested by the
+      subscriber or user to provide the service'. Attended assistance - the case
+      context_questions[1] calls an explicit prompt per session, where the person at the machine
+      asks for help and accepts the session - is the obvious candidate for that exemption. The
+      unattended path this rule's fifth clause group reads is the case where it plainly does not
+      apply, because nobody explicitly requested anything at the moment the session begins. Naming
+      the exemption is what makes the open question a sharp one rather than a general worry"
+    url: https://publications.europa.eu/resource/celex/02002L0058-20091219
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.6
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  match:
+    - \bIDXGIOutputDuplication\b|\bDuplicateOutput\b|\bAcquireNextFrame\s*\(|\bCGDisplayStream\b|\bCGDisplayCreateImage\s*\(|\bXShmGetImage\s*\(|\bXGetImage\s*\(|\bxdg-desktop-portal\b|\bScreenCast\b|\bpipewire\b
+    - \b[A-Za-z_]*MediaProjection[A-Za-z_]*\b|\bcreateScreenCaptureIntent\s*\(|\b[A-Za-z_]*VirtualDisplay[A-Za-z_]*\b|\bImageReader\b|\bacquireLatestImage\s*\(
+    - \bAudioRecord\b|\bAudioPlaybackCaptureConfiguration\b|\bstartRecording\s*\(|\bAVCaptureSession\b|\bcamera_capture\b
+    - \bSendInput\s*\(|\bkeybd_event\s*\(|\bmouse_event\s*\(|\bXTestFake(?:Key|Button|Motion)Event\s*\(|\bCGEventPost\s*\(|\bCGEventCreateKeyboardEvent\s*\(|\buinput\b|\bSendSAS\s*\(
+    - \bdispatchGesture\s*\(|\bGestureDescription\s*\.\s*Builder\b|\bAccessibilityService\b|\bperformGlobalAction\s*\(
+    - \bCGSetDisplayTransferByTable\s*\(|\bCGDisplayGammaTableCapacity\s*\(|\bCGGammaValue\b|\bSetDeviceGammaRamp\s*\(
+    - \bkCGHIDEventTap\b|\bCGEventTapCreate\s*\(|\bkCGEventTapDisabledBy(?:Timeout|UserInput)\b|\bWH_KEYBOARD_LL\b|\bWH_MOUSE_LL\b|\bSetWindowsHookEx[AW]?\s*\(
+    - \b[A-Za-z_]*[Pp]rivacy[_]?[Mm]ode[A-Za-z_]*\b|\b[A-Za-z_]*[Bb]lackout[A-Za-z_]*\b
+    - \bCDS_SET_PRIMARY\b|\bChangeDisplaySettingsEx[AW]?\s*\(|\bWS_EX_TOOLWINDOW\b|\bSetWindowDisplayAffinity\s*\(|\bWDA_EXCLUDEFROMCAPTURE\b
+    - \b[A-Za-z_]*(?:[Rr]endezvous|RENDEZVOUS)[A-Za-z_]*\b|\bRegisterPk\b|\bregister_pk\b|\b[A-Za-z_]*(?:[Rr]elay|RELAY)_?(?:[Ss]erver|SERVER)[A-Za-z_]*\b|\bpunch_hole\b
+    - \bACTION_BOOT_COMPLETED\b|\b[A-Za-z_]*BootReceiver[A-Za-z_]*\b|\bLaunchDaemons\b|\bSMJobBless\s*\(|\b[A-Za-z_]*(?:[Ss]tart|START)_?(?:[Oo]n|ON)_?(?:[Bb]oot|BOOT)[A-Za-z_]*\b|\b[A-Za-z_]*(?:[Uu]nattended|UNATTENDED)[A-Za-z_]*\b
+    - \b[Uu]nattended[_-]?(?:[Aa]ccess|[Ss]ession|[Ss]ervice|[Mm]ode|[Ss]tart|[Ii]nstall)\b|\bUNATTENDED_(?:ACCESS|SESSION|SERVICE|MODE|START|INSTALL)\b|--unattended-install\b
+context_questions:
+  - IS THE BLINDING LIMB PRESENT, AND WHAT DOES IT DO TO THE PERSON AT THE MACHINE? This is the
+    question that decides how this finding should read. Check for a zeroed display gamma table, a
+    hardware-level event tap or low-level hook that swallows local input, a substituted primary
+    display, and a session window removed from the taskbar. Quote what the local person sees and can
+    do while a session is running. A product with none of these is remote assistance; a product with
+    them is remote assistance plus a mode in which the observed person cannot tell.
+  - WHO CONSENTS, WHEN, AND CAN THEY REFUSE OR END A SESSION? Read the connection-acceptance path.
+    There are four materially different answers - an explicit prompt per session, a standing
+    password set once, a permanent access token, and an unattended service configured by whoever
+    installed it - and only the first is a per-session decision by the observed person. Say which
+    this deployment allows and which it ships with.
+  - WHO IS THE OBSERVED PERSON RELATIVE TO WHOEVER DEPLOYED THIS? Ask the operator; do not infer it
+    from the code, which cannot tell an employee from a family member from a support customer. The
+    answer decides whether member-state employment rules are in play at all, and it is the single
+    fact that most changes what this finding means.
+  - WHAT DOES THE RENDEZVOUS RELAY SEE? Establish whether the media is end-to-end encrypted between
+    the two ends or terminates at the relay, whether the relay is the vendor's default or one the
+    operator runs, and what it retains - identifiers, connection times, addresses. A default relay
+    is a recipient in the record of processing even when it carries no plaintext.
+  - CAN A SESSION START WITH NOBODY PRESENT? Read the boot and service-installation paths. A product
+    that can be started unattended after a reboot is a monitoring capability whichever way it was
+    intended, and the finding should say whether that path is present, what enables it, and whether
+    the person at the machine is told when it is used.
+evidence_template: "{file}:{line} matched one of five clause groups making up a remote
+  observation-and-control channel: screen, audio or camera capture; input injection back into the
+  observed machine; the BLINDING sub-mechanism that stops the local person from seeing the session;
+  registration with a rendezvous relay; and unattended start. WHAT THIS ESTABLISHES is that a part
+  of that mechanism is present at this line. Each group fires on its own, deliberately, so a single
+  match is one limb and not the whole construct - read the candidate's other locations before
+  deciding which of the five this codebase has. It does not establish that any session has occurred,
+  who the remote party is, or what the relay operator sees, all of which are deployment facts. It
+  does not establish who the observed person is relative to whoever deployed the software -
+  employee, family member, support customer - and that fact must be asked of the operator rather
+  than inferred from anything in the source. SEVERAL OF THESE PRIMITIVES ARE ALSO HOW ORDINARY
+  SOFTWARE IS WRITTEN: a screen recorder, an automation tool, an accessibility aid and a
+  colour-calibration utility use the same capture, injection and gamma interfaces. What
+  distinguishes this construct is the relay and the blinding, which is why those have clause groups
+  of their own and why context_questions[0] asks for the blinding limb first."
+remediation_template: |
+  Deal with the blinding mechanism first, because it is the part that cannot be made transparent by
+  documentation. Where a mode blanks the local display or swallows local input, the person at that
+  machine has no way to know a session is running; if the mode is kept, it needs an indicator the
+  mode itself cannot suppress, and the product should say plainly that it exists.
+  Make consent per session where the transport allows it, and say what the alternative is where it
+  does not. A standing password and a permanent access token are not per-session decisions, and a
+  product that ships one should describe it as the standing authorisation it is.
+  Name the relay in the record of processing. Even a relay that carries no plaintext observes who
+  connected to whom and when, and a default relay operated by the vendor is a recipient.
+  Write down what an unattended start does and what the person is told about it. The boot path is
+  where assistance software becomes monitoring software, and the difference is a design decision
+  rather than an intention.
+  Where the deployment is an employer over an employee, treat the member-state employment rules as
+  the governing layer rather than as a footnote, and check them per country of establishment. That
+  is a legal question for the operator and it is not answered by anything in this repository.
+data_categories:
+  - user.device
+  - user.behavior
+  - user.content
+  - system.operations
+fingerprint_spec: file

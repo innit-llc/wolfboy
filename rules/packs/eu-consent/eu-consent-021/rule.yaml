@@ -1,0 +1,404 @@
+id: eu-consent-021
+pack: eu-consent
+short_name: Consent banner with Accept but no Refuse found beside it
+problem_line:
+  text: Consent banner offers Accept; no equal Refuse found
+fix_line: Put Refuse on the same layer as Accept, store a refusal as Accept stores consent, and
+  never treat closing as consent.
+title: Consent-banner acceptance control surfaced with no refusal vocabulary matched in the same
+  file outside comments
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC) read with Art.
+      2(f), and GDPR Art. 94. Art. 5(3), in the consolidated text at CELEX 02002L0058-20091219,
+      where the paragraph carries the M2 marker that the amending-act table of that document maps to
+      'DIRECTIVE 2009/136/EC OF THE EUROPEAN PARLIAMENT AND OF THE COUNCIL of 25 November 2009' (OJ
+      L 337, p. 11, 18.12.2009): 'Member States shall ensure that the storing of information, or the
+      gaining of access to information already stored, in the terminal equipment of a subscriber or
+      user is only allowed on condition that the subscriber or user concerned has given his or her
+      consent, having been provided with clear and comprehensive information, in accordance with
+      Directive 95/46/EC, inter alia, about the purposes of the processing. This shall not prevent
+      any technical storage or access for the sole purpose of carrying out the transmission of a
+      communication over an electronic communications network, or as strictly necessary in order for
+      the provider of an information society service explicitly requested by the subscriber or user
+      to provide the service.' Art. 2(f) of the same Directive provides that \"'consent' by a user
+      or subscriber corresponds to the data subject's consent in Directive 95/46/EC\", and GDPR Art.
+      94 repeals that Directive - Art. 94(1): 'Directive 95/46/EC is repealed with effect from 25
+      May 2018.'; Art. 94(2), first sentence: 'References to the repealed Directive shall be
+      construed as references to this Regulation.' That chain is what makes the GDPR definition in
+      entry 2 the definition a cookie or tracker banner has to satisfy. ADDRESSEE: Art. 5(3) is
+      drafted as a duty on the Member States ('Member States shall ensure'), and what it requires
+      them to ensure is that the storing or the access is allowed only on the stated condition, so
+      the party that carries the condition in a scanned repository is whoever stores or reads on the
+      terminal equipment. That party is usually, but not necessarily, the controller as GDPR Art.
+      4(7) defines it: \"'controller' means the natural or legal person, public authority, agency or
+      other body which, alone or jointly with others, determines the purposes and means of the
+      processing of personal data\". The national transposition, not this Directive, is the
+      instrument a supervisory authority applies, and which national text applies is a question for
+      the adjudicator and not for this rule."
+    url: http://publications.europa.eu/resource/celex/02002L0058-20091219
+    checked_at: 2026-08-10
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(11), quoted in full from the Official Journal text at
+      CELEX 32016R0679, retrieved 2026-08-10: \"'consent' of the data subject means any freely
+      given, specific, informed and unambiguous indication of the data subject's wishes by which he
+      or she, by a statement or by a clear affirmative action, signifies agreement to the processing
+      of personal data relating to him or her\". Four cumulative qualities, of which this rule
+      reaches one: freely given. The other three are other rows' subject matter - specific is
+      purpose granularity, informed is the notice, unambiguous is the affirmative-action requirement
+      that Recital 32 spells out ('Silence, pre-ticked boxes or inactivity should not therefore
+      constitute consent.'). Recital 32's opening sentence gives the same test in the positive:
+      'Consent should be given by a clear affirmative act establishing a freely given, specific,
+      informed and unambiguous indication of the data subject's agreement to the processing of
+      personal data relating to him or her, such as by a written statement, including by electronic
+      means, or an oral statement.' Applies since 2018-05-25, Art. 99(2): 'It shall apply from 25
+      May 2018.'"
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-10
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 42, last sentence, from the same Official Journal
+      text: 'Consent should not be regarded as freely given if the data subject has no genuine or
+      free choice or is unable to refuse or withdraw consent without detriment.' This is the
+      sentence that ties refusal to the validity of the consent itself: where the user cannot
+      refuse, what was collected is open to challenge from the moment it was taken, rather than a
+      separate housekeeping failure to be fixed later. Recital 43, second sentence, supplies the
+      companion presumption: 'Consent is presumed not to be freely given if it does not allow
+      separate consent to be given to different personal data processing operations despite it being
+      appropriate in the individual case, or if the performance of a contract, including the
+      provision of a service, is dependent on the consent despite such consent not being necessary
+      for such performance.' Two things a reader must not take from this entry. A recital does not
+      enact a duty - it colours Art. 4(11)'s freely-given condition, which is what this rule cites
+      as its test. And neither recital says anything about how prominent, how many clicks away, or
+      how visually equal a refusal control has to be; that comparison is a matter for the
+      adjudicating agent and for the national enforcement record, not for words this rule may put in
+      the Official Journal's mouth."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-10
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 7(4), from the same Official Journal text: 'When
+      assessing whether consent is freely given, utmost account shall be taken of whether, inter
+      alia, the performance of a contract, including the provision of a service, is conditional on
+      consent to the processing of personal data that is not necessary for the performance of that
+      contract.' Read exactly. The paragraph is a direction about how to assess the freely-given
+      condition, and the single factor it names is CONDITIONALITY - tying a service to consent that
+      the service does not need. It is the textual home of the consent-or-pay question. It does not
+      say that a refusal control must exist, that refusing must cost the same as accepting, or
+      anything at all about the layout of a prompt; the phrase 'inter alia' leaves room for other
+      factors without naming one. This rule therefore rests on Art. 4(11) with Recital 42, not on
+      Art. 7(4), and Art. 7(4) is carried here as reference so that anyone reading row 1b's citation
+      list can see which half of the row each provision answers. Consent-or-pay is out of this
+      rule's scope entirely (see the detector comment), so nothing in this rule tests the factor
+      this paragraph names."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-10
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 7(3), from the same Official Journal text: 'The data
+      subject shall have the right to withdraw his or her consent at any time. The withdrawal of
+      consent shall not affect the lawfulness of processing based on consent before its withdrawal.
+      Prior to giving consent, the data subject shall be informed thereof. It shall be as easy to
+      withdraw as to give consent.' Carried here to fix a boundary, not to test one: the parity
+      sentence in this paragraph is about withdrawal AFTER consent has been given, which is EU
+      coverage map row 16 and eu-consent-017. This rule is about the first layer of the prompt,
+      before any decision has been recorded. A settings page that lets a user take consent back does
+      not supply the refusal this rule is looking for, and a reject button on the banner is not a
+      withdrawal path; the two obligations are answered by different code and must not be reported
+      as one. Art. 7(1) marks the third neighbour - 'Where processing is based on consent, the
+      controller shall be able to demonstrate that the data subject has consented to processing of
+      his or her personal data.' - which is row 7 and eu-consent-016. Reference only: none of these
+      establishes the condition this rule tests."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-10
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.45
+detector:
+  engine: builtin-regex
+  vocabulary:
+    affirm_control_verb:
+      - confirm
+      - commit
+      - grant
+      - approve
+      - acknowledge
+      - store
+      - persist
+      - akzeptieren
+      - zustimmen
+      - bestaetigen
+      - bestätigen
+      - einverstanden
+    consent_object:
+      - consent
+      - cookie
+      - cookies
+      - tracking
+      - analytics
+      - popup
+      - banner
+      - preference
+      - preferences
+      - prefs
+      - choice
+      - choices
+      - decision
+      - decisions
+      - policy
+      - categories
+      - klick
+      - click
+      - button
+      - btn
+      - handler
+    affirm_state:
+      - confirmed
+      - granted
+      - approved
+      - acknowledged
+      - committed
+      - stored
+      - persisted
+    affirm_caption:
+      - ok
+      - okay
+      - got it
+      - gotit
+      - understood
+      - i understand
+      - sounds good
+      - sure thing
+      - sure
+      - alright
+      - all right
+      - yes
+      - akzeptieren
+      - alle akzeptieren
+      - zustimmen
+      - einverstanden
+      - verstanden
+      - alles klar
+    consent_key_head:
+      - cookie
+      - cookies
+      - consent
+      - gdpr
+      - banner
+      - privacy
+      - notice
+      - eupopup
+      - tracking
+    affirm_key_tail:
+      - confirm
+      - confirmed
+      - ok
+      - okay
+      - next
+      - got-it
+      - understood
+      - grant
+      - approve
+      - acknowledge
+  vocabulary_matching:
+    affirm_control_verb:
+      case_insensitive: true
+    consent_object:
+      case_insensitive: true
+    affirm_state:
+      case_insensitive: true
+    affirm_caption:
+      case_insensitive: true
+    consent_key_head:
+      case_insensitive: true
+    affirm_key_tail:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?:[Aa]ccept(?!ance)|ACCEPT|[Aa]gree|AGREE|[Aa]llow|ALLOW)\w{0,10}[_-]?(?:[Cc]onsent|CONSENT)
+    - (?:[Aa]ccept(?!ance)|ACCEPT|[Aa]gree|AGREE)\w{0,10}[_-]?(?:[Cc]ookies?|COOKIES?|[Tt]racking|TRACKING|[Aa]nalytics|ANALYTICS)
+    - (?:[Aa]ccept|ACCEPT)[_-]?(?:[Aa]ll|ALL)(?![a-z])
+    - (?:(?<![A-Za-z])on|On|ON)[_-]?(?:[Aa]ccept(?!ance)|ACCEPT|[Aa]gree|AGREE|[Aa]llow|ALLOW)
+    - (?:(?<![A-Za-z])handle|Handle|HANDLE)[_-]?(?:[Aa]ccept(?!ance)|ACCEPT|[Aa]gree|AGREE|[Aa]llow|ALLOW)
+    - (?:>|["'`])\s*(?:[Aa]ccept|ACCEPT|I agree|I Agree|I
+      AGREE|[Aa]gree|AGREE|[Cc]ontinue|CONTINUE|[Aa]llow|ALLOW)(?:\s+(?:all|All|ALL|cookies|Cookies|COOKIES|and
+      continue))*\s*(?:<|["'`])
+    - "[Aa]uto[_-]?[Aa]ccept(?!ance)"
+    - "[.:](?:[Aa]ccept|ACCEPT|[Aa]gree|AGREE|[Aa]llow|ALLOW|[Cc]ontinue|CONTINUE)(?:[_-](?:all|All\
+      |ALL|cookies?|Cookies?|COOKIES?|tracking|Tracking|TRACKING))*(?:[Bb]utton|BUTTON|[Bb]tn|BTN|[\
+      Cc]ta|CTA|[Aa]ction)?(?![A-Za-z0-9_./(-])"
+    - (?<![A-Za-z0-9])(?:accept|Accept|ACCEPT|agree|Agree|allow|Allow)[_-](?:btn|Btn|BTN|button|Button|BUTTON)(?![A-Za-z0-9])
+    - CybotCookiebotDialog[A-Za-z]*(?:AllowAll|Allowall|Accept)[A-Za-z]*
+    - \{\{#?\s*str\s*\}\}\s*(?:[Aa]ccept|ACCEPT|[Aa]gree|AGREE|[Aa]llow|ALLOW|[Cc]ontinue|CONTINUE)(?![A-Za-z0-9_])
+    - (?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&affirm_control_verb)(?=[_-]|[A-Z])\w{0,14}[_-]?(?&consent_object)
+    - (?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&affirm_control_verb)[_-]?(?:[Aa]ll|ALL|[Aa]lle|ALLE|[Ee]verything|EVERYTHING)(?![a-z])
+    - (?:(?<![A-Za-z0-9])|(?<=[a-z0-9])(?=[A-Z]))(?&consent_object)\w{0,14}[_-]?(?&affirm_state)
+    - (?:>|["'`])\s*(?&affirm_caption)(?![A-Za-z0-9])[^<>"'`]{0,24}(?:<|["'`])
+    - ^\s*(?:(?&affirm_caption)|[Aa]ccept|ACCEPT|[Aa]gree|AGREE|I agree|I Agree|I
+      AGREE|[Aa]llow|ALLOW)(?:\s+(?:all|All|ALL|cookies|Cookies|COOKIES|and continue))*[ \t]*$
+    - (?&consent_key_head)[A-Za-z0-9_]*(?:[.:][A-Za-z0-9_-]+)*[.:](?&affirm_key_tail)(?:[Bb]utton|BUTTON|[Bb]tn|BTN|[Cc]ta|CTA|[Aa]ction)?(?![A-Za-z0-9_./(-])
+    - (?<![A-Za-z0-9])(?:[Aa]ccept|ACCEPT|[Aa]gree|AGREE|[Aa]llow|ALLOW)(?:[Bb]tn|BTN|[Bb]utton|BUTTON)(?![a-z0-9])
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|<%#|\{\{--|\{\{!|\{\{/\*|\{#|\{\*)
+    - "[Aa]ccept[_-]?(?:[Dd]iff|[Ii]nvit|[Rr]equest|[Oo]ffer|[Cc]onnection|[Cc]hanges?|[Ss]uggestio\
+      n|[Ee]ncoding|[Ll]anguage)"
+    - "[\"'`][Aa]ccept[\"'`]\\s*[,:]\\s*[\"'`](?:application|text|image|audio|video|multipart|\\*)"
+  also_in_file:
+    - ^(?![\s\S]*(?:(?:(?<![A-Za-z])on|On|ON|(?<![A-Za-z])handle|Handle|HANDLE|(?<![A-Za-z])set|Set)[_-]?(?:[Rr]eject|REJECT|[Dd]ecline|DECLINE|[Rr]efuse|REFUSE|[Dd]eny|DENY|[Dd]isagree|[Oo]pt_?[Oo]ut|OPT_?OUT)|(?<!(?:hide|Hide|HIDE|show|Show|SHOW|enable|Enable|ENABLE|disable|Disable|DISABLE|display|Display|DISPLAY)[_-]?)(?:[Rr]eject|REJECT|[Dd]ecline|DECLINE|[Rr]efuse|REFUSE|[Dd]eny|DENY)\w{0,6}[_-]?(?:[Aa]ll|ALL|[Cc]ookies?|COOKIES?|[Cc]onsent|CONSENT|[Tt]racking|TRACKING|[Bb]utton(?![A-Za-z_-])|BUTTON(?![A-Za-z_-])|[Aa]nalytics|[Ss]ervices?)(?![A-Za-z]{0,12}[Hh]idden)|["'`](?:[A-Za-z0-9_-]+[.:]+)+(?:[Rr]eject|REJECT|[Dd]ecline|DECLINE|[Dd]eny|DENY|[Rr]efuse|REFUSE|[Dd]isagree|DISAGREE)(?:[_-](?:all|All|ALL|cookies?|Cookies?|COOKIES?|tracking|Tracking|TRACKING))*["'`]|[A-Za-z0-9_]+:(?:[Rr]eject|REJECT|[Dd]ecline|DECLINE|[Dd]eny|DENY|[Rr]efuse|REFUSE|[Dd]isagree|DISAGREE)(?:[_-](?:all|All|ALL|cookies?|Cookies?|COOKIES?|tracking|Tracking|TRACKING))*(?![A-Za-z0-9_./(-])|(?<![A-Za-z0-9])(?<!(?:hide|Hide|HIDE|show|Show|SHOW|enable|Enable|ENABLE|disable|Disable|DISABLE|display|Display|DISPLAY)[_-])(?:reject|Reject|decline|Decline|deny|Deny|refuse|Refuse)[_-](?:btn|Btn|BTN|button|Button|BUTTON)(?![A-Za-z0-9])(?![_-](?:display|text|caption|enabled|visible|hidden))|[Oo]pt_?[Oo]ut|OPT_OUT|(?<!(?:[Bb]utton|[Bb]tn|BUTTON|BTN)[A-Za-z]{0,10}["'`]?\s{0,4}(?:=>|[:=])\s{0,4})(?:>|["'`])\s*(?:[Rr]eject|REJECT|[Dd]ecline|DECLINE|[Rr]efuse|[Nn]o,?
+      [Tt]hanks|[Dd]isagree|[Aa]blehnen|[Oo]pt[
+      _-]?[Oo]ut|[Nn]ecessary\s+[Oo]nly|[Oo]nly\s+[Nn]ecessary|[Ee]ssential\s+[Oo]nly)(?![A-Za-z0-9_-]*["'`]?\s*(?:=>|[:=]))|[Rr]eject\s+[Aa]ll|[Dd]ecline\s+[Aa]ll|[Rr]efuse\s+[Aa]ll|[Tt]out\s+refuser|[Aa]lles?[\s_-]?[Aa]blehnen|[Aa]ccept[_-]?[Nn]ecessary|acceptNecessaryBtn|[Cc]ontinue\s+without\s+accepting))(?:(?=[\s\S]*(?:[Cc]ookie[sS]?[_\-
+      ]?(?:[Cc]onsent|[Bb]anner|[Nn]otice|[Pp]olicy|[Pp]references|[Pp]refs|[Ss]ettings)|COOKIES?_(?:CONSENT|BANNER|NOTICE|POLICY|PREFERENCES|PREFS|SETTINGS|LAW)|[Cc]onsent[_\-
+      ]?(?:[Bb]anner|[Tt]oast|[Mm]odal|[Nn]otice|[Dd]ialog|[Pp]opup|[Mm]anager|[Gg]ate|[Pp]rompt)|CONSENT_(?:BANNER|MODAL|MANAGER|MODE)|[Gg]dpr|GDPR|eupopup|[Ee]u[_-][Cc]ookie|EU_COOKIE|cookieconsent|[Cc]ookieConsent|cookie-consent|cookieyes|CookieYes|Cookiebot|OneTrust|Optanon|Usercentrics|(?<![A-Za-z0-9])klaro(?![a-z0-9])|(?<![A-Za-z0-9])[Dd]idomi(?![a-z0-9])|__tcfapi|(?<![A-Za-z0-9])[Oo]sano(?![a-z0-9])|tarteaucitron|[Ii]ubenda|[Qq]uantcast|qc-cmp[0-9]?-|[Tt]racking[_\-
+      ]?(?:[Cc]onsent|[Pp]references|[Pp]refs)|(?:[Ww]e|[Tt]his site|[Tt]his website|[Oo]ur
+      website|[Oo]ur
+      site)\s+uses?\s+cookies|uses?\s+cookies\s+to|analytics_storage|ad_storage|ad_user_data|ad_personalization|[Cc]onsenso|CONSENSO|[Aa]ssenso|ASSENSO|[Tt]racciamento|TRACCIAMENTO))|(?=[\s\S]*[Cc]ookie)(?=[\s\S]*(?:[Cc]onsent|CONSENT)))
+  shared_path_exclusions:
+    - localisation_catalogues
+    - markdown_documents
+    - openapi_documents
+context_questions:
+  - "Is this a consent prompt within GDPR Art. 4(11) and ePrivacy Art. 5(3) at all - a decision
+    about storing or reading something on the user's device, or about processing personal data - or
+    is it something else that shares its vocabulary? Three shapes were found in real repositories
+    wearing this one. (a) CONTRACT ACCEPTANCE: a registration checkbox bound to a terms field, or a
+    modal asking a returning user to agree to revised terms, with links to a terms page and a
+    privacy policy and a stored value keyed to a document version. There is no refusal control
+    because refusing means not registering, and agreement to terms rests on Art. 6(1)(b) rather than
+    on consent, so Art. 4(11) does not attach and this rule's question does not arise. The owner's
+    own application produced exactly this misclassification once: a component named ConsentGate.tsx
+    turned out to be a terms re-acceptance modal. (b) A BROWSER-SUPPORT NOTICE: a modal in a file
+    named for cookies, with one button and no refusal, telling the user that cookies must be enabled
+    before they can log in. It is a technical warning and there is nothing to consent to. (c) A
+    THIRD PARTY'S BANNER CAPTURED AS DATA: a consent-management platform's script tag inside a
+    recorded HTTP response, an import fixture or a saved page. That is somebody else's banner and
+    says nothing about the scanned project. (d) NOT A CONTROL AT ALL: the acceptance word matched
+    inside data or prose rather than inside an interface - an HTTP header value in a routing
+    configuration, a row of a bundled model's token vocabulary, an enum value inside a stored
+    instruction file for a language model. Shapes (a) to (c) share consent's vocabulary and are at
+    least user interface; (d) is not, and the file it sits in usually qualified on a single
+    incidental occurrence of the word cookie, consent or gdpr somewhere else in it. Open the file,
+    quote what the control writes and what reads it, and say which of the five this is. Where it is
+    (a), (b), (c) or (d), record that and stop."
+  - "Does a refusal control exist that this rule could not see? The detector matched an acceptance
+    control and found no refusal vocabulary in that one file - that is the whole of what it
+    establishes, and it is not a claim that no refusal exists. Four places a refusal routinely lives
+    where a file-scoped view cannot reach it, all four observed in real repositories: a sibling
+    component that renders the preference panel and holds the deny-all writer; a persistent settings
+    route reached from the footer or the account page; a translation catalogue, where every label is
+    an i18n key and the component carries only onAccept and onReject as symbols; and a
+    consent-management platform's own configuration, where the presence of the reject button is a
+    boolean in the customer's own script tag or a missing property whose default is off. Search the
+    project, quote the route definition, component or configuration literal you find, and say
+    whether a user standing in front of THIS prompt can reach it. A refusal control that exists
+    somewhere in the repository but is not offered at the moment of the prompt answers a different
+    question - see the next one."
+  - "If a refusal control does exist, is it offered at the same layer as the acceptance control, and
+    what does reaching it cost? Art. 4(11) requires consent to be freely given, and Recital 42
+    states that consent should not be regarded as freely given where the data subject has no genuine
+    or free choice or is unable to refuse without detriment. Reconstruct both journeys from the same
+    starting point - the moment the prompt appears - and report them limb by limb rather than as a
+    symbol. (a) LAYER: is the refusal rendered by the same component, in the same render, as the
+    acceptance control, or does it exist only inside a dialog that a Manage, Customise, Preferences
+    or Settings control opens? A real documentation example in the pinned corpus offers Manage
+    Cookies and Accept Cookies on the first layer and puts Decline All inside the dialog, and this
+    rule is structurally unable to see that difference, so it is your question and not the
+    detector's. (b) ACTIONS: how many clicks, taps or requests each path takes, counted from the
+    same place. (c) PROMINENCE: whether the two controls are rendered as the same kind of control -
+    report what you see and quote it, and do not treat a difference in a button variant or a class
+    name as settling the question on its own, because the sources cited by this rule say nothing
+    about styling. (d) WHAT THE CLOSE CONTROL DOES: check the dismiss cross and any click-outside
+    handler, because in one real banner plugin the close cross calls the same writer as the accept
+    button and dismissing the notice records consent. Where the two paths differ, say on which limb
+    and by how much; where they do not, dismiss the candidate and quote both."
+  - "What does the acceptance control actually switch on, and is consent the basis being relied on?
+    Quote the code path that reads the stored decision and name what turns on it: a tracking or
+    analytics tag, an advertising pixel, a session-replay recorder, a marketing send list, an
+    optional feature. One case decides itself and it is common enough to check first: where the
+    stored value gates nothing except whether the notice renders again - the tag, the SDK or the
+    send fires identically whether the user accepted or never answered - then nothing is being
+    processed on the basis of consent, there is no free choice being offered or withheld, and the
+    defect is the absence of a consent mechanism at all. That is EU coverage map row 1 and
+    eu-consent-001, not this row. Say which of the two it is and route it there rather than
+    reporting one fact pattern under both rules."
+  - "Is this product offered to users in the EU or the EEA, and who is the addressee? Read
+    ScanProfile.distribution_regions, which is supplied with this candidate. A region that is not in
+    the list may not have been asked: that question is open, not answered no. Where it is absent,
+    say so and return needs_human rather than guessing, because this question decides whether the
+    obligation is engaged. ePrivacy Art. 5(3) is addressed to the Member States and is applied
+    through their national transpositions, so which national text governs is a question for a human
+    with the product's establishment and audience in front of them. The party carrying the condition
+    in the scanned repository is whoever stores or reads on the terminal equipment, which under GDPR
+    Art. 4(7) is the controller - and where the banner belongs to a platform the scanned code merely
+    integrates with, identify who that is before treating this repository as the addressee."
+evidence_template: "{file}:{line} matched one of this rule's acceptance patterns, in a file where
+  its consent vocabulary matched somewhere and its refusal vocabulary matched nowhere outside
+  comments. THAT IS THE WHOLE OF WHAT WAS MATCHED, and neither half of it is self-verifying. One
+  clause matches a bare acceptance word - Accept, Agree, I agree, Continue, Allow - wherever it
+  stands between quotation marks or between tags, which is how a button label in markup is spelled
+  and equally how a JSON key, an HTTP header value and a word-list entry are spelled; and the
+  file-level gate is satisfied by consent vocabulary occurring anywhere in the file, in any role. So
+  lines that are neither controls nor consent surfaces reach this template, and three such were
+  found in real repositories. An HTTP response header value in a deployment routing configuration -
+  'value': 'Accept', under 'key': 'Vary' - in a file that qualified because the string gdpr occurs
+  in its redirect paths. A subword-token row in a bundled embedding model's vocabulary table -
+  'allow': 3499, between 'operated': 3498 and 'spring': 3500 - in a file that qualified because
+  cookie and consent are themselves tokens in that table. An enum value inside a stored instruction
+  file for a language model - 'continue', beside 'handoff', naming what to do with a conversation -
+  in a file that qualified because that instruction text names cookie banners twice, both times
+  telling the model to leave them out. Read the matched line and open the file before anything else:
+  say whether an acceptance control is on the line, and whether the file is a consent surface. Where
+  either answer is no, record that and stop at context question 1, which is where that reading is
+  scored. Beyond those two matches this detector establishes nothing. It is NOT a finding that no
+  refusal control exists: a refusal path may sit in a sibling component, a settings route, a
+  translation catalogue or a consent-management platform's configuration, none of which a
+  file-scoped pattern can see; it may also be named in a comment in this file, and this rule is also
+  structurally unable to see a refusal that exists one dialog deeper in the same file"
+remediation_template: >
+  This is a candidate for review against ePrivacy Art. 5(3) read with GDPR Art. 4(11), not a
+
+  determination about this code. The scanner matched an acceptance control inside a file that reads
+
+  as a consent surface, and its own refusal patterns matched nothing in that file outside its
+
+  comments. It did not search the rest of the project, and it is not asserting that a refusal
+  control
+
+  is missing.
+
+  Two facts close most candidates, so establish them first:
+
+  1. Is this a consent prompt at all? Agreement to terms of service or to a privacy policy is a
+     contract matter under Art. 6(1)(b) and Art. 4(11) does not attach to it; a notice telling the
+     user to enable cookies in the browser is a technical warning with nothing to consent to; a
+     vendor's banner captured inside a recorded HTTP response belongs to that vendor. Where the
+     stored value is keyed to a document version rather than to a tracker category or a marketing
+     channel, move on.
+  2. Does a refusal control already exist? The scanner did not look outside this file. Start from
+     the shapes that usually carry one and treat each as evidence rather than as an answer:
+     onReject, onDecline, onOptOut, denyAll, rejectAll, acceptNecessary; a first-layer label
+     spelled Reject all, Decline All, Refuse all, Necessary only, No thanks, or the French wording
+     Continue without accepting; a preferences component or a route such as /cookie-settings; and,
+     where a consent-management platform renders the banner, the property that decides whether the
+     button appears at all - rejectButtonDisplay, enableDeclineButton, hideDeclineAll, or an
+     acceptNecessaryBtn entry that is present or absent from the vendor's configuration call.
+     Quote what you find and say whether a user standing in front of this prompt can reach it.
+  Where the gap is real, the engineering change has three parts and partial work leaves it open:
+
+  - A refusal control on the SAME layer as the acceptance control, in the same render, reachable in
+    the same number of actions. A refusal that exists only inside the dialog a Manage or Customise
+    button opens is a different journey from a one-click accept, and that difference is what a
+    reviewer is being asked about.
+  - A refusal path that writes the decision, not only one that hides the banner. Whatever the accept
+    control writes - a cookie, a Web Storage key, a session key, a database row, a Consent Mode
+    update, an SDK opt-in - the refusal needs its counterpart, so that a later page load does not
+    read silence as agreement and re-prompt forever.
+  - A close control that does not record acceptance. Where the dismiss cross, the escape key or a
+    click outside the banner calls the same writer as the accept button, dismissing the prompt
+    records a decision the user did not take; make those paths leave the stored value untouched.
+data_categories:
+  - user.device.cookie_id
+  - user.behavior
+fingerprint_spec: file

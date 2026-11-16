@@ -1,0 +1,23 @@
+{
+  "name": "wolfboy",
+  "description": "WolfBoy's Claude Code plugin",
+  "owner": {
+    "name": "INNIT Inc.",
+    "url": "https://github.com/innit-llc"
+  },
+  "plugins": [
+    {
+      "name": "wolfboy",
+      "description": "WolfBoy checks what your code actually does against GDPR, the AI Act and CCPA, and against your own privacy policy; your own Claude Code judges each place it finds",
+      "source": {
+        "source": "npm",
+        "package": "wolfboy",
+        "version": "0.1.0"
+      },
+      "license": "FSL-1.1-ALv2",
+      "homepage": "https://github.com/innit-llc/wolfboy",
+      "repository": "https://github.com/innit-llc/wolfboy",
+      "category": "security"
+    }
+  ]
+}

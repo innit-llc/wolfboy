@@ -1,0 +1,565 @@
+id: eu-retention-002
+pack: eu-retention
+short_name: Retention period whose deletion switch is off by default
+problem_line:
+  text: Retention period with deletion switched off by default
+fix_line: Ship the deletion switch on, or tell operators it is off and what period applies when on;
+  record the period.
+title: Retention period bound in one structure to a deletion switch whose shipped default is off
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(1)(e), the storage-limitation principle, quoted from
+      the Official Journal text at CELEX 32016R0679. Art. 5(1) opens 'Personal data shall be:' and
+      point (e) reads: 'kept in a form which permits identification of data subjects for no longer
+      than is necessary for the purposes for which the personal data are processed'. Three words in
+      that sentence decide what this rule may and may not say. FOR NO LONGER THAN IS NECESSARY - the
+      limit is set by the purpose and not by any number of days, so no configured period is right or
+      wrong on its face and no detector can compute the permitted period from code. This matters
+      more for this rule than for its sibling, because the period this rule matches is FINITE: a
+      90-day window is not a gap, and what the candidate is about is the switch beside it, not the
+      number. KEPT IN A FORM WHICH PERMITS IDENTIFICATION - the duty bites on identifiability rather
+      than on storage as such, so data anonymised past identification is outside the point and
+      pseudonymised data is not. PERSONAL DATA - the subject of the sentence is defined in Art.
+      4(1), carried as entry 4, and whether any particular table is within it is not a question this
+      detector answers. The point carries its own exception in the same sentence: 'personal data may
+      be stored for longer periods insofar as the personal data will be processed solely for
+      archiving purposes in the public interest, scientific or historical research purposes or
+      statistical purposes in accordance with Article 89(1) subject to implementation of the
+      appropriate technical and organisational measures required by this Regulation in order to
+      safeguard the rights and freedoms of the data subject'. That clause is CONJUNCTIVE - every
+      conjunct has to hold before the longer storage is permitted. The processing must be SOLELY for
+      one of three named purposes and the list is closed: archiving in the public interest,
+      scientific or historical research, or statistics. It must be in accordance with Article 89(1),
+      carried as entry 3. And it must be subject to implementation of the appropriate technical and
+      organisational measures. Note that 'in the public interest' attaches to archiving alone and
+      not to research or statistics. Art. 5(2) puts the burden of showing the position on the
+      controller: 'The controller shall be responsible for, and be able to demonstrate compliance
+      with, paragraph 1'. That sentence is why a switch that ships off is worth raising at all
+      rather than dismissing as a deployment matter: the shipped default is the state the controller
+      has to be able to account for. Applies since 2018-05-25, Art. 99(2): 'It shall apply from 25
+      May 2018.'"
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-12
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 39, from the same Official Journal text. Two
+      sentences corroborate Art. 5(1)(e) and neither enacts anything on its own. First: 'This
+      requires, in particular, ensuring that the period for which the personal data are stored is
+      limited to a strict minimum.' Second, and this is the sentence nearest the code shape this
+      rule matches: 'In order to ensure that the personal data are not kept longer than necessary,
+      time limits should be established by the controller for erasure or for a periodic review.'
+      Read what the alternative in that second sentence is between. Both limbs are things a TIME
+      LIMIT is established FOR, so the choice is between two ways of enforcing a limit and never
+      between having a limit and not having one. That reading is what makes this rule a question
+      rather than an answer, and it cuts both ways here. A product that has established a finite
+      time limit has done the first half of what the recital asks. Whether the limit is enforced is
+      the other half, and a switch that ships off is a reason to ask, not a finding that the limit
+      is unenforced - the operator may turn it on, an installer may set it, and the deletion may
+      live somewhere the scan never read. A recital does not enact a duty; it colours Art. 5(1)(e),
+      which is what this rule cites as its test."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-12
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 89(1), from the same Official Journal text: 'Processing
+      for archiving purposes in the public interest, scientific or historical research purposes or
+      statistical purposes, shall be subject to appropriate safeguards, in accordance with this
+      Regulation, for the rights and freedoms of the data subject.' The paragraph then states what
+      those safeguards have to do: 'Those safeguards shall ensure that technical and organisational
+      measures are in place in particular in order to ensure respect for the principle of data
+      minimisation.' It names two measures and the modal verbs are not interchangeable. 'Those
+      measures may include pseudonymisation provided that those purposes can be fulfilled in that
+      manner.' But 'Where those purposes can be fulfilled by further processing which does not
+      permit or no longer permits the identification of data subjects, those purposes shall be
+      fulfilled in that manner.' Pseudonymisation is permissive; giving up the identifying form
+      altogether is MANDATORY wherever the purposes can be met that way. Carried here because the
+      longer-storage exception in Art. 5(1)(e) is expressly conditioned on this paragraph, so
+      quoting the exception without it would overstate how freely the exception can be relied on.
+      Whether a given store is within the archiving, research or statistical purposes, and whether
+      the safeguards are in place, are questions for the adjudicating agent and for the operator;
+      nothing in this detector tests either."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-12
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1), from the same Official Journal text. Personal
+      data 'means any information relating to an identified or identifiable natural person', and the
+      paragraph continues: 'an identifiable natural person is one who can be identified, directly or
+      indirectly, in particular by reference to an identifier such as a name, an identification
+      number, location data, an online identifier or to one or more factors specific to the
+      physical, physiological, genetic, mental, economic, cultural or social identity of that
+      natural person'. Reference only, and carried for a specific reason: this rule matches a
+      CONFIGURATION SHAPE and never a determination that the data behind the setting is within this
+      definition. A schema whose columns are named for a user or an address may be quoted as
+      corroboration in the context of a finding, and a column name is closer to a schema fact than
+      to a product inference, but the definition above is applied by the adjudicating agent or by
+      the person running the scan, and never by a pattern. Nothing in the detector tests this
+      entry."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-12
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 83(5)(a): infringements of 'the basic principles for
+      processing, including conditions for consent, pursuant to Articles 5, 6, 7 and 9' are 'subject
+      to administrative fines up to 20 000 000 EUR, or in the case of an undertaking, up to 4 % of
+      the total worldwide annual turnover of the preceding financial year, whichever is higher'.
+      Quoted from the same Official Journal text. Article 5 is listed expressly by number, so the
+      storage-limitation principle sits in the upper fining band rather than the Art. 83(4) one, and
+      that is what `severity: high` records. The Journal prints no-break spaces inside '20 000 000';
+      they are rendered as ordinary spaces here, as in eu-consent-016 and eu-retention-001. This
+      entry fixes the exposure if a candidate turns out to be a real gap; it says nothing about how
+      likely that is, which is rule_confidence."
+    url: http://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-12
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.27
+detector:
+  engine: builtin-regex
+  vocabulary:
+    deletion_words:
+      - retention
+      - Retention
+      - RETENTION
+      - retain
+      - Retain
+      - RETAIN
+      - delet
+      - Delet
+      - DELET
+      - purge
+      - Purge
+      - PURGE
+      - prune
+      - Prune
+      - PRUNE
+      - cleanup
+      - Cleanup
+      - CLEANUP
+      - cleanUp
+      - clean_up
+      - Clean_Up
+      - CLEAN_UP
+      - clean-up
+      - CLEAN-UP
+      - erase
+      - Erase
+      - ERASE
+      - expunge
+      - Expunge
+      - EXPUNGE
+      - trash
+      - Trash
+      - TRASH
+      - sweep
+      - Sweep
+      - SWEEP
+      - vacuum
+      - Vacuum
+      - VACUUM
+      - garbagecollect
+      - garbage_collect
+      - garbageCollect
+      - GarbageCollect
+      - GARBAGE_COLLECT
+    retention_words:
+      - expir
+      - Expir
+      - EXPIR
+      - lifetime
+      - Lifetime
+      - LIFETIME
+      - maxage
+      - MaxAge
+      - MAXAGE
+      - max_age
+      - Max_Age
+      - MAX_AGE
+      - max-age
+      - MAX-AGE
+    inverted_words:
+      - disabl
+      - Disabl
+      - DISABL
+      - skip
+      - Skip
+      - SKIP
+      - prevent
+      - Prevent
+      - PREVENT
+      - suppress
+      - Suppress
+      - SUPPRESS
+      - protect
+      - Protect
+      - PROTECT
+      - never
+      - Never
+      - NEVER
+    duration_nouns:
+      - day
+      - Day
+      - DAY
+      - hour
+      - Hour
+      - HOUR
+      - minute
+      - Minute
+      - MINUTE
+      - second
+      - Second
+      - SECOND
+      - week
+      - Week
+      - WEEK
+      - month
+      - Month
+      - MONTH
+      - year
+      - Year
+      - YEAR
+      - period
+      - Period
+      - PERIOD
+      - duration
+      - Duration
+      - DURATION
+      - secs
+      - Secs
+      - SECS
+      - msec
+      - Msec
+      - MSEC
+      - millis
+      - Millis
+      - MILLIS
+      - lifetime
+      - Lifetime
+      - LIFETIME
+  match:
+    - ^[^\n]*?(?:(?<![\w$.-])(?![\w$.-]{0,80}(?:(?&inverted_words)|[Dd]o[_-]?[Nn]ot|DO[_-]?NOT))(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))[\w$.-]{1,80}(?![\w$.-])(?:['"\]]{0,2}[
+      \t]*(?:=>|[:=])[
+      \t]*[^,\n]{0,40}?['"`]?(?:false|False|FALSE)['"`]?(?![\w$])|[^\n]{0,80}?(?<![\w$.-])(?:default|Default|DEFAULT|defaultValue|default_value|defaultsTo)(?![\w$.-])[
+      \t]*(?:=>|[:=])[
+      \t]*['"`]?(?:false|False|FALSE)['"`]?(?![\w$]))|['"](?![\w$.-]{0,80}(?:(?&inverted_words)|[Dd]o[_-]?[Nn]ot|DO[_-]?NOT))(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))[\w$.-]{1,80}['"][
+      \t]*,[ \t]*['"`]?(?:false|False|FALSE)['"`]?(?![\w$]))
+    - ^[^\n]*?(?:(?<![\w$.-])(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))(?=[\w$.-]{0,60}(?:(?&duration_nouns)|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age|(?<![A-Z])AGE)(?![a-z])|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time|(?<![A-Z])TIME)(?![a-z])|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?:[Rr]et(?:ention|ain)|RET(?:ENTION|AIN)|[Kk]eep|KEEP)[\w$.-]{0,20}?(?:[Ii]nterval|INTERVAL))))[\w$.-]{1,80}(?![\w$.-])(?:['"\]]{0,2}[
+      \t]*(?:=>|[:=])[
+      \t]*[^,\n]{0,40}?(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.])|[^\n]{0,80}?(?<![\w$.-])(?:default|Default|DEFAULT|defaultValue|default_value|defaultsTo)(?![\w$.-])[
+      \t]*(?:=>|[:=])[
+      \t]*(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.]))|['"](?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))(?=[\w$.-]{0,60}(?:(?&duration_nouns)|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age|(?<![A-Z])AGE)(?![a-z])|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time|(?<![A-Z])TIME)(?![a-z])|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?:[Rr]et(?:ention|ain)|RET(?:ENTION|AIN)|[Kk]eep|KEEP)[\w$.-]{0,20}?(?:[Ii]nterval|INTERVAL))))[\w$.-]{1,80}['"][
+      \t]*,[ \t]*(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.]))
+    - ^[^\n]*?(?:(?<![\w$.-])(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))[\w$.-]{1,80}(?![\w$.-])(?:['"\]]{0,2}[
+      \t]*(?:=>|[:=])[
+      \t]*[^,\n]{0,40}?(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.]))|[^\n]{0,80}?(?<![\w$.-])(?:default|Default|DEFAULT|defaultValue|default_value|defaultsTo)(?![\w$.-])[
+      \t]*(?:=>|[:=])[
+      \t]*(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.])))|['"](?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))[\w$.-]{1,80}['"][
+      \t]*,[
+      \t]*(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.])))
+    - <column[ \t]+name=['"](?:name|key|setting)['"][
+      \t]+value=['"](?=[\w$.-]{0,80}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))(?=[\w$.-]{0,80}(?:(?&duration_nouns)|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age|(?<![A-Z])AGE)(?![a-z])|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time|(?<![A-Z])TIME)(?![a-z])|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?:[Rr]et(?:ention|ain)|RET(?:ENTION|AIN)|[Kk]eep|KEEP)[\w$.-]{0,20}?(?:[Ii]nterval|INTERVAL))))[\w$.-]{1,100}['"]
+    - ^[ \t]*(?:-[
+      \t]+)?['"]?(?=[\w$./-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))[\w$./-]{1,80}['"]?[
+      \t]*:[ \t]*[{\[]?[ \t]*\r?$
+    - ^[
+      \t]*(?![^\n]*(?:(?&inverted_words)|[Dd]o[_-]?[Nn]ot|DO[_-]?NOT))(?=[A-Za-z0-9_]{0,60}(?:(?&deletion_words)|REMOVAL|[Rr]emoval|REMOVE|[Rr]emove))[A-Z][A-Z0-9_]{2,60}\([^\n]{0,700}(?<![\w$.])(?:BooleanUtils\.FALSE|Boolean\.FALSE|FALSE|False|false)(?![\w$])[
+      \t]*\)[ \t]*[,;]?[ \t]*\r?$
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|<%#)
+    - (?<![\w$.-])[\w$.-]{0,60}(?:[Cc]ache|CACHE)[\w$.-]{0,60}(?![\w$.-])['"]?[ \t]*(?:=>|[:=])
+    - (?:(?&inverted_words)|[Dd]o[_-]?[Nn]ot|DO[_-]?NOT|[Dd]on'?t)
+  also_in_file:
+    - (?:^|\n)[^\n]*?(?:(?<![\w$.-])(?![\w$.-]{0,80}(?:(?&inverted_words)|[Dd]o[_-]?[Nn]ot|DO[_-]?NOT))(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))[\w$.-]{1,80}(?![\w$.-])(?:['"\]]{0,2}[
+      \t]*(?:=>|[:=])[
+      \t]*[^,\n]{0,40}?['"`]?(?:false|False|FALSE)['"`]?(?![\w$])|[^\n]{0,80}?(?<![\w$.-])(?:default|Default|DEFAULT|defaultValue|default_value|defaultsTo)(?![\w$.-])[
+      \t]*(?:=>|[:=])[
+      \t]*['"`]?(?:false|False|FALSE)['"`]?(?![\w$]))|['"](?![\w$.-]{0,80}(?:(?&inverted_words)|[Dd]o[_-]?[Nn]ot|DO[_-]?NOT))(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))[\w$.-]{1,80}['"][
+      \t]*,[
+      \t]*['"`]?(?:false|False|FALSE)['"`]?(?![\w$]))[^\n]*(?:\n[^\n]*){0,10}?\n[^\n]*?(?:(?:(?<![\w$.-])(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])|(?&retention_words)|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))))(?=[\w$.-]{0,60}(?:(?&duration_nouns)|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age|(?<![A-Z])AGE)(?![a-z])|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time|(?<![A-Z])TIME)(?![a-z])|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?:[Rr]et(?:ention|ain)|RET(?:ENTION|AIN)|[Kk]eep|KEEP)[\w$.-]{0,20}?(?:[Ii]nterval|INTERVAL))))[\w$.-]{1,80}(?![\w$.-])(?:['"\]]{0,2}[
+      \t]*(?:=>|[:=])[
+      \t]*[^,\n]{0,40}?(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.])|[^\n]{0,80}?(?<![\w$.-])(?:default|Default|DEFAULT|defaultValue|default_value|defaultsTo)(?![\w$.-])[
+      \t]*(?:=>|[:=])[
+      \t]*(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.]))|['"](?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])|(?&retention_words)|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))))(?=[\w$.-]{0,60}(?:(?&duration_nouns)|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age|(?<![A-Z])AGE)(?![a-z])|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time|(?<![A-Z])TIME)(?![a-z])|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?:[Rr]et(?:ention|ain)|RET(?:ENTION|AIN)|[Kk]eep|KEEP)[\w$.-]{0,20}?(?:[Ii]nterval|INTERVAL))))[\w$.-]{1,80}['"][
+      \t]*,[
+      \t]*(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.]))|(?:(?<![\w$.-])(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])|(?&retention_words)|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))))[\w$.-]{1,80}(?![\w$.-])(?:['"\]]{0,2}[
+      \t]*(?:=>|[:=])[
+      \t]*[^,\n]{0,40}?(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.]))|[^\n]{0,80}?(?<![\w$.-])(?:default|Default|DEFAULT|defaultValue|default_value|defaultsTo)(?![\w$.-])[
+      \t]*(?:=>|[:=])[
+      \t]*(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.])))|['"](?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])|(?&retention_words)|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))))[\w$.-]{1,80}['"][
+      \t]*,[
+      \t]*(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.]))))
+    - (?:^|\n)[^\n]*?(?:(?:(?<![\w$.-])(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])|(?&retention_words)|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))))(?=[\w$.-]{0,60}(?:(?&duration_nouns)|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age|(?<![A-Z])AGE)(?![a-z])|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time|(?<![A-Z])TIME)(?![a-z])|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?:[Rr]et(?:ention|ain)|RET(?:ENTION|AIN)|[Kk]eep|KEEP)[\w$.-]{0,20}?(?:[Ii]nterval|INTERVAL))))[\w$.-]{1,80}(?![\w$.-])(?:['"\]]{0,2}[
+      \t]*(?:=>|[:=])[
+      \t]*[^,\n]{0,40}?(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.])|[^\n]{0,80}?(?<![\w$.-])(?:default|Default|DEFAULT|defaultValue|default_value|defaultsTo)(?![\w$.-])[
+      \t]*(?:=>|[:=])[
+      \t]*(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.]))|['"](?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])|(?&retention_words)|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))))(?=[\w$.-]{0,60}(?:(?&duration_nouns)|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age|(?<![A-Z])AGE)(?![a-z])|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time|(?<![A-Z])TIME)(?![a-z])|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?:[Rr]et(?:ention|ain)|RET(?:ENTION|AIN)|[Kk]eep|KEEP)[\w$.-]{0,20}?(?:[Ii]nterval|INTERVAL))))[\w$.-]{1,80}['"][
+      \t]*,[
+      \t]*(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.]))|(?:(?<![\w$.-])(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])|(?&retention_words)|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))))[\w$.-]{1,80}(?![\w$.-])(?:['"\]]{0,2}[
+      \t]*(?:=>|[:=])[
+      \t]*[^,\n]{0,40}?(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.]))|[^\n]{0,80}?(?<![\w$.-])(?:default|Default|DEFAULT|defaultValue|default_value|defaultsTo)(?![\w$.-])[
+      \t]*(?:=>|[:=])[
+      \t]*(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.])))|['"](?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])|(?&retention_words)|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?<![A-Za-z])(?:[Kk]eep|KEEP)|(?<=[a-z])(?:Keep|KEEP))(?![_-]?(?:[Aa]live|ALIVE))))[\w$.-]{1,80}['"][
+      \t]*,[
+      \t]*(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.]))))[^\n]*(?:\n[^\n]*){0,10}?\n[^\n]*?(?:(?<![\w$.-])(?![\w$.-]{0,80}(?:(?&inverted_words)|[Dd]o[_-]?[Nn]ot|DO[_-]?NOT))(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))[\w$.-]{1,80}(?![\w$.-])(?:['"\]]{0,2}[
+      \t]*(?:=>|[:=])[
+      \t]*[^,\n]{0,40}?['"`]?(?:false|False|FALSE)['"`]?(?![\w$])|[^\n]{0,80}?(?<![\w$.-])(?:default|Default|DEFAULT|defaultValue|default_value|defaultsTo)(?![\w$.-])[
+      \t]*(?:=>|[:=])[
+      \t]*['"`]?(?:false|False|FALSE)['"`]?(?![\w$]))|['"](?![\w$.-]{0,80}(?:(?&inverted_words)|[Dd]o[_-]?[Nn]ot|DO[_-]?NOT))(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))[\w$.-]{1,80}['"][
+      \t]*,[ \t]*['"`]?(?:false|False|FALSE)['"`]?(?![\w$]))
+    - (?:^|\n)[^\n]*?(?<![\w$.'"-])['"]?(?:enabled|Enabled|ENABLED|enable|Enable|ENABLE|is_enabled|isEnabled|IS_ENABLED|active|Active|ACTIVE|is_active|isActive|IS_ACTIVE)['"]?[
+      \t]*(?:=>|[:=])[^\n]{0,60}?['"`]?(?:false|False|FALSE)['"`]?(?![\w$])[^\n]*(?:\n[^\n]*){0,10}?\n[^\n]*?(?:(?:(?<![\w$.-])(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))(?=[\w$.-]{0,60}(?:(?&duration_nouns)|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age|(?<![A-Z])AGE)(?![a-z])|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time|(?<![A-Z])TIME)(?![a-z])|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?:[Rr]et(?:ention|ain)|RET(?:ENTION|AIN)|[Kk]eep|KEEP)[\w$.-]{0,20}?(?:[Ii]nterval|INTERVAL))))[\w$.-]{1,80}(?![\w$.-])(?:['"\]]{0,2}[
+      \t]*(?:=>|[:=])[
+      \t]*[^,\n]{0,40}?(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.])|[^\n]{0,80}?(?<![\w$.-])(?:default|Default|DEFAULT|defaultValue|default_value|defaultsTo)(?![\w$.-])[
+      \t]*(?:=>|[:=])[
+      \t]*(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.]))|['"](?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))(?=[\w$.-]{0,60}(?:(?&duration_nouns)|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age|(?<![A-Z])AGE)(?![a-z])|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time|(?<![A-Z])TIME)(?![a-z])|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?:[Rr]et(?:ention|ain)|RET(?:ENTION|AIN)|[Kk]eep|KEEP)[\w$.-]{0,20}?(?:[Ii]nterval|INTERVAL))))[\w$.-]{1,80}['"][
+      \t]*,[
+      \t]*(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.]))|(?:(?<![\w$.-])(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))[\w$.-]{1,80}(?![\w$.-])(?:['"\]]{0,2}[
+      \t]*(?:=>|[:=])[
+      \t]*[^,\n]{0,40}?(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.]))|[^\n]{0,80}?(?<![\w$.-])(?:default|Default|DEFAULT|defaultValue|default_value|defaultsTo)(?![\w$.-])[
+      \t]*(?:=>|[:=])[
+      \t]*(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.])))|['"](?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))[\w$.-]{1,80}['"][
+      \t]*,[
+      \t]*(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.]))))
+    - (?:^|\n)[^\n]*?(?:(?:(?<![\w$.-])(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))(?=[\w$.-]{0,60}(?:(?&duration_nouns)|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age|(?<![A-Z])AGE)(?![a-z])|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time|(?<![A-Z])TIME)(?![a-z])|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?:[Rr]et(?:ention|ain)|RET(?:ENTION|AIN)|[Kk]eep|KEEP)[\w$.-]{0,20}?(?:[Ii]nterval|INTERVAL))))[\w$.-]{1,80}(?![\w$.-])(?:['"\]]{0,2}[
+      \t]*(?:=>|[:=])[
+      \t]*[^,\n]{0,40}?(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.])|[^\n]{0,80}?(?<![\w$.-])(?:default|Default|DEFAULT|defaultValue|default_value|defaultsTo)(?![\w$.-])[
+      \t]*(?:=>|[:=])[
+      \t]*(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.]))|['"](?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))(?=[\w$.-]{0,60}(?:(?&duration_nouns)|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age|(?<![A-Z])AGE)(?![a-z])|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time|(?<![A-Z])TIME)(?![a-z])|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?:[Rr]et(?:ention|ain)|RET(?:ENTION|AIN)|[Kk]eep|KEEP)[\w$.-]{0,20}?(?:[Ii]nterval|INTERVAL))))[\w$.-]{1,80}['"][
+      \t]*,[
+      \t]*(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.]))|(?:(?<![\w$.-])(?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))[\w$.-]{1,80}(?![\w$.-])(?:['"\]]{0,2}[
+      \t]*(?:=>|[:=])[
+      \t]*[^,\n]{0,40}?(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.]))|[^\n]{0,80}?(?<![\w$.-])(?:default|Default|DEFAULT|defaultValue|default_value|defaultsTo)(?![\w$.-])[
+      \t]*(?:=>|[:=])[
+      \t]*(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.])))|['"](?=[\w$.-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))[\w$.-]{1,80}['"][
+      \t]*,[
+      \t]*(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.]))))[^\n]*(?:\n[^\n]*){0,10}?\n[^\n]*?(?<![\w$.'"-])['"]?(?:enabled|Enabled|ENABLED|enable|Enable|ENABLE|is_enabled|isEnabled|IS_ENABLED|active|Active|ACTIVE|is_active|isActive|IS_ACTIVE)['"]?[
+      \t]*(?:=>|[:=])[^\n]{0,60}?['"`]?(?:false|False|FALSE)['"`]?(?![\w$])
+    - <column[ \t]+name=['"](?:name|key|setting)['"][
+      \t]+value=['"](?=[\w$.-]{0,80}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))(?=[\w$.-]{0,80}(?:(?&duration_nouns)|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age|(?<![A-Z])AGE)(?![a-z])|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time|(?<![A-Z])TIME)(?![a-z])|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?:[Rr]et(?:ention|ain)|RET(?:ENTION|AIN)|[Kk]eep|KEEP)[\w$.-]{0,20}?(?:[Ii]nterval|INTERVAL))))[\w$.-]{1,100}['"][\s\S]{0,400}?valueNumeric=['"][1-9][0-9]*['"][\s\S]{0,400}?<column[
+      \t]+name=['"](?:enabled?|is_enabled|active|is_active)['"][ \t]+valueBoolean=['"]false['"]
+    - (['"])(?![\w.]{0,80}(?:(?&inverted_words)))([\w.]{0,40}?(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z]))[\w.]{0,20}?)[._-](?:[Ee]nabled?|ENABLED?|[Aa]ctive|ACTIVE)\1[
+      \t]*,[
+      \t]*['"`]?(?:false|False|FALSE)['"`]?(?![\w$])[\s\S]{0,4000}?(['"])\2[._-][\w.]{1,60}\3[
+      \t]*,[ \t]*[1-9][0-9_]*(?![\w.])
+    - Enable(?![A-Za-z0-9_]{0,60}(?:(?&inverted_words)))([A-Z][A-Za-z0-9]{0,30}?)(?:Deletion|Delete|Cleanup|CleanUp|Purge|Prune|Retention|Trash)[^\n]{0,60}?(?:=>|[:=,(])[
+      \t]*(?:model\.)?(?:new|New[A-Za-z]{0,12}|ptr|Bool)?\(?[
+      \t]*['"`]?(?:false|False|FALSE)['"`]?(?![\w$])[\s\S]{0,3000}?(?<![A-Za-z0-9_])\1(?:Retention|Deletion|Cleanup|Purge|Prune)(?:Days|Hours|Minutes|Seconds|Weeks|Months|Years|Period|Age|Time)(?![A-Za-z])
+    - (?<![A-Za-z0-9_])([A-Z][A-Za-z0-9]{0,30}?)(?:Retention|Deletion|Cleanup|Purge|Prune)(?:Days|Hours|Minutes|Seconds|Weeks|Months|Years|Period|Age|Time)(?![A-Za-z])[\s\S]{0,3000}?Enable(?![A-Za-z0-9_]{0,60}(?:(?&inverted_words)))\1(?:Deletion|Delete|Cleanup|CleanUp|Purge|Prune|Retention|Trash)[^\n]{0,60}?(?:=>|[:=,(])[
+      \t]*(?:model\.)?(?:new|New[A-Za-z]{0,12}|ptr|Bool)?\(?[
+      \t]*['"`]?(?:false|False|FALSE)['"`]?(?![\w$])
+    - (?:^|\n)([
+      \t]*)['"]?(?![\w$./-]{0,80}(?:(?&inverted_words)|[Dd]o[_-]?[Nn]ot|DO[_-]?NOT))(?=[\w$./-]{0,60}(?<![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?:(?&deletion_words)|(?:[Cc]lean|CLEAN)(?![A-Za-z])|(?:[Rr]eap|REAP)(?:e[dr]|ing|s)?(?![A-Za-z])|(?<![A-Za-z])[Gg][Cc](?![A-Za-z])|(?<=[a-z])GC(?![A-Za-z])))[\w$./-]{1,80}['"]?[
+      \t]*:[ \t]*[{\[]?[ \t]*\r?(?=\n)(?=(?:\n\1[ \t][^\n]*){0,12}?\n\1[ \t]+(?![
+      \t])['"]?(?:enabled|Enabled|ENABLED|enable|Enable|ENABLE|is_enabled|isEnabled|active|Active|ACTIVE|default|Default|DEFAULT|defaultValue|default_value|value|Value)['"]?[
+      \t]*(?:=>|[:=])[ \t]*['"`]?(?:false|False|FALSE)['"`]?(?![\w$]))(?=(?:\n\1[
+      \t][^\n]*){0,12}?\n\1[ \t]+(?![
+      \t])['"]?(?<![\w$.-])(?=[\w$.-]{0,60}(?:(?&duration_nouns)|(?:(?<![A-Za-z])[Aa]ge|(?<=[a-z])Age|(?<![A-Z])AGE)(?![a-z])|(?:(?<![A-Za-z])[Tt]ime|(?<=[a-z])Time|(?<![A-Z])TIME)(?![a-z])|(?<![A-Za-z])[Tt][Tt][Ll](?![a-z])|(?<=[a-z])(?:TTL|Ttl)(?![a-z])|(?:(?:[Rr]et(?:ention|ain)|RET(?:ENTION|AIN)|[Kk]eep|KEEP)[\w$.-]{0,20}?(?:[Ii]nterval|INTERVAL))))[\w$.-]{1,80}(?![\w$.-])['"]?[
+      \t]*(?:=>|[:=])[
+      \t]*(?:(?:(?<![\w$.-])|(?<=:-))[1-9][0-9_]*(?![\w.])|(?:'[1-9][0-9]*(?:ms|s|m|h|d|w|y)'|"[1-9][0-9]*(?:ms|s|m|h|d|w|y)"|(?<![\w$.])[1-9][0-9_]*\.(?:second|minute|hour|day|week|month|year)s?(?:\.to_[if])?(?![\w.]))))
+    - "['\"](?![\\w$.-]{0,80}(?:(?&inverted_words)|[Dd]o[_-]?[Nn]ot|DO[_-]?NOT))(?=[\\w$.-]{0,60}(?\
+      <![Cc][Aa][Cc][Hh][Ee][sS]?[_-]{0,2})(?&deletion_words))(?=[\\w$.-]{0,60}(?&duration_nouns))[\
+      \\w$.-]{1,80}['\"][ \\t]*,[ \\t]*['\"`]?[1-9][0-9_]*['\"`]?[ \\t]*[,)]"
+    - (?<![A-Z0-9_])([A-Z][A-Z0-9]{2,20}(?:_[A-Z0-9]{2,20}){0,3})_(?:DAYS|HOURS|MINUTES|SECONDS|WEEKS|MONTHS|YEARS|PERIOD|AGE|TIME|TTL)(?![A-Z0-9_])[^\n]{0,60}\([\s\S]{0,4000}?(?<![A-Z0-9_])(?![A-Z0-9_]{0,60}(?:(?&inverted_words)))[A-Z0-9_]{0,40}(?:REMOVAL|REMOVE|DELET|PURGE|PRUNE|CLEANUP|CLEAN_UP|EXPUNGE)[A-Z0-9_]{0,20}_\1(?![A-Z0-9_])\([^\n]{0,700}(?<![\w$.])(?:BooleanUtils\.FALSE|Boolean\.FALSE|FALSE|false)(?![\w$])[
+      \t]*\)[ \t]*[,;]?[ \t]*(?=\r?\n|$)
+  gate_scope: directory
+  shared_path_exclusions:
+    - prose_documents
+  path_without:
+    - (^|/)openapi[-_]?specs?(/|$)
+context_questions:
+  - "MANDATORY, and the detector did not check it: does a deletion routine keyed to THIS switch
+    exist in the tree, and what does it do when the switch holds its shipped default? This is the
+    first element of the shape and the engine cannot reach it, because the routine lives in a
+    different file from the setting in every evidenced instance and this rule file-scoped
+    corroboration cannot cross that boundary. CORRECTED 2026-09-06, and the sentence above is left
+    exactly as it was written: this rule gate was scoped to the DIRECTORY on that date, so its
+    corroboration does now cross a file boundary, within one directory. It crosses it only to OPEN
+    THE GATE, never to find a deletion routine: the eleven clauses it carries look for a switch
+    bound to a period, and none of them looks for a routine. So this question is unchanged in
+    substance and is still MANDATORY. Search the project for the switch name as a STRING rather than
+    as an identifier - a scheduled task, a cron registration, a celery beat entry, a management
+    command, a queue worker - and read the first few lines of what you find. The shape that makes a
+    candidate concrete is a routine that reads the switch and returns before doing anything, or one
+    that is never registered at all, so that a deletion the product documents does not run in the
+    shipped configuration; in the evidenced instances the switch is read either in a scheduler that
+    returns early or in a task-registration function that skips the registration. Report which of
+    three you found and quote the file and the lines in every case: (a) such a routine exists and
+    no-ops or is not registered at the default, which is the full shape; (b) a routine exists and
+    deletes on some other basis, so the switch is not the only control and the finding is weaker
+    than it looks; (c) no routine reads this switch at all, in which case the switch may be
+    vestigial or the deletion may live outside the repository, and the candidate should be reported
+    as a configuration observation only."
+  - "Which way does this switch run? Read the consumer before anything else, because the corpus
+    contains the exact structure of this finding with the polarity reversed. One photo library ships
+    trash.enabled TRUE beside trash.days 30, and its consumer computes the cutoff as enabled ? days
+    : 0 - so setting that flag to false does not stop the deletion, it empties the trash
+    immediately. The same inversion exists on the period side: a zero on a retention-named key means
+    keep nothing in a forum's keep_old_ip_address_count, disables automated backups in an AWS
+    backupRetentionPeriod, and stops audit rows being written at all in a secrets manager's
+    auditLogsRetentionDays. Find the code that reads the switch and say in one sentence what the
+    false value makes it do: stop deleting, delete immediately, stop recording, stop warning, or
+    disable a feature that was never a deletion. If the reading that the deletion is off does not
+    survive that check, dismiss the candidate and quote the consumer."
+  - "Is the data governed by this structure personal data within GDPR Art. 4(1), and who says so?
+    This detector matched a configuration shape and is not permitted to answer this, under the
+    standing rule that a fact about what data a product handles is asked of the person running the
+    scan or read from their declared documents, and may be corroborated by code but never decided by
+    it. Work from the schema rather than from the setting name: find the table, model or collection
+    the routine deletes from and read its columns. Columns named for a user identifier, an address
+    of the requesting machine, a related person, a name or an email address are corroboration worth
+    quoting verbatim. Corroboration is not the determination. One evidenced instance of this shape
+    is a certificate store, where the answer may well be no, and the rule takes no position on it.
+    Where the ScanProfile or the declared documents answer the question, say which one you used and
+    quote it; where nothing answers it, return needs_human rather than deciding it from column
+    names. If the store holds no personal data, dismiss the candidate here and say what it holds
+    instead."
+  - "Does the period actually belong to this switch? The weakest of this rule six binding relations
+    is proximity: two of them accept a switch and a period within ten lines of each other in the
+    same file, and a settings file can put two unrelated settings on adjacent lines. Name the switch
+    and the period the finding is about, then say whether one governs the other, quoting the code
+    that shows it. Where the finding cites several locations, do this once for the pair the file is
+    actually about and say which of the other locations are the same setting group and which are
+    unrelated settings that happened to be in the same file. ADDED 2026-09-06: where the finding
+    carries corroborated_from, this question is weaker still and it changes shape. The switch and
+    the period that satisfied a binding relation are BOTH IN THE NAMED SIBLING FILE, not here, so
+    nothing in this file was bound to anything; a sibling corroborator is weaker than proximity and
+    never establishes belonging. Open the named file at the named line first, then say whether the
+    line cited here is part of the same setting group as the sibling's pair or an unrelated setting
+    that happens to sit in the same directory. Where it is unrelated, dismiss it and say so; a
+    directory of configuration files is a weaker container than ten lines of one file."
+  - Is the shipped default what a real deployment runs? The finding is about the value written in
+    the source, which is what a new installation gets and nothing more. Check three things and
+    report each. (a) Is there an installer, a seed, a migration, a Docker environment file or a
+    deployment template in this repository that turns the switch on at install time, so that the
+    default in the source is never what anyone runs? (b) Is the switch exposed to the operator at
+    all - an environment variable, an admin setting, a configuration key - or is it internal and
+    effectively fixed? (c) Does the product own documentation tell operators to turn it on, and does
+    it say what happens if they do not? A default that every deployment overrides is a weaker
+    finding than one nobody can see, and a switch the operator cannot reach at all is a stronger
+    one. Nothing in this rule claims to know what any given deployer has configured.
+  - Does the exception in Art. 5(1)(e) apply, and is the condition attached to it met? The point
+    permits storage for longer periods where the data will be processed solely for archiving
+    purposes in the public interest, scientific or historical research purposes or statistical
+    purposes, and only subject to the safeguards in Art. 89(1). Two questions follow and they are
+    separate. First, is this store within one of those purposes on the face of the code and of the
+    product own description - an audit trail kept for accountability is not automatically an
+    archiving purpose in the public interest, and a security log is not automatically a statistical
+    purpose. Second, if it is, are the technical and organisational measures in Art. 89(1) in place?
+    Ask that in the order the paragraph puts them, because its two measures are not equivalent and
+    legal_basis[2] quotes both. Where the purposes CAN be fulfilled by processing that no longer
+    permits identification, Art. 89(1) says they SHALL be fulfilled that way, so start by asking
+    whether the purpose could be served by anonymised or aggregated data; only where it genuinely
+    requires identifiable data does the permissive limb apply. Where the answer to the first is yes
+    and to the second is no, that is a different observation from the one this rule raised and
+    should be reported as such. Where a separate legal retention duty applies instead, quote the
+    instrument and the period rather than naming it.
+evidence_template: "{file}:{line} is a line this finding points at, in a file where this rule bound
+  a retention period to a deletion switch that ships in the off state. WHERE THE FINDING CARRIES
+  corroborated_from, THE CORROBORATION IS NOT IN THIS FILE, AND FOR THIS RULE THAT IS A LARGE
+  DIFFERENCE. Added 2026-09-06: this rule's gate is scoped to the DIRECTORY, so it may be opened by
+  another file whose immediate parent directory is this file's own, and when it is, the finding
+  names that file and that line in locations[].corroborated_from. Read that named line FIRST. EACH
+  BINDING RELATION IS STILL EVALUATED INSIDE ONE FILE - no clause is ever tested against text drawn
+  from two files, so a switch in one file and a period in another can never satisfy a relation
+  between them. What a sibling supplies is the OPENING of the gate and nothing else. BUT THE GATE IS
+  WHERE THIS RULE'S BINDING LIVES: every one of this rule's own match clauses is a single-line
+  anchor - a switch line, a period line, a database-migration name column, a block header, a Java
+  constant - and none of them joins a switch to a period. SO WHERE corroborated_from NAMES A
+  SIBLING, THE BINDING IS IN THAT SIBLING, between the sibling's own switch and the sibling's own
+  period, and THIS FILE CARRIES NO BINDING AT ALL: the cited line is one of those single-line
+  anchors, and being one of them is the whole of what it is. What is established for such a finding
+  is that this DIRECTORY writes retention configuration in which a deletion switch ships off, and
+  that the cited line is a switch or a period written beside it. Whether the two are the same
+  setting group is the reader's first question and the fourth context question asks it. A finding
+  that carries no corroborated_from is unchanged and means exactly what it meant before. WHAT WAS
+  ESTABLISHED, and it is two facts and a relation between them. A key whose own name is drawn from
+  the deletion vocabulary is assigned a default of false. A key drawn from the retention vocabulary
+  and carrying a duration noun is assigned a finite positive value, or a duration literal such as
+  90d. And the two are joined by one of six structural relations: they are within ten lines of each
+  other in the same file and the switch's own name says what is deleted; or they are within ten
+  lines of each other and the switch is a bare enable key while the period's name says what is
+  deleted; or they are three columns of one database-migration insert; or they share a setting-name
+  prefix; or they share a subject noun inside one identifier, as EnableMessageDeletion does with
+  MessageRetentionDays; or they are two members of one block whose own key names the deletion. THE
+  VALUE IN EACH CASE IS BOUND TO THE KEY THAT CARRIES THE WORD, never merely present on the same
+  line, because vocabulary co-occurrence produced a wrong candidate during authoring and the binding
+  is what removed it. WHAT WAS NOT ESTABLISHED, and each of these is a question rather than a
+  caveat. FIRST, no deletion routine was found, because none was looked for: the routine that reads
+  this switch lives in another file in every instance this rule was built from, and file-scoped
+  corroboration cannot cross that boundary. CORRECTED 2026-09-06, and the sentence above is left
+  exactly as it was written: this rule's corroboration does now cross a file boundary, within one
+  directory. It crosses it only to open the gate and never to find a deletion routine, so the FIRST
+  point stands unchanged - no routine was found, because none is looked for. A switch and a period
+  can describe a deletion nobody wrote. The first context question asks for it by name. SECOND,
+  nothing here establishes WHICH WAY the switch runs. The same structure exists in the corpus with
+  the polarity reversed, where the flag ships true and setting it false deletes everything at once;
+  read the consumer. THIRD, the finite period is not a finding on its own and must not be reported
+  as one - a 90-day window is unremarkable, and what the candidate is about is the switch beside it.
+  FOURTH, in the branch that binds two identifiers on a shared subject noun, the period VALUE WAS
+  NOT READ: the assignment reads a named constant, so what was established is that a
+  retention-period setting for that subject exists, not that its default is finite. FIFTH, OPEN THE
+  FILE BEFORE REPORTING ANY SINGLE LOCATION. The corroboration is evaluated once per file and every
+  qualifying line in that file then becomes a location, including lines that took no part in the
+  binding; one corpus file of six thousand lines contributes thirteen locations of which four are
+  API deletion switches unrelated to retention. Say which locations are the pair the file is about.
+  ADDED 2026-09-04: TWO FURTHER RELATIONS ARE ALSO REPORTED. First, a sibling duration value in the
+  same file written as the argument of a preference-reading call - a quoted setting name carrying
+  both the deletion vocabulary and a duration noun, followed by a finite positive number - which is
+  how a client-side settings module states the period and which the six relations above cannot read.
+  Second, a SCREAMING_SNAKE constant pair in a Java configuration enumeration, bound on the subject
+  noun the two constants share, where the switch's shipped default is the LAST positional argument
+  and is a named constant such as BooleanUtils.FALSE rather than the literal false. In that second
+  relation the cited line is the SWITCH constant, its period constant is elsewhere in the same file,
+  and the period VALUE WAS NOT READ."
+remediation_template: |
+  WHAT WAS FOUND. A retention period with a finite default and, bound to it in the same structure, a
+  switch whose shipped default turns the deletion off. The period is not the problem; the pairing is
+  what a reviewer is being asked about. What the detector established is narrower, and it is two
+  facts and a relation between them: a key whose own name comes from the deletion vocabulary carries
+  a default of false in this source, and the retention period is bound to it. Nothing was looked at
+  to see whether a routine reads that key, which way the switch runs, or whether some other path
+  deletes these records on a different basis, so do not report the period as unenforced until the
+  two questions below and context question 1 are answered.
+
+  BEFORE CHANGING ANYTHING, ANSWER TWO QUESTIONS, because the answer decides whether there is
+  anything to change at all.
+
+  1. Does a routine exist that reads this switch and deletes records? Search the project for the
+     switch name as a string. If nothing reads it, the switch is vestigial and the period is
+     documentation; that is a different problem and a different fix.
+  2. Which way does the switch run? Read the consumer. In at least one widely deployed project the
+     identical structure works the other way round, and turning the flag off deletes everything
+     immediately.
+
+  IF THE DELETION IS REAL AND THE SWITCH TURNS IT OFF, there are three honest options and the choice
+  is a product decision rather than an engineering one.
+
+  - Ship the switch on. This is the option that makes the shipped default match the retention period
+    the product already documents. Where turning it on could destroy data an existing operator
+    expects to keep, gate the change behind a release note and a migration that preserves the
+    current value for existing installations while new ones get the enforced default.
+  - Keep the switch off and say so where the operator will see it. A default that ships off is
+    defensible when the operator is the controller and is told, in the setting description and in
+    the deployment documentation, that no deletion runs until they turn it on and what period
+    applies when they do. Silence is what makes this a finding.
+  - Remove the switch. Where the period is not configurable in practice and the deletion should
+    always run, a switch that only ever gets turned on is a liability rather than a feature.
+
+  WHATEVER IS CHOSEN, RECORD THE PERIOD AND ITS BASIS somewhere a reviewer can read: what the store
+  holds, how long it is kept, and why that length is necessary for the purpose. Art. 5(2) puts the
+  burden of being able to demonstrate that position on the controller, and a number in a defaults
+  file is not by itself a demonstration.
+
+  DO NOT treat a deployment override as an answer to this on its own. The finding is about the value
+  a new installation gets. If every deployment turns the switch on through a template, say where the
+  template lives; if some do not, they are running with no deletion at all.
+data_categories:
+  - user.behavior
+  - user.device.ip_address
+  - user.unique_id
+  - user.account
+fingerprint_spec: file

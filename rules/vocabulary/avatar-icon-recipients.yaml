@@ -1,0 +1,74 @@
+lists:
+  avatar_icon_recipients:
+    kind: term
+    purpose: Third-party hosts and endpoint paths that render or deliver a picture on the scanned
+      product's behalf — an avatar keyed by a person's identity, a favicon looked up for a URL the
+      person saved, or an icon set and icon font loaded into the page. For the rules that ask who
+      receives a request the product causes a browser or a server to make, and that therefore need
+      the host written down before anyone can say whether it belongs in the record of processing
+      activities.
+    matching:
+      case_insensitive: true
+    entries:
+      - term: GitLab avatar lookup endpoint, keyed by email address
+        anchors:
+          - api/v4/avatar
+        note: "The usual shape is a server-side request such as `http.Get(baseURL +
+          \"/api/v4/avatar?size=400&email=\" + user.Email)`. THE HOST IS NOT IN THIS ANCHOR AND
+          CANNOT BE: the GitLab base URL is operator-configured, so the receiving instance is
+          gitlab.com for one operator and a self-hosted GitLab for another. The path is the part
+          GitLab owns, and it is what a reader can recognise. WHAT A MATCH DOES NOT ESTABLISH: which
+          instance was configured, and whether the operator of that instance is a third party at all
+          — both are facts about the deployment, which the importing rules ask as context questions.
+          The line is also the one construct in this file where the value in the query string is the
+          person's own email address rather than an opaque key."
+      - term: Favicon lookup services — a third party asked for the icon of a URL the person saved
+        anchors:
+          - f1.allesedv.com
+          - icon.horse
+          - api.faviconkit.com
+          - icons.duckduckgo.com
+          - favicon.yandex.net
+          - s2/favicons
+          - besticon-demo.herokuapp.com
+          - api.webmasterapi.com
+          - eu.mc-api.net
+          - gstatic.com/faviconV2
+        note: "Nine of the ten are the endpoints of the favicon-service table such a product ships, each
+          with `$URL` replaced by the host of the item the person configured:
+          `https://f1.allesedv.com/128/$URL`, `https://icon.horse/icon/$URL`,
+          `https://api.faviconkit.com/$URL/64`, `https://icons.duckduckgo.com/ip2/$URL.ico`,
+          `https://favicon.yandex.net/favicon/$URL`,
+          `https://www.google.com/s2/favicons?domain_url=$URL`,
+          `https://besticon-demo.herokuapp.com/icon?url=$URL`,
+          `https://api.webmasterapi.com/v1/favicon/<key>/$URL` and
+          `https://eu.mc-api.net/v3/server/favicon/$URL`. The tenth is a server-side favicon fetch
+          from `https://t1.gstatic.com/faviconV2?client=SOCIAL&url={url}&size=32`. The Google anchor
+          is the vendor-owned PATH `/s2/favicons` rather than the host, because the same path is
+          served from several Google hosts; the `gstatic.com/faviconV2` anchor keeps host and path
+          together for the same reason in the other direction, since `faviconV2` alone is a bare
+          token and the host prefix varies by digit (`t0`, `t1`, `t2`). WHAT A MATCH DOES NOT
+          ESTABLISH: which service an operator selected — a product may ship one as its default with
+          every other one setting away — and whether the URL handed over identifies a person. It is
+          the URL the person saved, which is disclosed to the icon service together with the
+          browser's own request metadata; whether that is personal data is the importing rule's
+          question and not this list's."
+      - term: Icon, icon-font and icon-set delivery CDNs
+        anchors:
+          - kit.fontawesome.com
+          - cdn.jsdelivr.net
+          - unpkg.com
+          - evatar.io
+        note: "The usual shape is a table of icon sources (`https://kit.fontawesome.com`,
+          `https://cdn.jsdelivr.net/npm/@mdi/font@…`, `https://unpkg.com/simple-icons@v7/icons`) and
+          a script element built at run time: `document.createElement('script')`, then
+          `setAttribute('src', …)` with a template literal building
+          `https://kit.fontawesome.com/${kitKey}.js`, then `document.head.appendChild(…)`.
+          `evatar.io` is a generative-avatar fallback of the same kind. THREE OF THESE FOUR ARE
+          GENERAL-PURPOSE HOSTS. jsDelivr and unpkg serve any published package to anyone, and a
+          Font Awesome kit URL carries the operator's own kit key; what they deliver in this use is
+          an icon font and an icon set. A match therefore names a host the page fetches from, and
+          never what was fetched. That is the whole of what these four anchors say, and it is why
+          they are spliced into `eu-consent-014` as a corroboration branch — the file must already
+          carry a script-placement construct before the host counts for anything — and into the two
+          `recipients` rules whose question is which third parties the tree names at all."

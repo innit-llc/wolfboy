@@ -1,0 +1,337 @@
+id: eu-dsr-003
+pack: eu-dsr
+short_name: Account deletion by overwrite or reassignment
+problem_line:
+  text: Deletion reassigns or overwrites data instead of erasing it
+fix_line: Use no shared live identity as the substitute, decide per table what is deleted, and make
+  the message match the code.
+title: Account deletion re-attributes, nulls or overwrites the person's record instead of erasing it
+  - GDPR Art. 17(1)
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: General Data Protection Regulation, Regulation (EU) 2016/679, Art. 17(1) - the duty this rule
+      tests. 'The data subject shall have the right to obtain from the controller the erasure of
+      personal data concerning him or her without undue delay and the controller shall have the
+      obligation to erase personal data without undue delay where one of the following grounds
+      applies', the first ground being that 'the personal data are no longer necessary in relation
+      to the purposes for which they were collected or otherwise processed'. THE QUESTION THIS RULE
+      PUTS IS WHETHER WHAT THE CODE DOES IS ERASURE. A row that survives with its owning foreign key
+      moved to a shared identity, set to NULL, or overwritten with a placeholder string has not been
+      deleted; whether what remains is still personal data within Art. 4(1) is the reader's question
+      and this detector does not answer it. Applies since 2018-05-25, Art. 99(2).
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 4(5) - what
+      pseudonymisation is, and why re-attribution to a shared identity is a different operation.
+      'pseudonymisation' means the processing of personal data in such a manner that the personal
+      data can no longer be attributed to a specific data subject without the use of additional
+      information, provided that such additional information is kept separately and is subject to
+      technical and organisational measures to ensure that the personal data are not attributed to
+      an identified or identifiable natural person'. Recital 26 adds that 'Personal data which have
+      undergone pseudonymisation, which could be attributed to a natural person by the use of
+      additional information should be considered to be information on an identifiable natural
+      person', and that the Regulation does not apply to 'personal data rendered anonymous in such a
+      manner that the data subject is not or no longer identifiable'. TWO THINGS FOLLOW AND NEITHER
+      IS DECIDED HERE. Pseudonymised data is still personal data, so a route that pseudonymises has
+      not discharged Art. 17(1) by that fact alone. And a shared identity is not per-person
+      pseudonymisation: every erased person's authored content is pointed at ONE row, so what is
+      lost is the mapping, while the content, its timestamps, its revision history and its
+      co-occurrence with other records stay exactly where they were. Whether the remainder still
+      permits identification is Recital 26's reasonably-likely-means test, and it is
+      context_questions[2]. Reference only."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 5(1)(d) - accuracy, which
+      a re-attribution engages directly. Personal data shall be 'accurate and, where necessary, kept
+      up to date; every reasonable step must be taken to ensure that personal data that are
+      inaccurate, having regard to the purposes for which they are processed, are erased or
+      rectified without delay ('accuracy')'. WHERE THE SUBSTITUTE IDENTITY IS ALSO A LIVE IDENTITY,
+      the record now attributes one person's issues, comments, journals and time entries to an
+      account that other people are simultaneously acting under. Reference only for this rule's
+      condition: the duty it establishes is about the accuracy of what is stored, and this detector
+      reports the operation rather than reading the store."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 12(3) - the duty to tell
+      the person what was done, which is what makes a success report a statement rather than a log
+      line. 'The controller shall provide information on action taken on a request under Articles 15
+      to 22 to the data subject without undue delay and in any event within one month of receipt of
+      the request.' A deletion path that reports success has made such a statement; whether the
+      statement matches what the code did is exactly what a reader of this candidate is being asked
+      to check. Reference only: it establishes an information duty, not the erasure duty this rule
+      tests."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.37
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    ownership_columns:
+      - author_id
+      - assigned_to_id
+      - assignee_id
+      - user_id
+      - owner_id
+      - created_by_id
+      - updated_by_id
+      - creator_id
+      - editor_id
+      - customer_id
+      - member_id
+      - account_id
+      - sender_id
+      - reporter_id
+      - requestor_id
+      - submitter_id
+      - uploader_id
+      - actor_id
+      - poster_id
+      - reviewer_id
+    shared_identity_names:
+      - anonymous_user
+      - user.anonymous
+      - anonymous_account
+      - deleted_user
+      - deleted_account
+      - removed_user
+      - former_user
+      - unknown_user
+      - ghost_user
+      - guest_user
+      - sentinel_user
+      - get_sentinel_user
+      - system_user
+      - service_account
+      - placeholder_user
+    identity_fields:
+      - email
+      - email_address
+      - mail
+      - username
+      - user_name
+      - login
+      - full_name
+      - first_name
+      - last_name
+      - display_name
+      - nickname
+      - name
+      - phone
+      - phone_number
+      - address
+      - idnumber
+    placeholder_identity_values:
+      - deleted
+      - anonymous
+      - anonymised
+      - anonymized
+      - redacted
+      - removed
+      - scrambled
+      - noreply
+      - no_reply
+      - donotreply
+      - unknownemail.invalid
+      - example.net
+      - example.com
+      - example.org
+      - example.invalid
+      - invalid.invalid
+      - securerandom
+      - randomstring
+      - uuid(
+      - uuid.v4
+      - uuid4
+      - randomuuid
+      - gen_random_uuid
+      - uuid_generate_v4
+      - newuuid
+      - uuid.new
+  vocabulary_matching:
+    ownership_columns:
+      case_insensitive: true
+      separator_insensitive: true
+    shared_identity_names:
+      case_insensitive: true
+      separator_insensitive: true
+    identity_fields:
+      case_insensitive: true
+      separator_insensitive: true
+    placeholder_identity_values:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?:update_all|update_columns|update_attribute|updateAll|bulk_update|bulkUpdate)[^\n]{0,90}(?&ownership_columns)
+    - (?&ownership_columns)[^\n]{0,90}(?:update_all|update_columns|update_attribute|updateAll|bulk_update|bulkUpdate)
+    - (?<![A-Za-z0-9_])[Uu][Pp][Dd][Aa][Tt][Ee](?![A-Za-z0-9_])[^\n]{0,60}(?<![A-Za-z0-9_])[Ss][Ee][Tt](?![A-Za-z0-9_])[^\n]{0,60}(?&ownership_columns)
+    - (?&shared_identity_names)
+    - "[Oo][Nn][ _.]?[Dd][Ee][Ll][Ee][Tt][Ee][^\\n]{0,40}(?:SET[ _]?NULL|SET[
+      _]?DEFAULT|[Ss]et[Nn]ull|set_null|[Nn]ullify|nullOnDelete)"
+    - dependent[ \t]*:[
+      \t]*:?(?:nullify|restrict_with_error)|->nullOnDelete\(|nullOnDelete\(\)|[Nn]ullify[Oo]n[Dd]elete
+    - (?:models|deletion)\.SET(?:_NULL|_DEFAULT|)\(
+    - \bSET_NULL\b|\bSET_DEFAULT\b|['"]SetNull['"]|['"]SetDefault['"]
+    - (?&identity_fields)[^\n]{0,30}(?<![=!<>])=(?!=)[^\n]{0,90}(?<![A-Za-z0-9])(?&placeholder_identity_values)
+    - remove_references_before_destroy|(?:reassign|re_assign|reattribute|re_attribute|reassociate|re_associate|reparent|orphan)[A-Za-z_]{0,24}
+    - (?<![A-Za-z0-9_])(?&identity_fields)[ \t]*(?::=|:|=(?!=))[ \t]*(?:new[ \t]+|await[
+      \t]+)?(?![A-Za-z_$][A-Za-z0-9_$]{0,40}[ \t]*\.[
+      \t]*(?:toLowerCase|toUpperCase|toLocaleLowerCase|toLocaleUpperCase|trim|normalize|toString|valueOf|strip|lower|upper|casefold|to_lowercase|to_uppercase|clone|to_string|to_owned)[
+      \t]*\()(?!(?:trim|strtoupper|strtolower|mb_strtoupper|mb_strtolower|ucfirst|ucwords|clean_param|htmlspecialchars|core_text::strtolower|strings\.ToLower|strings\.ToUpper|strings\.TrimSpace|strings\.Title)[
+      \t]*\()(?![A-Za-z0-9_$.]{0,40}(?:[Ff]ield|[Cc]olumn)[
+      \t]*\()(?!(?:[A-Za-z0-9_$.]{0,40}\.)?(?:varchar|VARCHAR|char|CHAR|text|TEXT|string|String|STRING|integer|INTEGER|int|INT|bigint|smallint|boolean|Boolean|BOOLEAN|bool|timestamp|TIMESTAMP|datetime|DateTime|date|Date|uuid|UUID|json|JSON|jsonb|decimal|numeric|float|double|blob|enum|Enum|ENUM)[
+      \t]*\()[A-Za-z_$][A-Za-z0-9_$.:]{0,40}[ \t]*\(
+    - (?<![A-Za-z0-9_])[Ss][Ee][Tt][_ ]?(?&identity_fields)[ \t]*\([ \t]*(?:new[ \t]+|await[
+      \t]+)?[A-Za-z_$][A-Za-z0-9_$.:]{0,40}[ \t]*\(
+  match_without:
+    - "[Oo][Nn][ _.]?[Dd][Ee][Ll][Ee][Tt][Ee][ _]?[Cc][Aa][Ss][Cc][Aa][Dd][Ee](?![^\\n]*(?:SET[
+      _]?NULL|[Nn]ullify))"
+  also_in_file:
+    - "[Dd]estroy"
+    - (?:[Dd]elete|[Rr]emove|[Pp]urge|[Ee]rase|[Rr]edact|[Dd]eactivate)[
+      _]?(?:[Aa]ccount|[Uu]ser|[Pp]rofile|[Mm]ember|[Cc]ustomer|[Ss]ubscriber|[Rr]eferences)
+    - "[Oo][Nn][ _.]?[Dd][Ee][Ll][Ee][Tt][Ee]|on_delete|dependent[ \\t]*:"
+    - before_destroy|beforeDestroy|pre_delete|preDelete|pre_destroy|before_delete
+  shared_path_exclusions:
+    - attribution_documents
+context_questions:
+  - "MANDATORY, and the detector did not check it: IS THE ROW THIS OPERATION TOUCHES PERSONAL DATA,
+    AND IS THIS PARTY THE CONTROLLER? A column named `owner_id` points at a person in a ticket
+    tracker and at a tenant, a workspace or a device in other products, and GDPR Art. 4(1) is not
+    satisfied by a column name. Open what the operation touches, quote the table or model and its
+    columns, and say whether they identify a natural person. Where the ScanProfile or the operator's
+    declared documents answer it, quote the one you used; where nothing answers it, return
+    needs_human rather than deciding it from a noun. Then say whether this repository is the
+    controller (Art. 4(7)) or a processor (Art. 4(8)), because a processor owes the assistance duty
+    in Art. 28(3)(e) under a contract rather than Art. 17 directly."
+  - "IS THE SUBSTITUTE IDENTITY SHARED, AND IS IT ALSO A LIVE IDENTITY? This is the question that
+    separates a per-person anonymisation from the construct this rule is named for, and it is
+    answered by reading the substitute, not the deletion path. Find where the substitute row is
+    created and where else it is used. In the tree this rule was built against, one singleton is
+    found or created by `User.anonymous`, is guarded by a validation stating that only one may
+    exist, and is ALSO assigned to `User.current` on every logged-out request - so the identity that
+    now owns an erased person's issues, comments and time entries is the same identity every
+    anonymous visitor acts under. Report: how many rows can hold this identity, who else is assigned
+    it at runtime, and whether any per-person salt, token or mapping is kept anywhere that could
+    re-link the content to the original account."
+  - "WHAT SURVIVES, AND CAN IT STILL SINGLE THE PERSON OUT? Enumerate rather than summarise. For
+    each table the deletion touched, say what is still there: the row itself, its timestamps, its
+    revision or audit history, its foreign keys to other rows, free text the person wrote, file
+    attachments and their filenames, and any external identifier. Recital 26's test is whether
+    identification is possible by means reasonably likely to be used, taking account of all
+    objective factors - so a body of authored content with intact timestamps, intact thread
+    structure and intact co-authorship is the material that test is about, and the answer is not
+    settled by the owning column having changed. Say plainly which of the surviving fields you read
+    and which you could not."
+  - WHAT DOES THE PRODUCT TELL THE PERSON THIS DID? GDPR Art. 12(3) requires information on the
+    action taken to reach the data subject. Find the response, the flash message, the confirmation
+    e-mail or the API status this path returns, and quote it. Then compare it with what the code
+    does. A path that returns a success message for an operation that re-attributes rather than
+    erases is the specific mismatch this rule exists to surface; a path that says plainly that
+    content is retained under an anonymous identity is a different fact and should be reported as
+    such. Also check the privacy policy and the account-deletion help page for the same statement,
+    because the reconciliation pillar reads them.
+  - "IS THIS THE DELETION PATH AT ALL, OR AN ORDINARY REASSIGNMENT? Several matches here are
+    operations a product performs for reasons that have nothing to do with erasure: moving an issue
+    to a new assignee, transferring ownership of a project, re-parenting a record after a merge, or
+    a cascade declaration on a table that holds no personal data. Read what calls the matched line.
+    Say whether it is reachable from an account-deletion, account-closure or data-subject-request
+    route, and if it is not, say what it IS reachable from and stop there. Where the match is a
+    schema or migration declaration with no caller, say which erasure path (if any) that table is
+    on."
+evidence_template: "{file}:{line} carries an operation by which a person's record or their authored
+  content SURVIVES A DELETION with the pointer to the person changed - re-attributed to a shared
+  identity, set to NULL, or overwritten with a placeholder value - in a file that also carries
+  deletion context. THIS IS A CANDIDATE ABOUT WHAT ERASURE MEANS HERE, AND IT IS NOT A DETERMINATION
+  THAT ANY DUTY WAS BREACHED. WHAT WAS ESTABLISHED, and which of the five it is has to be read off
+  the line. A BULK UPDATE OVER AN OWNERSHIP COLUMN - `update_all` beside `author_id`,
+  `assigned_to_id`, `user_id` - establishes that rows change owner in bulk. A SHARED IDENTITY BY
+  NAME - `AnonymousUser`, `User.anonymous`, `guest_user`, `deleted_user` - establishes that such an
+  identity exists in this code; the line does not say that anything is assigned to it, which is why
+  the gate and the context questions carry that half. A NULLIFY-ON-DELETE DECLARATION - `ON DELETE
+  SET NULL`, `dependent: :nullify`, `on_delete=models.SET_NULL` - establishes the erasure semantics
+  of one foreign key, in the schema, where they are binding on every path. AN IDENTITY FIELD
+  OVERWRITTEN WITH A PLACEHOLDER - `self.email = \"#{SecureRandom.uuid}@example.net\"`,
+  `user.username = f\"deleted-{user.pk}\"` - establishes the most: the person's own record is being
+  kept and rewritten rather than removed. THE OPERATION NAMED AS ITSELF -
+  `remove_references_before_destroy`, `reassign`, `reattribute` - establishes that the product has a
+  word for this. WHAT WAS NOT ESTABLISHED, and each is a question rather than a caveat. FIRST, THE
+  ROW WAS NOT READ: nothing here says the record holds personal data within Art. 4(1), and an
+  `owner_id` is a tenant in one product and a person in another. SECOND, THE SUBSTITUTE WAS NOT
+  FOLLOWED: whether the identity is shared, whether it is a singleton, and whether it is also
+  assigned to live unauthenticated visitors are facts about a different file. THIRD, WHAT SURVIVES
+  WAS NOT ENUMERATED - the timestamps, the revision history, the thread structure and the free text
+  are what Recital 26's re-identification test is about, and no pattern here reads them. FOURTH, THE
+  CALLER WAS NOT FOUND: a reassignment is also how an ordinary ownership-transfer feature is
+  written, and a cascade declaration in a migration may sit on a table that holds nothing about a
+  person. FIFTH, NOTHING HERE READ WHAT THE PRODUCT TOLD THE PERSON. The construct this rule is
+  named for is a deletion that REPORTS SUCCESS while the person stays reachable, and the success
+  report is in a controller, a mailer or a serialiser that this line is not in."
+remediation_template: >
+  WHAT WAS FOUND. A deletion path, a schema declaration or a record-rewriting operation under which
+
+  a person's data or their authored content survives the deletion with the pointer to the person
+
+  changed. This is not automatically a defect: retaining authored content under a substitute
+  identity
+
+  is a design decision many products take deliberately, and the question is whether it is written
+
+  down, whether it matches what the person was told, and whether what remains still identifies them.
+
+
+  1. SAY WHICH OPERATION THIS IS, IN ONE SENTENCE, BESIDE THE CODE. Three different things reach
+  this
+     finding and they need different answers: erasure that reassigns to a shared identity, erasure
+     that nulls a foreign key, and erasure that overwrites the person's own record in place. Write
+     the sentence as a comment on the deletion path and in the record of processing activities.
+  2. CHECK THE SUBSTITUTE IDENTITY IS NOT A LIVE ONE. Where erased content is re-attributed to a
+     shared account, find every other use of that account. If the same identity is assigned to
+     logged-out visitors, to a system job, or to an operator, the content is now attributed to a
+     party that is actively doing other things, which is a data-accuracy problem (Art. 5(1)(d)) on
+     top of the erasure question. Where a substitute is genuinely needed, one that cannot be
+     authenticated as and cannot act is the safer shape.
+  3. DECIDE, PER TABLE, BETWEEN DELETING AND KEEPING - AND WRITE THE DECISION DOWN. Enumerate every
+     table the deletion touches. For each: delete the row, or keep it and say what makes the
+     remainder no longer identify the person. "The owning column changed" is not that statement,
+     because timestamps, revision history and free text are unchanged.
+  4. MAKE THE MESSAGE MATCH THE CODE. If content is retained, the deletion confirmation, the privacy
+     policy and the account-settings page should say so, in the same words, before the person
+     confirms. Art. 12(3) requires information on the action taken; a success message describing an
+     erasure that did not happen is the specific failure this finding is looking for.
+
+  IF SOMETHING DOES NEED TO CHANGE, the changes that are usually right, in order:
+
+
+  - PER-PERSON PSEUDONYMISATION INSTEAD OF A SHARED IDENTITY, where the content has to stay. One
+    opaque, non-authenticatable identity per erased account keeps thread structure readable without
+    pointing at one row that also serves live visitors - and it does not, by itself, discharge
+    Art. 17(1), because pseudonymised data is still personal data (Art. 4(5), Recital 26).
+  - CASCADE OR ANONYMISE THE DEPENDENT ROWS DELIBERATELY, rather than inheriting whatever the
+    migration wrote. `ON DELETE SET NULL` on a table that holds free text the person wrote leaves the
+    text; `ON DELETE CASCADE` removes it. Choose per table and record why.
+  - OVERWRITE, DO NOT PREFIX. Where the record is kept and rewritten, a placeholder built from the
+    person's own primary key or username - `deleted-1234`, `user.name.1234@unknown.invalid` - is
+    still a pointer at the account it replaced. Write a value that carries nothing from the original.
+  - REMOVE THE COPIES THE PATH DOES NOT REACH. Search indexes, caches, exports, audit logs and
+    backups usually hold the pre-deletion row; Arts. 17(2) and 19 are about exactly what an erasure
+    has to reach beyond the primary table.
+data_categories:
+  - user.account
+  - user.contact.email
+  - user.name
+  - user.unique_id
+fingerprint_spec: directory

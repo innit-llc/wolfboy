@@ -1,0 +1,896 @@
+lists:
+  email_delivery_recipients:
+    kind: recipient
+    purpose: "Transactional-email and email-service-provider vendors that relay a message OUTWARD TO THE
+      DATA SUBJECT — the person the data is about is the addressee — for the rules that ask who the
+      recipients of the data are: GDPR Art. 30(1)(d)'s field (d) of the record of processing
+      activities, Cal. Civ. Code Sec. 1798.110(a)(4)'s categories of third parties, and the record
+      of provision to a third party under Japan's APPI Art. 29. The relay necessarily learns the
+      envelope recipient address and the subject line whether or not the body carries anything about
+      a person, so the metadata is a disclosure in its own right. Every anchor is a spelling the
+      vendor owns EXCEPT those marked corroborating-only in an entry's note, which a non-vendor
+      library author owns. A match is evidence that the vendor's code or endpoint is named in the
+      tree; it is not, on its own, evidence that anything was disclosed to that vendor, which is
+      what the importing rule's context questions are for."
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: Resend — Plus Five Five, Inc. (trading as Resend)
+        legal_name: Plus Five Five, Inc.
+        anchors:
+          - resend
+          - resend/resend-php
+          - Resend
+          - com.resend
+          - com.resend:resend-java
+          - github.com/resend/resend-go
+          - resend-rs
+          - api.resend.com
+          - resend.com
+        receives: "POST /emails (Send Email) — the ordinary send call every SDK wraps: to — the envelope
+          recipient address, and up to 50 of them; this is the data subject's own email address and
+          it is disclosed on EVERY send, whatever the body says, cc, bcc — further recipient
+          addresses, from — sender address, which for a reply-to-a-person flow is often an
+          operator's named mailbox, subject — the subject line, which routinely carries a person's
+          name or an order/account identifier, html, text — the message body, which routinely
+          carries a person's name, address, order contents and links containing tokens, attachments
+          (content, filename, path) — arbitrary file content and the original filename, headers —
+          arbitrary custom headers the application sets, tags (name, value) — arbitrary
+          application-defined key/value data carried with the message, template.variables —
+          arbitrary key/value merge data, which is where personalisation fields live | Open and
+          click tracking, where the operator enables it: IP address, location, operating system,
+          browser, device, email client, spam complaints | The transport itself (learned whether or
+          not the payload is interesting): the caller's IP address — the sending server's own
+          address, seen on every API call, the envelope recipient address and the subject line,
+          which are metadata rather than body content and are disclosed even where the body carries
+          nothing about a person [NOT established first-hand in the research pass; treat as
+          unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (San
+          Francisco, California) — Plus Five Five, Inc. || CANDIDATE CONTRACTING ENTITIES, as the
+          vendor's own documents named them on the day each document was read: Plus Five Five, Inc.
+          — United States (2261 Market Street #5039, San Francisco, CA 94114) — named as the Data
+          Importer and Processor in the vendor's own agreement; no entity established in the
+          European Economic Area is named at all, so an exporter there is exporting to a United
+          States importer [read from https://resend.com/legal/dpa on 2026-08-25]. || WHICH CANDIDATE
+          APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN
+          ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement or
+          the invoice that operator actually signed; where none of those can be read, the answer for
+          this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "https://resend.com/legal/dpa (retrieved 2026-08-25) names, for \"the
+          contracting entity, named as Data Importer in the DPA's own Exhibit B list of parties\":
+          \"Data Importer: Name: Plus Five Five, Inc. Address: 2261 Market Street #5039 San
+          Francisco, CA 94114 Contact: Resend Security - Signature and date: The parties agree that
+          execution of the Agreement by the Data Importer and the Data Exporter shall constitute
+          execution of these Clauses by both parties on the Effective Date of the Agreement. Role:
+          Processor\" || https://resend.com/legal/dpa (retrieved 2026-08-28) names, for \"the
+          categories of personal data the vendor's own DPA says are transferred\": \"The categories
+          of personal data transferred relate to the sending and receiving of email messages (and
+          which constitutes personal data). At a minimum, this includes metadata, email address and
+          message content. Message content may also include name and other information decided and
+          added by the sender, like attachments. The Customer also has the option to enable
+          open/link tracking and other analytics/tracking of recipient actions, which could include
+          IP address, location, operating system, browser, device, email client and spam
+          complaints.\""
+      - vendor: Twilio SendGrid — Twilio Ireland Limited
+        legal_name: Twilio Ireland Limited
+        anchors:
+          - "@sendgrid/mail"
+          - "@sendgrid/client"
+          - sendgrid
+          - python-http-client
+          - sendgrid-ruby
+          - sendgrid/sendgrid
+          - SendGrid
+          - com.sendgrid
+          - com.sendgrid:sendgrid-java
+          - com.sendgrid:smtpapi-java
+          - com.sendgrid:java-http-client
+          - github.com/sendgrid/sendgrid-go
+          - api.sendgrid.com
+          - smtp.sendgrid.net
+          - sendgrid.net
+          - "@sendgrid/"
+        receives: "POST /v3/mail/send — the ordinary send call: personalizations[].to.email and .to.name —
+          the envelope recipient address and the person's display name, per message,
+          personalizations[].cc, .bcc — further recipient addresses and names,
+          personalizations[].subject — the subject line, personalizations[].dynamic_template_data —
+          arbitrary merge data, which is where personalisation fields live,
+          personalizations[].custom_args — arbitrary application-defined values \"carried along with
+          the email and its activity data\", from.email, reply_to — sender and reply addresses,
+          content[].value — the message body, HTML or plain text, attachments[].content, .filename —
+          arbitrary file content and the original filename | SMTP relay (smtp.sendgrid.net) — the
+          same disclosure by a different transport: the RFC 5322 envelope and headers: recipient
+          address, sender address, subject, the message body and attachments [NOT established
+          first-hand in the research pass; treat as unconfirmed] | Event Webhook / activity feed
+          (delivery, open, click, bounce, spam report): the recipient email address, on every event,
+          the event type and timestamp — including whether and when a person opened a message and
+          which link they clicked, custom_args, echoed back with the event [NOT established
+          first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Ireland (Twilio Ireland
+          Limited, named as EEA Headquarters) and the United States (Twilio Inc.) || CANDIDATE
+          CONTRACTING ENTITIES, as the vendor's own documents named them on the day each document
+          was read: Twilio Ireland Limited — Ireland (78 Sir John Rogerson's Quay, Dublin 2 D02
+          R296) — named as the EEA Headquarters. SendGrid is a Twilio brand and not a separate
+          contracting party in the documents read here [read from
+          https://www.twilio.com/en-us/legal/privacy on 2026-08-25]; Twilio Inc. — United States, as
+          the research pass recorded it — named as the entity complying with the EU-U.S. Data
+          Privacy Framework and its United Kingdom and Swiss extensions [read from
+          https://www.twilio.com/en-us/legal/privacy on 2026-08-25]. || WHICH CANDIDATE APPLIES TO A
+          GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE
+          VENDOR. It is read from the order form, the data processing agreement or the invoice that
+          operator actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: 'https://www.twilio.com/en-us/legal/privacy (retrieved 2026-08-25) names, for
+          "the EEA entity and its address": "EEA Headquarters Twilio Ireland Limited 78 Sir John
+          Rogerson’s Quay, Dublin 2 D02 R296, Ireland" || https://www.twilio.com/en-us/legal/privacy
+          (retrieved 2026-08-25) names, for "the US entity and the transfer framework it certifies
+          under": "Twilio Inc. and our subsidiary Stytch Inc. comply with the EU-U.S. Data Privacy
+          Framework (EU-U.S. DPF), the UK Extension to the EU-U.S. DPF, and the Swiss-U.S. Data
+          Privacy Framework (Swiss-U.S. DPF) as set forth by the U.S. Department of."'
+      - vendor: 'Mailgun — customer-dependent: the notice says Sinch AB (publ) "or any of its subsidiaries
+          ... with which you or your employer have contracted"'
+        anchors:
+          - mailgun.js
+          - mailgun-js
+          - mailgun
+          - mailgun-ruby
+          - mailgun/mailgun-php
+          - com.mailgun
+          - com.mailgun:mailgun-java
+          - github.com/mailgun/mailgun-go
+          - api.mailgun.net
+          - api.eu.mailgun.net
+          - smtp.mailgun.org
+          - mailgun.org
+          - mailgun.net
+        receives: "POST /v3/{domain}/messages — the ordinary send call: to — the envelope recipient address,
+          cc, bcc — further recipient addresses, from — sender address, subject — the subject line,
+          text, html — the message body, attachment — file content and the original filename, o:tag
+          — arbitrary application-defined tags, v:my-var — arbitrary application-defined custom
+          variables carried with the message, recipient-variables — per-recipient merge data for a
+          batch send, which is where personalisation fields live for bulk [NOT established
+          first-hand in the research pass; treat as unconfirmed] | Events API and webhooks
+          (delivered, opened, clicked, bounced, complained, unsubscribed): the recipient email
+          address on every event, client and device facts recorded when a person opens a message or
+          clicks a link, the IP address the open or click came from [NOT established first-hand in
+          the research pass; treat as unconfirmed] | The transport itself (learned whether or not
+          the payload is interesting): the caller's IP address — the sending server's own address,
+          on every API or SMTP connection, the envelope recipient address and the subject line,
+          which are metadata rather than body content [NOT established first-hand in the research
+          pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: customer-dependent within
+          the Sinch group — the notice names Sinch AB (publ) (a Swedish listed company) or any of
+          its subsidiaries, and separately identifies Mailgun Technologies, Inc. as the group's US
+          company || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the
+          day each document was read: Sinch AB (publ) — Sweden, as the research pass recorded it (a
+          Swedish listed company); the quoted passage names the company without stating its country
+          — the notice applies to this company OR ANY OF ITS SUBSIDIARIES with which the customer or
+          the customer's employer have contracted. The notice itself refuses to fix one entity,
+          which is the plainest statement in this whole vocabulary that the answer lives in the
+          operator's contract [read from https://www.mailgun.com/legal/privacy-policy/ on
+          2026-08-25]; Mailgun Technologies, Inc. — United States, as the research pass recorded it
+          — named as the group's United States company, certified under the EU-U.S. Data Privacy
+          Framework [read from https://www.mailgun.com/legal/privacy-policy/ on 2026-08-25]. ||
+          WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT
+          AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing
+          agreement or the invoice that operator actually signed; where none of those can be read,
+          the answer for this field is needs_human. Do not choose a candidate because it is the
+          largest, the nearest, the one with the most familiar name or the only one left. Every date
+          above is the day that document was read and nothing in this repository re-reads it, so
+          this list ages into an INCOMPLETE list and never into a false statement — a candidate may
+          have been renamed, acquired or added since."
+        jurisdiction_source: "https://www.mailgun.com/legal/privacy-policy/ (retrieved 2026-08-25) names,
+          for \"which entity the notice applies to, and that it is customer-dependent\": \"refers to
+          Sinch AB (publ) or any of its subsidiaries, including the Sinch Email brands Mailgun,
+          Mailgun Optimize, Mailjet and Email on Acid with which you or your employer have
+          contracted if you are a Sinch customer\" || https://www.mailgun.com/legal/privacy-policy/
+          (retrieved 2026-08-25) names, for \"the group's US company and the framework it certifies
+          under\": \"Our US company, Mailgun Technologies, Inc., is subject to the investigatory and
+          enforcement powers of the Federal Trade Commission as part of certification under the
+          EU-U.S Data Privacy Framework\""
+      - vendor: Postmark — (see note for the entities the research recorded)
+        anchors:
+          - postmark
+          - postmark-rails
+          - wildbit/postmark-php
+          - com.postmarkapp
+          - com.postmarkapp:postmark
+          - api.postmarkapp.com
+          - postmarkapp.com
+          - smtp.postmarkapp.com
+          - postmarker
+          - github.com/mrz1836/postmark
+        receives: "POST /email (Postmark Email API) — the ordinary send call: From — the sender email
+          address, To — the envelope recipient address, up to 50, comma separated, Cc, Bcc — further
+          recipient addresses, up to 50 each, Subject — the subject line, Tag — an
+          application-defined category carried with the message, HtmlBody, TextBody — the message
+          body, ReplyTo — a reply address, Headers — arbitrary custom headers, TrackOpens,
+          TrackLinks — whether the vendor is instructed to record that the person opened the message
+          and which links they followed, Metadata — arbitrary custom key/value pairs, Attachments —
+          file content, filename and content type, MessageStream — which stream the message is sent
+          on | Bounce, open, click, delivery and spam-complaint webhooks: Recipient — the person's
+          email address, the client and platform the message was opened in, the geographic location
+          derived from the opening IP address [NOT established first-hand in the research pass;
+          treat as unconfirmed] | The transport itself (learned whether or not the payload is
+          interesting): the caller's IP address — the sending server's own address, on every API
+          call, the envelope recipient address and the subject line, which are metadata rather than
+          body content [NOT established first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (the
+          ActiveCampaign group's stated address is Chicago, Illinois) — AC PM LLC is named as the
+          entity for Postmark || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named
+          them on the day each document was read: AC PM LLC — United States; the group's stated
+          address is 1 North Dearborn Street, 5th floor, Chicago, IL 60602, and the document states
+          no state of incorporation for this entity — named as the data controller for Postmark
+          clients. The document does not say which entity is the PROCESSOR under the Postmark
+          agreement for a customer's own end-recipient data, which is the question an Art. 30 row
+          about message delivery turns on [read from https://postmarkapp.com/privacy-policy on
+          2026-08-25]; ActiveCampaign, LLC — United States; the group's stated address is 1 North
+          Dearborn Street, 5th floor, Chicago, IL 60602 — named as the group the policy is written
+          for, with the related bodies corporate below [read from
+          https://postmarkapp.com/privacy-policy on 2026-08-25]; ActiveCampaign Ireland Limited — no
+          country is stated for this entity in the passage the research pass recorded — named as a
+          related body corporate the policy covers; the page does not say it contracts for Postmark
+          [read from https://postmarkapp.com/privacy-policy on 2026-08-25]; ActiveCampaign Australia
+          Pty Limited — no country is stated for this entity in the passage the research pass
+          recorded — named as a related body corporate the policy covers; the page does not say it
+          contracts for Postmark [read from https://postmarkapp.com/privacy-policy on 2026-08-25];
+          ActiveCampaign Brasil LTDA — no country is stated for this entity in the passage the
+          research pass recorded — named as a related body corporate the policy covers; the page
+          does not say it contracts for Postmark [read from https://postmarkapp.com/privacy-policy
+          on 2026-08-25]; ActiveCampaign Costa Rica S.R.L. — no country is stated for this entity in
+          the passage the research pass recorded — named as a related body corporate the policy
+          covers; the page does not say it contracts for Postmark [read from
+          https://postmarkapp.com/privacy-policy on 2026-08-25]. || WHICH CANDIDATE APPLIES TO A
+          GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE
+          VENDOR. It is read from the order form, the data processing agreement or the invoice that
+          operator actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: 'https://postmarkapp.com/privacy-policy (retrieved 2026-08-25) names, for "the
+          entity that is the data controller for Postmark clients": "For Postmark and DMARC Digests
+          current, former, and prospective clients or website visitors, the data controller for
+          purposes of processing information about you is AC PM LLC." ||
+          https://postmarkapp.com/privacy-policy (retrieved 2026-08-25) names, for "the group and
+          the related bodies corporate the policy covers": "ActiveCampaign, LLC (“ ActiveCampaign ”)
+          provides a marketing platform that allows clients to reach their customers, to understand
+          how their customers interact with those communications and other content, and to customize
+          marketing based on their customers’ interests. This Privacy Policy explains how
+          ActiveCampaign, and its related bodies corporate (including AC PM LLC, ActiveCampaign
+          Australia Pty Limited, ActiveCampaign Ireland Limited, ActiveCampaign Brasil LTDA, and
+          ActiveCampaign Costa Rica S.R.L.), collect"'
+      - vendor: Amazon Web Services — Simple Email Service (SES) — Amazon Web Services EMEA SARL
+        legal_name: Amazon Web Services EMEA SARL
+        anchors:
+          - "@aws-sdk/client-ses"
+          - "@aws-sdk/client-sesv2"
+          - aws-sdk
+          - boto3
+          - aws-sdk-ses
+          - aws-sdk-sesv2
+          - AWSSDK.SimpleEmail
+          - AWSSDK.SimpleEmailV2
+          - software.amazon.awssdk
+          - com.amazonaws
+          - software.amazon.awssdk:ses
+          - software.amazon.awssdk:sesv2
+          - com.amazonaws:aws-java-sdk-ses
+          - github.com/aws/aws-sdk-go-v2/service/ses
+          - github.com/aws/aws-sdk-go-v2/service/sesv2
+          - com.amazonaws.services.simpleemail
+          - software.amazon.awssdk.services.ses
+          - software.amazon.awssdk.services.sesv2
+        receives: "SendEmail (SES API v2) — the ordinary send call: Destination.ToAddresses — the envelope
+          recipient addresses, Destination.CcAddresses, Destination.BccAddresses — further recipient
+          addresses, FromEmailAddress, FeedbackForwardingEmailAddress, ReplyToAddresses — sender,
+          bounce and reply addresses, Content.Simple.Subject — the subject line, Content.Simple.Body
+          — the message body, HTML or plain text, Content.Template.TemplateData — arbitrary merge
+          data, which is where personalisation fields live, Content.Raw.Data — a complete raw MIME
+          message, including any attachment, EmailTags (Name, Value) — arbitrary application-defined
+          tags carried with the message, ListManagementOptions.ContactListName, .TopicName — which
+          subscription list and topic the person is on | SES event publishing / configuration sets
+          (send, delivery, open, click, bounce, complaint): the recipient email address on every
+          event, the IP address and user agent recorded when a person opens a message, the link URL
+          a person clicked [NOT established first-hand in the research pass; treat as unconfirmed] |
+          The transport itself (learned whether or not the payload is interesting): the caller's IP
+          address and the calling IAM principal, recorded by CloudTrail where the operator has
+          enabled it, the envelope recipient address and the subject line, which are metadata rather
+          than body content [NOT established first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: region-dependent; no single
+          EEA entity — see legal_entities || CANDIDATE CONTRACTING ENTITIES, as the vendor's own
+          documents named them on the day each document was read: Amazon Web Services EMEA SARL —
+          Luxembourg (38 Avenue John F. Kennedy, L-1855, Luxembourg) — named for a customer whose
+          declared AWS Account Country is any country within Europe, the Middle East or Africa,
+          excluding South Africa. The sending region of the service is a further separate fact: a
+          Luxembourg contracting entity and a us-east-1 sending region are both true at once [read
+          from https://aws.amazon.com/agreement/ on 2026-08-25]; Amazon Web Services, Inc. — United
+          States (410 Terry Avenue North, Seattle, WA 98109-5210) — named for a customer whose
+          declared AWS Account Country is not listed in any other row of the same table [read from
+          https://aws.amazon.com/agreement/ on 2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN
+          OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR.
+          It is read from the order form, the data processing agreement or the invoice that operator
+          actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "https://aws.amazon.com/agreement/ (retrieved 2026-08-25) names, for \"EMEA and
+          default contracting parties by region\": \"Any country within Europe, the Middle East, or
+          Africa (excluding South Africa) ... Amazon Web Services EMEA SARL ... 38 Avenue John F.
+          Kennedy, L-1855, Luxembourg ... Any country/territory that is not listed in this table
+          above. Amazon Web Services, Inc. ... 410 Terry Avenue North, Seattle, WA 98109-5210
+          U.S.A.\" [CARRIED ACROSS, NOT RE-FETCHED. This citation was established by the first
+          recipients bundle's own research and is reproduced from it verbatim; it was not
+          re-retrieved in this pass. The source record, including its own caveats, is the named
+          research file. Source: an internal record, vendor aws_s3, jurisdiction.citations[0]. That
+          record's own note states the table was re-fetched raw on 2026-08-25 (HTTP 200, 530,490
+          bytes) and every fragment confirmed verbatim, and that the author's elisions are marked.
+          Its own unconfirmed_fields entry for aws_s3 nonetheless flags that the FULL per-country
+          table was read via a summarising pass; that caveat travels with this copy.]"
+      - vendor: Mailchimp Transactional (Mandrill) — The Rocket Science Group LLC d/b/a Mailchimp
+        legal_name: The Rocket Science Group LLC
+        anchors:
+          - "@mailchimp/mailchimp_transactional"
+          - mandrill-api
+          - mailchimp-transactional
+          - MailchimpTransactional
+          - mailchimp/transactional
+          - mandrill/mandrill
+          - mandrillapp.com
+          - smtp.mandrillapp.com
+          - mailchimp_transactional
+          - MandrillAdapter
+          - "@mailchimp/"
+        receives: "POST /messages/send (and /messages/send-template) — the ordinary send call:
+          message.to[].email and .name — the envelope recipient address and the person's display
+          name, message.to[].type — whether the person is a to, cc or bcc recipient,
+          message.from_email, .from_name — sender address and display name, message.subject — the
+          subject line, message.html, .text — the message body, message.merge_vars and
+          .global_merge_vars — per-recipient merge data, which is where personalisation fields live,
+          message.metadata and .recipient_metadata — arbitrary application-defined key/value data,
+          per recipient, message.tags — arbitrary application-defined tags, message.attachments —
+          file content, filename and content type, message.track_opens, .track_clicks — whether the
+          vendor is instructed to record that the person opened the message and which links they
+          followed [NOT established first-hand in the research pass; treat as unconfirmed] |
+          Webhooks and the activity log (open, click, bounce, spam, unsub): the recipient email
+          address on every event, the IP address and user agent recorded when a person opens a
+          message, the geographic location derived from that IP address [NOT established first-hand
+          in the research pass; treat as unconfirmed] | The transport itself (learned whether or not
+          the payload is interesting): the caller's IP address — the sending server's own address,
+          on every API or SMTP connection, the envelope recipient address and the subject line,
+          which are metadata rather than body content [NOT established first-hand in the research
+          pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States — The Rocket
+          Science Group LLC d/b/a Mailchimp, within the Intuit group || CANDIDATE CONTRACTING
+          ENTITIES, as the vendor's own documents named them on the day each document was read: The
+          Rocket Science Group LLC d/b/a Mailchimp — United States, as the research pass recorded it
+          — named as the Mailchimp entity complying with the EU-U.S. Data Privacy Framework. The
+          document does not name a contracting entity for the transactional product specifically, as
+          distinct from the marketing product [read from https://www.intuit.com/privacy/statement/
+          on 2026-08-25]; Intuit Inc. — United States, as the research pass recorded it — named
+          alongside it in the same certification sentence, as the group parent [read from
+          https://www.intuit.com/privacy/statement/ on 2026-08-25]. || WHICH CANDIDATE APPLIES TO A
+          GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE
+          VENDOR. It is read from the order form, the data processing agreement or the invoice that
+          operator actually signed; where none of those can be read, the answer for this field is
+          needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: 'https://www.intuit.com/privacy/statement/ (retrieved 2026-08-25) names, for
+          "the Mailchimp entity and the transfer framework it certifies under": "Intuit Inc. and The
+          Rocket Science Group LLC d/b/a Mailchimp complies with the EU-U.S. Data Privacy Framework
+          (EU-U.S. DPF), the UK Extension to the EU-U.S. DPF, and the Swiss-U.S. Data Privacy
+          Framework (Swiss-U.S. DPF) as set forth by the U.S. Department of."'
+      - vendor: "Mailjet — customer-dependent: the terms choose the governing law FROM which of five named
+          entities the agreement was entered into with, and the privacy notice names Sinch AB (publ)
+          or any of its subsidiaries with which you or your employer have contracted"
+        anchors:
+          - node-mailjet
+          - mailjet_rest
+          - mailjet
+          - mailjet/mailjet-apiv3-php
+          - Mailjet.Api
+          - com.mailjet
+          - com.mailjet:mailjet-client
+          - github.com/mailjet/mailjet-apiv3-go
+          - api.mailjet.com
+          - mailjet.com
+        receives: "POST https://api.mailjet.com/v3/send — the Send API v3 call: FromEmail — the sender
+          address, which the vendor requires to be a verified sender, FromName — the sender display
+          name, Subject — the subject line, Text-part and Html-part — the message body in plain text
+          and in HTML, Recipients — a list with at least one Email address, each recipient receiving
+          a separate message that does not show the others, To, Cc and Bcc — recipient addresses
+          usable in place of Recipients, in which case every recipient listed in To sees the others
+          | POST https://api.mailjet.com/v3.1/send — the current Send API: Messages[].From.Email and
+          .Name — sender address and display name, Messages[].To[].Email and .Name — recipient
+          address and display name, Messages[].Cc and .Bcc — further recipient objects of the same
+          shape, Messages[].Subject — the subject line, Messages[].TextPart and .HTMLPart — the
+          message body, Messages[].TemplateID — the identifier of a stored Mailjet template used in
+          place of a body | The transport itself (learned whether or not the payload is
+          interesting): the caller's IP address — the sending server's own address, on every API
+          connection, the envelope recipient address and the subject line, which are metadata rather
+          than body content [NOT established first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: customer-dependent within
+          the Sinch group — the Mailjet terms name Mailjet SAS and Mailjet GmbH (French law, Paris),
+          Mailjet SaaS Ltd (England and Wales, London) and Mailjet Emailing SL (Spain, Madrid) as
+          alternative parties to the same agreement, alongside Mailgun Technologies, Inc. (Texas,
+          San Antonio), and the Sinch Email privacy notice fixes no entity at all || CANDIDATE
+          CONTRACTING ENTITIES, as the vendor's own documents named them on the day each document
+          was read: Mailjet SAS — France, as the research pass recorded it — named in the
+          governing-law clause as an entity the agreement may be entered into with, in which case
+          French law and the exclusive jurisdiction of the Paris courts apply [read from
+          https://www.mailjet.com/legal/terms/ on 2026-09-04]; Mailjet GmbH — France, as the clause
+          selects it; the document does not state this company's own country of registration — named
+          beside Mailjet SAS in the same clause selecting French law and the Paris courts, which is
+          the only thing the document says about it [read from https://www.mailjet.com/legal/terms/
+          on 2026-09-04]; Mailjet SaaS Ltd — England and Wales, as the research pass recorded it —
+          named as an entity the agreement may be entered into with, in which case the law of
+          England and Wales and the exclusive jurisdiction of the London courts apply [read from
+          https://www.mailjet.com/legal/terms/ on 2026-09-04]; Mailjet Emailing SL — Spain, as the
+          research pass recorded it — named as an entity the agreement may be entered into with, in
+          which case Spanish law and the exclusive jurisdiction of the Madrid courts apply [read
+          from https://www.mailjet.com/legal/terms/ on 2026-09-04]; Mailgun Technologies, Inc. —
+          United States, as the research pass recorded it — named as an entity the agreement may be
+          entered into with, in which case the law of the State of Texas and the San Antonio courts
+          apply; the same group's privacy notice separately names it as the group's US company
+          certified under the EU-U.S. Data Privacy Framework [read from
+          https://www.mailjet.com/legal/terms/ on 2026-09-04]; Sinch AB (publ) — Sweden, as the
+          research pass recorded it (a Swedish listed company); the quoted passage names the company
+          without stating its country — the privacy notice applies to this company OR ANY OF ITS
+          SUBSIDIARIES with which the customer or the customer's employer have contracted, and names
+          Mailjet as one of the Sinch Email brands it covers [read from
+          https://www.mailjet.com/legal/privacy-policy/ on 2026-09-04]. || WHICH CANDIDATE APPLIES
+          TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF
+          THE VENDOR. It is read from the order form, the data processing agreement or the invoice
+          that operator actually signed; where none of those can be read, the answer for this field
+          is needs_human. Do not choose a candidate because it is the largest, the nearest, the one
+          with the most familiar name or the only one left. Every date above is the day that
+          document was read and nothing in this repository re-reads it, so this list ages into an
+          INCOMPLETE list and never into a false statement — a candidate may have been renamed,
+          acquired or added since."
+        jurisdiction_source: "https://www.mailjet.com/legal/terms/ (retrieved 2026-09-04) names, for \"the
+          entities an agreement may be entered into with, and the law each choice selects\": \"If
+          the Agreement is entered into with Mailgun Technologies, Inc., or Email on Acid LLC, the
+          Agreement will be governed by and construed in accordance with the laws of the State of
+          Texas, USA ... If the Agreement is entered into with Mailjet SAS or Mailjet GmbH, the
+          Agreement will be governed by and construed in accordance with the laws of France ... If
+          the Agreement is entered into with Mailjet SaaS Ltd, the Agreement will be governed by and
+          construed in accordance with the laws of England and Wales ... If the Agreement is entered
+          into with Mailjet Emailing SL, the Agreement will be governed by and construed in
+          accordance with the laws of Spain\" || https://www.mailjet.com/legal/privacy-policy/
+          (retrieved 2026-09-04) names, for \"which entity the notice applies to, and that it is
+          customer-dependent\": \"refers to Sinch AB (publ) or any of its subsidiaries, including
+          the Sinch Email brands Mailgun, Mailgun Optimize, Mailjet and Email on Acid with which you
+          or your employer have contracted if you are a Sinch customer\" ||
+          https://www.mailjet.com/legal/privacy-policy/ (retrieved 2026-09-04) names, for \"the
+          group's US company and the framework it certifies under\": \"Our US company, Mailgun
+          Technologies, Inc., is subject to the investigatory and enforcement powers of the Federal
+          Trade Commission as part of certification under the EU-U.S Data Privacy Framework\" ||
+          https://sinch.com/legal/terms-and-conditions/other-sinch-terms-conditions/data-processing\
+          -agreement/ (retrieved 2026-09-04) names, for \"which party is the controller and which
+          the processor under the group's data processing agreement\": \"For the purposes of this
+          DPA, the Customer is the controller of the Customer's Personal Data and Sinch is the
+          processor of such data, except when the Customer acts as a processor of the Customer's
+          Personal Data, in which case Sinch is a sub-processor.\""
+      - vendor: Mailchimp Marketing — The Rocket Science Group LLC d/b/a Mailchimp
+        legal_name: The Rocket Science Group LLC
+        anchors:
+          - "@mailchimp/mailchimp_marketing"
+          - mailchimp-marketing
+          - MailchimpMarketing
+          - mailchimp/marketing
+          - mailchimp/mailchimp
+          - api.mailchimp.com
+          - list-manage.com
+          - mailchimp_marketing
+        receives: "The Marketing API root — https://<dc>.api.mailchimp.com/3.0/: the data-centre prefix of
+          the operator's own account, which a client derives from the API key and puts in the
+          hostname, the API key, in the Authorization header — a credential rather than personal
+          data, named here because a hardcoded one is a secrets finding as well as a recipients
+          finding | PUT /3.0/lists/{list_id}/members/{subscriber_hash} — adding or updating an
+          audience member, which is what a signup or ticket-purchase integration calls:
+          email_address — the person's own email address, status — subscribed, unsubscribed, pending
+          or cleaned, which is the consent state the platform records and acts on, merge_fields —
+          the operator-defined merge tags, which is where a name and any other personalisation field
+          lives, tags — arbitrary operator-defined tags, ip_signup and ip_opt — the IP address the
+          person signed up from and the one they confirmed from, language, vip and
+          marketing_permissions — further per-member attributes [NOT established first-hand in the
+          research pass; treat as unconfirmed] | Hosted signup forms — POST to
+          <account>.<dc>.list-manage.com/subscribe/post: u — the operator's own Mailchimp user ID,
+          in a hidden input, id — the audience ID, in a hidden input, whatever the form itself asks
+          the person for, which the operator chooses | The transport itself (learned whether or not
+          the payload is interesting): the caller's IP address — the calling server's own address,
+          on every API request, the audience identifier and the subscriber hash, which are in the
+          request PATH and are therefore in any log that records request URLs [NOT established
+          first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: United States (Georgia) —
+          The Rocket Science Group LLC d/b/a Mailchimp, within the Intuit group; the terms name
+          Georgia law and the company's Atlanta address, and the EEA and UK bodies the group names
+          are Art. 27 Representatives rather than contracting parties || CANDIDATE CONTRACTING
+          ENTITIES, as the vendor's own documents named them on the day each document was read: The
+          Rocket Science Group LLC d/b/a Mailchimp — United States (Georgia), as the research pass
+          recorded it — named in the Standard Terms of Use as the party a user of the service enters
+          a legal agreement with, and in the same document as the manufacturer at an Atlanta,
+          Georgia address whose state law governs disputes [read from
+          https://mailchimp.com/legal/terms/ on 2026-09-04]; Intuit Inc. — United States, as the
+          research pass recorded it — named as the parent entity in the same sentence of the
+          Standard Terms of Use, and named beside the Mailchimp company in the Data Privacy
+          Framework certification [read from https://mailchimp.com/legal/terms/ on 2026-09-04]. ||
+          WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT
+          AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing
+          agreement or the invoice that operator actually signed; where none of those can be read,
+          the answer for this field is needs_human. Do not choose a candidate because it is the
+          largest, the nearest, the one with the most familiar name or the only one left. Every date
+          above is the day that document was read and nothing in this repository re-reads it, so
+          this list ages into an INCOMPLETE list and never into a false statement — a candidate may
+          have been renamed, acquired or added since."
+        jurisdiction_source: "https://mailchimp.com/legal/terms/ (retrieved 2026-09-04) names, for \"the
+          party an operator's agreement is with, and the group it sits in\": \"which will result in
+          a legal agreement between you and The Rocket Science Group LLC d/b/a Mailchimp ...
+          Mailchimp is part of the Intuit group of companies and our parent entity is Intuit Inc.\"
+          || https://mailchimp.com/legal/terms/ (retrieved 2026-09-04) names, for \"the state whose
+          law governs and the address the company gives for itself\": \"The manufacturer is The
+          Rocket Science Group LLC, 405 N Angier Ave. NE Atlanta, Georgia 30308. ... The State of
+          Georgia laws and the Federal Arbitration Act will govern all disputes arising out of or
+          relating to\" || https://mailchimp.com/legal/data-processing-addendum/ (retrieved
+          2026-09-04) names, for \"the role Mailchimp takes for the data an operator puts into the
+          platform\": \"the parties acknowledge and agree that with regard to the processing of
+          Customer Data, Mailchimp processes Customer Data as a processor acting on behalf of
+          Customer (whether itself a controller or a processor on behalf of a third party
+          controller).\" || https://www.intuit.com/privacy/statement/ (retrieved 2026-09-04) names,
+          for \"the transfer framework the Mailchimp entity and its parent certify under\": \"Intuit
+          Inc. and The Rocket Science Group LLC d/b/a Mailchimp complies with the EU-U.S. Data
+          Privacy Framework (EU-U.S. DPF), the UK Extension to the EU-U.S. DPF, and the Swiss-U.S.
+          Data Privacy Framework (Swiss-U.S. DPF) as set forth by the U.S. Department of.\" ||
+          https://www.intuit.com/privacy/statement/ (retrieved 2026-09-04) names, for \"the bodies
+          appointed as Representative in the European Union and the United Kingdom\": \"In the EEA:
+          Intuit Inc., Intuit Limited and Mailchimp have each appointed Intuit Ireland Software
+          Limited as its Representative in the European Union in accordance with Regulation (EU)
+          2016/679\""
+  team_chat_recipients:
+    kind: recipient
+    purpose: "Team-chat and ops-notification webhook vendors that relay a message INWARD TO THE
+      OPERATOR'S OWN STAFF — the person the data is about is the SUBJECT of the message rather than
+      its addressee, and normally does not know it exists — for the same record fields the sibling
+      list serves. THE DIRECTION IS WHY THIS IS A SEPARATE LIST: the audience is the vendor PLUS
+      everyone in the channel it posts to, which for a public channel is unbounded, so a record row
+      naming only the vendor has understated who received the data. Every anchor is a spelling the
+      vendor owns EXCEPT those marked corroborating-only in an entry's note, which a non-vendor
+      library author owns — for Discord that is nearly all of them, because Discord publishes no SDK
+      in any ecosystem. A match is evidence that the vendor's code or endpoint is named in the tree;
+      it is not, on its own, evidence that anything was disclosed."
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - vendor: Slack — Slack Technologies Limited
+        legal_name: Slack Technologies Limited
+        anchors:
+          - "@slack/web-api"
+          - "@slack/bolt"
+          - "@slack/webhook"
+          - "@slack/client"
+          - slack_sdk
+          - slack-bolt
+          - slackclient
+          - com.slack.api
+          - com.slack.api:slack-api-client
+          - com.slack.api:bolt
+          - com.slack.api:slack-api-model
+          - hooks.slack.com
+          - slack.com/api
+          - api.slack.com
+          - files.slack.com
+          - slack-gov.com
+          - slack
+          - slack-ruby-client
+          - slack-notifier
+          - github.com/slack-go/slack
+          - jolicode/slack-php-api
+          - SlackNet
+          - SlackAPI
+          - slack-morphism
+          - slack_elixir
+          - "@slack/"
+        receives: "POST to an Incoming Webhook URL (hooks.slack.com/services/...) — the ops-notification
+          path: text — the message body, which for an ops notification routinely names the person
+          the event is about, quotes their message, or carries their email address or account id,
+          blocks — Block Kit structured content, the same body in richer form, the webhook URL
+          itself, which fixes the workspace and the channel the message lands in | chat.postMessage
+          (Web API) — the same disclosure through the authenticated API: channel — which channel or
+          user the message goes to, text and blocks — the message body, username, icon_emoji,
+          icon_url — the display identity the message is posted under, attachments — legacy
+          structured content [NOT established first-hand in the research pass; treat as unconfirmed]
+          | The transport itself (learned whether or not the payload is interesting): the caller's
+          IP address — the posting server's own address, on every request, the workspace and channel
+          identity, which the URL or the token fixes, the timing of every event the operator
+          notifies on, which is a behavioural record about whoever triggered it [NOT established
+          first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Ireland (Slack Technologies
+          Limited, for workspaces established for customers outside the US and Canada) and the
+          United States (Slack Technologies, LLC, for US and Canadian workspaces) || CANDIDATE
+          CONTRACTING ENTITIES, as the vendor's own documents named them on the day each document
+          was read: Slack Technologies Limited — Ireland (Salesforce Tower, 60 R801, North Dock,
+          Dublin) — named for customers and authorised users who use workspaces established for
+          customers OUTSIDE the United States and Canada. The split is by where the WORKSPACE was
+          established, which is a property of the operator's Slack workspace and not of the sending
+          server [read from https://slack.com/trust/privacy/privacy-policy?geocode=en-us on
+          2026-08-25]; Slack Technologies, LLC — United States (50 Fremont Street, San Francisco,
+          CA, 94105) — named for workspaces established for customers IN the United States and
+          Canada. The same policy states this entity can act as a sub-processor on behalf of the
+          Irish one, so a United States leg can exist behind an Irish contracting entity [read from
+          https://slack.com/trust/privacy/privacy-policy?geocode=en-us on 2026-08-25]. || WHICH
+          CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT
+          AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement
+          or the invoice that operator actually signed; where none of those can be read, the answer
+          for this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "https://slack.com/trust/privacy/privacy-policy?geocode=en-us (retrieved
+          2026-08-25) names, for \"which entity is controller and processor for which workspaces\":
+          \"Different Slack entities provide the Services in different parts of the world. Slack
+          Technologies Limited , an Irish company based in Dublin, Ireland, is the controller of
+          Other Information and a processor of Customer Data relating to\" ||
+          https://slack.com/trust/privacy/privacy-policy?geocode=en-us (retrieved 2026-08-25) names,
+          for \"the two entities' registered addresses\": \"For Customers and Authorized Users who
+          use Workspaces established for Customers in the US and Canada: Slack Technologies, LLC 50
+          Fremont Street San Francisco, CA, 94105 United States or For Customers and Authorized
+          Users who use Workspaces established for Customers outside the US and Canada: Slack
+          Technologies Limited Salesforce Tower 60 R801, North Dock Dublin Ireland\""
+      - vendor: Discord — Discord Netherlands BV
+        legal_name: Discord Netherlands BV
+        anchors:
+          - discord.com/api/webhooks
+          - discordapp.com/api/webhooks
+          - discord.com/api
+          - discord
+          - discord.js
+          - "@discordjs/rest"
+          - discord-api-types
+          - discord.py
+          - discordrb
+          - team-reflex/discord-php
+          - Discord.Net
+          - net.dv8tion
+          - net.dv8tion:JDA
+          - github.com/bwmarrin/discordgo
+          - serenity
+          - twilight-http
+          - nostrum
+        receives: "POST /webhooks/{webhook.id}/{webhook.token} (Execute Webhook) — the ops-notification
+          path: content — the message body, up to 2000 characters, which for an ops notification
+          routinely names the person the event is about or quotes what they wrote, username — the
+          display name the message is posted under, overriding the webhook's default, avatar_url —
+          the avatar the message is posted under, embeds — up to 10 embed objects of structured
+          content, the same body in richer form, files[n] — arbitrary file content, thread_name,
+          applied_tags — which thread the message creates, in a forum channel, the webhook id and
+          token in the URL, which fix the guild and channel the message lands in | The channel
+          itself, after delivery: every member of the guild channel the webhook posts into can read
+          the message, so the audience is not \"Discord\" but \"Discord plus whoever is in that
+          channel\" — and for a PUBLIC guild that is an unbounded audience [NOT established
+          first-hand in the research pass; treat as unconfirmed] | The transport itself (learned
+          whether or not the payload is interesting): the caller's IP address — the posting server's
+          own address, on every request, the guild and channel identity, which the webhook id fixes,
+          the timing of every event the operator notifies on [NOT established first-hand in the
+          research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Netherlands (Discord
+          Netherlands BV, for EEA residents) and the United States (Discord Inc., for everyone else)
+          [JURISDICTION NOT ESTABLISHED in the research pass; treat as unconfirmed — see note] ||
+          CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the day each
+          document was read: Discord Netherlands BV — Netherlands (Schiphol Boulevard 195, 1118 BG
+          Schiphol) — named as data controller for individuals who RESIDE in the European Economic
+          Area. That split is by where the individual resides, which is the shape of an end-user
+          policy rather than of an operator's contract, and the agreement governing an operator
+          posting to a webhook could not be retrieved in this pass [read from
+          https://discord.com/privacy on 2026-08-25]; Discord Inc. — United States (444 De Haro
+          Street #200, San Francisco, CA 94107) — named as data controller for everyone else, on the
+          same end-user split and with the same limitation [read from https://discord.com/privacy on
+          2026-08-25]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT
+          OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order
+          form, the data processing agreement or the invoice that operator actually signed; where
+          none of those can be read, the answer for this field is needs_human. Do not choose a
+          candidate because it is the largest, the nearest, the one with the most familiar name or
+          the only one left. Every date above is the day that document was read and nothing in this
+          repository re-reads it, so this list ages into an INCOMPLETE list and never into a false
+          statement — a candidate may have been renamed, acquired or added since."
+        jurisdiction_source: "https://discord.com/privacy (retrieved 2026-08-25) names, for \"which entity
+          is the data controller, split by where the individual resides\": \"If you reside in the
+          European Economic Area (“EEA”), Discord Netherlands BV is the “data controller” of your
+          personal information collected through the services (as defined in our Terms of Service ).
+          For everyone else, Discord Inc. is the data controller.\" || https://discord.com/privacy
+          (retrieved 2026-08-25) names, for \"the two entities' postal addresses\": \"If you reside
+          in the EEA, you can contact us at: Discord Netherlands BV ATTN: Privacy Policy Schiphol
+          Boulevard 195 1118 BG Schiphol, Netherlands If you reside anywhere else, you can contact
+          us at: Discord Inc. ATTN: Privacy Policy 444 De Haro Street #200 San Francisco, CA 94107,
+          USA.\""
+      - vendor: Microsoft Teams — Microsoft Ireland Operations Limited
+        legal_name: Microsoft Ireland Operations Limited
+        anchors:
+          - "@microsoft/teams-js"
+          - botbuilder
+          - "@microsoft/microsoft-graph-client"
+          - adaptivecards
+          - botbuilder-core
+          - Microsoft.Bot.Builder
+          - Microsoft.Graph
+          - com.microsoft.graph
+          - com.microsoft.bot
+          - com.microsoft.graph:microsoft-graph
+          - com.microsoft.bot:bot-connector
+          - webhook.office.com
+          - outlook.office.com/webhook
+          - logic.azure.com
+          - graph.microsoft.com
+          - pymsteams
+        receives: "POST to an Incoming Webhook / Workflows URL (…webhook.office.com/… or
+          …logic.azure.com/…): the Adaptive Card JSON body — attachments[].content.body[].text is
+          the message text, which for an ops notification routinely names the person the event is
+          about or quotes what they wrote, the webhook URL itself, which fixes the tenant, the team
+          and the channel the message lands in | Microsoft Graph chatMessage POST — the same
+          disclosure through the authenticated Graph API: body.content — the message body, the
+          target team, channel or chat id, the identity the message is posted as [NOT established
+          first-hand in the research pass; treat as unconfirmed] | The transport itself (learned
+          whether or not the payload is interesting): the caller's IP address — the posting server's
+          own address, on every request, the tenant, team and channel identity, which the URL or the
+          token fixes, the timing of every event the operator notifies on [NOT established
+          first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Ireland (Microsoft Ireland
+          Operations Limited) || CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named
+          them on the day each document was read: Microsoft Ireland Operations Limited — Ireland, as
+          the research pass recorded it; the quoted definition names the entity without stating its
+          country — named as the processor established in the European Economic Area, inside the
+          definition of Microsoft's 2021 Standard Contractual Clauses. The addendum covers Microsoft
+          Online Services generally rather than this product specifically [read from
+          https://www.shl.com/assets/documents/microsoft-azure-sccs.pdf on 2026-08-25]; Microsoft
+          Corporation — United States, as the research pass recorded it; the quoted definition names
+          the entity without stating its country — named as the other party to those same clauses,
+          that is, the processor established in a third country [read from
+          https://www.shl.com/assets/documents/microsoft-azure-sccs.pdf on 2026-08-25]. || WHICH
+          CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT OPERATOR'S OWN CONTRACT AND NOT
+          AN ATTRIBUTE OF THE VENDOR. It is read from the order form, the data processing agreement
+          or the invoice that operator actually signed; where none of those can be read, the answer
+          for this field is needs_human. Do not choose a candidate because it is the largest, the
+          nearest, the one with the most familiar name or the only one left. Every date above is the
+          day that document was read and nothing in this repository re-reads it, so this list ages
+          into an INCOMPLETE list and never into a false statement — a candidate may have been
+          renamed, acquired or added since."
+        jurisdiction_source: "https://www.shl.com/assets/documents/microsoft-azure-sccs.pdf (retrieved
+          2026-08-25) names, for \"Microsoft Ireland Operations Limited (EEA) and Microsoft
+          Corporation (US), named together in the SCC definition\": \"\"2021 Standard Contractual
+          Clauses\" means the standard data protection clauses (processor-to-processor module)
+          between Microsoft Ireland Operations Limited and Microsoft Corporation for the transfer of
+          personal data from processors in the EEA to processors established in third countries
+          which do not ensure an adequate level of data protection, as described in Article 46 of
+          the GDPR and approved by the European Commission in decision 2021/914/EC, dated 4 June
+          2021.\" [CARRIED ACROSS, NOT RE-FETCHED. This citation was established by the first
+          recipients bundle's own research and is reproduced from it verbatim; it was not
+          re-retrieved in this pass. The source record, including its own caveats, is the named
+          research file. Source: an internal record, vendor azure_blob, jurisdiction.citations[0].
+          THAT RECORD'S OWN CAVEATS TRAVEL WITH THIS COPY AND ARE NOT SOFTENED HERE: the PDF is
+          Microsoft's own Volume Licensing addendum dated 2022-09-15, it may not be the current
+          version, and THE HOST IS NOT MICROSOFT'S — it is a third party's copy of Microsoft's
+          document. That record's own conclusion is that anyone re-deriving this should fetch the
+          current DPA from microsoft.com and replace the citation.]"
+      - vendor: Telegram — Telegram Messenger Inc.
+        legal_name: Telegram Messenger Inc.
+        anchors:
+          - api.telegram.org
+          - telegram
+          - node-telegram-bot-api
+          - telegraf
+          - grammy
+          - python-telegram-bot
+          - pyTelegramBotAPI
+          - aiogram
+          - telegram-bot-ruby
+          - irazasyed/telegram-bot-sdk
+          - Telegram.Bot
+          - github.com/go-telegram-bot-api/telegram-bot-api
+          - teloxide
+          - org.telegram:telegrambots
+        receives: "POST https://api.telegram.org/bot<token>/sendMessage — the ordinary bot send, which is
+          what a notification destination calls: chat_id — the target chat, group or channel, or a
+          username in the format @username; for a per-person notification this IS that person's own
+          Telegram identity, text — the message text, up to 4096 characters, which is where whatever
+          the product says about a person goes, parse_mode and entities — how the text is formatted,
+          which is how a person's name is turned into a link, link_preview_options — whether
+          Telegram fetches and renders a preview of a URL in the message, which hands the linked
+          address to Telegram's own fetcher, reply_parameters — the message this one replies to,
+          disable_notification and protect_content — delivery options | The transport and the token
+          itself: the caller's IP address, on every Bot API request, the bot token, which sits in
+          the URL PATH of every request rather than in a header, so a hardcoded one is a secrets
+          finding as well as a recipients finding and it appears in any log that records request
+          URLs, the timing of every event the operator notifies on [NOT established first-hand in
+          the research pass; treat as unconfirmed] | The chat itself, and everyone in it: every
+          member of the target group or channel reads the message, and for a public channel that
+          audience is unbounded, the people in that chat are Telegram's OWN data subjects, because
+          Telegram's privacy policy names Telegram as the data controller for the people who use the
+          service [NOT established first-hand in the research pass; treat as unconfirmed]"
+        jurisdiction: "A QUESTION, NOT AN ANSWER. The candidate entities the vendor's own documents name are
+          listed below with the document each was read from and the date it was read; which of them
+          applies to the operator running this scan is a fact about THEIR contract, not about the
+          vendor. The place the research pass recorded for this vendor: Telegram Messenger Inc. is
+          named as BOTH the operator's contracting party and the controller for the people in the
+          chat, and no document read states that company's own country of registration; the same
+          documents place the parent company, Telegram Group Inc, in the British Virgin Islands,
+          place Telegram FZ-LLC in Dubai, and state that Telegram is located outside the EEA ||
+          CANDIDATE CONTRACTING ENTITIES, as the vendor's own documents named them on the day each
+          document was read: Telegram Messenger Inc. — not stated by any document read; the privacy
+          policy says only that Telegram is located outside the EEA, and the same document places
+          the parent company in the British Virgin Islands and a group member in Dubai — named in
+          the Bot Platform Developer Terms as the party an operator building on the Bot API enters a
+          legally binding agreement with, and in the privacy policy as the data controller for the
+          people who use the service [read from https://telegram.org/tos/bot-developers on
+          2026-09-04]. || WHICH CANDIDATE APPLIES TO A GIVEN OPERATOR IS A FACT ABOUT THAT
+          OPERATOR'S OWN CONTRACT AND NOT AN ATTRIBUTE OF THE VENDOR. It is read from the order
+          form, the data processing agreement or the invoice that operator actually signed; where
+          none of those can be read, the answer for this field is needs_human. Do not choose a
+          candidate because it is the largest, the nearest, the one with the most familiar name or
+          the only one left. Every date above is the day that document was read and nothing in this
+          repository re-reads it, so this list ages into an INCOMPLETE list and never into a false
+          statement — a candidate may have been renamed, acquired or added since."
+        jurisdiction_source: 'https://telegram.org/tos/bot-developers (retrieved 2026-09-04) names, for "the
+          party an operator using the Bot API contracts with": "These Terms of Service for Bot
+          Platform Developers ... govern your usage of the Telegram Bot Platform for the purposes of
+          developing services that integrate it or function in connection with it, and constitute a
+          legally binding agreement between you and Telegram Messenger Inc." ||
+          https://telegram.org/privacy (retrieved 2026-09-04) names, for "who the controller is, and
+          that the EEA presence is a representative rather than an establishment": "the Services are
+          provided by Telegram, which for the purposes of applicable data protection legislation is
+          the data controller responsible for your personal data when you use our Services. However,
+          as Telegram is located outside the EEA, we have designated a third party, European Data
+          Protection Office (EDPO), as our representative pursuant to Article 27 of the GDPR." ||
+          https://telegram.org/privacy (retrieved 2026-09-04) names, for "the group companies the
+          data may be shared with, and where each is": "we may share your personal data with: (1)
+          our parent company, Telegram Group Inc, located in the British Virgin Islands, (2)
+          Telegraph Inc., a group member also located in the BVI; and (3) Telegram FZ-LLC, a group
+          member located in Dubai."'

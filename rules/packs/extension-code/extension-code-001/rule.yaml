@@ -1,0 +1,256 @@
+id: extension-code-001
+pack: extension-code
+short_name: Module fetched at start-up that holds people's records
+problem_line:
+  text: External modules run in-process with people's records
+fix_line: List loaded modules and their outbound hosts, hand each hook only what it needs, and pin
+  and verify each artefact.
+title: Operator-named module fetched at boot and run in-process, holding person records and its own egress
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 5(2) - 'The controller shall be responsible for, and be
+      able to demonstrate compliance with, paragraph 1'. This is the provision the construct is
+      hardest against: a controller who cannot say which modules are loaded in a deployment, or what
+      they do with the records handed to them, cannot demonstrate compliance for the processing
+      those modules perform"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 32(1)(b) - the measures a controller and processor
+      implement include, inter alia as appropriate, 'the ability to ensure the ongoing
+      confidentiality, integrity, availability and resilience of processing systems and services'.
+      Cited because the loaded artefact is fetched over the network and runs in the product's own
+      process with its own outbound allowlist
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 25(1) - the controller shall, 'both at the time of the
+      determination of the means for processing and at the time of the processing itself, implement
+      appropriate technical and organisational measures, such as pseudonymisation, which are
+      designed to implement data-protection principles, such as data minimisation, in an effective
+      manner and to integrate the necessary safeguards into the processing'. Cited because what is
+      handed to an extension point is a design decision made once, at the hook site, and a hook
+      handed a whole person record is a different measure from one handed an identifier
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 28(3) - 'Processing by a processor shall be governed by
+      a contract or other legal act under Union or Member State law, that is binding on the
+      processor with regard to the controller and that sets out the subject-matter and duration of
+      the processing, the nature and purpose of the processing, the type of personal data and
+      categories of data subjects and the obligations and rights of the controller.' Reference only,
+      and cited as the QUESTION rather than the answer: whether the author of a loaded module is a
+      processor, or the operator loading it is simply the controller processing through code they
+      chose, is not decided by any line this detector can match"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 17(1) - 'The data subject shall have the right to
+      obtain from the controller the erasure of personal data concerning him or her without undue
+      delay and the controller shall have the obligation to erase personal data without undue delay
+      where one of the following grounds applies'. Reference only, and cited for one specific
+      reason: on the tree this rule was modelled on an extension point sits inside the
+      account-deletion handler, and the hook's return value replaces the form the deletion then acts
+      on. Whether that can change what is erased is a question about the deployed module, not about
+      this line"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: high
+rule_confidence: 0.4
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    wasm_plugin_runtime:
+      - extism
+      - extism-manifest
+      - extism_pdk
+      - wasmtime
+      - wasmer
+      - wasmedge
+      - WasmMetadata
+      - Wasm::Url
+      - Wasm::File
+      - WasmModule
+      - instantiate_module
+    plugin_hook_dispatch:
+      - plugin_hook_before
+      - plugin_hook_after
+      - plugin_hook_notification
+      - run_plugin_hook_before
+      - run_plugin_hook_after
+      - plugin_hook
+      - pluginHook
+      - call_plugin
+      - callPlugin
+      - dispatch_plugin
+      - invoke_plugin
+    plugin_hook_probe:
+      - function_exists
+    plugin_egress_allowlist:
+      - allowed_hosts
+      - allowedHosts
+      - allow_hosts
+      - allowed_paths
+      - allowedPaths
+      - allowed_domains
+    plugin_integrity_bypass:
+      - SKIP_HASH_CHECK
+      - skip_hash_check
+      - skipHashCheck
+      - DANGER_PLUGIN
+      - PLUGIN_SKIP_VERIFY
+      - skip_signature_check
+      - insecure_skip_verify
+    code_install_apis:
+      - installBundle
+      - install_bundle
+      - installPlugin
+      - install_plugin
+      - installModule
+      - install_module
+      - installExtension
+      - install_extension
+      - defineClass
+      - addURL
+  vocabulary_matching:
+    wasm_plugin_runtime:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?:^|[^A-Za-z0-9_])(?&wasm_plugin_runtime)(?:\b|_)
+    - (?:^|[^A-Za-z0-9_])(?&plugin_hook_dispatch)\s*[\(<!]
+    - (?:\.\s*|(?:^|[^A-Za-z0-9_])(?:fn|def|function)\s+)(?&plugin_hook_probe)\s*[\(<!]
+    - (?:(?:^|[^A-Za-z0-9_])(?:plugin|plugins|module|modules|extension|extensions|addon|addons)[A-Za-z0-9_.]{0,20}\s*[.:\[]\s*["']?(?:file|url|uri|source|location|path)\b|(?:^|[^A-Za-z0-9_])(?:plugin|module|extension|addon)_(?:file|url|uri|source|location)\b|(?:^|[^A-Za-z0-9_])(?:file|url|uri|source|location|path|artifact|artefact)\s*(?:=>|[:=])\s*["'][^"'\n]{0,200}\.wasm\b)
+    - (?:^|[^A-Za-z0-9_])(?&plugin_egress_allowlist)\b
+    - (?:^|[^A-Za-z0-9_])(?&plugin_integrity_bypass)
+    - (?:(?:^|[^A-Za-z0-9_])(?:importlib\s*\.\s*)?import_module|(?:^|[^A-Za-z0-9_])__import__|(?:^|[^A-Za-z0-9_])(?:[A-Za-z0-9_]{0,24}\.)?(?:forName|loadClass)|(?:^|[^A-Za-z0-9_])(?:require|createRequire))\s*\(\s*(?!["'`])[A-Za-z_$]
+    - (?:(?:^|[^A-Za-z0-9_])(?&code_install_apis)\s*\(|(?:^|[^A-Za-z0-9_])URLClassLoader|(?:^|[^A-Za-z0-9_])System\s*\.\s*load(?:Library)?\s*\(\s*(?!["'])[A-Za-z_$]|(?:^|[^A-Za-z0-9])(?:codebase|codeBase|CodeBase|CODEBASE|code_base|CODE_BASE)(?:\s*[._-]\s*(?:url|uri|path|dir|base|host|location|URL|URI|PATH|DIR|BASE|HOST)|\s*(?:=>|=|:)\s*["'$])|(?:^|[^A-Za-z0-9_])(?:felix\s*\.\s*)?auto\s*\.\s*start\b|(?:^|[^A-Za-z0-9_])(?:(?:update|bundle)[._-](?:url|uri)|plugin[._-]repo(?:sitory)?)\b)
+    - (?:^|[^A-Za-z0-9_])(?:[A-Za-z0-9_]{0,24}\s*\.\s*)?(?:load(?:Plugin|Extension|Module)|load_(?:plugin|extension|module))\s*\(\s*(?!["'`])[A-Za-z_$]
+context_questions:
+  - "WHICH MODULES ARE LOADED IN THIS DEPLOYMENT? This is the question no pattern can answer and the
+    reason the finding exists. The artefact is fetched at boot from a string in a configuration
+    file, so the source tree contains the mechanism and not the modules. Ask the operator for the
+    deployed list - the configuration entries, the URLs they point at, and who wrote each artefact -
+    and record the answer as evidence. Where the operator cannot produce the list, record THAT: it
+    is the finding, and it is a stronger one than any code reading."
+  - WHAT IS HANDED TO THE HOOK, FIELD BY FIELD? Open each hook call site the match names and quote
+    what is serialised into it. On the tree this rule was modelled on one hook is handed a full
+    person record loaded from the database specifically so the hook can have it. A hook handed an
+    identifier and a hook handed a whole person row are different disclosures with the same dispatch
+    line, and only the call site decides which this is.
+  - "IS ANY HOOK ON A RIGHTS PATH - ERASURE, EXPORT, RECTIFICATION OR CONSENT? Say which handlers
+    the matched call sites sit in. A hook inside an account-deletion handler is materially different
+    from one inside a notification path, and it is worse where the hook's RETURN VALUE replaces the
+    data the handler then acts on: read the dispatch function and say whether it is a 'before' form
+    that can substitute the payload, or an 'after' form that only observes. This is the specific
+    mechanism by which foreign code can change what an erasure request does."
+  - WHERE MAY A LOADED MODULE SEND WHAT IT RECEIVES? Quote the module's own outbound allowlist from
+    the configuration, if one exists. Those hosts are recipients of whatever the hook handed over,
+    they are not in the product's own recipient inventory, and they are set per deployment. Where
+    the allowlist is absent or unbounded, say so.
+  - IS THE ARTEFACT PINNED, AND IS THE PIN ENFORCED IN THIS BUILD? Quote the hash or signature
+    configuration and the code that checks it, including any branch that skips the check - a
+    debug-build condition or an environment variable. An unpinned remote artefact means the code
+    running in the product's process is whatever the configured host serves at the moment of the
+    next restart, which changes what the answers to every question above are worth.
+  - "WHO CONTROLS THE BASE URL THE CODE IS FETCHED FROM, AND IS ANYTHING CHECKED ON THE WAY IN? Two
+    halves, and neither is answered by any line this rule matches. First: find the setting that
+    supplies the base address - a codebase property, an auto-start entry, an update or bundle URL -
+    and say who can set it in a deployment. An operator editing a configuration file, a packager
+    baking a default, and a value taken from a link or a query parameter that a person can be sent
+    are three different situations with the same code behind them. Second: say whether anything
+    verifies what came back before it is installed and started - a checksum, a signature, a pinned
+    hash, a certificate check beyond the transport's own. Where the answer is nothing, record that;
+    where it is a check, quote where it runs and say whether any build or setting can turn it off.
+    This detector reaches the fetch and the install and stops there, so both answers have to come
+    from reading the deployment rather than from this finding."
+  - "WHERE DOES THE NAME OF THE LOADED MODULE COME FROM, WHEN THE CODE DOES NOT SPELL IT? A match
+    may be a loader call whose argument is a variable rather than a literal - a module name, a class
+    name, a path resolved at run time. Follow that variable back and say what supplies it: a
+    configuration key an operator sets, a database row, a request parameter, or a value computed
+    from the product's own constants. Only the first two make this an operator-named module in the
+    sense this rule is about; a name the product itself computes from a fixed set is a different
+    situation, and the line alone does not tell you which of them you are looking at."
+evidence_template: "{file}:{line} matched a construct for loading and running code the product
+  itself does not contain: a WebAssembly plugin runtime being declared or used, an extension point
+  being reached, the configured location the artefact is fetched from, the artefact's own outbound
+  allowlist, or a branch that skips its integrity check. This establishes only that THE EXTENSION
+  POINT EXISTS, WHAT IS HANDED TO IT, AND THAT IT HAS ITS OWN EGRESS. It establishes NOTHING ABOUT
+  WHAT ANY LOADED MODULE DOES WITH THE DATA IT RECEIVES, and no clause of this rule attempts to: the
+  artefact is fetched over the network from a configuration string, so its behaviour is not in this
+  repository and cannot be recovered by reading further here. It does not establish that any module
+  is loaded in a given deployment - that is an operator fact and is context question 1. And a match
+  on a hook dispatch does not by itself say what the hook is handed, which is context question 2 and
+  is written at the call site rather than in the dispatcher. ADDED 2026-09-09, THREE MORE SHAPES
+  THIS RULE NOW REACHES AND WHAT EACH DOES NOT SETTLE. FIRST, A LOADER CALL WHOSE MODULE NAME IS NOT
+  WRITTEN IN THE SOURCE: an import, class-lookup or require call whose argument is a variable rather
+  than a quoted name. That establishes that the module which runs here is decided outside this file
+  and nothing more. IT DOES NOT ESTABLISH THAT THE NAME COMES FROM CONFIGURATION - at the construct
+  this shape was read from, the configuration read is four lines above the loader call, so a
+  line-scoped detector cannot carry it, and where the name comes from is context question 7. SECOND,
+  CODE INSTALLED INTO THE RUNNING PROCESS, or the base address it is fetched from: a bundle
+  installer, a class loader built over URLs, a method that adds a URL to a loader or turns bytes
+  into a class, or a configuration key naming a codebase, auto-start, update or bundle URL. Two
+  things follow that the other clauses of this rule do not carry. ONE, THE FETCHED ARTEFACT MAY BE
+  THE WHOLE APPLICATION RATHER THAN AN ADD-ON: where a launcher installs its own program modules
+  from a configured base address, what arrives is not an optional extension but the software the
+  person is running, and the module inventory context question 1 asks for is then a description of
+  the product itself. TWO, WHETHER ANYTHING VERIFIES WHAT WAS FETCHED IS A QUESTION FOR THE READER
+  AND IS NOT A CLAIM OF THIS FINDING: the absence of a checksum or a signature is not expressible in
+  any pattern here and none of these clauses looks for it, so a match says a fetch-and-install
+  exists and says nothing at all about what is or is not checked on the way in. That is context
+  question 6. Nor does a match separate an install from a remote address from an install from a path
+  inside the artefact itself: at the construct this clause was read from the location is on a
+  different line from the call, so both reach this rule and only the reader can tell them apart.
+  THIRD, A PLUGIN MANAGER'S LOAD VERB: a call named for the object it loads - a plugin, an
+  extension, a module - taking an argument that is a variable rather than a quoted name. This is the
+  same question as the first shape asked one level up, at the manager rather than at the language:
+  the code that runs is chosen by something outside this file. WHAT IT DOES NOT ESTABLISH IS WHERE
+  THE ARTEFACT CAME FROM. Loading is not fetching, and this shape says nothing about whether the
+  loaded module arrived over a network, shipped inside the artefact, or was placed on the machine by
+  an administrator; those are three different situations with the same line, and telling them apart
+  means reading the manager's own search path, which is what context questions 1 and 6 ask for. Nor
+  does it say whether the person who named the module and the person running the process are the
+  same."
+remediation_template: |
+  Produce the module inventory first. For each deployment: which artefacts are configured, what URL
+  each is fetched from, who wrote it, and what it does with what it is handed. Everything else in
+  this finding depends on that list existing, and the list lives with the operator, not in the code.
+  Record the loaded modules' own outbound hosts as recipients. A module's allowlist is a recipient
+  list the product's Art. 30(1)(d) record almost certainly does not carry, because it is set per
+  deployment and lives in a different file.
+  Look hardest at the hooks on rights paths. A `before`-style hook in an account-deletion,
+  export or rectification handler can substitute the data the handler then acts on. Where a hook
+  there is not needed, remove it; where it is, make it observe-only, or validate the returned
+  payload against the one that was sent.
+  Reduce what is handed over. A hook that receives a whole person record when it needs an
+  identifier is the Art. 25(1) question in its plainest form, and the fix is at the call site.
+  Enforce the pin. Require a hash or signature for every configured artefact, and make the
+  bypass unreachable in a production build rather than conditional on a build flag or an
+  environment variable.
+data_categories:
+  - user.name
+  - user.contact.email
+  - user.unique_id
+  - user.behavior
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 1
+      class: existence
+    - question: 2
+      class: enumeration
+      item: hook call site
+      item_source: reading
+    - question: 3
+      class: enumeration
+      item: hook handler
+      item_source: reading

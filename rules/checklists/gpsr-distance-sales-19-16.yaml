@@ -1,0 +1,1025 @@
+checklist_id: gpsr-distance-sales-19-16
+title: GPSR Article 19 and Article 16 - the information a distance-sales offer must show, and the EU
+  responsible person
+law: Regulation (EU) 2023/988 (General Product Safety Regulation)
+source_url: https://publications.europa.eu/resource/celex/02023R0988-20260529
+checked_at: 2026-09-07
+scope_note: "**Scope declaration.** This checklist covers two of the three articles of the General
+  Product Safety Regulation that this pack reaches: **Article 19**, the information a distance-sales
+  offer must clearly and visibly indicate - **four limbs in the Official Journal text, (a) to (d),
+  which this checklist splits into ten items because several of the limbs name more than one data
+  point that can be answered separately**; and **Article 16**, the requirement that an economic
+  operator established in the Union be responsible for a product placed on the market, together with
+  the checks that person must perform and the details that must be indicated on the product. It says
+  nothing about whether the product is safe, which is Chapter II, and nothing about the
+  manufacturer's own Article 9 duties. **Article 22 is not covered, and that is a scope limit rather
+  than a judgement.** Article 22 is the whole of Chapter IV and it binds the **provider of an online
+  marketplace** - an intermediary whose online interface lets consumers conclude distance contracts
+  with traders - and not the economic operator whose product is listed there, which is what this
+  product's typical user is. Its paragraphs 9 and 10 mirror Article 19's four limbs, but as a duty
+  to design an interface that enables a trader to supply the information and to ensure it is
+  displayed, which is a different duty on a different person. The owner scoped this checklist to
+  Articles 19 and 16 on 2026-08-06. **Whether row 25 can be called covered while Article 22 is
+  unbuilt is not decided here and is not this file's decision to take**; it is recorded so that no
+  later reader has to reconstruct whether the omission was noticed. Nothing in this file changes row
+  25's Status word. **The Regulation has applied in full since 13 December 2024** - Article 52,
+  quoted in the gate - **and Article 52 defers no article at all.** There is no phased application,
+  no article with a date of its own and no equivalent of the Cyber Resilience Act's staged Article
+  71. Every finding this checklist produces is therefore a statement about a **present** obligation.
+  **The preparation wording used by the Cyber Resilience Act checklists in this repository must not
+  be reused here**: those rows are worded as preparation because their duties are deferred to 11
+  December 2027, and copying that phrasing onto a GPSR finding would be wrong by twenty months.
+  Article 51, the one transitional provision, protects units already **placed on the market** before
+  13 December 2024 - the first making available, Article 3(7) - and is close to inert for a
+  continuously published online offer, because a listing that is available today is being made
+  available today. **The gate has two tiers, and the second tier does not switch this checklist
+  off.** Tier 1 asks whether the GPSR reaches the product at all: whether the thing supplied is a
+  'product' within Article 3(1), whether it is supplied in the course of a commercial activity
+  within Article 3(6), whether the offer is targeted at consumers in the Union within Article 4, and
+  whether any of Article 2(2)'s nine exclusions applies. **Every one of those is a fact about the
+  product and the business, so every one is asked of the person running the scan and none is
+  inferred from source vocabulary.** Tier 2 asks whether the product is subject to specific
+  requirements imposed by **Union harmonisation legislation** as defined in Article 3(27). A `yes`
+  there switches off the three Article 16 items and **leaves all ten Article 19 items standing.**
+  **The structural reason for that asymmetry is the single most consequential finding behind this
+  checklist, and it is in the operative text.** Article 2(1)(b) disapplies \"Chapter IIa, Chapter
+  III, Section 1, Chapters V and VII and Chapters IX to XI\" - the words are quoted from the
+  consolidated text 02023R0988-20260529, which carries the \"Chapter IIa,\" that Regulation (EU)
+  2024/2748 inserted with effect from 29 May 2026. **Article 16 sits in Chapter III Section 1 and is
+  disapplied. Article 19 sits in Chapter III Section 2, which Article 2(1)(b) does not name, and is
+  not.** Article 19(b)'s own drafting corroborates the reading: it names the responsible person
+  \"within the meaning of Article 16(1) of this Regulation **or** Article 4(1) of Regulation (EU)
+  2019/1020\", and that second alternative exists precisely for the case where GPSR Article 16 is
+  switched off while the Regulation (EU) 2019/1020 duty applies of its own force. If Article 19 fell
+  away whenever Article 16 did, the alternative would be dead letter. **The weakness in that reading
+  is recorded rather than hidden, and so is what cuts the other way.** Recital 8 lists the
+  provisions the legislator described as complementary to Union harmonisation legislation - the
+  obligations of providers of online marketplaces, the obligations of economic operators in the
+  event of accidents, the right to information and to a remedy, and product safety recalls - and
+  **Article 19 is not among the named examples**, while the same recital says only that \"most of\"
+  the obligations of economic operators should not apply. The operative text governs and the answer
+  is that Article 19 survives; the recital's silence is a weakness in that answer. **What that same
+  list does contain cuts in favour of the reading, and omitting it understated the case.** \"The
+  obligations of economic operators in the event of accidents\" is Article 20, whose own heading is
+  \"Obligations of economic operators in the case of accidents related to safety of products\" -
+  **and Article 20 sits in Chapter III Section 2, the same Section as Article 19**. So the
+  legislator did name a Section 2 article among the complementary provisions, which is hard to
+  square with a reading on which Article 2(1)(b) sweeps Section 2 away. One caution against
+  over-reading it: the closing sentence of recital 8 also says \"Article 20\", but that is **Article
+  20 of Regulation (EU) 2019/1020**, which is about RAPEX, and not GPSR Article 20. A second:
+  **Section 2 carries no descriptive title in the Official Journal** - the text reads \"SECTION 2\"
+  and then \"Article 19\" - so any title given for it here or elsewhere is a description and never a
+  quotation. The Commission resolves the doubt as far as anything short of a court can: its
+  Guidelines of 21 November 2025 (Commission notice, Guidelines on the application of the EU general
+  product safety legislative framework by businesses, OJ C/2025/6233, CELEX 52025XC06233) list,
+  among the chapters that apply to products already subject to EU harmonisation legislation,
+  \"Chapter III Section 2 - economic operator obligations regarding distance sales, reporting on
+  accidents related to products, and the provisions on information in electronic format\", and open
+  the list of what does not apply with \"Chapter III, Section 1 (the part of the obligations for
+  economic operators not mentioned in the paragraph above)\". **Quote the whole of that entry rather
+  than its first clause, because the rest of it is the part that helps.** An earlier version of this
+  file cut the sentence after \"distance sales\"; the words it dropped name the other two articles
+  of Chapter III Section 2 - Article 20 on accidents and Article 21 on information in electronic
+  format - so the Commission is not listing Article 19 alone but the **whole Section**, which is a
+  considerably stronger statement of the same position and matches Article 2(1)(b)'s own drafting,
+  which also names Sections rather than articles. Both passages were re-fetched from EUR-Lex and
+  matched word for word on 2026-08-06. **That is a stated Commission position and not the law**, and
+  it agrees with the text. One further limit survives either way: even where Article 19 is not
+  disapplied by Article 2(1)(b), it remains subject to Article 2(1)'s first subparagraph, so a
+  provision with the same objective in the sector instrument can still displace it, and that
+  question is asked of the user rather than assumed away. **Whether the GPSR reaches standalone
+  software is the hardest question on this row, and it is carried here at exactly the strength the
+  sources support - no more and no less.** The Regulation's own text **never says standalone
+  software is a product and never says it is not.** The word \"software\" occurs six times in it,
+  and **in every place where it names software as a thing, that thing is either an online interface
+  or a component**: Article 3(15) defines 'online interface' as \"any software, including a website,
+  part of a website or an application, including mobile applications\", and Article 15(3)(a) and
+  Article 15(5) speak of \"any software embedded into the product\". The other three occurrences do
+  not treat software as the product either - recital 25 and Article 37(3) are about software
+  **updates**, as a source of substantial modification and as a recall remedy, and Article 41 is
+  about the Safety Gate Portal's own interface. **Nowhere does the Regulation treat software as
+  itself the product.** That is silence, not exclusion: Article 3(1) says \"any item\" with no
+  tangibility qualifier, and Article 2(2)'s nine exclusions name no intangible category. **The claim
+  that the GPSR reaches standalone software therefore rests on a Commission position, not on the
+  Regulation.** The Commission's Frequently Asked Questions document states at section 2.9 that
+  \"The GPSR obligations apply to standalone software being as a 'product' and as it does not fall
+  into the categories of exceptions enumerated in Article 2 GPSR\", and its Guidelines state at
+  section 2.1 that the product definition \"is wide enough to cover 'any item', whether tangible or
+  non-tangible or of a mixed nature\" and \"includes apps and software products, including for
+  example chatbots\". **Three qualifications travel with that and none of them may be dropped.**
+  First, the FAQ says in the same answer that \"The GPSR nevertheless is not to be seen as a
+  software regulation as such, it regulates only the safety aspects of software\" - so even on the
+  Commission's most expansive statement the GPSR reaches software for its **safety aspects** alone,
+  and a GPSR artefact for an app is not a general software-compliance artefact. Second, the
+  standalone-software answer is from the **March 2025** revision of the FAQ and not from the
+  November 2024 version, which does not contain the word \"standalone\" anywhere. Third, both FAQ
+  versions carry the Commission's own disclaimer that the replies \"do not bind the Commission
+  and/or the Commission services and cannot be relied upon as an authoritative interpretation of the
+  GPSR\", and that \"only the European Courts can interpret the GPSR with authoritative effect\".
+  **The word \"games\" is not Commission wording in any of these documents** and is not used here; a
+  case-insensitive search of the Guidelines and of both FAQ versions returns zero hits for it. **A
+  retrieval limit belongs with every FAQ sentence quoted above**: on 2026-08-06 the Commission's own
+  host for that PDF returned its block page from this environment, so the FAQ text rests on a
+  government mirror published by the Italian Ministry of Enterprise for the November 2024 version
+  and on an Internet Archive snapshot of the official URL for the March 2025 version, and should be
+  re-checked against the live Commission URL from an unblocked network before anything is published
+  on it. **Whether pure software-as-a-service is in or out is open, and this checklist keeps it
+  open.** The text pulls both ways and does so within one boundary: recital 17 opens \"Services
+  should not be covered by this Regulation\", while Article 3(1) says a product is an item made
+  available \"including in the context of providing a service\". The boundary the Regulation draws
+  is between the service and the product supplied through it, and not between digital and physical -
+  a gym is a service and the treadmill in it is a product. **The Commission has not addressed the
+  question**: `SaaS` and `cloud` return zero hits in the Guidelines and in both FAQ versions, every
+  worked example the Guidelines give for the service boundary is a physical object - a rented bike,
+  a gym machine, a cosmetic, a tattoo ink - and the most expansive Commission statement available is
+  about **standalone** software, which is software the consumer obtains, and says nothing about
+  software the consumer merely reaches. The case this scanner's audience actually presents - an
+  installed client fronting a hosted backend, sold as one commercial offering - sits on that line
+  and the Regulation gives no rule for splitting it. **So no item, note or finding here may assert
+  that software-as-a-service is inside the GPSR, and none may assert that it is outside.** Where the
+  answer turns on this, the output is the question put to the person running the scan plus a
+  recorded uncertainty. Replacing a false certainty with the opposite false certainty is the same
+  defect facing the other way. **A document's silence is `unresolved` and never `not-applicable`.
+  This is the rule most likely to be broken by anything built from this file, so it is stated once
+  here, again on every item, and mechanically in the build's reconciliation gate check, which is
+  where a written decision in this project becomes something a build can fail on.** Where the
+  product's own declared documents say nothing about an item, nothing has been shown either way, and
+  recording `not-applicable` would turn a null result into a statement that the requirement does not
+  reach this product. \"We looked and found nothing\" is not evidence that nothing is there. **The
+  rule admitting `not-applicable` is this one, and both of its halves bind: a fact affirmatively
+  stated by the person running the scan closes a genuinely conditional limb.** It must be a fact
+  **that somebody stated** - a document that fails to mention something never supplies one, and
+  neither does this scanner's own failure to find something. And the limb must be **genuinely
+  conditional** - a limb carrying no words of condition cannot be closed by any fact at all. **Three
+  such conditions exist on this checklist, and between them they reach seven of the thirteen items.
+  They are enumerated rather than counted, because a count asserted in this field while the items
+  named more conditions than the count allowed is exactly how this paragraph was wrong until
+  2026-08-06.** **(1) Tier 2 of the gate answered `yes`** - the product is subject to specific
+  requirements imposed by Union harmonisation legislation - makes the three **Article 16** items
+  `not-applicable`, because Article 2(1)(b) disapplies Chapter III Section 1. **(2) The manufacturer
+  being established in the Union** makes the three **Article 19(b)** display items `not-applicable`,
+  because that limb bites only \"where the manufacturer is not established in the Union\". **(3) No
+  warning or safety information being required to be affixed to this product** under this Regulation
+  or the applicable Union harmonisation legislation makes `art-19-d-warnings-and-safety-information`
+  `not-applicable`. **That limb is conditional in the operative text itself**: it reaches \"any
+  warning or safety information **to be affixed** to the product or to the packaging or included in
+  an accompanying document **in accordance with this Regulation or the applicable Union
+  harmonisation legislation**\", so where nothing is required to be affixed the limb imposes
+  nothing. Holding that item at `unresolved` whatever anybody states would misdescribe a conditional
+  limb as permanently open, which is its own error and not a safe default. **A fourth condition
+  stood in this list until 2026-08-06 and has been withdrawn, because it contradicted the rule
+  stated immediately above it.** It read that the product carrying no identifier beyond its type
+  makes `art-19-c-other-product-identifier` `not-applicable`, while conceding in its own next
+  sentence that Article 19(c) attaches no words of condition to any of its three elements - so the
+  rule forbade exactly what the condition licensed, and one element of a single limb was given a
+  verdict rule that its two siblings, `art-19-c-picture-of-the-product` and `art-19-c-product-type`,
+  were denied on identical wording. **What has been withdrawn is the condition and not the reading
+  behind it.** That reading is that \"**any other** product identifier\" bites only where such an
+  identifier exists, so that a product carrying none would owe nothing under that element; the
+  Official Journal text neither states it nor rules it out, it is defensible, and **this file
+  settles it in neither direction.** What follows from leaving it open is narrow and it is the whole
+  of the repair: **an open reading cannot carry `not-applicable`**, because that verdict is a
+  positive statement that the requirement does not reach this product, and a reading nobody has
+  settled cannot support one. Where the person running the scan states that the product carries no
+  identifier beyond its type, record the statement, say that the reading it would support is
+  unsettled, and leave the item `unresolved` - which is the output this file gives to every other
+  question it declines to settle, the software-as-a-service question included. **Withdrawing the
+  condition rather than loosening the rule was the choice, and the alternative is named so that a
+  later reader can weigh it**: a rule admitting `not-applicable` wherever a stated fact makes a limb
+  \"have no application to this product\" would replace a test anybody can run against the words of
+  the Official Journal with a judgement about reach, and it would have had to be run on the picture
+  and type elements too. **All three Article 19(c) elements are treated alike, and treating them
+  alike is what this paragraph is for.** **The remaining six items can never be `not-applicable`,
+  because they carry no condition for any fact to close**: the three Article 19(a) items and the
+  three Article 19(c) items. **Silence on any of the thirteen is `unresolved`**, including on the
+  seven that a stated fact can reach, because silence is not one of the facts described above.
+  **Article 16(1) is NOT conditional on the manufacturer being established outside the Union, and
+  reading it as though it were is the defect this checklist exists partly to correct.** Article
+  16(1) says a product covered by the Regulation \"shall not be placed on the market unless there is
+  an economic operator established in the Union who is responsible for the tasks set out in Article
+  4(3) of Regulation (EU) 2019/1020\". The duty is that **somebody established in the Union always
+  holds the role.** The out-of-Union condition appears in **Article 19(b)**, which is about what the
+  offer must display and not about when the role must exist. An EU-established manufacturer does not
+  escape Article 16(1): it occupies it, as the first limb of Regulation (EU) 2019/1020 Article 4(2)
+  - \"a manufacturer established in the Union\" - makes plain. **The Commission states this directly
+  in a document that was actually retrievable, and that is the citation to prefer.** The Guidelines
+  (OJ C/2025/6233, CELEX 52025XC06233), section 3.2, say: \"A product covered by the GPSR cannot be
+  placed on the market without an economic operator established in the EU, the 'responsible person',
+  who is responsible for performing the tasks set out in Article 4(3) of Regulation (EU) 2019/1020
+  and in Article 16 of the GPSR in respect to that product\", and then open the list of who that
+  person may be with \"(a) a manufacturer established in the EU\". **The same document confirms
+  Article 19(b)'s condition from the other side**: its checklist for manufacturers, at section
+  3.1.1, asks for \"identification and contact details of the responsible person for the product
+  **if you as manufacturer are not established in the EU**\". The Commission's FAQ section 4.4 -
+  \"If the manufacturer is established in the EU, they are the 'responsible person'\" - says the
+  same thing and is kept here as corroboration; the Guidelines are preferred because the
+  Publications Office served them on request on 2026-08-06 while the Commission's own host for the
+  FAQ returned its block page, so every FAQ sentence in this file rests on a mirror and every
+  Guidelines sentence does not. **Both remain stated Commission positions and neither is the law.**
+  Row 25 of the coverage map stated the condition on Article 16(1) until 2026-08-06 and was
+  corrected in the same session as this file was written. **Article 19(a) and Article 19(b) are
+  cumulative and not alternative.** A manufacturer established outside the Union must show **both**
+  its own three data points **and** the responsible person's three - six, not three. The Commission
+  states it expressly at FAQ section 6.1: \"The requirements under Article 19 (a) and (b) are to be
+  read as cumulative.\" That is a stated Commission position on operative text that reads the same
+  way, and an artefact treating 19(b) as replacing 19(a) for an out-of-Union manufacturer would be
+  wrong. **No item below names a census category, and the omission is deliberate.**
+  `census_categories` is the field through which code facts are offered to an adjudicating agent as
+  bearing on an item. Every question this checklist asks is either about what a published **offer**
+  displays - a fact about a listing, which no repository contains - or about a business arrangement,
+  and no code fact bears on either. A maintainer address in a README is not the address published in
+  the offer; a bundle identifier in a manifest is not the identifier shown on a listing; a
+  screenshot committed to a repository is not a picture in an offer. An agent reading the tree may
+  of course notice such things and use them to corroborate or to doubt what the documents say, and
+  this checklist deliberately provides no structural field through which such an observation could
+  be presented as evidence. The pin is held outside this file, in the build's reconciliation gate
+  check. **Two absences worth naming, because a reader will look for them.** First, the micro and
+  small enterprise carve-outs that Part C's header says do most of the work in this domain **do not
+  exist in the GPSR**: a case-insensitive search of the Official Journal text for `micro`, `SMEs`
+  and `small and medium` returns **five substantive passages and not one of them is an exemption, a
+  threshold or a reduced obligation** - **recital 41** and **Article 17(2)** impose duties on the
+  Commission to provide practical guidelines and tailored guidance to smaller operators, **Article
+  18(5)(a)** makes the impact on SMEs a factor for future delegated acts on traceability, **Article
+  47(1)** is the review clause requiring an evaluation by 13 December 2029, and **recital 85**
+  encourages economic operators to take account of micro and small enterprises acting like consumers
+  when recall notices are issued. A sixth raw match is a substring false positive: \"genetically
+  modified microorganisms\" in Article 2(2)(d). Article 19, Article 16, Article 22 and Article 44
+  carry no size threshold of any kind, so a one-person operation shipping to consumers in the Union
+  is fully bound. **Corrected 2026-08-06 against CELEX 32023R0988, after an independent legal
+  check.** This passage previously said \"four hits\", named **recital 44** as the SME-support
+  recital - recital 44 is in fact about detecting emerging risks - and named **Article 50(1)** as
+  the 2029 review clause - Article 50 is in fact the repeal of Directives 87/357/EEC and 2001/95/EC.
+  All three errors were inherited from the provision research this checklist was written from, and
+  were corrected there on the same date, 2026-08-06. The conclusion drawn here was unaffected by any
+  of the three and is unchanged. Second, there is no Union-level penalty figure to quote: Article 44
+  leaves levels to the Member States, and any statement of a fine amount for the GPSR would be
+  invented. **What this checklist does NOT cover, beyond Article 22.** It does not cover Article 20,
+  the accident-notification duty that sits beside Article 19 in the same Section. It does not cover
+  Article 21, which permits the information required by Articles 9(5), (6) and (7), 11(3) and 16(3)
+  to be made available in digital form **additionally** - the word is the Regulation's own, and a QR
+  code is a supplement and not a substitute. It does not cover Chapter III Section 1's other
+  obligations, in particular Article 9(6), which is Article 19(a) again but attached to the product
+  rather than to the offer, and Article 9(11), which requires manufacturers to make publicly
+  available a channel for complaints and accident reports and is the one GPSR duty a README or a
+  published support page can genuinely evidence. It reaches no verdict about an offer: it records
+  what the declared documents say and what remains unanswered, and a human decides what that means.
+  It does not test whether information is presented \"clearly and visibly\", which is Article 19's
+  own presentation standard and a property of the rendered listing rather than of any document in a
+  repository; that limit is repeated on each Article 19 item rather than left here. **The coverage
+  map's Class column for row 25 reads DECL / RUN, and this checklist was authored as the DECL
+  half.** The RUN half - reading the offer as a consumer sees it, which is the only place Article
+  19's \"clearly and visibly\" can actually be tested - does not exist in this repository. Testing a
+  row's Class column is the first step of a row and changing it is the owner's call, so the map's
+  cell is unchanged and this paragraph exists so that no later reader has to guess whether it was
+  tested."
+applicability:
+  question: Two tiers. **Tier 1 - does the General Product Safety Regulation reach this product at
+    all?** Is the thing supplied a 'product' within Article 3(1)? Its elements are "any item",
+    "whether or not it is interconnected to other items", "supplied or made available", "whether for
+    consideration or not", "including in the context of providing a service", and "which is intended
+    for consumers or is likely, under reasonably foreseeable conditions, to be used by consumers
+    even if not intended for them" - every phrase there is the definition's own, and the definition
+    is quoted whole and machine-checked in the first of the supporting quotes below rather than
+    copied a second time into this field. **Article 3(1) carries no tangibility qualifier of any
+    kind** - not "physical", not "goods", not "movable". The reading that the definition reaches
+    non-tangible items is the **Commission's**, stated at section 2.1 of its Guidelines and recorded
+    with the rest of the Commission material in the scope note; it is a stated Commission position
+    and it is not the Regulation's words. Is it supplied in the course of a **commercial activity**
+    within Article 3(6)? Is the offer **targeted at consumers in the Union** within Article 4, on
+    the case-by-case test recital 21 describes rather than on mere accessibility from the Union?
+    Does any of Article 2(2)'s nine exclusions apply, and is there specific Union law with the same
+    objective regulating the safety of this product, which Article 2(1)'s first subparagraph would
+    let displace the Regulation on that ground? **Tier 2 - and this tier does not switch the
+    checklist off** - is the product subject to specific requirements imposed by **Union
+    harmonisation legislation** as defined in Article 3(27), which by Article 2(1)(b) disapplies
+    Chapter III **Section 1** and therefore Article 16, while leaving Chapter III **Section 2** and
+    therefore Article 19 standing?
+  quote: "1. This Regulation applies to products that are placed or made available on the market
+    insofar as there are no specific provisions with the same objective under Union law which
+    regulate the safety of the products concerned. Where products are subject to specific safety
+    requirements imposed by Union law, this Regulation applies only to those aspects and risks or
+    categories of risks which are not covered by those requirements. With regard to products subject
+    to specific requirements imposed by Union harmonisation legislation as defined in Article 3,
+    point (27): (a) Chapter II does not apply insofar as the risks or categories of risks covered by
+    Union harmonisation legislation are concerned; (b) Chapter IIa, Chapter III, Section 1, Chapters
+    V and VII and Chapters IX to XI do not apply. 2. This Regulation does not apply to: (a)
+    medicinal products for human or veterinary use; (b) food; (c) feed; (d) living plants and
+    animals, genetically modified organisms and genetically modified microorganisms in contained
+    use, as well as products of plants and animals relating directly to their future reproduction;
+    (e) animal by-products and derived products; (f) plant protection products; (g) equipment on
+    which consumers ride or travel where that equipment is directly operated by a service provider
+    within the context of a transport service provided to consumers and is not operated by the
+    consumers themselves; (h) aircraft referred to in Article 2(3), point (d) of Regulation (EU)
+    2018/1139; (i) antiques. 3. This Regulation applies to products placed or made available on the
+    market whether new, used, repaired or reconditioned. It does not apply to products to be
+    repaired or reconditioned prior to being used where those products are placed or made available
+    on the market and are clearly marked as such. 4. This Regulation is without prejudice to the
+    rules laid down by Union law on consumer protection. 5. This Regulation shall be implemented
+    taking due account of the precautionary principle."
+  cite: GPSR Art. 2
+  url: https://publications.europa.eu/resource/celex/02023R0988-20260529
+  checked_at: 2026-09-07
+  ask_the_user: true
+  supporting_quotes:
+    - quote: "'product' means any item, whether or not it is interconnected to other items, supplied or
+        made available, whether for consideration or not, including in the context of providing a
+        service, which is intended for consumers or is likely, under reasonably foreseeable
+        conditions, to be used by consumers even if not intended for them;"
+      cite: GPSR Art. 3(1)
+      url: http://publications.europa.eu/resource/celex/32023R0988
+      checked_at: 2026-08-06
+      why: "**The definition the whole row turns on, and the place the software question lives.** Read it
+        as elements. \"Any item\" carries **no tangibility qualifier** - not \"physical\", not
+        \"goods\", not \"movable\" - and Article 2(2)'s nine exclusions name no intangible category,
+        so the text does not put software outside. It also never puts software inside: wherever the
+        Regulation names software as a thing it is an online interface (Article 3(15)) or a
+        component embedded into a product (Article 15(3)(a), Article 15(5)), and its remaining uses
+        of the word are about software updates and about the Safety Gate Portal - never about
+        software as the product itself. **The Commission has stated that standalone software is
+        covered - FAQ section 2.9, March 2025 revision - and its own answer ends \"The GPSR
+        nevertheless is not to be seen as a software regulation as such, it regulates only the
+        safety aspects of software.\"** Ask the question with that framing attached: a stated
+        Commission position, non-binding by the document's own disclaimer, on operative text that is
+        compatible with it and does not compel it, untested by any court, and limited to safety
+        aspects. \"Whether for consideration or not\" settles free supply on the operative text
+        without needing the Commission at all. \"Including in the context of providing a service\"
+        is the hinge of the software-as-a-service question and cuts **into** scope rather than out
+        of it - see recital 17 below, which pulls the other way, and the scope note, which leaves
+        the question open in both directions. **None of these elements is readable from source
+        code.**"
+    - quote: "'making available on the market' means any supply of a product for distribution, consumption
+        or use on the Union market in the course of a commercial activity, whether in return for
+        payment or free of charge;"
+      cite: GPSR Art. 3(6)
+      url: http://publications.europa.eu/resource/celex/32023R0988
+      checked_at: 2026-08-06
+      why: '**Price is not the gate; commerciality is.** Free supply is expressly inside - "whether in
+        return for payment or free of charge" - so a free app is not outside the Regulation for
+        being free. The condition that survives is "**in the course of a commercial activity**",
+        which the Regulation does not define further. Put that distinction into the question rather
+        than asking about price: a hobby project given away and a free tier monetised by advertising
+        sit on opposite sides of it, and whether an advertising-funded or free-tier supply is "in
+        the course of a commercial activity" is an open question this file does not settle.'
+    - quote: Products offered for sale online or through other means of distance sales shall be deemed to
+        be made available on the market if the offer is targeted at consumers in the Union. An offer
+        for sale shall be considered to be targeted at consumers in the Union if the relevant
+        economic operator directs, by any means, its activities to one or more Member States.
+      cite: GPSR Art. 4
+      url: http://publications.europa.eu/resource/celex/32023R0988
+      checked_at: 2026-08-06
+      why: "**The provision that makes an online offer \"made available on the market\" at all, and the
+        reason this gate is asked rather than inferred.** Recital 21 sets out how \"targeted\" is
+        decided and makes it expressly case by case, on factors that are all facts about how the
+        offer is published and priced - the geographical areas to which dispatch is possible, the
+        languages available, the means of payment, the currency, a domain name registered in a
+        Member State - and it closes with the sentence that matters most here: in the case of online
+        sales, \"the mere fact that the economic operators' or the providers of online marketplaces'
+        interface is accessible in the Member State in which the consumer is established or
+        domiciled is insufficient\". Accessibility from the Union is not targeting. Note also that
+        unlike the European Accessibility Act pack's standing premise, this limb is **not** settled
+        by running the EU pack: the premise says the product is offered into the Union, and Article
+        4 asks a narrower question that a case-by-case weighing answers."
+    - quote: "'Union harmonisation legislation' means Union legislation listed in Annex I to Regulation
+        (EU) 2019/1020 and any other Union legislation harmonising the conditions for the marketing
+        of products to which that Regulation applies;"
+      cite: GPSR Art. 3(27)
+      url: http://publications.europa.eu/resource/celex/32023R0988
+      checked_at: 2026-08-06
+      why: '**The definition tier 2 of this gate turns on.** Note the second limb: "and any other Union
+        legislation harmonising the conditions for the marketing of products". The definition is
+        open-ended and is not frozen to the 2019 Annex I list, so an instrument adopted after
+        Regulation (EU) 2019/1020 can fall inside it. Answering this limb `yes` disapplies Chapter
+        III Section 1 by Article 2(1)(b) and therefore switches off the three Article 16 items of
+        this checklist; it does **not** reach Chapter III Section 2, and the ten Article 19 items
+        stay live. The limb informs the reading of the checklist and never closes the gate.'
+    - quote: "'economic operator' means the manufacturer, the authorised representative, the importer, the
+        distributor, the fulfilment service provider or any other natural or legal person who is
+        subject to obligations in relation to the manufacture of products or making them available
+        on the market in accordance with this Regulation;"
+      cite: GPSR Art. 3(13)
+      url: http://publications.europa.eu/resource/celex/32023R0988
+      checked_at: 2026-08-06
+      why: "**Who Article 19 binds.** Article 19 is addressed to \"economic operators\" and not to
+        manufacturers alone, so a distributor listing somebody else's product is inside it too. The
+        term is broad and its last limb - \"any other natural or legal person who is subject to
+        obligations ... in accordance with this Regulation\" - is open. Ask which role the person
+        running the scan occupies rather than assuming they are the manufacturer."
+    - quote: "'manufacturer' means any natural or legal person who manufactures a product or has a product
+        designed or manufactured, and markets that product under that person's name or trademark;"
+      cite: GPSR Art. 3(8)
+      url: http://publications.europa.eu/resource/celex/32023R0988
+      checked_at: 2026-08-06
+      why: "**The role most of this scanner's audience actually occupies, and the reason the Article 16
+        and Article 19(b) questions bite at all.** A developer who publishes under their own name or
+        studio name markets the product under that name and is the manufacturer. They are not an
+        importer, which Article 3(10) confines to a person established in the Union who places a
+        product **from a third country** on the Union market, and they are not a distributor, which
+        Article 3(11) defines as somebody \"other than the manufacturer or the importer\"."
+    - quote: A natural or legal person shall be deemed to be a manufacturer for the purposes of this
+        Regulation and shall be subject to the obligations of the manufacturer set out in Article 9
+        where that natural or legal person places a product on the market under the natural or legal
+        person's name or trademark.
+      cite: GPSR Art. 13(1)
+      url: http://publications.europa.eu/resource/celex/32023R0988
+      checked_at: 2026-08-06
+      why: "**The deeming provision that answers \"am I a manufacturer if I did not manufacture
+        anything?\"** Placing a product on the market under one's own name or trademark is enough,
+        independently of Article 3(8). Quoted here because a solo developer reading Article 3(8)'s
+        word \"manufactures\" may conclude the duties are somebody else's, and this sentence is the
+        reason they are not. Note what it reaches on its own terms: it makes the person subject to
+        the obligations \"set out in Article 9\", which is a Chapter III Section 1 article, so it is
+        Article 3(8) rather than Article 13(1) that carries the identification of the manufacturer
+        for Article 19(a)'s purposes."
+    - quote: "'consumer' means any natural person who acts for purposes which are outside that person's
+        trade, business, craft or profession;"
+      cite: GPSR Art. 3(17)
+      url: http://publications.europa.eu/resource/celex/32023R0988
+      checked_at: 2026-08-06
+      why: "**The consumer nexus in Article 3(1) and the targeting test in Article 4 both run through this
+        definition.** It matters for the business-to-business boundary: the Commission's FAQ section
+        2.8 states that products \"exclusively intended for professional use (B2B)\" and \"not
+        reasonably likely to be used by consumers themselves\" do not fall under the GPSR - a stated
+        Commission position, non-binding, and one that tracks Article 3(1)'s own second limb. Note
+        that Article 3(1) reaches a product \"likely, under reasonably foreseeable conditions, to be
+        used by consumers **even if not intended for them**\", and recital 9 confirms the
+        professional-to-consumer migration case, so \"we built it for developers\" does not settle
+        it."
+    - quote: Services should not be covered by this Regulation. However, in order to protect the health
+        and safety of consumers, products that are supplied or made available to consumers in the
+        context of the provision of services, including products to which consumers are directly
+        exposed during the provision of a service, should fall within the scope of this Regulation.
+      cite: GPSR Recital 17
+      url: http://publications.europa.eu/resource/celex/32023R0988
+      checked_at: 2026-08-06
+      why: "**A recital, quoted because it is the strongest thing pulling against the software-as-a-
+        service question and a gate that omitted it would look one-sided.** It is interpretive and
+        it is never the sole support for any conclusion here. Its first sentence is as blunt as the
+        drafting gets; its second is the operative counterpart of Article 3(1)'s \"including in the
+        context of providing a service\". The boundary the two draw together is between the service
+        and the product supplied through it, not between digital and physical, and the Regulation
+        gives no rule for a hosted application that the consumer reaches rather than obtains.
+        **Neither this recital nor Article 3(1) settles that case, and neither may be quoted as
+        settling it.** The only Article 2(2) exclusion that is service-related is limb (g), ridden
+        or travelled-on equipment operated by a transport-service provider, which is narrow and
+        physical."
+    - quote: This Regulation shall enter into force on the twentieth day following that of its publication
+        in the Official Journal of the European Union. It shall apply from 13 December 2024.
+      cite: GPSR Art. 52
+      url: http://publications.europa.eu/resource/celex/32023R0988
+      checked_at: 2026-08-06
+      why: "**The application date, quoted rather than asserted, because it decides how every finding on
+        this checklist must be worded.** Article 52 grants no deferral to any article: there is no
+        phased application and no article with a date of its own. Articles 16 and 19 have both been
+        in application since 13 December 2024. **Any finding worded as preparation would be wrong**,
+        and the Cyber Resilience Act checklists' preparation phrasing, which is correct for a duty
+        deferred to 2027, must not be copied onto this row."
+    - quote: Notwithstanding any obligations set out in applicable Union harmonisation legislation, a
+        product subject to legislation referred to in paragraph 5 may be placed on the market only
+        if there is an economic operator established in the Union who is responsible for the tasks
+        set out in paragraph 3 in respect of that product.
+      cite: Reg. (EU) 2019/1020 Art. 4(1)
+      url: http://publications.europa.eu/resource/celex/32019R1020
+      checked_at: 2026-08-06
+      why: '**The second legal basis Article 19(b) names, and the reason Article 19 is not dead letter
+        when Article 16 is switched off.** Article 19(b) requires the details of "the responsible
+        person within the meaning of Article 16(1) of this Regulation **or** Article 4(1) of
+        Regulation (EU) 2019/1020". Where a product is subject to Union harmonisation legislation
+        and GPSR Article 16 is therefore disapplied by Article 2(1)(b), this provision can still
+        impose the responsible-person duty of its own force - which is exactly why the alternative
+        is in the text. Note its own limit: it applies to a product subject to the legislation
+        referred to in its paragraph 5, which is a named list, so it does not reach every product.
+        GPSR Article 16(1) imports Article 4(2) and (3) of this Regulation only, and not its Article
+        4(5) list - which is why GPSR Article 16 has to exist as a separate provision at all.'
+    - quote: "For the purposes of this Article, the economic operator referred to in paragraph 1 means any
+        of the following: (a) a manufacturer established in the Union; (b) an importer, where the
+        manufacturer is not established in the Union; (c) an authorised representative who has a
+        written mandate from the manufacturer designating the authorised representative to perform
+        the tasks set out in paragraph 3 on the manufacturer's behalf; (d) a fulfilment service
+        provider established in the Union with respect to the products it handles, where no other
+        economic operator as mentioned in points (a), (b) and (c) is established in the Union."
+      cite: Reg. (EU) 2019/1020 Art. 4(2)
+      url: http://publications.europa.eu/resource/celex/32019R1020
+      checked_at: 2026-08-06
+      why: "**Who can be the responsible person, imported wholesale into the GPSR by Article 16(1)'s
+        second sentence.** It is a cascade and its order matters: an EU-established manufacturer,
+        then an importer where the manufacturer is not EU-established, then an authorised
+        representative holding a **written mandate**, and only then - point (d) is expressly
+        residual - a fulfilment service provider, and only where none of (a), (b) or (c) is
+        established in the Union. **Limb (a) is the answer to the commonest misreading of Article
+        16(1)**: an EU-established manufacturer does not escape the requirement, it is the
+        responsible person. The Commission's FAQ section 4.4 walks the same cascade and opens it
+        with \"If the manufacturer is established in the EU, they are the 'responsible person'.\""
+  when_unresolved: "**Never resolve this gate by guessing in either direction.** Assuming the
+    Regulation applies invents present obligations for somebody outside its scope; assuming it does
+    not silently skips thirteen checks for somebody inside it, and a skipped check is
+    indistinguishable from a passed one. Record `unresolved` and name which limb was missing. **Tier
+    1, and every limb of it is asked of the person running the scan.** (i) **Is the thing a
+    'product' within Article 3(1)?** For a physical article this is not in question. For software it
+    is the hard case, and the honest framing to put in front of the person answering is the one in
+    the scope note: the Regulation's own text neither includes nor excludes standalone software, the
+    Commission has stated that it is covered and has also said the GPSR \"is not to be seen as a
+    software regulation as such, it regulates only the safety aspects of software\", that statement
+    is non-binding by its own terms and untested by any court, and for a hosted service reached
+    rather than obtained the question is open with nothing from the Commission on either side. **Do
+    not resolve the software-as-a-service case in either direction**; where the product is an
+    installed client fronting a hosted backend, record the split and leave it open. (ii) **Is it
+    supplied in the course of a commercial activity (Article 3(6))?** Free supply is inside; the
+    question is commerciality, and whether free-tier or advertising-funded supply meets it is not
+    settled by the Regulation. (iii) **Is the offer targeted at consumers in the Union (Article
+    4)?** Ask about dispatch geography, the languages the offer and the ordering flow are available
+    in, the means of payment, the currency and the domain name - and say when asking that mere
+    accessibility from a Member State is expressly insufficient. (iv) **Does any Article 2(2)
+    exclusion apply?** Nine limbs, quoted in full above; software is not one of them and neither are
+    services or motor vehicles. (v) **Is there specific Union law with the same objective regulating
+    the safety of this product?** Article 2(1)'s first subparagraph is a partial, ground-by-ground
+    step-back and it can displace even Article 19 where the sector instrument has a provision with
+    the same objective. **None of these five is settled by anything in a repository**, and none may
+    be inferred from what the source tree imports, links or implements. A declared document may
+    corroborate an answer - a published legal notice that names Member States the product ships to,
+    a pricing page in euro - and it may never decide one. **Tier 2, and it switches off three items
+    rather than the checklist.** Is the product subject to specific requirements imposed by Union
+    harmonisation legislation as defined in Article 3(27) - the list in Annex I to Regulation (EU)
+    2019/1020, plus any other Union legislation harmonising the conditions for the marketing of
+    products? A product carrying a CE marking under a named instrument, or one whose documents
+    describe conformity with a harmonisation directive or regulation, is the ordinary case.
+    **Answered `yes`: the three Article 16 items become `not-applicable`** - because Article 2(1)(b)
+    disapplies Chapter III Section 1 - **and the ten Article 19 items stay live**, because Article
+    2(1)(b) does not name Chapter III Section 2. **Answered `no`: all thirteen items are live.**
+    **Answered not at all: record `unresolved` for the three Article 16 items and walk the ten
+    Article 19 items anyway**, because tier 2 cannot affect them either way and there is no reason
+    to withhold ten answers for want of one fact. **The one thing tier 2 must never do is close the
+    gate.** A single \"the GPSR applies / does not apply\" verdict would be wrong for one of the two
+    articles whichever way it were set."
+items:
+  - id: art-19-a-manufacturer-name
+    article: Art. 19(a)
+    quote: name, registered trade name or registered trade mark of the manufacturer, as well as the
+      postal and electronic address at which they can be contacted;
+    cite: GPSR Art. 19(a)
+    url: http://publications.europa.eu/resource/celex/32023R0988
+    checked_at: 2026-08-06
+    question: Does the offer itself show the manufacturer's name, registered trade name or registered
+      trade mark, and do the declared documents say which of those three the published name is?
+    applicability_note: "**Applies now. Article 19 has been in application since 13 December 2024**
+      (Article 52) and is deferred by nothing, so a finding here states a present position and is
+      never worded as preparation. **Tier 2 of the gate leaves this item standing.** A `yes` there
+      disapplies Chapter III Section 1 and switches off the three Article 16 items; Article 19 sits
+      in Chapter III Section 2, which Article 2(1)(b) does not name, so this item is answered either
+      way. **Unconditional limb.** Article 19(a) carries no condition at all: it applies whether or
+      not the manufacturer is established in the Union, and it applies in addition to Article 19(b)
+      where the manufacturer is not. The Commission states the cumulation expressly at FAQ section
+      6.1 - \"The requirements under Article 19 (a) and (b) are to be read as cumulative\" - which
+      is a stated Commission position, non-binding by the document's own disclaimer, on operative
+      text that reads the same way. **The trap on this limb is that a name found is not necessarily
+      the name required.** Article 19(a) asks for the **name, registered trade name or registered
+      trade mark**. **Read the word \"registered\" carefully: it modifies \"trade name\" and \"trade
+      mark\" and it does not modify \"name\".** Article 9(6) settles the parsing by repeating the
+      possessive - \"their name, their registered trade name or registered trade mark\" - so the
+      first alternative is the manufacturer's name and needs no registration and no registry at all.
+      **This note asserted the contrary until 2026-08-06**, saying the limb's three alternatives all
+      turned on a registry fact, which made the limb harder to satisfy than the Official Journal
+      makes it. A copyright line in a `LICENSE` file, an author field in a package manifest, a
+      developer name on a store listing and a studio name in a README all show **a** name, and a
+      name is capable of satisfying the first alternative on its own. What no repository holds is
+      whether a name it carries is *also* a registered trade name or a registered trade mark, which
+      is a corporate-registry and trade-mark-registry fact - relevant only where the second or third
+      alternative is being relied on. Treat any name found as corroboration and never as proof, and
+      say in the reasoning which document the name came from. **The reason it is never proof is the
+      paragraph below, not the registry**: Article 19 governs what the offer indicates, and a name
+      in a repository is not evidence of what a listing displays. **Article 19 governs the offer,
+      not the repository.** The duty is that the **offer** indicate the information \"clearly and
+      visibly\". A name that appears in a repository, or elsewhere on a website but not in the
+      offer, does not satisfy the Article on its face, and nothing in a repository can show what a
+      listing displays. Where a declared document states what the offer shows, record that statement
+      and say it is a statement. **Where the declared documents say nothing about this, the answer
+      is `unresolved`, never `not-applicable` and never a bare `absent` presented as a shortfall.**
+      Silence is a statement about the reading and not about the offer. `not-applicable` is
+      available on this checklist only where a fact affirmatively stated by the person running the
+      scan closes a genuinely conditional limb, and this limb carries no condition for such a fact
+      to close, so `not-applicable` is never correct here."
+  - id: art-19-a-manufacturer-postal-address
+    article: Art. 19(a)
+    quote: name, registered trade name or registered trade mark of the manufacturer, as well as the
+      postal and electronic address at which they can be contacted;
+    cite: GPSR Art. 19(a)
+    url: http://publications.europa.eu/resource/celex/32023R0988
+    checked_at: 2026-08-06
+    question: Does the offer itself show a postal address at which the manufacturer can be contacted?
+    applicability_note: "**Applies now**, since 13 December 2024 (Article 52), and no finding here is
+      preparation. **Tier 2 of the gate leaves this item standing**, like every Article 19 item:
+      Article 2(1)(b) names Chapter III Section 1, where Article 16 sits, and not Section 2, where
+      Article 19 sits. **Article 19(a) requires both a postal and an electronic address,
+      conjunctively.** The limb reads \"the postal **and** electronic address at which they can be
+      contacted\" and there is no \"or\" in it. Finding one of the two satisfies part of the limb,
+      not the limb, and a finding must say which of the two was found. **This is the systematic
+      blind spot of the whole row, and the honest output names it as such.** A postal address is
+      almost never in a source repository. Where it exists in a declared document at all it is in an
+      imprint, an Impressum, a legal-notice page, a store listing's trader-contact block or
+      occasionally a privacy policy's controller-address section. **Its absence from a repository is
+      evidence about the repository and not about the offer**, and a finding that reads \"no postal
+      address found\" without saying so misdescribes what was looked at. **Where the declared
+      documents say nothing about a postal address, the answer is `unresolved` and never
+      `not-applicable`.** This limb is unconditional, so no fact can make it inapplicable; a silent
+      document leaves it open. Recording `not-applicable` here would say the requirement does not
+      reach this product, which is a different claim and an unsupported one."
+  - id: art-19-a-manufacturer-electronic-address
+    article: Art. 19(a)
+    quote: name, registered trade name or registered trade mark of the manufacturer, as well as the
+      postal and electronic address at which they can be contacted;
+    cite: GPSR Art. 19(a)
+    url: http://publications.europa.eu/resource/celex/32023R0988
+    checked_at: 2026-08-06
+    question: Does the offer itself show an electronic address at which the manufacturer can be contacted?
+    applicability_note: "**Applies now**, since 13 December 2024 (Article 52); a finding here is a
+      present position and never preparation. **Tier 2 of the gate leaves this item standing**, like
+      every Article 19 item: Article 2(1)(b) names Chapter III Section 1, where Article 16 sits, and
+      not Section 2, where Article 19 sits. **The best-evidenced of the Article 19(a) limbs, and the
+      one most easily over-read.** A support or contact address in a README, a `SECURITY.md`
+      security-contact line, a `mailto:` in a published policy page, a store listing's support email
+      or a `bugs.email` field in a package manifest are all electronic addresses that a declared
+      document or a repository may carry. **Two traps travel with every one of them.** First, **a
+      maintainer's address in a repository is not necessarily the address published in the offer**,
+      and Article 19 governs the offer: an address that reaches the project is not evidence that the
+      listing shows one. Second, **finding the electronic address satisfies a third of Article 19(a)
+      and not the limb** - the same sentence requires a postal address as well, and a finding that
+      records the limb as met on an email alone is wrong about the Regulation. **Where the declared
+      documents say nothing, record `unresolved`, never `not-applicable`.** The limb is
+      unconditional and nothing can make it inapplicable, so the only honest reading of silence is
+      that the question was not answered."
+  - id: art-19-b-responsible-person-name
+    article: Art. 19(b)
+    quote: where the manufacturer is not established in the Union, the name, postal and electronic
+      address of the responsible person within the meaning of Article 16(1) of this Regulation or
+      Article 4(1) of Regulation (EU) 2019/1020;
+    quote_anchor: "Where economic operators make products available on the market online or through
+      other means of distance sales, the offer of those products shall clearly and visibly indicate
+      at least the following information:"
+    cite: GPSR Art. 19(b)
+    url: http://publications.europa.eu/resource/celex/32023R0988
+    checked_at: 2026-08-06
+    question: Where the manufacturer is not established in the Union, does the offer show the name of
+      the responsible person within the meaning of Article 16(1) of this Regulation or Article 4(1)
+      of Regulation (EU) 2019/1020?
+    applicability_note: "**Applies now**, since 13 December 2024 (Article 52). Nothing here is
+      preparation. **Tier 2 of the gate leaves this item standing.** Article 2(1)(b) names Chapter
+      III Section 1, where Article 16 sits, and not Section 2, where Article 19 sits, so a product
+      subject to Union harmonisation legislation still owes this display limb - and the responsible
+      person it then points at is the one within Article 4(1) of Regulation (EU) 2019/1020, which is
+      the alternative the limb itself names. **This is the Article 19 limb whose condition is the
+      manufacturer's place of establishment** - not the only conditional limb in the Article, since
+      Article 19(d) is conditional too, but the only one conditioned on establishment. \"Where the
+      manufacturer is not established in the Union\" governs the whole of Article 19(b). **Where the
+      person running the scan answers that the manufacturer IS established in the Union, this item
+      is `not-applicable`** - condition (2) of the three the scope note enumerates, and it counts
+      because a stated fact closed a conditional limb, never because a document was silent. **Do not
+      read the condition backwards onto Article 16.** Article 16(1) requires a responsible person
+      established in the Union **whether or not** the manufacturer is EU-established; an
+      EU-established manufacturer is itself that person, by Regulation (EU) 2019/1020 Article
+      4(2)(a). The out-of-Union condition belongs to this display limb alone. The coverage map
+      stated it the other way until 2026-08-06. **Article 19(a) is not displaced by this limb.**
+      Where the manufacturer is outside the Union the offer must show **both** sets of details - six
+      data points, not three. FAQ section 6.1 says so expressly; it is a stated Commission position,
+      non-binding, and it agrees with the text. **The near-miss this limb exists to catch is the
+      GDPR Article 27 representative.** A privacy policy naming an \"EU representative\" is naming a
+      role under a different instrument, with a different task list, appointed for a different
+      reason. One person may hold both roles, but that is a business arrangement and never an
+      inference. An entity named as a GDPR representative is not thereby the GPSR responsible
+      person, and a finding that treats it as one is wrong. **Where the manufacturer is outside the
+      Union and the declared documents say nothing about a responsible person, the answer is
+      `unresolved`, never `not-applicable`.** The condition was met, so the question was reached;
+      nothing answered it."
+  - id: art-19-b-responsible-person-postal-address
+    article: Art. 19(b)
+    quote: where the manufacturer is not established in the Union, the name, postal and electronic
+      address of the responsible person within the meaning of Article 16(1) of this Regulation or
+      Article 4(1) of Regulation (EU) 2019/1020;
+    quote_anchor: "Where economic operators make products available on the market online or through
+      other means of distance sales, the offer of those products shall clearly and visibly indicate
+      at least the following information:"
+    cite: GPSR Art. 19(b)
+    url: http://publications.europa.eu/resource/celex/32023R0988
+    checked_at: 2026-08-06
+    question: Where the manufacturer is not established in the Union, does the offer show the postal
+      address of the responsible person?
+    applicability_note: "**Applies now**, since 13 December 2024 (Article 52); never worded as
+      preparation. **Tier 2 of the gate leaves this item standing**, like every Article 19 item:
+      Article 2(1)(b) names Chapter III Section 1, where Article 16 sits, and not Section 2, where
+      Article 19 sits. **Conditional on the same fact as the rest of Article 19(b).** Where the
+      person running the scan answers that the manufacturer is established in the Union, this item
+      is `not-applicable`, because a stated fact closed a conditional limb. **Where the manufacturer
+      is outside the Union and no document addresses the responsible person's postal address, the
+      answer is `unresolved`, never `not-applicable`** - the condition was met, so the question was
+      reached, and silence is not one of the facts that can close it. **Article 19(b) names three
+      data points and this is the second of them** - name, postal address, electronic address. They
+      are cumulative within the limb, exactly as Article 19(a)'s three are. **The same blind spot as
+      Article 19(a)'s postal address applies, and one more.** A postal address is systematically
+      absent from repositories, so its absence there is evidence about the repository. And where a
+      document does carry an address for an EU entity, check what role that entity is named in: an
+      EU-based hosting provider, a data-protection representative and a local reseller all have
+      Union postal addresses and none of them is thereby the Article 16(1) responsible person."
+  - id: art-19-b-responsible-person-electronic-address
+    article: Art. 19(b)
+    quote: where the manufacturer is not established in the Union, the name, postal and electronic
+      address of the responsible person within the meaning of Article 16(1) of this Regulation or
+      Article 4(1) of Regulation (EU) 2019/1020;
+    quote_anchor: "Where economic operators make products available on the market online or through
+      other means of distance sales, the offer of those products shall clearly and visibly indicate
+      at least the following information:"
+    cite: GPSR Art. 19(b)
+    url: http://publications.europa.eu/resource/celex/32023R0988
+    checked_at: 2026-08-06
+    question: Where the manufacturer is not established in the Union, does the offer show the electronic
+      address of the responsible person?
+    applicability_note: "**Applies now**, since 13 December 2024 (Article 52); never preparation. **Tier
+      2 of the gate leaves this item standing**, like every Article 19 item: Article 2(1)(b) names
+      Chapter III Section 1, where Article 16 sits, and not Section 2, where Article 19 sits.
+      **Conditional on the manufacturer not being established in the Union**, like the other two
+      Article 19(b) items. An EU-established manufacturer makes this `not-applicable` - a stated
+      fact closing a conditional limb, never a silence. **Where the condition is met and the
+      documents say nothing, the answer is `unresolved` and never `not-applicable`.** **The third of
+      Article 19(b)'s three data points.** An offer that names the responsible person and gives a
+      postal address has met two of the three, and a finding should say which one is missing rather
+      than recording the limb as a whole. **Watch for a support address standing in for a
+      responsible person's address.** A general contact or support mailbox published by the
+      manufacturer answers Article 19(a)'s electronic address limb and says nothing about how the
+      responsible person is reached. Where one address is offered for both roles, record that it is
+      offered for both and let a human decide whether that is what the offer shows."
+  - id: art-19-c-picture-of-the-product
+    article: Art. 19(c)
+    quote: information allowing the identification of the product, including a picture of it, its type
+      and any other product identifier; and
+    quote_anchor: "Where economic operators make products available on the market online or through
+      other means of distance sales, the offer of those products shall clearly and visibly indicate
+      at least the following information: (a) name, registered trade name or registered trade mark
+      of the manufacturer, as well as the postal and electronic address at which they can be
+      contacted; (b) where the manufacturer is not established in the Union, the name, postal and
+      electronic address of the responsible person within the meaning of Article 16(1) of this
+      Regulation or Article 4(1) of Regulation (EU) 2019/1020;"
+    cite: GPSR Art. 19(c)
+    url: http://publications.europa.eu/resource/celex/32023R0988
+    checked_at: 2026-08-06
+    question: Does the offer include a picture of the product?
+    applicability_note: '**Applies now**, since 13 December 2024 (Article 52). Not preparation. **Tier 2
+      of the gate leaves this item standing**, like every Article 19 item: Article 2(1)(b) names
+      Chapter III Section 1, where Article 16 sits, and not Section 2, where Article 19 sits.
+      **Unconditional limb.** Article 19(c) attaches no condition to the picture element, so no
+      stated fact can close it, `not-applicable` is never the right answer to it, and silence is
+      `unresolved`. **What counts as a picture is defined broadly, in a recital.** Recital 42 -
+      interpretive, and never the sole support for a conclusion - says "A picture should be
+      considered as a photograph, illustration or other pictographic element, which easily allows
+      the identification of a product or potential product." An application icon, a store screenshot
+      or a rendered illustration plausibly satisfies that. **Two limits keep this from being
+      over-read.** First, **whether a picture appears in the offer is a fact about the listing**:
+      icon assets in a repository, a progressive-web-app or extension `manifest.json` icons array,
+      or a store-metadata directory of marketing images show that images exist, not that the offer
+      displays one. Second, the Commission warns against reading a picture as discharging more than
+      its own limb: FAQ section 6.2, answering about the mirror provision in Article 22(9), says the
+      required points "are set out cumulatively" and that "prima facie, it would be difficult to
+      satisfy this obligation with just a picture", since a picture would also have to display the
+      warning or safety information. That is a stated Commission position, non-binding, and it is
+      about Article 22(9) rather than Article 19 - but the two provisions carry the same four limbs,
+      and the reasoning transfers on its face. **A picture discharges this item. It does not
+      discharge Article 19(c) as a whole and it does not touch Article 19(d).**'
+  - id: art-19-c-product-type
+    article: Art. 19(c)
+    quote: information allowing the identification of the product, including a picture of it, its type
+      and any other product identifier; and
+    quote_anchor: "Where economic operators make products available on the market online or through
+      other means of distance sales, the offer of those products shall clearly and visibly indicate
+      at least the following information: (a) name, registered trade name or registered trade mark
+      of the manufacturer, as well as the postal and electronic address at which they can be
+      contacted; (b) where the manufacturer is not established in the Union, the name, postal and
+      electronic address of the responsible person within the meaning of Article 16(1) of this
+      Regulation or Article 4(1) of Regulation (EU) 2019/1020;"
+    cite: GPSR Art. 19(c)
+    url: http://publications.europa.eu/resource/celex/32023R0988
+    checked_at: 2026-08-06
+    question: Does the offer show the product's type?
+    applicability_note: "**Applies now**, since 13 December 2024 (Article 52). Not preparation. **Tier 2
+      of the gate leaves this item standing**, like every Article 19 item: Article 2(1)(b) names
+      Chapter III Section 1, where Article 16 sits, and not Section 2, where Article 19 sits.
+      **Unconditional limb**: Article 19(c) attaches no condition to the type element, so no stated
+      fact can close it, silence is `unresolved` and `not-applicable` is never correct. **\"Type\"
+      is not defined in the GPSR, and this item says so rather than inventing a test.** Article 3
+      defines twenty-eight terms and \"type\" is not among them. The nearest gloss in the Regulation
+      is Article 9(5), which requires manufacturers to ensure their products bear \"a type, batch or
+      serial number or other element enabling the identification of the product\" - a different
+      duty, attached to the product rather than to the offer, and in Chapter III Section 1. **A
+      software version or build identifier is a defensible candidate for \"type\" and is not a
+      settled one.** Record what the documents call the product's type, quote the sentence, and say
+      that the term is undefined. Do not score a version string as the answer without saying that
+      the identification is the author's reading."
+  - id: art-19-c-other-product-identifier
+    article: Art. 19(c)
+    quote: information allowing the identification of the product, including a picture of it, its type
+      and any other product identifier; and
+    quote_anchor: "Where economic operators make products available on the market online or through
+      other means of distance sales, the offer of those products shall clearly and visibly indicate
+      at least the following information: (a) name, registered trade name or registered trade mark
+      of the manufacturer, as well as the postal and electronic address at which they can be
+      contacted; (b) where the manufacturer is not established in the Union, the name, postal and
+      electronic address of the responsible person within the meaning of Article 16(1) of this
+      Regulation or Article 4(1) of Regulation (EU) 2019/1020;"
+    cite: GPSR Art. 19(c)
+    url: http://publications.europa.eu/resource/celex/32023R0988
+    checked_at: 2026-08-06
+    question: Does the offer show any other product identifier?
+    applicability_note: "**Applies now**, since 13 December 2024 (Article 52). Not preparation. **Tier 2
+      of the gate leaves this item standing**, like every Article 19 item: Article 2(1)(b) names
+      Chapter III Section 1, where Article 16 sits, and not Section 2, where Article 19 sits.
+      **Unconditional limb, and the reading that would make it conditional is recorded rather than
+      adopted.** Article 19(c) attaches no words of condition to any of its three elements, so no
+      stated fact can close this item, `not-applicable` is never correct on it, and silence on it is
+      `unresolved`. The one argument the other way is worth naming and this file settles it in
+      neither direction: \"**any other** product identifier\" could be read as biting only where
+      such an identifier exists, so that a product carrying none would owe nothing under this
+      element. **An open reading cannot carry `not-applicable`**, because that verdict is a positive
+      statement that the requirement does not reach this product. Where the person running the scan
+      states that the product carries no identifier beyond its type, record the statement, say that
+      the reading it would support is unsettled, and leave the item `unresolved`. **The other two
+      elements of this limb are treated identically, and until 2026-08-06 they were not.**
+      `art-19-c-picture-of-the-product` and `art-19-c-product-type` share the identical absence of
+      conditional words; this item carried a condition that the scope note's own rule forbade, and
+      that condition has been withdrawn from the scope note and from the build's reconciliation gate
+      check rather than the rule loosened to fit it. **The strongest of the Article 19 limbs for a
+      software product, because a published application identifier really does identify the offer.**
+      A bundle identifier, an application id, a browser extension id, a store product id or a
+      package name in a public registry are real, published, unique identifiers. Where a declared
+      document names one, that is genuine evidence. **It is still evidence about the product and not
+      about the listing.** An identifier recorded in a manifest inside a repository shows that the
+      identifier exists; whether the offer displays it is a fact about the offer. Say which of the
+      two the evidence supports. **Note the chapeau's words \"at least\".** Article 19 is a floor
+      and not a list of everything an offer must show, so an offer carrying more identifying
+      information than this limb requires is not thereby doing something wrong, and a finding here
+      never says that it is."
+  - id: art-19-d-warnings-and-safety-information
+    article: Art. 19(d)
+    quote: any warning or safety information to be affixed to the product or to the packaging or
+      included in an accompanying document in accordance with this Regulation or the applicable
+      Union harmonisation legislation in a language which can be easily understood by consumers, as
+      determined by the Member State in which the product is made available on the market.
+    cite: GPSR Art. 19(d)
+    url: http://publications.europa.eu/resource/celex/32023R0988
+    checked_at: 2026-08-06
+    question: Is any warning or safety information required to be affixed to this product, and if so
+      does the offer show it in a language easily understood by consumers in each Member State where
+      the product is made available?
+    applicability_note: "**Applies now**, since 13 December 2024 (Article 52). Not preparation. **This
+      item is routed entirely to the person running the scan, and no document a repository holds can
+      settle it. That is a design decision and not a gap.** Two independent reasons, each sufficient
+      on its own. First, the limb is conditional on a warning or safety information being
+      **required** to be affixed \"in accordance with this Regulation or the applicable Union
+      harmonisation legislation\" - which is a legal conclusion about the product's risks and about
+      which instruments apply to it, not a fact recorded in any file. Second, the language
+      requirement is \"as determined by the Member State in which the product is made available on
+      the market\", so the correct answer depends on which Member States the offer targets, and that
+      is a fact about the offer. **So do not have this item read documents and conclude.** A
+      published safety section, a cautionary note in a README or an in-app disclaimer may be
+      recorded as context, and none of them answers whether a warning is required or whether the
+      language obligation is met. **A voluntary caution is not a required warning**, and treating
+      one as the other would report a product as satisfying a limb that may never have bitten, or as
+      failing one that does not apply to it. **Tier 2 of the gate leaves this item standing**, like
+      every Article 19 item: Article 2(1)(b) names Chapter III Section 1, where Article 16 sits, and
+      not Section 2, where Article 19 sits. Note that tier 2 and this limb's own condition are
+      different questions that both mention Union harmonisation legislation: tier 2 asks whether any
+      such instrument imposes requirements on the product, and this limb asks whether a warning is
+      **required to be affixed** under one. A product can be inside Union harmonisation legislation
+      and owe no affixed warning under it. **The verdicts this item can honestly take.** Where the
+      person running the scan states that no warning or safety information is required for this
+      product under this Regulation or any applicable Union harmonisation legislation, the item is
+      `not-applicable` - **condition (3) of the three the scope note enumerates**, and it counts
+      because a stated fact closed a limb that the Official Journal text makes conditional on its
+      face. Where they state that a warning is required, the question becomes whether the offer
+      shows it in the right languages, and that is answered from the offer and from the list of
+      targeted Member States. **Where neither has been answered, the item is `unresolved`, whatever
+      the documents contain.** In particular, a document that is silent about warnings has not shown
+      that none is required."
+  - id: art-16-1-responsible-person-established-in-the-union
+    article: Art. 16(1)
+    quote: A product covered by this Regulation shall not be placed on the market unless there is an
+      economic operator established in the Union who is responsible for the tasks set out in Article
+      4(3) of Regulation (EU) 2019/1020 in respect to that product. Article 4(2) and (3) of that
+      Regulation shall apply to products covered by this Regulation. For the purposes of this
+      Regulation, references to 'Union harmonisation legislation' and 'applicable Union
+      harmonisation legislation' in Article 4(3) of that Regulation shall be read as 'this
+      Regulation'.
+    cite: GPSR Art. 16(1)
+    url: http://publications.europa.eu/resource/celex/32023R0988
+    checked_at: 2026-08-06
+    question: Do the declared documents identify an economic operator established in the Union who is
+      responsible for the tasks set out in Article 4(3) of Regulation (EU) 2019/1020 in respect of
+      this product?
+    applicability_note: "**Applies now**, since 13 December 2024 (Article 52). Not preparation.
+      **Conditional on tier 2 of the gate, and on nothing else.** Article 16 sits in Chapter III
+      Section 1, which Article 2(1)(b) disapplies for a product subject to specific requirements
+      imposed by Union harmonisation legislation. **Where the person running the scan answers tier 2
+      `yes`, this item is `not-applicable`** - **condition (1) of the three the scope note
+      enumerates**, and it counts because a stated fact closed a conditional limb. Where they answer
+      `no`, the item is live. **Where tier 2 has not been answered, this item is `unresolved`, never
+      `not-applicable`**, and the ten Article 19 items are walked regardless, because Article
+      2(1)(b) does not reach Chapter III Section 2. **Article 16(1) is NOT conditional on the
+      manufacturer being established outside the Union.** The duty is that somebody established in
+      the Union always holds the role. An EU-established manufacturer occupies it rather than
+      escaping it - Regulation (EU) 2019/1020 Article 4(2)(a), quoted in the gate, makes an EU
+      manufacturer the first limb of the cascade. **The Commission says it directly, and the
+      citation to prefer is the retrievable one.** The Guidelines (Commission notice of 21 November
+      2025, OJ C/2025/6233, CELEX 52025XC06233), at section 3.2 \"Economic operator also assuming
+      the role of the responsible person\", state: \"A product covered by the GPSR cannot be placed
+      on the market without an economic operator established in the EU, the 'responsible person',
+      who is responsible for performing the tasks set out in Article 4(3) of Regulation (EU)
+      2019/1020 and in Article 16 of the GPSR in respect to that product\", and then list who that
+      person may be, beginning \"(a) a manufacturer established in the EU\". **That document was
+      fetched successfully from the Publications Office on 2026-08-06**, unlike the FAQ, whose
+      Commission host returned a block page and which is therefore quoted in this file from mirrors.
+      The FAQ section 4.4 sentence - \"If the manufacturer is established in the EU, they are the
+      'responsible person'\" - says the same thing and is kept as corroboration rather than as the
+      primary support. **Both are stated Commission positions and neither is the law**; the
+      operative text of Article 16(1) and of Regulation (EU) 2019/1020 Article 4(2)(a) is what
+      governs, and it reads the same way. **Anything built from this item that asks the question
+      only of non-EU manufacturers has reproduced the error this checklist was written to correct.**
+      **The cascade decides who it can be, and its order matters**: an EU-established manufacturer,
+      then an importer where the manufacturer is not EU-established, then an authorised
+      representative holding a **written mandate**, and only as a residual a fulfilment service
+      provider established in the Union, and only where none of the first three is. A document that
+      names an EU entity without saying in which of those capacities it acts has not answered this
+      item. **What this item does not import.** GPSR Article 16(1) imports Article 4(2) and (3) of
+      Regulation (EU) 2019/1020 and **not** its Article 4(4) or 4(5). So the address rule for GPSR
+      products is GPSR Article 16(3), which requires postal **and** electronic - stricter than
+      Regulation (EU) 2019/1020 Article 4(4), which requires only a postal address - and the
+      eighteen-instrument limit in Article 4(5) does not apply, which is why Article 16 exists as a
+      separate provision at all. **Where the documents are silent, record `unresolved`.** A
+      repository that says nothing about an EU responsible person has not shown that none exists; it
+      has shown that the documents do not address it. `not-applicable` is reserved for tier 2
+      answered `yes`."
+  - id: art-16-2-regular-checks-and-documented-evidence
+    article: Art. 16(2)
+    quote: "Without prejudice to any obligations of economic operators under this Regulation, in
+      addition to the tasks referred to in Article 4(3) of Regulation (EU) 2019/1020, and to ensure
+      the safety of the product it is responsible for, where appropriate with regard to the possible
+      risks related to a product, the economic operator referred to in paragraph 1 of this Article
+      shall regularly check: (a) that the product complies with the technical documentation referred
+      to in Article 9(2) of this Regulation; (b) that the product complies with the requirements
+      provided for in Article 9(5), (6) and (7) of this Regulation. The economic operator referred
+      to in paragraph 1 of this Article shall, upon request by the market surveillance authorities,
+      provide documented evidence of the checks performed."
+    cite: GPSR Art. 16(2)
+    url: http://publications.europa.eu/resource/celex/32023R0988
+    checked_at: 2026-08-06
+    question: Do the declared documents describe the responsible person regularly checking the product
+      against its technical documentation and against Article 9(5), (6) and (7), and keeping
+      documented evidence of the checks performed?
+    applicability_note: "**Applies now**, since 13 December 2024 (Article 52). Not preparation.
+      **Conditional on tier 2 of the gate**, exactly as the Article 16(1) item above is: tier 2
+      answered `yes` makes it `not-applicable` - **condition (1) of the three the scope note
+      enumerates** - tier 2 unanswered makes it `unresolved`, and tier 2 answered `no` makes it
+      live. The three Article 16 items must not diverge on this. **Two duties in one paragraph, and
+      a finding should say which of them the documents reach.** The first is the regular check
+      itself, qualified by \"where appropriate with regard to the possible risks related to a
+      product\" - a proportionality qualifier that the Regulation does not elaborate, and which this
+      item records rather than resolves. The second is the duty to provide **documented evidence of
+      the checks performed** on request by the market surveillance authorities, which is an
+      unqualified obligation on the responsible person. **What the check is against is
+      cross-referenced and worth naming when reporting**: the technical documentation of Article
+      9(2), and the requirements of Article 9(5) - the type, batch or serial number - Article 9(6) -
+      the manufacturer's name and addresses on the product - and Article 9(7). Those are Chapter III
+      Section 1 articles and this checklist does not walk them; a finding here records whether the
+      checking process is described, not whether the underlying requirements are met. **This is a
+      duty about conduct over time, so a document can describe it and never prove it.** A release
+      checklist, a stated review interval or a named owner of the check is the kind of statement
+      that answers this item. Recording that such a statement exists is not recording that the
+      checks happen. **Silence is `unresolved`, never `not-applicable`.** A repository whose
+      documents never mention checking the product against its technical documentation has not shown
+      that no checks occur, and the only fact that can close this item is tier 2 answered `yes`."
+  - id: art-16-3-responsible-person-details-on-the-product
+    article: Art. 16(3)
+    quote: The name, registered trade name or registered trade mark, and contact details, including the
+      postal and electronic address, of the economic operator referred to in paragraph 1 shall be
+      indicated on the product or on its packaging, the parcel or an accompanying document.
+    cite: GPSR Art. 16(3)
+    url: http://publications.europa.eu/resource/celex/32023R0988
+    checked_at: 2026-08-06
+    question: Do the declared documents show the responsible person's name and contact details,
+      including a postal and an electronic address, indicated on the product or on its packaging,
+      the parcel or an accompanying document?
+    applicability_note: "**Applies now**, since 13 December 2024 (Article 52). Not preparation.
+      **Conditional on tier 2 of the gate**, like the other two Article 16 items: `not-applicable`
+      where tier 2 is answered `yes` - **condition (1) of the three the scope note enumerates** -
+      `unresolved` where it is unanswered, and live where it is answered `no`. **This is a different
+      duty from Article 19(b) and the two are easy to run together.** Article 19(b) is about what
+      the **offer** displays and bites only where the manufacturer is not established in the Union.
+      Article 16(3) is about what is indicated **on the product, its packaging, the parcel or an
+      accompanying document**, and it carries no such condition - it attaches to whoever the Article
+      16(1) responsible person is, including an EU-established manufacturer that occupies the role
+      itself. An offer can satisfy Article 19(b) and leave Article 16(3) unmet, and the reverse.
+      **Postal and electronic, both.** The paragraph requires \"contact details, including the
+      postal and electronic address\". That is stricter than Regulation (EU) 2019/1020 Article 4(4),
+      which requires only a postal address and which GPSR Article 16(1) does not import. **For
+      software with no packaging, ask where \"on the product or ... in a document accompanying the
+      product\" actually lands.** An in-application about screen, an installer's licence or notice
+      screen, a shipped `NOTICE` file or the metadata block of a distributed package are the
+      candidate places; a page on a website is none of them, and Article 21 permits a digital format
+      only **additionally** and not instead. The Regulation gives no rule for a product that has no
+      physical form, and this item records the reading rather than asserting one. **Silence is
+      `unresolved`, never `not-applicable`.** Nothing in a repository shows what an installed
+      application displays to a user, so a document that does not address it has left the item open,
+      and the only fact that can close this item is tier 2 answered `yes`."

@@ -1,0 +1,32 @@
+lists:
+  ai_assistant_recipients:
+    kind: term
+    purpose: Embedded third-party AI assistant and "ask the docs" chat widgets — the component, package
+      and service-host spellings by which a product hands a conversational surface, and whatever a
+      person types into it, to somebody else's model. For the rule that asks where a language model
+      is reached and whether the surface needs an AI disclosure.
+    matching:
+      case_insensitive: true
+    entries:
+      - term: Fern search-and-ask widget (the AskAiChat panel)
+        anchors:
+          - "@fern-api/search-widget"
+          - AskAiChat
+        note: "The usual shape: a product imports `AskAiChat` from `@fern-api/search-widget`, declares the
+          package in its `package.json`, and renders the component's parts (`AskAiChat.Trigger`,
+          `AskAiChat.Root`, `AskAiChat.Panel`) where the panel opens. THE COMPONENT NAME IS CARRIED
+          AS WELL AS THE PACKAGE because the two reach different lines: the specifier appears once
+          at the top of a module and the identifier appears at every use site, including in a file
+          that received it through a re-export. WHAT A MATCH DOES NOT ESTABLISH: which model
+          answers, where it runs, or whether the panel is reachable by an end user rather than by
+          staff."
+      - term: Fern AI service host
+        anchors:
+          - buildwithfern.com
+        note: "The usual shape is an entry in the application's own Content-Security-Policy allow-list, such
+          as `'fai.buildwithfern.com'`, beside the other search hosts the page may reach. The
+          registrable domain rather than the `fai.` host is the anchor, because the CSP names one
+          subdomain and the widget's own bundle reaches others. A CSP ENTRY IS A PERMISSION AND NOT
+          A CALL: it establishes that the operator arranged for the browser to be allowed to reach
+          this host, which is why it is evidence worth reporting, and it establishes nothing about
+          any request that was actually made."

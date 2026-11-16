@@ -1,0 +1,35 @@
+sets:
+  build_output_directories:
+    question: >
+      Is this file inside a directory a build writes into — a bundle, a compiled target, a coverage
+      report?
+    patterns:
+      - pattern: (^|/)(?:dist|build|out|target|\.next|\.nuxt|coverage)/
+        excludes: "`dist/`, `build/`, `out/`, `target/`, `.next/`, `.nuxt/`, `coverage/`."
+      - pattern: (^|/)(?:\.cache|\.turbo|__pycache__)/
+        excludes: "`.cache/`, `.turbo/`, `__pycache__/`."
+    near_misses:
+      - rules:
+          - ai-prohibited-001
+        pattern: (^|/)(dist|build|out|\.next|\.nuxt|coverage)/
+        differs_by: The same names without `target`. One rule spells it.
+      - rules:
+          - eu-dsa-001
+        pattern: (^|/)(generated|__generated__|codegen|\.output|\.vercel)/
+        differs_by: >
+          A different question — code a GENERATOR wrote, not output a build wrote — and no name in
+          common. Left in that rule.
+      - rules:
+          - eu-dsr-001
+        pattern: (^|/)(generated|__generated__|codegen|\.output|\.vercel)/|\.(min|bundle|chunk)\.[cm]?jsx?$
+        differs_by: >
+          The generated-code directory branch above, OR'd in the same clause with a minified and
+          bundled FILENAME branch — `*.min.js`, `*.bundle.js`, `*.chunk.jsx`. Two questions written
+          as one clause, so neither half can be adopted without the other, and neither half is this
+          set's question. Left in that rule.
+  type_declaration_files:
+    question: |
+      Is this file a TypeScript declaration file, which carries types and no executable statement?
+    patterns:
+      - pattern: \.d\.ts$
+        excludes: "`index.d.ts`, `globals.d.ts` and every other `*.d.ts`."

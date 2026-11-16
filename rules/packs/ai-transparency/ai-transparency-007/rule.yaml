@@ -1,0 +1,426 @@
+id: ai-transparency-007
+pack: ai-transparency
+short_name: "Emotion or biometric recognition: telling people it runs"
+problem_line:
+  text: "Emotion or biometric analysis: notice to people not found"
+fix_line: Tell people where they meet the system, by the time capture or upload starts, that emotion
+  or biometric analysis runs.
+title: Emotion-recognition or biometric-categorisation API - notice to the persons exposed needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 50(3) — addressed to deployers (Art. 3(4)), not
+      to providers (Art. 3(3)): 'Deployers of an emotion recognition system or a biometric
+      categorisation system shall inform the natural persons exposed thereto of the operation of the
+      system, and shall process the personal data in accordance with Regulations (EU) 2016/679 and
+      (EU) 2018/1725 and Directive (EU) 2016/680, as applicable. This obligation shall not apply to
+      AI systems used for biometric categorisation and emotion recognition, which are permitted by
+      law to detect, prevent or investigate criminal offences, subject to appropriate safeguards for
+      the rights and freedoms of third parties, and in accordance with Union law.' Art. 50(5) fixes
+      the manner and the moment: the information goes to the natural persons concerned in a clear
+      and distinguishable manner at the latest at the time of the first interaction or exposure, and
+      conforms to the applicable accessibility requirements. Chapter IV applies from 2026-08-02
+      under Art. 113 (no derogation covers Art. 50). The party calling a third-party emotion or
+      biometric-categorisation API under its own authority is the deployer here — the mirror image
+      of the provider-side duties in Art. 50(1) and (2)."
+    url: https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-50
+    checked_at: 2026-07-27
+    jurisdiction: EU
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 2(12) — the free and open-source exclusion, cited
+      here because it does NOT switch this rule off and because a reader of an AI Act finding whose
+      own product is open source reaches for it first. Art. 2(12): 'This Regulation does not apply
+      to AI systems released under free and open-source licences, unless they are placed on the
+      market or put into service as high-risk AI systems or as an AI system that falls under Article
+      5 or 50.' Article 50 is named inside that proviso alongside Article 5, so the Art. 50(3)
+      deployer duty — the duty this rule tests — survives however the system is licensed. That is
+      the same disposal ai-prohibited-001, -002 and -003 make one article over, on the identical
+      words. How the project is funded does not reopen the question either. The conditions recital
+      103 attaches — that a component provided against a price or otherwise monetised does not
+      benefit, that making a component available through an open repository is not in itself a
+      monetisation, and that transactions between microenterprises are excepted — qualify the
+      exceptions this Regulation provides to free and open-source AI components, and the recital
+      says exceptions in the plural: Art. 2(12) here, and elsewhere Art. 25(4), Art. 53(2) and Art.
+      54(6). Microenterprise there is a defined term, tested by Commission Recommendation
+      2003/361/EC rather than by self-description. An Article 50 system is outside the Art. 2(12)
+      exclusion before any of those conditions is reached, and none of the other three exceptions
+      reaches an Article 50 duty at all. So being unmonetised, being a microenterprise and
+      publishing on a public repository change nothing here, in either direction. Commission
+      Guidelines C(2026) 5054 final — draft approval, not yet applicable, interpretation only — say
+      the same at para. 23 of the Annex: providers and deployers of open-source AI systems within
+      the scope of Article 50 still have to meet their respective transparency obligations. Its
+      footnote 11 anchors the free and open-source release on recital 102, not on recital 103.
+      Neither of those two Guidelines propositions is quoted here or carries a quote receipt: the
+      quote checker does not fetch guidance documents, and this entry's url resolves to the
+      Regulation, which does not contain them — the Guidelines have a separate entry in this rule's
+      legal_basis, carrying their own source link and their own not-yet-applicable status. Only the
+      single-quoted Art. 2(12) sentence above is machine-verified against the Official Journal. How
+      the system was released is a question for the person running the scan rather than for a
+      detector, read from the terms the system is actually released under, and a LICENSE file is
+      evidence about it rather than the answer. The Art. 2(12) quotation above is the text the four
+      ai-annex3 Article 6(4) checklists carry, re-verified against the same Official Journal source
+      on 2026-08-04. Those four quote recital 103 in full as well, because the Art. 2(12) exclusion
+      becomes available on an Annex III row only once the Article 6(4) derogation takes the system
+      out of high-risk — the proviso names high-risk systems first, so until then the exclusion is
+      as unavailable there as it is here — and the monetisation test then decides whether it
+      applies; on an Article 50 row it decides nothing, which is why it is not repeated here.
+      Reference only: a scope provision establishes no duty of its own, and this one removes none
+      from this rule."
+    url: http://publications.europa.eu/resource/celex/32024R1689
+    checked_at: 2026-08-04
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Commission Guidelines on the implementation of the transparency obligations for certain AI
+      systems under Article 50 of Regulation (EU) 2024/1689, C(2026) 5054 final, 20.7.2026 — STATUS:
+      DRAFT APPROVAL, NOT YET ADOPTED AND NOT YET APPLICABLE. Page 2 of the document states that
+      'The Guidelines will be formally adopted by the Commission at a later date' and that 'It is
+      only from that moment that these Guidelines will be applicable'. Cited for interpretation
+      only; it establishes no obligation. Content relied on: para. 99 (Art. 50(3) imposes the
+      obligation on deployers of emotion recognition and biometric categorisation systems, to inform
+      the natural persons exposed to those systems of the operation of the system); para. 100
+      (Recital 132 purpose: awareness of exposure to systems that can be intrusive for privacy; the
+      obligation applies whether the persons are exposed in real time or the systems are operated ex
+      post); paras 101-102 (Art. 3(39) notion of emotion recognition system; all emotion recognition
+      systems are also high-risk unless prohibited under Art. 5(1)(f) in the areas of workplace and
+      education); paras 103-104 (Art. 3(40) notion of biometric categorisation system; unless
+      prohibited under Art. 5(1)(g), Art. 50(3) reaches any biometric categorisation system, e.g.
+      age or gender classification based on biometric data, whether or not it is high-risk); paras
+      105-108 (what must be told, that it is owed to all natural persons exposed including children,
+      that no particular means is prescribed but Art. 50(5) requires a clear and distinguishable
+      manner and accessibility, and that it is due at the latest at first exposure); para. 109 (the
+      law-enforcement exception, applying the clarifications of paras 46-48 with the difference that
+      Art. 50(3) turns on the legal rules governing law enforcement powers rather than on an
+      explicit authorising law); para. 110 (the Art. 50(3) information obligation does not in itself
+      render the use of such a system lawful, does not legitimise intrusive or discriminatory uses
+      that might be prohibited under Art. 5, and is owed in addition to information duties under
+      Union data protection law); paras 12-13 (deployer = the party assuming responsibility for the
+      decision to deploy and for the manner of actual use, technical control not required; deployers
+      are in scope of Art. 50(3) and (4) when established or located in the Union, or located in a
+      third country where the output is used in the Union). Verified against the published PDF (51
+      pp.) on 2026-07-27; paras 12-13 are within the range already cited by
+      ai-transparency-001/-003/-004, paras 99-110 are new to this rule."
+    url: https://digital-strategy.ec.europa.eu/en/library/guidelines-transparency-obligations-providers-and-deployers-ai-systems
+    checked_at: 2026-09-07
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), definitional and scoping provisions that fix who and
+      what this rule is about, kept for reference because none of them creates an obligation on its
+      own. Art. 3(4): a deployer is 'a natural or legal person, public authority, agency or other
+      body using an AI system under its authority except where the AI system is used in the course
+      of a personal non-professional activity'. Art. 2(10): the Regulation 'does not apply to
+      obligations of deployers who are natural persons using AI systems in the course of a purely
+      personal non-professional activity' — read in Commission Guidelines C(2026) 5054 final para.
+      19, where 'purely' qualifies the whole phrase, both limbs must hold, and any activity yielding
+      regular economic benefit or forming part of a professional, business, trade, occupational or
+      freelance activity counts as professional. Art. 3(39): an emotion recognition system is 'an AI
+      system for the purpose of identifying or inferring emotions or intentions of natural persons
+      on the basis of their biometric data'. Art. 3(40): a biometric categorisation system is 'an AI
+      system for the purpose of assigning natural persons to specific categories on the basis of
+      their biometric data, unless it is ancillary to another commercial service and strictly
+      necessary for objective technical reasons'. Art. 3(34): biometric data is 'personal data
+      resulting from specific technical processing relating to the physical, physiological or
+      behavioural characteristics of a natural person, such as facial images or dactyloscopic data'.
+      Recital 18 narrows Art. 3(39): it does not include physical states such as pain or fatigue,
+      nor the mere detection of readily apparent expressions, gestures or movements, unless those
+      are used for identifying or inferring emotions."
+    url: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 99(4) and Art. 99(4)(g) — the penalty tier this
+      rule sits in, kept for reference because a penalty provision does not create the disclosure
+      duty: non-compliance with 'transparency obligations for providers and deployers pursuant to
+      Article 50' is 'subject to administrative fines of up to EUR 15 000 000 or, if the offender is
+      an undertaking, up to 3 % of its total worldwide annual turnover for the preceding financial
+      year, whichever is higher'. Art. 99(6) reverses that for SMEs including start-ups: 'each fine
+      referred to in this Article shall be up to the percentages or amount referred to in paragraphs
+      3, 4 and 5, whichever thereof is lower'."
+    url: https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-99
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: EU AI Act (Regulation (EU) 2024/1689), Art. 5(1)(e), (f) and (g) with Art. 99(3) — the
+      boundary of this rule, kept for reference because this rule does NOT test them and must not be
+      read as covering them. Art. 5(1)(f) prohibits 'the placing on the market, the putting into
+      service for this specific purpose, or the use of AI systems to infer emotions of a natural
+      person in the areas of workplace and education institutions, except where the use of the AI
+      system is intended to be put in place or into the market for medical or safety reasons'. Art.
+      5(1)(g) prohibits biometric categorisation systems 'that categorise individually natural
+      persons based on their biometric data to deduce or infer their race, political opinions, trade
+      union membership, religious or philosophical beliefs, sex life or sexual orientation',
+      excluding labelling or filtering of lawfully acquired biometric datasets and categorising of
+      biometric data in the area of law enforcement. Art. 5(1)(e) prohibits 'the placing on the
+      market, the putting into service for this specific purpose, or the use of AI systems that
+      create or expand facial recognition databases through the untargeted scraping of facial images
+      from the internet or CCTV footage'. Art. 99(3) puts all three at 'administrative fines of up
+      to EUR 35 000 000 or, if the offender is an undertaking, up to 7 % of its total worldwide
+      annual turnover for the preceding financial year, whichever is higher', and they have applied
+      since 2025-02-02. Commission Guidelines C(2026) 5054 final para. 110 and para. 25 (with
+      Recital 137) record that the Art. 50(3) notice does not in itself make such a use acceptable
+      and cannot displace Art. 5 — the notice duty and the prohibitions are cumulative, at different
+      tiers, on the same SDK surface.
+    url: https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-5
+    checked_at: 2026-07-27
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2026-08-02
+severity: high
+rule_confidence: 0.35
+detector:
+  engine: builtin-regex
+  match:
+    - api\.hume\.ai
+    - (?:from|require|import)\s*\(?\s*["'](?:npm:|jsr:)?(?:hume(?:/[^"']*)?|@humeai/[^"']+)["']
+    - HUME_API_KEY|HUME_KEY|[Hh]ume[_-]?(?:[Aa]pi[_-]?)?[Kk]ey
+    - (?:joy|sorrow|anger|surprise)(?:_l|L)ikelihood
+    - "[\"']?Attributes[\"']?\\s*(?:=>|[:=])\\s*\\[[^\\]]*[\"'](?:ALL|EMOTIONS|AGE_RANGE|GENDER)[\"\
+      ']"
+    - FaceAttributeType\.(?:[Ee]motion|[Aa]ge|[Gg]ender)
+    - returnFaceAttributes[^\n]{0,60}(?:[Ee]motion|(?<![A-Za-z])[Aa]ge(?![a-z])|[Gg]ender)
+    - faceExpressionNet|withFaceExpressions\s*\(|loadFaceExpressionModel\s*\(
+    - ageGenderNet|withAgeAndGender\s*\(|loadAgeGenderModel\s*\(
+    - ^\s*(?:from\s+(?:deepface|fer|feat|hsemotion|opensmile|hume)(?:\.[\w.]+)?\s+import\s|import\s+(?:deepface|fer|feat|hsemotion|opensmile|hume)(?:[.\s,]|$))
+    - "[Dd]eep[Ff]ace\\.(?:analyze|analyse)\\s*\\(|(?<![A-Za-z])FER\\(|\\.detect_emotions\\s*\\("
+    - ^\s*["']?(?:[^"']*["']\s*:\s*["'](?:npm|jsr):)?(?:@humeai/[\w.\-]+|hume|face-api\.js|@vladmandic/face-api|deepface|fer|py[-_.]feat|hsemotion|opensmile|vokaturi)["']?\s*(?:\[[^\]]*\])?\s*[:=><~^@]
+    - "[Ee]motion(?:al)?[_\\-.]?(?:[Rr]ecogni|[Dd]etect|[Aa]naly|[Cc]lassif|[Ii]nfer|[Pp]redict)"
+    - (?:[Rr]ecogni[sz]e?|[Dd]etect|[Aa]naly[sz]e?|[Cc]lassify|[Ii]nfer|[Mm]easure|[Pp]redict|[Aa]ssess|[Ss]core?|[Gg]auge?|[Ee]stimat(?:e|ion)?|[Ee]valuat(?:e|ion)?|[Ee]xtract|[Tt]rack|[Ss]ense?|[Mm]onitor|[Dd]eriv(?:e|ation)?|[Ii]dentif(?:y|ication)?|[Dd]etermin(?:e|ation)?|[Jj]udge?|[Ii]nterpret)[_\-.]?[Ee]motion
+    - "[Aa]ffective[_\\-.]?[Cc]omputing|[Aa]ffect[_\\-.]?(?:[Rr]ecogni|[Dd]etect|[Aa]ssess|[Ss]cor|\
+      [Ee]stimat|[Mm]easur|[Ee]valuat)"
+    - (?:[Vv]oice|[Vv]ocal|[Ss]peech|[Pp]rosod(?:y|ic))[_\-.]?[Ee]motion|[Ee]motion(?:al)?[_\-.]?(?:[Vv]oice|[Vv]ocal|[Ss]peech|[Pp]rosod(?:y|ic))
+    - "[Vv]okaturi"
+    - "[Aa]ffect[Nn]et|[Ff][Ee][Rr]-?2013|[Ff][Ee][Rr][Pp]lus|emotion-ferplus"
+    - ^[
+      \t]*(?:[Dd][Ee][Ee][Pp][Ff][Aa][Cc][Ee]|[Hh][Ss][Ee][Mm][Oo][Tt][Ii][Oo][Nn]|[Oo][Pp][Ee][Nn][Ss][Mm][Ii][Ll][Ee]|[Vv][Oo][Kk][Aa][Tt][Uu][Rr][Ii]|[Pp][Yy][-_.]?[Ff][Ee][Aa][Tt]|[Ff][Ee][Rr]|[Hh][Uu][Mm][Ee])[
+      \t]*(?:[=<>!~]=|[<>]|@|\[|;|\r?$)
+  match_without:
+    - ^\s*(?:\*|//|<!--)
+    - ^\s*(?:readonly\s+)?[A-Za-z_$][\w$]*\??\s*:\s*(?:boolean|string|number|any|unknown|null)(?:\s*\|\s*(?:boolean|string|number|any|unknown|null))*\s*[;,]?\s*$
+    - ^(?![^\n]*(?:[Ff]ace|FACE|[Ff]acial|FACIAL|[Bb]iometric|BIOMETRIC|[Hh]ume|HUME|[Vv]okaturi|VOKATURI|hsemotion|opensmile|py-?feat|[Ff][Ee][Rr][Pp]lus|[Ff][Ee][Rr]-?2013|[Aa]ffect[Nn]et|detect_emotions|(?:joy|sorrow|anger|surprise)(?:_l|L)ikelihood|AGE_RANGE|[Vv]oice|VOICE|[Ss]peech|SPEECH|[Pp]rosody|PROSODY))[^\n]*(?<![A-Za-z])[Ss]entiment(?![A-Za-z])|text-classification|textClassification|[Nn]aturalLanguage|(?<![A-Za-z])[Cc]omprehend|(?<![A-Za-z])NLP(?![A-Za-z])|tokeni[sz]
+  resolve_import_aliases: true
+context_questions:
+  - "Which role does the scanned party hold for this system — provider (AI Act Art. 3(3)) or
+    deployer (Art. 3(4))? Art. 50(3) is owed by the deployer: the party using the system under its
+    own authority, which for a hosted emotion or biometric-categorisation API is whoever calls it on
+    its own credentials for its own purpose. Answer from the codebase. A repository that ships a
+    connector, an SDK, an integration catalogue, a plugin or a client library exposing a vendor's
+    emotion API to its own users is not itself exposing any natural person to that system: that code
+    is a conduit, and the deployer is whoever configures and runs it downstream. Quote the
+    credential handling, the call path and the surface that settle which role this repository holds,
+    and say plainly if the answer is neither because nothing here is ever executed against a real
+    person."
+  - Is the input to this call biometric data within AI Act Art. 3(34) — 'personal data resulting
+    from specific technical processing relating to the physical, physiological or behavioural
+    characteristics of a natural person, such as facial images or dactyloscopic data'? Art. 3(39)
+    and Art. 3(40) are both built on that term, so if the input is not biometric data this rule does
+    not reach the call at all. Text a user typed into a form is not biometric data; neither is a
+    click stream, a purchase history or a self-declared mood. A camera frame, a photograph, a voice
+    recording and a face embedding derived from one are. Quote the input source.
+  - "Is the system this call implements an emotion recognition system within AI Act Art. 3(39) —
+    identifying or inferring emotions or intentions of natural persons on the basis of their
+    biometric data — or a biometric categorisation system within Art. 3(40) — assigning natural
+    persons to specific categories on the basis of their biometric data, unless ancillary to another
+    commercial service and strictly necessary for objective technical reasons — or a different use
+    of the same SDK? Several neighbouring uses are none of these: face detection returning only
+    bounding boxes, liveness or anti-spoofing checks, blur and quality scoring, head-pose and gaze
+    tracking, identity matching, and emotion or sentiment scoring over text the user typed, which
+    rests on no biometric data at all. Recital 18 also puts physical states such as pain or fatigue
+    outside Art. 3(39), and the mere detection of readily apparent expressions, gestures or
+    movements unless they are used to infer emotions. Quote the model name, the requested attribute
+    list or the consumed output field that settles which of these it is."
+  - "Does this call reach a surface where natural persons are exposed to the system in operation — a
+    live camera or microphone, a photo or video a user submits, a kiosk, a store or venue, a game
+    client — or is it an internal batch job over material already collected, a benchmark, or a
+    model-evaluation script? Trace the input source and the delivery surface and quote both. Do not
+    treat 'it runs offline' as the answer: Commission Guidelines C(2026) 5054 final para. 100
+    records that the duty applies whether persons are exposed in real time or the system is operated
+    ex post, so the question is whether identifiable natural persons are exposed to the system's
+    operation, not whether the processing is live."
+  - "Is a person who is scanned, categorised or emotion-analysed by this system actually TOLD, at
+    the point where they are exposed to it? That is the question Art. 50(3) asks — the deployer
+    informs the natural persons exposed thereto of the operation of the system — and it is not the
+    question 'does a string resembling a notice exist somewhere in this codebase'. Art. 50(5) fixes
+    the standard you are applying: the information is provided to the natural persons concerned in a
+    clear and distinguishable manner at the latest at the time of the first interaction or exposure,
+    and conforms to the applicable accessibility requirements. So find the surface where the person
+    meets the system — the screen above the camera, the panel before the microphone opens, the
+    upload or permission step, the printed sign at the kiosk or venue, the mobile permission string,
+    the store listing — and read what is actually rendered there, then say whether a person standing
+    in front of it learns that the system is operating and what it does with them. THE DETECTOR
+    PERFORMS NO ABSENCE CHECK AT ALL: it raises the candidate on the emotion or
+    biometric-categorisation path and leaves this whole question to you, so the search is yours to
+    do and yours to report. Search the whole repository before concluding the notice is absent — UI
+    components and templates, i18n and locale bundles, onboarding, permission and consent screens,
+    signage copy, mobile permission strings and store metadata — and follow the call path upward,
+    because the notice or the gate may sit in the caller, the route handler, the layout or the
+    middleware rather than in the file that matched. Weigh what you find rather than counting it.
+    Second-person copy telling the person what is read of them ('While you play, the console reads
+    the camera and detects your mood'; 'Your facial expressions are analysed on this device') is the
+    shape that comes closest to discharging the duty, and it is the vocabulary this rule's two
+    deleted guard clauses keyed on — it is now evidence for you to weigh, not a reason to stop
+    looking, because that guard was wrong in both directions at once: an ordinary developer comment
+    silenced it while a correctly worded notice did not. Four shapes look like the notice and are
+    not. An operator-side configuration flag — a settings toggle, an environment variable, an admin
+    dashboard checkbox, a per-tenant feature switch — informs the party that turned the system on,
+    whereas this duty is owed to the person exposed to it. An identifier or i18n key named for a
+    notice (EmotionNoticeBanner, notice.biometric.kiosk, facePresentationNotice) is a name; read the
+    string it resolves to, because 'Camera in use' says nothing about emotion inference. A comment
+    or ticket recording that the notice is still outstanding is a record that the duty is UNMET. And
+    a paragraph in the terms of service or the privacy policy does not reach the person at the
+    moment of exposure. Quote the string that ships and where it renders, or record the absence
+    together with the places you searched."
+  - Does the law-enforcement exception in the second sentence of Art. 50(3) apply — is this system
+    permitted by law to detect, prevent or investigate criminal offences, subject to appropriate
+    safeguards for the rights and freedoms of third parties and in accordance with Union law? Read
+    it narrowly. Commission Guidelines C(2026) 5054 final para. 109 applies the clarifications of
+    paras 46-48, which require the permitting rules to specify the purposes and circumstances of the
+    permitted use and to provide safeguards, with the difference that Art. 50(3) turns on the legal
+    rules governing law enforcement powers rather than on an explicit authorising instrument.
+    Commercial fraud scoring, content moderation, abuse detection and a general security framing do
+    not reach it. Quote whatever is being relied on.
+  - Is the scanned party a deployer at all? Art. 3(4) excludes a natural person using an AI system
+    in the course of a personal non-professional activity, and Art. 2(10) puts deployer obligations
+    outside the Regulation for purely personal non-professional use; Commission Guidelines C(2026)
+    5054 final para. 19 reads 'purely' as qualifying the whole phrase, so both limbs must hold, and
+    treats any activity yielding regular economic benefit or forming part of a professional,
+    business, trade, occupational or freelance activity as professional. A hobby, learning or demo
+    repository with no product, no users and no economic benefit must not produce a deployer
+    finding. On the other side, para. 12 places the deployer role on whoever decides to deploy the
+    system and how it is used, without requiring technical control over it. Quote the evidence of
+    which side the repository sits on.
+  - "Does the use instead fall inside one of the Art. 5 prohibitions that share this SDK surface —
+    inferring emotions of natural persons in the areas of workplace and education institutions (Art.
+    5(1)(f), with the medical or safety carve-out), biometric categorisation deducing race,
+    political opinions, trade-union membership, religious or philosophical beliefs, sex life or
+    sexual orientation (Art. 5(1)(g)), or untargeted scraping of facial images to build a facial
+    recognition database (Art. 5(1)(e))? Those sit at the Art. 99(3) tier and have applied since
+    2025-02-02; this rule tests none of them. If the evidence points there, mark the finding to
+    clarify with the reason: return needs_human with `settles` set to `law_unclear:` followed by the
+    Art. 5 point (for example `law_unclear:AI Act Art. 5(1)(f)`), and name the evidence for it in
+    your reasoning. Do not tie it to a profile question - no `question:<id>` in `settles` and no
+    `waits_on_answer` standing - because an answer to such a question would return the finding as a
+    notice gap under this rule's title. Do not report a notice gap, and do not return
+    violation_candidate on the notice duty for it, because Commission Guidelines C(2026) 5054 final
+    paras 25 and 110 record that the Art. 50(3) notice does not in itself make such a use acceptable
+    and cannot displace Art. 5. Whether the use is inside Art. 5 turns on where and on whom the
+    system is used - a workplace, an education institution, what a categorisation deduces - facts
+    the person holds and the code does not decide, and on how the Art. 5 point and any exception it
+    carries, such as the medical or safety exception of point (f), read on those facts, which is a
+    question for counsel; so your answer raises that question rather than settling it. Quote the
+    workplace, education, protected-category or scraping evidence you found, or record that you
+    looked and found none."
+evidence_template: "{file}:{line} names or calls one of this rule's emotion-recognition or
+  biometric-categorisation spellings - a vendor host, an SDK import or package entry, a credential
+  name, a requested face-attribute list, a model or library identifier, or an emotion word bound to
+  a recognition verb. Naming is not calling, and one of these spellings has already matched a line
+  that names nothing at all: the package-entry clause reads a package name written as a manifest
+  key, and a WordPiece tokenizer vocabulary shipped inside a sentence-embedding model writes its
+  rows in exactly that shape, so `\"hume\": 20368,` - a subword token and its id, sitting between
+  `\"wonderland\": 20365` and `\"pivotal\": 20369` - matched it. That line is model data: no vendor,
+  no call, no natural person. Other shapes on this list name rather than do - a credential name in a
+  sample environment file or a deployment template, and a connector or integration catalogue that
+  offers a vendor's API to somebody else's users - and one vendor here also sells a text-to-speech
+  surface, which infers nothing from anybody's biometric data. Read the matched line and settle what
+  it is: context question 1 asks whose system this is and takes the answer that nothing here is ever
+  executed against a real person, and context question 3 separates emotion inference from the
+  neighbouring uses of the same SDK. The detector makes no finding about whether anybody was told —
+  whether a person exposed to this system is informed at the point of exposure is context question
+  5, and whether the scanned party is the deployer at all is context question 1"
+remediation_template: >
+  Settle the role first. AI Act Art. 50(3) is owed by the deployer (Art. 3(4)) — the party that
+
+  decides to run the system and how it is used — and not by the vendor whose API is called, nor by
+
+  a project that only ships a connector or a client library for that API; a natural person using
+
+  such a system in a purely personal non-professional activity is outside the obligation altogether
+
+  (Art. 2(10)).
+
+  On the deployer branch, put the notice where the exposed person meets the system, not where an
+
+  operator configures it: a panel shown before the camera or microphone opens, the same at the
+  upload
+
+  step where a person submits a photo or video of themselves to be analysed, a persistent label on
+
+  the surface that carries the capture, printed or on-screen signage for a kiosk or in-store
+
+  deployment, and the equivalent in mobile permission strings and store metadata. Art. 50(5) asks
+  for
+
+  it in a clear and distinguishable manner, at the latest at first exposure, conforming to the
+
+  applicable accessibility requirements. What ships is a sentence the person reads - "While you
+  play,
+
+  the console reads the camera and detects your mood to pick a track", "Your facial expressions are
+
+  analysed on this device while the screen is in use" - addressed to them, in the second person,
+
+  naming what is read of them and what the system does with it. Four things look like that answer
+  and
+
+  are not, and all four appear in real repositories: an operator-side switch (an admin toggle, an
+
+  environment variable, a per-tenant feature flag), which informs whoever turned the system on
+  rather
+
+  than the person it is turned on; a component or i18n key named for a notice - EmotionNoticeBanner,
+
+  notice.biometric.kiosk - whose rendered string says only "Camera in use"; a comment or ticket
+
+  recording that the notice is still outstanding, which is a record that the duty is unmet; and a
+
+  paragraph in the terms of service or the privacy policy, which is not where a person standing in
+
+  front of a camera is reading. Art. 50(3) also routes the same processing into the GDPR / LED /
+
+  EUDPR track, so pair the notice with the data-protection information and legal-basis work instead
+
+  of treating one as a substitute for the other.
+
+  Keep this separate from Art. 5. Inferring emotions in the workplace or in education institutions
+
+  (Art. 5(1)(f), medical and safety uses excepted), biometric categorisation deducing race,
+  political
+
+  opinions, trade-union membership, religious or philosophical beliefs, sex life or sexual
+  orientation
+
+  (Art. 5(1)(g)), and untargeted scraping of facial images to build a facial recognition database
+
+  (Art. 5(1)(e)) are prohibitions at the Art. 99(3) tier, in force since 2025-02-02. Adding a notice
+
+  does not cure a use that falls there — if the deployment looks like one of those, the engineering
+
+  answer is to remove that use, not to label it.
+
+  Art. 50 applies to EU-facing deployments from 2026-08-02, at the Art. 99(4)(g) tier.
+
+  Releasing this under a free and open-source licence does not remove the duty: Art. 2(12) withholds
+  that
+
+  exclusion from AI systems placed on the market or put into service as systems falling under
+  Article 5 or 50,
+
+  and Article 50 is the article this finding sits under. Neither does the way the project is funded.
+  Recital
+
+  103's monetisation test narrows the Art. 2(12) exclusion, and an Article 50 system does not have
+  that
+
+  exclusion to narrow, so being unmonetised, being a microenterprise and publishing on a public
+  repository
+
+  leave this duty exactly where it is.
+data_categories:
+  - user.biometric
+fingerprint_spec: project
+reading_class:
+  class: mixed
+  limbs:
+    - question: 2
+      class: per-location
+    - question: 3
+      class: per-location
+    - question: 5
+      class: existence

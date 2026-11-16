@@ -1,0 +1,851 @@
+checklist_id: cra-annex3-important-products
+title: CRA Article 7 and Annex III - important products with digital elements and the conformity
+  assessment route
+law: Regulation (EU) 2024/2847 (Cyber Resilience Act)
+source_url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+checked_at: 2026-09-07
+scope_note: "**Scope declaration.** This checklist covers one question and no other: whether the
+  product's own declared documents place its **core functionality** in one of the twenty-three
+  product categories listed in Annex III to the Cyber Resilience Act - nineteen in Class I and four
+  in Class II - and, where they do, which of the conformity assessment procedures in Article 32 is
+  then available to the manufacturer. **Every answer this checklist produces is a routing signal and
+  never a shortfall.** Placing a product in Annex III states which assessment path applies; it
+  states nothing about whether anything has been done wrongly. Annex III carries no obligation of
+  its own, no penalty of its own and no disclosure duty of its own: its whole legal effect runs
+  through Article 7(1), which routes the product to Article 32(2) and (3), and - for the narrower
+  set of Annex III products that are already inside one of Article 32's third-party branches -
+  through Article 12(3), which decides whose conformity assessment governs where such a product is
+  also a high-risk AI system. **Article 12(3) is conditional and the condition is stated wherever it
+  is mentioned**, in this checklist's \"What this checklist does NOT cover\" paragraph below as well
+  as here. So a finding on any item here reads *\"the declared documents describe this product as X,
+  which routes it to Y - here is what Y asks for\"*, and never *\"this product falls short\"*. Three
+  of the six items below declare `finding_when: present`, which makes their permitted verdicts
+  `found`, `not-found`, `not-applicable` and `unresolved`; `found` on those items records a route,
+  and the ordinary reading of a finding as a problem does not apply to them. **The classification is
+  a fact about what the product IS, so it is read from the developer's own declared documents and is
+  never inferred from source vocabulary.** That is a standing rule of this repository and it is
+  backed by an incident: a source-code classifier for \"is this a hiring, education or lending
+  product\" was designed, measured and discarded by the owner on 2026-08-04, and row 11 of the same
+  coverage map records the reclassification SRC to DECL that followed. The primary sources say the
+  same thing twice over. The Commission's own guidance defines core functionality by reference to
+  \"that product's main features and technical capabilities, without which it would not be able to
+  meet its intended purpose\", assessed on \"the information the ... manufacturer supplies in the
+  instructions for use, promotional or sales materials and statements, as well as in the technical
+  documentation\" - every source named there is a document the manufacturer writes. And Implementing
+  Regulation (EU) 2025/2392 recital 5 says outright that a product \"that has the ability to perform
+  the functions of a product category ... but whose core functionality itself is different from that
+  of such product category is not to be considered to meet the technical description of that product
+  category\", with a smartphone containing an operating system and a password manager as its worked
+  example. A detector keyed to credential-vault code, tunnel setup or a bundled browser engine
+  measures exactly the signal that recital says is not decisive. **So no item below names a census
+  category, and that omission is deliberate rather than an oversight.** `census_categories` is the
+  field through which code facts are offered to an adjudicating agent as bearing on an item, and
+  there is no code fact that bears on which product category a product's core functionality falls
+  in. An agent reading the repository may of course notice that the tree contains a licence file, a
+  tunnel implementation or a credential store, and may use that to corroborate or to doubt what the
+  documents say; that is the agent's own judgement while reading, and this checklist deliberately
+  provides no structural field through which such an observation could be presented as evidence of a
+  category. **Article 32(5) is the provision in this chain that matters most to the audience of this
+  scanner, and it is stated here rather than left to one item.** A manufacturer of an Annex III
+  product - **of either class** - that qualifies as free and open-source software within Article
+  3(48) may demonstrate conformity by any of the Article 32(1) procedures, **including the internal
+  control procedure based on module A, which is self-assessment**, provided that the technical
+  documentation referred to in Article 31 \"is made available to the public at the time of the
+  placing on the market of those products\". Recital 91 closes with the same rule, and the
+  Commission's guidance states that the stricter procedures do \"not include important products with
+  digital elements of class I or II qualifying as free and open-source software\". For a large part
+  of this product's audience, therefore, an Annex III classification does not require a notified
+  body at all: it attaches a **publication condition to the technical documentation**. A statement
+  of this row that omits Article 32(5) misdescribes the exposure of an open-source manufacturer, and
+  item `art-32-5-foss-public-technical-documentation` exists to ask that question directly. **Class
+  I is conditional and Class II is not, and running the two together is the single easiest error on
+  this row.** Article 32(2) requires a Class I product to go to a notified body (module B plus
+  module C, or module H) **only where** the manufacturer \"has not applied or has applied only in
+  part harmonised standards, common specifications or European cybersecurity certification schemes
+  at assurance level at least 'substantial' as referred to in Article 27, **or where such**
+  harmonised standards, common specifications or European cybersecurity certification schemes **do
+  not exist**\". Applied in full, module A self-assessment stays available under Article 32(1).
+  **How far partial application reaches is a reading and not a settled point, and it is recorded as
+  an open question rather than asserted**: the paragraph submits the product \"with regard to those
+  essential cybersecurity requirements\", which reads naturally as operating requirement by
+  requirement, while the Commission's draft guidance at paragraphs 149 to 151 - content approved 27
+  July 2026 and **not applicable until formally adopted** - states a per-product eligibility test
+  with a limb the operative text does not carry, that \"all the applicable requirements of a
+  relevant harmonised standard need to be applied\" and that \"the standard's scope needs to cover
+  at least all the cybersecurity risks associated to that product's core functionality\". The
+  divergence is set out again on `art-32-2-class-i-standards-applied`, and neither reading is
+  presented as the answer. Article 32(3), by contrast, has no such opening: a Class II product
+  demonstrates conformity by module B plus C, module H, or a European cybersecurity certification
+  scheme at assurance level at least 'substantial', and module A is not among them. Recital 91
+  states this expressly - for class II the assessment \"should always involve a third party, even
+  where the product complies fully or partly with harmonised standards, common specifications or
+  European cybersecurity certification schemes\". **Two riders keep that statement of Class I from
+  being read wider than it is, and both must travel with it.** First, the trigger in Article 32(2)
+  includes the case where **no** standard, specification or scheme exists at all, so for as long as
+  none covers a given essential requirement, a Class I product sits in the third-party branch for
+  that requirement and the self-assessment option is open in law with nothing available to satisfy
+  it. Second, **whether any harmonised standard reference for the Cyber Resilience Act's Annex I
+  requirements has yet been published in the Official Journal was not established** by the research
+  this checklist is built from, and it is not answerable from the Regulation. Until it is
+  established, no item, note or finding here may assert that a Class I product must use a notified
+  body, and none may assert that it may self-assess either. The honest output names the condition
+  and hands the judgement over. **Article 27(9) can remove the third-party obligation even for Class
+  II**, and it is recorded because a reader who knows only Article 32(3) will overstate that route.
+  That paragraph empowers the Commission, by delegated act, to specify the European cybersecurity
+  certification schemes that can demonstrate conformity, and provides that a certificate under such
+  a scheme at least at assurance level 'substantial' \"eliminates the obligation of a manufacturer
+  to carry out a third-party conformity assessment for the corresponding requirements, as set out in
+  Article 32(2), points (a) and (b), and Article 32(3), points (a) and (b)\". Whether any such
+  delegated act has been adopted was not established; no evidence of one was found, and the point
+  was not searched systematically. **The Article 7(4) implementing act exists, is in force, and is
+  where the operative content of every category lives.** Commission Implementing Regulation (EU)
+  2025/2392 of 28 November 2025 on the technical description of the categories of important and
+  critical products with digital elements (CELEX 32025R2392; OJ L, 2025/2392, 1.12.2025; in force
+  from **21 December 2025**) supplies a binding technical description for all twenty-three Annex III
+  categories. Annex III's bare noun phrases are therefore no longer the whole of the operative text:
+  the Annex does not say what a \"network management system\" or a \"boot manager\" is, and that
+  implementing regulation does. Those descriptions are reproduced in the `applicability_note` fields
+  of `annex-iii-class-i-categories` and `annex-iii-class-ii-categories`. **They sit in prose fields
+  and not in `quote` fields for a mechanical reason that a reader is entitled to know**: the build's
+  quotation check verifies an item's `quote` against the checklist's own `source_url` only, and
+  reads a per-quote url for a gate's `supporting_quotes` and for nothing else - so a quotation from
+  a second instrument placed in an item `quote` would fail that check, and placing it there under
+  this checklist's source_url would attribute it to the wrong act. The prose fields attribute every
+  such passage to Implementing Regulation (EU) 2025/2392 by name at the point of use, and a reader
+  checking one should fetch CELEX 32025R2392 rather than the Regulation. **Neither the Annex III
+  list nor its technical descriptions add anything to the scope of the Regulation.** Article 7(1)
+  operates on \"products with digital elements\", the Article 3(1) term whose reach Article 2 fixes;
+  Article 2 contains no reference to Annex III and Annex III contains no scope language. So the
+  order of operations is Article 2 first and Annex III second, and the shared gate
+  `rules/gates/cra-scope.yaml` - the whole of Article 2 as 37 limbs - is what decides whether this
+  checklist has anything to say at all. It is named by `applicability_ref` and is not restated here.
+  **The one place Annex III appears to reach back into Article 2 is redundant rather than
+  additional**: Class I item 19 **reaches** personal wearable health-monitoring products only where
+  the two instruments it names do not apply - its own words are \"and to which Regulation (EU)
+  2017/745 or (EU) No 2017/746 do not apply\" - and those are the same two instruments the gate
+  already carries as the limbs `regulation-2017-745-medical-devices-applies` and
+  `regulation-2017-746-in-vitro-diagnostics-applies`. If either applies the gate has already closed
+  and item 19 is never reached; if neither applies, the same answer satisfies item 19's condition.
+  It needs no separate question. **The gate's free-and-open-source limbs answer a different question
+  from Article 32(5), and the two must not be run together.** The gate asks whether the product is
+  made available in the course of a commercial activity at all, which is whether the Regulation
+  applies. Article 32(5) applies to a product that **is** inside the Regulation - commercially made
+  available free and open-source software - and asks a second, later question about which assessment
+  route is open to it. A product can pass the gate as in-scope commercial free and open-source
+  software and still take module A under Article 32(5) because its technical documentation is
+  public. Nothing in the gate answers that, and nothing in the gate should be read as answering it.
+  **The application date is 11 December 2027**, from Article 71(2) first subparagraph, and every
+  finding this checklist produces must be worded as **preparation** and never as a present
+  shortfall. Article 71(2)'s two carve-outs do not reach these duties: Article 14 applies from 11
+  September 2026 and Chapter IV from 11 June 2026, and Article 7 and Article 32 sit in neither. For
+  a product already on the market, Article 69(2) is the more exact sentence - such a product becomes
+  subject to the Regulation \"only if, from that date, those products are subject to a substantial
+  modification\" - so the wording for released standalone software is *\"this route attaches when
+  the software is next substantially modified on or after 11 December 2027, and to any new product
+  or variant first released from that date\"*, while for hardware, placed on the market unit by unit
+  (Recital 38), it is *\"every unit placed on the market from 11 December 2027 must meet this
+  route\"* (corrected 2026-11-11, checker L, D4) and only for an unreleased one is it *\"from 11
+  December 2027\"*. **The implementing act's own entry into force, 21 December 2025, is a different
+  thing and must not be conflated with it**: the technical descriptions are settled law today, while
+  the duty they qualify is not yet in application. There is no Annex III-specific transitional
+  provision; the only Annex III-specific timing anywhere is the 12-month floor in Article 7(3) for
+  future delegated acts that change the list. **The list is amendable, so this checklist records
+  which version of Annex III it was written against.** Article 7(3) empowers the Commission by
+  delegated act to add a category to either class, to **move a category from one class to the
+  other**, or to withdraw one, taking into account the criteria in Article 7(2); under **Article
+  61(2)** the power runs for five years from 10 December 2024 and is tacitly extended for identical
+  periods unless Parliament or Council opposes, under **Article 61(6)** each act enters into force
+  only if neither institution objects within two months of notification, a period extendable by two
+  more, and the act shall \"where appropriate\" provide a minimum transitional period of 12 months -
+  a floor with two exits and not a guarantee. The lists quoted below are Annex III as adopted on 23
+  October 2024 and as described by Implementing Regulation (EU) 2025/2392 of 28 November 2025, read
+  from the Official Journal on 2026-08-05. No delegated act amending Annex III was found, and none
+  was searched for systematically. **What this checklist does NOT cover.** It does not cover **Annex
+  IV** (critical products with digital elements), which is a different list with a different
+  consequence under Article 32(4) and Article 8. It does not walk the module texts: Annex VIII Parts
+  I to IV restate modules A, B, C and H in the Regulation's own words, and what any of them requires
+  is another row. It does not ask whether a conformity assessment has been carried out, whether an
+  EU declaration of conformity has been drawn up or whether a CE marking has been affixed - those
+  are Part C row 31, recorded there as having no reliable code signal. It does not decide **Article
+  12(3)**, and Article 12(3) reaches far less than an Annex III membership on its own. The paragraph
+  applies to important products with digital elements \"which are subject to the conformity
+  assessment procedures referred to in Article 32(2), points (a) and (b), and Article 32(3)\" and
+  which are classified as high-risk AI systems pursuant to Article 6 of Regulation (EU) 2024/1689
+  and to which that Regulation's internal-control route in its Annex VI applies; where all of that
+  holds, the Cyber Resilience Act's procedures govern in so far as its own essential cybersecurity
+  requirements are concerned. **That opening condition is the whole of what limits it, and dropping
+  it would repeat here the exact error this checklist exists to correct in the map** - an Annex III
+  consequence stated as unconditional. Two common cases sit outside Article 12(3) altogether: a
+  Class I product that applies the standards in full and stays on module A under Article 32(1), and
+  **any** Annex III product of either class taking module A under the Article 32(5)
+  free-and-open-source carve-out. Neither is subject to the procedures the paragraph names. The
+  interaction is set out here so it is not mistaken for an omission, and it is not an item because
+  it turns on an AI Act classification that this checklist does not make. It does not attempt to
+  settle **whether the product actually falls in a category** - it asks what the documents say, and
+  a document's silence is recorded as `unresolved`. **\"Core functionality\", the term Article 7(1)
+  turns on, is not defined in the Regulation**, and saying so is part of the scope declaration
+  rather than a caveat added to it. Article 3 has 51 numbered definitions and none of them defines
+  it, nor any of Annex III's category terms. Its only elaboration in the instrument is Recital 45.
+  The Commission's draft guidance supplies a working definition and records the same gap - \"this
+  concept is not explicitly defined in the CRA\" - but **that guidance does not yet apply**: C(2026)
+  5252 final of 27 July 2026 approves the content of the draft Communication, and its own cover note
+  says the guidance \"will be formally adopted by the Commission at a later date, when all language
+  versions are available. It is only from that moment that it will apply.\" Where a note below draws
+  on it, it is named as approved-but-not-yet-applicable guidance, and guidance interprets rather
+  than amends in any event. **The coverage map's row 29 disagrees with this checklist in stated
+  ways, and changing the map is not done here.** Row 29 lists seven Class I categories where Annex
+  III has nineteen, and three Class II categories where it has four - \"Tamper-resistant
+  microcontrollers\" is missing, and \"Operating systems\" is the omission that most changes the
+  row's size, since the implementing regulation reaches \"real-time operating systems,
+  general-purpose and special-purpose operating systems\". The row also drops qualifiers that limit
+  or extend individual items, does not name the implementing act at all, states the Class I
+  consequence as an unconditional stricter route, does not carry Article 32(5), cites \"Annex III +
+  Art. 7\" where the operative chain is Annex III plus Article 7(1) plus Article 32(2), (3) and (5)
+  plus Annex VIII plus Article 27 plus Implementing Regulation (EU) 2025/2392, and omits Article
+  7(1)'s second sentence. Each of those was set out against its primary source when this checklist
+  was written, on 2026-08-05. **The map's Class column for row 29 is SRC and this checklist was
+  authored as DECL**, on the reasoning in the third paragraph above; testing the Class column is the
+  first step of a row and changing it is the owner's call, so the map's cell is unchanged and this
+  paragraph exists so that no later reader has to guess whether it was tested."
+applicability_ref: cra-scope
+items:
+  - id: art-7-1-core-functionality-of-an-annex-iii-category
+    article: Art. 7(1)
+    quote: Products with digital elements which have the core functionality of a product category set
+      out in Annex III shall be considered to be important products with digital elements and shall
+      be subject to the conformity assessment procedures referred to in Article 32(2) and (3). The
+      integration of a product with digital elements which has the core functionality of a product
+      category set out in Annex III shall not in itself render the product in which it is integrated
+      subject to the conformity assessment procedures referred to in Article 32(2) and (3).
+    cite: CRA Art. 7(1)
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    finding_when: present
+    question: Do the product's own declared documents describe its core functionality as that of a
+      product category set out in Annex III, as opposed to describing such a category as something
+      the product integrates or bundles?
+    applicability_note: "**Applies from 11 December 2027** (Article 71(2)), or, for a product already on
+      the market, from the first substantial modification made on or after that date (Article
+      69(2)). For hardware, placing on the market is per unit, so every unit placed from 11 December
+      2027 must comply, whatever the model's age (Recital 38). Every answer here describes
+      preparation and not a present shortfall. **`found` on this item is a route and not a
+      problem**, which is why the item declares `finding_when: present` and takes `found`,
+      `not-found`, `not-applicable` or `unresolved`. `found` records that the manufacturer's own
+      documents describe the product as an important product with digital elements, and therefore
+      that Article 32(2) or (3) - and possibly Article 32(5) - decides which assessment procedure is
+      open. It records nothing about whether anything has been done wrongly. **The trigger is core
+      functionality, not presence, and Article 7(1)'s second sentence is the half most easily
+      lost.** Integrating a product that has the core functionality of an Annex III category into a
+      larger product does **not in itself** make the larger product subject to Article 32(2) and
+      (3). **The three words \"in itself\" are the Regulation's own and they are not decoration**:
+      they stop the sentence from becoming an excuse. A product that has an Annex III core
+      functionality of its own is routed on that footing whatever it also integrates, and the second
+      sentence of Article 7(1) says only that the act of integrating does not by itself do the
+      routing. Recital 45 works the example: firewalls and intrusion detection or prevention systems
+      are class II by their core functionality, and \"This is not the case for other products with
+      digital elements not categorised as important products with digital elements which may
+      integrate firewalls or intrusion detection or prevention systems.\" Implementing Regulation
+      (EU) 2025/2392 recital 3 gives the software example - \"integrating an embedded browser as a
+      component of a news app for use in smartphones does not in itself render the news app subject
+      to the conformity assessment procedure applicable to products with digital elements that have
+      the core functionality of 'standalone and embedded browsers'\" - and adds the duty that
+      survives it: the manufacturer \"needs to evaluate the security of the whole product,
+      considering, as appropriate, the security of the components or functionalities that are
+      integrated into it\". So an answer of `not-found` on the ground of integration says which
+      assessment route applies and never that the integrated component may be ignored. **Two
+      recitals of the implementing act cut in opposite directions and both must be applied.**
+      Recital 4: extra functions do not defeat a classification - \"products with digital elements
+      that have the core functionality of 'operating systems' often include software that performs
+      ancillary functions not included in the technical description of that product category, such
+      as calculators or simple graphics editors\", and an operating system integrating browser
+      functionality or a router integrating firewall functionality is still an operating system or a
+      router. Recital 5: the ability to perform a category's functions does not create a
+      classification - security orchestration, automation and response software \"often has the
+      ability to perform the functions\" of a SIEM and is \"generally not to be considered\" one,
+      because its core functionality is different, and a smartphone containing an operating system
+      and an integrated password manager is generally neither. **\"Core functionality\" is not
+      defined in the Regulation.** Article 3's 51 definitions do not reach it and no Annex III
+      category term is defined either. The Commission's draft guidance, whose content was approved
+      on 27 July 2026 by C(2026) 5252 final and which **does not apply until it is formally adopted
+      in all language versions**, records the same gap and offers a working definition: core
+      functionality \"refers to that product's main features and technical capabilities, without
+      which it would not be able to meet its intended purpose\", assessed \"in light of that
+      product's specific context and conditions of use, taking into account, among others, the
+      information the ... manufacturer supplies in the instructions for use, promotional or sales
+      materials and statements, as well as in the technical documentation\". Use it as an aid to
+      reading, cite it as guidance and never as the operative test. **Read this from the declared
+      documents only.** What a product's core functionality is, is a fact about the product, so it
+      is read from what the manufacturer has written about their own product and it is never
+      inferred from what the source tree imports, links or implements. **Read it from the declared
+      documents, and do not expect a declared answer from the scan profile**: the ScanProfile
+      carries no field for a Cyber Resilience Act Annex III product category -
+      `features.annex_iii_use` is the AI Act's four Annex III use cases and answers a different
+      instrument's question - so there is no profile field to read and no prompt that asks for one.
+      Whether such a field should exist is owed work in this project's own records and is not
+      assumed here. A tunnel implementation, a credential store, a bundled browser engine or a
+      container control path in the tree may be quoted in the reasoning as corroboration or as
+      something that sits oddly beside what the documents say, and none of them may decide the
+      answer. **Where the documents never address what kind of product this is in Annex III terms,
+      the answer is `unresolved` and not `not-found`.** Silence is a statement about the reading,
+      not about the product: a README that describes features without ever saying what the product
+      is for has not shown that the product is outside Annex III, and recording `not-found` there
+      would turn a null result into a negative finding. A document that expressly addresses a
+      category and says the product's core functionality is something else has answered the
+      question, and that is `not-found`."
+  - id: annex-iii-class-i-categories
+    article: Annex III, Class I
+    quote: Class I 1. Identity management systems and privileged access management software and
+      hardware, including authentication and access control readers, including biometric readers 2.
+      Standalone and embedded browsers 3. Password managers 4. Software that searches for, removes,
+      or quarantines malicious software 5. Products with digital elements with the function of
+      virtual private network (VPN) 6. Network management systems 7. Security information and event
+      management (SIEM) systems 8. Boot managers 9. Public key infrastructure and digital
+      certificate issuance software 10. Physical and virtual network interfaces 11. Operating
+      systems 12. Routers, modems intended for the connection to the internet, and switches 13.
+      Microprocessors with security-related functionalities 14. Microcontrollers with
+      security-related functionalities 15. Application specific integrated circuits (ASIC) and
+      field-programmable gate arrays (FPGA) with security-related functionalities 16. Smart home
+      general purpose virtual assistants 17. Smart home products with security functionalities,
+      including smart door locks, security cameras, baby monitoring systems and alarm systems 18.
+      Internet connected toys covered by Directive 2009/48/EC of the European Parliament and of the
+      Council (4) that have social interactive features (e.g. speaking or filming) or that have
+      location tracking features 19. Personal wearable products to be worn or placed on a human body
+      that have a health monitoring (such as tracking) purpose and to which Regulation (EU) 2017/745
+      or (EU) No 2017/746 do not apply, or personal wearable products that are intended for the use
+      by and for children
+    cite: CRA Annex III, Class I
+    url: https://publications.europa.eu/resource/celex/02024R2847-20241120
+    checked_at: 2026-09-07
+    finding_when: present
+    question: Which, if any, of the nineteen Annex III Class I product categories do the declared
+      documents describe this product's core functionality as, and which sentence of which document
+      says so?
+    applicability_note: "**Applies from 11 December 2027** (Article 71(2)), or from the first
+      substantial modification on or after that date for a product already on the market (Article
+      69(2)). For hardware, placing on the market is per unit, so every unit placed from 11 December
+      2027 must comply, whatever the model's age (Recital 38). Every answer here describes
+      preparation. **`found` records a route, not a shortfall.** A Class I classification sends the
+      product to Article 32(2), and Article 32(2) is **conditional**: it requires a notified body
+      only where harmonised standards, common specifications or European cybersecurity certification
+      schemes at assurance level at least 'substantial' were not applied, were applied only in part,
+      or do not exist. Applied in full, module A self-assessment remains available under Article
+      32(1). If the product qualifies as free and open-source software, Article 32(5) makes the
+      Article 32(1) procedures available whatever the answer here, provided the Article 31 technical
+      documentation is public at the time of placing on the market. Item
+      `art-32-2-class-i-standards-applied` asks the first of those and
+      `art-32-5-foss-public-technical-documentation` the second; do not state the consequence of a
+      Class I answer without them. **Nineteen categories, and the coverage map lists seven.** The
+      quote above is Annex III's Class I in full, read from the Official Journal on 2026-08-05.
+      Twelve categories are absent from the map's description of this row: items 4, 9, 10, 11, 12,
+      13, 14, 15, 16, 17, 18 and 19. **Item 11, \"Operating systems\", is the one that most changes
+      what this row reaches**, and items 4 and 9 are squarely within reach of an open-source
+      developer audience. **The qualifiers inside individual items are part of the category and must
+      not be dropped.** Item 1 is expressly **extended** - \"including authentication and access
+      control readers, including biometric readers\" - so hardware readers are inside it. Items 13,
+      14 and 15 are each **limited** by \"with security-related functionalities\". Item 5 is framed
+      functionally: \"Products with digital elements **with the function of** virtual private
+      network (VPN)\". Items 6 and 7 are two separate categories, not one. Item 18 reaches only
+      internet connected toys **covered by Directive 2009/48/EC** that additionally have social
+      interactive features or location tracking features; a connected toy outside that Directive, or
+      with neither feature, is not item 18. Item 19 reaches personal wearable health-monitoring
+      products only where Regulation (EU) 2017/745 and Regulation (EU) No 2017/746 do not apply -
+      which the scope gate has already asked - and separately reaches personal wearables \"intended
+      for the use by and for children\" without any health-monitoring purpose. **The binding
+      technical descriptions are in Implementing Regulation (EU) 2025/2392, not in Annex III**, and
+      they are what makes a category recognisable from a manufacturer's prose. What follows is Annex
+      I to Commission Implementing Regulation (EU) 2025/2392 of 28 November 2025 (CELEX 32025R2392;
+      OJ L, 2025/2392, 1.12.2025; in force 21 December 2025), quoted for each Class I category. Its
+      recital 7 records that the enumerations are illustrative: \"Such examples are provided for
+      illustrative purposes only and are not an exhaustive list.\" **1. Identity management systems
+      and privileged access management.** \"Identity management systems are products with digital
+      elements that provide mechanisms for authentication or authorisation and that may also provide
+      mechanisms for the lifecycle management of identity credentials of natural persons, legal
+      persons, devices or systems, such as identity registration, provisioning, maintenance,
+      deregistration. These systems include access management systems that control access of natural
+      persons, legal persons, devices or systems to digital resources or physical locations.\"
+      \"Privileged access management software is an access management system that controls and
+      monitors access rights to IT or OT systems and sensitive information within an organisation,
+      including systems enforcing differentiated access control policies for privileged users.\"
+      Includes but is not limited to \"authentication and access control readers, biometric readers,
+      single sign-on software, federated identity management software, one-time password software,
+      hardware authentication devices such as transaction authentication number (TAN) generators,
+      authentication software and multi-factor authentication software.\" **2. Standalone and
+      embedded browsers.** \"Software products with digital elements that enable end users to
+      access, render, and interact with web content and services hosted on servers that are
+      connected to networks such as the Internet. They typically include a browser engine for
+      interpreting and displaying content written in markup language (e.g. HTML), support for web
+      protocols (e.g. HTTP, HTTPS), the ability to execute scripts and manage user inputs as well as
+      storage of temporary or persistent data from websites (cookies).\" Includes but is not limited
+      to \"standalone applications that fulfil the functions of browsers, embedded browsers intended
+      for integration into another system or application as well as browsers with AI agent
+      integration.\" **3. Password managers.** \"Products with digital elements that store
+      passwords, locally on a device or on a remote server, including activities such as generation
+      of passwords as well as password sharing and integration with local or third-party
+      applications for usage of passwords.\" Includes but is not limited to \"local password
+      managers, password managers provided as browser extensions, enterprise password managers as
+      well as hardware-based password managers.\" **4. Software that searches for, removes, or
+      quarantines malicious software.** \"Software products with digital elements, typically
+      referred to as antivirus or antimalware, that detect or search for malicious software or code
+      on devices, or remove or quarantine such software or code, in order to maintain the integrity,
+      confidentiality, or availability of such devices.\" \"In the context of this category of
+      products, malicious software means software containing malicious features or capabilities that
+      can cause harm directly or indirectly to the user and/or the computer system, such as viruses,
+      worms, ransomware, spyware and trojans.\" Includes but is not limited to \"software that
+      detects or searches for malicious software in real-time or manually, rootkit detection and
+      rescue disks with the core functionality of searching, removing or quarantining malicious
+      software.\" **5. Products with the function of virtual private network (VPN).** \"Products
+      with digital elements that establish an encrypted logical tunnel that is constructed from the
+      system resources of a physical or virtual network.\" Includes but is not limited to \"virtual
+      private network clients, virtual private network servers and virtual private network
+      gateways.\" **6. Network management systems.** \"Products with digital elements that manage
+      connected network elements, such as servers, routers, switches, workstations, printers or
+      mobile devices, by monitoring them and controlling their network operations and
+      configuration.\" Includes but is not limited to \"end-to-end management systems and dedicated
+      configuration management systems, such as controllers for software-defined networking.\" **7.
+      Security information and event management (SIEM) systems.** \"Products with digital elements
+      that collect data from multiple sources, analyse and correlate that data and present it as
+      actionable information for security-related purposes, such as threat and incident detection,
+      forensic analysis or compliance purposes.\" This is the category recital 5 uses to show the
+      limit of the test: security orchestration, automation and response software often has the
+      ability to perform those functions and is generally not a SIEM, because its core functionality
+      is not that of one. **8. Boot managers.** \"Software products with digital elements that
+      manage the process of initial system startup after power on/restart by initialising hardware,
+      loading or transferring control to the operating system environment or system resources, and
+      selecting boot options.\" Includes but is not limited to \"UEFI firmware, single-stage and
+      multi-stage boot loaders.\" **9. Public key infrastructure and digital certificate issuance
+      software.** \"Products with digital elements used as part of a public key infrastructure (PKI)
+      that manage the validation, creation, issuance, distribution, status publication, renewal or
+      revocation of digital certificates, or the generation, storage, escrow, exchange, destruction
+      or rotation of cryptographic keys associated with such digital certificates.\" Includes but is
+      not limited to \"key management systems, digital certificate management systems, online
+      certificate status protocol responders and all-in-one PKI solutions.\" **10. Physical and
+      virtual network interfaces.** \"Physical network interfaces are products with digital elements
+      that directly connect a device to a network via an application programming interface (API)
+      provided by the interface drivers, typically operating at the data link layer, and that
+      feature hardware adapters to transmission media with corresponding firmware, typically
+      operating at the physical and data link layer.\" \"Virtual network interfaces are products
+      with digital elements that directly or indirectly connect a device to a network via an API
+      that emulates that of drivers of physical network interfaces, typically operating at the data
+      link layer.\" Includes but is not limited to \"wired and wireless network interface cards,
+      controllers and adapters, such as for Wi-Fi, Ethernet, IrDA, USB, Bluetooth, NearLink, Zigbee,
+      or Fieldbus, as well as purely virtual standalone products, such as virtual network interface
+      cards, container network interfaces and VPN interfaces.\" **11. Operating systems.**
+      \"Software products with digital elements that provide an abstract interface of the underlying
+      hardware and control the execution of software, and that may provide services such as
+      computing resource management and configuration, scheduling, input-output control, managing
+      data, and providing an interface through which applications interact with system resources and
+      peripherals.\" Includes but is not limited to \"real-time operating systems, general-purpose
+      and special-purpose operating systems\" - so an embedded or real-time operating system project
+      is inside this category and not only a desktop one. **12. Routers, modems intended for the
+      connection to the internet, and switches.** \"Routers are products with digital elements that
+      establish and control the flow of data between different networks by selecting paths or routes
+      using routing protocol mechanisms and algorithms, typically operating at the network layer\",
+      including \"wired and wireless routers, virtual routers and routers with or without modems\".
+      \"Modems intended for the connection to the Internet are hardware products with digital
+      elements that use digital modulation and demodulation techniques to convert analogue signals
+      from and to digital signals for IP-based communication\", including fibre, DSL, cable
+      (DOCSIS), satellite and cellular modems. \"Switches are products with digital elements that
+      provide connectivity between networked devices through packet forwarding mechanisms and that
+      have a management plane, typically implemented at the data link or network layer\", including
+      \"managed switches, smart switches, multilayer switches, virtual security switches,
+      programmable switches for software-defined networking and bridges such as wireless access
+      points.\" **13. Microprocessors with security-related functionalities.** \"Products with
+      digital elements that are integrated circuits that carry out central processing functions
+      relying on external memory and peripherals, including microcode and other low-level firmware.
+      They additionally provide security-related functionalities, such as encryption,
+      authentication, secure key storage, random number generation, trusted execution environment,
+      or other hardware-based protection mechanisms, that aim to secure other products, networks or
+      services beyond the microprocessor itself, such as secure boot chain, virtualization or secure
+      communication interfaces.\" **14. Microcontrollers with security-related functionalities.**
+      The same description with \"integrating memory allowing the microcontroller to be programmable
+      and typically also other peripherals\", and the security-related functionalities aimed at
+      securing products, networks or services \"beyond the microcontroller itself\". **15. ASIC and
+      FPGA with security-related functionalities.** An ASIC in this category is an integrated
+      circuit \"fully or partially custom-designed to perform a specific function or implement a
+      specific application, including microcode and other low-level firmware\", which additionally
+      provides the same security-related functionalities as items 13 and 14, aimed at securing other
+      products, networks or services \"beyond the ASIC itself\". An FPGA is an integrated circuit
+      \"characterized by a matrix of configurable logic blocks designed to be reprogrammable after
+      manufacturing to perform a specific function or implement a specific application, including
+      microcode and other low-level firmware\", which likewise additionally provides those
+      functionalities aimed at securing other products, networks or services \"beyond the FPGA
+      itself\". **16. Smart home general purpose virtual assistants.** \"Products with digital
+      elements that communicate on the public Internet, whether directly or via other equipment,
+      that process demands, tasks or questions based on natural language prompts, such as through
+      audio or written input, and that, based on those demands, tasks or questions, provide access
+      to other services or control the functions of connected devices in residential settings.\"
+      Includes but is not limited to \"smart speakers with an integrated virtual assistant, and
+      standalone virtual assistants that meet this description.\" **17. Smart home products with
+      security functionalities.** \"Products with digital elements that protect the physical
+      security of consumers in a residential setting and which can be controlled or managed remotely
+      from other systems, as well as hardware and software that centrally control such products.\"
+      Includes but is not limited to \"smart door locking devices, baby monitoring systems, alarm
+      systems and home security cameras.\" **18. Internet connected toys with social interactive or
+      location tracking features.** Toys \"covered by Directive 2009/48/EC, that communicate on the
+      public Internet, whether directly or via any other equipment, and that have embedded
+      technologies that enable inbound and outbound communication, such as keyboard, microphone,
+      speaker or camera\"; or the same, with \"technologies that enable tracking or inferring of the
+      geographical location of the toy or its user\". The implementing regulation adds a limit:
+      \"Where the toy merely detects the proximity of the user or of other toys by using sensing
+      technologies, the toy is not to be considered to have location tracking features.\" **19.
+      Personal wearable products.** Health-monitoring wearables are \"products with digital elements
+      that are worn on the body directly or via clothing or accessories and that can, regularly or
+      continuously, sense and further process information, including body metrics, relevant to the
+      user's health, excluding products that fall within the scope of Regulation (EU) 2017/745 or of
+      Regulation (EU) 2017/746\", including \"fitness trackers, smartwatches, smart jewellery, smart
+      clothing and sports apparel that meet this description\". The second branch, wearables
+      \"intended for the use by and for children\", covers products \"which can be worn or placed on
+      the body, directly or via clothing or accessories, of individuals under the age of 14\",
+      including child safety wearables. **Read all of this from the declared documents.** The
+      question is which category the manufacturer's own description of the product's core
+      functionality falls in, quoted sentence by quoted sentence. Nothing in the source tree may
+      decide it: ordinary credential-encryption code is not a password manager, an Electron shell is
+      not a browser, and a repository that imports a tunnelling library is not thereby a product
+      with the function of a VPN. Where the documents describe more than one category, record every
+      one of them with its sentence; recital 4 makes clear that performing further functions does
+      not remove a product from a category it otherwise meets. **Where the documents say nothing
+      about what kind of product this is, record `unresolved`.** Not `not-found`, and never
+      `not-applicable`: an absence of description is an absence of evidence, and the honest output
+      names what was missing. `not-found` belongs to the case where the documents do describe the
+      product's core functionality and it is not one of the nineteen."
+  - id: annex-iii-class-ii-categories
+    article: Annex III, Class II
+    quote: Class II 1. Hypervisors and container runtime systems that support virtualised execution of
+      operating systems and similar environments 2. Firewalls, intrusion detection and prevention
+      systems 3. Tamper-resistant microprocessors 4. Tamper-resistant microcontrollers
+    cite: CRA Annex III, Class II
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    finding_when: present
+    question: Which, if any, of the four Annex III Class II product categories do the declared documents
+      describe this product's core functionality as, and which sentence of which document says so?
+    applicability_note: "**Applies from 11 December 2027** (Article 71(2)), or from the first
+      substantial modification on or after that date for a product already on the market (Article
+      69(2)). For hardware, placing on the market is per unit, so every unit placed from 11 December
+      2027 must comply, whatever the model's age (Recital 38). Every answer here describes
+      preparation. **`found` records a route, and this route is the stricter of the two - but it is
+      still not a shortfall.** Article 32(3) carries no \"has not applied or has applied only in
+      part\" condition at its head, which is the whole difference between it and Article 32(2): a
+      Class II product demonstrates conformity by module B followed by module C, by module H, or by
+      a European cybersecurity certification scheme at assurance level at least 'substantial', and
+      module A is not among the three. Recital 44 explains the split - an incident involving a class
+      II product \"might lead to greater negative impacts\" - and Recital 91 states the consequence:
+      the assessment \"should always involve a third party, even where the product complies fully or
+      partly with harmonised standards, common specifications or European cybersecurity
+      certification schemes\". **Two things soften that and both belong in any finding.** Article
+      32(5) makes the Article 32(1) procedures, module A included, available to a Class II product
+      qualifying as free and open-source software whose Article 31 technical documentation is public
+      - the exception applies to this class as much as to Class I. And Article 27(9) provides that a
+      European cybersecurity certificate at least at assurance level 'substantial' \"eliminates the
+      obligation of a manufacturer to carry out a third-party conformity assessment for the
+      corresponding requirements, as set out in Article 32(2), points (a) and (b), and Article
+      32(3), points (a) and (b)\", which displaces the notified-body route for Class II as well;
+      that power is a delegated act and no evidence that it has been exercised was found. **Four
+      categories, and the coverage map lists three** - \"Tamper-resistant microcontrollers\" is
+      missing from it. The quote above is Annex III's Class II in full, read from the Official
+      Journal on 2026-08-05. **The limiting clause on item 1 is part of the category.** It reads
+      \"Hypervisors and container runtime systems **that support virtualised execution of operating
+      systems and similar environments**\", and the map's shorter \"hypervisors and container
+      runtimes\" drops it. **The binding technical descriptions**, from Annex I to Commission
+      Implementing Regulation (EU) 2025/2392 of 28 November 2025 (CELEX 32025R2392; OJ L, 2025/2392,
+      1.12.2025; in force 21 December 2025): **1. Hypervisors and container runtime systems.**
+      \"Hypervisors are software products with digital elements that abstract and/or allocate
+      computing resources and enable the execution, management and orchestration of virtual machines
+      that are logically separated from each other and/or from the physical hardware. Hypervisors
+      may run directly on hardware (bare metal), on top of an operating system, or within another
+      virtual machine (nested virtualisation).\" \"In the context of this category of products, a
+      virtual machine is a software-defined logical separation of a computing environment, which
+      includes a virtualised set of hardware resources (e.g. CPU, memory, storage, network
+      interfaces) and typically hosts its own operating system.\" Includes but is not limited to
+      \"type 1 hypervisors (bare metal), type 2 hypervisors (hosted on an operating system) and
+      hybrid hypervisors.\" \"Container runtime systems are software products with digital elements
+      that manage the execution and lifecycle of containers running on a single host operating
+      system as isolated processes, allocating resources and allowing the management and
+      orchestration of individual containers.\" \"In the context of this category of products, a
+      container is a software-based execution environment that encapsulates one or more software
+      components and their dependencies in a single package, enabling it to run independently and
+      consistently.\" **2. Firewalls, intrusion detection and prevention systems.** \"Firewalls are
+      products with digital elements that protect a connected network or system from unauthorized
+      access by monitoring and restricting data communication traffic to and from that network\",
+      including \"network firewalls and application firewalls such as web application firewalls or
+      filters and anti-spam gateways\". \"Intrusion detection systems are products with digital
+      elements that monitor traffic once it has entered the network environment for suspicious
+      activity and detect or identify that an intrusion has been attempted, is occurring, or has
+      occurred on a connected network or system\", including network-based and host-based systems.
+      \"Intrusion prevention systems are products with digital elements composed of an intrusion
+      detection system that actively responds to an intrusion to a connected network or system\",
+      likewise network-based and host-based. **3 and 4. Tamper-resistant microprocessors and
+      microcontrollers.** Each is defined by reference to the Class I category plus a measurable
+      threshold: products \"that are microprocessors with security-related functionalities referred
+      to in Table 'Class I', point 13, of this Annex, including tamper evidence, resistance or
+      response, and which additionally are designed to provide protection of **AVA_VAN level 2 or
+      3**, as set out in the Common Criteria and the Common Evaluation Methodology\", and the same
+      for microcontrollers by reference to Class I point 14. Article 1 of that implementing
+      regulation defines both terms by reference to Commission Implementing Regulation (EU)
+      2024/482. **What separates these two categories from Class I items 13 and 14 is the operative
+      text of Annex I itself** - the cross-reference to Class I point 13 or 14 plus the added
+      AVA_VAN threshold - and **not** recital 8, which was read from the Official Journal on
+      2026-08-05 and says something narrower: that \"the categories of products with digital
+      elements that are tamper-resistant microprocessors, tamper-resistant microcontrollers, and
+      smartcards and similar devices, including secure elements, should be distinguished on the
+      basis of the level of resistance against potential exploitability of flaws or weaknesses for
+      which they have been designed\", and that \"AVA_VAN level is an extensively used and
+      standardised way to express such a level of resistance\". Those are the two Class II
+      categories and the Annex IV entry; **Class I items 13 and 14 are not mentioned in recital 8 at
+      all**, and the wider attribution stood here, and in the research it was taken from, until it
+      was corrected on 2026-08-05. A recital credited with a proposition it does not make is a
+      citation a lawyer rejects, whether or not the proposition is true. **A hardware product moves
+      between Class I item 13 or 14 and Class II item 3 or 4 on its designed resistance level
+      alone**, which is a design fact stated in the manufacturer's own documentation and not
+      something a source tree shows. **Integration is the commonest way to get this category
+      wrong.** Recital 4 of the implementing regulation says a router integrating firewall
+      functionality still has the core functionality of a router, and Article 7(1)'s second sentence
+      says integration does not **in itself** propagate the stricter route - which is not the same
+      as saying it never can, because a product with an Annex III core functionality of its own is
+      routed on that footing regardless of what it integrates. A product that ships a packet filter,
+      runs its own workloads in containers, or embeds a sandbox is not thereby a firewall or a
+      container runtime system; the question is what the product **is**, in the manufacturer's own
+      words. **Where the documents say nothing about what kind of product this is, record
+      `unresolved`.** `not-found` is for the case where the documents describe the product's core
+      functionality and it is none of these four."
+  - id: art-32-2-class-i-standards-applied
+    article: Art. 32(2)
+    quote: "Where, in assessing the compliance of an important product with digital elements that falls
+      under class I as set out in Annex III and the processes put in place by its manufacturer with
+      the essential cybersecurity requirements set out in Annex I, the manufacturer has not applied
+      or has applied only in part harmonised standards, common specifications or European
+      cybersecurity certification schemes at assurance level at least 'substantial' as referred to
+      in Article 27, or where such harmonised standards, common specifications or European
+      cybersecurity certification schemes do not exist, the product with digital elements concerned
+      and the processes put in place by the manufacturer shall be submitted with regard to those
+      essential cybersecurity requirements to either of the following procedures: (a) the EU-type
+      examination procedure (based on module B) set out in Annex VIII followed by conformity to
+      EU-type based on internal production control (based on module C) set out in Annex VIII; or (b)
+      a conformity assessment based on full quality assurance (based on module H) set out in Annex
+      VIII."
+    cite: CRA Art. 32(2)
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    question: Where the declared documents place this product's core functionality in Annex III Class I,
+      do they state whether harmonised standards, common specifications or European cybersecurity
+      certification schemes at assurance level at least 'substantial' have been applied in full,
+      applied only in part, or do not exist for the essential requirements concerned?
+    applicability_note: "**Applies from 11 December 2027** (Article 71(2)), or from the first
+      substantial modification on or after that date for a product already on the market (Article
+      69(2)). For hardware, placing on the market is per unit, so every unit placed from 11 December
+      2027 must comply, whatever the model's age (Recital 38). Nothing here is a present shortfall,
+      and an `absent` answer records that the documents do not yet say which branch of Article 32(2)
+      the manufacturer expects to be in - not that a wrong route has been taken. **Class I is NOT
+      unconditionally routed to a third party, and the coverage map's one-line description of this
+      row says it is.** The paragraph quoted above bites only where the manufacturer \"has not
+      applied or has applied only in part\" harmonised standards, common specifications or European
+      cybersecurity certification schemes at assurance level at least 'substantial' as referred to
+      in Article 27, **or where such do not exist**. A Class I manufacturer that applies them in
+      full stays on Article 32(1) and may use the internal control procedure based on module A,
+      which is self-assessment. Recital 91 says the same in terms - the manufacturer \"should apply
+      harmonised standards, common specifications or European cybersecurity certification schemes
+      adopted pursuant to Regulation (EU) 2019/881 which have been identified by the Commission in
+      an implementing act if it wants to carry out the conformity assessment under its own
+      responsibility (module A)\". **That recital adds a qualifier the operative text does not
+      carry** - \"identified by the Commission in an implementing act\", where Article 32(2) says
+      only \"as referred to in Article 27\" - and the discrepancy is recorded rather than resolved:
+      treat the recital as explanatory gloss and not as an extra operative condition. **How far
+      partial application reaches is an open reading, and this item records the divergence rather
+      than settling it.** On the face of Article 32(2) the product and the processes are submitted
+      to module B plus C or module H \"with regard to **those** essential cybersecurity
+      requirements\", which reads naturally as operating requirement by requirement. The
+      Commission's draft guidance takes a different view at paragraphs 149 to 151, and it is a
+      per-product eligibility test with a limb the operative text does not carry: \"for an important
+      product with digital elements of class I to be eligible for the internal control procedure,
+      (i) all the applicable requirements of a relevant harmonised standard need to be applied; and
+      (ii) the standard's scope needs to cover at least all the cybersecurity risks associated to
+      that product's core functionality.\" That guidance is approved in content by C(2026) 5252
+      final of 27 July 2026 and **does not apply until it is formally adopted in all language
+      versions**, and it interprets rather than amends in any event. **Neither reading is stated
+      here as the answer.** An earlier version of this note asserted the first as settled and added
+      that partial application sends \"only the uncovered requirements ... and not the whole
+      product\", which the paragraph's own subject contradicts - what is submitted is \"the product
+      with digital elements concerned and the processes put in place by the manufacturer\". A
+      finding should say which requirements are said to be covered, and name the divergence rather
+      than resolve it. **The trigger includes the case where nothing exists to apply.** \"or where
+      such harmonised standards, common specifications or European cybersecurity certification
+      schemes do not exist\" means that, for as long as none covers a given essential requirement, a
+      Class I product sits in the third-party branch for that requirement and the self-assessment
+      option is open in law with nothing available to satisfy it. **Whether any harmonised standard
+      reference for the Regulation's Annex I requirements has yet been published in the Official
+      Journal was not established** when this checklist was written and is not answerable from the
+      Regulation. Until it is, a finding on this item may not say that a Class I product must use a
+      notified body, and may not say that it may self-assess: it says which of the two branches the
+      documents place the product in, or that the documents do not say. **Article 27 is what the
+      condition points at.** Article 27(1) gives products in conformity with harmonised standards
+      whose references have been published in the Official Journal a presumption of conformity with
+      the essential requirements those standards cover; Article 27(2) lets the Commission establish
+      common specifications by implementing act, but only where **both** of two cumulative
+      conditions are fulfilled - point (a), that a standardisation request has not been accepted, or
+      the harmonised standards addressing it were not delivered within the deadline, or they do not
+      comply with the request; **and point (b)**, that \"no reference to harmonised standards
+      covering the relevant essential cybersecurity requirements set out in Annex I to this
+      Regulation has been published in the Official Journal of the European Union in accordance with
+      Regulation (EU) No 1025/2012 and no such reference is expected to be published within a
+      reasonable period\". This note carried point (a) alone until 2026-08-05, which described the
+      power as easier to exercise than it is; Article 27(8) gives certified products a presumption
+      of conformity, and Article 27(9) is the delegated power described in this checklist's
+      `scope_note`. **Conditional in one direction, and the direction is stated as three ordered
+      branches because the earlier two-branch wording read a silent document as an inapplicable
+      one.** Take them in this order, keyed to what `annex-iii-class-i-categories` returned: (1)
+      **`unresolved` there means `unresolved` here.** Where the documents never say what kind of
+      product this is, there is no settled premise to condition this item on, and the answer is
+      `unresolved` - **never `not-applicable`**. Reading silence as \"the question does not reach
+      this product\" turns a null result into a negative finding, and this product's standing rule
+      is that a null result never narrows what the scanner reports.
+      `art-32-5-foss-public-technical-documentation` states the identical rule for the identical
+      situation, and the two must not diverge. (2) **`not-found` there means `not-applicable`
+      here.** Where the documents do describe the product's core functionality and it is none of the
+      nineteen Class I categories, the question this item asks is not reached, and a document that
+      had no reason to address standards is not short of anything. Recording `absent` there would
+      state a gap the Regulation does not create. (3) **`found` there, and nothing said about
+      standards, is `absent` here.** **The wording until 2026-08-05 put silence in branch (2).** It
+      opened \"Where the declared documents do not place the product in Class I at all, this item is
+      `not-applicable`\", which is true of a silent document as much as of a disclaiming one, so
+      silence resolved to `not-applicable` and the third branch it was supposed to reach was
+      unreachable - it required the documents to place the product in Class I **and** the class
+      answer to be `unresolved`, which cannot both hold. The fixture case pinned `unresolved` for
+      this item on the silent side throughout, so the fixture and this note disagreed and the note
+      was the one that was wrong. **Watch for the near-miss.** An engineering standard a project
+      actually follows - OWASP ASVS, NIST SSDF, ISO/IEC 27001, a vendor hardening baseline - is not
+      a harmonised standard within Article 27(1), is not a common specification within Article 27(2)
+      and is not a European cybersecurity certification scheme under Regulation (EU) 2019/881. A
+      document naming one of those has said something useful about the product's engineering and has
+      not answered this item; say so rather than scoring it `present`. **Article 32(5) can make this
+      question moot for a free and open-source product**, because the Article 32(1) procedures
+      become available whatever the answer here. Answer this item on its own terms and let
+      `art-32-5-foss-public-technical-documentation` carry that."
+  - id: art-32-3-class-ii-third-party-route
+    article: Art. 32(3)
+    quote: "Where the product is an important product with digital elements that falls under class II as
+      set out in Annex III, the manufacturer shall demonstrate conformity with the essential
+      cybersecurity requirements set out in Annex I by using any of the following procedures: (a)
+      EU-type examination procedure (based on module B) set out in Annex VIII followed by conformity
+      to EU-type based on internal production control (based on module C) set out in Annex VIII; (b)
+      a conformity assessment based on full quality assurance (based on module H) set out in Annex
+      VIII; or (c) where available and applicable, a European cybersecurity certification scheme
+      pursuant to Article 27(9) of this Regulation at assurance level at least 'substantial'
+      pursuant to Regulation (EU) 2019/881."
+    cite: CRA Art. 32(3)
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    question: Where the declared documents place this product's core functionality in Annex III Class
+      II, do they record which of the three procedures Article 32(3) allows the manufacturer is
+      preparing to use?
+    applicability_note: "**Applies from 11 December 2027** (Article 71(2)), or from the first
+      substantial modification on or after that date for a product already on the market (Article
+      69(2)). For hardware, placing on the market is per unit, so every unit placed from 11 December
+      2027 must comply, whatever the model's age (Recital 38). An `absent` answer records that the
+      documents do not yet name a route, and not that a wrong one has been taken; nothing on this
+      item is a present shortfall. **Three procedures, and module A is not one of them.** Article
+      32(3) is drafted flatly - it has no \"has not applied or has applied only in part\" condition
+      at its head, which is the whole difference from Article 32(2) - so the three options are
+      module B followed by module C, module H, or a European cybersecurity certification scheme at
+      assurance level at least 'substantial' pursuant to Article 27(9) and Regulation (EU) 2019/881.
+      Recital 91: the conformity assessment \"should always involve a third party, even where the
+      product complies fully or partly with harmonised standards, common specifications or European
+      cybersecurity certification schemes\". **Option (c) is conditional on an act that may not
+      exist yet.** It reads \"where available and applicable\", and the schemes it points at are
+      those the Commission specifies by delegated act under Article 27(9). Whether any such
+      delegated act has been adopted was not established when this checklist was written; no
+      evidence of one was found and the point was not searched systematically. So a document naming
+      option (c) has named a route whose availability a reader cannot confirm from the Regulation,
+      and the reasoning should say so. **Article 27(9) also removes the obligation where a
+      certificate already exists.** Its second sentence provides that the issuance of a European
+      cybersecurity certificate under such a scheme, at least at assurance level 'substantial',
+      \"eliminates the obligation of a manufacturer to carry out a third-party conformity assessment
+      for the corresponding requirements, as set out in Article 32(2), points (a) and (b), and
+      Article 32(3), points (a) and (b)\". That is not self-assessment - the certificate comes from
+      a Regulation (EU) 2019/881 scheme - but it does displace the notified-body route. **Article
+      32(5) reaches Class II as much as Class I**, and a finding on this item that omits it will
+      overstate what a free and open-source Class II product faces. The paragraph applies to
+      products \"which fall under the categories set out in Annex III\" without distinguishing
+      class, Recital 91's closing sentence matches, and the Commission's draft guidance - content
+      approved 27 July 2026, **not applicable until formally adopted** - says the stricter
+      procedures do \"not include important products with digital elements of class I or II
+      qualifying as free and open-source software\". **Conditional in one direction, in the same
+      three ordered branches as `art-32-2-class-i-standards-applied`, and for the same reason.**
+      Keyed to what `annex-iii-class-ii-categories` returned: (1) **`unresolved` there means
+      `unresolved` here** - the documents never say what kind of product this is, so nothing
+      conditions this item, and `not-applicable` would read a silent document as one the question
+      does not reach. (2) **`not-found` there means `not-applicable` here** - the documents describe
+      the core functionality and it is none of the four Class II categories. (3) **`found` there,
+      and no route named, is `absent` here.** This note opened \"Where the declared documents do not
+      place the product in Class II, this item is `not-applicable`\" until 2026-08-05, which swept
+      silence into branch (2) exactly as the Article 32(2) item's note did. **The fee note, recorded
+      because a small manufacturer will ask.** Article 32(6): \"The specific interests and needs of
+      microenterprises and small and medium-sized enterprises, including start-ups, shall be taken
+      into account when setting the fees for conformity assessment procedures and those fees shall
+      be reduced proportionately to their specific interests and needs\". It reduces a cost; it does
+      not change which procedure applies, and it is not an item of its own."
+  - id: art-32-5-foss-public-technical-documentation
+    article: Art. 32(5)
+    quote: Manufacturers of products with digital elements qualifying as free and open-source software,
+      which fall under the categories set out in Annex III, shall be able to demonstrate conformity
+      with the essential cybersecurity requirements set out in Annex I by using one of the
+      procedures referred to in paragraph 1 of this Article, provided that the technical
+      documentation referred to in Article 31 is made available to the public at the time of the
+      placing on the market of those products.
+    cite: CRA Art. 32(5)
+    url: http://publications.europa.eu/resource/celex/32024R2847
+    checked_at: 2026-08-05
+    question: Where the product qualifies as free and open-source software, do the declared documents
+      state that the technical documentation referred to in Article 31 is made available to the
+      public at the time of the placing on the market?
+    applicability_note: "**Applies from 11 December 2027** (Article 71(2)), or from the first
+      substantial modification on or after that date for a product already on the market (Article
+      69(2)). For hardware, placing on the market is per unit, so every unit placed from 11 December
+      2027 must comply, whatever the model's age (Recital 38). An `absent` answer records that the
+      condition of the carve-out has not been shown, never that it has been failed. **This is the
+      most consequential provision on this row for the audience of this scanner.** A manufacturer of
+      an Annex III product **of either class** that qualifies as free and open-source software may
+      demonstrate conformity by any of the Article 32(1) procedures - including the internal control
+      procedure based on module A, which is self-assessment - provided the condition in the closing
+      clause is met. Recital 91 closes with the same rule: \"Manufacturers of important products
+      with digital elements qualifying as free and open-source software should be able to follow the
+      internal control procedure based on module A, provided that they make the technical
+      documentation available to the public.\" The Commission's draft guidance - content approved 27
+      July 2026 by C(2026) 5252 final, **not applicable until formally adopted in all language
+      versions** - states it for both classes expressly. **The carve-out has two conditions and both
+      are easy to lose.** First, the product must qualify as free and open-source software **within
+      Article 3(48)**, which defines it as \"software the source code of which is openly shared and
+      which is made available under a free and open-source licence which provides for all rights to
+      make it freely accessible, usable, modifiable and redistributable\". Second, the Article 31
+      technical documentation must be public **at the time of the placing on the market** - not on
+      request, not later, and not merely produced to customers who ask. **A licence file in the
+      repository speaks to the first condition and to nothing else.** Identifying the licence a
+      project is released under is not a product-category inference, and a reader may say what
+      licence file the tree carries. It does not answer this item: this item asks whether the
+      **technical documentation** is public, which is a statement the manufacturer makes about a
+      document Article 31 and Annex VII define, and which is read from the declared documents rather
+      than from the tree. **Published source code is not the Article 31 technical documentation, and
+      treating it as though it were is the near-miss this item exists to catch.** Annex VII
+      requires, among other things, a general description of the product, a description of its
+      design, development and production **and vulnerability handling processes** - point 2's own
+      words are \"a description of the design, development and production of the product with
+      digital elements and vulnerability handling processes\", and the four words were dropped here
+      until 2026-08-05, which understated what the dossier has to contain - an assessment of the
+      cybersecurity risks, a list of the harmonised standards applied, the reports of tests carried
+      out and a copy of the EU declaration of conformity. A public repository under an open-source
+      licence satisfies Article 3(48)'s openly-shared limb and says nothing at all about whether
+      that dossier exists or is published. A document that offers \"the code is on GitHub and anyone
+      can read it\" as the answer has answered a different question, and the reasoning must say
+      which. **Conditional in one direction, and say which.** Where nothing in the declared
+      documents places the product in an Annex III category at all, this item is `unresolved` rather
+      than `not-applicable`: the carve-out is only reached for an Annex III product, and whether it
+      is one has not been settled. Where the documents place the product in a class and show that it
+      is not free and open-source software within Article 3(48), the item is `not-applicable`. Where
+      it is free and open-source software and the documents say nothing about publishing the
+      technical documentation, that is `absent`, and the finding says that the module A route under
+      Article 32(5) has not been shown to be open, never that it is closed. **This is a different
+      question from the one the scope gate asks about free and open-source software.** The gate's
+      limbs decide whether the Regulation reaches the product at all, by way of whether it is
+      supplied in the course of a commercial activity. Article 32(5) applies to a product already
+      inside the Regulation and decides which assessment procedure is available to it. A product can
+      be in scope as commercially supplied free and open-source software and still take module A
+      here."

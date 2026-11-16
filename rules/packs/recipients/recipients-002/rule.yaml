@@ -1,0 +1,587 @@
+id: recipients-002
+pack: recipients
+short_name: Storage or delivery company that may receive data
+problem_line:
+  text: Personal data sent to a storage or delivery service
+  template: "{data} sent to {recipient}"
+fix_line: "Unless you publish and host this service, record it as a recipient: what it receives and
+  the company you contract with."
+title: Storage, delivery or picture-serving vendor named in the tree - candidate recipient for the
+  record of processing activities
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - the record of processing activities "shall
+      contain all of the following information", including "the categories of recipients to whom the
+      personal data have been or will be disclosed including recipients in third countries or
+      international organisations". The duty is on the controller and, where applicable, its
+      representative, and Art. 30(4) makes the record available to the supervisory authority on
+      request
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(2) - \"Each processor and, where applicable, the
+      processor's representative shall maintain a record of all categories of processing activities
+      carried out on behalf of a controller, containing: (a) the name and contact details of the
+      processor or processors and of each controller on behalf of which the processor is acting,
+      and, where applicable, of the controller's or the processor's representative, and the data
+      protection officer; (b) the categories of processing carried out on behalf of each controller;
+      (c) where applicable, transfers of personal data to a third country or an international
+      organisation, including the identification of that third country or international organisation
+      and, in the case of transfers referred to in the second subparagraph of Article 49(1), the
+      documentation of suitable safeguards; (d) where possible, a general description of the
+      technical and organisational security measures referred to in Article 32(1).\" Reference only:
+      it is cited to mark what the processor's record does NOT contain. There is no
+      categories-of-recipients field in Art. 30(2), so where the scanned product is a processor the
+      RECIPIENT CATEGORY belongs in the customer-controller's Art. 30(1)(d) record - but Art.
+      30(2)(c), quoted above, is the processor's OWN third-country-transfer field, so its record is
+      not silent about the vendor wherever the disclosure is such a transfer, and Art. 28(2) and
+      Art. 28(4) are owed beside that entry"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(9) - \"recipient\" means \"a natural or legal person,
+      public authority, agency or another body, to which the personal data are disclosed, whether a
+      third party or not\". An object-storage provider or a push-notification relay acting only on
+      the operator's instructions is therefore a recipient for the purposes of Art. 30(1)(d), and so
+      is one that is an independent controller for some part of what it holds. Reference only: a
+      definition establishes no duty of its own"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: 'GDPR (Regulation (EU) 2016/679), Art. 28(2) - "The processor shall not engage another
+      processor without prior specific or general written authorisation of the controller. In the
+      case of general written authorisation, the processor shall inform the controller of any
+      intended changes concerning the addition or replacement of other processors, thereby giving
+      the controller the opportunity to object to such changes." Reference only: it creates an
+      authorisation and notification duty between processor and controller rather than a record
+      field, and whether the scanned product is a controller or a processor for the data in question
+      is an operator fact this detector never decides'
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 28(4) - \"Where a processor engages another processor
+      for carrying out specific processing activities on behalf of the controller, the same data
+      protection obligations as set out in the contract or other legal act between the controller
+      and the processor as referred to in paragraph 3 shall be imposed on that other processor by
+      way of a contract or other legal act under Union or Member State law, in particular providing
+      sufficient guarantees to implement appropriate technical and organisational measures in such a
+      manner that the processing will meet the requirements of this Regulation. Where that other
+      processor fails to fulfil its data protection obligations, the initial processor shall remain
+      fully liable to the controller for the performance of that other processor's obligations.\"
+      Reference only: it is a flow-down duty in a contract, not an entry in the record, and this
+      rule reads neither contract"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: 'GDPR (Regulation (EU) 2016/679), Art. 28(1) - "Where processing is to be carried out on
+      behalf of a controller, the controller shall use only processors providing sufficient
+      guarantees to implement appropriate technical and organisational measures in such a manner
+      that processing will meet the requirements of this Regulation and ensure the protection of the
+      rights of the data subject." Reference only: it is a duty of selection owed by the controller,
+      not a field of the record, and this rule tests the record'
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: 'GDPR (Regulation (EU) 2016/679), Art. 28(3) - processing by a processor "shall be governed by
+      a contract or other legal act under Union or Member State law, that is binding on the
+      processor with regard to the controller and that sets out the subject-matter and duration of
+      the processing, the nature and purpose of the processing, the type of personal data and
+      categories of data subjects and the obligations and rights of the controller." Reference only:
+      it is a contract requirement rather than a record field, and this rule reads no contract'
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1) - \"personal data\" means \"any information
+      relating to an identified or identifiable natural person ('data subject'); an identifiable
+      natural person is one who can be identified, directly or indirectly, in particular by
+      reference to an identifier such as a name, an identification number, location data, an online
+      identifier or to one or more factors specific to the physical, physiological, genetic, mental,
+      economic, cultural or social identity of that natural person\". Reference only: a definition
+      establishes no duty of its own. It is cited because the disclosure this rule is about is
+      frequently metadata rather than content - an object key, a device token, a caller IP - and the
+      definition is what makes such a value personal data in its own right"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: 'GDPR (Regulation (EU) 2016/679), Art. 30(5) - "The obligations referred to in paragraphs 1
+      and 2 shall not apply to an enterprise or an organisation employing fewer than 250 persons
+      unless the processing it carries out is likely to result in a risk to the rights and freedoms
+      of data subjects, the processing is not occasional, or the processing includes special
+      categories of data as referred to in Article 9(1) or personal data relating to criminal
+      convictions and offences referred to in Article 10." Reference only: this provision removes a
+      duty rather than creating one, and the facts it turns on are operator facts'
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 44 - \"Any transfer of personal data which are
+      undergoing processing or are intended for processing after transfer to a third country or to
+      an international organisation shall take place only if, subject to the other provisions of
+      this Regulation, the conditions laid down in this Chapter are complied with by the controller
+      and processor, including for onward transfers of personal data from the third country or an
+      international organisation to another third country or to another international
+      organisation.\" Reference only: field (d) of the record is owed whether or not a transfer is
+      involved, and this rule tests the record, not the transfer. The record's separate transfer
+      field is Art. 30(1)(e) in a controller's Art. 30(1) record and Art. 30(2)(c) in a processor's
+      Art. 30(2) record"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-25
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose "The
+      categories of third parties to whom the business discloses personal information." The
+      obligation is owed on a verifiable consumer request under Sec. 1798.110(b), and Sec.
+      1798.130(a)(5)(B) requires the same categories in the privacy policy
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-08-25
+    jurisdiction: US
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.15
+detector:
+  engine: builtin-regex
+  shared_vocabulary:
+    - storage_recipients
+    - delivery_recipients
+    - avatar_icon_recipients
+    - delivery_recipients_word_end
+    - delivery_recipients_camel_s
+  resolve_import_aliases: true
+  match:
+    - (?:^|[^A-Za-z0-9])(?&storage_recipients)
+    - (?:^|[^A-Za-z0-9])(?&delivery_recipients)
+    - (?:^|[^A-Za-z0-9])(?&avatar_icon_recipients)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:)(?&storage_recipients)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:)(?&delivery_recipients)
+    - (?:^|[^A-Za-z0-9])(?&delivery_recipients_word_end)(?![A-Za-z0-9])
+    - (?:^|[^A-Za-z0-9])(?&delivery_recipients_camel_s)(?:s|es)?(?![a-z])
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:)(?&delivery_recipients_word_end)
+    - (?:\b(?:from|require|import|include|Include|gem|pod|implementation|testImplementation|androidTestImplementation|compileOnly|classpath|api|compile|install)\b[^A-Za-z0-9\n]{0,8}["'`]|["'](?=[^"'\n]{0,80}["']\s*:\s*["'][\^~><=*\d])|<(?:groupId|artifactId)>\s*|^[
+      \t]*(?:pub\s+)?(?:import|from|use|alias|require)\s+|^[
+      \t]*(?=[A-Za-z0-9_.@/-]{0,60}\s*(?:==|>=|~=))|^[
+      \t]*(?=[A-Za-z0-9_-]{1,60}\s*=\s*(?:["'][\^~><=*\d]|\{\s*(?:version|path|git|workspace|package|features|optional|default-features)\b))|^[
+      \t]*\[[^\]\n]{0,60}dependencies\.|\{\s*:)(?&delivery_recipients_camel_s)
+context_questions:
+  - "What SHAPE is the matched line? Name it before treating it as a disclosure. The same anchor
+    reaches a tree in at least seven shapes and only two of them put data in the vendor's hands: (a)
+    a dependency declaration or an import that the product's own code uses; (b) a request to the
+    vendor's API, a bucket URL the product writes to, or a script or asset served from the vendor's
+    host on the product's own request path; (c) a VENDORED SDK or a generated third-party API client
+    that no first-party code calls - a learning platform's generated Google API PHP client is the
+    shape, and note that a lockfile entry is NOT one of the shapes you can meet, because the walker
+    drops every lockfile by name before any rule runs; (d) a documentation link, a comparison table,
+    a migration guide or a changelog entry - note that a guide about migrating AWAY from a vendor
+    matches exactly like a guide about adopting one; (e) a Content-Security-Policy or allow-list
+    entry naming the host without loading it; (f) test, fixture, seed or demo data, or a static list
+    of popular packages used by the project's own tooling; (g) THE ANCHOR IS NOT THE VENDOR AT ALL -
+    the matched string is an ordinary word, an unrelated technology or another company's product
+    that happens to be spelled the way a registry coordinate is. Quote the line and say which of the
+    seven it is. Shape (g) is the FIRST thing to test for the anchors named in question 2, and
+    dismissing a candidate on it needs no further work."
+  - "WHICH ANCHOR DID YOU ACTUALLY MEET, and is it one of the known collisions? Every anchor named
+    here is KEPT in the vocabulary on purpose, so you will meet them, and the ordering below is what
+    this detector actually raised over 98 real repositories on 2026-08-25 - 21,326 locations in 89
+    of them. TEST THESE FOUR FIRST, because they are 72 % of everything this rule raises. (1) `a2`,
+    3,477 locations in 71 repositories - a real Rust crate on crates.io for Apple push
+    (github.com/walletconnect/a2, originally pimeys), published by a third party and NOT a spelling
+    Apple owns, so the construct that exists for it is `a2 = \"0.10\"` or `[dependencies.a2]` in a
+    Cargo.toml and never `gem \"a2\"`; two characters long, and therefore also every CSS colour like
+    #a22, every function parameter named a2, every UUID fragment and every numeric variable; twelve
+    sampled lines were read and ZERO named a vendor. (2) `cloudflare`, 2,989 locations in 62
+    repositories - Cloudflare's own PyPI client, and also cdnjs.cloudflare.com in prose and script
+    tags, and Cloudflare products that are not R2; twelve sampled lines were read and ZERO named
+    object storage. (3) `cloudinary.com`, 6,627 locations but 97.7 % of them in ONE repository's
+    marketing site as blog and badge images. (4) `digitaloceanspaces.com`, 2,355 locations, 98.6 %
+    in ONE repository. For (3) and (4) the remainder is real: one headless CMS builds its Cloudinary
+    upload URLs out of that host and one business-management platform names a DigitalOcean Spaces
+    service URL in its production config, so read the line rather than dismissing the anchor. THEN
+    THE REST, worst first. `pigeon`, 805 locations - a real Hex package that sends to Apple and
+    Google push services, and ALSO the name of Flutter's own official code-generation tool; ten
+    sampled lines were read by the research pass and ZERO named a push vendor. Treat a bare `pigeon`
+    as non-evidentiary unless the line is an Elixir deps tuple or names a module such as
+    Pigeon.APNS. `apn`, 752 locations - Apple's own abbreviation, and also a cellular Access Point
+    Name in Google's Android Management API, and a coincidental substring of the Slovak word zapnute
+    and the Swedish skrapning in locale files, and base64 image noise; roughly 3 of 8 sampled lines
+    were genuine. `firebase`, 956 locations - not an ordinary word, but a PRODUCT-SURFACE
+    over-match, plus a Material Design Icons glyph named after the logo and guides about migrating
+    AWAY from it. `pusher`, 333 locations - a home-automation firmware's LED pusher C++ class, an
+    internal event-sourcing component in an identity server, and, most importantly, MATRIX'S OWN
+    PROTOCOL CONCEPT: a Matrix client's usePushers and NotificationPusherSettings are
+    Matrix-protocol vocabulary for a homeserver-side notification forwarder, not the vendor Pusher.
+    `wrangler`, 210 - Cloudflare's general Workers CLI, and feedwrangler.net in a bot-detection
+    domain list. `boto3`, 167 - also the font identifier roboto32 and base64-like blobs. `houston`,
+    98 - an ordinary-word RubyGems package for Apple push, unsampled by the research pass, so treat
+    a hit as unevidenced until you have read the line. `svix`, 134 - one research hit was a
+    coincidental substring inside minified SVG path data. THE ONES MOST LIKELY TO BE GENUINE are the
+    service-specific package names, which are only 2.5 % of this rule's volume:
+    `@aws-sdk/client-s3`, `@azure/storage-blob`, `@google-cloud/storage`,
+    `com.google.firebase.messaging`, `aws-config`, `firebase-admin`."
+  - "Is this anchor the vendor's STORAGE or MESSAGING product, or the whole platform? This is a
+    different trap from the ordinary-word one and it catches lines that really do name the vendor.
+    `aws-sdk` and `cloudflare` are PLATFORM-WIDE VENDOR NAMES covering every service those two
+    platforms sell - DynamoDB, Lambda, Bedrock, Workers, D1, DNS - so a hit on either is evidence of
+    SOME relationship with that cloud vendor and not of object storage. The four bare npm scopes
+    that used to do the same for all four platforms - `@aws-sdk/`, `@google-cloud/`, `@azure/`,
+    `@cloudflare/` - were withdrawn as anchors on 2026-09-16, when the owner withdrew the nine
+    umbrella scopes across the bundle. An `@aws-sdk/*` or `@cloudflare/*` package still reaches you,
+    through the two plain names just given; an `@azure/*` or `@google-cloud/*` package that is not
+    `@azure/storage-blob` or `@google-cloud/storage` no longer reaches you at all. The unscoped
+    `firebase` npm package and the `com.google.firebase` Maven group cover Auth, Firestore, Hosting,
+    Analytics, Crashlytics and Remote Config as well as Cloud Messaging; only `@firebase/messaging`,
+    `firebase-admin/messaging`, `com.google.firebase.messaging`, `firebase_admin.messaging`,
+    `firebase-messaging` and `fcm.googleapis.com` name messaging specifically. `wrangler` is
+    Cloudflare's general Workers CLI and the `cloudflare` PyPI package is its general REST client;
+    neither is specific to R2. `com.pusher:chatkit-android`, `com.pusher:chatkit-core` and the
+    `pusher-platform` artifacts are a chat product Pusher discontinued in 2020, so a hit on them is
+    evidence of a retired integration rather than current traffic. TWO MORE, EACH SAMPLED IN THE
+    CORPUS. Bare `aws-sdk` is the legacy all-AWS-services npm package AND a substring of Ruby's
+    aws-sdk-* gem family for other services entirely - a customer-support application's Gemfile
+    carries `aws-sdk-sns (~> 1, >= 1.61.0)`, which is Simple Notification Service, and a forum
+    application writes `require \"aws-sdk-bedrockruntime\"`, which is an AI service - and it is also
+    a substring of the unrelated npm package `@opentelemetry/instrumentation-aws-sdk`. Of four
+    sampled repositories only one was a genuine npm v2 import. Require an S3-specific spelling
+    before concluding object storage. And a bare-scope hit was not always application code at all:
+    one note-taking product's only `@google-cloud/` line is inside `.yarn/releases/yarn-4.12.0.cjs`,
+    Yarn's own vendored release binary, and the package it names there is `@google-cloud/firestore`,
+    which is a database rather than object storage. That line is one of the ones the 2026-09-16
+    withdrawal removed, so you will not meet it through this rule any more; it is kept here as the
+    worked example of what a bare scope was doing. Say which product the line actually names, and if
+    the answer is only \"the platform\", say that."
+  - "WHAT DOES THE VENDOR RECEIVE ON THE PATH THIS CODE USES - and do not answer it from the
+    vendor's name. For payment vendors the product decides the fields; for object storage and
+    message delivery THE OPERATOR DECIDES THEM, because the vendor receives whatever the operator
+    puts through it. So the answer is per integration path, and the paths differ materially. The
+    authority for what a vendor receives is the VENDOR'S OWN API REFERENCE for the call this code
+    makes, and it is the thing to read: nothing in this bundle carries the per-vendor field lists,
+    and no file in the scanner's own repository is available to you. The examples below were read
+    from those references and are here to show how much the paths differ, not to save you the
+    reading: an S3 PutObject discloses the object body, the object key - which routinely carries a
+    user id or an original filename - any x-amz-meta-* headers the application sets, and, through
+    server access logs, the caller's IP address; a Cloudinary upload discloses public_id,
+    display_name, context key-value pairs, filename_override and free-text tags, and on one path can
+    relay an Authorization header for a protected remote URL; a Firebase Cloud Messaging send
+    discloses the installation id or device token, the notification title and body, and an arbitrary
+    application-defined data map, and, for any message targeting an iOS device, the nested APNs
+    payload as well; an APNs send discloses the device token in the URL path, aps.alert.title,
+    subtitle and body, and any custom top-level keys the application adds - Apple's own
+    documentation warns developers \"Do not include customer information or any sensitive data in
+    your payload unless that data is encrypted or useless outside of the context of your app\",
+    which establishes that Apple thought this field worth warning about and establishes nothing at
+    all about what the application in front of you puts in it; a Pusher channel authentication
+    discloses a user id, optional user_info such as a name, and a watchlist that Pusher's own
+    documentation describes as a circle of interest whose presence can be exposed - that is a
+    person's relationship graph, not a bare identifier. AND THE METADATA IS A DISCLOSURE EVEN WHEN
+    THE PAYLOAD IS ENCRYPTED: an object key carrying a user id, a device token, a caller IP and an
+    authenticated principal's email address are each information relating to an identifiable natural
+    person within Art. 4(1) in their own right, and a channel name or a notification title is one
+    whenever it carries or relates to information about an identifiable person - `notifications` and
+    `New message` are not, `user-42-dm` and `Reply from Anna` are, and encrypting the object body
+    changes none of them. Quote the call, name the path, and list the fields it populates."
+  - "Is the vendor a PROCESSOR here, a SUB-PROCESSOR, or an independent controller - and which of
+    those is the scanned product itself? This is the question that makes this a different rule from
+    the payment one, and it has two halves that are easy to run together. First, what is the scanned
+    product: a controller for its own account holders, or a processor handling a customer's data? If
+    it is a processor, then the bucket or the relay it engages is a SUB-PROCESSOR, and Art. 28(2)
+    requires the controller's prior specific or general written authorisation with notice of
+    changes, while Art. 28(4) requires the same data protection obligations to be flowed down by
+    contract. Second, what does the vendor say about itself: Svix's own privacy notice states it is
+    the data controller for its users' personal data in the EU while acting as a processor for
+    message payloads, and Cloudinary, Pusher and Firebase Cloud Messaging each name several entities
+    without saying which contracts for a given customer. Read the contract the product actually
+    signed and the subprocessor list it actually publishes, not the vendor's marketing page. If the
+    product's own position in the chain is not established, say so rather than choosing one."
+  - "WHICH LEGAL ENTITY does this deployment contract with, and IS ANY CANDIDATE ESTABLISHED AT ALL?
+    THE VENDOR DOES NOT HAVE ONE ANSWER TO THE FIRST QUESTION. A cloud or delivery vendor of this
+    kind names SEVERAL contracting entities and picks between them by a property of the CUSTOMER -
+    the account country the customer declared, the region the account sits in, which product they
+    bought. So there is no fact of the form 'this vendor is established in X' for the record to
+    copy: there is a list of candidates the vendor publishes, and one contract that says which of
+    them this operator signed. It is an operator fact and is never inferred from source code - it is
+    read from the order form, the data processing agreement, the invoice or the vendor dashboard.
+    FOUR OF THE FOURTEEN VENDORS IN THESE TWO LISTS HAVE NO ESTABLISHED CANDIDATE AT ALL, and they
+    are named here rather than pointed at, because no vendor file ships with this bundle: GOOGLE
+    CLOUD STORAGE, CLOUDINARY, FIREBASE CLOUD MESSAGING and PUSHER. For each of those four the
+    research pass ended with no established jurisdiction; treat all four as unconfirmed. YOU MAY NOT
+    FILL ONE IN. An unconfirmed jurisdiction stays unconfirmed in whatever you write; do not
+    substitute the vendor's headquarters, the country in its billing address, the region in a bucket
+    name, or a plausible guess from the group's other entities. Return needs_human for that field
+    instead. WHAT THE VENDORS' OWN DOCUMENTS NAMED, on the dates given, and NONE of it decides which
+    one applies here. Amazon Web Services' customer agreement (read 2026-08-25) names AMAZON WEB
+    SERVICES EMEA SARL in Luxembourg where the declared Account Country is in Europe, the Middle
+    East or Africa excluding South Africa, AMAZON WEB SERVICES, INC. in Seattle where it is in no
+    other row, and ten further per-region entities in the rows between. Microsoft's own addendum
+    (read 2026-08-25) names MICROSOFT IRELAND OPERATIONS LIMITED and MICROSOFT CORPORATION together,
+    in the definition of its standard contractual clauses. Apple's developer agreement (read
+    2026-08-25) names APPLE INC. in Cupertino as the entity a developer contracts with, and Apple's
+    privacy policy names APPLE DISTRIBUTION INTERNATIONAL LIMITED in Ireland as controller for
+    individuals in the European Economic Area, the United Kingdom and Switzerland - which is a
+    statement about individuals rather than about the developer's contract. Cloudinary's terms name
+    THREE affiliates and make the governing law depend on which one contracted, without saying which
+    applies to which customer. Firebase's terms name GOOGLE LLC, GOOGLE IRELAND LIMITED and GOOGLE
+    ASIA PACIFIC PTE. LTD. 'as applicable', and extend the clause to any other entity under common
+    control. Pusher's current owner names MESSAGEBIRD UK LIMITED for the push line of business, over
+    a historical PUSHER LIMITED. Four storage vendors - DIGITALOCEAN, LLC, CLOUDFLARE, INC., T3
+    TOOLS, INC. (Uploadthing) and BACKBLAZE, INC. - and three delivery vendors - ONESIGNAL, INC.,
+    PUBNUB INC. and SVIX INC. - each named ONE United States entity and no entity in the European
+    Economic Area in the documents read. EVERY DATE ABOVE IS THE DAY THAT DOCUMENT WAS READ AND
+    NOTHING RE-READS IT: a vendor may have been renamed, acquired or added an entity since, so treat
+    this as an incomplete list of candidates rather than a closed one, and never as the answer. If
+    the operator cannot produce the contract, return needs_human for this field rather than choosing
+    the candidate that looks likeliest."
+  - "Is a Chapter V transfer engaged on this leg, and is that a SEPARATE finding from this one?
+    Field (d) of the record is owed whether or not a transfer is involved; the transfer is a
+    separate field, and WHICH field depends on which record the product keeps - Art. 30(1)(e) if it
+    is a controller, Art. 30(2)(c) if it is a processor. Where a transfer IS engaged, name the
+    mechanism the deployment relies on and say where you read it - Backblaze's own DPA names itself
+    the data importer and relies on Standard Contractual Clauses with Ireland as the competent
+    supervisory authority; OneSignal's DPA relies on the EU-U.S. Data Privacy Framework; PubNub's
+    privacy policy names Standard Contractual Clauses. An intra-EEA contracting leg does not dispose
+    of an onward transfer inside the vendor's own group, which is a different question again, and
+    for a storage vendor the BUCKET REGION is a further separate fact from the contracting entity:
+    an Irish contracting entity and a us-east-1 bucket are both true at once."
+  - "Does the Art. 30 record duty apply to this organisation at all? Art. 30(5) switches it off for
+    an enterprise or organisation employing fewer than 250 persons UNLESS any one of three things is
+    true: the processing is likely to result in a risk to the rights and freedoms of data subjects,
+    the processing is not occasional, or it includes special categories of data under Art. 9(1) or
+    criminal-conviction data under Art. 10. Storing user uploads or sending push notifications on a
+    continuing basis is not occasional, so the exemption very often does not survive - but headcount
+    and regularity are facts the operator supplies, not facts in the tree. If the operator has not
+    supplied them, say so."
+  - Is this vendor already IN the record of processing activities, the privacy policy and the
+    published subprocessor list? That is the gap this rule exists to find, and it is answered by
+    reading the operator's own declared documents against the code - not by reading more code. A
+    vendor present in the code and absent from all three is the finding; a vendor present in all
+    three is not a finding at all; a vendor present in some but not all is a finding about the
+    documents that omit it. For this class the SUBPROCESSOR LIST is the document that most often has
+    the gap, because a storage bucket or a push relay is usually engaged by an engineer rather than
+    by whoever maintains the list. Say which of the three documents you read and which named the
+    vendor.
+evidence_template: "{file}:{line} carries a string from one of the three vendor lists this rule
+  matches on: 71 spellings owned by 8 cloud object-storage vendors, and 95 spellings owned by 6
+  push-notification, real-time-relay and webhook-delivery vendors. Since 2026-09-04 a third list is
+  also matched: 15 spellings of picture-serving hosts and vendor-owned endpoint paths - avatar
+  lookups, favicon services, and icon or icon-font CDNs - three of which (cdn.jsdelivr.net,
+  unpkg.com, kit.fontawesome.com) are general-purpose hosts, so a match names the host and never
+  what was delivered through it. What each vendor receives on each integration path, and where it is
+  established, is read from the vendor's own API reference and its own contracting documents - the
+  context questions say which, and this bundle carries the spellings only. MANY of those spellings
+  are self-identifying - a scoped npm package, a Maven or NuGet coordinate, a Go module path, an API
+  hostname - but SEVERAL ARE BARE TOKENS THAT ARE ALSO ORDINARY WORDS OR UNRELATED TECHNOLOGY, and
+  you must decide which kind you are holding before reading any further. Measured over 98 real
+  repositories on 2026-08-25, this detector raised 21,326 locations in 89 of them, and FOUR ANCHORS
+  CARRY 72 % OF THAT: `a2` (3,477 locations in 71 repositories - also every CSS colour like #a22,
+  every parameter named a2 and every UUID fragment; twelve sampled lines named no vendor),
+  `cloudflare` (2,989 in 62 - also cdnjs.cloudflare.com and Cloudflare products that are not R2;
+  twelve sampled lines named no object storage), `cloudinary.com` (6,627, of which 97.7 % are one
+  repository's blog and badge images) and `digitaloceanspaces.com` (2,355, of which 98.6 % are one
+  repository's). The others: `pigeon`, of which ten sampled lines were read and none named a push
+  vendor - the hits were Flutter's own code-generation tool and a machine-learning tokenizer entry;
+  `apn`, of which roughly three of eight sampled lines were genuine, the rest being a cellular
+  Access Point Name, Slovak and Swedish locale substrings and base64 noise; `houston`, an
+  ordinary-word Ruby gem name the research pass did not sample at all; `pusher`, which is also a
+  home-automation firmware's LED pusher class and, more often, MATRIX'S OWN PROTOCOL CONCEPT of a
+  Pusher in a Matrix client; `wrangler`, which is also Cloudflare's general Workers CLI and
+  feedwrangler.net; `boto3`, which is also the font identifier roboto32. Two further families are
+  genuinely vendor-owned and still do not name this rule's subject: the platform-wide vendor names
+  `aws-sdk` and `cloudflare` cover every service those two platforms sell rather than storage
+  specifically, as the four bare npm scopes withdrawn on 2026-09-16 did for all four, and the bare
+  `firebase` package covers Auth, Firestore, Hosting and Analytics as well as Cloud Messaging. So
+  what this detector established is ONLY that a listed string occurs at this location. It does NOT
+  establish that the string names the vendor at all, that any personal data was disclosed, that the
+  integration is live, that the line is first-party code rather than a vendored SDK or a generated
+  third-party API client nothing calls, or which integration path is in use. Note that a transitive
+  lockfile entry is not among the shapes you can meet FOR MOST LOCKFILES, and the exception matters.
+  The walker drops fourteen names and only those fourteen: `package-lock.json`, `pnpm-lock.yaml`,
+  `yarn.lock`, `npm-shrinkwrap.json`, `bun.lockb`, `composer.lock`, `Gemfile.lock`, `poetry.lock`,
+  `pdm.lock`, `Cargo.lock`, `go.sum`, `packages.lock.json`, `Podfile.lock` and `flake.lock`, and
+  `node_modules` and `vendor` with them, before any rule runs. `bun.lock` - Bun's CURRENT,
+  text-format lockfile - is NOT on that list and IS read, because only the older binary `bun.lockb`
+  is named there (corrected 2026-09-17; the sentence used to say \"and their siblings by name\",
+  which is not what the walker does). So a `bun.lock` dependency line can reach you, and it is a
+  transitive dependency record rather than a line this product wrote. WHAT THE VENDOR RECEIVES IS
+  DECIDED BY THE OPERATOR AND NOT BY THE VENDOR, so the path has to be read from the code rather
+  than inferred from the vendor's name - and note that the metadata is a disclosure even where the
+  payload is encrypted: an object key carrying a user id, a device token and the caller's IP address
+  are each personal data in their own right, and a channel name or a notification title is one
+  whenever it carries or relates to information about an identifiable person. Four of the fourteen
+  vendors - Google Cloud Storage, Cloudinary, Firebase Cloud Messaging and Pusher - have NO
+  established jurisdiction in the research behind this list. They are named here rather than pointed
+  at, because no vendor file ships with this bundle, and you may not supply a jurisdiction for any
+  of them. Whether the vendor is already in the operator's record of processing activities, privacy
+  policy and subprocessor list is not decided by the detector and cannot be: see the context
+  questions"
+remediation_template: >
+  Read the matched line first and decide what it is, because this rule matches a spelling the vendor
+
+  owns and that spelling reaches a tree in seven shapes of which two put data in the vendor's hands.
+
+  A dependency declaration or import that first-party code calls, and a request to the vendor's API
+
+  or a bucket URL the product writes to, are the two. A vendored SDK or generated third-party API
+
+  client nothing calls, a documentation or migration-guide link, a Content-Security-Policy
+
+  allow-list entry, test or seed data, and a string that is not the vendor at all are the other
+
+  five. Several anchors in these two lists are ordinary words or other companies' products -
+
+  `a2`, `cloudflare`, `pigeon`, `apn`, `houston`, `pusher`, `wrangler`, `boto3` - and for those the
+
+  last shape is the likeliest one: over 98 real repositories, `a2` and `cloudflare` alone raised
+
+  6,466 locations and twelve sampled lines of each named no vendor at all.
+
+  If it is one of the two, settle FIRST whether the scanned product is a CONTROLLER or a PROCESSOR
+
+  for this data, because that decides which record the entry belongs in and there is no field to
+
+  write it into until it is answered. Where the product is a controller, add the vendor to field (d)
+
+  of its own Art. 30(1) record as a category of recipient. Where the product is a processor, its own
+
+  record is the Art. 30(2) record, which has NO categories-of-recipients field - its (d) is the
+
+  security-measures field, so the words FIELD (D) name something else entirely there: the RECIPIENT
+
+  CATEGORY belongs in the customer-controller's record. The product's own record is NOT silent about
+
+  this vendor, though: where the disclosure is a transfer to a third country, Art. 30(2)(c) requires
+
+  the processor to record that transfer in its own Art. 30(2) record, "including the identification
+
+  of that third country or international organisation". The safeguards limb of the same provision is
+
+  conditional, and asking for it on every transfer overstates the duty: Art. 30(2)(c) requires the
+
+  documentation of suitable safeguards only "in the case of transfers referred to in the second
+
+  subparagraph of Article 49(1)", which is the compelling-legitimate-interests derogation. A
+  transfer
+
+  resting on an adequacy decision or on standard contractual clauses engages the identification limb
+
+  and not that one. Beside that entry, what the
+
+  product owes on its own account is Art. 28(2)'s authorisation and change-notification and
+
+  Art. 28(4)'s flow-down to the vendor. If the product's own position in the chain is not
+
+  established, say so and stop rather than choosing one.
+
+  In either case add the vendor to the published subprocessor list, which for this class is the
+
+  document that most often lacks it. Write the row from the integration path that is actually used
+
+  rather than from the vendor's name, reading the fields off the vendor's own API reference for the
+
+  call the code makes: an S3 PutObject, a Cloudinary upload and a Firebase Cloud Messaging send are
+
+  materially different disclosures that the row should not flatten. Record the metadata as well as
+  the payload - the
+
+  object key, the device token, the channel name, the notification title and the caller's IP are
+
+  each disclosed even where the object body is encrypted.
+
+  Then answer the two things the record still needs and the code cannot supply. Which legal entity
+
+  the deployment contracts with - and THE VENDOR HAS NO SINGLE ANSWER TO COPY, because these vendors
+
+  name several contracting entities each and pick between them by a property of the CUSTOMER, such
+  as
+
+  the account country the customer declared. That makes the entity a fact about THIS OPERATOR'S
+
+  CONTRACT rather than an attribute of the vendor: read it from the order form, the data processing
+
+  agreement or the invoice they actually signed. Context question 6 lists the candidates each
+
+  vendor's own documents named and the date each was read; it is an incomplete list of candidates
+  and
+
+  never the answer, because nothing re-reads those documents. Where the operator cannot produce the
+
+  contract, return needs_human for that field rather than choosing the candidate that looks
+  likeliest.
+
+  And whether a Chapter V transfer is engaged on this leg - which is a SEPARATE question from field
+
+  (d), which this rule does not test, and which does NOT reduce to where the EXPORTER is
+
+  established. Establishment in the Union is one route into the Regulation, not the test. Art. 3(1)
+
+  reaches processing "in the context of the activities of an establishment of a controller or a
+
+  processor in the Union". Art. 3(2) separately reaches "a controller or processor not established
+
+  in the Union" where the processing relates to "the offering of goods or services" to data subjects
+
+  in the Union, or to "the monitoring of their behaviour" there. So the US-established product that
+
+  Sec. 1798.110(a)(4) also reaches can be inside the Regulation at the same time, and its disclosure
+
+  to a vendor in a third country inside Chapter V - Art. 44 conditions the Chapter on the transfer,
+
+  not on where the exporter sits - and closing the question from the product's own address loses
+
+  real transfers. Where no limb of Art. 3 is met, the Regulation does not reach this processing and
+
+  the Art. 30 record does not arise either. Which of those holds, and where the receiving entity
+
+  sits, are both operator facts this detector does not have; ask them. What the
+
+  vendor's own documents establish is about the VENDOR rather than about this deployment, and
+
+  context question 6 sets that out vendor by vendor; report it, and leave whether a transfer is
+
+  engaged to the operator's answer.
+
+  For the four vendors named above as having no established jurisdiction - Google Cloud Storage,
+  Cloudinary, Firebase Cloud Messaging and Pusher - leave that field unanswered and say why; do not
+  substitute a headquarters, a billing country or a bucket region.
+
+  If the vendor is already named in the record, in the privacy policy and in the subprocessor list,
+
+  and the three answers above are recorded, dismiss the candidate and
+
+  say which of the three documents you read.
+
+  Do not delete the bucket or the push integration in order to close the finding. The obligation is
+
+  to record the recipient, not to have no recipients.
+data_categories:
+  - user.behavior
+  - user.contact.email
+  - user.contact.phone_number
+  - user.content
+  - user.device
+  - user.device.ip_address
+  - user.name
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: enumeration
+  item: vendor per list
+  item_source: token

@@ -1,0 +1,222 @@
+id: recipients-011
+pack: recipients
+short_name: Claim that split data cannot be rebuilt by any one party
+problem_line:
+  text: Claim that no one party can rebuild split data may not hold
+fix_line: State the claim's conditions beside it, pin the list the shares are indexed against, and
+  log the fail-open path.
+title: Datum split across recipients so none can reconstruct it - the non-collusion claim needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 4(1) - 'personal data' means 'any information relating
+      to an identified or identifiable natural person ('data subject'); an identifiable natural
+      person is one who can be identified, directly or indirectly, in particular by reference to an
+      identifier such as a name, an identification number, location data, an online identifier or to
+      one or more factors specific to the physical, physiological, genetic, mental, economic,
+      cultural or social identity of that natural person'. Cited because the whole question this
+      construct raises is whether what each recipient holds is still information relating to an
+      identifiable person
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 26 - in deciding whether a person is identifiable
+      'account should be taken of all the means reasonably likely to be used, such as singling out,
+      either by the controller or by another person to identify the natural person directly or
+      indirectly'. Reference only: a recital establishes no duty. It is cited because the words 'or
+      by another person' are what make collusion between share holders the right question rather
+      than an academic one"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(c) - personal data shall be 'adequate, relevant and
+      limited to what is necessary in relation to the purposes for which they are processed ('data
+      minimisation')'. Cited because a split scheme is a minimisation measure, and a measure that
+      does not hold in the deployed build is minimisation that was assumed rather than achieved
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 25(1) - the controller shall, 'both at the time of the
+      determination of the means for processing and at the time of the processing itself, implement
+      appropriate technical and organisational measures, such as pseudonymisation, which are
+      designed to implement data-protection principles, such as data minimisation, in an effective
+      manner and to integrate the necessary safeguards into the processing'. Cited because the
+      phrase 'in an effective manner' is exactly what a fail-open branch in a share-distribution
+      planner puts in question
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 32(1)(a) - the measures a controller and processor
+      implement include, inter alia as appropriate, 'the pseudonymisation and encryption of personal
+      data'. Reference only: this detector establishes no security failure. It is cited because a
+      split scheme is the same kind of measure this subparagraph names, assessed the same way - by
+      what it achieves rather than by its presence"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - the record of processing activities 'shall
+      contain all of the following information', including 'the categories of recipients to whom the
+      personal data have been or will be disclosed including recipients in third countries or
+      international organisations'. Reference only: several parties receive a share each, they are a
+      recipient category, and the fact that no one of them can reconstruct the datum does not by
+      itself decide whether the record must name the category"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.35
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    secret_share_terms:
+      - shareIndex
+      - share_index
+      - shareCount
+      - share_count
+      - sharePayload
+      - share_payload
+      - shareComms
+      - share_comms
+      - shamir
+      - splitSecret
+      - split_secret
+      - secretShare
+      - secret_share
+      - secretSharing
+      - secret_sharing
+      - thresholdShare
+      - threshold_share
+      - combineShares
+      - combine_shares
+      - reconstructSecret
+      - reconstruct_secret
+    pir_terms:
+      - pirEndpoints
+      - pir_endpoints
+      - pirServer
+      - pir_server
+      - pirClient
+      - pir_client
+      - pirLayout
+      - PirLayout
+      - poly_len
+      - polyLen
+      - privateInformationRetrieval
+      - private_information_retrieval
+    pinned_config_fetch:
+      - pinnedSource
+      - pinnedSources
+      - pinnedConfig
+      - pinned_config
+      - bundledPinnedSource
+      - configPin
+      - config_pin
+    pinned_trust_terms:
+      - trustAnchor
+      - trust_anchor
+    k_anonymity_terms:
+      - passwordHashPrefix
+      - hashPrefix
+      - hash_prefix
+      - kAnonymity
+      - k_anonymity
+      - rangeQuery
+      - range_query
+      - prefixQuery
+      - prefix_query
+  vocabulary_matching:
+    secret_share_terms:
+      case_insensitive: true
+      separator_insensitive: true
+    pir_terms:
+      case_insensitive: true
+      separator_insensitive: true
+    pinned_config_fetch:
+      case_insensitive: true
+      separator_insensitive: true
+    pinned_trust_terms:
+      case_insensitive: true
+      separator_insensitive: true
+    k_anonymity_terms:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?:^|[^A-Za-z0-9_])[A-Za-z0-9_]{0,24}(?&secret_share_terms)\b
+    - (?:^|[^A-Za-z0-9_])(?&pir_terms)\b
+    - (?:(?:^|[^A-Za-z0-9_])[A-Za-z0-9_.]{0,32}(?:shareIndex|share_index)[^\n]{0,60}[%]|[%][^\n]{0,60}(?:shareIndex|share_index)\b)
+    - (?:(?:^|[^A-Za-z0-9_])(?&pinned_config_fetch)\b|checksum=sha256:)
+    - (?:^|[^A-Za-z0-9_])(?&pinned_trust_terms)[^\n]{0,60}(?:[Cc]onfig|[Pp]in|sha256|[Mm]irror|[Hh]elper)
+    - (?:(?:^|[^A-Za-z0-9_])(?&k_anonymity_terms)\b|["'`][^"'`\n]{0,40}[/]range[/])
+context_questions:
+  - IS THE SPLIT DATUM PERSONAL DATA, OR A SECRET? This decides most candidates first, and the same
+    vocabulary serves both. A wallet seed, a backup key or a recovery secret split across devices is
+    a key-management design; a person's ballot, balance, location or message split across helpers is
+    this construct. Quote what is being split and what it relates to, and where it is a key rather
+    than a person's datum, record that and stop.
+  - "WHO ARE THE RECIPIENTS, AND WHERE IS THE LIST? The detector cannot answer this and does not
+    try: on the tree this rule was modelled on the list is fetched at run time as signed
+    configuration under a content hash, so it is not in the repository. Go and get the configuration
+    the code pins, list the parties, and say who operates each. Whether they are independent of one
+    another IS the privacy property, and it is an organisational fact rather than a code fact."
+  - IS THE OMISSION ENFORCED ON EVERY ROUND, OR ONLY THE FIRST? Read the distribution loop. A scheme
+    that withholds one share from one recipient on the initial selection and then backfills failures
+    without re-applying the rule hands that recipient its missing share on the retry, and the
+    property is gone. Quote the retry and backfill paths specifically, not only the first selection.
+  - WHAT LIST IS THE INDEX TAKEN AGAINST - THE CONFIGURED ONE, OR A WORKING COPY? This is the subtle
+    failure and it is worth checking on its own. Where the index is computed against a list that
+    shrinks as recipients fail, a later share can slide into a departed party's slot and the
+    recipient that was meant to be short of a share receives it. Quote the list the arithmetic
+    indexes and say whether it is fixed for the whole operation.
+  - WHAT HAPPENS WHEN THE RULE CANNOT BE SATISFIED - FAIL OPEN OR FAIL CLOSED? Quote the branch. A
+    planner that would rather deliver the share to the withheld recipient than lose it has chosen
+    availability over the privacy property, which may well be the right engineering call; it needs
+    to be written down as a condition of the claim rather than left in a comment. Say how often that
+    branch can be reached.
+  - "IF THIS MATCH IS THE RANGE-QUERY FORM, SAY SO AND DO NOT DESCRIBE IT AS A SPLIT. A client that
+    sends a hash prefix and receives a range is a k-anonymity design with ONE recipient. It is a
+    real minimisation measure and it is a different one: there is no share, no threshold and no
+    non-collusion assumption. Record it as a range query, and record what the prefix length is,
+    which is what bounds the set the recipient can narrow to."
+evidence_template: "{file}:{line} matched vocabulary or an arithmetic shape belonging to a scheme
+  that spreads a datum across several recipients so that no one of them holds it whole - secret
+  sharing, private information retrieval, the withholding rule that makes a share set incomplete for
+  each recipient, the pinned configuration the recipient list is fetched from, or the separate
+  range-query family. This is NOT a report that a protection is in place and must not be written up
+  as one: it marks a CLAIM whose conditions have to be checked. It does not establish that what is
+  split is personal data rather than a key, which is context question 1. It does not establish who
+  the recipients are - on the construct this rule was modelled on the list is fetched at run time
+  under a content hash and is not in the repository. It does not establish that the withholding rule
+  holds on retry and backfill rounds, or that the index is taken against a fixed list, which are
+  context questions 3 and 4. WHERE THE MATCH IS THE RANGE-QUERY FORM (a hash prefix sent so a server
+  answers a range), THAT IS A DIFFERENT DESIGN WITH ONE RECIPIENT AND NO NON-COLLUSION ASSUMPTION,
+  and describing it as a split scheme would be wrong."
+remediation_template: |
+  Write the claim down as conditions, not as a property. "No single helper can reconstruct the
+  value" is true only while: the withholding rule is applied on every selection round including
+  backfill; the index is taken against a list fixed for the whole operation; the fail-open branch
+  is reachable rarely and is logged when it fires; and the recipients are operated independently.
+  Each of those is testable, and each belongs beside the claim wherever the claim is made to users.
+  Pin the list the arithmetic indexes. Where the working set of recipients can shrink during an
+  operation, take the index against the configured list rather than the working one, so a departed
+  party's slot cannot be reused.
+  Log the fail-open path. A branch that delivers a withheld share rather than losing it is a
+  deliberate trade; make it countable, so that "rarely" is a number rather than an expectation.
+  Record the recipients as a category in the Art. 30(1)(d) record even though none holds the whole
+  datum. Whether a share is personal data in a given holder's hands is a question for Recital 26,
+  and leaving the category out because the answer feels obvious is how the row goes missing.
+  Where the design is the range-query form, say so in the privacy documentation in those words,
+  and state the prefix length: that number is what bounds the set the recipient can narrow to, and
+  it is the whole of the measure.
+data_categories:
+  - user.unique_id
+  - user.behavior
+  - user.authorization.credentials
+fingerprint_spec: project
+reading_class:
+  class: existence

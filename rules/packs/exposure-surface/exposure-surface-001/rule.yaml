@@ -1,0 +1,238 @@
+id: exposure-surface-001
+pack: exposure-surface
+short_name: Admin or debug path to personal data
+problem_line:
+  text: Admin or debug access to personal data beside the main API
+fix_line: Record this path's access check and whether it is enabled, and cover it in your security
+  review and access records.
+title: Operator- or debug-grade access path over the personal-data store, beside the primary API
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 32(1)(b) - the controller and the processor 'shall
+      implement appropriate technical and organisational measures to ensure a level of security
+      appropriate to the risk, including inter alia as appropriate' 'the ability to ensure the
+      ongoing confidentiality, integrity, availability and resilience of processing systems and
+      services'. A second access path over the same store is part of the processing system whose
+      ongoing confidentiality this subparagraph asks about, and it is ordinarily outside whatever
+      review covers the primary API
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(f) - personal data shall be 'processed in a manner
+      that ensures appropriate security of the personal data, including protection against
+      unauthorised or unlawful processing and against accidental loss, destruction or damage, using
+      appropriate technical or organisational measures'. A surface with its own authorisation model
+      decides who is authorised somewhere other than where the primary API decides it, so the same
+      product answers that question in two places
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 29 - 'The processor and any person acting under the
+      authority of the controller or of the processor, who has access to personal data, shall not
+      process those data except on instructions from the controller, unless required to do so by
+      Union or Member State law.' An operator console, an impersonation route and a diagnostic dump
+      are three ways a person acting under the controller's authority reaches personal data, and
+      this Article is the provision that asks which instructions bound that access
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 25(2) - 'The controller shall implement appropriate
+      technical and organisational measures for ensuring that, by default, only personal data which
+      are necessary for each specific purpose of the processing are processed. That obligation
+      applies to the amount of personal data collected, the extent of their processing, the period
+      of their storage and their accessibility.' Accessibility is the limb this rule reaches: a
+      secondary surface changes who can get at the store without changing anything about what is
+      stored"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1)(g) - the record of processing activities shall
+      contain, 'where possible, a general description of the technical and organisational security
+      measures referred to in Article 32(1)'. Reference only: this detector establishes that a
+      second surface exists in the source, not that any record is deficient - only the operator,
+      reading their own record, can say whether the surface is described in it. The span occurs
+      twice in the instrument, in Art. 30(1)(g) and again in Art. 30(2)(d), and the receipt records
+      both without claiming which is meant"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.4
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  match:
+    - \bDebugger\s*\(\s*\w*[Mm]ux\b
+    - (?:^|[^A-Za-z0-9_])tsweb\s*\.\s*Debugger\s*\(
+    - /debug/(?:pprof|vars|requests|events)\b
+    - (?:^|[^A-Za-z0-9_])(?:statsviz|expvar)\s*\.\s*[A-Za-z]
+    - \bdebug\s*\.\s*Handle\s*\(\s*["'`][a-zA-Z][\w-]*["'`]\s*,
+    - (?:^|[^A-Za-z0-9_])debug\s*\.\s*Handle\s*\(|\.\s*Handle\s*\(\s*["'](?:[a-zA-Z][\w-]*)["']\s*,\s*["'][^"'\n]{0,120}["']\s*,
+    - (?:^|[^A-Za-z0-9_])(?:debug|Debug)[A-Za-z0-9]*(?:HTTPServer|HttpServer|Server|Handler|Router|Routes|Dump[A-Za-z0-9]*|MapResponses?)\b|\b[A-Z][A-Z0-9]*_DEBUG_[A-Z0-9_]{2,}\b
+    - (?:^|[^A-Za-z0-9_])(?:tailsql|TailSQL|TailSql|Blazer|PgHero|pghero|[Ss]ql[_]?[Ii]nspector|SQLInspector|[Ss]ql[_]?[Cc]onsole|SQLConsole|[Qq]uery[_]?[Cc]onsole|[Dd]b[_]?[Cc]onsole|[Dd]atabase[_]?[Cc]onsole)\b
+    - (?:^|[^A-Za-z0-9_])live_dashboard\s*\(
+    - \bmount\s+(?:[A-Za-z0-9_]+::)*(?:Sidekiq::Web|Blazer::Engine|MissionControl::Jobs::Engine|PgHero::Engine|RailsAdmin::Engine|Flipper::UI|Avo::Engine|Madmin::Engine|Lookbook::Engine)
+    - (?:^|[^A-Za-z0-9_:])(?:Sidekiq::Web|MissionControl::Jobs::Engine|RailsAdmin::Engine|Flipper::UI|Avo::Engine|Madmin::Engine|Lookbook::Engine)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:ProcessDump|process_dump|ReconTrace|recon_trace|TenantInfo|tenant_info)\b
+    - (?:^|[^A-Za-z0-9_])django\.contrib\.admin\b
+    - \badmin\s*\.\s*site\s*\.\s*(?:register|urls)\b|@\s*admin\s*\.\s*register\s*\(
+    - (?:^|[^A-Za-z0-9])[Ii]mpersonat(?:e|es|ed|ing|ion|or|ors)[A-Za-z0-9_]*
+    - (?:^|[^A-Za-z0-9_])(?:login_as|loginAs|log_in_as|become_user|becomeUser|masquerade|sudo_user|switch_user|switchUser|act_as_user|actAsUser|imitate[-_]?customer|imitateCustomer|true_user|trueUser)\b
+    - (?:^|[^A-Za-z0-9_])(?:[A-Za-z0-9]*Admin[A-Za-z0-9]*Constraint|super_admin\?|superAdmin\b|is_super_admin|staff_only|admin_only)
+    - (?:^|[^A-Za-z0-9_])(?:impersonation[_-]?token|impersonationToken|customer[_-]?impersonation|x-impersonate|X-Impersonate)\b
+    - "[\"'`](?:/(?:fever|greader|googlereader)/?|/reader/api/0/?|/api/fever/?|/api/v0/?|/api/legac\
+      y/?|/legacy/api/?)[\"'`]"
+    - (?:^|[^A-Za-z0-9_])(?:feverHandler|FeverHandler|greaderHandler|GReaderHandler|googlereader|GoogleReader|googleReaderHandler)\b
+    - \bUser(?:By|With)[A-Za-z0-9]*Token\s*\(
+    - (?:^|[^A-Za-z0-9_])legacy_(?:protocol|api|endpoint|auth|client|user|server|session)[A-Za-z0-9_]*
+    - (?:^|[^A-Za-z0-9_])(?:[Ll]egacy|[Cc]ompat|[Cc]ompatibility)[A-Za-z0-9]*(?:Api|API|Handler|Router|Controller|Endpoint|Protocol|Server|Service)\b
+    - \bgit-(?:upload|receive)-pack\b
+    - \bGet(?:User)?(?:Access|Api|Auth)?Token\s*\(\s*(?:final\s+|const\s+|string\s+|String\s+|int\s+|long\s+)?(?:user_?[Ii]d|userName|user_name|username|account_?[Ii]d|subject_?[Ii]d)\b
+    - (?:[Ff]light[_-]?[Rr]ecorder|[Cc]rash[_-]?[Rr]eport(?:er|ers|s)?|erl_crash|[Mm]ini[_-]?[Dd]ump|[Hh]eap[_-]?[Dd]ump|[Cc]ore[_-]?[Dd]ump)[A-Za-z0-9_]*
+    - (?:^|[^A-Za-z0-9_])(?:barryvdh/laravel-debugbar|laravel-debugbar|phpdebugbar|spatie/laravel-ignition|laravel-ignition|laravel/telescope|TelescopeApplicationServiceProvider|symfony/web-profiler-bundle|WebProfilerBundle|symfony/debug-bundle|django-debug-toolbar|debug_toolbar|rack-mini-profiler|rack_mini_profiler|better_errors|flask-debugtoolbar|flask_debugtoolbar|DebugToolbarExtension|@nestjs/devtools-integration|spring-boot-starter-actuator)\b
+    - ^\s*(?:export\s+)?(?:APP_DEBUG|APP_DEBUGBAR|DEBUG|DEBUGBAR_ENABLED|DEBUG_TOOLBAR|DJANGO_DEBUG|FLASK_DEBUG|RAILS_DEBUG|SYMFONY_DEBUG|TELESCOPE_ENABLED|WEB_PROFILER|PROFILER_ENABLED)\s*(?:=>|[:=])\s*["']?(?:true|True|TRUE|1|on|yes)\b|^\s*management\.endpoints\.web\.exposure\.include\s*=
+    - ^\s*(?:export\s+)?["'](?:APP_DEBUG|APP_DEBUGBAR|DEBUG|DEBUGBAR_ENABLED|DEBUG_TOOLBAR|DJANGO_DEBUG|FLASK_DEBUG|RAILS_DEBUG|SYMFONY_DEBUG|TELESCOPE_ENABLED|WEB_PROFILER|PROFILER_ENABLED)["']\s*(?:=>|[:=])\s*["']?(?:true|True|TRUE|1|on|yes)\b
+    - "[A-Za-z0-9_]{0,40}(?:ctrl|Ctrl|CTRL|vty|Vty|VTY|telnet|Telnet|TELNET|webcontrol|WebControl|w\
+      ebControl|WEBCONTROL)[A-Za-z0-9_]{0,20}_?(?:setup|Setup|SETUP|init|Init|INIT)[A-Za-z0-9_]{0,2\
+      0}\\s*\\("
+    - (?:^|[^A-Za-z0-9_])(?:[A-Za-z0-9]{1,20}_)?(?:ctrl|CTRL|vty|VTY|telnet|TELNET|webcontrol|WEBCONTROL)_(?:interface|port|bind|host|listen|address|addr|localhost|INTERFACE|PORT|BIND|HOST|LISTEN|ADDRESS|ADDR|LOCALHOST)[A-Za-z0-9_]{0,20}
+context_questions:
+  - IS THIS SURFACE SECONDARY, OR IS IT THE PRODUCT? The construct is an access path BESIDE the
+    primary API, carrying an authorisation model the primary API does not describe. A standing
+    local-IPC endpoint that is the product's whole point - a password manager answering the desktop
+    secret-service bus, a sync client serving its own file-manager extension - is a different
+    construct and belongs to `exposure-surface-002`; an MCP tool surface answering AI clients
+    belongs to `ai-inference-003`. Say which of the three is in front of you before anything else,
+    and where it is none of them, the finding closes here.
+  - WHO CAN REACH IT, AND IS THAT THE SAME SET AS THE PRIMARY API'S USERS? Read the authentication
+    actually applied to this path and quote it. The declaring anchor reaches its live SQL console by
+    starting a SEPARATE network node, so membership of that network - not the product's own accounts
+    - is what grants access. A compatibility API may authenticate against a token of its own, so
+    revoking a password does not close it. A debug route may be gated only on the caller's IP
+    address being private. Name the check, not the framework.
+  - "HOW MUCH OF THE STORE DOES IT REACH, AND CAN IT WRITE? Read the query, the route or the dump
+    and say what it returns. A read-only console over the whole database, a per-record
+    administration screen, a job console listing enqueued arguments and a route that returns one
+    other account's token are four very different disclosures behind clauses in one rule. Where the
+    surface can write as well as read, say so: an impersonation session and a Django admin screen
+    both change data as the person they act as."
+  - "IS IT SWITCHED ON IN THE DEPLOYMENT? Several of these paths are gated on an environment
+    variable, a build flag or a configuration key. THIS IS A QUESTION FOR THE OPERATOR AND NOT FOR
+    THE CODE: the detector reports that the path exists in the source and records the gate it found,
+    and only the person running the installation can say whether the gate is open. A gate that is
+    shut today is still a path that ships, which is why the detector does not stay silent on it."
+  - WHAT IS LOGGED WHEN SOMEBODY USES IT, AND FOR HOW LONG IS THAT KEPT? Art. 29 asks what
+    instructions bound access by a person acting under the controller's authority, and the ordinary
+    evidence for that is an audit record. Quote the logging on this path if there is any. Where an
+    impersonation session exists, check whether the person being impersonated is told, and whether
+    the record distinguishes the acting operator from the account acted as.
+  - IF THE MATCH IS AN ENVIRONMENT-VARIABLE NAME OR A LIBRARY IMPORT RATHER THAN A ROUTE, WHAT DOES
+    IT ACTUALLY OPEN? Clause 5 reaches every `X_DEBUG_Y` environment variable in a tree, and clause
+    10 reaches a Django settings file that lists the admin application among its installed apps.
+    Both are evidence that the product HAS the surface and neither is evidence that it is reachable.
+    Follow the name to the code that reads it before writing anything down.
+  - IS THIS THE SAME FINDING AS ANOTHER RULE'S? A git smart-HTTP route reached by clause 20 is also
+    read by the erasure-side rule about contributor identity in version-control history; a
+    background-job console reached by clause 8 may sit in a file another rule matched for a
+    different reason. Two rules asking different questions about one line is normal and neither is
+    wrong; say which question this finding answers.
+  - "IF THE MATCH IS A DECLARED DEPENDENCY OR AN ENVIRONMENT TEMPLATE RATHER THAN CODE (clauses 23
+    and 24), THREE FACTS ARE OUTSTANDING AND TWO OF THEM ARE NOT IN THE TREE. First, and it IS in
+    the tree: read the manifest and the lock file, name the package and the exact pinned version,
+    and say whether anything in this repository blocks the framework from registering it - an entry
+    in a `dont-discover` or excluded-provider list, an explicit provider array that omits it, a
+    conditional registration guarded on the environment. An empty opt-out list is the framework
+    registering it. Second, and it is NOT in the tree: what that package at that version actually
+    mounts - which routes, under which middleware, collecting what. Read the package's own
+    documentation for the pinned version rather than assuming, and where the dependency is not
+    vendored into this checkout say that you could not read it. Third, and it is a question for the
+    OPERATOR and not for the code: is the package present in the deployed installation at all? A
+    development dependency is normally excluded at install time, and a README that recommends
+    excluding it is a recommendation and not a mechanism. Ask, record the answer as a deployment
+    fact, and do not infer it from the manifest either way. Where the match is an environment
+    template, the same split applies: a template is what a deployment is seeded from, not what it
+    runs."
+  - "IF THE MATCH IS A LINE-PROTOCOL INTERFACE (shape viii), READ THE INTERFACE'S OWN DOCUMENTATION
+    BEFORE THE CODE, AND ANSWER THREE THINGS. WHAT DOES IT REACH? Many such interfaces ship a
+    reference table of every variable they expose, with an access column; find it, and quote the
+    rows that are readable or writable over this path, naming any that carry credentials,
+    authentication keys or account identifiers. IS ANYTHING REQUIRED TO USE IT? Ask the operator,
+    and read the setup path: a setup or registration call that takes no credential argument is a
+    reason to ask, not an answer, because authentication can be applied by the transport, by a
+    wrapper or by the network the port is bound to. WHERE DOES IT BIND? Quote the bind address from
+    the deployed configuration rather than from the example file the project ships - a loopback
+    default in an example is not a deployment fact, and the same interface bound to a routable
+    address is a different exposure. Then say whether the product's primary authorisation model
+    describes this path at all."
+evidence_template: "{file}:{line} matched a construct that serves, or opens, an access path over
+  this product's personal-data store BESIDE its primary API - a debug HTTP surface or dump, a live
+  SQL or job console, an impersonation route, a parallel or compatibility API, a route returning
+  another account's token, a diagnostic capture, or a debug-grade package declared in a dependency
+  manifest. THAT IS THE WHOLE OF WHAT IS ESTABLISHED: such a path is present in the source. Eight
+  shapes reach this rule and they are not equally strong. (i) A named console product or a mounted
+  operator dashboard - the strongest, because the name says what it serves. (ii) A debug route table
+  or a debug HTTP server being built. (iii) An impersonation route or session model. (iv) A parallel
+  API prefix, handler or its own credential lookup. (v) A route returning another named account's
+  token. (vi) A diagnostic capture (flight recorder, crash or process dump). (vii) A DECLARED rather
+  than written surface: a debug, profiling or error-page package named in a dependency manifest, in
+  an installed-application or middleware list, or at an import site, or an environment template
+  shipping a debug-on default. Shape (vii) is the weakest of the eight and is different in kind from
+  the other seven - no line of this product's code mounts anything, so what the surface IS depends
+  on the package and its pinned version, which this detector does not read. It is never a line
+  inside a LOCK FILE: the walker refuses every lock file by name, so a lock file's copy of the
+  package manifest is for you to open, not something the detector can report - and a package that
+  appears only there, as a transitive dependency, is not reachable by this rule at all. (viii) A
+  SECOND READ/WRITE INTERFACE SERVED AS A LINE PROTOCOL rather than as an HTTP API - a control, VTY
+  or telnet interface being set up or initialised, or the configuration key or port constant that
+  binds one. This is shape (iv)'s construct with the transport changed: the parallel path is a
+  command language on its own TCP port instead of a URL prefix, and where the product documents it
+  the documentation is often the only place its access model is written down. TWO THINGS SHAPE
+  (viii) DOES NOT ESTABLISH, BEYOND THE LIST BELOW. First, whether the interface is reachable
+  off-host: a product may ship an example configuration that binds it to loopback, and whether the
+  operator kept that bind is a deployment fact this finding does not answer. Second, whether the
+  interface authenticates: a setup call that takes no credential argument is not proof that none is
+  applied elsewhere, and context question 9 asks it rather than this template asserting it. WHAT
+  THIS DETECTOR DOES NOT ESTABLISH: whether the surface is enabled in this deployment (context
+  question 4 - the gate is an operator fact, and an environment-variable name is not a route); who
+  can reach it (context question 2); how much of the store it returns or whether it can write
+  (context question 3); for an environment-variable name or a settings-file entry, that anything is
+  reachable at all (context question 6); and for shape (vii), what the declared package mounts and
+  whether it is present in the deployed installation at all (context question 8). Read the route and
+  its authorisation check before writing a record row, and say which of the eight shapes the line
+  is."
+remediation_template: |
+  Establish first which construct this is (context question 1). A standing local-IPC endpoint that
+  is the product's primary feature belongs to `exposure-surface-002` and an MCP tool surface to
+  `ai-inference-003`; where the match is neither this construct nor those, the finding closes here.
+  Read the authorisation check on this path and write it down as a separate entry beside the
+  primary API's, rather than assuming the two are the same. Where the path authenticates against a
+  credential of its own - a compatibility API's token, a debug node's network membership - record
+  that revoking the account credential does not close it, and check whether the product's own
+  account-deletion and password-reset routes reach that credential.
+  Ask the operator whether the surface is enabled in this installation and record the answer as a
+  deployment fact, not as a source fact. Where it is gated on an environment variable or a build
+  flag, record the gate by name so that the answer can be re-checked after a configuration change.
+  Record the surface in the Art. 30 record's description of technical and organisational measures
+  if the operator maintains one, and check the Art. 32(1)(b) review actually covers it - the point
+  of this construct is that a review scoped to the primary API does not see it.
+  Where the surface lets one person act as another, check that the acting operator and the account
+  acted as are separately recorded, that the access is bounded in time, and that Art. 29's
+  documented instructions exist for the people who hold it.
+  Where a diagnostic capture is retained, establish its retention period and where the exported
+  file goes; a support bundle leaving the device is a disclosure and belongs in the recipient
+  record.
+data_categories:
+  - user.account
+  - user.contact
+  - user.unique_id
+  - user.behavior
+  - user.authorization.credentials
+fingerprint_spec: project
+reading_class:
+  class: enumeration
+  item: auxiliary path
+  item_source: reading

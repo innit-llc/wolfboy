@@ -1,0 +1,47 @@
+sets:
+  vendored_dependencies:
+    question: >
+      Is this file inside a directory where a package manager or a vendoring convention puts code
+      the team did not write?
+    patterns:
+      - pattern: (^|/)(?:node_modules|vendor|vendored|third_party|thirdparty|bower_components)(/|$)
+        excludes: >
+          Any path with one of those six names as a whole segment, and a file so named with no
+          extension.
+    near_misses:
+      - rules:
+          - ai-prohibited-001
+        pattern: (^|/)(node_modules|vendor|third_party|thirdparty|bower_components|site-packages|\.venv|venv)/
+        differs_by: |
+          Adds Python's `site-packages`, `.venv` and `venv`; drops `vendored`; closes with "/".
+  vendored_dependencies_with_python_environments:
+    question: >
+      Is this file inside a vendored directory OR inside an installed Python environment — a
+      virtualenv, an egg, a tox sandbox?
+    patterns:
+      - pattern: (^|/)(?:node_modules|vendor|third_party|thirdparty|site-packages|bower_components|\.venv|venv|virtualenv|eggs|\.tox)/
+        excludes: >
+          The JavaScript and generic vendoring names, plus `site-packages/`, `.venv/`, `venv/`,
+          `virtualenv/`, `eggs/` and `.tox/`.
+  bundled_dependency_directories:
+    question: >
+      Is this file inside a directory named for code that was bundled or externalised into this
+      repository?
+    patterns:
+      - pattern: (^|/)(vendor|vendors|third_party|third-party|externals|bundled)/
+        excludes: "`vendor/`, `vendors/`, `third_party/`, `third-party/`, `externals/`, `bundled/`."
+  packaged_dependency_directories:
+    question: >
+      Is this file inside a directory a PACKAGING tool fills — CocoaPods, Go's Godeps, Bower — or a
+      hand-vendored tree?
+    patterns:
+      - pattern: (^|/)(?:third_party|thirdparty|vendored|bower_components|Pods|Godeps)(/|$)
+        excludes: "`third_party/`, `thirdparty/`, `vendored/`, `bower_components/`, `Pods/`, `Godeps/`."
+  third_party_source_directories:
+    question: >
+      Is this file inside a `third-party/` or a `vendored/` directory, spelled with either separator?
+    patterns:
+      - pattern: (^|/)third[-_]?party/
+        excludes: "`third-party/`, `third_party/` and `thirdparty/` as directory segments."
+      - pattern: (^|/)vendored/
+        excludes: "`vendored/` as a directory segment."

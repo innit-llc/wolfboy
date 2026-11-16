@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/bundle-manifest.schema.json",
+  "title": "CompiledBundle manifest",
+  "description": "Describes a compiled rule bundle: what is in it, and how to verify that what was downloaded is what was published.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["bundle_version", "created_at", "packs", "files"],
+  "properties": {
+    "bundle_version": { "type": "string", "pattern": "^\\d{4}\\.\\d{2}\\.\\d+$", "description": "Calendar version, YYYY.MM.n. Rules track the law rather than the software, so bundles are dated rather than semantically versioned. Derived by the build from the bundle's content alone since 2026-10-12 (until then it was the constant 2026.07.1 whatever the rules held): 0000.00.n, where 0000.00 says this is not a dated release and n is the first 24 bits of the bundle's content digest as a decimal number, so it is NOT a sequence. A rebuild of the same rules keeps the version and any change to a listed file gives another; never the build time, because carry-forward holds every carried verdict to this value. BUNDLE_VERSION in the build's environment sets a dated label explicitly, for a release." },
+    "created_at": { "type": "string", "format": "date-time" },
+    "packs": {
+      "type": "array",
+      "description": "Rule packs included in this bundle.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["pack_id", "rules"],
+        "properties": {
+          "pack_id": { "type": "string", "description": "Identifier of the pack." },
+          "rules": { "type": "integer", "description": "Number of rules the pack contributes." },
+          "jurisdiction": { "type": "array", "items": { "type": "string" }, "description": "Jurisdictions the pack covers: \"EU\" or ISO 3166-1 alpha-2 country codes." }
+        }
+      }
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+      "description": "Bundle file name -> sha256 digest. Lets a client verify each file it loads."
+    },
+    "engine_pins": { "type": "object", "additionalProperties": { "type": "string" }, "description": "Engine name -> pinned version. Detector results depend on the engine, so reproducing a scan means reproducing the engine too." },
+    "signature": {
+      "type": ["object", "string", "null"],
+      "if": { "type": "string" }, "then": { "const": "unsigned" },
+      "description": "The string \"unsigned\" while bundles ship unsigned: an explicit marker, so an unsigned bundle is never read as one whose signature went missing. `null` is what bundles built before 2026-10-12 carry, and means the same as \"unsigned\".",
+      "properties": { "alg": { "type": "string", "description": "Signature algorithm." }, "sig": { "type": "string", "description": "Signature value." }, "key_id": { "type": "string", "description": "Identifier of the signing key." } }
+    },
+    "changelog_url": { "type": "string", "description": "Where to read what changed in this bundle, and why." }
+  }
+}

@@ -1,0 +1,545 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.invalid/product/reconcile-diff.schema.json",
+  "title": "ReconcileDiff (what moved between two pillar-2 runs, and which conclusions that leaves stale)",
+  "description": "The deterministic comparison of two reconciliation runs, written by `reconcile-diff`. It answers one question in three directions: WHICH SIDE MOVED. Either the code moved and the documents did not (the census of what the code does differs while every document's digest is the one the earlier run read), or the documents moved (a digest changed, or a document is gone), or both. From that it computes which of the earlier run's conclusions may no longer describe the current state, and which are untouched. NO MODEL RUNS. Re-judging what this file names is the user's agent's option, and the saving is why the list is computed at all. WHAT THIS DOCUMENT MAY SAY. `possibly-stale` and `needs-re-checking` are the strongest words in it. Nothing here asserts that a document is wrong, that a conclusion was mistaken, or that any legal requirement is met or missed: two runs disagreeing is a question about which of them describes today, and it is put as one. WHAT IT DOES NOT CONTAIN, deliberately: no proposed replacement text for any document - drafting the user's own policy wording was settled as excluded from this work item and is not a gap for a later session to fill; no comparison of pillar-1 candidates with each other, which is a different question - a run's findings file is read only far enough to record whether the run had one, what it counted and which tree it named; and no continuous-integration mode, which is a reserved successor to this command and is not implemented anywhere.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "tool",
+    "diff_version",
+    "runs",
+    "bundle_mismatch",
+    "reconcile_id_collision",
+    "target_mismatch",
+    "absences",
+    "documents",
+    "census_facts",
+    "checklist_items",
+    "checklist_results",
+    "claims",
+    "findings",
+    "claim_tracking",
+    "possibly_stale",
+    "not_asserted",
+    "unmatched",
+    "stats",
+    "disclaimer"
+  ],
+  "properties": {
+    "tool": {
+      "const": "reconcile-diff",
+      "description": "Which tool wrote this. Named rather than assumed, so a stored comparison cannot be mistaken for something an agent produced."
+    },
+    "diff_version": {
+      "type": "integer",
+      "description": "Bumped whenever the keying, the matching or the direction rules change, so a reader can tell which behaviour produced these rows. Its own number rather than the quote verifier's: the two tools share a waterfall, not a lifecycle."
+    },
+    "runs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before", "after"],
+      "description": "What each run was, in its own words. Both identities are carried in full so that a comparison read months later says which bundle, which tree and which artifacts produced it, without either run's files having to still exist.",
+      "properties": {
+        "before": { "$ref": "#/$defs/runIdentity" },
+        "after": { "$ref": "#/$defs/runIdentity" }
+      }
+    },
+    "bundle_mismatch": {
+      "oneOf": [{ "$ref": "#/$defs/bundleMismatch" }, { "type": "null" }],
+      "description": "Present as an object when the two runs used different rule bundles, and null when they used the same one. THE CONSOLE PRINTS IT FIRST OF EVERYTHING, before any count. A different bundle is a different set of checklists, items and applicability gates, so rule-set drift can explain a difference in the findings or the checklist results on its own, with nothing in the repository or the documents having moved - and a reader who meets that fact after the numbers has already formed a view of them. It DOES NOT change the exit code: which questions were asked and whether the answers differ are different questions, and the same line is taken with a document digest mismatch in declarations.schema.json's `quoteVerification`."
+    },
+    "reconcile_id_collision": {
+      "type": ["string", "null"],
+      "description": "The sentence to print when both runs carry the same `reconcile_id`, which two runs are not meant to: either one directory was compared with itself, or an identifier was copied. Null where the two ids differ. Stated and not resolved - the comparison still ran, on the bytes each directory holds, and nothing here picks one of the two runs to disbelieve."
+    },
+    "target_mismatch": {
+      "type": ["string", "null"],
+      "description": "The sentence to print when the two runs name different `target` roots. Null where they agree. Every file path in this document is relative to a run's own target, so where the two differ a path present in both may name two different files - which is stated rather than resolved, because a repository that moved on disk and two genuinely different repositories look alike from here."
+    },
+    "absences": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "One sentence for every optional artifact a run directory did not carry, and for every one that was substituted. AN ABSENCE IS NEVER SILENT: a run with no agent report is an ordinary thing to compare - the deterministic half alone answers whether the code moved - and it is also exactly the shape in which a missing file would otherwise print as `no claims changed`. Where the agent's own declarations.json is absent and the annotated declarations.verified.json is beside it, the annotated copy is read and this array says so; it carries the same conclusions with the mechanical quote check added beside them. Empty when both runs carried everything."
+    },
+    "documents": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["added", "removed", "changed", "unchanged"],
+      "description": "The document side, keyed on PATH and compared on DIGEST. A path in one run and not the other is an addition or a removal; a path in both whose sha256 differs is `changed`, which is the trigger for direction (b). Paths are compared verbatim and never case-folded: two files whose names differ only in case are two files on the platforms this runs on.",
+      "properties": {
+        "added": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/documentDiffEntry" },
+          "description": "Documents the after run read and the before run did not. No conclusion of the before run was drawn from one of these, which is why they raise no stale entry: there is nothing yet to be stale."
+        },
+        "removed": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/documentDiffEntry" },
+          "description": "Documents the before run read and the after run did not. Treated as the document side having moved, on the same terms as a changed digest: every conclusion the before run drew from one needs re-checking, and the difference between the two cases is stated in each entry's own reason sentence. A document that stopped being discovered is not a document that stopped existing, and nothing here says it is."
+        },
+        "changed": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/documentDiffEntry" },
+          "description": "Documents present in both runs whose bytes differ. This is the whole of direction (b)'s trigger: a hosted policy changes without the repository changing, which is the case a code-only diff cannot see at all."
+        },
+        "unchanged": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Documents present in both runs with the same digest. A count rather than a list: the list is in both runs' own reconcile-input.json, and a second copy of it here is a second thing that can go stale."
+        }
+      }
+    },
+    "census_facts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["added", "removed", "moved", "unchanged"],
+      "description": "The code side, keyed on content. See `$defs.contentKey` for the key and its normalisation.",
+      "properties": {
+        "added": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/factRef" },
+          "description": "Facts the after run's census produced and the before run's did not."
+        },
+        "removed": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/factRef" },
+          "description": "Facts the before run's census produced and the after run's did not. Never worded as anything having been fixed or removed on purpose: a collector that stopped matching produces exactly this row, and so does a deleted call."
+        },
+        "moved": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/movedFact" },
+          "description": "Facts present in both runs at different line numbers. THIS ROW IS WHY THE LINE IS NOT IN THE KEY: a file that gained an import at the top moves every fact below it, and reporting each of them as one removal plus one addition would bury a real change under position drift. It is still a difference and is still counted as one."
+        },
+        "unchanged": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Facts present in both runs at the same line."
+        }
+      }
+    },
+    "checklist_items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["added", "removed", "unchanged"],
+      "description": "The bundled checklists' items, keyed on `checklist_id` + `item_id`, which are already stable and were never prose. A difference here is normally a bundle upgrade rather than anything about the project, which is what `bundle_mismatch` is printed first to say.",
+      "properties": {
+        "added": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "`<checklist_id>/<item_id>` for every item the after run's bundle carries and the before run's does not. An added item has no answer in the earlier run at all, which is a gap rather than a stale answer."
+        },
+        "removed": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "`<checklist_id>/<item_id>` for every item the before run's bundle carries and the after run's does not."
+        },
+        "unchanged": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "checklist_results": {
+      "$ref": "#/$defs/maybeCounts",
+      "description": "The agent's answers, keyed on `checklist_id` + `item_id`. `moved` counts pairs whose `status` differs between the two runs - one question answered two ways, which is a difference whatever else this comparison found and is never a saved conclusion. Not computed where either run has no agent report; the reason then names the absence."
+    },
+    "claims": {
+      "$ref": "#/$defs/maybeCounts",
+      "description": "The claims drawn from the documents. `moved` counts every matched pair that is not `unchanged` - the ones that changed line, the ones whose document's bytes changed under them, and the ones whose two fields disagree. `claim_tracking` below is the itemised version and says which of those each pair was. Not computed where either run has no agent report."
+    },
+    "findings": {
+      "$ref": "#/$defs/maybeCounts",
+      "description": "The reconciliation findings. `moved` is always 0 and is written rather than omitted: a finding's text IS its key, so a finding is matched or it is not, and there is no third state. Present as an explicit zero so the six count blocks read alike and a reader never has to decide whether a missing number is a zero. Not computed where either run has no agent report."
+    },
+    "claim_tracking": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/claimPairEntry" },
+      "description": "Every claim of both runs, as one row per claim or pair of claims: which vanished, which appeared, which moved down the page and which are untouched. This is the itemised answer to the design's own question - whether a reusable link between a document passage and a conclusion survives a run - and the `re_anchor` field is where the quote waterfall answers it. Empty where either run has no agent report."
+    },
+    "possibly_stale": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/staleEntry" },
+      "description": "The work list: every conclusion this comparison found a mechanical reason to look at again, with the reason written out. ONE ENTRY PER CONCLUSION, PER SIDE, PER LINK - never one per trigger. The unit of re-judgement is a conclusion: an agent re-answers a checklist item once however many facts moved under it, so a row per fact would turn a work list into a multiplication table - every checklist item the bundle carries times every fact that moved, all of them saying one thing. Every trigger is kept, complete and uncut, in the entry's `moved_facts` and `moved_documents`, and the reason sentence names the first and counts the rest."
+    },
+    "not_asserted": {
+      "type": "string",
+      "minLength": 1,
+      "description": "THE BOUNDARY OF THE WHOLE COMPARISON, WRITTEN ON EVERY OUTPUT. It names the links this comparison follows and no others - a checklist item's `census_categories`; a finding's `fact_refs`; a finding's `searches`, and those ONLY through a listed hit or an exactly-named path, since a glob in `searches[].paths` is never expanded; a checklist result's and a finding's quoted document; and the runtime configuration a claim and a census fact name in common, which is the only link between a claim and a fact any schema here carries - and it says that a conclusion resting on something none of those names is outside what this comparison can reach, so its absence from the work list is not evidence that nothing touched it. It also says that A SAVED CONCLUSION IS NOT A RE-VERIFIED ONE. A CLOSING CLAUSE STATES WHICH LINKS WERE AVAILABLE IN THIS RUN'S SHAPE, because that turns on which runs carried an agent report: with both, every link above; with one, the report-borne links against that one run's conclusions alone and no saved count at all; with neither, only the census-category join, and the work list then says nothing whatever about claims, findings or checklist results. WHY IT IS TOP-LEVEL AND REQUIRED RATHER THAN A FIELD OF `stats.saved`: it lived there until 2026-09-02, and `stats.saved` is replaced by a not-computed branch whenever either run lacks a report - which is this command's OWN MAIN USE, an earlier run with a report against a later run carrying only the deterministic half. In exactly that shape the output carried a work list and no statement of what the list cannot see, while the shipped declaration-reconcile skill instructed the agent to go and read one. An independent verifier found it. The sentence is a property of the comparison, not of the count, and it is now written wherever the comparison is."
+    },
+    "unmatched": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/unmatchedEntry" },
+      "description": "EVERY record, of every class, on either side, that paired with nothing on the other. THIS IS THE LEDGER THAT MAKES THE COMPARISON CHECKABLE: for each class and each side, the matched pairs plus this list's members equal that side's total, so a record cannot be dropped in silence - and a comparison that dropped records would look exactly like a comparison that found no differences. It restates the added and removed populations of the sections above in one place and in one shape; that duplication is the point of it, and the `key` is carried so a reader can see WHY two records did not pair rather than only that they did not."
+    },
+    "stats": { "$ref": "#/$defs/stats" },
+    "disclaimer": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Statement that the output is informational and not legal advice. Mandatory: this document says which of a developer's earlier conclusions may no longer hold, and it must not be read as saying which of them was wrong."
+    }
+  },
+  "$defs": {
+    "contentKey": {
+      "description": "THE STATEMENT OF RECORD FOR HOW TWO RUNS' RECORDS ARE MATCHED. Nothing else in this repository restates it; the code that implements it carries the reason for each step beside the step and points here for the rules. WHY CONTENT AND NOT POSITION. A line number drifts for reasons that have nothing to do with meaning - an added import at the top of a file moves every fact below it - so a key containing a position reports one removal and one addition for every such fact, and a real change disappears into the noise. Every record here is therefore keyed on WHAT IT IS, and its position is compared separately and reported as a move. THE TEXT FOLD, applied to every text component of every key, in this order: (1) every run of whitespace - the regular expression class \\s, plus the no-break space U+00A0 and the byte-order mark U+FEFF - becomes one space, and leading and trailing whitespace is removed; (2) the result is lower-cased. Nothing else. NO accent folding, NO separator removal, NO trailing-dot removal, NO Unicode normalisation: those are the operations the document-name-shape fold in the reconcile module performs for a different purpose, and importing them here would merge records that are not the same record. THE FIVE KEYS. (a) CENSUS FACT: collector + kind + folded value + file. The line is deliberately absent, which is what makes pure position drift a `moved` row. `collector` and `kind` go in verbatim, being produced by this code base from its own vocabulary rather than typed by anyone; `file` goes in verbatim because it is a path and two files whose names differ only in case are two files. THE VALUE CARRIES ONE EXTRA STEP: for the `outbound-hosts` collector only, a trailing `:` followed by digits is dropped from the KEY. That collector is the only one in the census whose patterns admit a port - its two scheme-bearing patterns end `(?::\\d+)?` - and the reconciliation skill already records the consequence for a reader comparing declared tracking domains with outbound hosts: census host values keep the port (`ads.example.com:443`), so that comparison is not string equality. A host reached on 443 in one run and on 8443 in the next is one recipient that moved port, not one gone and another arrived. Every other collector's captured value keeps every character it has, so a `distribution` fact valued `npm:private` is untouched. THE PORT IS DROPPED FROM THE KEY AND FROM NOTHING ELSE: the fact's own `value` is carried into every list and every sentence exactly as the census produced it, so a reader always sees the port even where the comparison ignored it. (b) CHECKLIST ITEM and CHECKLIST RESULT: `checklist_id` + `item_id`, both verbatim. They are stable identifiers and were never prose. (c) CLAIM: the folded claim sentence + the document. A SECOND, CONFIRMING KEY is offered to the records the first leaves unpaired: the folded QUOTE + the document. The two fields fail in opposite directions and neither alone is safe - the claim sentence is the agent's paraphrase and can be reworded between runs over an unchanged document, which the primary key alone reports as one claim vanishing and another appearing, while the quotation is the document's own words and can be identical for two claims that read it differently. So the primary key runs first, the quote key sees only what it left over, and WHICH KEY PAIRED A RECORD IS CARRIED in `claimPairEntry.matched_on` rather than smoothed away. A PAIR IS NEVER CALLED UNCHANGED ON ONE FIELD ALONE: where the sentence matched and the quote did not, or the reverse, the pair is `changed` and it is not saved. (d) FINDING: direction + categories, sorted so that order cannot key + the folded finding text. (e) DOCUMENT: the path, with the sha256 compared rather than keyed - see `properties.documents`. MULTIPLICITY. Records are paired as MULTISETS, not as sets. Two records can share a key legitimately - the same host reached twice in one file on two ports, the same claim sentence drawn from two passages of one document - and a set-based join would quietly report one of them and drop the other. A key held by two records on the left and one on the right pairs two of them and leaves one unpaired, which is what actually happened; within a key, records pair in the order their own side's array carries them, so the result is deterministic. THE COST, STATED IN THE DIRECTION IT IS WRONG IN. The case fold merges two records differing only in case, and the port strip merges one host reached on two ports in one file. Both are chosen because the alternative - reporting a formatting difference as a real one - is the failure a reader stops trusting, and both are conservative in the direction that matters here: a merge produces a `moved` row, which is a difference and is never saved."
+    },
+    "runIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dir",
+        "reconcile_id",
+        "generated_at",
+        "target",
+        "bundle_version",
+        "bundle_sha256",
+        "documents",
+        "census_facts",
+        "input_file",
+        "report_file",
+        "report_reconcile_id",
+        "report_completed_at",
+        "findings_file",
+        "findings_scan_id",
+        "findings_target",
+        "findings_candidates"
+      ],
+      "description": "One run, as its own artifacts describe it. Every field is required, the nullable ones included as an explicit null, so an identity can never be half-written: a missing key and a recorded `there was no report` would otherwise read alike.",
+      "properties": {
+        "dir": { "type": "string", "description": "The directory this run's artifacts were read from." },
+        "reconcile_id": { "type": "string", "description": "The run's own identifier, from its reconcile-input.json." },
+        "generated_at": { "type": "string", "description": "When the CLI produced that file. This document adds no clock of its own, so two comparisons of the same pair of directories are byte-identical and a gate can pin one." },
+        "target": { "type": "string", "description": "The tree root that run walked. File paths in this document are relative to each run's own target." },
+        "bundle_version": { "type": "string" },
+        "bundle_sha256": { "type": ["string", "null"] },
+        "documents": { "type": "integer", "minimum": 0, "description": "Extracted documents the run carried." },
+        "census_facts": { "type": "integer", "minimum": 0, "description": "Census facts the run carried." },
+        "input_file": { "type": "string", "description": "The reconciliation input's file name, as read." },
+        "report_file": {
+          "type": ["string", "null"],
+          "description": "Which agent report was read - the agent's own declarations.json, or the annotated declarations.verified.json where only that was present - or null where neither was. Named rather than assumed, because the second is a copy with the quote check added and a reader should know which one the claim and finding rows came from."
+        },
+        "report_reconcile_id": {
+          "type": ["string", "null"],
+          "description": "The identifier the report claims. It is meant to equal this run's own `reconcile_id`; where it does not, the report and the input may describe different runs, and this is where a reader sees that."
+        },
+        "report_completed_at": { "type": ["string", "null"] },
+        "findings_file": { "type": ["string", "null"] },
+        "findings_scan_id": { "type": ["string", "null"] },
+        "findings_target": {
+          "type": ["string", "null"],
+          "description": "The tree the code scan walked. A value differing from this run's own `target` means the two halves describe different trees, and the overlap annotations that run carried mean nothing."
+        },
+        "findings_candidates": {
+          "type": ["integer", "null"],
+          "description": "Rows of the findings file's `candidates` array, or null where no findings file was read. Recorded because the overlap annotations a reconciliation carries come from it. THE CANDIDATES THEMSELVES ARE NOT COMPARED: that is a different question, and this command does not answer it."
+        }
+      }
+    },
+    "bundleMismatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before_version", "after_version", "before_sha256", "after_sha256", "note"],
+      "properties": {
+        "before_version": { "type": "string" },
+        "after_version": { "type": "string" },
+        "before_sha256": { "type": ["string", "null"] },
+        "after_sha256": {
+          "type": ["string", "null"],
+          "description": "Two runs on the same bundle VERSION with different manifest digests are still two different bundles, so the digest is compared as well as the version and either difference produces this object."
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the mismatch can and cannot explain, carried WITH the object rather than left in a schema a reader may not open."
+        }
+      }
+    },
+    "documentDiffEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["doc_path", "before_sha256", "after_sha256", "before_bytes", "after_bytes"],
+      "description": "One document, as each run read it. The nulls say which run did not have it, and are written rather than omitted.",
+      "properties": {
+        "doc_path": { "type": "string", "description": "Repository-relative path, or the full URL, as the run recorded it." },
+        "before_sha256": { "type": ["string", "null"] },
+        "after_sha256": { "type": ["string", "null"] },
+        "before_bytes": { "type": ["integer", "null"] },
+        "after_bytes": { "type": ["integer", "null"] }
+      }
+    },
+    "factRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fact_id", "collector", "kind", "value", "categories", "file", "line"],
+      "description": "One census fact, copied out of the run that carried it so this document reads on its own.",
+      "properties": {
+        "fact_id": { "type": "string", "description": "The census's own fingerprint, which covers the LINE as well as the value - so the same fact at a new line carries a new id, and that is exactly why the id is not the key here." },
+        "collector": { "type": "string" },
+        "kind": { "type": "string" },
+        "value": {
+          "type": "string",
+          "description": "THE CENSUS'S OWN VALUE, ports and case intact. The key's normalisation is applied to the key and never to this field, so a reader always sees what the collector captured."
+        },
+        "categories": { "type": "array", "items": { "type": "string" }, "description": "The census categories the fact bears on - the axis a checklist item joins on." },
+        "file": { "type": "string" },
+        "line": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "movedFact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fact_id",
+        "collector",
+        "kind",
+        "value",
+        "categories",
+        "file",
+        "line",
+        "before_line",
+        "after_line",
+        "before_fact_id"
+      ],
+      "description": "A fact present in both runs at two line numbers. Its `fact_id` and `line` are the after run's, so the row addresses the current state; the before run's are carried beside them.",
+      "properties": {
+        "fact_id": { "type": "string" },
+        "collector": { "type": "string" },
+        "kind": { "type": "string" },
+        "value": { "type": "string" },
+        "categories": { "type": "array", "items": { "type": "string" } },
+        "file": { "type": "string" },
+        "line": { "type": "integer", "minimum": 0 },
+        "before_line": { "type": "integer", "minimum": 0 },
+        "after_line": { "type": "integer", "minimum": 0 },
+        "before_fact_id": {
+          "type": "string",
+          "description": "The same fact's id in the before run. It differs from `fact_id` although nothing about the fact changed, because the census fingerprints the line - which is the whole reason this comparison keys on content instead."
+        }
+      }
+    },
+    "staleEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "side", "status", "link", "moved_facts", "moved_documents", "reason"],
+      "description": "One conclusion worth looking at again, and the mechanical reason it is on this list.",
+      "properties": {
+        "ref": { "$ref": "#/$defs/staleRef" },
+        "side": {
+          "enum": ["code", "documents"],
+          "description": "WHICH SIDE OF THE RECONCILIATION MOVED, which is the question this whole command exists to answer. `code`: the census of what the code does gained or lost a fact. `documents`: a document's bytes changed, or the document is no longer there. A conclusion reached by both routes carries one entry per route, because the two say different things about what to look at."
+        },
+        "status": {
+          "enum": ["possibly-stale", "needs-re-checking"],
+          "description": "THE TWO STRONGEST WORDS THIS DOCUMENT HAS, and neither asserts that anything is wrong. `possibly-stale`: something the conclusion rests on moved, and whether the conclusion still holds is a reading nothing here performs. `needs-re-checking`: the text the conclusion was drawn from is not the text that is there now, so the conclusion cannot be confirmed from this run's artifacts either way. Never `wrong`, never `invalid`, never `no longer applies`."
+        },
+        "link": {
+          "enum": [
+            "census-categories",
+            "fact-refs",
+            "search-touches-file",
+            "runtime-config-shared",
+            "claim-in-document",
+            "evidence-in-document",
+            "quote-in-document",
+            "cites-document"
+          ],
+          "description": "HOW THE CONCLUSION WAS TIED TO WHAT MOVED, named so a reader can disagree with the link rather than only with the conclusion. `census-categories`: the checklist item declares census categories that cover the moved fact's, which is the join the law itself decides - a checklist item names the categories whose facts bear on it. `fact-refs`: the finding names the moved fact by id. `search-touches-file`: a search the finding rests on lists a hit in, or names exactly, the file the fact sits in; A GLOB IN `searches[].paths` IS NOT EXPANDED, because deciding that a pattern covers a file is a judgement about a pattern language and a wrong expansion would be invisible in either direction. `runtime-config-shared`: the claim and the fact name the same environment variable in `depends_on_runtime_config`, WHICH IS THE ONLY MECHANICAL LINK BETWEEN A CLAIM AND A CENSUS FACT THE SCHEMAS CARRY - a claim has no `fact_refs` and no `searches`, and a claim not linked this way is not thereby unaffected. `claim-in-document`, `evidence-in-document`, `quote-in-document`: the claim was read from, the checklist result quoted evidence from, or the finding quotes, a document whose bytes moved. `cites-document`: the finding CITES a document whose bytes moved, in `evidence[].document_ref` or in a search hit's `document_ref` - added 2026-09-03 with those two fields, because before them a finding's only document link was its own singular `quote`, and a new field nothing reads is a link that silently stops being followed."
+        },
+        "moved_facts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/factRef" },
+          "description": "EVERY census fact that moved and reached this conclusion through `link`. Complete and never cut: the reason sentence names the first and counts the rest, and this is where the rest are. Empty where `side` is `documents`."
+        },
+        "moved_documents": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Every document that moved and reached this conclusion through `link`, by path. Empty where `side` is `code`."
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The sentence a person reads, naming what moved and which conclusion it reached. It says what moved and what that leaves open; it never says that the conclusion was mistaken, and it never says anything about any law."
+        }
+      }
+    },
+    "staleRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "found_in"],
+      "description": "The conclusion an entry is about, addressed the way its own document addresses it.",
+      "properties": {
+        "kind": {
+          "enum": ["checklist_item", "checklist_result", "claim", "finding"],
+          "description": "`checklist_item` addresses a QUESTION in the bundle and is what direction (a) names, because the category join runs on the item's own `census_categories`, which is an input-side fact and exists whether or not any agent has answered it. `checklist_result` addresses an ANSWER in a report and is what direction (b) names, because the join there runs on the answer's quoted evidence. The two are deliberately different kinds rather than one: they are reached by different evidence, and merging them would hide which."
+        },
+        "checklist_id": { "type": "string" },
+        "item_id": { "type": "string" },
+        "claim_id": { "type": "string" },
+        "finding_id": { "type": "string" },
+        "doc": { "type": "string", "description": "The document the conclusion was drawn from, where it was drawn from one." },
+        "direction": { "type": "string", "description": "A finding's direction, A or B, carried so a reader sees which question the finding asked without opening the report." },
+        "found_in": {
+          "enum": ["before", "after"],
+          "description": "Which run this conclusion was read from. For a `checklist_item` it is which run's bundled checklists were joined against - the after run's where it carries any, and the before run's otherwise, so that a moved fact still names something rather than silently naming nothing."
+        }
+      }
+    },
+    "claimPairEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_id_before",
+        "claim_id_after",
+        "doc",
+        "outcome",
+        "before_line",
+        "after_line",
+        "matched_on",
+        "re_anchor"
+      ],
+      "description": "One claim followed across the two runs. Every field is required, the nulls included, so a row can never be half-written.",
+      "properties": {
+        "claim_id_before": { "type": ["string", "null"], "description": "Null where the claim exists only in the after run." },
+        "claim_id_after": { "type": ["string", "null"], "description": "Null where the claim exists only in the before run." },
+        "doc": { "type": "string" },
+        "outcome": {
+          "enum": ["unchanged", "moved", "changed", "vanished", "appeared"],
+          "description": "`unchanged`: both key fields agree, the line is the same and the document's bytes did not move. `moved`: both key fields agree and the position or the document moved - the case re-anchoring exists for. `changed`: the two records paired on one key field and disagree on the other, so the agent either read different words or read the same words differently; NEVER counted as unchanged and never saved. `vanished`: in the before run and paired with nothing - which is a statement about the REPORT and not about the document, and `re_anchor` is what says whether the quoted words are still in the text. `appeared`: in the after run and paired with nothing."
+        },
+        "before_line": { "type": ["integer", "null"] },
+        "after_line": { "type": ["integer", "null"] },
+        "matched_on": {
+          "oneOf": [{ "enum": ["claim-and-quote", "claim-text", "quote-text"] }, { "type": "null" }],
+          "description": "Which key paired the two, carried rather than smoothed away: `claim-and-quote` where both the claim sentence and the quotation agree, `claim-text` or `quote-text` where only one did and the pair is therefore `changed`. Null for an unpaired row. See `$defs.contentKey` for why there are two keys."
+        },
+        "re_anchor": {
+          "oneOf": [{ "$ref": "#/$defs/reAnchor" }, { "type": "null" }],
+          "description": "Where the BEFORE run's claim quotation sits in the AFTER run's text. Null where no re-anchoring was attempted, WHICH IS FOUR CASES AND NOT TWO: the pair is `unchanged`; the pair is `changed` while its line and its document both stayed put, so nothing about its position is in question; the row is `appeared`, so there is no before-run quotation to search for; or the after run does not carry that document at all, so there is nothing to search in. It is attempted, and therefore non-null, for every `moved` pair, for every `changed` pair whose position or document moved, and for every `vanished` row whose document the after run still carries - which is the case that tells a claim gone from the REPORT apart from one whose words left the DOCUMENT."
+        }
+      }
+    },
+    "reAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "tier", "fallback", "final_source", "final_lines", "notes"],
+      "description": "THE QUOTE WATERFALL, RUN ACROSS THE TWO RUNS RATHER THAN WITHIN ONE. The needle is the before run's claim quotation and the haystack is the after run's extracted text, because the question is whether the words the earlier run read are still in the document and where they now sit. It is the same implementation `reconcile-verify` runs, CALLED AND NOT COPIED: that file's own header records three independent rebuilds of these tiers, two of which shipped the identical bug, which is why there is one implementation and two callers. The five statuses mean exactly what they mean there, and `declarations.schema.json`'s `quoteCheck` is their statement of record; what they mean HERE is: `confirmed_at_declared` - the claim is still at the line it was; `repaired` - the text is still in that document at a different line, which is the re-anchoring the design of record asks for; `re_attributed` - the text is now in a different document; `ambiguous` - the text sits in more than one document, so no position is asserted; `unverifiable` - the words themselves are no longer anywhere this tool could look, which is the strongest thing this row can say and still says nothing about whether their removal matters.",
+      "properties": {
+        "status": {
+          "enum": ["confirmed_at_declared", "repaired", "re_attributed", "ambiguous", "unverifiable"]
+        },
+        "tier": { "oneOf": [{ "enum": ["T1-exact", "T2-collapsed", "T2-normalized", "T3-fragment"] }, { "type": "null" }] },
+        "fallback": {
+          "type": "boolean",
+          "description": "True when only the quotation's FIRST LINE was found. The position is then an anchor and not a verification, exactly as in `reconcile-verify`, and it is carried here so a re-anchored claim wearing the word `repaired` cannot be read as a confirmed one."
+        },
+        "final_source": { "type": ["string", "null"] },
+        "final_lines": { "type": "array", "items": { "type": "integer" } },
+        "notes": { "type": "array", "items": { "type": "string" }, "description": "The waterfall's own notes, carried verbatim." }
+      }
+    },
+    "unmatchedEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record_class", "side", "key", "label"],
+      "properties": {
+        "record_class": {
+          "enum": ["document", "census_fact", "checklist_item", "checklist_result", "claim", "finding"]
+        },
+        "side": { "enum": ["before", "after"], "description": "Which run held the record that paired with nothing." },
+        "key": {
+          "type": "string",
+          "description": "The content key itself. FIVE OF THE SIX CLASSES carry a length-prefixed key, so no component's characters can be read as the separator - `41:guest records are removed after 180 days.|10:PRIVACY.md`; `document` carries the BARE PATH, because its key is a single component and there is nothing to separate. Carried so a reader can see WHY two records did not pair - which component differs - rather than only that they did not."
+        },
+        "label": {
+          "type": "string",
+          "description": "A short human address for the record, so the key never has to be decoded to find it."
+        }
+      }
+    },
+    "classCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before", "after", "added", "removed", "moved", "unchanged"],
+      "description": "One record class, counted the same way as every other so the six blocks read alike. `before` and `after` are the totals each run held; `added` + `removed` + `moved` is what this class contributes to `stats.differences`, and `unchanged` is the only bucket that never does.",
+      "properties": {
+        "before": { "type": "integer", "minimum": 0 },
+        "after": { "type": "integer", "minimum": 0 },
+        "added": { "type": "integer", "minimum": 0, "description": "Present in the after run and paired with nothing in the before run." },
+        "removed": { "type": "integer", "minimum": 0, "description": "Present in the before run and paired with nothing in the after run." },
+        "moved": { "type": "integer", "minimum": 0, "description": "Paired across the two runs and DIFFERING IN THE ONE FIELD THAT CLASS COMPARES, which is not the same as differing at all and is stated per class above: a census fact's line, a document's digest, a CHECKLIST RESULT'S STATUS AND NOTHING ELSE (a pair answered the same way from different evidence, in a document whose bytes did not move, is `unchanged` and is saved), and a claim pair that moved position or whose two key fields disagree. A difference, and never a saved conclusion." },
+        "unchanged": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "notComputed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["computed", "reason"],
+      "description": "A section that was not computed, with the reason. Two branches rather than optional fields, for the same reason `reconcile-input.schema.json`'s `pillar1` takes two: a comparison that was not run must not look like a comparison that found nothing.",
+      "properties": {
+        "computed": { "const": false },
+        "reason": { "type": "string", "minLength": 1, "description": "Why it was not computed, in words, naming the absent artifact." }
+      }
+    },
+    "maybeCounts": {
+      "oneOf": [{ "$ref": "#/$defs/classCounts" }, { "$ref": "#/$defs/notComputed" }]
+    },
+    "savedCount": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "computed",
+        "checklist_results",
+        "claims",
+        "findings",
+        "total",
+        "of_matched"
+      ],
+      "description": "WHAT AN INCREMENTAL RE-CHECK MAY SKIP. A saved conclusion is one present in BOTH runs under its content key and named in NO entry of `possibly_stale`, and not otherwise touched by this comparison - a checklist result whose status moved between the runs is excluded whatever else was found. The arithmetic closes: for each class, the matched pairs equal the saved count plus the touched ones. WHAT IT IS NOT is stated in the top-level `not_asserted`, not here: this object is absent whenever either run lacks an agent report, and the boundary sentence must not go missing with it - it did, until 2026-09-02.",
+      "properties": {
+        "computed": { "const": true },
+        "checklist_results": { "type": "integer", "minimum": 0 },
+        "claims": { "type": "integer", "minimum": 0 },
+        "findings": { "type": "integer", "minimum": 0 },
+        "total": { "type": "integer", "minimum": 0 },
+        "of_matched": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Conclusions present in both runs, which is the denominator `total` is a part of. Reported beside it so that `saved: 40` is never read without `of 52`."
+        }
+      }
+    },
+    "stats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "documents",
+        "census_facts",
+        "checklist_items",
+        "checklist_results",
+        "claims",
+        "findings",
+        "possibly_stale",
+        "needs_re_checking",
+        "unmatched",
+        "differences",
+        "saved"
+      ],
+      "description": "The counts, in the order the console prints them.",
+      "properties": {
+        "documents": { "$ref": "#/$defs/classCounts" },
+        "census_facts": { "$ref": "#/$defs/classCounts" },
+        "checklist_items": { "$ref": "#/$defs/classCounts" },
+        "checklist_results": { "$ref": "#/$defs/maybeCounts" },
+        "claims": { "$ref": "#/$defs/maybeCounts" },
+        "findings": { "$ref": "#/$defs/maybeCounts" },
+        "possibly_stale": { "type": "integer", "minimum": 0, "description": "Entries of `possibly_stale` whose status is `possibly-stale`." },
+        "needs_re_checking": { "type": "integer", "minimum": 0, "description": "Entries of `possibly_stale` whose status is `needs-re-checking`. The two are counted apart and listed together, because the list is one work list and the words are two different statements." },
+        "unmatched": { "type": "integer", "minimum": 0 },
+        "differences": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "THE NUMBER THE EXIT CODE TURNS ON: the sum, over the six count blocks above, of `added` + `removed` + `moved`, with a not-computed block contributing nothing. Named class by class so it can be checked by hand. A not-computed block contributing zero is a real limit and is stated rather than hidden: a comparison with no agent report on one side cannot see a claim that changed, and the absence that caused it is in `absences`. A `moved` census fact COUNTS HERE, so a pair of runs whose only difference is position drift exits with the differences-found code while carrying an empty work list. That is the honest pair of answers and both halves matter: the two runs are not the same runs, and nothing about the meaning of the state moved, so there is nothing to re-judge. What the content key buys is that such a fact is reported ONCE, as a move, instead of as a removal and an addition; it was never that the runs would be called identical."
+        },
+        "saved": { "oneOf": [{ "$ref": "#/$defs/savedCount" }, { "$ref": "#/$defs/notComputed" }] }
+      }
+    }
+  }
+}

@@ -1,0 +1,317 @@
+id: eu-dsr-011
+pack: eu-dsr
+short_name: Viewer's identity stamped into a served document or image
+problem_line:
+  text: Viewer's identity can be stamped into each served copy
+  template: "{data} can be stamped into each served copy"
+fix_line: Stamp only what you need, say at download that their copy is marked, and record that
+  erasure cannot reach copies.
+title: Recipient-identifying values composited into a document or image at the moment it is served
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(a) - personal data shall be 'processed lawfully,
+      fairly and in a transparent manner in relation to the data subject'. This is the provision the
+      construct turns on. A document is manufactured at the moment of delivery to carry the identity
+      of the person receiving it, and whether that person is told their copy is individually marked
+      is a fairness and transparency question before it is anything else
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 17(1) - 'The data subject shall have the right to obtain
+      from the controller the erasure of personal data concerning him or her without undue delay and
+      the controller shall have the obligation to erase personal data without undue delay where one
+      of the following grounds applies'. The obligation is to erase the personal data, and a copy of
+      it composited into a file that has already left the deployment is within the words while being
+      outside everything the controller operates. Erasing the view record does not reach the stamped
+      document somebody downloaded last month
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 19 - 'The controller shall communicate any rectification
+      or erasure of personal data or restriction of processing carried out in accordance with
+      Article 16, Article 17(1) and Article 18 to each recipient to whom the personal data have been
+      disclosed, unless this proves impossible or involves disproportionate effort. The controller
+      shall inform the data subject about those recipients if the data subject requests it.' Cited
+      because each person handed a marked copy is a recipient to whom that person's own identifying
+      data has been disclosed, and the duty runs to each of them. Note the two express limits in the
+      same sentence - impossibility and disproportionate effort - which is why the finding this rule
+      raises is a question about whether the deployment can enumerate its recipients at all, and not
+      an assertion that it must reach every copy
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(c) - personal data shall be 'adequate, relevant and
+      limited to what is necessary in relation to the purposes for which they are processed'. The
+      imprint is usually configured as free text, so which of the viewer's attributes are drawn into
+      the page is an operator's choice made once and applied to every download. A mark carrying an
+      e-mail address, a client IP address and a timestamp is a different minimisation question from
+      a mark carrying an initial, and the two are one configuration field apart
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 14(1) - 'Where personal data have not been obtained
+      from the data subject, the controller shall provide the data subject with the following
+      information', which the paragraph then lists at points (a) to (f) including 'the purposes of
+      the processing for which the personal data are intended as well as the legal basis for the
+      processing'. Reference only, and deliberately so: the trigger is the SOURCE of the data, and
+      compositing a value into a page is not obtaining it. Where the addresses stamped into a
+      document were supplied by the document's owner rather than by the person the copy is served
+      to, this entry becomes live - and establishing that is context question 2, not a detector's
+      work"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-02
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.4
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    imprint_machinery:
+      - insert_watermark
+      - apply_watermark
+      - add_watermark
+      - draw_watermark
+      - render_watermark
+      - stamp_watermark
+      - write_watermark
+      - put_watermark
+      - set_watermark
+      - enable_watermark
+      - watermark_config
+      - watermark_text
+      - watermark_pdf
+      - watermark_image
+      - watermark_page
+      - watermark_document
+      - watermark_options
+      - watermarker
+      - imprint_document
+      - imprint_page
+      - stamp_document
+      - stamp_page
+      - overlay_text
+      - burn_in_text
+    per_recipient_imprint:
+      - dynamic_watermark
+      - personalized_watermark
+      - personalised_watermark
+      - per_viewer_watermark
+      - per_recipient_watermark
+      - per_user_watermark
+      - viewer_watermark
+      - recipient_watermark
+      - user_watermark
+      - forensic_watermark
+      - forensic_marking
+      - traceable_watermark
+      - tracking_watermark
+      - viewer_imprint
+      - recipient_imprint
+      - viewer_stamp
+      - recipient_stamp
+      - email_watermark
+      - watermark_email
+      - watermark_viewer
+      - watermark_recipient
+    receiver_identity:
+      - viewer_email
+      - viewer_data
+      - viewer_id
+      - viewer_name
+      - viewer_ip
+      - viewers_email
+      - recipient_email
+      - recipient_id
+      - recipient_name
+      - downloader_email
+      - download_email
+      - share_recipient
+      - view_id
+      - ip_address
+      - client_ip
+      - remote_addr
+      - get_ip_address
+      - get_client_ip
+    composition_call:
+      - draw_text
+      - draw_string
+      - show_text
+      - draw_image
+      - get_pages
+      - add_page
+      - merge_page
+      - pdpage_content_stream
+      - use_template
+      - write_html_cell
+      - multi_cell
+      - image_draw
+      - composite
+      - annotate
+      - text_watermark
+      - canvas_draw
+    imprint_marker:
+      - confidential
+      - watermark
+      - imprint
+      - stamp
+      - do_not_distribute
+      - do_not_share
+      - do_not_copy
+      - not_for_distribution
+      - for_your_eyes_only
+      - proprietary_copy
+      - traceable_copy
+      - licensed_to
+      - issued_to
+    burn_in:
+      - flatten
+      - flatten_all
+      - flatten_annotations
+      - flatten_forms
+      - rasterize
+      - rasterise
+      - burn_in
+      - burned_in
+      - content_stream
+      - non_removable
+  vocabulary_matching:
+    imprint_machinery:
+      case_insensitive: true
+      separator_insensitive: true
+    per_recipient_imprint:
+      case_insensitive: true
+      separator_insensitive: true
+    receiver_identity:
+      case_insensitive: true
+      separator_insensitive: true
+    composition_call:
+      case_insensitive: true
+      separator_insensitive: true
+    burn_in:
+      case_insensitive: true
+      separator_insensitive: true
+    imprint_marker:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?&imprint_machinery)[^\n]{0,80}(?&receiver_identity)|(?&receiver_identity)[^\n]{0,80}(?&imprint_machinery)
+    - (?&composition_call)[^\n]{0,80}(?&receiver_identity)|(?&receiver_identity)[^\n]{0,80}(?&composition_call)
+    - (?:^|[^A-Za-z0-9_])(?&per_recipient_imprint)
+    - (?&imprint_machinery)[^\n]{0,80}(?&burn_in)|(?&burn_in)[^\n]{0,80}(?&imprint_machinery)
+    - (?&composition_call)[^\n]{0,80}(?&imprint_machinery)|(?&imprint_machinery)[^\n]{0,80}(?&composition_call)
+    - \{\{\s*(?:ipAddress|ip_address|clientIp|client_ip|viewerEmail|viewer_email|recipientEmail|recipient_email|viewerName|viewer_name|viewerIp|viewer_ip|downloaderEmail|downloader_email)\s*\}\}
+    - (?:(?&imprint_marker)|(?&imprint_machinery))[^\n]{0,80}\{\{\s*(?:email|date|time|link|name|user|username|userEmail|user_email)\s*\}\}|\{\{\s*(?:email|date|time|link|name|user|username|userEmail|user_email)\s*\}\}[^\n]{0,80}(?:(?&imprint_marker)|(?&imprint_machinery))
+    - (?:(?&imprint_marker)|(?&imprint_machinery))[^\n]{0,80}(?:%|\$\{)\s*(?&receiver_identity)\s*(?:%|\})|(?:%|\$\{)\s*(?&receiver_identity)\s*(?:%|\})[^\n]{0,80}(?:(?&imprint_marker)|(?&imprint_machinery))
+context_questions:
+  - WHO ASKED FOR THIS FILE, AND WHOSE IDENTITY IS DRAWN ON IT? This is the first question because
+    the whole type turns on it. Where the person who requested the document is the same person whose
+    identity is stamped on it - their own export, their own invoice, their own certificate - this is
+    not the construct and the candidate should be dismissed here, with the code path that shows it
+    quoted. Where the artefact is served to one person and marked with that person's identity so
+    that a later copy can be traced back to them, it is the construct. Read the route that produces
+    the file and say which of the two it is; do not infer it from the name of the routine.
+  - "WHICH ATTRIBUTES ARE ACTUALLY COMPOSITED, AND WHERE DOES THE OPERATOR CHOOSE THEM? Find the
+    imprint's text template and quote it. The placeholder set is the list of attributes drawn into
+    every copy, and it is usually a free-text field an operator filled in once: an e-mail address,
+    the client IP address of the request, a timestamp, a link name. Say which of them are values the
+    person supplied to this product and which are values observed from their request, because that
+    distinction decides whether the Art. 14(1) entry in this rule's legal basis is live at all -
+    Art. 14 applies where the data was NOT obtained from the data subject, and a dataroom whose
+    viewer list is set by the document owner is exactly that case."
+  - IS THE IMPRINT SWITCHED ON IN THIS DEPLOYMENT? The detector cannot answer this and must not be
+    read as having answered it. The mark is almost always an operator configuration row - a per-link
+    setting, a workspace default, a plan feature - so the code being present says the capability
+    exists, not that any document carries a mark. Find the configuration and say whether it is on,
+    for which links or documents, and who can turn it on.
+  - IS THE PERSON RECEIVING THE FILE TOLD THAT THEIR COPY IS INDIVIDUALLY MARKED? Look for the text
+    shown at the point of download or in the viewer, not for a clause in a policy document
+    elsewhere. A visible mark carrying a legible e-mail address tells the person something; a
+    low-opacity tiled mark, a mark drawn only on later pages, or an imprint carrying an IP address
+    the person never sees may not. Quote whatever the person is actually shown, or record that
+    nothing is.
+  - "WHAT HAPPENS TO THE MARKED COPIES WHEN THE PERSON ASKS FOR ERASURE? Follow the erasure route
+    for a viewer record and say where it ends. The honest answer is normally that it reaches the
+    view row and the analytics, and reaches nothing at all in the files already downloaded - which
+    is the finding, and it should be recorded as a limit of the route rather than as a defect
+    somebody can fix. Then address Art. 19 separately: each person handed a marked copy is a
+    recipient, the duty to communicate an erasure to each of them is subject to express limits for
+    impossibility and disproportionate effort, and the practical question is whether the deployment
+    can enumerate the recipients at all."
+  - "IS THE MARK IN THE ARTEFACT'S SUBSTANCE OR IS IT A REMOVABLE LAYER? A PDF annotation, an
+    optional-content layer, an XMP or EXIF field and an HTTP header can all be stripped without
+    touching the page content, and none of them is this construct. Check for a flatten, burn-in or
+    rasterise step and say whether one runs. Where it does, say so plainly: every copy made
+    afterwards carries the identity, and no later editing removes it."
+evidence_template: "{file}:{line} matched a place where this product composites
+  RECIPIENT-IDENTIFYING VALUES into a document or an image at the moment it is served: an imprint
+  routine carrying a viewer payload, a drawing call beside a viewer identifier, an imprint named for
+  the recipient it identifies, an imprint beside a burn-in instruction, a drawing call inside the
+  imprint routine, or a text template naming a viewer attribute. THAT IS THE WHOLE OF WHAT IS
+  ESTABLISHED - that the code manufactures per-recipient copies. IT DOES NOT ESTABLISH THE ONE FACT
+  THE TYPE TURNS ON: whether the person receiving the file is a different person from the one whose
+  identity is drawn on it. A person's own export stamped with their own identity matches these
+  clauses exactly and is NOT this construct; that is context question 1 and it decides the
+  candidate. It does not establish that the imprint is switched on in this deployment - that is an
+  operator configuration row and is context question 3. It does not establish that the recipient was
+  told - question 4. And it does not establish that the mark is in the artefact's substance rather
+  than in a removable layer, although a burn-in instruction on the matched line is evidence that it
+  is - question 6. Where the construct is confirmed, the reach question follows: the copies live
+  outside every store this controller operates, so an erasure route that reaches the view record has
+  not reached them, and each holder of a marked copy is a recipient in Art. 19's sense."
+remediation_template: >
+  Answer the actor-versus-subject question first, from the route that produces the file. Where the
+
+  person receiving the document is the person it is marked with, there is nothing further to do here
+
+  and the candidate closes.
+
+  Where it is a per-recipient mark, write down the attribute set. The imprint's text template is a
+
+  configuration field, it is usually the only place the attribute set is recorded, and it is where a
+
+  reduction is cheapest: a mark that identifies a copy does not need a full e-mail address, a client
+
+  IP address and a timestamp together, and each attribute dropped is one fewer value living in every
+
+  copy that leaves.
+
+  Tell the person at the point of download. The mark is applied to their copy, it carries their own
+
+  identity, and a sentence at the download button is the difference between a control they know
+
+  about and one they discover from a forwarded file.
+
+  Record the reach limit honestly rather than designing around it. Copies already served cannot be
+
+  reached by any erasure route, and writing that down - in the record of processing activities and
+  in
+
+  the answer given to an erasure request - is the accurate position. Where the deployment keeps a
+
+  list of who received a marked copy, that list is what makes an Art. 19 communication possible at
+
+  all; where it does not, that is the gap to record.
+
+  Check whether the mark is burned in or is a layer. A layer that can be stripped is a weaker
+  control
+
+  and a smaller exposure at the same time; a mark flattened into the page content is the reverse.
+  Say
+
+  which one this is, because the two lead to different answers on both counts.
+
+  Where the viewer list is set by the document's owner rather than by the viewer, revisit the
+
+  Art. 14(1) entry in this rule's legal basis: in that configuration the addresses were not obtained
+
+  from the data subject, and the information duty in that paragraph becomes live.
+data_categories:
+  - user.contact
+  - user.identifiers
+  - user.behavior
+fingerprint_spec: file

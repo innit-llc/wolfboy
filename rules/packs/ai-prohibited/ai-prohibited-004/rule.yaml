@@ -1,0 +1,792 @@
+id: ai-prohibited-004
+pack: ai-prohibited
+short_name: "Image generator: safeguards against fake nude images"
+problem_line:
+  text: Generator may make sexual deepfakes or child abuse material
+fix_line: "From 2 Dec 2026: show real people only on explicit consent; none looking under 18; keep
+  filters in code; act on misuse."
+title: Nudification wording, safety control off, or image-generation surface - AI Act Art. 5
+  (ba)/(bb) from 2026-12-02
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 5(1), first subparagraph, points (ba) and (bb),
+      read with Art. 5(1a) and Art. 5(1b), all inserted by Art. 1(7) of Regulation (EU) 2026/1744
+      (Digital Omnibus on AI), CELEX 32026R1744, OJ L series 2026/1744 of 24.7.2026, in force 27
+      July 2026. Point (ba) prohibits 'the placing on the market, the putting into service or the
+      use of an AI system that generates or manipulates realistic images, videos, audio or similar
+      material of an identifiable natural person's intimate parts, or of an identifiable natural
+      person engaged in sexually explicit activities, without that person's freely-given, specific,
+      informed, unambiguous and explicit consent for that generation or manipulation'. Point (bb)
+      prohibits 'the placing on the market, the putting into service or the use of an AI system that
+      generates or manipulates material or performance within the meaning of Article 2, points (c)
+      and (e), of Directive 2011/93/EU, except where a \"without right\" defence applies under
+      national law'. Art. 5(1a) then splits the three prohibited acts between two addressees and
+      applies a different test to each, and there is no test that applies to both. PROVIDER, for
+      placing on the market and putting into service, Art. 5(1a)(a): those acts are 'only prohibited
+      where' either (i) 'that generation or manipulation is the intended purpose of the AI system'
+      or (ii) 'the system's design, training, architecture, capabilities or user-facing
+      functionalities make that generation or manipulation a reasonably foreseeable and reproducible
+      outcome, without requiring significant technical modification, and the system does not have
+      reasonable and adequate technical safety measures and other safeguards to reliably prevent
+      that generation or manipulation, taking into account reasonably foreseeable misuse, and to
+      correct observed or reported misuse'. The connector between (i) and (ii) is or, so either
+      alone suffices; the connector inside (ii) is and, so foreseeability alone never establishes a
+      provider breach and a provider with reasonable and adequate measures that corrects observed or
+      reported misuse sits outside limb (ii) however foreseeable the output is. DEPLOYER, for use,
+      Art. 5(1a)(b): 'the use of an AI system that generates or manipulates the material or
+      performance referred to in paragraph 1, first subparagraph, points (ba) and (bb) is only
+      prohibited where the deployer uses the system for the purpose of generating or manipulating
+      such material or performance' - a pure purpose test with no foreseeability element, no
+      safeguards element and no capability element. Art. 5(1b) narrows point (ba) only: 'an AI
+      system that manipulates material in a way that does not increase the exposure of any depicted
+      intimate parts or alter the nature of any depicted sexually explicit activities shall not
+      constitute manipulation'. Two cross-reference wordings differ in the Official Journal and are
+      reproduced as printed: the provider limb refers to 'point (ba) or (bb)' and the deployer limb
+      to 'points (ba) and (bb)'."
+    url: https://publications.europa.eu/resource/celex/32026R1744
+    checked_at: 2026-08-06
+    jurisdiction: EU
+  - cite: "EU AI Act Art. 113, third paragraph, point (a), as replaced by Art. 1(40)(a) of Regulation
+      (EU) 2026/1744 (CELEX 32026R1744): 'Chapters I and II shall apply from 2 February 2025, with
+      the exception of Article 5(1), first subparagraph, points (ba) and (bb), and Article 5(1a) and
+      (1b) which shall apply from 2 December 2026'. The two new points and the two new paragraphs
+      are therefore not applicable before 2026-12-02, while the pre-existing Art. 5 prohibitions
+      keep 2025-02-02. Art. 113 is composed of unnumbered paragraphs and has no subparagraphs, so
+      the citation is the third paragraph and not the third subparagraph. Reference only: this fixes
+      when the obligation in entry 1 starts to apply, not what it requires."
+    url: https://publications.europa.eu/resource/celex/32026R1744
+    checked_at: 2026-08-06
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Regulation (EU) 2026/1744 (CELEX 32026R1744), recitals 11, 12 and 13 - context for the
+      adjudicator and not the operative test. Recital 11 records that the technologies concerned are
+      'often described as' nudification applications and that their proliferation 'has created an
+      urgent need for an explicit regulatory prohibition'. Recital 12 lists what safeguards may look
+      like: 'Technical measures and other safeguards to prevent the generation of such material
+      could include data cleaning, refusal training, safe prompt design and output controls, runtime
+      prompt guardrails, content classification and filtering mechanisms, usage restrictions, abuse
+      detection mechanisms, and notice and action mechanisms'. It sets the adequacy standard:
+      preventive measures 'are considered adequate if they align with the state-of-the-art measures
+      and demonstrably prevent or sufficiently reduce in each specific case the likelihood of
+      generating or manipulating such material, taking into account known and reasonably foreseeable
+      misuse, including reasonably foreseeable circumvention of the preventive measures without
+      significant technical modification'. The closing words are part of the standard and are quoted
+      here in full because they extend it: foreseeable circumvention without significant technical
+      modification sits inside the adequacy question and not beside it, so a measure that known
+      misuse would foreseeably circumvent has to be weighed against the standard rather than assumed
+      to meet it. What the wording does not do is settle that such a measure fails: the standard is
+      disjunctive - measures 'demonstrably prevent or sufficiently reduce in each specific case the
+      likelihood' - so a measure that is foreseeably circumvented may still be adequate where it
+      sufficiently reduces that likelihood. Both halves are evidential questions for the operator
+      and neither is in a source tree. It fixes what realism means for point (ba): the term 'refers
+      to the depiction of the person's face, voice or their body in a credible real-life manner,
+      regardless of the realism of the context of that depiction or whether it fully corresponds to
+      the actual voice or appearance of the depicted person. Conversely, it excludes cartoonish or
+      physically impossible depictions of a person's body'. It places consented and clinical uses
+      outside point (ba), naming 'try-on applications and medical applications, such as medical
+      anatomical simulations and mammograms'. It preserves capability development: 'This prohibition
+      should not prevent providers from developing the technical capabilities of AI systems to
+      generate or manipulate images, videos, audio or similar material'. It states the deployer side
+      in both directions: the prohibition on use 'does not cover the use of an AI system for lawful
+      purposes, such as the generation or manipulation of material other than non-consensual
+      intimate material or child sexual abuse material, even in cases where the AI system lacks
+      reasonable and adequate safeguards that should have been put in place by the provider, nor
+      does it cover accidental generation or manipulation of such content'. Recital 13 names what
+      the point (bb) carve-out is meant to include: 'activities carried out under domestic legal
+      powers, such as the legitimate generation, or manipulation of child sexual abuse material by
+      the authorities in order to conduct criminal proceedings or to prevent, detect or investigate
+      crime, as well as the legitimate use of the AI system in the context of red-teaming and
+      evaluation activities for the purpose of assessing the system's compliance with the
+      prohibition laid down in this Regulation'. One warning for anyone quoting from here: recital
+      12's summary of the provider test is NOT word-identical to Art. 5(1a)(a)(ii), which carries
+      neither 'where necessary' nor 'including circumvention of such measures'. Reference only:
+      recitals do not create the defence and do not restate the test."
+    url: https://publications.europa.eu/resource/celex/32026R1744
+    checked_at: 2026-08-07
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Directive 2011/93/EU of the European Parliament and of the Council of 13 December 2011 on
+      combating the sexual abuse and sexual exploitation of children and child pornography, and
+      replacing Council Framework Decision 2004/68/JHA (OJ L 335, 17.12.2011, p. 1), CELEX
+      32011L0093 - Art. 2, points (c) and (e), which AI Act Art. 5(1)(bb) imports by article and
+      point number. Art. 2(c) defines the term 'child pornography' over four alternatives, quoted
+      here point by point: (i) 'any material that visually depicts a child engaged in real or
+      simulated sexually explicit conduct'; (ii) 'any depiction of the sexual organs of a child for
+      primarily sexual purposes'; (iii) 'any material that visually depicts any person appearing to
+      be a child engaged in real or simulated sexually explicit conduct or any depiction of the
+      sexual organs of any person appearing to be a child, for primarily sexual purposes'; (iv)
+      'realistic images of a child engaged in sexually explicit conduct or realistic images of the
+      sexual organs of a child, for primarily sexual purposes'. Art. 2(e) defines 'pornographic
+      performance' as 'a live exhibition aimed at an audience, including by means of information and
+      communication technology, of' either (i) 'a child engaged in real or simulated sexually
+      explicit conduct' or (ii) 'the sexual organs of a child for primarily sexual purposes'. Art.
+      2(a) supplies the subject: a child is 'any person below the age of 18 years'. Three
+      consequences for anything built on point (bb). First, the enacting text of point (bb) never
+      uses the phrase child sexual abuse material - the recitals do, the operative text imports the
+      Directive terms above, and a citation attributing that phrase to either instrument would be
+      quoting words neither contains. Second, the definition reaches generated material by more than
+      one route, and not only through (c)(iii) and (c)(iv): (c)(i) already covers material visually
+      depicting a child engaged in 'real or simulated' sexually explicit conduct, so a generated or
+      manipulated depiction of a real, identifiable child falls inside the term with no need for the
+      later points, while (c)(iii) and (c)(iv) extend it to material where no real child exists at
+      all - a person appearing to be a child, or a realistic image of a child. Third, point (e)
+      reaches a live exhibition rather than stored material, so a real-time stream is within point
+      (bb) through the performance branch even where nothing is written to disk. The carve-out
+      defers to national law: Art. 5(1) of the same Directive requires Member States to punish the
+      listed conduct 'when committed without right', and the Directive gives that phrase no
+      definition in its Art. 2, so what it covers is settled by national law and none of those
+      answers is in a source repository. Two counts, kept apart because they are not the same
+      number. Point (bb) belongs to a Regulation binding in all 27 Member States and its carve-out
+      is keyed to national law rather than to this Directive's transposition, so there are up to 27
+      national answers to the carve-out question. The Directive behind it is transposed in at most
+      26 of them: its recital (52) records that, in accordance with Articles 1 and 2 of Protocol (No
+      22), 'Denmark is not taking part in the adoption of this Directive and is not bound by it or
+      subject to its application'. It is not, however, unglossed at EU level, and the gloss must not
+      be read past. Recital (17) of the same Directive states that in the context of child
+      pornography the term allows Member States to provide a defence in respect of conduct relating
+      to pornographic material having for example 'a medical, scientific or similar purpose'; that
+      it also allows 'activities carried out under domestic legal powers', the example given being
+      'the legitimate possession of child pornography by the authorities in order to conduct
+      criminal proceedings or to prevent, detect or investigate crime'; and that it 'does not
+      exclude legal defences or similar relevant principles that relieve a person of responsibility
+      under specific circumstances', the example given being 'where telephone or Internet hotlines
+      carry out activities to report those cases'. Recital 13 of Regulation (EU) 2026/1744 points
+      the reader at this same phrase in this same article, and it carries only the middle one of
+      those three categories forward - restating it for generation and manipulation rather than
+      possession, and adding red-teaming and evaluation. It does not narrow or replace the other
+      two. An adjudicator who takes recital 13's list for the whole of the EU-level material
+      therefore drops the medical, scientific or similar purpose category and the hotline-reporting
+      category, which are the two most likely to describe a repository this rule's own patterns
+      reach, and reports point (bb) as broader than it was enacted. None of this displaces the
+      national-law question and a recital creates no defence: what the phrase covers in the Member
+      State concerned is answered by that Member State's transposition and by counsel, not here. Two
+      further Member State discretions sit in the same Directive and are recorded so that they are
+      not mistaken for either thing: Art. 5(7) leaves each Member State to decide whether Art. 5
+      applies at all to Art. 2(c)(iii) material where the person appearing to be a child was in fact
+      18 years of age or older at the time of depiction, and Art. 5(8) leaves each Member State to
+      decide whether Art. 5(2) and (6) apply to Art. 2(c)(iv) material produced and possessed by its
+      producer solely for private use on the conditions stated there. Neither is a without right
+      defence and neither narrows point (bb) directly, because point (bb) imports Art. 2's
+      definitions and not Art. 5's offences or discretions; they are here only as further evidence
+      that the national picture behind the carve-out really does differ from one Member State to the
+      next. Reference only: this supplies definitions the AI Act imports; entry 1 carries the
+      obligation."
+    url: https://publications.europa.eu/resource/celex/32011L0093
+    checked_at: 2026-08-07
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 99(3): 'Non-compliance with the prohibition of
+      the AI practices referred to in Article 5 shall be subject to administrative fines of up to
+      EUR 35 000 000 or, if the offender is an undertaking, up to 7 % of its total worldwide annual
+      turnover for the preceding financial year, whichever is higher.' Art. 99(6) reverses that
+      comparison for SMEs including start-ups: 'each fine referred to in this Article shall be up to
+      the percentages or amount referred to in paragraphs 3, 4 and 5, whichever thereof is lower'.
+      Regulation (EU) 2026/1744 (CELEX 32026R1744) did not amend either paragraph; its new Art.
+      99(6a) gives small mid-cap enterprises a comparable cap for 'paragraphs 4 and 5' only, so an
+      SMC gets no relief on an Art. 5 breach while an SME does. Do not confuse Art. 99(3) with Art.
+      100(2), whose opening words are nearly identical and whose EUR 1 500 000 figure applies only
+      to Union institutions, bodies, offices and agencies. Reference only: this establishes the
+      consequence, not the obligation the detector tests."
+    url: https://publications.europa.eu/resource/celex/32024R1689
+    checked_at: 2026-08-06
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 3(3), Art. 3(4), Art. 2(1), Art. 2(10) and Art.
+      2(12). A provider is a body that 'develops an AI system or a general-purpose AI model or that
+      has an AI system or a general-purpose AI model developed and places it on the market or puts
+      the AI system into service under its own name or trademark, whether for payment or free of
+      charge'; a deployer is a body 'using an AI system under its authority except where the AI
+      system is used in the course of a personal non-professional activity'. Art. 2(10): 'This
+      Regulation does not apply to obligations of deployers who are natural persons using AI systems
+      in the course of a purely personal non-professional activity.' Art. 2(12): 'This Regulation
+      does not apply to AI systems released under free and open-source licences, unless they are
+      placed on the market or put into service as high-risk AI systems or as an AI system that falls
+      under Article 5 or 50.' The carve-back names Article 5 without qualification, so it picks up
+      points (ba) and (bb) from 2026-12-02 with no further step, and it is framed on placing on the
+      market and putting into service rather than on use - whether it shelters a deployer whose own
+      use is the prohibited act is not answered by any text retrieved on 2026-08-06 and is an open
+      question for the adjudicator rather than a settled exclusion. Territorially, Art. 2(1) reaches
+      providers placing on the market or putting into service in the Union wherever established,
+      deployers established or located in the Union, and providers and deployers in a third country
+      'where the output produced by the AI system is used in the Union'. Reference only: these
+      narrow who the rule can reach, they do not establish the obligation."
+    url: https://publications.europa.eu/resource/celex/32024R1689
+    checked_at: 2026-08-06
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Commission Guidelines on prohibited artificial intelligence practices established by
+      Regulation (EU) 2024/1689 (AI Act), C(2025) 5052 final, 29.7.2025. These Guidelines do not
+      address Art. 5(1) points (ba) or (bb), Art. 5(1a) or Art. 5(1b) at all: searched over the full
+      extracted text on 2026-08-06, nudification 0 occurrences, non-consensual 0, (ba) 0, (bb) 0,
+      5(1a) 0. They predate the amending act by a year. There is therefore no Commission
+      interpretation of reasonable and adequate technical safety measures and other safeguards, of
+      reasonably foreseeable and reproducible outcome, or of significant technical modification, and
+      the only official gloss on any of those phrases is recital 12 quoted above. What the
+      Guidelines do supply, and what carries over unchanged because the underlying provisions were
+      not amended, is the reading of the scope exclusions: para. 34 treats any regular economic
+      benefit and any professional, business, trade, occupational or freelance use as professional
+      and states that criminal activities cannot be considered purely personal activities, even if
+      no economic benefit is sought or attained; para. 35 confines the Art. 2(10) exclusion to
+      deployer obligations, leaving providers, other professional deployers, importers and
+      distributors in scope; para. 36 records that providers of AI systems cannot benefit from the
+      Art. 2(12) free-and-open-source exclusion if the AI system they place on the market or put
+      into service constitutes a prohibited practice under Article 5. Separately, the Guidelines
+      touch AI-generated child sexual abuse material in two places rather than one, and both were
+      re-read in the extracted text on 2026-08-07. Para. 116 gives AI systems used for the
+      generation of such material, and for manipulating existing material depicting real children to
+      create further novel content featuring them, as an illustration of significant harm under Art.
+      5(1)(b) - a different prohibition with a different test. Para. 145, in the passage on the
+      interplay with other Union law, attributes to the prohibitions in Art. 5(1)(a) AND (b)
+      together the aim of preventing the generation and dissemination of 'illegal content', and its
+      list of that content names sexually explicit deepfakes alongside terrorist content, child
+      sexual abuse material and hate speech; the same paragraph records that, as internal market
+      legislation, those prohibitions cover not only the use but also the placing on the market of
+      the AI system. Sexually explicit deepfakes are nearer to the subject matter of point (ba) than
+      anything in para. 116, so a reader sent only to para. 116 is sent to the less relevant of the
+      two. Neither paragraph interprets points (ba) or (bb), neither is authority for the new test,
+      and both predate it. Reference only, and a null result is not evidence that no guidance is
+      coming: this row should be re-checked before 2026-12-02, and again if the reported recast of
+      Directive 2011/93/EU is adopted, because point (bb) imports that Directive by article and
+      point number."
+    url: https://ai-act-service-desk.ec.europa.eu/sites/default/files/2025-08/guidelines_on_prohibited_artificial_intelligence_practices_established_by_regulation_eu_20241689_ai_act_english_ied3r5nwo50xggpcfmwckm3nuc_112367-1.PDF
+    checked_at: 2026-08-07
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "EU AI Act (Regulation (EU) 2024/1689), Art. 3(12) and Art. 3(13) - the two defined terms the
+      enacted test in entry 1 turns on. Limb (i) of Art. 5(1a)(a) asks whether the generation or
+      manipulation is the INTENDED PURPOSE of the AI system, and Art. 3(12) defines that term as
+      'the use for which an AI system is intended by the provider, including the specific context
+      and conditions of use, as specified in the information supplied by the provider in the
+      instructions for use, promotional or sales materials and statements, as well as in the
+      technical documentation'. Every source the definition names is a document the provider writes,
+      and it names no property of the system, which is why limb (i) is answered from declared
+      documents and never from what the code can do. The second element of limb (ii) requires
+      safeguards taking into account REASONABLY FORESEEABLE MISUSE, and Art. 3(13) defines that term
+      as 'the use of an AI system in a way that is not in accordance with its intended purpose, but
+      which may result from reasonably foreseeable human behaviour or interaction with other
+      systems, including other AI systems'. Two things follow, and both hold limb (ii) to what was
+      enacted. First, the term is anchored to the intended purpose, so the misuse a provider must
+      take into account is use departing from the Art. 3(12) purpose - use inside that purpose is
+      not misuse at all, it is limb (i) - and the provider's answer on limb (ii) is therefore tied
+      back to the same documentation that answers limb (i). Second, the misuse must be one that may
+      result from reasonably foreseeable human behaviour or from interaction with other systems, so
+      an arbitrary hypothetical use is outside the term. An adjudicator who reads reasonably
+      foreseeable misuse at large reads limb (ii) as reaching further than the words do, which is
+      the same shape as reading point (bb) without recital (17). One boundary on this entry: the
+      FIRST element of limb (ii) asks whether the generation or manipulation is a reasonably
+      foreseeable and reproducible outcome, which is a statement about the outcome and not the
+      defined term about the use, so Art. 3(13) must not be imported into it. Neither definition was
+      touched by Regulation (EU) 2026/1744: its Art. 1(4) amends Art. 3 at point (14) and inserts
+      points (14a) and (14b) and does nothing else, read first-hand on 2026-08-07. Reference only:
+      these define two terms entry 1 quotes; entry 1 carries the obligation."
+    url: https://publications.europa.eu/resource/celex/32024R1689
+    checked_at: 2026-08-07
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2026-12-02
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.4
+detector:
+  engine: builtin-regex
+  match_in_comments: true
+  vocabulary:
+    person_segmentation_wide:
+      - segment_person
+      - segment_human
+      - segment_body
+      - segment_portrait
+      - segment_cloth
+      - segment_clothes
+      - segment_garment
+      - segmentation_person
+      - segmentation_human
+      - segmentation_body
+      - segmentation_mask
+      - person_segmentation
+      - human_segmentation
+      - body_segmentation
+      - portrait_segmentation
+      - cloth_segmentation
+      - clothes_segmentation
+      - garment_segmentation
+      - person_seg
+      - human_seg
+      - body_seg
+      - seg_person
+      - seg_human
+      - seg_body
+      - parse_person
+      - parse_human
+      - parse_body
+      - person_parsing
+      - human_parsing
+      - body_parsing
+      - cloth_parsing
+      - parsing_mask
+      - human_matting
+      - portrait_matting
+      - person_matting
+      - human_matte
+      - portrait_matte
+      - person_mask
+      - human_mask
+      - body_mask
+      - portrait_mask
+      - cloth_mask
+      - garment_mask
+      - graphonomy
+      - schp
+    inpainting_corroborator:
+      - mask_image
+      - mask_url
+      - inpaint
+      - inpainting
+      - inpaint_mask
+      - inpaint_pipeline
+      - inpaint_model
+      - inpainting_pipeline
+      - stable_diffusion_inpaint
+      - flux_fill
+      - diffusion
+      - openpose
+      - dwpose
+      - densepose
+      - controlnet
+  vocabulary_matching:
+    person_segmentation_wide:
+      case_insensitive: true
+      separator_insensitive: true
+    inpainting_corroborator:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Nn][Uu][Dd][Ii][Ff][Yy]|[Nn][Uu][Dd][Ii][Ff][Ii][Ee][Rr]|[Nn][Uu][Dd][Ii][Ff][Ii][Ee][Rr][Ss]|[Nn][Uu][Dd][Ii][Ff][Ii][Cc][Aa][Tt][Ii][Oo][Nn]|[Nn][Uu][Dd][Ii][Ff][Ii][Ee][Dd]|[Nn][Uu][Dd][Ii][Ff][Yy][Ii][Nn][Gg]|[Nn][Uu][Dd][Ii][Ff][Ii][Ee][Ss])(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Uu][Nn][Dd][Rr][Ee][Ss][Ss]|[Uu][Nn][Dd][Rr][Ee][Ss][Ss][Ee][Dd]|[Uu][Nn][Dd][Rr][Ee][Ss][Ss][Ii][Nn][Gg]|[Uu][Nn][Dd][Rr][Ee][Ss][Ss][Ee][Rr]|[Uu][Nn][Dd][Rr][Ee][Ss][Ss][Aa][Ii])(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Uu][Nn][Cc][Ll][Oo][Tt][Hh][Ee]|[Uu][Nn][Cc][Ll][Oo][Tt][Hh][Ee][Dd]|[Uu][Nn][Cc][Ll][Oo][Tt][Hh][Ii][Nn][Gg]|[Dd][Ee][Cc][Ll][Oo][Tt][Hh][Ee]|[Dd][Ee][Cc][Ll][Oo][Tt][Hh][Ee][Dd]|[Dd][Ii][Ss][Rr][Oo][Bb][Ee]|[Dd][Ii][Ss][Rr][Oo][Bb][Ee][Dd]|[Dd][Ii][Ss][Rr][Oo][Bb][Ii][Nn][Gg])(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Dd][Ee][Ee][Pp][Nn][Uu][Dd][Ee]|[Dd][Ee][Ee][Pp][Nn][Uu][Dd][Ee][Ss]|[Dd][Ee][Ee][Pp][Nn][Uu][Dd][Ii][Ff][Yy]|[Dd][Ee][Ee][Pp][Nn][Uu][Dd][Ee][Cc][Cc])(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Cc][Ll][Oo][Tt][Hh](?:[Ee][Ss]|[Ii][Nn][Gg])?[_\-
+      ]?(?:[Oo][Ff][Ff]|[Rr][Ee][Mm][Oo][Vv](?:[Ee][Rr]|[Aa][Ll]|[Ee])|[Ss][Tt][Rr][Ii][Pp](?:[Pp][Ee][Rr])?)|(?:[Rr][Ee][Mm][Oo][Vv][Ee]|[Ss][Tt][Rr][Ii][Pp]|[Dd][Ee][Ll][Ee][Tt][Ee])[_\-
+      ]?(?:[Cc][Ll][Oo][Tt][Hh](?:[Ee][Ss]|[Ii][Nn][Gg])?|[Dd][Rr][Ee][Ss][Ss]|[Gg][Aa][Rr][Mm][Ee][Nn][Tt][Ss]?)|[Dd][Rr][Ee][Ss][Ss][_\-
+      ]?[Oo][Ff][Ff]|[Bb][Ii][Kk][Ii][Nn][Ii][_\-
+      ]?[Oo][Ff][Ff])(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9.\-])(?:[a-z0-9-]+\.)*(?:clothoff\.io|nudify\.(?:online|io|app|club)|undress(?:app)?\.(?:app|cc|vip|love|io)|deepnude\.(?:cc|to|com)|porngen\.art|pornx\.ai|pornjourney\.ai|soulgen\.(?:ai|net)|deepswap\.ai|promptchan\.(?:ai|com)|seduced\.ai|candy\.ai|pornpen\.ai|xpictures\.ai)(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Pp][Oo][Rr][Nn](?:[Ii][Ff][Yy]|[Gg][Ee][Nn]|[Pp][Ee][Nn]|[Mm][Aa][Kk][Ee][Rr]|[Jj][Oo][Uu][Rr][Nn][Ee][Yy])|(?:[Nn][Ss][Ff][Ww]|[Aa][Dd][Uu][Ll][Tt]|[Hh][Ee][Nn][Tt][Aa][Ii]|[Ee][Rr][Oo][Tt][Ii][Cc])[_\-
+      ]?(?:[Gg][Ee][Nn][Ee][Rr][Aa][Tt][Oo][Rr]|[Gg][Ee][Nn][Ee][Rr][Aa][Tt][Ii][Oo][Nn]|[Mm][Aa][Kk][Ee][Rr]|[Cc][Rr][Ee][Aa][Tt][Oo][Rr]))(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])[Ss][Aa][Ff][Ee][Tt][Yy][_\-]?[Cc][Hh][Ee][Cc][Kk][Ee][Rr]["']?\s*(?:=>|[:=])\s*(?:None|null|nil|[Ff]alse|FALSE|0)(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])[Rr][Ee][Qq][Uu][Ii][Rr][Ee][Ss]?[_\-]?[Ss][Aa][Ff][Ee][Tt][Yy][_\-]?[Cc][Hh][Ee][Cc][Kk][Ee][Rr]["']?\s*(?:=>|[:=])\s*(?:[Ff]alse|FALSE|None|null|0)(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Rr][Ee][Qq][Uu][Ii][Rr][Ee][Ss])?[Ss][Aa][Ff][Ee][Tt][Yy][Cc][Hh][Ee][Cc][Kk][Ee][Rr]["']?\s*(?:=>|[:=])\s*(?:null|undefined|[Ff]alse|None|0)(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - \.[Ss][Aa][Ff][Ee][Tt][Yy][_\-]?[Cc][Hh][Ee][Cc][Kk][Ee][Rr]\s*=\s*(?:None|null|lambda|\(\s*\)|_)
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:--)?[Dd][Ii][Ss][Aa][Bb][Ll][Ee][_\-]?[Ss][Aa][Ff][Ee][Tt][Yy](?:[_\-]?(?:[Cc][Hh][Ee][Cc][Kk][Ee][Rr]|[Ff][Ii][Ll][Tt][Ee][Rr]|[Cc][Hh][Ee][Cc][Kk]))?(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])[Ee][Nn][Aa][Bb][Ll][Ee][_\-]?[Ss][Aa][Ff][Ee][Tt][Yy][_\-]?[Cc][Hh][Ee][Cc][Kk][Ee][Rr]["']?\s*(?:=>|[:=])\s*(?:[Ff]alse|FALSE|0|None|null)(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Nn][Ss][Ff][Ww][_\-]?(?:[Ff][Ii][Ll][Tt][Ee][Rr]|[Cc][Hh][Ee][Cc][Kk](?:[Ee][Rr])?|[Dd][Ee][Tt][Ee][Cc][Tt][Oo][Rr]|[Dd][Ee][Tt][Ee][Cc][Tt][Ii][Oo][Nn]|[Cc][Ll][Aa][Ss][Ss][Ii][Ff][Ii][Ee][Rr]|[Gg][Uu][Aa][Rr][Dd]|[Bb][Ll][Oo][Cc][Kk])|(?:[Ff][Ii][Ll][Tt][Ee][Rr]|[Cc][Hh][Ee][Cc][Kk]|[Bb][Ll][Oo][Cc][Kk])[_\-]?[Nn][Ss][Ff][Ww])(?:[_\-]?[Ee][Nn][Aa][Bb][Ll][Ee][Dd])?["']?\s*(?:=>|[:=])\s*(?:[Ff]alse|FALSE|0|None|null|["']off["'])(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:--)?(?:[Dd][Ii][Ss][Aa][Bb][Ll][Ee]|[Ss][Kk][Ii][Pp]|[Bb][Yy][Pp][Aa][Ss][Ss]|[Ii][Gg][Nn][Oo][Rr][Ee]|[Nn][Oo])[_\-]?[Nn][Ss][Ff][Ww](?:[_\-]?(?:[Ff][Ii][Ll][Tt][Ee][Rr]|[Cc][Hh][Ee][Cc][Kk](?:[Ee][Rr])?|[Dd][Ee][Tt][Ee][Cc][Tt][Ii][Oo][Nn]))?(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:--)?(?:[Dd][Ii][Ss][Aa][Bb][Ll][Ee]|[Ss][Kk][Ii][Pp]|[Bb][Yy][Pp][Aa][Ss][Ss]|[Nn][Oo])[_\-]?(?:[Mm][Oo][Dd][Ee][Rr][Aa][Tt][Ii][Oo][Nn]|[Cc][Oo][Nn][Tt][Ee][Nn][Tt][_\-]?(?:[Ff][Ii][Ll][Tt][Ee][Rr]|[Mm][Oo][Dd][Ee][Rr][Aa][Tt][Ii][Oo][Nn]|[Cc][Hh][Ee][Cc][Kk])|[Ss][Aa][Ff][Ee][Tt][Yy][_\-]?[Ss][Ee][Tt][Tt][Ii][Nn][Gg][Ss])(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Cc][Oo][Nn][Tt][Ee][Nn][Tt][_\-]?[Ff][Ii][Ll][Tt][Ee][Rr]|[Mm][Oo][Dd][Ee][Rr][Aa][Tt][Ii][Oo][Nn]|[Cc][Oo][Nn][Tt][Ee][Nn][Tt][_\-]?[Mm][Oo][Dd][Ee][Rr][Aa][Tt][Ii][Oo][Nn])["']?\s*(?:=>|[:=])\s*(?:[Ff]alse|FALSE|0|None|null|["'](?:off|none|low|disabled)["'])(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - "[Tt][Hh][Rr][Ee][Ss][Hh][Oo][Ll][Dd][\"']?\\s*(?:=>|[:=])\\s*[\"']?(?:[\\w.]*\\.)?(?:BLOCK_N\
+      ONE|OFF|HARM_BLOCK_THRESHOLD_UNSPECIFIED)(?![A-Za-z0-9\\u00C0-\\u02AF\\u0370-\\u1FFF\\u2C00-\
+      \\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD])"
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])[Rr][Uu][Nn][_\-]?[Ss][Aa][Ff][Ee][Tt][Yy][_\-]?[Cc][Hh][Ee][Cc][Kk][Ee][Rr](?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:(?:--)?(?:[Dd][Ii][Ss][Aa][Bb][Ll][Ee]|[Nn][Oo]|[Uu][Nn])[_\-]?[Cc][Ee][Nn][Ss][Oo][Rr](?:[Ss][Hh][Ii][Pp]|[Ee][Dd]|[Ii][Nn][Gg])?|[Cc][Ee][Nn][Ss][Oo][Rr](?:[Ss][Hh][Ii][Pp]|[Ee][Dd])?["']?\s*(?:=>|[:=])\s*(?:[Ff]alse|FALSE|0|None|null)|[Uu][Nn][Cc][Ee][Nn][Ss][Oo][Rr][Ee][Dd]["']?\s*(?:=>|[:=])\s*(?:[Tt]rue|TRUE|1))(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])[Ss][Aa][Ff][Ee][_\-]?(?:[Mm][Oo][Dd][Ee]|[Ss][Ee][Aa][Rr][Cc][Hh]|[Ff][Ii][Ll][Tt][Ee][Rr]|[Ss][Ee][Tt][Tt][Ii][Nn][Gg])["']?\s*(?:=>|[:=])\s*(?:[Ff]alse|FALSE|0|None|null|["'](?:off|none|disabled)["'])(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Aa][Ll][Ll][Oo][Ww]|[Pp][Ee][Rr][Mm][Ii][Tt]|[Ee][Nn][Aa][Bb][Ll][Ee])[_\-]?(?:[Nn][Ss][Ff][Ww]|[Aa][Dd][Uu][Ll][Tt]|[Ee][Xx][Pp][Ll][Ii][Cc][Ii][Tt]|[Pp][Oo][Rr][Nn]|[Uu][Nn][Cc][Ee][Nn][Ss][Oo][Rr][Ee][Dd])["']?\s*(?:=>|[:=])\s*(?:[Tt]rue|TRUE|1|["']?yes["']?)(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - ^\s*(?:#|//|--)\s*(?:[Aa][Ww][Aa][Ii][Tt]\s+|[Rr][Ee][Tt][Uu][Rr][Nn]\s+)?[\w.$]*(?:[Mm][Oo][Dd][Ee][Rr][Aa][Tt][Ii][Oo][Nn]|[Ss][Aa][Ff][Ee][Tt][Yy][_\-]?[Cc][Hh][Ee][Cc][Kk]|[Cc][Hh][Ee][Cc][Kk][_\-]?[Nn][Ss][Ff][Ww]|[Nn][Ss][Ff][Ww][_\-]?[Cc][Hh][Ee][Cc][Kk]|[Ss][Aa][Ff][Ee][Tt][Yy][_\-]?[Cc][Hh][Ee][Cc][Kk][Ee][Rr]|[Cc][Oo][Nn][Tt][Ee][Nn][Tt][_\-]?[Ff][Ii][Ll][Tt][Ee][Rr])[\w.$]*\(
+    - --(?:[Dd][Ii][Ss][Aa][Bb][Ll][Ee]-[Nn][Ss][Ff][Ww]-[Ff][Ii][Ll][Tt][Ee][Rr]|[Dd][Ii][Ss][Aa][Bb][Ll][Ee]-[Ss][Aa][Ff][Ee][Tt][Yy]-[Cc][Hh][Ee][Cc][Kk][Ee][Rr]|[Nn][Oo]-[Nn][Ss][Ff][Ww]|[Nn][Ss][Ff][Ww]-[Ff][Ii][Ll][Tt][Ee][Rr][=
+      ](?:false|off|0)|[Dd][Ii][Ss][Aa][Bb][Ll][Ee]-[Ss][Aa][Ff][Ee]-[Uu][Nn][Pp][Ii][Cc][Kk][Ll][Ee]|[Aa][Ll][Ll][Oo][Ww]-[Nn][Ss][Ff][Ww])(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Ff][Aa][Cc][Ee][_\-]?[Ss][Ww][Aa][Pp](?:[Pp][Ee][Rr]|[Pp][Ii][Nn][Gg]|[Pp][Ee][Dd])?|[Ii][Nn][Ss][Ww][Aa][Pp][Pp][Ee][Rr](?:_128)?|[Ss][Ii][Mm][Ss][Ww][Aa][Pp]|[Ff][Aa][Cc][Ee][Ff][Uu][Ss][Ii][Oo][Nn]|[Dd][Ee][Ee][Pp][Ff][Aa][Cc][Ee][Ll][Aa][Bb]|[Dd][Ee][Ee][Pp][Ff][Aa][Cc][Ee][Ll][Ii][Vv][Ee]|[Ff][Aa][Cc][Ee][Ss][Hh][Ii][Ff][Tt][Ee][Rr]|[Rr][Oo][Oo][Pp]|[Ss][Ww][Aa][Pp][_\-]?[Ff][Aa][Cc][Ee][Ss]?)(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Ii][Pp][Aa][Dd][Aa][Pp][Tt][Ee][Rr][_\-]?[Ff][Aa][Cc][Ee][Ii][Dd]|[Ii][Pp][_\-][Aa][Dd][Aa][Pp][Tt][Ee][Rr][_\-]?[Ff][Aa][Cc][Ee][Ii][Dd]|[Ff][Aa][Cc][Ee][Ii][Dd][_\-]?[Pp][Ll][Uu][Ss](?:[Vv]2)?|[Ii][Nn][Ss][Tt][Aa][Nn][Tt][Ii][Dd]|[Pp][Hh][Oo][Tt][Oo][Mm][Aa][Kk][Ee][Rr]|[Pp][Uu][Ll][Ii][Dd]|[Aa][Rr][Cc]2[Ff][Aa][Cc][Ee]|[Ff][Aa][Cc][Ee][Cc][Hh][Aa][Ii][Nn]|[Cc][Oo][Nn][Ss][Ii][Ss][Tt][Ee][Nn][Tt][Ii][Dd]|[Ii][Dd][_\-]?[Aa][Nn][Ii][Mm][Aa][Tt][Oo][Rr])(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Mm][Aa][Ss][Kk]_[Ii][Mm][Aa][Gg][Ee]|[Mm][Aa][Ss][Kk]_[Uu][Rr][Ll]|[Ii][Nn][Pp][Aa][Ii][Nn][Tt]_[Mm][Aa][Ss][Kk]|[Ii][Nn][Pp][Aa][Ii][Nn][Tt](?:[Ii][Nn][Gg])?[_\-]?(?:[Pp][Ii][Pp][Ee][Ll][Ii][Nn][Ee]|[Mm][Aa][Ss][Kk]|[Mm][Oo][Dd][Ee][Ll])|StableDiffusion[Ii][Nn][Pp][Aa][Ii][Nn][Tt]\w*|[Ff][Ll][Uu][Xx][Ff][Ii][Ll][Ll])(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?:(?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Oo][Pp][Ee][Nn][Pp][Oo][Ss][Ee]|[Dd][Ww][Pp][Oo][Ss][Ee]|[Dd][Ee][Nn][Ss][Ee][Pp][Oo][Ss][Ee]|[Hh][Uu][Mm][Aa][Nn][_\-]?[Pp][Aa][Rr][Ss](?:[Ii][Nn][Gg]|[Ee][Rr])|[Ss][Ee][Ll][Ff][_\-]?[Cc][Oo][Rr][Rr][Ee][Cc][Tt][Ii][Oo][Nn][_\-]?[Hh][Uu][Mm][Aa][Nn]|(?:[Ss][Ee][Gg][Mm][Ee][Nn][Tt]|[Ss][Ee][Gg])[_\-]?(?:[Pp][Ee][Rr][Ss][Oo][Nn]|[Hh][Uu][Mm][Aa][Nn]|[Bb][Oo][Dd][Yy])|[Hh][Uu][Mm][Aa][Nn][_\-]?[Ss][Ee][Gg]\w*)(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])|(?<![A-Za-z0-9\-\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Pp][Ee][Rr][Ss][Oo][Nn]|[Bb][Oo][Dd][Yy])[_\-]?[Mm][Aa][Ss][Kk](?![A-Za-z0-9\-\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]))
+    - ^(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&person_segmentation_wide)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&inpainting_corroborator)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Uu][Bb][Ee][Rr][_\-]?[Rr][Ee][Aa][Ll][Ii][Ss][Tt][Ii][Cc][_\-]?[Pp][Oo][Rr][Nn][_\-]?[Mm][Ee][Rr][Gg][Ee]|[Uu][Rr][Pp][Mm]|[Hh][Aa][Ss][Ss][Aa][Nn][Bb][Ll][Ee][Nn][Dd]|[Cc][Hh][Ii][Ll][Ll][Oo][Uu][Tt][Mm][Ii][Xx]|[Pp][Oo][Rr][Nn][Mm][Aa][Ss][Tt][Ee][Rr]|[Ll][Uu][Ss][Tt][Ii][Ff][Yy]|[Pp][Oo][Nn][Yy][_\-]?[Dd][Ii][Ff][Ff][Uu][Ss][Ii][Oo][Nn]|[Aa][Uu][Tt][Ii][Ss][Mm][Mm][Ii][Xx]|[Bb][Aa][Bb][Ee][Ss][_\-]?\d|[Nn][Ss][Ff][Ww][_\-]?(?:[Ll][Oo][Rr][Aa]|[Cc][Hh][Ee][Cc][Kk][Pp][Oo][Ii][Nn][Tt]|[Mm][Oo][Dd][Ee][Ll]))(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9.\-])(?:[a-z0-9-]+\.)*[Cc][Ii][Vv][Ii][Tt][Aa][Ii]\.[Cc][Oo][Mm](?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])|(?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])[Cc][Ii][Vv][Ii][Tt][Aa][Ii](?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:[Nn][Ee][Gg][Aa][Tt][Ii][Vv][Ee][_\-]?[Pp][Rr][Oo][Mm][Pp][Tt]|[Nn][Ee][Gg][_\-]?[Pp][Rr][Oo][Mm][Pp][Tt])(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+  match_without:
+    - "[Ll][Oo][Gg]4[A-Za-z]+|[Ll][Oo][Gg][Bb][Aa][Cc][Kk]"
+    - (?<![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])(?:(?:[Cc][Aa][Nn]|[Mm][Aa][Yy])[_\-](?:[Rr][Ee][Vv][Oo][Kk][Ee]|[Gg][Rr][Aa][Nn][Tt]|[Aa][Ss][Ss][Ii][Gg][Nn])[_\-]?[Mm][Oo][Dd][Ee][Rr][Aa][Tt][Ii][Oo][Nn]|[Mm][Oo][Dd][Ee][Rr][Aa][Tt][Oo][Rr][_\-]?(?:[Pp][Rr][Ii][Vv][Ii][Ll][Ee][Gg][Ee]|[Pp][Ee][Rr][Mm][Ii][Ss][Ss][Ii][Oo][Nn]|[Rr][Oo][Ll][Ee])[Ss]?)(?![A-Za-z0-9\u00C0-\u02AF\u0370-\u1FFF\u2C00-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD])
+context_questions:
+  - "Read the matched line before anything else and say what it actually is. The classes below are
+    counted rather than imagined: over the 31 pinned repositories this rule was built against -
+    236,434 files after its own path_without - it raises 19 candidates on 67 matched lines, and this
+    is what those 19 are. Read the share before the label, because the share decides where your
+    reading goes. (f) AN ORDINARY IMAGE-GENERATION CALL SITE, 12 of the 19 candidates and 53 of the
+    67 lines, in 4 of the 31 repositories: a negative_prompt or neg_prompt parameter on a Bedrock,
+    Vertex, HuggingFace, ModelsLab, Runware or Stability action, or on a self-hosted AUTOMATIC1111
+    or ComfyUI router, with no person-image path and no adult vocabulary anywhere in the file. THIS
+    IS NOT A DISMISSAL, AND IT IS NOT A FINDING EITHER. It establishes capability - the first
+    element of Art. 5(1a)(a)(ii), design, training, architecture, capabilities or user-facing
+    functionalities - and nothing else, and capability alone never engages this prohibition. Do not
+    close it here and do not upgrade it here: record it in those words and carry it to question 2
+    and then to the role and purpose questions. (c) AUDIO AND VIDEO MODERATION IN A CONFERENCE, 4 of
+    the 19 candidates and 11 of the 67 lines, all in one repository: DISABLE_MODERATION in a meeting
+    product governs who may unmute and is not content safety. A dismissal. (e) A LOGGING OR SEARCH
+    SETTING, 1 of the 19 candidates and 1 of the 67 lines: safesearch 0 on a web-search tool. A log4
+    configuration with threshold OFF is the same class and is removed by match_without before it
+    reaches you. Dismiss it, but say which of the two you are holding, because the same control
+    sitting on a generation path would not be dismissible. The remaining 2 candidates on that corpus
+    are neither a dismissal nor class (f): a build-time feature flag pair for an unfinished feature
+    (ENABLE_AGENT_CONTENT_MODERATION = false, on the line after ENABLE_AGENT_CLI_TOOLS = false), and
+    a harm threshold genuinely set to BLOCK_NONE - on a text completion endpoint, not an image path.
+    Read each as what it is. Three further classes are named below because they are the direction
+    error this rule must never make and because they are what a widened pattern would raise first;
+    no shipped pattern reaches any of them today, checked string by string on 2026-08-07, so if you
+    are looking at one then something has changed, and you should say so and stop. (a) A CONTENT
+    CLASSIFIER OR ITS THRESHOLD: nsfw_flag_threshold_porn, is_nsfw, nsfw_likelihood,
+    show_nsfw_content, a NudeNet, opennsfw, nsfwjs or Falconsai/nsfw_image_detection model id, a
+    SafetyChecker class - these are a safeguard being applied, the opposite direction from this
+    rule. (b) A CONTENT-WARNING TAXONOMY: a platform's label enumeration such as Adult Content or
+    Nudity in a social or video connector. (d) A MODERATOR PRIVILEGE: can_revoke_moderation and its
+    siblings are permissions on a person, and match_without removes them before they reach you. ONE
+    LIMIT ON EVERY SHARE ABOVE: those 31 repositories are ordinary open-source applications selected
+    for other rows, not the population this rule exists for, so the split says what this rule costs
+    an ordinary tree and says nothing about what its output looks like on a tree that does the work
+    these two points describe. Quote the line and its surroundings and name which class it is, or
+    say that it is none of them."
+  - "If the line survives question 1, what does it establish about the SYSTEM, and what does it not?
+    Trace outward from the matched location and name the files you read: where the images or frames
+    come from (an upload endpoint, a camera, a URL fetch, a dataset path), which call generates or
+    edits them, and whether any safety code sits between the two. The vocabulary of an image
+    generation or editing stack is images.generate, createImage, text2img, txt2img, img2img, an
+    inpaint or edit endpoint, a Stable Diffusion, ComfyUI, AUTOMATIC1111, SDXL, FLUX, DALL-E or
+    Midjourney reference, a Replicate, fal, Stability or Bedrock endpoint, a checkpoint or LoRA
+    path, and a negative_prompt or guidance parameter. A CivitAI reference is a weak corroborator on
+    its own, because that site hosts general-purpose checkpoints as well. Record what the code can
+    do; do not record what you think it is for. Every question below is about the second thing, and
+    none of it is in the tree."
+  - "Is the date of assessment before 2 December 2026, or on or after it? Say which, in the finding,
+    before wording anything else. Nothing in the engine conditions this rule's output on the date -
+    the effective_date field is declared in the schema and no code reads it - so the two branches
+    are held apart by the words the adjudicator writes and by nothing else. AI Act Art. 113, third
+    paragraph, point (a), as replaced by Art. 1(40)(a) of Regulation (EU) 2026/1744, defers Art.
+    5(1), first subparagraph, points (ba) and (bb) and Art. 5(1a) and (1b) to that date. BEFORE 2
+    DECEMBER 2026: these two points do not yet apply, every finding on this rule is preparation for
+    a date in the future, and it must be worded that way - do not describe present conduct as caught
+    by a prohibition that has not started. ON OR AFTER 2 DECEMBER 2026: the two points are in force,
+    the preparation framing is no longer accurate and must not be used, and a finding may speak in
+    the present tense about exposure. What does not change on that date is what a matched line
+    establishes, which is nothing: the elements are still the role, the intended purpose or the
+    deployer's purpose, the adequacy of safeguards and facts about depicted persons, all of them
+    answered below and none of them by the code. Report what the code names either way; the date
+    decides the tense, not the strength of the claim. The pre-existing Art. 5 prohibitions are
+    unaffected and keep 2 February 2025."
+  - "Which role does the scanned party hold for this system: provider (it develops the system, or
+    has it developed, and places it on the market or puts it into service under its own name or
+    trademark, whether for payment or free of charge - Art. 3(3)), deployer (it uses the system
+    under its own authority - Art. 3(4)), both, or neither? Art. 5(1a) applies a different test to
+    each and there is no test that applies to both, so this must be answered before any other
+    question about the test. Answer from packaging, publication, deployment configuration and the
+    declared documents, and quote what you relied on."
+  - "PROVIDER LIMB (i) - is the generation or manipulation of the material described in points (ba)
+    or (bb) the intended purpose of this AI system, as stated in the technical documentation,
+    instructions for use, marketing material, terms of service and store listing? Intended purpose
+    is a defined term of the AI Act, at Art. 3(12): the use for which an AI system is intended by
+    the provider, including the specific context and conditions of use, as specified in the
+    information supplied by the provider in the instructions for use, promotional or sales materials
+    and statements, as well as in the technical documentation. Every source that definition names is
+    a document the provider writes and it names no property of the system, so this is fixed by the
+    provider's own documentation and not by what the code can do. Ask the person running the scan or
+    read their declared documents. What the code is capable of does not answer this, and a source
+    identifier never does."
+  - DEPLOYER LIMB - if the scanned party is a deployer, does it use this system for the purpose of
+    generating or manipulating that material? Art. 5(1a)(b) prohibits use on that ground and on no
+    other. Two consequences, both from recital 12 of Regulation (EU) 2026/1744, and both matter
+    here. A deployer that uses the system for other purposes stays outside this prohibition even
+    where the provider's safeguards are absent, and accidental generation is not covered. But a
+    deployer that uses a well-safeguarded system for the prohibited purpose IS caught, and the
+    provider's diligence gives it no shelter. Purpose is a state of the operator; ask them.
+  - "PROVIDER LIMB (ii), FIRST ELEMENT - do this system's design, training, architecture,
+    capabilities or user-facing functionalities make that generation or manipulation a reasonably
+    foreseeable and reproducible outcome, without requiring significant technical modification? The
+    outcome must be BOTH foreseeable AND reproducible: a one-off output that cannot be reproduced
+    does not meet this element, and neither does one that needs significant technical modification
+    to obtain. Read this element on its own words. It asks about the OUTCOME, and the phrase
+    reasonably foreseeable and reproducible outcome is not the AI Act's defined term reasonably
+    foreseeable misuse (Art. 3(13)), which belongs to the second element and is asked at question 8.
+    Do not import that definition here, and do not answer the two elements together: they are joined
+    by and, so both have to be established. This is the element the detector's evidence speaks to,
+    and it speaks to it only as corroboration. Point to red-team reports, evaluation results, abuse
+    reports, model cards or incident records, not to the matched line alone."
+  - "PROVIDER LIMB (ii), SECOND ELEMENT - does the system have reasonable and adequate technical
+    safety measures and other safeguards that reliably prevent that generation or manipulation,
+    taking into account reasonably foreseeable misuse, AND correct observed or reported misuse? The
+    two purposes are joined by and: prevention without any route for acting on observed or reported
+    misuse does not satisfy this element. Reasonably foreseeable misuse is a defined term of the AI
+    Act, at Art. 3(13): the use of an AI system in a way that is not in accordance with its intended
+    purpose, but which may result from reasonably foreseeable human behaviour or interaction with
+    other systems, including other AI systems. It is anchored to the intended purpose answered at
+    question 5, so the misuse to be taken into account here is use that departs from the documented
+    purpose AND that may result from reasonably foreseeable human behaviour or from interaction with
+    other systems - not any use that can be imagined. Use that stays inside the intended purpose is
+    not misuse at all; that is limb (i), and it is a different question. The element is stated in
+    the negative, so a provider with such measures defeats limb (ii) entirely however foreseeable
+    the misuse is - which is why capability alone never engages this prohibition. Recital 12 lists
+    data cleaning, refusal training, safe prompt design and output controls, runtime prompt
+    guardrails, content classification and filtering mechanisms, usage restrictions, abuse detection
+    mechanisms, and notice and action mechanisms, and treats measures as adequate where they align
+    with state-of-the-art measures and demonstrably prevent or sufficiently reduce, in each specific
+    case, the likelihood of generating or manipulating such material, taking into account known and
+    reasonably foreseeable misuse, including reasonably foreseeable circumvention of the preventive
+    measures without significant technical modification. Those closing words are part of the
+    standard and they cut both ways: circumvention that is foreseeable without significant technical
+    modification has to be weighed rather than ignored, and the standard is met by preventing OR by
+    sufficiently reducing the likelihood, so a measure that could be circumvented is not disposed of
+    on that ground alone. Code can show that a filter or a refusal path EXISTS; it cannot show that
+    it is state-of-the-art, that it demonstrably reduces likelihood here, or that reported misuse is
+    actually corrected. Those are evidential questions for the operator. Note also that an
+    open-source release strategy is a proportionality factor in what corrective measures are
+    reasonable, and is not an exclusion."
+  - POINT (ba) - does the material this system generates or manipulates depict identifiable natural
+    persons, and for each such person is there consent to that generation or manipulation which is
+    freely given, specific, informed, unambiguous and explicit - all five, and consent to THAT
+    generation, not to something else? Where does that consent live and how is it demonstrated?
+    Whether a depicted person is identifiable, and whether that person consented, are facts about
+    people and about records held outside the repository, and no source vocabulary decides either.
+    Ask the operator.
+  - "POINT (ba), the two boundaries. REALISM: are the depictions realistic in recital 12's sense -
+    showing the person's face, voice or body in a credible real-life manner, regardless of how
+    realistic the context is - and do they show intimate parts, or sexually explicit activity?
+    Cartoonish or physically impossible depictions of a person's body are outside the point. On
+    intimate parts, recital 12 says the prohibition should be limited to realistic depictions of
+    intimate parts, NOTABLY the genitals, pubic area, anus, exposed buttocks or exposed female
+    breasts, nipples or areolae. That word notably is in the recital and it matters: the list
+    illustrates what counts rather than closing it, so a depiction is not outside the point merely
+    for being outside the list. MANIPULATION: where the system edits pre-existing material, does the
+    edit increase the exposure of any depicted intimate parts, or alter the nature of any depicted
+    sexually explicit activities? Art. 5(1b) provides that an edit doing neither does not constitute
+    manipulation for point (ba), and recital 12 gives changing a background, adding a text heading
+    and adjusting contrast or brightness as examples. Also outside: generative applications where
+    intimate parts are not exposed, or are exposed with the depicted person's consent - recital 12
+    names try-on applications and medical applications such as anatomical simulations and
+    mammograms."
+  - "POINT (bb) - does the material or performance this system generates or manipulates fall within
+    Article 2, point (c) or point (e), of Directive 2011/93/EU? Point (c) reaches generated material
+    by more than one route, and the shorter route is the one to check first. Its point (i) covers
+    material visually depicting a child engaged in real or simulated sexually explicit conduct, so a
+    generated or manipulated depiction of a real, identifiable child is inside the term with no need
+    for the later points - which is the route taken by a system that edits an uploaded photograph.
+    Its points (iii) and (iv) then extend the term to material where no real child exists at all:
+    any person appearing to be a child, and realistic images of a child. Point (e) reaches a live
+    exhibition aimed at an audience, including by means of information and communication technology,
+    so a real-time stream is within the point even where nothing is stored. This is a criminal-law
+    classification turning on appearing to be a child, primarily sexual purposes and realistic.
+    Point (bb) imports these Art. 2 definitions by article and point number, so the definitional
+    question is the Directive's own; what differs from one Member State to the next is the criminal
+    law around it, and the Directive itself is transposed in at most 26 Member States rather than 27
+    because Denmark is not bound by it. Either way the classification is answered by counsel and by
+    the declared purpose, never by source vocabulary, and this rule deliberately carries no
+    age-suggesting vocabulary for that reason."
+  - "POINT (bb) ONLY - does a without right defence apply under the national law of the Member State
+    concerned? Directive 2011/93/EU gives the phrase no definition in its Art. 2; its Art. 5(1)
+    makes it a condition of criminalisation and leaves the content to national law, so there are up
+    to 27 answers and none is in the repository. But two EU-level recitals gloss it, and BOTH must
+    be put to the operator, because between them they name three categories and only one of the
+    three survives into the newer instrument. FROM RECITAL (17) OF DIRECTIVE 2011/93/EU, three: (a)
+    MEDICAL, SCIENTIFIC OR SIMILAR PURPOSE - the term allows Member States to provide a defence for
+    conduct relating to such material having, for example, a medical, scientific or similar purpose;
+    (b) ACTIVITIES UNDER DOMESTIC LEGAL POWERS - the example given is legitimate possession by the
+    authorities in order to conduct criminal proceedings or to prevent, detect or investigate crime;
+    (c) HOTLINE REPORTING - the term does not exclude legal defences or similar principles relieving
+    a person of responsibility in specific circumstances, the example given being where telephone or
+    Internet hotlines carry out activities to report those cases. FROM RECITAL 13 OF REGULATION (EU)
+    2026/1744, category (b) again in a generative form - authorities generating or manipulating such
+    material to conduct criminal proceedings or to prevent, detect or investigate crime - plus
+    red-teaming and evaluation activities for the purpose of assessing the system's compliance with
+    this prohibition. Ask about all of them, not only the newer list. Branches 2 and 3 of this
+    rule's detector fire on moderation, classifier and content-filter identifiers, which is exactly
+    the code a CSAM-reporting hotline, a law-enforcement tool or a clinical or research system
+    carries, so categories (a) and (c) are live possibilities here rather than remote ones - how
+    often is not measured and is not claimed. An adjudicator who considers only recital 13 will
+    report the prohibition as broader than it was enacted for precisely those operators. Neither
+    recital creates a defence and neither answers the question: name which Member State's law is
+    relied on, and if the answer relies on red-teaming, state whether the activity is for assessing
+    compliance with this prohibition, because that recital's wording is narrow. Note also that the
+    same Directive leaves Member States a discretion at Art. 5(7) over Art. 2(c)(iii) material where
+    the person appearing to be a child was in fact 18 or older, and at Art. 5(8) over Art. 2(c)(iv)
+    material held solely for private use. Those are discretions on the criminal offence, not without
+    right defences, and they do not answer this question - they are one more reason to ask which
+    Member State's law applies rather than to assume the position is uniform. There is no equivalent
+    defence for point (ba)."
+  - "Do the scope provisions take the scanned party outside the Regulation? Three to check, none of
+    which is decided by the code. TERRITORY: Art. 2(1) reaches providers placing on the market or
+    putting into service in the Union wherever they are established, deployers established or
+    located in the Union, and third-country providers and deployers where the output produced by the
+    system is used in the Union. PERSONAL NON-PROFESSIONAL USE: Art. 2(10), read with Art. 3(4),
+    disapplies deployer obligations for a natural person acting purely personally and
+    non-professionally. Commission Guidelines C(2025) 5052 final para. 34 treats any regular
+    economic benefit and any professional, business, trade, occupational or freelance activity as
+    professional and states that criminal activities cannot be considered purely personal even where
+    no economic benefit is sought; para. 35 confines the exclusion to deployer obligations and
+    leaves the provider side untouched. Because the deployer limb of these two points turns on an
+    individual's purpose, this route matters far more here than it does for the older Art. 5
+    prohibitions, and it should be put to the adjudicating agent rather than assumed in either
+    direction. FREE AND OPEN-SOURCE RELEASE: Art. 2(12) excludes systems released under free and
+    open-source licences unless they are placed on the market or put into service as a system
+    falling under Article 5, so it gives a provider no shelter here (Guidelines para. 36); whether
+    it shelters a deployer whose own use is the prohibited act is not settled by any text or
+    guidance retrieved as at 2026-08-06, and should be recorded as an open question rather than
+    answered."
+evidence_template: "{file}:{line} matched one of three shapes this rule looks for against AI Act
+  Art. 5(1) points (ba) and (bb), which apply from 2026-12-02 - an identifier stating a nudification
+  purpose, a safety control being switched off, or an image-generation or person-image path. Which
+  of the three it is has to be read off the line, and it may be none of them. Three look-alikes have
+  been read on real matched lines: the disable-flag vocabulary also reaches a safeguard of the
+  opposite polarity, where a no_nsfw column defaulting to true excludes adult media rather than
+  switching a filter off; the inpainting mask vocabulary also reaches unrelated masking options,
+  such as a mask_url_credentials setting in error-tracking code, and reaches them inside a
+  documentation code sample as readily as in a running path; and a safesearch control set to 0 on a
+  web-search tool satisfies the second shape literally, on a surface these two points do not reach.
+  Context question 1 names the classes with their measured shares and says what to do with each.
+  This records what the code names, not what the operator does: the prohibition turns on role,
+  purpose, the adequacy of safeguards and facts about depicted persons, none of which is in this
+  repository"
+remediation_template: >
+  Check today's date before reading further, because it decides how this finding reads. AI Act
+
+  Art. 5(1), first subparagraph, points (ba) and (bb), and Art. 5(1a) and (1b), were inserted by
+
+  Art. 1(7) of Regulation (EU) 2026/1744 and apply from 2 December 2026 under Art. 113, third
+
+  paragraph, point (a).
+
+  BEFORE 2 DECEMBER 2026 this is preparation for a prohibition that has not started, not a finding
+
+  about present conduct, and there is time to answer the questions below on paper.
+
+  ON OR AFTER 2 DECEMBER 2026 the two points are in force and the preparation wording no longer
+
+  describes the position: the same questions decide whether the prohibition is engaged, but they are
+
+  no longer being answered ahead of time, and the Art. 99(3) tier attaches to a breach - up to
+
+  EUR 35 000 000 or 7 % of total worldwide annual turnover, whichever is higher, and for an SME or
+
+  start-up Art. 99(6) reverses that to whichever is lower.
+
+  What the date does not change is what this rule reports. A matched line names a surface; it
+
+  establishes none of the elements, on either side of 2 December 2026.
+
+  Read the matched line first. On the 31 repositories this rule was built against it raises 19
+
+  candidates, and 12 of the 19 are an ordinary image-generation call site - a negative_prompt
+
+  parameter on a hosted or a self-hosted image API. That is a capability rather than the subject
+
+  matter, and it is not closed at this step: it goes on to the four facts below. Five further
+
+  look-alikes are named in the rule and none of them is the subject matter - a content classifier or
+
+  its threshold, a platform content-warning label, a conference audio and video moderation feature,
+
+  a moderator role privilege, or a logging or web-search setting. If the line is one of those five,
+
+  record which and close it. One qualification, which context question 1 states in the same terms: a
+
+  safety control switched off is the fifth class only where it sits on a logging or a search path,
+  so
+
+  name the path you are relying on, because the same control on a generation path is not closed
+  here.
+
+  Otherwise, and that includes every image-generation call site, write down four facts next to the
+
+  code. Which of them decides the answer depends on the role, because the two limbs of the test draw
+
+  on different ones. (1) WHICH ROLE this
+
+  organisation holds for the system: provider, if it develops or commissions the system and places
+
+  it on the market or puts it into service under its own name; deployer, if it uses the system under
+
+  its own authority; or both. The test is different for each and there is no test that applies to
+
+  both. (2) WHAT THE STATED PURPOSE IS, in the technical documentation, instructions for use,
+
+  marketing, terms of service and store listing - not what the code can do. For a provider this is
+
+  the FIRST limb and it is sufficient on its own: where that generation is the intended purpose of
+
+  the system, nothing else has to be established. For a deployer it is the whole test. (3) WHAT THE
+
+  SAFEGUARDS ARE and whether they both prevent and correct. This is the provider's SECOND limb, and
+
+  it applies only where the first does not: it is engaged where the outcome is reasonably
+  foreseeable
+
+  AND reproducible without significant technical modification AND the system lacks reasonable and
+
+  adequate measures that reliably prevent it and correct observed or reported misuse. A system whose
+
+  measures do both sits outside that second limb however foreseeable the misuse is. (4) WHERE THE
+
+  IMAGES COME FROM and whether depicted persons are identifiable and have consented to that specific
+
+  generation - a fact about people and records, not about code.
+
+  Settle the purpose first, because none of the engineering changes further down reaches it. If fact
+
+  (2) shows that generating or manipulating that material is the intended purpose of the system, a
+
+  provider is inside the first limb however good its safeguards are; and if this organisation, as a
+
+  deployer, uses a system for the purpose of that generation, it is inside the deployer limb whoever
+
+  built the safeguards. No filter, toggle or reporting route changes either answer. What does: for
+
+  point (ba) material, a generation is outside the point where the identifiable person depicted has
+
+  given freely given, specific, informed, unambiguous and explicit consent to that specific
+  generation,
+
+  collected and stored as described below; for point (bb) material no consent takes it out, and the
+
+  one exception the point names, a without-right defence under national law, is a question for
+
+  counsel, not for code. Otherwise the change is to the purpose itself: stop offering or using the
+
+  system for that generation, take out the feature that offers it, and take the statements of that
+
+  purpose out of the interface copy, instructions for use, technical documentation, marketing, terms
+
+  of service and store listing, so that what the product does and what it says it is for agree. The
+
+  capability can stay (see the last paragraph); the purpose cannot. Once that generation is not the
+
+  purpose, the provider's second limb still applies, and the changes below are what answer it.
+
+  Engineering changes that move a system away from this subject matter, cheapest first. Keep the
+
+  safety path in the code rather than in configuration, so that a filter cannot be switched off by a
+
+  deployment variable or an admin toggle with no trace in the repository. Where a switch must be
+
+  exposed, default it on and record why it can be turned off. Add a route for acting on observed or
+
+  reported misuse - reporting, takedown, key revocation - because prevention alone does not satisfy
+
+  the second element. Where the system takes an uploaded photograph of a person into a generative
+
+  edit, decide whether it needs to, and if it does, collect and store demonstrable consent from the
+
+  depicted person for that generation, which is what recital 12 expects of a system intended for
+
+  such generation. Where a checkpoint, LoRA or hosted endpoint is named for adult output, record
+
+  what it is there for.
+
+  Two things that do not change the answer. Releasing under a free and open-source licence does not
+
+  take an Art. 5 practice out of the Regulation on the provider side (Art. 2(12), Commission
+
+  Guidelines C(2025) 5052 final para. 36). And removing the capability is not required: recital 12
+
+  states that this prohibition should not prevent providers from developing the technical
+
+  capabilities of AI systems to generate or manipulate images, videos, audio or similar material.
+data_categories:
+  - user.content
+  - user.biometric
+  - user.childrens
+fingerprint_spec: file

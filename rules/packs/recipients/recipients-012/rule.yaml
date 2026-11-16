@@ -1,0 +1,233 @@
+id: recipients-012
+pack: recipients
+short_name: Claim that the service cannot read what it stores
+problem_line:
+  text: Claim the service cannot read what it stores may overstate
+fix_line: Beside the claim, describe where the key is at every hop, what stays unencrypted, and any
+  recovery path.
+title: Custodian stores and re-serves content it declares it cannot read - the blind-custody claim
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(2) - 'processing' means 'any operation or set of
+      operations which is performed on personal data or on sets of personal data, whether or not by
+      automated means, such as collection, recording, organisation, structuring, storage, adaptation
+      or alteration, retrieval, consultation, use, disclosure by transmission, dissemination or
+      otherwise making available, alignment or combination, restriction, erasure or destruction'.
+      Cited because storage and 'making available' are each processing in their own right: a
+      custodian that cannot read what it holds is still storing and re-serving it"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(7) - 'controller' means 'the natural or legal person,
+      public authority, agency or other body which, alone or jointly with others, determines the
+      purposes and means of the processing of personal data'. Reference only: a definition
+      establishes no duty. It is cited because the role of a blind custodian is the question this
+      construct raises and the definition is where the answer starts"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(8) - 'processor' means 'a natural or legal person,
+      public authority, agency or other body which processes personal data on behalf of the
+      controller'. Reference only, and cited beside Art. 4(7) for the same reason: whether a party
+      that holds ciphertext it cannot open is a processor, a controller, or neither, is not settled
+      by any line this detector matches"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 28(3) - 'Processing by a processor shall be governed by
+      a contract or other legal act under Union or Member State law, that is binding on the
+      processor with regard to the controller and that sets out the subject-matter and duration of
+      the processing, the nature and purpose of the processing, the type of personal data and
+      categories of data subjects and the obligations and rights of the controller.' Cited because
+      where the blind custodian IS a processor the contract is owed whatever the custodian can read,
+      and the practical difficulty is real: the contract has to describe the type of personal data
+      and the categories of data subjects, and the custodian by design cannot inspect either"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 32(1)(a) - the measures a controller and processor
+      implement include, inter alia as appropriate, 'the pseudonymisation and encryption of personal
+      data'. Cited because this construct is that measure taken to its limit, and because the
+      subparagraph is about the measure rather than about who holds the key - which is the fact that
+      decides everything here
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1) - 'personal data' means 'any information relating
+      to an identified or identifiable natural person'. Reference only, and cited AS THE QUESTION
+      rather than as an answer: whether ciphertext is personal data in the hands of a party that
+      holds no key is contested, this detector does not decide it, and nothing in this rule's output
+      should read as though it had"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "GDPR (Regulation (EU) 2016/679), Recital 26 - in deciding whether a person is identifiable
+      'account should be taken of all the means reasonably likely to be used, such as singling out,
+      either by the controller or by another person to identify the natural person directly or
+      indirectly'. Reference only: a recital establishes no duty. It is cited as the test the
+      previous question is answered under, and 'or by another person' is the clause that makes who
+      else holds the key part of the answer"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    blind_custody_declaration:
+      - receiveencrypted
+      - receiveEncrypted
+      - ReceiveEncrypted
+      - FolderTypeReceiveEncrypted
+      - untrusted device
+      - untrustedDevice
+      - untrusted_device
+      - encrypted folder
+      - encryptedFolder
+      - encrypted_folder
+      - folderKey
+      - folder_key
+      - FOLDER_PASSWORD
+      - folderPassword
+      - end-to-end encrypted
+      - endToEndEncrypted
+      - e2ee
+    zk_custody_terms:
+      - zero-knowledge
+      - zeroKnowledge
+    decrypt_only_tool:
+      - VerifyOnly
+      - verifyOnly
+      - verify_only
+      - decryptOnly
+      - decrypt_only
+      - KeyGenerator
+      - keyGenerator
+      - storedEncryptionToken
+      - encryptionToken
+    key_derivation_calls:
+      - scrypt.Key
+      - hkdf.New
+      - Argon2id
+      - argon2id
+      - argon2.IDKey
+      - pbkdf2.Key
+      - PBKDF2
+      - deriveKey
+      - derive_key
+    aead_constructions:
+      - chacha20poly1305
+      - XChaCha20
+      - aes.NewCipher
+      - siv.NewGCM
+      - AES-SIV
+      - aessiv
+      - NewGCMWithNonceSize
+      - AEAD
+  vocabulary_matching:
+    blind_custody_declaration:
+      case_insensitive: true
+      separator_insensitive: true
+    zk_custody_terms:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?:^|[^A-Za-z0-9_])[A-Za-z0-9_]{0,24}(?&blind_custody_declaration)
+    - (?:^|[^A-Za-z0-9_])(?&decrypt_only_tool)\b
+    - (?:^|[^A-Za-z0-9_])(?&key_derivation_calls)[^\n]{0,80}(?:[Ff]older|[Ss]hare|[Vv]olume|[Vv]ault|[Pp]assphrase|[Pp]assword|[Rr]ecovery)
+    - (?:^|[^A-Za-z0-9_])(?&aead_constructions)
+    - (?:^|[^A-Za-z0-9_])(?&zk_custody_terms)(?!\s*[-_ ]?[Pp]roof)
+  also_in_file:
+    - (?:^|[^A-Za-z0-9_])[A-Za-z0-9_]{0,24}(?&blind_custody_declaration)
+    - (?:^|[^A-Za-z0-9_])(?&decrypt_only_tool)\b
+    - (?:^|[^A-Za-z0-9_])(?&key_derivation_calls)[^\n]{0,80}(?:[Ff]older|[Ss]hare|[Vv]olume|[Vv]ault|[Pp]assphrase|[Pp]assword|[Rr]ecovery)
+    - (?:^|[^A-Za-z0-9_])(?&zk_custody_terms)(?!\s*[-_ ]?[Pp]roof)
+context_questions:
+  - FOLLOW THE KEY, END TO END. This is the question the detector cannot answer and the reason the
+    finding exists. Where is the key or passphrase created, where is it stored, and does it ever
+    reach the storing party in any form - a configuration file on their host, a support or recovery
+    tool, a memory dump, a mobile client that syncs it to a server-side account? Quote each hop. The
+    declaration is true only if the answer is no everywhere, and a single path that hands the
+    custodian the key ends the claim.
+  - IS THERE A RECOVERY PATH, AND WHO CAN USE IT? A product that can restore access for a user who
+    has lost their passphrase has, somewhere, a way to reach the key. Quote the recovery flow if one
+    exists and say who can invoke it and what they must supply. Where a server-held escrow exists at
+    all - even one guarded by a mnemonic or a second factor - the custody is not blind in the same
+    sense, and the finding should say so plainly rather than treating the two designs as one.
+  - "WHAT IS NOT ENCRYPTED? Quote the metadata that stays in the clear: file names, sizes,
+    modification times, folder structure, device identifiers, the transfer graph. A custodian that
+    cannot read content but can see who exchanges how much with whom at what times holds personal
+    data of a different kind, and that is what the Art. 30 record has to describe. Say what is
+    visible rather than only what is protected."
+  - "WHICH PARTY IS THE SCANNED REPOSITORY - THE CUSTODIAN, OR THE PARTY WHOSE DATA IS HELD? The
+    same codebase often contains both sides. The duties differ completely: the custodian's question
+    is its own role and contract, and the depositing party's question is whether the arrangement
+    discharges its own security and recipient obligations. Say which side each matched file is on."
+  - IS THE DECLARED PROPERTY WHAT THE PRODUCT TELLS USERS? Compare the code to the product's own
+    words - the interface strings, the documentation, the store listing. A declaration in a
+    folder-type constant and a promise in marketing copy are different artefacts and they can drift
+    apart; where they disagree, that difference is itself the finding and belongs in the
+    declaration-reconciliation record rather than here.
+evidence_template: "{file}:{line} matched a construct in which one party stores and re-serves
+  content it declares it cannot read: the custody declaration itself, a decrypt-only tool or entry
+  point, a key derived from a folder or volume secret, or an authenticated cipher construction in a
+  file that also carries the declaration. This is NOT a report that a protection is in place and
+  must not be written up as one: it marks a CLAIM whose conditions have to be checked, and the
+  condition that decides it is where the key goes. It does not establish that the custodian cannot
+  read the content - only reading the key flow end to end decides that, which is context question 1.
+  It does not establish whether a recovery or escrow path exists, which is context question 2. It
+  does not establish what metadata remains in the clear, which is context question 3 and is
+  frequently the part that carries the recipient obligation. And it does not establish which side of
+  the arrangement this repository is on."
+remediation_template: |
+  Write down where the key is, at every hop, and keep that description beside the claim. "The
+  server cannot read your files" is a statement about key custody, and it is only as true as the
+  weakest path by which a key reaches the storing party.
+  Say what is NOT protected, in the same place the claim is made. File names, sizes, timings and
+  the device graph are usually visible to the custodian, they are usually personal data, and a
+  privacy statement that says "encrypted so we cannot read it" without naming them overstates the
+  measure.
+  Where a recovery path exists, describe it as one. An escrow guarded by a mnemonic is a real and
+  reasonable design, and it is a different design from having no path at all; the two should not be
+  described in the same words.
+  Where this repository is the custodian, do not skip the Art. 28(3) contract on the basis that
+  nothing readable is held. The contract has to name the type of personal data and the categories
+  of data subjects, and the interesting engineering consequence is that the custodian must get
+  those facts from the depositing controller rather than from its own store.
+  Where this repository is the depositing party, record the custodian as a recipient category. A
+  party that holds ciphertext is still a party that holds it.
+data_categories:
+  - user.content
+  - user.unique_id
+  - user.device
+fingerprint_spec: project
+reading_class:
+  class: existence
+  elements:
+    - name: file_names
+      question: 3
+      text: "the metadata that stays in the clear: file names"
+    - name: sizes
+      question: 3
+      text: "the metadata that stays in the clear: sizes"
+    - name: modification_times
+      question: 3
+      text: "the metadata that stays in the clear: modification times"
+    - name: folder_structure
+      question: 3
+      text: "the metadata that stays in the clear: folder structure"
+    - name: device_identifiers
+      question: 3
+      text: "the metadata that stays in the clear: device identifiers"
+    - name: transfer_graph
+      question: 3
+      text: "the metadata that stays in the clear: the transfer graph"

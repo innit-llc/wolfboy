@@ -1,0 +1,261 @@
+id: recipients-009
+pack: recipients
+short_name: Open and click tracking with a per-person identifier
+problem_line:
+  text: Opens and clicks tracked per person in sent messages
+fix_line: Record and disclose the per-person open and click measurement, and choose its legal basis
+  apart from the message's.
+title: First-party open and click tracking - a per-recipient identifier in a pixel or redirect URL
+jurisdiction:
+  - EU
+  - US
+legal_basis:
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 30(1)(d) - the controller's record of processing
+      activities \"shall contain all of the following information\", including \"the categories of
+      recipients to whom the personal data have been or will be disclosed including recipients in
+      third countries or international organisations\". An open pixel and a click redirect create a
+      disclosure at the moment the recipient's mail client or browser fetches them: the identifier
+      in the URL, the IP address and the user agent reach whoever operates that endpoint"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 13(1)(e) - where personal data are collected from the
+      data subject, the controller shall, at the time when personal data are obtained, provide the
+      data subject with "the recipients or categories of recipients of the personal data, if any".
+      Open and click tracking collects at the moment the message is displayed or a link is followed,
+      and the categories owed are the same ones the record carries
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 4(1) - \"personal data\" means \"any information
+      relating to an identified or identifiable natural person ('data subject'); an identifiable
+      natural person is one who can be identified, directly or indirectly, in particular by
+      reference to an identifier such as a name, an identification number, location data, an online
+      identifier or to one or more factors specific to the physical, physiological, genetic, mental,
+      economic, cultural or social identity of that natural person\". Reference only. It is cited
+      because this construct removes the usual doubt: a per-recipient identifier in a pixel URL is
+      an online identifier tied to a subscriber row, so the open and click records relate to an
+      identified person by construction, not by inference"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: 'GDPR (Regulation (EU) 2016/679), Art. 5(1)(b) - personal data shall be "collected for
+      specified, explicit and legitimate purposes and not further processed in a manner that is
+      incompatible with those purposes". Reference only: this detector establishes no purpose and
+      cannot. It is cited because measuring who opened a message and which link they followed is a
+      purpose distinct from sending the message, and the basis for the send does not automatically
+      extend to the measurement'
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-08-28
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: California Consumer Privacy Act, Cal. Civ. Code Sec. 1798.110(a)(4) (Title 1.81.5, as amended
+      by the California Privacy Rights Act) - a consumer may request that a business disclose "The
+      categories of third parties to whom the business discloses personal information." Sec.
+      1798.130(a)(5)(B) requires the same categories in the privacy policy
+    url: https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=1798.110.
+    checked_at: 2026-08-28
+    jurisdiction: US
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: medium
+rule_confidence: 0.69
+detector:
+  engine: builtin-regex
+  match:
+    - (?:px\.png|pixel\.(?:png|gif)|beacon\.(?:gif|png)|spacer\.gif|[Tt]racking[_
+      ]?[Pp]ixel|TRACKING_PIXEL|[Oo]pen[_-]?[Tt]racking|OPEN_TRACKING|TrackView|[Vv]iew[_]?[Tt]rack|VIEW_TRACK)
+    - <img[^\n]{0,200}(?:width=["']?1["']?[ \t]+height=["']?1["']?|height=["']?1["']?[
+      \t]+width=["']?1["']?)
+    - (?:[Ll]ink[_]?[Tt]rack|[Tt]rack[_]?[Ll]ink|LINK_TRACK|TRACK_LINK|[Cc]lick[_]?[Tt]rack|[Tt]rack[_]?[Cc]lick|CLICK_TRACK|TRACK_CLICK)
+    - (?:link_clicks|campaign_views|email_opens|email_clicks|message_opens|message_clicks|campaign_clicks|newsletter_opens|open_events|click_events|LinkClick|CampaignView|MessageOpen|EmailOpen|link-click|campaign-view|email-open|message-open)
+    - (?:[Oo]pen(?:ed)?_(?:at|count)|[Cc]lick(?:ed)?_(?:at|count)|last_?[Oo]pened|open_rate|click_rate)
+    - "[/:{][A-Za-z_]{0,20}(?:[Cc]amp|CAMP|[Mm]essage|MESSAGE|[Nn]ewsletter|[Mm]ailing)[A-Za-z_]{0,\
+      20}[/:}][^\\n\"',]{0,40}[/:{][A-Za-z_]{0,20}(?:[Ss]ub(?:scriber)?|SUB|[Rr]ecipient|RECIPIENT|\
+      [Cc]ontact)[A-Za-z_]{0,20}(?:[/:}]|[\"'`)]|$)"
+    - (?:R0lGOD[dl]hAQABA|iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB|GIF8[79]a\\x01\\x00\\x01\\x00|GIF8[79]a\\001\\000\\001\\000|0x47,[
+      \t]*0x49,[ \t]*0x46,[ \t]*0x38[^\n]{0,40}?0x01,[ \t]*0x00,[ \t]*0x01,[
+      \t]*0x00|\\x47\\x49\\x46\\x38[^\n]{0,24}?\\x01\\x00\\x01\\x00)
+    - (?:[Rr]edirect(?:_to|To|Response|[Rr]esponse)?[ \t]*[(
+      \t][^\n)]{0,60}?(?:[Ll]ink|[Ss]hort[Ll]ink|short_link|[Tt]racked[Ll]ink|tracked_link|[Cc]lick[Ll]ink|[Cc]ampaign[Ll]ink|[Bb]eacon|[Pp]ixel|[Tt]arget|[Hh]op)[
+      \t]*(?:\.|->|::)[
+      \t]*(?:[Uu]rl|URL|[Hh]ref|[Dd]est)\b|[Rr]edirect(?:_to|To|Response|[Rr]esponse)?[ \t]*[(
+      \t][^\n)]{0,60}?[A-Za-z_$][\w$]{0,30}[ \t]*(?:\.|->|::)[
+      \t]*(?:original_url|[Oo]riginal[Uu]rl|long_url|[Ll]ong[Uu]rl|target_url|[Tt]arget[Uu]rl|destination_url|[Dd]estination[Uu]rl|redirect_url|[Rr]edirect[Uu]rl|[Dd]estination)\b|Location:[^\n]{0,40}\$?[A-Za-z_$][\w$]{0,30}[
+      \t]*(?:->|\.)[
+      \t]*(?:original_url|long_url|target_url|destination_url|redirect_url|[Dd]estination)\b|Location:[^\n]{0,40}\$?(?:[Ll]ink|[Ss]hort[Ll]ink|short_link|[Tt]racked[Ll]ink|tracked_link)[
+      \t]*(?:->|\.)[ \t]*(?:[Uu]rl|URL|[Hh]ref)\b)
+  match_without:
+    - ^\s*(?:\*|//|/\*|#|<!--|<%#|--)
+context_questions:
+  - "MANDATORY: IS THE IDENTIFIER IN THE URL PER-RECIPIENT, AND CAN IT BE SWITCHED OFF? Read the URL
+    builder and say what the identifier is - a subscriber UUID, a database id, a hash, or a fixed
+    placeholder. The corpus case is instructive and should be looked for in any product that carries
+    this construct: one newsletter product substitutes a DUMMY UUID for the subscriber when its
+    `IndividualTracking` setting is off, and returns the pixel without recording anything when
+    `DisableTracking` is on. A product with those switches, set that way, is doing aggregate
+    measurement and not per-person measurement, and the finding should say so. Name the setting,
+    quote its default, and say which of the three states this deployment is in: per-recipient,
+    aggregate, or off."
+  - "WHO RECEIVES THE FETCH, AND WHAT ELSE DOES IT CARRY? The pixel and the redirect are fetched by
+    the recipient's mail client or browser, so the operator of the endpoint receives the identifier,
+    the IP address and the user agent - and for a mail client, often the address of a proxy the mail
+    provider runs rather than the person's own. Say whether the endpoint is the product's own
+    deployment, a vendor's, or a link-shortening service, because those are three different
+    recipients. Then say what the server-side handler stores: read the INSERT and list its columns."
+  - WHAT IS THE LAWFUL BASIS FOR THE MEASUREMENT, AS OPPOSED TO THE SEND? These are two purposes and
+    the second does not follow from the first. Art. 5(1)(b) is the provision; the practical question
+    is whether the recipient was told that opens and clicks are recorded, and whether consent was
+    asked where consent is the basis relied on. Where the product is a MULTI-TENANT mailer, the
+    operator running it is usually the processor and its customers the controllers, so the answer is
+    not one answer - say which party you are describing. Note also that several EU supervisory
+    authorities treat open tracking as requiring consent under the national transposition of
+    ePrivacy Art. 5(3), because the pixel is a read of the terminal equipment; that is a
+    national-law question this detector does not reach and it should be flagged rather than decided.
+  - "HOW LONG DOES THE STORE KEEP THE ROWS, AND WHAT ARE THEY LINKED TO? Read the table declaration
+    and say whether the recipient reference survives the recipient: the corpus case declares
+    `subscriber_id ... ON DELETE SET NULL` with the comment \"Subscribers may be deleted, but the
+    view counts should remain\", which is a deliberate and defensible retention design and belongs
+    in the finding as such. Then say whether any retention or purge job touches these rows, and
+    whether the product's own data-export feature includes them - one newsletter product's
+    `privacy.exportable` setting lists `campaign_views` and `link_clicks` among the exportable
+    categories, which is evidence that the operator already treats them as the subscriber's personal
+    data."
+  - IS THIS THE PRODUCT'S OWN TRACKER OR A VENDOR'S? This rule's subject is a tracker the project
+    built. If the matched line turns out to be an integration with a named vendor's open-tracking -
+    a mail service that rewrites the links itself, or an analytics SDK - then the vendor is the
+    recipient, recipients-005 and eu-consent-018 are the rules that speak to it, and this finding
+    should be re-labelled rather than answered here.
+  - "FOR A CONSTRUCT-SHAPE MATCH - A ONE-PIXEL IMAGE BODY OR A REDIRECT TO A STORED DESTINATION -
+    WHO EMBEDS THE URL, AND DO THEY ADD A RECIPIENT IDENTIFIER TO IT? THIS IS THE LIMB THE DETECTOR
+    DOES NOT REACH AND MUST NOT BE READ AS ANSWERING. The two clauses added on 2026-09-02 read what
+    the code DOES - it serves an image that cannot be looked at, and it forwards a request to an
+    address it holds - and neither reads a name, a vendor or a per-recipient parameter, because a
+    product that builds this surface itself has no vendor to name. Whether the surface measures a
+    NAMED PERSON therefore depends on how the embeddable URL is used, and the observed case shows
+    both halves of that: the product builds the URL as a fixed host and a slug with no recipient
+    parameter, and neither collect route reads a recipient id out of the fetch - so if a recipient
+    identifier is appended, it is appended by whoever pastes the URL into a message, which the
+    product neither builds in nor prevents. ASK THE PERSON RUNNING THE SCAN, or read their own
+    templates: is a per-recipient value appended when the pixel or link is embedded? Then read the
+    rest of the handler, because two things the clause cannot see decide the finding: whether
+    cache-defeating response headers accompany the image body - no-cache, no-store, must-revalidate,
+    a Pragma and an expired Expires are what make an open countable more than once - and whether an
+    event is written before the redirect, since a bare link shortener that records nothing has the
+    same one-line shape. Say plainly where the answer is that nothing per-person is measured."
+evidence_template: "{file}:{line} MATCHED A CONSTRUCT THIS RULE READS AS FIRST-PARTY OPEN OR CLICK
+  TRACKING - a measurement surface the product built itself, in which a per-recipient identifier
+  travels in a URL and the result is written to a store. What was established depends on the clause.
+  A TRACKING-PIXEL SPELLING or a 1x1 IMAGE ELEMENT establishes that the product emits an image whose
+  only purpose is to be fetched; the 1x1 clause reads the thing itself and the name clause reads
+  what the project called it. A LINK-TRACKING IDENTIFIER establishes that links are rewritten to
+  pass through the product before reaching their destination. A STORE NAMED FOR OPENS, VIEWS OR
+  CLICKS establishes that the result is kept. A ROUTE CARRYING A MESSAGE IDENTIFIER AND A RECIPIENT
+  IDENTIFIER TOGETHER establishes the per-person part, which is the whole difference between
+  aggregate measurement and profiling. A HARD-CODED ONE-PIXEL TRANSPARENT IMAGE BODY establishes
+  that this code holds, as a literal, an image one pixel wide and one pixel high with no visible
+  content - an image that exists to be fetched and cannot be looked at - which is the served-bytes
+  form of what the 1x1 element clause reads in emitted markup. A REDIRECT TO A STORED DESTINATION
+  establishes that a request arrives at this product's own endpoint and is forwarded to an address
+  the product holds in a record, which is the hop a click measurement is made of; IT DOES NOT
+  ESTABLISH THAT ANYTHING IS RECORDED BEFORE THE HOP, and a bare link shortener has the same
+  one-line shape. ITS RECEIVER SET INCLUDES THE BARE NOUN `target`, WHICH REACHES THE
+  AUTHENTICATION-REDIRECT FAMILY - independent verification found
+  `createRedirectResponse(redirectTarget.href, ...)` matching, which is a sign-in hop and not a
+  measured one. Read the receiver: where it is a request's own return address rather than a record
+  the product stores for somebody else, the row is position-correct and construct-wrong. Those two
+  clauses were added on 2026-09-02 and are the only two in this rule that read a CONSTRUCT rather
+  than a SPELLING, because a product that builds this surface itself has no vendor name and no
+  campaign vocabulary to recognise; what they leave for the reader is set out in
+  context_questions[5], and the two things worth reading next are the response headers beside the
+  image body - no-cache, no-store, must-revalidate, Pragma and an expired Expires, which are what
+  make an open countable - and the lines above the redirect, which is where the event write would
+  be. ONE READING NOTE ON THE SENTENCES THAT FOLLOW, BECAUSE THEY PRE-DATE THESE TWO CLAUSES AND ARE
+  LEFT WORD FOR WORD: where they say `the six`, they mean the six clauses this rule shipped with,
+  which are the six described above these two. A COUNTER OR TIMESTAMP - `opened_at`, `click_count` -
+  is the weakest of the six and the one to read carefully: a support ticket, a document and a
+  notification are all opened and clicked too, and the word alone does not make the line about
+  message tracking. THE LINK-TRACKING AND STORE-NAME CLAUSES CARRY THE SAME WEAKNESS IN A SECOND
+  FORM, AND THIS PARAGRAPH WAS EXTENDED TO THEM ON 2026-08-28 AFTER INDEPENDENT VERIFICATION READ
+  TWENTY MATCHED LINES AND FOUND TWO OF THIS KIND. Both clauses recognise a SPELLING, not a
+  construct, so a line that merely contains the spelling matches even where nothing is tracked and
+  no store exists. The two real instances, both in one repository: a CSS selector styling the column
+  that displays a tracked link (`td.link-click-url {`, a stylesheet rule), and a translation
+  catalogue entry giving the user-interface label for the tracking switch (`campaigns.trackLink`, a
+  JSON key whose value is the word in another language). A STYLESHEET RULE AND A TRANSLATION STRING
+  TRACK NOTHING. Ask what the line DOES before recording it: if it only names the feature - styles
+  it, labels it, documents it, or translates its label - the finding is position-correct and the
+  answer is that no tracking happens on this line. The clauses are not narrowed to exclude them,
+  because the same spellings are how the corpus names the real store and the real rewriting helper.
+  WHAT IS NOT ESTABLISHED. FIRST, WHETHER THE TRACKING IS PER-RECIPIENT IN THIS DEPLOYMENT. The
+  corpus case ships two switches - one that disables tracking entirely and one that substitutes a
+  dummy identifier for the subscriber - and the same source line means different things under each;
+  context_questions[0] asks which state this is. SECOND, WHO RECEIVES THE FETCH. The endpoint is
+  ordinarily the product's own deployment, so the receiving party is whoever runs it; THE JUDGEMENT
+  ABOUT WHETHER THE RECIPIENT IS A THIRD PARTY BELONGS TO LAYER 2. THIRD, WHETHER THERE IS A LAWFUL
+  BASIS, or whether the recipient was told: measuring opens is a purpose distinct from sending the
+  message and the detector reads neither purpose nor notice. FOURTH, WHETHER ANYTHING WAS EVER
+  RECORDED - a table can exist and stay empty, and a helper can exist and be unused. FIFTH, WHETHER
+  THE MESSAGE ITSELF REQUIRES REVIEW - the consent the send rests on is eu-consent-018's question
+  and not this one's. SIXTH, AND FOR THE TWO CONSTRUCT-SHAPE CLAUSES THIS IS THE ONE TO READ FIRST,
+  WHETHER A RECIPIENT IS IDENTIFIED AT ALL. Those clauses read behaviour and not names, so they fire
+  on a first-party measurement surface whether or not any deployment uses it per person. The
+  observed case builds its embeddable URL as a fixed host and a slug and reads no recipient id out
+  of the fetch, so a per-recipient measurement there would come from whoever embeds the URL rather
+  than from the product - a use it neither builds in nor prevents. THAT LIMB IS ASKED AND NEVER
+  INFERRED FROM SOURCE VOCABULARY, and context_questions[5] puts it to the person running the scan."
+remediation_template: >
+  This is a candidate for review against GDPR Art. 30(1)(d) and Art. 13(1)(e), and - where the
+
+  national transposition of ePrivacy Art. 5(3) treats an open pixel as access to the recipient's
+
+  terminal equipment - against that too. It is not a determination about this code.
+
+
+  ANSWER THE PER-RECIPIENT QUESTION FIRST, because it changes the whole finding. Tracking that
+
+  records a campaign-level count with no recipient identifier is a different processing operation
+
+  from tracking that records which named person opened which message at which time. If the product
+
+  has a switch for this, name it and record which way it is set; if it has none, that is the first
+
+  thing worth building.
+
+
+  WHERE THE MEASUREMENT IS PER-RECIPIENT AND IS KEPT, in the order these are usually worth doing:
+
+
+  1. WRITE IT DOWN. The record of processing activities needs the operation, its purpose and the
+     recipient category, and the privacy notice needs to tell recipients that opens and clicks are
+     measured. A notice that describes the mailing and is silent about the measurement is incomplete
+     on a fact this finding establishes.
+  2. DECIDE THE BASIS DELIBERATELY, and separately from the basis for sending the message. Where
+     consent is relied on, it has to be asked for the measurement; where legitimate interests are
+     relied on, the balancing has to be written down; and where a national authority treats the
+     pixel as terminal-equipment access, consent is the only available route.
+  3. GIVE THE ROWS A LIFETIME. An open and click store grows for ever by default and is rarely
+     needed at per-recipient granularity beyond the campaign report. Aggregating after a stated
+     period, and deleting the per-recipient rows, keeps the reporting and removes the profile.
+  4. OFFER THE SWITCH TO THE PERSON, not only to the operator. A recipient who asks not to be
+     measured is exercising Art. 21 in substance, and a product that can honour that per subscriber
+     is easier to run lawfully than one that cannot.
+  5. MAKE THE STORE PART OF ACCESS AND ERASURE. These rows are personal data; a subject access
+     response that omits them is incomplete, and an erasure that leaves them linked is not an
+     erasure. Where the schema deliberately keeps counts after the subscriber is deleted - a real and
+     defensible design - make sure the surviving row carries no reference back to the person.
+
+  DO NOT answer this finding by moving the tracking to a third-party mail service. That changes who
+
+  the recipient is, not whether the measurement happens, and it adds a processor to the record.
+data_categories:
+  - user.behavior
+  - user.contact
+  - user.device
+  - user.device.ip_address
+  - user.unique_id
+fingerprint_spec: project
+reading_class:
+  class: existence

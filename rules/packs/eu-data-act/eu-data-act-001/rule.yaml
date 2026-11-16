@@ -1,0 +1,876 @@
+id: eu-data-act-001
+pack: eu-data-act
+short_name: "Data export or published API: switching providers"
+problem_line:
+  text: Export gated, or no full structured export or open API found
+fix_line: Let customers port all exportable data unobstructed in a structured, machine-readable
+  format, and offer open interfaces.
+title: Export path, or a published interface description - Data Act Arts. 23(c), 30(2) and 30(5)
+  need checking
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "Data Act (Regulation (EU) 2023/2854), Art. 23, chapeau and point (c) - the obstacle-removal
+      duty, and the first sentence that is itself an operative duty. Chapeau: \"Providers of data
+      processing services shall take the measures provided for in Articles 25, 26, 27, 29 and 30 to
+      enable customers to switch to a data processing service, covering the same service type, which
+      is provided by a different provider of data processing services, or to on-premises ICT
+      infrastructure, or, where relevant, to use several providers of data processing services at
+      the same time. In particular, providers of data processing services shall not impose and shall
+      remove pre-commercial, commercial, technical, contractual and organisational obstacles, which
+      inhibit customers from:\". Point (c): \"porting the customer's exportable data and digital
+      assets, to a different provider of data processing services or to an on-premises ICT
+      infrastructure, including after having benefited from a free-tier offering;\". THREE THINGS TO
+      CARRY OUT OF THIS TEXT. First, the duty is stated as obstacle removal rather than as feature
+      delivery: the question a reader has to answer is not only whether an export control exists but
+      whether anything - commercial, technical, contractual or organisational - stops a customer
+      taking their data elsewhere. Second, the free-tier clause is the only qualifier inside point
+      (c), and it settles one thing and not another: a free tier does not put a customer's data
+      outside the porting duty, which is a different statement from the proposition that a free
+      service is a data processing service - the Art. 2(8) test still has to be met on its own.
+      Third, Art. 23 must be handled POINT BY POINT and never as a whole article, because Art. 31(1)
+      carves out point (d) while leaving point (c) standing; see the Art. 31 entry below."
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-08-06
+    jurisdiction: EU
+  - cite: "Data Act (Regulation (EU) 2023/2854), Art. 30(2) - open interfaces, free of charge, equally
+      available. \"Providers of data processing services, other than those referred to in paragraph
+      1, shall make open interfaces available to an equal extent to all their customers and the
+      concerned destination providers of data processing services free of charge to facilitate the
+      switching process. Those interfaces shall include sufficient information on the service
+      concerned to enable the development of software to communicate with the services, for the
+      purposes of data portability and interoperability.\" Four separate requirements are packed
+      into two sentences and a finding should name which one it is about: the interfaces are OPEN;
+      they are available TO AN EQUAL EXTENT to all customers and to the destination providers those
+      customers are moving to; they are FREE OF CHARGE; and they carry SUFFICIENT INFORMATION to
+      enable somebody to develop software against them for portability and interoperability. The
+      addressee limb - \"other than those referred to in paragraph 1\" - points at the providers
+      Art. 30(1) does NOT cover, i.e. everything that is not bare scalable and elastic
+      infrastructure, which is the platform and application layer this scanner's audience ships.
+      Recital 97 states the same pairing of format and interface: parties should \"enable the secure
+      and timely transfer of necessary data in a commonly used, machine-readable format, and by
+      means of open interfaces\". GDPR has no interface-provision duty at all, which is why this
+      entry has no analogue in eu-dsr-001 and cannot be covered by citing it."
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-08-06
+    jurisdiction: EU
+  - cite: 'Data Act (Regulation (EU) 2023/2854), Art. 30(5) - export all exportable data, on request, in
+      a structured, commonly used and machine-readable format. "In the case of switching between
+      services of the same service type, for which common specifications or the harmonised standards
+      for interoperability referred to in paragraph 3 of this Article have not been published in the
+      central Union standards repository for the interoperability of data processing services in
+      accordance with Article 35(8), the provider of data processing services shall, at the request
+      of the customer, export all exportable data in a structured, commonly used and
+      machine-readable format." The word ALL is operative and is the difference between this duty
+      and a per-object download. The Regulation does not further define structured, commonly used or
+      machine-readable anywhere in Chapter VI; it is the same phrase GDPR Art. 20(1) uses, and the
+      nearest gloss is Recital 85 on who does what: "the source provider of data processing services
+      is responsible for extracting the data to a machine-readable format, but it is the customer
+      and the destination provider of data processing services who are to upload the data to the new
+      environment, unless a specific professional transition service has been obtained." ONE WORDING
+      TRAP, MEASURED RATHER THAN ASSUMED: where the Data Act states the same requirement for
+      connected-product data in Arts. 3(1), 4(1) and 5(1) it writes "in a comprehensive, structured,
+      commonly used and machine-readable format" - one word longer. Art. 30(5) omits comprehensive,
+      and the Chapter II wording must not be imported into a Chapter VI finding. Recital 90 names
+      ISO/IEC 19941:2017 as "an important international standard constituting a reference for the
+      achievement of the objectives of this Regulation", which is a reference and not a requirement,
+      and is not a harmonised standard.'
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-08-06
+    jurisdiction: EU
+  - cite: 'Data Act (Regulation (EU) 2023/2854), Art. 34 - the same duties again, for a customer who is
+      not leaving. Art. 34(1): "The requirements laid down in Article 23, Article 24, Article 25(2),
+      points (a)(ii), (a)(iv), (e) and (f) and Article 30(2) to (5) shall also apply mutatis
+      mutandis to providers of data processing services to facilitate interoperability for the
+      purposes of in-parallel use of data processing services." So Art. 23 and Art. 30(2) to (5) -
+      every provision this rule rests on - apply a SECOND time, to multi-cloud and side-by-side use
+      rather than to switching away. The open-interfaces duty and the export duty are therefore owed
+      even to a customer with no intention of terminating, which is the answer to any argument that
+      a product owes nothing because nobody has ever asked to leave it. Art. 34(2) is the one place
+      egress charging survives, and only at cost: "Where a data processing service is being used in
+      parallel with another data processing service, the providers of data processing services may
+      impose data egress charges, but only for the purpose of passing on egress costs incurred,
+      without exceeding such costs." Note that Art. 34(1) expressly carries Art. 24 across as well,
+      so the source-provider limit travels with the duty into the in-parallel case.'
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-08-06
+    jurisdiction: EU
+  - cite: "Data Act (Regulation (EU) 2023/2854), Art. 1(2), Art. 2(1), Art. 2(38) and Art. 2(30) - the
+      duty's data scope is NOT limited to personal data, and its right-holder is not a natural
+      person. Art. 1(2) chapeau: \"This Regulation covers personal and non-personal data\", and
+      point (e): \"Chapter VI applies to any data and services processed by providers of data
+      processing services;\". The contrast with point (f) is load-bearing, because it shows the
+      drafters narrowing when they meant to: \"Chapter VII applies to any non-personal data held in
+      the Union by providers of data processing services.\". Art. 2(1) defines the term with no
+      personal-data limb: \"'data' means any digital representation of acts, facts or information
+      and any compilation of such acts, facts or information, including in the form of sound, visual
+      or audio-visual recording;\", while the neighbouring points exist precisely so the Regulation
+      can narrow elsewhere - \"'personal data' means personal data as defined in Article 4, point
+      (1), of Regulation (EU) 2016/679;\" and \"'non-personal data' means data other than personal
+      data;\". Art. 2(38) is the operative term in Arts. 23(c) and 30(5): \"'exportable data', for
+      the purpose of Articles 23 to 31 and Article 35, means the input and output data, including
+      metadata, directly or indirectly generated, or cogenerated, by the customer's use of the data
+      processing service, excluding any assets or data protected by intellectual property rights, or
+      constituting a trade secret, of providers of data processing services or third parties;\".
+      Read what that includes: INPUT AND OUTPUT data, METADATA, and data INDIRECTLY generated or
+      COGENERATED - observed and derived data, not only what the customer typed in - with the only
+      exclusions being the provider's or a third party's IP-protected assets and trade secrets. The
+      hook is the CUSTOMER'S USE OF THE SERVICE, not identifiability. Recital 82 confirms it: \"The
+      scope of exportable data should include, at a minimum, input and output data, including
+      metadata, directly or indirectly generated, or cogenerated, by the customer's use of the data
+      processing service, excluding any assets or data of the provider of data processing services
+      or a third party.\" Art. 2(30) settles who is owed the duty: \"'customer' means a natural or
+      legal person that has entered into a contractual relationship with a provider of data
+      processing services with the objective of using one or more data processing services;\". A
+      business customer that is a limited company holds an Art. 30(5) right and holds no GDPR Art.
+      20 right at all, because GDPR rights are owed only to a data subject, who is a natural
+      person."
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-08-06
+    jurisdiction: EU
+  - cite: "Data Act (Regulation (EU) 2023/2854), Art. 2(8) and Recitals 80 and 81 - whether the scanned
+      party is a provider of data processing services at all, WHICH IS AN OPEN QUESTION THIS RULE
+      INHERITS AND DOES NOT CLOSE. Art. 2(8): \"'data processing service' means a digital service
+      that is provided to a customer and that enables ubiquitous and on-demand network access to a
+      shared pool of configurable, scalable and elastic computing resources of a centralised,
+      distributed or highly distributed nature that can be rapidly provisioned and released with
+      minimal management effort or service provider interaction;\". Recital 81 puts the three
+      delivery models inside the category: \"As commonly understood by providers and users and in
+      line with broadly used standards, data processing services fall into one or more of the
+      following three data processing service delivery models, namely Infrastructure as a Service
+      (IaaS), Platform as a service (PaaS) and Software as a Service (SaaS).\" IT DOES NOT SAY THE
+      CONVERSE. The proposition that every data processing service is one of the three delivery
+      models is not the proposition that every hosted application sold as a subscription is a data
+      processing service, and Art. 2(8)'s own test still has to be met; the
+      data-act-switching-terms-23-25 checklist, which ships in this bundle, records that this file's
+      sibling asserted the converse between 2026-07-28 and 2026-07-29 and withdrew it, and that
+      record is not restated here. Recital 80 glosses the last clause of Art. 2(8) and points AWAY
+      from the widest reading: \"The capability of the customer of the data processing service to
+      unilaterally self-provision computing capabilities, such as server time or network storage,
+      without any human interaction by the provider of data processing services could be described
+      as requiring minimal management effort and as entailing minimal interaction between provider
+      and customer.\" The definition says \"with minimal management effort or service provider
+      interaction\" - a disjunction - while the recital describes the paradigm case as the customer
+      self-provisioning without any human interaction at all, so a provider-administered application
+      is the genuinely arguable case rather than a clear inclusion. This is a fact about the PRODUCT
+      and the way it is sold. It is asked of the person running the scan or read from their declared
+      documents, and it is never inferred from vocabulary in the tree."
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-08-06
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Data Act (Regulation (EU) 2023/2854), Art. 24 - the SOURCE-provider limit, checked against
+      the operative text rather than assumed. \"The responsibilities of providers of data processing
+      services laid down in Articles 23, 25, 29, 30 and 34 shall apply only to the services,
+      contracts or commercial practices provided by the source provider of data processing
+      services.\" The list names Articles 23 and 30, so it reaches BOTH of this rule's articles, and
+      it names Article 34, so it reaches the in-parallel-use re-application too. A destination-side
+      provider - one whose product IMPORTS a customer's data from a competitor - is a data
+      processing service and owes none of these duties on that account. This bears directly on one
+      measured detection hazard: a sweep of real repositories on 2026-08-06 found 180 lines across
+      15 of them carrying competitor-IMPORT vocabulary (importFromAirtable, migrate from slack,
+      import from github), which evidences that a product ACCEPTS switchers and says nothing about
+      whether a customer can leave it. Treating that as evidence of an export capability would
+      invert the direction of the duty, which is why no branch of this detector matches it."
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-08-06
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Data Act (Regulation (EU) 2023/2854), Art. 31 - the specific regime, and it has TWO limbs
+      which except different amounts. Art. 31(1): \"The obligations laid down in Article 23, point
+      (d), Article 29 and Article 30(1) and (3) shall not apply to data processing services of which
+      the majority of main features has been custom-built to accommodate the specific needs of an
+      individual customer or where all components have been developed for the purposes of an
+      individual customer, and where those data processing services are not offered at broad
+      commercial scale via the service catalogue of the provider of data processing services.\" READ
+      THE LIST. It names Article 23 point (d), Article 29, and Article 30(1) and (3). This rule
+      rests on Article 23 point (c), Article 30(2) and Article 30(5), and NONE of them is on that
+      list - so a custom-built service that is not offered at broad commercial scale still owes the
+      whole of this rule's subject matter. That is the same position as Art. 25 (coverage map Part C
+      row 18) and the OPPOSITE of Art. 29 (row 20), which is named in 31(1) and switches off under
+      either limb. Art. 31(2) is the limb that does reach this rule, and it reaches it completely:
+      \"The obligations laid down in this Chapter shall not apply to data processing services
+      provided as a non-production version for testing and evaluation purposes and for a limited
+      period of time.\" Chapter VI is Articles 23 to 31, so Arts. 23 and 30 fall with it. Its three
+      conditions are cumulative: a non-production version, AND for testing and evaluation purposes,
+      AND for a limited period of time. ART. 34 IS NOT IN CHAPTER VI AND THIS FILE SAID OTHERWISE
+      UNTIL 2026-08-06, WHICH WAS A FALSE PREMISE CARRYING A CONCLUSION. The Official Journal's own
+      structure puts Art. 34 in CHAPTER VIII (Interoperability, Arts. 33 to 36), between Art. 33 and
+      Art. 35; Chapter VI ends at Art. 31 and Chapter VII (Arts. 32) sits between them. So Art.
+      31(2)'s words \"this Chapter\" do not reach Art. 34 by chapter membership. Whether they reach
+      it another way is a REAL AND UNSETTLED QUESTION, and it is left open here rather than
+      answered: Art. 34(1) applies \"the requirements laid down in Article 23 ... and Article 30(2)
+      to (5) ... mutatis mutandis\", so one reading is that the borrowed requirements arrive with
+      their Chapter VI qualifications, Art. 31 included, and another is that Art. 31(2) is expressly
+      confined to its own Chapter and a duty imposed from outside it survives. Nothing in the
+      operative text settles which, no Commission guidance addresses it, and a finding must not
+      assert either. What is certain is narrower and is what a reader should be told: Art. 31(2)
+      disapplies the Arts. 23(c), 30(2) and 30(5) half of this row for a service that meets its
+      three cumulative conditions. Art. 31(3) adds a disclosure duty wherever either limb is relied
+      on: \"Prior to the conclusion of a contract on the provision of the data processing services
+      referred to in this Article, the provider of data processing services shall inform the
+      prospective customer of the obligations of this Chapter that do not apply.\" Whether a service
+      is custom-built, whether it is offered at broad commercial scale, and whether an environment
+      is a time-limited non-production version are facts about the product and its contracts, asked
+      of the person running the scan."
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-08-06
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Data Act (Regulation (EU) 2023/2854), Art. 30(6) - the ceiling, and it is narrower than it is
+      usually stated. \"Providers of data processing services shall not be required to develop new
+      technologies or services, or disclose or transfer digital assets that are protected by
+      intellectual property rights or that constitute a trade secret, to a customer or to a
+      different provider of data processing services or compromise the customer's or provider's
+      security and integrity of service.\" Three reliefs, and each is bounded. No duty to develop
+      NEW technologies or services - which does not excuse failing to expose data the service
+      already holds through an interface it already has. No duty to disclose or transfer digital
+      assets protected by intellectual property rights or constituting a trade secret - and Art.
+      2(38) has already excluded exactly those from the definition of exportable data, so this is a
+      restatement at the point of transfer rather than a second carve-out. No duty to compromise
+      security or integrity of service. Recital 82 adds the limit on the limit: those exemptions
+      \"should not impede or delay the switching process\". The provider's own IP is excluded; the
+      CUSTOMER'S data is not, and a claim that a customer's records are the provider's trade secret
+      is the kind of assertion a finding should ask to see substantiated rather than accept."
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-08-06
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Data Act (Regulation (EU) 2023/2854), Art. 30(3) and Art. 35(8), and the implementing-act
+      status as at 2026-08-06. Art. 30(3): \"For data processing services other than those referred
+      to in paragraph 1 of this Article, providers of data processing services shall ensure
+      compatibility with common specifications based on open interoperability specifications or
+      harmonised standards for interoperability at least 12 months after the references to those
+      common specifications or harmonised standards for interoperability of data processing services
+      were published in the central Union standards repository for the interoperability of data
+      processing services following the publication of the underlying implementing acts in the
+      Official Journal of the European Union in accordance with Article 35(8).\" Note the addressee:
+      \"other than those referred to in paragraph 1\" - the SAME audience as 30(2) and 30(5), namely
+      the platform and application layer, not bare infrastructure. Recital 100 confirms it in the
+      legislator's own words, describing the standards power as existing \"where market-driven
+      processes have not demonstrated a capacity to establish common specifications or standards
+      that facilitate effective cloud interoperability at the PaaS and SaaS levels\". Art. 35(8) is
+      the mechanism: \"For the purpose of Article 30(3), the Commission shall, by means of
+      implementing acts, publish the references of harmonised standards and common specifications
+      for the interoperability of data processing services in a central Union standards repository
+      for the interoperability of data processing services.\" NO SUCH IMPLEMENTING ACT HAS BEEN
+      ADOPTED AND THE CENTRAL UNION STANDARDS REPOSITORY HAS NOT BEEN ESTABLISHED, checked rather
+      than assumed on 2026-08-06, and the checks are these: the Commission's Rolling Plan for ICT
+      Standardisation still describes the repository as to-be-established and its preparatory study
+      was published only in March 2026; the standardisation request that has been accepted, M/614,
+      is aimed at Art. 33 and not Art. 35; and Commission Implementing Regulation (EU) 2026/818,
+      which surfaces on a keyword search, was fetched (CELEX 32026R0818) and is made under
+      Regulation (EU) 2024/900 on political advertising, which has nothing to do with the Data Act.
+      Delegated acts under this Regulation are confined by Art. 45(2) to Art. 29(7) and Art. 33(2),
+      so there is no delegated-act power over this subject matter either. THE CONSEQUENCE: Art.
+      30(3) currently has no operative content, its 12-month clock has never started, and Art. 30(5)
+      is the live export duty today for every same-service-type switch. THIS WILL INVERT. When the
+      first Art. 35(8) implementing act lands, Art. 30(3) switches on 12 months later for the
+      service types it covers and Art. 30(5) recedes for those types, at which point this rule needs
+      re-reading. The negative fact is time-sensitive and should be re-checked before anything
+      ships."
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-08-06
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Data Act (Regulation (EU) 2023/2854), Art. 1(5) and Recital 35 - the GDPR relationship
+      clause, and what it does NOT do. Art. 1(5): \"This Regulation is without prejudice to Union
+      and national law on the protection of personal data, privacy and confidentiality of
+      communications and integrity of terminal equipment, which shall apply to personal data
+      processed in connection with the rights and obligations laid down herein, in particular
+      Regulations (EU) 2016/679 and (EU) 2018/1725 and Directive 2002/58/EC, including the powers
+      and competences of supervisory authorities and the rights of data subjects. Insofar as users
+      are data subjects, the rights laid down in Chapter II of this Regulation shall complement the
+      rights of access by data subjects and rights to data portability under Articles 15 and 20 of
+      Regulation (EU) 2016/679.\" Two readings, and the second is easy to miss. First, this is the
+      standard without-prejudice pattern: the Data Act ADDS a duty and does not narrow itself to the
+      GDPR's scope; the GDPR prevails only on CONFLICT, and an export duty wider than Art. 20 is not
+      in conflict with Art. 20. Second, THE SENTENCE THAT EXPRESSLY BRIDGES TO GDPR ARTS. 15 AND 20
+      IS ABOUT CHAPTER II, NOT CHAPTER VI. The legislator wrote a complementarity clause for the
+      connected-product chapter and wrote none for the switching chapter, so there is no mechanism
+      anywhere in this Regulation that narrows Chapter VI back to personal data. Recital 35 states
+      the difference in the drafters' own words - it is written in the Chapter II context, and its
+      reasoning about the narrowness of Art. 20 is general: \"Article 20 of Regulation (EU) 2016/679
+      specifies that it pertains to data provided by the data subject\" but does not settle whether
+      that reaches passively observed data, whereas this Regulation grants rights \"irrespective of
+      their nature as personal data\", and \"Unlike Article 20 of Regulation (EU) 2016/679, this
+      Regulation mandates and ensures the technical feasibility of third party access for all types
+      of data falling within its scope, whether personal or non-personal\". FOUR AXES ON WHICH THIS
+      DUTY IS WIDER THAN GDPR ART. 20, each traceable to a quote in this file: the KIND of data (any
+      data, not personal data only); WHICH data of that kind (input AND output data, metadata,
+      indirectly generated and cogenerated data, against the limit in Art. 20 to data the person has
+      provided); the LEGAL-BASIS precondition (none here, against the condition in Art. 20(1) that
+      processing rest on consent or contract and be carried out by automated means); and WHO HOLDS
+      THE RIGHT (a customer, expressly including a legal person, against a data subject who must be
+      a natural person). And one duty with no GDPR analogue at all: Art. 30(2)'s open interfaces."
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-08-06
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: "Data Act (Regulation (EU) 2023/2854), Art. 50 and Art. 1(3), point (f) - the date, and who it
+      reaches. Art. 50: \"It shall apply from 12 September 2025.\" Art. 50 then grants deferrals to
+      exactly three things and CHAPTER VI IS NOT AMONG THEM: \"The obligation resulting from Article
+      3(1) shall apply to connected products and the services related to them placed on the market
+      after 12 September 2026.\", \"Chapter III shall apply in relation to obligations to make data
+      available under Union law or national legislation adopted in accordance with Union law, which
+      enters into force after 12 September 2025.\", and \"Chapter IV shall apply to contracts
+      concluded after 12 September 2025.\" Neither Art. 23 nor Art. 30 nor Art. 34 carries a date of
+      its own. SO THIS DUTY HAS BEEN IN APPLICATION SINCE 12 SEPTEMBER 2025, and unlike the Cyber
+      Resilience Act rows in this repository THERE IS NO PREPARATION-PHASE FRAMING AVAILABLE HERE: a
+      finding is worded as a present obligation, not as preparation for a future date. The only
+      dates anywhere inside Chapter VI are in Art. 29, and there are two of them rather than one:
+      the switching-charge cliff of 12 January 2027 set by Art. 29(1), and the window set by Art.
+      29(2) running \"From 11 January 2024 to 12 January 2027\", during which reduced switching
+      charges are permitted. Both belong to coverage map Part C row 20 and neither may be imported
+      into this row. Two further points on exposure. There is NO micro or small-enterprise carve-out
+      anywhere in Chapter VI, unlike Chapter II, which has one in Art. 7(1). And Art. 1(3), point
+      (f) applies the Regulation to \"providers of data processing services, irrespective of their
+      place of establishment, providing such services to customers in the Union\", so a provider
+      established outside the Union that serves Union customers is inside it. Penalties are for the
+      Member States to set under Art. 40 rather than being fixed in the Regulation, so no fine
+      ceiling is stated here; authority designation was still fragmented across Member States in
+      mid-2026, which is the reason this row's practical exposure is recorded as low today and
+      rising."
+    url: http://publications.europa.eu/resource/celex/32023R2854
+    checked_at: 2026-08-06
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2025-09-12
+sunset: null
+superseded_by: null
+severity: medium
+rule_confidence: 0.55
+applicability_preconditions:
+  - scope.data_processing_service
+detector:
+  engine: builtin-regex
+  shared_vocabulary:
+    - export_document_writers
+  resolve_local_values: true
+  match:
+    - (?<![A-Za-z0-9])(?:workspace|Workspace|WORKSPACE|organization|Organization|ORGANIZATION|organisation|Organisation|ORGANISATION|tenant|Tenant|TENANT|project|Project|PROJECT|account|Account|ACCOUNT|team|Team|TEAM|site|Site|SITE|instance|Instance|INSTANCE|company|Company|COMPANY)[_-]?(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?(?:export|Export|EXPORT|dump|Dump|DUMP)\w*|(?<![A-Za-z0-9])(?:export|Export|EXPORT|dump|Dump|DUMP)[_-]?(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?(?:workspace|Workspace|WORKSPACE|organization|Organization|ORGANIZATION|organisation|Organisation|ORGANISATION|tenant|Tenant|TENANT|project|Project|PROJECT|account|Account|ACCOUNT|team|Team|TEAM|site|Site|SITE|instance|Instance|INSTANCE|company|Company|COMPANY)\w*|(?<![A-Za-z0-9])(?:export|Export|EXPORT)[_-]?(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?(?:all|All|ALL|everything|Everything|EVERYTHING)\w*|(?<![A-Za-z0-9])(?:bulk|Bulk|BULK|mass|Mass|MASS)[_-]?(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?(?:export|Export|EXPORT|dump|Dump|DUMP)\w*|(?<![A-Za-z0-9])(?:export|Export|EXPORT|dump|Dump|DUMP)[_-]?(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?(?:bulk|Bulk|BULK|mass|Mass|MASS)\w*
+    - (?<!\bfrom\s{0,4})(?<!\bimport\s{0,4})(?<!\brequire\s*\(\s*)(?<!\bmock\s*\(\s*)["'`](?!\.{1,2}/)[^"'`\s\n]{0,120}(?<!:)(?<!import)/export(?![^"'`\s\n]{0,80}\.(?:png|PNG|jpe?g|JPE?G|gif|GIF|svg|SVG|webp|WEBP|avif|AVIF|ico|ICO)["'`])(?:[/"'`?-]|$)
+    - (?<![A-Za-z0-9])export[_-](?:job|process|worker|queue|task)\w*|(?<![A-Za-z0-9])(?:job|process|worker|queue|task)[_-]export\w*|(?<![A-Za-z0-9])export(?:Job|Process|Worker|Queue|Task)\w*|(?<![A-Za-z0-9])Export[A-Za-z]{0,24}(?:Job|Process|Worker|Queue|Task)\b
+    - (?<![A-Za-z0-9])exportAs\b|(?<![A-Za-z0-9])export_as\b|(?<![A-Za-z0-9])EXPORT_AS\b|(?<![A-Za-z0-9])dumpAs\b|(?<![A-Za-z0-9])dump_as\b|(?<![A-Za-z0-9])DUMP_AS\b|(?<![A-Za-z0-9])(?:export|Export|EXPORT)[_-]?(?:format|Format|FORMAT)\w*|\b(?:csv|CSV|Csv|json|Json|JSON|jsonl|Jsonl|ndjson|Ndjson|xlsx|Xlsx|XLSX|parquet|Parquet)[_-]?[A-Za-z]{0,24}[_-]?(?:export|Export|EXPORT)(?:er|Er|ER)?\w*|(?<![A-Za-z0-9])(?:export|Export|EXPORT)[._-]?[A-Za-z]{0,24}[._-]?(?:csv|CSV|Csv|json|Json|JSON|jsonl|Jsonl|ndjson|Ndjson|xlsx|Xlsx|XLSX|parquet|Parquet)\w*|(?<![A-Za-z0-9])(?:Csv|CSV|Json|JSON|Jsonl|Ndjson|Xlsx|XLSX|Parquet)[A-Za-z]{0,24}Export\w*
+    - (?:(?<![A-Za-z0-9])|(?<=[a-z])(?=[A-Z]))Export[A-Za-z]{0,24}(?:csv|CSV|Csv|json|Json|JSON|jsonl|Jsonl|ndjson|Ndjson|xlsx|Xlsx|XLSX|parquet|Parquet)\w*
+    - ^\s*["']?openapi["']?\s*:\s*["']?[23]\.|^\s*["']?swagger["']?\s*:\s*["']?[12]\.
+    - (?<![A-Za-z0-9])ENABLE_ADMIN_EXPORT\b|(?<![A-Za-z0-9])admin[_-]export\w*|(?<![A-Za-z0-9])adminExport\w*|(?<![A-Za-z0-9])export[_-]?all[_-]?users\w*|(?<![A-Za-z0-9])exportAllUsers\w*|(?<![A-Za-z0-9])export_users_to_csv\w*|(?<![A-Za-z0-9])exportUsersToCsv\w*|(?<![A-Za-z0-9])startUsersBatchExport\w*|(?<![A-Za-z0-9])system_users_export\w*|(?<![A-Za-z0-9])ENABLE_ADMIN_DUMP\b|(?<![A-Za-z0-9])admin[_-]dump\w*|(?<![A-Za-z0-9])adminDump\w*|(?<![A-Za-z0-9])dump[_-]?all[_-]?users\w*|(?<![A-Za-z0-9])dumpAllUsers\w*|(?<![A-Za-z0-9])dump_users_to_csv\w*|(?<![A-Za-z0-9])dumpUsersToCsv\w*|(?<![A-Za-z0-9])startUsersBatchDump\w*|(?<![A-Za-z0-9])system_users_dump\w*
+    - ^[ \t]*["']?operationId["']?[ \t]*:[ \t]*["']?\w*(?:export|Export|EXPORT|dump|Dump|DUMP)\w*
+    - (?:^|[^A-Za-z0-9_])(?&export_document_writers)(?![A-Za-z0-9_])[ \t]*\(
+    - (?<![A-Za-z0-9])SwaggerUi::new[ \t]*\(|(?<![A-Za-z0-9])OpenApiRouter::with_openapi[
+      \t]*\(|#\[derive\([^)\n]{0,80}OpenApi[,)]|#\[(?:utoipa::)?openapi[
+      \t]*\(|(?<![A-Za-z0-9])utoipa::openapi(?![A-Za-z0-9_])|(?<![A-Za-z0-9])SwaggerModule\.setup[
+      \t]*\(|(?<![A-Za-z0-9])new[ \t]+DocumentBuilder[ \t]*\(|(?<![A-Za-z0-9])swaggerJsdoc[
+      \t]*\(|(?<![A-Za-z0-9])swaggerUi\.(?:setup|serve)(?![A-Za-z0-9_])|["'`]swagger-(?:jsdoc|ui-express|ui-dist)["'`]|@OpenAPIDefinition(?![A-Za-z0-9_])|(?<![A-Za-z0-9])GroupedOpenApi\.builder[
+      \t]*\(|(?<![A-Za-z0-9])new[ \t]+OpenAPI[ \t]*\([
+      \t]*\)|(?<![A-Za-z0-9])springdoc[.-](?:swagger-ui|api-docs|swagger_ui|api_docs)(?![A-Za-z0-9])|(?<![A-Za-z0-9])SpectacularAPIView(?![A-Za-z0-9_])|(?<![A-Za-z0-9])SpectacularSwaggerView(?![A-Za-z0-9_])|(?<![A-Za-z0-9])SPECTACULAR_SETTINGS(?![A-Za-z0-9_])|(?<![A-Za-z0-9])drf_spectacular(?![A-Za-z0-9_])|(?<![A-Za-z0-9])get_schema_view[
+      \t]*\(|(?<![A-Za-z0-9])(?:http|gin|echo|fiber)Swagger\.WrapHandler(?![A-Za-z0-9_])|["'`][^"'`\s]{0,120}/(?:openapi|swagger)\.(?:json|yaml|yml)["'`]|["'`](?:[A-Za-z][A-Za-z0-9+.-]{1,9}://[^"'`\s]{0,100}|\$\{[^"'`\s]{0,60}\}[^"'`\s]{0,60}|\{\{?[^"'`\s}]{0,60}\}\}?[^"'`\s]{0,60}|#\{[^"'`\s]{0,60}\}[^"'`\s]{0,60})?(?:/[^"'`\s/]{1,60}){0,8}/(?:v[0-9]{1,2}/)?api-docs(?:[/"'`?]|$)|["'`][^"'`\s]{0,120}/swagger-ui(?:[/"'`?]|$)
+    - ^[ \t]*(?:extend[ \t]+)?type[ \t]+[A-Z][A-Za-z0-9_]*(?:[ \t]+implements[ \t]+[^{\n]{0,160})?[
+      \t]*(?:@[A-Za-z_][A-Za-z0-9_]*(?:\([^)\n]{0,160}\))?[ \t]*)*\{|^[ \t]*schema[
+      \t]*(?:@[A-Za-z_][A-Za-z0-9_]*[ \t]*)*\{[ \t]*$|^[ \t]*scalar[ \t]+[A-Z][A-Za-z0-9_]*[
+      \t]*(?:@[A-Za-z_][A-Za-z0-9_]*(?:\([^)\n]{0,160}\))?[ \t]*)*$|^[ \t]*directive[
+      \t]+@[A-Za-z_][A-Za-z0-9_]*[^\n]{0,200}[ \t]on[ \t]+(?:repeatable[ \t]+)?[A-Z][A-Z_]{2,}
+    - <!ENTITY[ \t]+[A-Za-z_][A-Za-z0-9_.-]*[ \t]+SYSTEM[
+      \t]+["'][^"'\n]{0,160}(?:vty|VTY|ctrl|CTRL|command|Command|COMMAND|refer|Refer|REFER)[^"'\n]{0,60}\.xml["']|<refentry(?:[
+      \t>]|$)|<refname[ \t>]|<title>[^<\n]{0,80}(?:VTY|CTRL|Control|Command|Telnet|API)[
+      \t]+(?:Reference|Interface|Manual)[^<\n]{0,60}</title>|^[ \t]*\|[
+      \t]*(?:Command|COMMAND|Selector|Variable|Parameter|Attribute|Endpoint|Method)[ \t]*\|[
+      \t]*(?:Access|Trap|Value|Type|Default|Required|Comment|Description|Meaning|Purpose)(?![A-Za-z0-9_])|^[
+      \t]*\|[ \t]*(?:Name|NAME)[ \t]*\|[
+      \t]*(?:Access|Trap|Value|Type|Default|Required)(?![A-Za-z0-9_])
+    - (?<![A-Za-z0-9])(?:(?:workspace|Workspace|WORKSPACE|organization|Organization|ORGANIZATION|organisation|Organisation|ORGANISATION|tenant|Tenant|TENANT|project|Project|PROJECT|team|Team|TEAM|site|Site|SITE|instance|Instance|INSTANCE|company|Company|COMPANY)[_-]?(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?|(?:account|Account|ACCOUNT)[_-]?(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)(?:transfer|Transfer|TRANSFER|relocate|Relocate|RELOCATE)\w*|(?<![A-Za-z0-9])(?:transfer|Transfer|TRANSFER|relocate|Relocate|RELOCATE)[_-]?(?:(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?(?:workspace|Workspace|WORKSPACE|organization|Organization|ORGANIZATION|organisation|Organisation|ORGANISATION|tenant|Tenant|TENANT|project|Project|PROJECT|team|Team|TEAM|site|Site|SITE|instance|Instance|INSTANCE|company|Company|COMPANY)|(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?(?:account|Account|ACCOUNT)|(?:account|Account|ACCOUNT)[_-]?(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW))\w*|(?<![A-Za-z0-9])(?:transfer|Transfer|TRANSFER|relocate|Relocate|RELOCATE)[_-]?(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?(?:all|All|ALL|everything|Everything|EVERYTHING)\w*|(?<![A-Za-z0-9])(?:bulk|Bulk|BULK|mass|Mass|MASS)[_-]?(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?(?:transfer|Transfer|TRANSFER|relocate|Relocate|RELOCATE)\w*|(?<![A-Za-z0-9])(?:transfer|Transfer|TRANSFER|relocate|Relocate|RELOCATE)[_-]?(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?(?:bulk|Bulk|BULK|mass|Mass|MASS)\w*
+    - (?<![A-Za-z0-9])(?:export|Export|EXPORT|dump|Dump|DUMP)[_-]?(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?(?:[Oo]f|OF|[Ff]or|FOR)[_-]?(?:workspace|Workspace|WORKSPACE|organization|Organization|ORGANIZATION|organisation|Organisation|ORGANISATION|tenant|Tenant|TENANT|project|Project|PROJECT|account|Account|ACCOUNT|team|Team|TEAM|site|Site|SITE|instance|Instance|INSTANCE|company|Company|COMPANY)\w*
+    - (?<![A-Za-z0-9])transfer[_-](?:job|process|worker|queue|task)\w*|(?<![A-Za-z0-9])(?:job|process|worker|queue|task)[_-]transfer\w*|(?<![A-Za-z0-9])transfer(?:Job|Process|Worker|Queue|Task)\w*|(?:(?<![A-Za-z0-9])|(?<=[a-z])(?=[A-Z]))Transfer[A-Za-z]{0,24}(?:Job|Process|Processor|Worker|Queue|Task)\w*
+    - (?:(?<![A-Za-z0-9])|(?<=[a-z])(?=[A-Z]))Export[A-Za-z]{0,24}(?:Job|Process|Processor|Worker|Queue|Task)\w*|(?<![A-Za-z0-9])[a-z]{0,16}(?:job|process|worker|queue|task)[_-]export\w*|(?<![A-Za-z0-9])export[_-](?:job|process|worker|queue|task)s?\w*
+    - (?:(?<![A-Za-z0-9])|(?<=[a-z])(?=[A-Z]))(?:[Aa]dmin[_-]?[Ee]xport|[Aa]dmin[_-]?[Dd]ump|[Ee]xport[_-]?[Aa]ll[_-]?[Uu]sers|[Dd]ump[_-]?[Aa]ll[_-]?[Uu]sers|[Ee]xport[_-]?[Uu]sers[_-]?[Tt]o[_-]?[Cc]sv|[Dd]ump[_-]?[Uu]sers[_-]?[Tt]o[_-]?[Cc]sv|[Ss]tart[_-]?[Uu]sers[_-]?[Bb]atch[_-]?[Ee]xport|[Ss]tart[_-]?[Uu]sers[_-]?[Bb]atch[_-]?[Dd]ump|[Ss]ystem[_-]?[Uu]sers[_-]?[Ee]xport|[Ss]ystem[_-]?[Uu]sers[_-]?[Dd]ump)\w*
+    - (?:(?<![A-Za-z0-9])|(?<=[a-z])(?=[A-Z]))(?:csv|CSV|Csv|json|Json|JSON|jsonl|Jsonl|ndjson|Ndjson|xlsx|Xlsx|XLSX|parquet|Parquet)(?![_-]?[Ss]chema|[_-]?SCHEMA)[_-]?[A-Za-z]{0,24}[_-]?(?:generat(?:e|or|ion)|Generat(?:e|or|ion)|GENERAT(?:E|OR|ION))\w*|(?:(?<![A-Za-z0-9])|(?<=[a-z])(?=[A-Z]))(?:generat(?:e|or|ion)|Generat(?:e|or|ion)|GENERAT(?:E|OR|ION))[_-]?[A-Za-z]{0,24}[_-]?(?:csv|CSV|Csv|json|Json|JSON|jsonl|Jsonl|ndjson|Ndjson|xlsx|Xlsx|XLSX|parquet|Parquet)(?![_-]?[Ss]chema|[_-]?SCHEMA)\w*
+    - (?:(?<![A-Za-z0-9])|(?<=[a-z])(?=[A-Z]))(?:csv|CSV|Csv|tsv|TSV|Tsv|json|Json|JSON|jsonl|Jsonl|JSONL|ndjson|Ndjson|NDJSON|xlsx|Xlsx|XLSX|parquet|Parquet|PARQUET)[_-]?(?:output|Output|OUTPUT)[_-]?(?:format|Format|FORMAT|type|Type|TYPE|as|As|AS)(?![A-Za-z0-9]*(?:[Ss]tream|STREAM))\w*|(?:(?<![A-Za-z0-9])|(?<=[a-z])(?=[A-Z]))(?:output|Output|OUTPUT)[_-]?(?:format|Format|FORMAT|type|Type|TYPE|as|As|AS)[_-]?(?:csv|CSV|Csv|tsv|TSV|Tsv|json|Json|JSON|jsonl|Jsonl|JSONL|ndjson|Ndjson|NDJSON|xlsx|Xlsx|XLSX|parquet|Parquet|PARQUET)\w*|(?:(?<![A-Za-z0-9])|(?<=[a-z])(?=[A-Z]))(?:output|Output|OUTPUT)[_-]?(?:format|Format|FORMAT|type|Type|TYPE|as|As|AS)(?![A-Za-z0-9]*(?:[Ss]tream|STREAM))\w*[^\n]{0,32}["'](?:csv|CSV|Csv|tsv|TSV|Tsv|json|Json|JSON|jsonl|Jsonl|JSONL|ndjson|Ndjson|NDJSON|xlsx|Xlsx|XLSX|parquet|Parquet|PARQUET)["']|["'](?:csv|CSV|Csv|tsv|TSV|Tsv|json|Json|JSON|jsonl|Jsonl|JSONL|ndjson|Ndjson|NDJSON|xlsx|Xlsx|XLSX|parquet|Parquet|PARQUET)["'][^\n]{0,32}(?:(?<![A-Za-z0-9])|(?<=[a-z])(?=[A-Z]))(?:output|Output|OUTPUT)[_-]?(?:format|Format|FORMAT|type|Type|TYPE|as|As|AS)(?![A-Za-z0-9]*(?:[Ss]tream|STREAM))\w*|(?:(?<![A-Za-z0-9])|(?<=[a-z])(?=[A-Z]))(?:output|Output|OUTPUT)[_-]?(?:format|Format|FORMAT|type|Type|TYPE|as|As|AS)(?![A-Za-z0-9]*(?:[Ss]tream|STREAM))\w*[^\n]{0,80}(?:(?<![A-Za-z0-9])|(?<=[a-z])(?=[A-Z]))(?:collect|Collect|COLLECT|gather|Gather|GATHER|fetch|Fetch|FETCH|load|Load|LOAD|select|Select|SELECT|read|Read|READ|list|List|LIST|query|Query|QUERY)[_-]?(?:all|All|ALL)?[_-]?(?:rows|Rows|ROWS|records|Records|RECORDS)[A-Za-z0-9_]{0,16}(?:account|Account|ACCOUNT|tenant|Tenant|TENANT|workspace|Workspace|WORKSPACE|organization|Organization|ORGANIZATION|organisation|Organisation|ORGANISATION|project|Project|PROJECT|team|Team|TEAM|site|Site|SITE|instance|Instance|INSTANCE|company|Company|COMPANY|customer|Customer|CUSTOMER)\w*|(?:(?<![A-Za-z0-9])|(?<=[a-z])(?=[A-Z]))(?:collect|Collect|COLLECT|gather|Gather|GATHER|fetch|Fetch|FETCH|load|Load|LOAD|select|Select|SELECT|read|Read|READ|list|List|LIST|query|Query|QUERY)[_-]?(?:all|All|ALL)?[_-]?(?:rows|Rows|ROWS|records|Records|RECORDS)[A-Za-z0-9_]{0,16}(?:account|Account|ACCOUNT|tenant|Tenant|TENANT|workspace|Workspace|WORKSPACE|organization|Organization|ORGANIZATION|organisation|Organisation|ORGANISATION|project|Project|PROJECT|team|Team|TEAM|site|Site|SITE|instance|Instance|INSTANCE|company|Company|COMPANY|customer|Customer|CUSTOMER)\w*[^\n]{0,80}(?:(?<![A-Za-z0-9])|(?<=[a-z])(?=[A-Z]))(?:output|Output|OUTPUT)[_-]?(?:format|Format|FORMAT|type|Type|TYPE|as|As|AS)(?![A-Za-z0-9]*(?:[Ss]tream|STREAM))\w*
+    - (?:Content-Disposition|content-disposition|CONTENT-DISPOSITION)[^\n]{0,80}(?:attachment|ATTACHMENT)[^\n]{0,80}\.(?:csv|CSV|json|JSON|jsonl|ndjson|xlsx|XLSX|parquet|tsv|TSV)(?![A-Za-z0-9])|(?:Content-Type|content-type|CONTENT-TYPE)[^\n]{0,60}(?:text/(?:x-)?csv|text/(?:x-)?tsv|application/(?:x-)?(?:csv|json|jsonl|ndjson|parquet)|application/vnd\.ms-excel)[^\n]{0,60}(?:name|filename)=|(?<![A-Za-z0-9])(?:file_?name|File_?[Nn]ame|FILE_?NAME)(?<!^[
+      \t]{0,8}(?:`{3,}|~{3,})[^\n]{0,80})[^\n]{0,12}(?:=|=>|:)[^\n]{0,60}\.(?:csv|CSV|json|JSON|jsonl|ndjson|xlsx|XLSX|parquet|tsv|TSV)(?![A-Za-z0-9])
+  also_in_file:
+    - ^(?![\s\S]*(?:^|\n)[^\S\n]*["']?(?:openapi["']?[^\S\n]*:[^\S\n]*["']?[23]\.|swagger["']?[^\S\n]*:[^\S\n]*["']?[12]\.))
+    - (?<![A-Za-z0-9])(?:workspace|Workspace|WORKSPACE|organization|Organization|ORGANIZATION|organisation|Organisation|ORGANISATION|tenant|Tenant|TENANT|project|Project|PROJECT|account|Account|ACCOUNT|team|Team|TEAM|site|Site|SITE|instance|Instance|INSTANCE|company|Company|COMPANY)[_-]?(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?(?:export|Export|EXPORT|dump|Dump|DUMP)\w*|(?<![A-Za-z0-9])(?:export|Export|EXPORT|dump|Dump|DUMP)[_-]?(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?(?:workspace|Workspace|WORKSPACE|organization|Organization|ORGANIZATION|organisation|Organisation|ORGANISATION|tenant|Tenant|TENANT|project|Project|PROJECT|account|Account|ACCOUNT|team|Team|TEAM|site|Site|SITE|instance|Instance|INSTANCE|company|Company|COMPANY)\w*|(?<![A-Za-z0-9])(?:export|Export|EXPORT)[_-]?(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?(?:all|All|ALL|everything|Everything|EVERYTHING)\w*|(?<![A-Za-z0-9])(?:bulk|Bulk|BULK|mass|Mass|MASS)[_-]?(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?(?:export|Export|EXPORT|dump|Dump|DUMP)\w*|(?<![A-Za-z0-9])(?:export|Export|EXPORT|dump|Dump|DUMP)[_-]?(?:(?:[Dd]ata|DATA|[Ee]xtra|EXTRA|[Ff]ull|FULL|[Rr]aw|RAW)[_-]?)?(?:bulk|Bulk|BULK|mass|Mass|MASS)\w*
+    - (?<!\bfrom\s{0,4})(?<!\bimport\s{0,4})(?<!\brequire\s*\(\s*)(?<!\bmock\s*\(\s*)["'`](?!\.{1,2}/)[^"'`\s\n]{0,120}(?<!:)(?<!import)/export(?:[/"'`?-]|\n|$)
+    - (?<![A-Za-z0-9])export[_-](?:job|process|worker|queue|task)\w*|(?<![A-Za-z0-9])(?:job|process|worker|queue|task)[_-]export\w*|(?<![A-Za-z0-9])export(?:Job|Process|Worker|Queue|Task)\w*|(?<![A-Za-z0-9])Export[A-Za-z]{0,24}(?:Job|Process|Worker|Queue|Task)\b
+    - (?<![A-Za-z0-9])exportAs\b|(?<![A-Za-z0-9])export_as\b|(?<![A-Za-z0-9])EXPORT_AS\b|(?<![A-Za-z0-9])(?:export|Export|EXPORT)[_-]?(?:format|Format|FORMAT)\w*|\b(?:csv|CSV|Csv|json|Json|JSON|jsonl|Jsonl|ndjson|Ndjson|xlsx|Xlsx|XLSX|parquet|Parquet)[_-]?(?:export|Export|EXPORT)(?:er|Er|ER)?\w*|(?<![A-Za-z0-9])(?:export|Export|EXPORT)[._-]?(?:csv|CSV|Csv|json|Json|JSON|jsonl|Jsonl|ndjson|Ndjson|xlsx|Xlsx|XLSX|parquet|Parquet)\w*|(?<![A-Za-z0-9])(?:Csv|CSV|Json|JSON|Jsonl|Ndjson|Xlsx|XLSX|Parquet)[A-Za-z]{0,24}Export\w*
+    - (?<![A-Za-z0-9])ENABLE_ADMIN_EXPORT\b|(?<![A-Za-z0-9])admin[_-]export\w*|(?<![A-Za-z0-9])adminExport\w*|(?<![A-Za-z0-9])export[_-]?all[_-]?users\w*|(?<![A-Za-z0-9])exportAllUsers\w*|(?<![A-Za-z0-9])export_users_to_csv\w*|(?<![A-Za-z0-9])exportUsersToCsv\w*|(?<![A-Za-z0-9])startUsersBatchExport\w*|(?<![A-Za-z0-9])system_users_export\w*|(?<![A-Za-z0-9])ENABLE_ADMIN_DUMP\b|(?<![A-Za-z0-9])admin[_-]dump\w*|(?<![A-Za-z0-9])adminDump\w*|(?<![A-Za-z0-9])dump[_-]?all[_-]?users\w*|(?<![A-Za-z0-9])dumpAllUsers\w*|(?<![A-Za-z0-9])dump_users_to_csv\w*|(?<![A-Za-z0-9])dumpUsersToCsv\w*|(?<![A-Za-z0-9])startUsersBatchDump\w*|(?<![A-Za-z0-9])system_users_dump\w*
+    - (?:^|\n)[ \t]*["']?operationId["']?[ \t]*:[
+      \t]*["']?\w*(?:export|Export|EXPORT|dump|Dump|DUMP)\w*
+    - (?:^|[\n\s\[,])/[^\s"'`,\]]{0,120}/export(?:[/"'`?:-]|\n|$)
+    - (?:^|[^A-Za-z0-9_])(?&export_document_writers)(?![A-Za-z0-9_])[ \t]*\(
+  path_without:
+    - (^|/)(?:marketplace/plugins|packages/pieces|connectors)/
+    - (^|/)lib/(?:google|google2-service|aws-sdk|guzzle)/
+context_questions:
+  - "Is the scanned party a PROVIDER OF DATA PROCESSING SERVICES that these duties reach at all, and
+    is it the SOURCE provider? Three separate gates, and none of them is decidable from source code.
+    (a) Art. 2(8) defines a data processing service as \"a digital service that is provided to a
+    customer and that enables ubiquitous and on-demand network access to a shared pool of
+    configurable, scalable and elastic computing resources of a centralised, distributed or highly
+    distributed nature that can be rapidly provisioned and released with minimal management effort
+    or service provider interaction\". WHETHER A NICHE APPLICATION MEETS THAT TEST IS AN OPEN
+    QUESTION IN THIS REPOSITORY AND THIS RULE DOES NOT CLOSE IT. Recital 81 puts IaaS, PaaS and SaaS
+    inside the category, but it does not say the converse - that every hosted application is a data
+    processing service - and Recital 80 glosses the last clause of the definition around the
+    customer self-provisioning without any human interaction by the provider, so a
+    provider-administered application is the arguable case. Ask the person running the scan how the
+    service is sold and provisioned; do not infer it from vocabulary in the tree. (b) Art. 24 limits
+    Arts. 23, 25, 29, 30 and 34 to \"the services, contracts or commercial practices provided by the
+    source provider of data processing services\". A destination-side provider - one whose product
+    imports a customer's data FROM a competitor - owes none of this. If the only migration code in
+    the tree runs in the import direction (importFromAirtable, migrate from slack, an importer for a
+    competitor's zip file), say so: that evidences accepting switchers and says nothing about
+    letting a customer leave. (c) Art. 1(3), point (f) applies the Regulation to providers
+    \"irrespective of their place of establishment, providing such services to customers in the
+    Union\", so establishment outside the Union is not a gate; where the customers are, is. Answer
+    each of the three and say which, if any, closes the candidate."
+  - "Does Art. 31(2) switch this off? \"The obligations laid down in this Chapter shall not apply to
+    data processing services provided as a non-production version for testing and evaluation
+    purposes and for a limited period of time.\" Chapter VI is Arts. 23 to 31, so this limb takes
+    the Arts. 23(c), 30(2) and 30(5) half of this row with it. All three conditions are cumulative:
+    a non-production version, AND for testing and evaluation purposes, AND for a limited period of
+    time. IT DOES NOT DISPOSE OF THE ART. 34(1) IN-PARALLEL-USE DUTY, AND DO NOT CLOSE THAT DUTY ON
+    THIS GROUND. Art. 34 sits in Chapter VIII (Interoperability, Arts. 33 to 36), not in Chapter VI,
+    so Art. 31(2)'s words \"this Chapter\" do not reach it by chapter membership - this file
+    asserted that they did until 2026-08-06 and the premise was simply false. Whether the
+    disapplication travels anyway is genuinely arguable both ways, because Art. 34(1) borrows
+    Chapter VI's requirements \"mutatis mutandis\" and it is unsettled whether the borrowing carries
+    their qualifications with them. Report it as unsettled, say which reading you are taking and
+    why, and do not present either as settled law. A permanently available free tier is none of
+    those - Art. 23(c) expressly names porting \"including after having benefited from a free-tier
+    offering\" - and a long-running public beta is not obviously time-limited either. DO NOT ALSO
+    APPLY ART. 31(1), AND THIS IS THE MOST LIKELY MISTAKE ON THIS ROW. Art. 31(1) disapplies Art. 23
+    point (d), Art. 29 and Art. 30(1) and (3) for a custom-built service not offered at broad
+    commercial scale. This rule rests on Art. 23 point (c), Art. 30(2) and Art. 30(5), none of which
+    is on that list, so a bespoke service still owes everything here. The sibling row on switching
+    charges (Art. 29) does switch off under either limb, and importing its gate would wrongly
+    disapply this one. Where either limb is relied on, Art. 31(3) requires the provider to tell the
+    prospective customer, before contracting, which Chapter VI obligations do not apply - which is
+    worth reporting as a companion item."
+  - "Is what was found a CUSTOMER-FACING BULK EXPORT, or an internal operations backup, or something
+    that is neither? The detector cannot decide this and does not try. What it matched is a scope
+    noun bound to an export identifier, a `/export` route literal, an export job or worker, a
+    format-bound export name, an API description, an admin-scoped instance export, or - since
+    2026-09-04 - an archive or document writer being called, which is the one shape that carries no
+    export word at all. Work through the distinctions the vocabulary measurement drew, using the
+    code around each location. (0) IF THE LOCATION IS AN ARCHIVE OR DOCUMENT WRITER, ASK WHAT GOES
+    INTO IT AND WHERE IT GOES. That clause matches a ZIP, gzip, tar, spreadsheet, PDF, Word or
+    calendar writer being invoked, and it says nothing about the size of what is written: the same
+    call builds one customer's whole dataset and one object a person clicked download on. Read the
+    loop that feeds it and the response that carries it away. Art. 30(5)'s operative word is ALL
+    exportable data, so a writer fed from one record is evidence of a hand-out and not of this duty
+    being answered; a writer fed from a whole tenant's rows is the shape the row is about. (a)
+    CUSTOMER-FACING EXPORT versus OPERATIONS BACKUP. The separating feature is not the word backup;
+    it is what the word is attached to and where the bytes go. A customer export attaches to a scope
+    the customer owns - workspace, organisation, project, team, view - is triggered by an HTTP
+    route, a user-interface control or a command the customer runs, and ends in a download, a
+    presigned URL or an emailed link. An operations backup attaches to the infrastructure - pg_dump,
+    WAL, point-in-time recovery, a snapshot policy, a retention window - is triggered by a cron, a
+    schedule or a Kubernetes job, and ends in an object-store bucket with a lifecycle rule. One
+    repository in the corpus has both, and the word backup appears in both. Quote the trigger and
+    the destination. (b) WHO CAN REACH IT. An export only an operator can run from a shell is not a
+    route by which a customer exercises Art. 23(c); an export behind an administrator role MAY be,
+    because the Data Act's claimant is the CUSTOMER organisation and its own administrator acts for
+    it - which is the opposite of the GDPR position, where an admin-only console is not a route for
+    the data subject. Say which role reaches the path and whether that role belongs to the customer
+    or to the provider. (c) WHOSE DATA MOVES, AND IN WHICH DIRECTION. Some matched vocabulary is an
+    IMPORT wearing export words - a client library that calls a third-party service's own export API
+    to pull data IN. That evidences the opposite of this duty. (d) A DIRECTORY THE DETECTOR CANNOT
+    SEE. The strongest signal the vocabulary measurement found was a directory named `export`,
+    `export-import`, `data-export` or `export_process` - 74 of them across 16 real repositories -
+    and this engine cannot match a path. Look for one by name; in two corpus trees it was the only
+    route to the export implementation."
+  - "Does the export reach ALL EXPORTABLE DATA, and is the format genuinely structured, commonly
+    used and machine-readable? Art. 30(5) requires the provider, \"In the case of switching between
+    services of the same service type\" and where no common specifications or harmonised standards
+    have been published, at the customer's request, to \"export all exportable data in a structured,
+    commonly used and machine-readable format\". The word ALL is operative, and so is the
+    same-service-type condition: Art. 30(5) is written for a move to a service COVERING THE SAME
+    SERVICE TYPE, and it does not by its own terms reach a move to something else. WHAT COVERS THE
+    OTHER CASES IS ART. 23(c), WHICH CARRIES NO SUCH RESTRICTION - it forbids obstacles to \"porting
+    the customer's exportable data and digital assets, to a different provider of data processing
+    services or to an on-premises ICT infrastructure\", so a customer taking their data in-house
+    rests on Art. 23(c) rather than on Art. 30(5). Say which provision the case in front of you
+    turns on. Art. 2(38) defines exportable data as \"the input and output data, including metadata,
+    directly or indirectly generated, or cogenerated, by the customer's use of the data processing
+    service\", excluding only assets protected by intellectual property rights or constituting a
+    trade secret of the provider or a third party. Read that list against what the code actually
+    emits. INPUT data is what the customer put in. OUTPUT data is what the service produced for them
+    - generated documents, computed results, model outputs, rendered artefacts. METADATA is
+    timestamps, authorship, structure, permissions, relationships between objects. INDIRECTLY
+    GENERATED and COGENERATED data is observed and derived - activity history, usage records,
+    analytics computed about the customer's own use. An export that emits the rows of one table and
+    none of the above is not obviously an Art. 30(5) export, and this is where most real
+    implementations fall short. On format: JSON, CSV, NDJSON, XML, Parquet and a documented archive
+    of such files are structured and machine-readable; a PDF, a screenshot, a rendered HTML report
+    or a proprietary binary that only this product can read is not, on the same reasoning this
+    repository already applies to the GDPR Art. 20 export in eu-dsr-001. Quote the serialiser and
+    the shape it writes. Where the route parameter or the task class names the format - `:exportAs`,
+    ExportJSONTask, CsvReportExportService - that is where the answer is legible; the serialisation
+    library alone is not, because the same library parses uploads."
+  - "Are OPEN INTERFACES available, and to whom? This is Art. 30(2) and it has NO counterpart in the
+    GDPR, so nothing in a data-subject-rights review will have answered it. The text requires
+    providers to \"make open interfaces available to an equal extent to all their customers and the
+    concerned destination providers of data processing services free of charge to facilitate the
+    switching process\", and those interfaces must \"include sufficient information on the service
+    concerned to enable the development of software to communicate with the services, for the
+    purposes of data portability and interoperability\". Four properties, and a checked-in OpenAPI
+    or Swagger document evidences at most the last one. Work through them. OPEN: is the interface
+    published and usable without a negotiated agreement? EQUALLY AVAILABLE: can every customer reach
+    it on every plan, and can the DESTINATION PROVIDER a customer is moving to reach it - which is a
+    party with no contract with you at all? FREE OF CHARGE: is access to the interface itself
+    charged for, metered, or rate-limited in a way that makes a bulk migration impractical?
+    SUFFICIENT: is there enough documentation of the data structures and formats for somebody to
+    write an importer? If the candidate's only locations are specification files, say plainly that
+    no export path was found in this tree and that the finding is about the interface half of the
+    row alone."
+  - "Is the export capability PAYWALLED, TIER-GATED OR ROLE-GATED, and what does that mean here?
+    This was measured in the corpus and it is the sharpest question on the row: one workspace-export
+    endpoint is documented in its own specification as \"only available on an enterprise license\",
+    another workspace export sits behind an explicit permission string, and one platform's own
+    upgrade dialog tells a locked-out customer to upgrade in order to \"export your workspaces\"
+    before their data is removed. Three distinct provisions bear on that and they should not be
+    merged. (a) Art. 23 forbids imposing \"pre-commercial, commercial, technical, contractual and
+    organisational obstacles\" that inhibit customers from porting their exportable data - a paywall
+    in front of the only bulk-export path is on its face a commercial obstacle, and point (c) adds
+    that porting is owed \"including after having benefited from a free-tier offering\", so being on
+    the free plan is not an answer. (b) Art. 30(2)'s open interfaces must be available to an equal
+    extent to ALL customers and free of charge, so a tier that removes interface access is squarely
+    within it. (c) SWITCHING CHARGES ARE A SEPARATE ROW AND ARE NOT RESOLVED HERE. Art. 29 governs
+    charges for the switching process and is coverage map Part C row 20, with its own checklist
+    `data-act-switching-charges-29` and its own 12 January 2027 cliff. FLAG THE OVERLAP AND DO NOT
+    DECIDE IT: say that a charge or tier gate was found, name which of Arts. 23 and 30(2) it bears
+    on, and hand the charging question to row 20 rather than answering it with this row's
+    provisions. Note also Art. 34(2), which permits data egress charges for in-parallel use but only
+    at cost."
+  - "Does the product owe this to customers who never leave? YES, AND THIS IS THE POINT NOBODY
+    EXPECTS. Art. 34(1) provides that the requirements laid down in Art. 23, Art. 24, Art. 25(2)
+    points (a)(ii), (a)(iv), (e) and (f) and \"Article 30(2) to (5) shall also apply mutatis
+    mutandis to providers of data processing services to facilitate interoperability for the
+    purposes of in-parallel use of data processing services\". So the whole of this rule's subject
+    matter applies a second time to a customer using this product SIDE BY SIDE with another -
+    multi-cloud, a second tool for the same job, a warehouse the customer syncs into - and not only
+    to a customer terminating the contract. Two consequences for the finding. First, the common
+    objection - our customers never switch away, so this does not reach us - does not answer the
+    duty, and the finding should say so before anyone raises it. Second, the shape of what is owed
+    differs slightly: in-parallel use is about ONGOING interoperability rather than a one-time
+    extraction, which raises the weight of Art. 30(2)'s interfaces relative to Art. 30(5)'s export.
+    Art. 34(2) is the one charging permission in this area: egress charges for in-parallel use are
+    permitted \"but only for the purpose of passing on egress costs incurred, without exceeding such
+    costs\"."
+  - Whose duty is this, and does anything in Art. 30(6) limit it? Art. 30(6) provides that providers
+    "shall not be required to develop new technologies or services, or disclose or transfer digital
+    assets that are protected by intellectual property rights or that constitute a trade secret, to
+    a customer or to a different provider of data processing services or compromise the customer's
+    or provider's security and integrity of service". Read the three reliefs narrowly, because each
+    is narrower than it is usually stated. No duty to develop NEW technologies or services does not
+    excuse failing to expose data the service already holds through an interface it already has. The
+    intellectual-property and trade-secret relief covers the PROVIDER'S OR A THIRD PARTY'S assets,
+    and Art. 2(38) has already excluded those from the definition of exportable data - so a claim
+    that the CUSTOMER'S own records are the provider's trade secret is an assertion to be
+    substantiated, not accepted, and Recital 82 adds that these exemptions "should not impede or
+    delay the switching process". The security relief is about not compromising integrity of
+    service, not about declining to build an authenticated export. Where the team relies on any of
+    the three, name which one and what evidence supports it.
+  - "What is the date position, and how should the finding be worded? Art. 50 provides that the
+    Regulation \"shall apply from 12 September 2025\", and its three deferrals - Art. 3(1), Chapter
+    III and Chapter IV - do not touch Chapter VI. Neither Art. 23 nor Art. 30 nor Art. 34 carries a
+    date of its own. THIS DUTY IS THEREFORE IN FORCE TODAY AND HAS BEEN SINCE 12 SEPTEMBER 2025, and
+    a finding on this row is written in the present tense as a live obligation - not, as every Cyber
+    Resilience Act row in this repository is, as preparation for a future date. Do not import Art.
+    29's dates: 12 January 2027 is its switching-charge cliff, and 11 January 2024 is the opening of
+    the reduced-charge window in Art. 29(2). Both belong to the sibling row on charges and neither
+    dates anything in this row. Chapter VI has no micro or small-enterprise carve-out anywhere, so
+    team size changes nothing. One forward-looking caveat belongs in any finding that quotes Art.
+    30(5): it is written as a FALLBACK that applies only while no common specifications or
+    harmonised standards have been published in the central Union standards repository under Art.
+    35(8). As at 2026-08-06 that was checked and none had been - no implementing act has been
+    adopted and the repository has not been established - so Art. 30(5) is the live duty and Art.
+    30(3) is dormant. When the first Art. 35(8) implementing act lands, Art. 30(3) switches on
+    twelve months later for the service types it covers and Art. 30(5) recedes for those types. If
+    you are reading this well after 2026-08-06, re-check that status before relying on it."
+  - "What does the tree NOT show, and what should the finding refuse to conclude? Three things this
+    scan cannot see, each of which has closed a candidate in a comparable review. First, a mechanism
+    living somewhere else: an export offered from a separate administrative console, a hosted
+    control panel, a separate repository or a documented manual process on request is outside this
+    scan and should be recorded as existing elsewhere rather than assumed absent. Second, the
+    ABSENCE of any export path. This detector says nothing by staying silent - it looks for the
+    presence of an export capability, and finding none is not evidence that none exists, so a
+    finding must never report silence as a gap. Third, the contract. Art. 23's obstacles are
+    expressly \"pre-commercial, commercial, technical, contractual and organisational\", and the
+    contractual half lives in the terms of service, not in the source tree; coverage map Part C row
+    18 and its checklist `data-act-switching-terms-23-25` are where the written contract is examined
+    against Art. 25. Where the code shows a working export and the contract forbids or charges for
+    it, neither half alone reaches the answer. Say which half you were able to read."
+evidence_template: "{file}:{line} carries one of this rule's export or published-interface
+  spellings: it evidences a path by which data leaves this product in bulk, or a published
+  description of its interface, or NEITHER OF THOSE - and which of the three it is has to be read
+  off the matched line before anything else. The third limb is not a formality, and it is the same
+  third limb context question 3 offers: the export clauses match on spellings, so a homonym reaches
+  them. EXPORT_ALL_VARIABLES, a GNU Make special target that exports Make variables into the
+  environment of recipe subshells, matched inside one alternation of a vendored TextMate
+  syntax-highlighting grammar for Makefiles - a line where no data leaves anything and no interface
+  of this product is described. Where the matched line is that kind of homonym, say so and close the
+  location on that ground. ONE BRANCH CARRIES NO EXPORT WORD AT ALL, ADDED 2026-09-04: an archive,
+  compressed-stream, spreadsheet, PDF, Word or calendar WRITER being called - `zip.NewWriter(`,
+  `zipfile.ZipFile(`, `new ZipOutputStream(`, `archiver.create(`, `SimpleDocTemplate(` - because a
+  product can hand a customer their data out of the door without ever writing the word `export` in
+  the file that does it. WHAT THAT BRANCH ESTABLISHES IS NARROWER THAN THE OTHERS: a file is being
+  BUILT here, and nothing on the line says how much goes into it, whether it reaches a customer or
+  an operations bucket, or whether the archive holds a whole tenant's dataset or the single object
+  somebody clicked. Art. 30(5)'s operative word is ALL exportable data, so a writer fed from one
+  record evidences a hand-out and not this duty; context question 3, limb (0), is where that is read
+  off the surrounding code. The archive spellings this branch reads are the same ones the
+  personal-data export rules read, so the three cannot disagree about how a writer is spelled, and
+  that shared list also carries per-document renderers - a weaker shape for this rule than an
+  archive writer, kept rather than filtered. READ THE LOCATIONS BEFORE ACCEPTING THE HEADLINE: this
+  rule raises one finding per repository, and a candidate's locations may mix export constructs with
+  published-interface evidence, so which of the three any given location is has to be read off the
+  line rather than taken from the headline. A CANDIDATE CAN NO LONGER REST ENTIRELY ON AN OPENAPI OR
+  SWAGGER VERSION STRING. Since 2026-08-12 that branch produces a location only in a file that also
+  carries an export construct, so a version string is corroboration of the Art. 30(2) half and never
+  the whole of a candidate; measured over the 94-repository corpus, the change removed 76 locations,
+  added none, and took the firing repositories from 70 to 63. THIS PASSAGE SAID, UNTIL 2026-08-12:
+  \"a candidate can rest entirely on branch 5, an OpenAPI or Swagger version string, with NO export
+  location anywhere in it. On the 31-repository corpus that is the case for 2 of the 25 firing
+  trees.\" That was true of the rule as it then stood and is kept here so that a reader who quotes
+  it can see that it moved and why. Note also that the corpus grew from 31 repositories to 94
+  between the two measurements, so the old figures and the new ones are not comparable. What a
+  matched line establishes is that Data Act Arts. 23(c), 30(2) and 30(5) - and, through Art. 34(1),
+  the same duties again for a customer using this product in parallel with another - are live
+  questions for whatever this repository operates. It is NOT evidence that those duties are met, and
+  it is not evidence that they are unmet. THE SCOPE OF THIS DUTY IS NOT PERSONAL DATA: Art. 1(2)(e)
+  applies Chapter VI to \"any data\", Art. 2(38) keys exportable data to the customer's USE OF THE
+  SERVICE rather than to identifiability, and Art. 2(30) gives the right to a customer that may be a
+  legal person. A per-person GDPR Art. 20 download does not answer it, and a finding that describes
+  this as a data-subject right has cited the wrong instrument. What the detector cannot see, and
+  what context_questions ask instead: whether the export reaches ALL exportable data including
+  output data and metadata, whether the format is structured, commonly used and machine-readable,
+  whether open interfaces exist and are equally available and free of charge, whether the capability
+  is paywalled or role-gated, whether this is a customer-facing export or an internal operations
+  backup, and whether the party is a data processing service at all. THREE BRANCHES ADDED 2026-09-09
+  READ AN INTERFACE DESCRIPTION THAT IS NOT A STATIC CHECKED-IN SPECIFICATION FILE, which is the
+  only form the OpenAPI branch above can see. (a) A DOCUMENT GENERATED FROM CODE ANNOTATIONS AND
+  SERVED AT A ROUTE - `SwaggerUi::new(`, `OpenApiRouter::with_openapi(`, `#[derive(OpenApi)]`,
+  `@OpenAPIDefinition`, `GroupedOpenApi.builder(`, `SpectacularAPIView`, `swaggerJsdoc(`,
+  `SwaggerModule.setup(`, or the published route itself as a quoted path such as `/openapi.json`,
+  `/v3/api-docs` or `/swagger-ui` - where the description exists only when the service is running
+  and the tree carries no version line to read. (b) A GRAPHQL SCHEMA WRITTEN IN THE SCHEMA
+  DEFINITION LANGUAGE - `type Query {`, `extend type Mutation {`, `scalar DateTime`, `directive
+  @auth on FIELD_DEFINITION` - which publishes the same kind of information in a different format; a
+  GraphQL OPERATION document (`query apps { … }`, a fragment) is a client's request text and is
+  deliberately not matched. (c) A PUBLISHED COMMAND OR CONTROL-VARIABLE REFERENCE - a DocBook entity
+  include of a generated VTY or command reference, a `<refentry>`, a document title naming a
+  command, control or API reference, or a documentation table whose header enumerates an interface's
+  commands, selectors, variables or endpoints against their access mode, value or type. WHAT THOSE
+  THREE ESTABLISH IS THE INTERFACE HALF AND NOTHING BEYOND IT: that a description of this product's
+  interface is published somewhere. They do not establish that the interface is OPEN, that it is
+  available TO AN EQUAL EXTENT to every customer and to the destination provider a customer is
+  moving to, that it is FREE OF CHARGE, or that it carries SUFFICIENT INFORMATION for somebody to
+  write an importer - Art. 30(2)'s four properties, which context question 5 puts one at a time. A
+  generated document has to be OPENED before any of that can be answered, and the matched line only
+  says that something serves it; a schema or a command table has to be read against Art. 2(38)'s
+  list of exportable data before anyone can say the description covers what a customer would need to
+  take with them. WHERE THESE THREE SIT RELATIVE TO THE FILE-LEVEL GATE, BECAUSE IT CHANGES HOW A
+  CANDIDATE SHOULD BE READ. No gate clause was changed by them. The gate's first clause is an
+  absence claim about a static OpenAPI or Swagger version header, so it is satisfied by a route
+  file, a schema file or a reference document - none of which declares one - and a location produced
+  by these branches stands whether or not an export construct sits beside it in the same file. The
+  decision that an OpenAPI or Swagger VERSION STRING inside a checked-in specification file may not
+  carry a candidate on its own is unchanged in wording and in effect; it is about that branch and
+  that file shape, and it is not a general rule that an interface description must be corroborated.
+  SO READ THE LOCATIONS BEFORE ACCEPTING THE HEADLINE, in the way this rule has always asked:
+  because it raises one finding per repository, a repository whose only locations are interface
+  descriptions of these three kinds produces a candidate with no extraction location anywhere in it.
+  A candidate of that shape is about the Art. 30(2) interface half alone - say so plainly, say that
+  no export path was found in this tree, and do not report the silence as a gap. WHETHER THE DATA
+  ACT REACHES THIS PRODUCT AT ALL IS A PRODUCT-CLASSIFICATION QUESTION, ASKED OF THE PERSON RUNNING
+  THE SCAN AND NEVER READ OFF THE SOURCE. The classification this rule's own duties turn on is Art.
+  2(8): is the scanned party a provider of a `data processing service`, and is it the SOURCE
+  provider of it under Art. 24? Where a reader reaches instead for the Regulation's Chapter II
+  vocabulary, the same rule holds and the answer comes from the same place: whether the thing is a
+  `connected product` (Art. 2(5)) or a `related service` (Art. 2(6)) is a fact about how the product
+  is built, sold and provisioned, answered by the operator or read from their declared documents.
+  Say which chapter is in play before quoting either term, because they are not interchangeable: the
+  duties this rule tests are Chapter VI's, owed by a provider of data processing services, while
+  `connected product` and `related service` are Chapter II's terms and Chapter II is not what this
+  rule tests. No clause in this detector decides any of those classifications or contributes to
+  deciding one, and context question 1 - deliberately the first of the ten - is where the question
+  is asked. TWO SHAPES THE 2026-09-09 BRANCHES REACH THAT ARE WEAKER THAN THE REST, MEASURED ON THE
+  PINNED CORPUS AND DISCLOSED HERE RATHER THAN FILTERED OUT. FIRST, THE DOCUMENTATION TABLE CAN BE A
+  TABLE ABOUT SOMETHING THAT IS NOT AN INTERFACE. The same header row that publishes a control
+  interface's commands and variables also heads a contributor guide's table of build commands, a
+  keyboard-shortcut reference, and an operator's environment-variable list - and of those three,
+  only the last is arguably an interface at all, and none is an interface a destination provider
+  would write an importer against. Read the table's own subject before treating it as Art. 30(2)
+  evidence: what makes a table interface documentation is that its rows are the operations or values
+  something OUTSIDE the product may send it, not that its columns are named the same way. SECOND, A
+  LINK OR A ROUTE CAN NAME SOMEBODY ELSE'S DOCUMENT. A quoted path ending in `/openapi.json` or
+  `/swagger-ui` evidences a published description only when the host serving it is this product;
+  where the line links to a third party's specification - a vendor's own API documentation the
+  product happens to call - it evidences the OPPOSITE direction, and Art. 24 limits Arts. 23, 25,
+  29, 30 and 34 to \"the services, contracts or commercial practices provided by the source provider
+  of data processing services\". Context question 1, limb (b), is where that is settled"
+remediation_template: >
+  This is a candidate for review against Data Act (Regulation (EU) 2023/2854) Arts. 23(c), 30(2) and
+
+  30(5), applied a second time to in-parallel use by Art. 34(1). It is not a determination about
+  this
+
+  repository. What the scan established is narrower than it may look: this tree carries evidence of
+  a
+
+  bulk or tenant-scoped export path, or of a published interface description, or - where the match
+
+  is the archive-and-document-writer branch added 2026-09-04 - only that a FILE IS BEING BUILT here,
+
+  which says nothing on its own about how much goes into it or who receives it. It did NOT check
+
+  whether any duty below is met, and finding an export route here is not evidence that it is.
+
+  READ THIS FIRST, BECAUSE IT IS THE THING MOST OFTEN GOT WRONG ON THIS ROW.
+
+  THIS IS NOT A PERSONAL-DATA DUTY AND IT IS NOT THE GDPR EXPORT. Art. 1(2), point (e) applies
+
+  Chapter VI to "any data"; Art. 2(38) defines exportable data by the CUSTOMER'S USE OF THE SERVICE,
+
+  with no reference to whether anybody is identifiable; and Art. 2(30) gives the right to a
+
+  "customer", expressly "a natural or legal person" - so a company holds it and a company has no
+
+  GDPR Art. 20 right at all. The unit is the whole dataset belonging to one customer, tenant,
+
+  workspace or organisation. A per-person "download my data" button, however well built, answers a
+
+  different instrument, and four differences make that concrete: the KIND of data (any data, not
+
+  personal data), WHICH data of that kind (input and output data, metadata, indirectly generated and
+
+  cogenerated data, against Art. 20's "provided by" limit), the LEGAL-BASIS precondition (none
+  here),
+
+  and WHO HOLDS THE RIGHT (a customer including a legal person, against a natural person).
+
+  Five requirements sit behind these provisions. They are separate, a product can meet some and not
+
+  others, and a finding should name which one it is about rather than asking for an export in
+
+  general.
+
+  1. EXPORT ALL EXPORTABLE DATA, ON REQUEST - Art. 30(5), which is written for the case of switching
+     between services of the SAME SERVICE TYPE and applies while no common specifications or
+     harmonised standards have been published. A customer porting to on-premises ICT infrastructure,
+     or to something that is not the same service type, is covered by Art. 23(c) instead, which names
+     porting "to a different provider of data processing services or to an on-premises ICT
+     infrastructure" and carries no same-service-type restriction. The word ALL is operative and Art. 2(38)
+     says what it covers: input AND output data, metadata, and data indirectly generated or
+     cogenerated by the customer's use of the service. In practice that means more than the rows of
+     the main tables - generated artefacts, computed results, activity history, timestamps,
+     authorship, permissions and the relationships between objects all sit inside the definition.
+     The only exclusions are assets protected by intellectual property rights or constituting a
+     trade secret OF THE PROVIDER OR A THIRD PARTY; the customer's own records are never inside that
+     carve-out. Concretely: one route or command that produces one archive containing everything one
+     customer owns, requestable by that customer.
+  2. USE A STRUCTURED, COMMONLY USED AND MACHINE-READABLE FORMAT - Art. 30(5), same sentence. JSON,
+     NDJSON, CSV, XML or Parquet, or a documented archive of such files, with the schema written
+     down. A PDF, a rendered HTML report, a screenshot bundle or a proprietary binary that only this
+     product can read does not satisfy it. Note the exact words: Art. 30(5) does NOT say
+     "comprehensive" - that longer phrase belongs to Chapter II's connected-product provisions and
+     should not be quoted here.
+  3. PROVIDE OPEN INTERFACES, FREE AND EQUALLY AVAILABLE - Art. 30(2). This has NO GDPR counterpart
+     and is the requirement most often missing. The interfaces must be open; available TO AN EQUAL
+     EXTENT to all customers AND to the destination providers a customer is moving to, who have no
+     contract with you; free of charge; and carrying enough information about the service to let
+     somebody develop software against them for portability and interoperability. In practice: a
+     published, versioned API description, documented data structures and formats, and access that
+     does not depend on the plan the customer is on. Art. 26, point (b) is the companion information
+     duty and names the artefact - an up-to-date online register of the data structures, data formats
+     and relevant standards in which the exportable data are available.
+  4. REMOVE OBSTACLES RATHER THAN ADDING A FEATURE - Art. 23. The duty is worded as not imposing and
+     removing "pre-commercial, commercial, technical, contractual and organisational obstacles". A
+     bulk export that exists only on the top plan, an export that must be requested through support,
+     a rate limit that makes a full extraction impractical, or a contract term that forbids it are
+     each capable of being such an obstacle even where an export path exists in the code. Point (c)
+     adds that porting is owed "including after having benefited from a free-tier offering", so being
+     on a free plan is not an answer. Where a charge is attached, note that the separate question of
+     switching CHARGES is Art. 29 and belongs to its own row and checklist; do not settle it here.
+  5. OWE IT TO CUSTOMERS WHO ARE NOT LEAVING - Art. 34(1). Art. 23 and Art. 30(2) to (5) apply
+  again,
+     mutatis mutandis, to in-parallel use of data processing services. A customer running this
+     product alongside another one is owed the same interfaces and the same export, which makes
+     ongoing interoperability - not just a one-time extraction on the way out - part of the
+     requirement. Art. 34(2) permits data egress charges for in-parallel use only at cost.
+  Before doing any of this, settle whether the duties attach. They bind a "provider of data
+
+  processing services" (Art. 2(8)), and only the SOURCE provider (Art. 24) - a product that imports
+  a
+
+  customer's data from a competitor owes nothing on that account. Art. 31(1) does NOT reach this
+  row:
+
+  its list is Art. 23 point (d), Art. 29 and Art. 30(1) and (3), so a custom-built service still
+  owes
+
+  everything above. Art. 31(2) is the limb that does reach it: for a non-production version supplied
+
+  for testing and evaluation for a limited period, all three conditions together, requirements 1 to
+  4
+
+  above fall away. IT DOES NOT DISPOSE OF REQUIREMENT 5. Art. 31(2) disapplies "the obligations laid
+
+  down in this Chapter", and Art. 34 is in Chapter VIII (Interoperability), not in Chapter VI - so
+
+  the in-parallel-use duty is not switched off by chapter membership. Whether it is switched off
+
+  anyway, because Art. 34(1) borrows Chapter VI's requirements mutatis mutandis, is genuinely
+
+  unsettled; treat it as an open question rather than as answered in either direction.
+
+  Dates, so the work can be scheduled. All of the above has applied since 12 September 2025
+
+  (Art. 50); Chapter VI is not among that article's three deferrals and carries no micro or
+
+  small-enterprise carve-out, and Art. 1(3), point (f) reaches providers established anywhere who
+
+  serve customers in the Union. Do not import the 12 January 2027 date - that is the
+  switching-charge
+
+  cliff in Art. 29(1) and belongs to a different row. One forward-looking note: Art. 30(5) is
+  written
+
+  as a fallback that applies while no common specifications or harmonised standards have been
+
+  published in the central Union standards repository under Art. 35(8). None had been as at
+
+  2026-08-06 - no implementing act has been adopted and the repository has not been established - so
+
+  Art. 30(5) governs today. When the first such act lands, Art. 30(3) takes over twelve months later
+
+  for the service types it covers.
+
+  Where a mechanism already exists but the scanner could not see it - an export offered from a
+
+  separate administrative console, a hosted control panel, a separate repository, or a documented
+
+  manual process on request - record where it lives so that the next reader can close the candidate
+
+  from the note rather than re-deriving it.
+fingerprint_spec: project
+reading_class:
+  class: existence
+  elements:
+    - name: open
+      question: 5
+      text: "OPEN: is the interface published and usable without a negotiated agreement?"
+    - name: equally_available
+      question: 5
+      text: "EQUALLY AVAILABLE: can every customer reach it on every plan, and can the DESTINATION
+        PROVIDER a customer is moving to reach it?"
+    - name: free_of_charge
+      question: 5
+      text: "FREE OF CHARGE: is access to the interface itself charged for, metered, or rate-limited in a
+        way that makes a bulk migration impractical?"
+    - name: sufficient
+      question: 5
+      text: "SUFFICIENT: is there enough documentation of the data structures and formats for somebody to
+        write an importer?"

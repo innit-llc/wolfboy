@@ -1,0 +1,323 @@
+id: eu-consent-014
+pack: eu-consent
+short_name: Tracking script placed on a page
+problem_line:
+  text: Tracking tag loads with the page, no consent gate found
+fix_line: Load the tag only once consent is recorded, or, for a container snippet, set the vendor's
+  pre-consent default first.
+title: Script or pixel placement, or the machinery for one, in a file naming a tag vendor, a beacon
+  constant or a slot name, or a collector address - prior consent needs review
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC) (prior consent
+      for storing or accessing information on terminal equipment; tags executing before consent)
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) (replaces Art. 5(3) of Directive 2002/58/EC: the 2002
+      wording offered only a right to refuse, the replacement wording requires prior consent) and
+      Art. 4 (Member State transposition deadline 25 May 2011)"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-07-22
+    jurisdiction: EU
+effective_date: 2011-05-25
+severity: high
+rule_confidence: 0.55
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  shared_vocabulary:
+    - dom_script_sinks
+    - avatar_icon_recipients
+  vocabulary:
+    script_src_attributes:
+      - src
+      - th:src
+      - :src
+      - v-bind:src
+    injection_slot_names:
+      - analytics_code
+      - analytics_script
+      - analytics_scripts
+      - analytics_snippet
+      - analytics_html
+      - analytics_tag
+      - analytics_tags
+      - analytics_pixel
+      - analytics_js
+      - tracking_code
+      - tracking_script
+      - tracking_scripts
+      - tracking_snippet
+      - tracking_html
+      - tracking_tag
+      - tracking_tags
+      - tracking_pixel
+      - tracking_js
+      - tracker_code
+      - tracker_script
+      - tracker_snippet
+      - tracker_html
+      - head_html
+      - head_script
+      - head_scripts
+      - head_snippet
+      - head_code
+      - head_tag
+      - head_tags
+      - header_html
+      - header_script
+      - header_scripts
+      - header_snippet
+      - header_code
+      - header_tags
+      - footer_html
+      - footer_script
+      - footer_scripts
+      - footer_snippet
+      - footer_code
+      - footer_tags
+      - custom_script
+      - custom_scripts
+      - custom_html
+      - custom_code
+      - custom_js
+      - custom_snippet
+      - embed_code
+      - embed_script
+      - embed_html
+      - embed_snippet
+      - inject_script
+      - injected_script
+      - inject_html
+      - inject_code
+  vocabulary_matching:
+    script_src_attributes:
+      case_insensitive: true
+    injection_slot_names:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - strategy\s*(?:=>|[:=])\s*\{?\s*["']beforeInteractive["']|["']beforeInteractive["']
+    - ScriptStrategy\.preHydrate|strategy\s*(?:=>|[:=])\s*\{?\s*["']pre-hydrate["']|["']pre-hydrate["']
+    - set(?:Head|PreBody)Components\s*\(
+    - set(?:Head|PreBody)Components\s*:\s*[A-Za-z_$][\w$]*
+    - \buseHead(?:Safe)?\s*\(
+    - \btagPosition\s*:\s*["'](?:head|bodyOpen)["']
+    - \btagPriority\s*:\s*["']critical["']
+    - \bmetaInfo\s*[({:]
+    - ^\s*(?:head|script)\s*:\s*(?:\[|[A-Za-z_$][\w$]*\s*,?\s*$)
+    - <script[^>]*\bis:inline
+    - (?:<(?:script|SCRIPT)|%script)\b[^>\n]*(?<![\w-])(?&script_src_attributes)\s*(?:=>|[:=])\s*["'`{]{0,2}[^>\n]{0,200}?(?:googletagmanager\.com|google-analytics\.com|pagead2\.googlesyndication\.com|securepubads\.g\.doubleclick\.net|connect\.facebook\.net|analytics\.tiktok\.com|static\.ads-twitter\.com|snap\.licdn\.com|static\.criteo\.net|cdn\.taboola\.com|widgets\.outbrain\.com|tags\.tiqcdn\.com|utag\.js|assets\.adobedtm\.com|matomo\.(?:js|cloud)|piwik\.js|/mtm\.js|cdn\.segment\.com|cdn\.mxpnl\.com|cdn\.amplitude\.com|static\.hotjar\.com|clarity\.ms|fullstory\.com|plausible\.io/js|posthog\.com/static/array|mc\.yandex\.ru|js\.hs-scripts\.com)|(?:<(?:script|SCRIPT)|%script)\b[^>\n]*(?<![\w-])(?&script_src_attributes)\s*=\s*(?:["'][A-Za-z_$][\w$.]*["']|\{[A-Za-z_$][\w$.]*\})
+    - javascript_(?:include|importmap|pack|module)_tags?
+    - "[\"'`]gtm\\.start[\"'`]"
+    - googletagmanager\.com/ns\.html
+    - <noscript>[^\n]{0,240}<(?:iframe|img)\b[^>]*(?<![\w-])src\s*=
+    - \.(?:parentNode\s*\??\.\s*)?insertBefore\s*\(|\.before\s*\(|document\s*\.\s*(?:head|body|documentElement)\s*\.\s*(?:appendChild|append|prepend|insertBefore)\s*\(
+    - document\.write(?:ln)?\s*\(
+    - dangerouslySetInnerHTML
+    - add_action\s*\(\s*["'](?:wp_head|wp_enqueue_scripts|wp_print_scripts|wp_footer|login_enqueue_scripts|admin_enqueue_scripts)["']
+    - wp_(?:register|enqueue)_script\s*\(
+    - \.[ \t]*(?&dom_script_sinks)[
+      \t]*\([^\n]{0,80}(?:[Ss]cript|[Tt]ag|[Pp]ixel|[Ii]frame|[Nn]oscript)
+    - (?:\$\{?|\{\{\{?|<%[=-]|\{\$|#\{|@)[ \t]{0,4}@?[\w$.?(]{0,60}?(?&injection_slot_names)
+  also_in_file:
+    - googletagmanager\.com|google-analytics\.com|["'`]gtm\.start["'`]|GTM-[A-Z0-9]{4,}|["'`](?:G-[A-Z0-9]{6,}|UA-[0-9]{4,}-[0-9]+)["'`]
+    - pagead2\.googlesyndication\.com|securepubads\.g\.doubleclick\.net|connect\.facebook\.net|analytics\.tiktok\.com|static\.ads-twitter\.com|snap\.licdn\.com|static\.criteo\.net|cdn\.taboola\.com|widgets\.outbrain\.com
+    - tags\.tiqcdn\.com|utag\.js|assets\.adobedtm\.com|matomo\.(?:js|php|cloud)|piwik\.js|/mtm\.js
+    - cdn\.segment\.com|cdn\.mxpnl\.com|cdn\.amplitude\.com|static\.hotjar\.com|clarity\.ms|fullstory\.com|plausible\.io/js|posthog\.com/static/array|mc\.yandex\.ru|js\.hs-scripts\.com|posthog\.com|posthog\.init\s*\(
+    - app\.chatwoot\.com|chatwootSDK
+    - (?:(?:^|[^\w])(?:import|require|from|use|include)\b[^\n]{0,200}(?:[Tt]elemetry|[Tt]racking|[Bb]eacon|[Pp]ixel|[Aa]nalytics|[Cc]ollect)(?:Pixel|Url|Uri|Host|Endpoint|Src|Script|Domain|Origin)\b|(?:TELEMETRY|TRACKING|BEACON|PIXEL|ANALYTICS|COLLECT|MEASURE)_(?:PIXEL|URL|URI|HOST|ENDPOINT|SRC|SCRIPT|BEACON|DOMAIN|ORIGIN)\b)
+    - https?://[A-Za-z0-9.\-]{2,80}/(?:[A-Za-z0-9._\-]{1,40}/){0,3}(?:collect|track|tracker|tracking|telemetry|beacon|pixel|event|events|analytics|stats|hit|__utm\.gif|noscript)\b|https?://[A-Za-z0-9.\-]{2,80}/(?:[A-Za-z0-9._\-]{1,40}/){0,3}[A-Za-z0-9_\-]{1,3}\.(?:gif|png|webp)\b
+    - (?:^|[^A-Za-z0-9])(?&avatar_icon_recipients)
+    - (?:\$\{?|\{\{\{?|<%[=-]|\{\$|#\{|@)[ \t]{0,4}@?[\w$.?(]{0,60}?(?&injection_slot_names)
+  resolve_import_aliases: true
+context_questions:
+  - "Is the construct on the matched line the one that loads the third-party tag this file names?
+    This rule matches a placement construct on one line - the Next.js strategy prop is one of the
+    seven shapes listed at context question 4 - and a tag host, container id or measurement id
+    anywhere in the same file, and those two can belong to different components, partials or
+    snippets. A layout routinely carries several: a polyfill or a theme-flash guard placed early,
+    and the tag itself placed later or loaded from a consent callback. Read the element, component
+    or partial the matched line sits inside, quote its src or its snippet, and say whether it is the
+    third-party tag. Where it is not, the candidate closes here - and say whether the tag in the
+    same file has a load problem of its own, which is eu-consent-001's subject matter and not this
+    rule's."
+  - Does this tag have to load this early? A tag placed in the document's initial load path - a
+    pre-hydration strategy prop such as Next.js beforeInteractive, a container snippet in the head,
+    a static script element or pixel, or a synchronous injector - executes before a consent manager
+    can record a decision.
+  - Where this is a Google tag, is Consent Mode default-denied guaranteed to execute before this
+    script? Where it is not a Google tag, name the vendor's own pre-consent mechanism - Matomo's
+    requireConsent, or the equivalent opt-in call - and say whether it runs first; where the vendor
+    offers none, the only gate is not loading the tag until consent is recorded.
+  - "Appended 2026-08-11 with the reach widening, because the three questions above were written for
+    one branch. Which branch produced this candidate, and does the matched line place a tag in the
+    document's initial load path at all? The detector now matches seven shapes: a pre-hydration
+    strategy prop; a head-population call (useHead, setHeadComponents, a head/script config array);
+    an inline Astro script; a script element whose src is a tag host; a container snippet, a
+    noscript element holding an iframe or an image, or the synchronous injector that inserts a
+    script before the first one in the document; an inline script written into a React document
+    shell; and a WordPress head registration. Quote the matched line and name the shape. Two of them
+    - dangerouslySetInnerHTML and a head-population call - are placement machinery that carries no
+    tag of its own, so read what is being placed before going further."
+  - "Is this placement gated on a consent decision that the detector cannot see, and is the file a
+    deployed tag or a quotation of one? Neither question is answerable from the matched line. For
+    the first, read outward from the match for a consent state check, an early return or a
+    conditional render: the shared telemetry component of one product carries a complete Google Tag
+    Manager container snippet inside a component that returns null unless the visitor has accepted,
+    and it matches this rule exactly as an ungated one does. For the second, check whether the file
+    is documentation, an administration screen that displays a vendor snippet for an operator to
+    copy, or an integration manifest describing a tag the product's own users install - all three
+    quote the snippet verbatim and none of them loads a tag on this product's pages."
+  - "Appended 2026-09-02 with the corroboration-gate widening, and it is the question those two
+    branches make necessary. WHO OPERATES THE ADDRESS THIS PLACEMENT CONTACTS? THAT IS A FACT ABOUT
+    THE PRODUCT AND ITS DEPLOYMENT, IT IS ASKED OF THE PERSON RUNNING THE SCAN, AND IT IS NEVER
+    INFERRED FROM A NAME IN THE SOURCE. Five of the seven corroboration branches recognise a named
+    vendor, so on those the answer is on the page. Two do not: one admits the file because it names
+    or imports a placement constant whose value lives in another module, and one because it carries
+    an absolute address whose path is a collector endpoint or whose file name is a
+    one-to-three-character image. On a candidate raised through either of those, the address may
+    belong to a separate company, to the operator's own measurement deployment, or to the analytics
+    vendor whose product this repository IS - and the source does not say which. Read the constant's
+    definition or the address, then ask the operator, and say plainly which of the three it is. Two
+    consequences follow and both belong in the finding. First, A THIRD PARTY IS NOT GUARANTEED ON
+    THESE TWO BRANCHES: ePrivacy Art. 5(3) turns on information being stored on or read from the
+    visitor's terminal equipment and not on who receives it, which is why the branches exist, but a
+    finding that reports a first-party collector as a third-party tag is describing it wrongly.
+    Second, a first-party collector does not make the Article inapplicable and does not answer it
+    either: the strictly-necessary exemption in the same paragraph turns on what the storage is FOR,
+    not on who runs the endpoint, and a measurement beacon is a weak candidate for it however it is
+    hosted."
+  - "Appended 2026-09-09 with the placement-slot clause, and it is the question that clause makes
+    necessary. WHO SUPPLIES THE VALUE THIS PAGE INTERPOLATES, AND WHERE IS IT STORED? The matched
+    line is a slot - a template variable whose own name says that a script, a tag or head markup
+    belongs there - and what the slot carries is not in the source, so no clause can read it. Answer
+    three things from the deployment rather than from the code. Who may write into that slot: a site
+    administrator, a tenant of a shared installation, an end user, or nobody, because the value
+    ships fixed. Where the value is kept: a database row, a settings file, an environment variable,
+    a content-management entry. And what is in it at this deployment. Until those are answered the
+    finding names an injection point and no recipient: it is not evidence that a third party
+    receives anything, and it is not evidence that nothing is placed there either. If the slot is
+    filled at this deployment, read the value and then answer the earlier questions on this list
+    about what it loads and when it runs."
+evidence_template: "{file}:{line} carries one of the shapes this rule screens: a pre-hydration
+  strategy prop (Next.js beforeInteractive, Gatsby preHydrate), a head-population call, a placement
+  option on a head entry (tagPosition, tagPriority, metaInfo) or a head/script configuration array,
+  an inline Astro script, a script element whose src is a tag host, a Rails javascript_include_tag
+  (matched on the helper alone, whatever it loads), the gtm.start marker that opens a Google Tag
+  Manager container snippet, Google Tag Manager's noscript iframe URL, a noscript element holding an
+  iframe or an image with a src (matched on the noscript alone, whatever the source is), the
+  synchronous injector that inserts a script ahead of the first one already in the document or the
+  older document.write spelling of the same thing, a dangerouslySetInnerHTML block (which in a React
+  document shell is how an inline script is placed, and which is matched on the prop alone, wherever
+  it appears), or a WordPress script registration or head hook. Two of those - a head-population
+  call and a dangerouslySetInnerHTML block - are placement machinery that may carry no tag of their
+  own, so read what is being placed before reading the finding as a tag load; an administration card
+  whose dangerouslySetInnerHTML holds a translated help string is the observed case. Somewhere in
+  the same file, the matched line included, a third-party tag is named - a loader host, a container
+  id or a measurement id, from Google, Matomo, Piwik, Tealium, Adobe, Segment, Mixpanel, Amplitude,
+  Hotjar, Clarity, FullStory, Plausible, PostHog, Yandex, HubSpot, or an ad or social pixel - and,
+  since 2026-08-28, Chatwoot's hosted loader host or the global its snippet installs, which is a
+  live-chat widget rather than an analytics tag and is corroboration on the same footing, because
+  what BRINGS Art. 5(3) into play is that something is stored on, or read from, the visitor's
+  terminal equipment, whatever it is stored for. What it is stored for decides a DIFFERENT question,
+  and this rule does not answer that one either: the same paragraph exempts storage strictly
+  necessary in order to provide an information society service the user has explicitly requested,
+  and a support widget a visitor opens themselves is a stronger case for that exemption than a tag
+  that loads on arrival. Which of the two this is is not readable from the matched line, and it is a
+  question the vendor-neutrality of the corroboration list makes MORE important rather than less.
+  SINCE 2026-09-02 THE CORROBORATION SIDE ALSO ADMITS A FILE ON TWO FACTS THAT NAME NO VENDOR AT
+  ALL, and a finding raised through either of them has to say so rather than reporting a vendor that
+  was never established. One is that the file names or imports a PLACEMENT CONSTANT -
+  TELEMETRY_PIXEL, TRACKING_URL, BEACON_URL, PIXEL_HOST or a peer - whose value lives in another
+  module, which is the case where the address is one import away and the same-file gate could not
+  reach it. The other is that the file carries an ABSOLUTE COLLECTOR ADDRESS: a path segment such as
+  collect, track, telemetry, beacon, pixel, event or stats, or an image file of one to three
+  characters, which is the beacon idiom. Both branches exist because ePrivacy Art. 5(3) turns on
+  information being stored on or read from the visitor's terminal equipment and not on who receives
+  it, and a product that runs its own measurement endpoint is on nobody's vendor list. SINCE
+  2026-09-04 A THIRD VENDOR-FREE BRANCH ADMITS AN ICON, ICON-FONT OR ICON-SET DELIVERY HOST, which
+  is not a tag vendor: a finding raised through it should say that the file names a host the page
+  fetches from and no tag vendor, and the strictly-necessary exemption in the same paragraph is a
+  stronger candidate for an icon font than for a tag. WHAT THEY DO NOT ESTABLISH IS WHO OPERATES
+  THAT ADDRESS. It may be a separate company, the operator's own deployment, or - in the case that
+  produced these branches - the analytics vendor whose own product the repository is. That is a fact
+  about the product and its deployment, it is asked in context_questions[5], and it is never
+  inferred from a constant's name or a host string. Two things follow. A third party is not
+  guaranteed on those two branches, so a finding raised through them should describe what it
+  actually found - a placement contacting an address the source does not attribute - rather than
+  assert a third party. And a first-party collector neither removes the Article nor answers it: the
+  strictly-necessary exemption in the same paragraph turns on what the storage is FOR, and a
+  measurement beacon is a weak candidate for it however it is hosted. The detector matched the two
+  facts separately and cannot tell whether they belong to the same element, whether a consent gate
+  it cannot see wraps the placement, or whether this file deploys the snippet or only quotes it: see
+  the context questions SINCE 2026-09-09 A NINTH CORROBORATION BRANCH AND A TWENTY-FIRST MATCH
+  CLAUSE ADMIT A PLACEMENT SLOT THAT CARRIES NO VENDOR NAME AT ALL. The construct is a template
+  interpolation whose own variable name is the placement slot - analyticsCode, trackingCode,
+  headHtml, customScript and their peers - written into a rendered page, and the observed case is a
+  publishing platform whose theme template emits whatever tracking markup an administrator typed
+  into a settings form and the server stored in a database row. ON THIS PAIR OF CLAUSES THE FINDING
+  ESTABLISHES THE INJECTION POINT AND NOT THE RECIPIENT. No vendor, no first party and no address is
+  written into the source at all, so a finding raised through them describes a place where
+  administrator-supplied markup is written into a page, and must not name or imply who receives
+  anything. WHO SUPPLIES THAT VALUE AND WHERE IT IS STORED IS ASKED IN THE LAST CONTEXT QUESTION,
+  and it is never inferred from the slot name. It is also why the corroboration and the match may
+  sit on one line for this shape: the placement and the named slot are the same piece of text, which
+  is the case this template already describes as the matched line included. SEPARATELY, AND ON THE
+  VENDOR SIDE, A HOST MAY BE SPELLED REGIONALLY WITHOUT CHANGING WHAT THE CODE DOES - a us. or eu.
+  prefix, an asset host derived from the deployment address at runtime, or a ui_host parameter
+  carrying one of them - so on 2026-09-09 the analytics and session-replay corroboration branch was
+  extended to read one vendor host family and that vendor own initialiser rather than a single
+  asset-path spelling. The file that prompted it carried the host one line below a placement this
+  gate had deleted."
+remediation_template: >
+  This is a candidate for review against ePrivacy Directive 2002/58/EC Art. 5(3) as nationally
+
+  transposed, which is this rule's first legal basis. It is not a determination about this code. The
+
+  changes below apply where the review confirms that a third-party tag really is placed in the
+
+  document's initial load path.
+
+  Read the matched line first and name its shape, because the change differs by shape and only one
+  of
+
+  the seven shapes this detector matches has a strategy prop to change.
+
+  - A pre-hydration strategy prop (Next.js strategy="beforeInteractive", Gatsby
+    ScriptStrategy.preHydrate): move the tag off it — "afterInteractive" is the Next.js default — and
+    load the tag from the consent manager's callback instead.
+  - A script element in a server template or an application shell (ERB, Twig, Mustache, Handlebars,
+    Blade, HAML, a SvelteKit app.html, an Angular or Vite index.html, a Remix or React Router root, an
+    Astro script marked is:inline), a Rails javascript_include_tag, or a WordPress
+    wp_register_script / wp_enqueue_script: there is no
+    strategy prop to change here. Take the element or the registration out of the shell and let the
+    consent manager inject the tag once the visitor has answered, or leave the element in place with
+    its src moved to data-src, which is how Cookiebot, CookieHub and OneTrust hold a tag back until
+    consent arrives.
+  - A tag-manager container snippet, its synchronous injector (parentNode.insertBefore,
+    document.write) or an inline script written into a React document shell: the snippet runs as the
+    page parses, so the gate has to sit around the snippet itself — render it only after consent, or
+    keep it and set the vendor's own pre-consent default ahead of it. Consent Mode default-denied is
+    that mechanism for Google, and requireConsent is Matomo's; where a vendor offers no pre-consent
+    mode, the only gate is not loading the snippet until consent is recorded. The Google answer does
+    not transfer to the other vendors.
+  - A noscript container iframe or tracking pixel: a JavaScript consent manager cannot reach it at
+    all, because it fires from static markup with scripting switched off. Remove it, or emit it only
+    from a server-side branch that already knows consent was recorded.
+  - A head-population call (useHead, setHeadComponents, a head: or script: configuration array, or a
+    placement option such as tagPosition, tagPriority or metaInfo) or a dangerouslySetInnerHTML
+    block: these are placement machinery and may carry no tag of their own. Read what is being
+    placed before changing anything.
+  Where the file is documentation, an administration screen that shows an operator a snippet to
+  paste,
+
+  or an integration manifest for a tag this product's own users install, nothing loads on this
+
+  product's own pages and the candidate closes there.
+data_categories:
+  - user.behavior
+fingerprint_spec: default

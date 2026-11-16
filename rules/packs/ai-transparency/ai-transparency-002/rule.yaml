@@ -1,0 +1,180 @@
+id: ai-transparency-002
+pack: ai-transparency
+short_name: "Companion-chatbot wording: AI notice and user safety"
+problem_line:
+  text: "Companion chatbot: user notices or crisis protocol not found"
+fix_line: Give each state's AI notices and minors' break reminders, run a crisis protocol, and
+  publish it for California.
+title: Companion-chatbot wording in a file that calls an LLM (CA SB 243 / NY scope)
+jurisdiction:
+  - US
+legal_basis:
+  - cite: California S.B. 243 (2025-2026 Regular Session), adding Business and Professions Code Sec.
+      22601-22606, in force 2026-01-01 — Sec. 22602(a) notification that the companion chatbot is
+      artificially generated and not human where a reasonable person would be misled; Sec. 22602(b)
+      protocol preventing suicidal-ideation and self-harm content with referral to crisis services,
+      the details of which are to be published on the operator's website; Sec. 22602(c)(2)
+      notification provided BY DEFAULT, at least every three hours of continuing companion-chatbot
+      interaction with a user the operator knows is a minor, which must BOTH remind the user to take
+      a break AND state that the companion chatbot is artificially generated and not human — two
+      things, not one; Sec. 22602(c)(1) disclosure to a known minor that the user is interacting
+      with artificial intelligence; Sec. 22602(c)(3) reasonable measures against sexually explicit
+      material for minors; Sec. 22605 private right of action, created by the section's opening
+      words "A person who suffers injury in fact as a result of a violation of this chapter may
+      bring a civil action to recover all of the following relief" and granting all three of (a)
+      injunctive relief, (b) damages in an amount equal to the greater of actual damages or one
+      thousand dollars ($1,000) per violation, and (c) reasonable attorney's fees and costs — the
+      right of action is the chapeau's and not subdivision (b)'s, and injury in fact is its
+      threshold
+    url: https://leginfo.legislature.ca.gov/faces/billTextClient.xhtml?bill_id=202520260SB243
+    checked_at: 2026-09-07
+    jurisdiction: US
+  - cite: New York General Business Law Sec. 1701 (Prohibitions and requirements), in Art. 47
+      (Artificial Intelligence Companion Models), Sec. 1700-1704, in force 2025-11-05 — the standard
+      is reasonable efforts, not detection as such. Sec. 1701 reads in full "It shall be unlawful
+      for any operator to operate for or provide an AI companion to a user unless such AI companion
+      contains a protocol to take reasonable efforts for detecting and addressing suicidal ideation
+      or expressions of self-harm expressed by a user to the AI companion, that includes but is not
+      limited to, detection of user expressions of suicidal ideation or self-harm, and a
+      notification to the user that refers them to crisis service providers such as the 9-8-8
+      suicide prevention and behavioral health crisis hotline under section 36.03 of the mental
+      hygiene law, a crisis text line, or other appropriate crisis services upon detection of such
+      user's expressions of suicidal ideation or self-harm."
+    url: https://www.nysenate.gov/legislation/laws/GBS/1701
+    checked_at: 2026-09-07
+    jurisdiction: US
+  - cite: New York General Business Law Sec. 1702 (Notifications), in Art. 47 (Artificial Intelligence
+      Companion Models), Sec. 1700-1704, in force 2025-11-05 — Sec. 1702 reads in full "An operator
+      shall provide a clear and conspicuous notification to a user at the beginning of any AI
+      companion interaction which need not exceed once per day and at least every three hours for
+      continuing AI companion interactions which states either verbally or in writing that the user
+      is not communicating with a human."
+    url: https://www.nysenate.gov/legislation/laws/GBS/1702
+    checked_at: 2026-09-07
+    jurisdiction: US
+effective_date: 2025-11-05
+severity: high
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  match:
+    - "[Cc]ompanion"
+    - "[Gg]irlfriend|[Bb]oyfriend|[Ww]aifu"
+    - "[Rr]omantic.{0,30}(chat|AI|ai)"
+    - "[Ss]oul[ _-]?mate"
+    - "[Vv]irtual[ _-]?(?:partner|lover|spouse|friend|[Pp]artner|[Ll]over|[Ss]pouse|[Ff]riend)"
+  also_in_file:
+    - useChat\(|streamText\(|chat\.completions|messages\.create\(
+context_questions:
+  - Does this feature offer a sustained social relationship of the kind a companion AI provides, or
+    is the term only incidental wording? Judge from what the product actually does and quote the
+    code that settles it.
+  - "If it does: search for an AI disclosure; for the notification California owes a user the
+    operator knows is a minor - provided by default, at least every three hours of continuing
+    interaction, and required both to remind the user to take a break and to state that the chatbot
+    is artificially generated and not human, which is two things and not one; and for a published
+    suicide and self-harm response protocol. Quote each one you find or record its absence."
+  - Is this feature offered to users in California or New York?
+evidence_template: "{file}:{line} carries companion-AI wording alongside LLM code; the state-law
+  duties (AI disclosure, the minor-facing notification California owes by default, which both
+  reminds the user to take a break and states that the chatbot is artificially generated and not
+  human, and a suicide and self-harm response protocol) need review"
+remediation_template: >
+  This is a candidate for review against California S.B. 243 and New York General Business Law
+
+  Art. 47, not a determination about this code. What layer 1 matched is a word - companion,
+
+  girlfriend, boyfriend, waifu, or romantic near a chat noun - in a file that also calls a language
+
+  model. It did not establish that this product is a companion chatbot, and that is the fact
+
+  everything below turns on.
+
+  Settle that first, because a negative answer ends the review. Both statutes reach a system
+  offering
+
+  a sustained social relationship: S.B. 243 defines a companion chatbot in the Business and
+
+  Professions Code sections it adds, and New York defines an AI companion in Gen. Bus. Law Art. 47.
+
+  A Kotlin companion object, a companion app, a companion guide in documentation, a pet or
+
+  companion-animal feature, and a romantic genre tag in a content taxonomy all carry this vocabulary
+
+  and none of them is a companion chatbot. Read what the product does and quote it; where the term
+  is
+
+  incidental wording, record that and stop.
+
+  Where the product IS a companion chatbot and is offered in California or New York, the duties
+  below
+
+  follow and they are separate:
+
+  - an unambiguous notification that the chatbot is artificially generated and not human, where a
+    reasonable person would otherwise be misled (S.B. 243 Sec. 22602(a)). New York states the same
+    notification in Sec. 1702, in one sentence quoted here whole because its limiting words sit
+    between its two limbs: "An operator shall provide a clear and conspicuous notification to a
+    user at the beginning of any AI companion interaction which need not exceed once per day and at
+    least every three hours for continuing AI companion interactions which states either verbally
+    or in writing that the user is not communicating with a human." So on the New York side this is
+    a repeating duty rather than a one-time one, and it is a bounded one: read the sentence above
+    before recording anything about how often the notification is owed, and do not restate its
+    frequency in your own words;
+  - a notification owed to a user the operator knows is a minor, which California states in Business
+    and Professions Code Sec. 22602(c)(2) in these words: "Provide by default a clear and
+    conspicuous notification to the user at least every three hours for continuing companion chatbot
+    interactions that reminds the user to take a break and that the companion chatbot is artificially
+    generated and not human." That is two things and not one - the break reminder AND the statement
+    that the chatbot is artificially generated and not human - and it is owed by default. A product
+    that reminds a minor to take a break and says nothing about the chatbot not being human has half
+    of it, so record both halves separately. It is a California duty owed to known minors and it is
+    not the New York Sec. 1702 notification quoted above;
+  - a protocol on each side, framed differently by each statute and not interchangeable: California
+    Sec. 22602(b)(1) requires the operator to maintain a protocol for preventing the production of
+    suicidal ideation, suicide, or self-harm content, including a notification referring the user to
+    crisis service providers, and Sec. 22602(b)(2) requires the details of that protocol to be
+    published on the operator's internet website; New York Gen. Bus. Law Sec. 1701 requires the AI
+    companion itself to contain a protocol taking reasonable efforts for detecting and addressing
+    suicidal ideation or expressions of self-harm, with a notification referring the user to crisis
+    service providers such as the 9-8-8 hotline. Reasonable efforts is New York's own standard, the
+    section is quoted in full in this rule's legal basis, and nothing here states it more strictly;
+  - age-appropriate safeguards for the minor case.
+
+  S.B. 243 Sec. 22605 attaches a private right of action, and California puts it in the section's
+  own
+
+  opening words: "A person who suffers injury in fact as a result of a violation of this chapter may
+
+  bring a civil action to recover all of the following relief" - (a) injunctive relief, (b) damages
+  in
+
+  an amount equal to the greater of actual damages or one thousand dollars ($1,000) per violation,
+
+  and (c) reasonable attorney's fees and costs. The right of action is the chapeau's rather than
+
+  subdivision (b)'s, injury in fact is the threshold, and the fees and the injunction are part of
+  the
+
+  exposure beside the damages, which is why establishing the first fact carefully matters more here
+
+  than on a rule whose only exposure is regulatory.
+data_categories: []
+fingerprint_spec: project
+reading_class:
+  class: existence
+  elements:
+    - name: ai_disclosure
+      question: 2
+      text: an AI disclosure
+    - name: break_reminder
+      question: 2
+      text: the notification California owes a user the operator knows is a minor, "required both to
+        remind the user to take a break"
+    - name: non_human_statement
+      question: 2
+      text: the same notification's second half - "to state that the chatbot is artificially generated and
+        not human, which is two things and not one"
+    - name: self_harm_protocol
+      question: 2
+      text: a published suicide and self-harm response protocol

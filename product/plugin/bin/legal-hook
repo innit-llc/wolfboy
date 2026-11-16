@@ -1,0 +1,752 @@
+#!/bin/bash -p
+# legal-hook: the one way every hook of this plugin runs. hooks/hooks.json
+# names it for every entry as `/bin/bash -p "${CLAUDE_PLUGIN_ROOT}/bin/legal-hook" <event>`, and for the Bash group as
+# `... PreToolUse Bash`. The Bash group matches the three tools that run a shell command, Bash, PowerShell and Monitor,
+# each with its command in tool_input.command (hook.ts SHELL_TOOLS), and the VS Code
+# extension's code tool mcp__ide__executeCode, with its code in tool_input.code (hook.ts IDE_CODE_TOOL)
+#; what this file reads of the Bash group it reads of all four.
+#
+# THE CLASS IT CLOSES: a guard that did not run must not look like a guard that allowed. Claude Code reads exit 0 (with
+# any JSON on stdout) and exit 2 (blocking, the reason on stderr) as a hook's answer, and every other exit as a
+# non-blocking error that lets the action go ahead. So this shim runs the hook entry and passes on only its own answer -
+# exit 0 or 2, which the entry gives only after deciding - and treats every other outcome (no node outside the project,
+# a node that cannot run the entry, a crash, a missing module, an entry that is not built) as a hook that did not run.
+# The entry's own "go ahead" after a failure that does not refuse (a route that fails open by design) reaches this shim
+# as exit 0 with its note as a systemMessage: the entry is told it runs under this shim by --stderr-fd=3, and writes
+# what it means for stderr to descriptor 3; Node's own stderr (a crash's trace) is not passed on.
+#
+# A HOOK THAT DID NOT RUN FAILS CLOSED ONLY WHERE A GUARD IS DUE: outside a scan the
+# guards protect nothing, and refusing every call there would cost the person their tool for no gain. A guard is due
+# - while a scan is under way in this project: the program's one marker for it, .legal/launch/scan-under-way.json under
+#   CLAUDE_PROJECT_DIR (hook.ts SCAN_UNDER_WAY_FILE: written before every question-ledger line and before the run's
+#   marker, removed when a run ends), stands, or a folder on its way exists and cannot be searched, so that whether it
+#   stands cannot be told; this shim only asks whether the file is there and reads nothing of the program's logic;
+# - at all times, for a Bash call that may name the pre-launch step's --shape or --previous (hook.ts `mentionsShapeFlag`,
+#   the entry's own light check for its question:shape-flag route, which refuses those flags whether or not a scan is
+#   under way). This shim does not parse the event's JSON: it reads the event's text (the
+#   Bash group only) and asks the same question of it with every JSON escape that could spell a flag counted as a yes
+#   (legal_names_shape below).
+# Where a guard is due, the event ends in its fail-closed result; elsewhere the call goes ahead, and the person is told
+# once, at the session's start, in one line, that the hooks cannot run and how to repair or disable them.
+#
+# What fail-closed means per event (Claude Code's hooks reference, "Exit code 2 behavior per event" and "Block the
+# action when a hook fails"):
+# - PreToolUse: exit 2, the call is blocked and Claude reads the sentence.
+# - UserPromptExpansion: exit 2, the expansion is blocked and the person reads the sentence.
+# - PostToolUse, PostToolUseFailure: exit 2, Claude reads the sentence (the tool already ran or failed).
+# - SessionStart, SubagentStart: exit 2, the person sees the sentence as a hook error; the session or the agent goes on
+#   (neither event can block).
+# - PermissionDenied: exit 0 and the sentence as a systemMessage, never `retry`: Claude Code ignores this event's exit
+#   code and stderr, and the denial stands whatever the hook says.
+# - SubagentStop: exit 0 and the sentence as a systemMessage. Never a block: a stop refused because the hook cannot
+#   run would be refused again at every attempt, and Claude Code itself does not apply onFailure to this event for
+#   that reason. An answer the capture did not take is not taken, so the stop going ahead loses no refusal.
+# - Stop (the main conversation's): exit 0 and the sentence as a systemMessage, never a block: the
+#   hook's block is a waker, and a waker that cannot run must never keep the person's conversation from stopping.
+# An event name this shim does not know gets exit 2, scan or no scan.
+#
+# The environment and the node: node-choice.bash, the launcher's own rule (bin/legal-scan says what it closes and what
+# it does not), so LEGAL_BUNDLE_DIR, PRODUCT_CLI_*, NODE_*, OPENSSL_*, GCONV_PATH and LOCPATH from a project's settings,
+# in any case, do not reach the hooks' node either.
+# This file's own folder comes from $0 as the launcher's does, never from BASH_SOURCE or another variable (hooks.json
+# starts it by its full path), and a start with no folder in the path, or
+# through a symbolic link, is a hook that could not run.
+# The entry is dist/hook-entry.js of the program node-choice.bash finds (LEGAL_CLI_DIR, the launcher's own rule: the
+# plugin's folder where it holds the program's package, else the source checkout's product/packages/cli), and the
+# launcher's two refusals apply here too: a program whose packages are not installed, and a plugin and a program of
+# different versions (legal_cli_refusal), are each a hook that could not run, never an entry run anyway.
+# Only shell builtins run here before the node does. TMOUT, which a project's settings can set, would cut the read of the
+# event below short, and FUNCNEST would abort this file's own function calls: both are unset before either happens.
+unset TMOUT FUNCNEST
+# Bash counts SECONDS from here (an environment value,
+# which bash takes as the count's start, is set aside): the entry takes it off its deadline (hook-entry.ts --shim-seconds).
+SECONDS=0
+legal_event="${1:-}"
+legal_tool="${2:-}"
+legal_sentence="wolfboy: this plugin's hook could not run, so its check did not take place and is not treated as passed. Repair the plugin's install (Node.js 20 or later on PATH outside the project folder, and the program installed with the plugin, complete in its dist folder), or disable the plugin."
+legal_outside="wolfboy: this plugin's hooks cannot run (they need Node.js 20 or later on PATH outside the project folder, and the program installed with the plugin, complete in its dist folder). No scan is under way in this project, so nothing needs their checks and your calls go ahead; during a scan they would be refused. Repair the plugin's install, or disable the plugin."
+legal_why=""
+legal_read=""
+legal_in=""
+legal_unread=""
+legal_cause=""
+
+# The text of $1 as a JSON string's contents (backslash, double quote and control characters escaped), in legal_j: a
+# launcher's refusal can name a path that holds a backslash or a quote. Parameter expansion only.
+legal_json_text() {
+  legal_j="${1//\\/\\\\}"
+  legal_j="${legal_j//\"/\\\"}"
+  legal_j="${legal_j//$'\n'/\\n}"
+  legal_j="${legal_j//$'\r'/\\r}"
+  legal_j="${legal_j//$'\t'/\\t}"
+  legal_j="${legal_j//[$'\x01'-$'\x1f']/?}"
+}
+
+legal_fail_closed() {
+  legal_said="$legal_sentence"
+  case "$legal_why" in
+    scan) legal_said="$legal_said A scan is under way in this project (its .legal/launch/scan-under-way.json stands). If none is, a scan that stopped left that file: delete it outside Claude Code." ;;
+    shape) legal_said="$legal_said This Bash command may name the pre-launch step's --shape or --previous, which the hook checks whether or not a scan is under way." ;;
+    guard) legal_said="$legal_said This call may reach WolfBoy's state folder, a project's .legal folder or the redaction key's folder, which the hook guards whether or not a scan is under way." ;;
+    long) legal_said="$legal_said This call is longer than this file reads of it (65,536 characters), so it may name the pre-launch step's --shape or --previous or reach WolfBoy's state folder, a project's .legal folder or the redaction key's folder, which the hook checks whether or not a scan is under way." ;;
+  esac
+  if [ -n "$legal_cause" ]; then legal_said="$legal_said Why, in the launcher's words: $legal_cause"; fi
+  case "$legal_event" in
+    PermissionDenied | SubagentStop | Stop)
+      legal_json_text "$legal_said"
+      printf '{"systemMessage":"%s"}\n' "$legal_j"
+      exit 0
+      ;;
+    *)
+      printf '%s\n' "$legal_said" >&2
+      exit 2
+      ;;
+  esac
+}
+
+legal_go_ahead() {
+  case "$legal_event" in
+    SessionStart)
+      legal_said="$legal_outside"
+      if [ -n "$legal_cause" ]; then legal_said="$legal_said Why, in the launcher's words: $legal_cause"; fi
+      legal_json_text "$legal_said"
+      printf '{"systemMessage":"%s"}\n' "$legal_j"
+      exit 0
+      ;;
+    PreToolUse | PostToolUse | PostToolUseFailure | PermissionDenied | UserPromptExpansion | SubagentStart | SubagentStop | Stop) exit 0 ;;
+    *) legal_fail_closed ;;
+  esac
+}
+
+# Whether the event's text may hold a Bash command that names --shape or --previous as hook.ts `mentionsShapeFlag` reads
+# the command: (A) with backslashes, quotes, `$` and new lines removed, it holds --shape or --previous; or (B) it holds a
+# backslash and, with backslashes, double quotes and new lines removed, a `$'`. In the JSON text a command's letters and
+# hyphens stand as themselves or as a \u escape; a new line stands as \n, a backslash as \\, a double quote as \". So: any
+# \u at all is a yes; otherwise \n is removed (before any backslash), then the characters the check removes, and the same
+# test is made.
+legal_names_shape() {
+  case "$legal_in" in *'\u'*) return 0 ;; esac
+  legal_t="${legal_in//\\n/}"
+  legal_t="${legal_t//\\/}"
+  legal_t="${legal_t//\"/}"
+  legal_u="$legal_t"
+  legal_t="${legal_t//\'/}"
+  legal_t="${legal_t//\$/}"
+  case "$legal_t" in *--shape* | *--previous*) return 0 ;; esac
+  case "$legal_in" in *'\\'*) case "$legal_u" in *"\$'"*) return 0 ;; esac ;; esac
+  return 1
+}
+
+# Whether the event is a
+# file-tool call (Write, Edit, MultiEdit, NotebookEdit, Read, Grep, Glob) whose target could be one the guard rows
+# refuse in every session, as hook.ts `guardTargetMayBe` asks it of the parsed event where the entry runs: here, of the
+# event's text, case-folded (nocasematch: bash 3.2 has no case conversion). A Grep or a Glob is a yes (its folder may
+# lie above a guarded one); otherwise any \u escape, any of the three names (legal-scan, .legal,
+# wolfboy-redaction-key) or an 8.3 short name's ~<digit> anywhere in the text is a yes.
+# Then, where the node the launcher's rule chose is
+# known (LEGAL_NODE: the entry could not start, the node could), the target as the file system resolves it, so a link a
+# repository commits is followed: that node, with no module of the program's (`node -e`, Node's own fs and path only),
+# reads the event, takes the target (file_path, or a NotebookEdit's notebook_path; a leading ~ as $HOME; relative
+# to the event's cwd), resolves the real path of its nearest existing folder (fs.realpathSync.native) with the names
+# below it, and answers no only where that path holds none of the four; a script that fails once the node runs answers
+# yes. Where no node is known (the launcher's rule found none, or this shim stopped before asking it), or the node gives
+# no answer at all (it cannot run), the text alone decides, and a link is not followed. It refuses more than the guard
+# in places (a Grep of the project, a path whose own text holds .legal), and less where hook.ts `guardTargetMayBe` says
+# its own check does (the transcript folder, a .git, the deeper checks' rows, a hard link). Only while the entry cannot
+# run.
+legal_names_guarded() {
+  if [ -n "$legal_unread" ]; then
+    # Not read whole (P3 above): a file tool, or an event whose head names no tool, may reach a guarded folder.
+    [[ $legal_in =~ \"tool_name\"[[:space:]]*:[[:space:]]*\"([^\"]*)\" ]] || return 0
+    case "${BASH_REMATCH[1]}" in Write | Edit | MultiEdit | NotebookEdit | Read | Grep | Glob) return 0 ;; esac
+    return 1
+  fi
+  [[ $legal_in =~ \"tool_name\"[[:space:]]*:[[:space:]]*\"(Write|Edit|MultiEdit|NotebookEdit|Read|Grep|Glob)\" ]] || return 1
+  case "${BASH_REMATCH[1]}" in Grep | Glob) return 0 ;; esac
+  case "$legal_in" in *'\u'*) return 0 ;; esac
+  shopt -s nocasematch
+  case "$legal_in" in
+    *legal-scan* | *.legal* | *wolfboy-redaction-key* | *'~'[0-9]*)
+      shopt -u nocasematch
+      return 0
+      ;;
+  esac
+  shopt -u nocasematch
+  [ -n "${LEGAL_NODE:-}" ] || return 1
+  legal_real_says="$(printf '%s' "$legal_in" | "$LEGAL_NODE" -e '
+try {
+const fs = require("fs"), path = require("path");
+const e = JSON.parse(fs.readFileSync(0, "utf8")), i = e.tool_input || {};
+const n = e.tool_name === "NotebookEdit" ? i.notebook_path : i.file_path;
+if (typeof n !== "string" || n === "") { process.stdout.write("no"); process.exit(0); }
+const h = process.env.HOME || "";
+let at = h !== "" && (n === "~" || n.startsWith("~/")) ? h + n.slice(1) : n;
+const cwd = typeof e.cwd === "string" && path.isAbsolute(e.cwd) ? e.cwd : process.env.CLAUDE_PROJECT_DIR || process.cwd();
+if (!path.isAbsolute(at)) at = cwd.replace(/[\\/]+$/, "") + path.sep + at;
+const below = [];
+let real = "";
+for (let k = 0; k < 4096; k++) {
+  try { real = fs.realpathSync.native(at); if (below.length !== 0) real = path.join(real, ...below); break; } catch {}
+  const up = path.dirname(at);
+  if (up === at) break;
+  below.unshift(path.basename(at));
+  at = up;
+}
+const f = real.normalize("NFKC").toLowerCase();
+process.stdout.write(/legal-scan|\.legal|wolfboy-redaction-key|~[0-9]/.test(f) ? "yes" : "no");
+} catch { process.stdout.write("yes"); }
+' 2>/dev/null)"
+  case "$legal_real_says" in no | "") return 1 ;; esac
+  return 0
+}
+
+# The entry did not give its answer.
+legal_not_run() {
+  if [ -n "$legal_why" ]; then legal_fail_closed; fi
+  if [ -n "$legal_read" ] && [ "$legal_tool" = Bash ] && { [ -n "$legal_unread" ] || legal_names_shape; }; then
+    legal_why=shape
+    if [ -n "$legal_unread" ]; then legal_why=long; fi
+    legal_fail_closed
+  fi
+  if [ -n "$legal_read" ] && legal_names_guarded; then
+    legal_why=guard
+    if [ -n "$legal_unread" ]; then legal_why=long; fi
+    legal_fail_closed
+  fi
+  legal_go_ahead
+}
+
+# A scan under way in the project the entry acts on (CLAUDE_PROJECT_DIR; with none set the entry acts on no run).
+if [ -n "${CLAUDE_PROJECT_DIR:-}" ]; then
+  legal_marker="$CLAUDE_PROJECT_DIR/.legal/launch/scan-under-way.json"
+  if [ -e "$legal_marker" ] || [ -L "$legal_marker" ]; then
+    legal_why=scan
+  else
+    for legal_d in "$CLAUDE_PROJECT_DIR" "$CLAUDE_PROJECT_DIR/.legal" "$CLAUDE_PROJECT_DIR/.legal/launch"; do
+      if [ -d "$legal_d" ] && [ ! -x "$legal_d" ]; then legal_why=scan; fi
+    done
+  fi
+fi
+# THE FAST PATH: no node is started for an
+# event that no route of the entry can act on. Stop, UserPromptExpansion and PermissionDenied have one route each
+# (hook.ts ROUTES: launch-main-stop, launch-person-expansion, launch-denied), and each acts only while a scan run's
+# active-run marker stands in the project (`when: runMarkerStands`: CLAUDE_PROJECT_DIR/.legal/launch/active-run.json,
+# hook.ts runPaths and ACTIVE_RUN_MARKER; a gate holds this file's name to them). Where no scan is under way (above:
+# the scan-under-way marker is not there and every folder on its way can be searched, so what follows is told
+# reliably) and that marker is neither there nor a link, the entry would start, find no route and answer nothing, and
+# so the event ends here, with nothing read and nothing printed. Every other event, and these three wherever the
+# marker stands, goes to the entry as before.
+case "$legal_event" in
+  Stop | UserPromptExpansion | PermissionDenied)
+    if [ -z "$legal_why" ]; then
+      if [ -z "${CLAUDE_PROJECT_DIR:-}" ]; then exit 0; fi
+      legal_run_marker="$CLAUDE_PROJECT_DIR/.legal/launch/active-run.json"
+      if [ ! -e "$legal_run_marker" ] && [ ! -L "$legal_run_marker" ]; then exit 0; fi
+    fi
+    ;;
+esac
+# THE PRE-FILTER (stage A of r10-hooks-2026-11-10.md,
+# proposal P1): no node for a Read, Grep or Glob outside a scan that provably reaches neither the redaction key nor its
+# spare folder, and that the entry's own fail-closed check (hook.ts guardTargetMayBe) would not hold either. Outside a
+# scan run (no active-run marker: seat-read and launch-seat-call do not act) the entry's one route for these calls is
+# guard-key-read (hook-guard.ts onKeyRead), whose answer where the key is not reached is exit 0 with nothing printed;
+# so is this function's, and only where every condition below holds. Anything it cannot decide with certainty, it does
+# not decide: the call goes to the entry unchanged, and from there to every fail-closed path as before. It runs in a
+# subshell (one fork, no program started), so nothing it sets or the folder it moves to reaches the rest of this file.
+# The places (the state folder's rule, the key's and spare folder's names, the guarded names, the run marker's place)
+# are bin/fast-places.bash, which npm run gen:fast-places writes from the built TypeScript; test:hook-prefilter fails
+# where that file differs from a fresh generation, and runs every Read, Grep and Glob case of the guard tests through
+# this function and through the entry, failing where this one lets a call through that the entry would not.
+# The conditions:
+# - Linux or macOS bash (OSTYPE); on native Windows (Git Bash) every call goes to the entry: the drive, share, subst
+#   and short-name spellings Windows Node resolves are not decided here (the record's section "Windows")
+#  .
+# - CLAUDE_PROJECT_DIR a plain absolute path, the run's marker neither there nor a link (seat-read and launch-seat-call
+#   act only while it stands), and the real and effective user the same.
+# - The event valid JSON with no \" anywhere (so every double quote is a string's edge), read by the grammar below;
+#   hook_event_name PreToolUse, tool_name one of the tools in fast-places.bash, tool_input an object holding only
+#   strings, numbers and literals, no field of ours twice; cwd, file_path (a Read's, never empty), path, pattern and
+#   glob strings with no backslash.
+# - Every path in one plain spelling: absolute (a leading ~/ read as $HOME, as hook.ts homePath reads it), printable
+#   ASCII, no //, no . or .. name, no name ending in a dot or a space, no colon, no ~ (an 8.3 short name's mark).
+# - No guarded name in any form the entry's check reads (the path as named and as given, a pattern or glob, the real
+#   path of the target's deepest existing folder and of each folder a pattern names before its first wildcard): the
+#   names as text in any case, and a wildcard part that may stand for one (hook.ts partMayBeGuarded).
+# - The target located as hook.ts locate locates it: the real path of its deepest existing folder (cd -P, or the file
+#   itself where it is not a link) and the names below it; a link this cannot resolve (a file that is a link, a
+#   dangling link) is not decided. Then, by identity ([ -ef ]: device and file number, a hard link included) and by
+#   the name rule of file-identity.ts atOrInside, the target is not at or inside any place the key may be: the key file
+#   in every state folder the environment can name (XDG_STATE_HOME, HOME and the account's home from the password
+#   database, each system's folder) and the spare folder in every temporary folder (TMPDIR, TMP, TEMP, /tmp, with and
+#   without -<uid>); for a Grep or Glob, none of those places is at or inside the target either.
+# - For a Grep or Glob, as hook.ts guardTargetMayBe reads it, no form of the target or of a pattern's folders is at or
+#   above a project's .legal (the event's cwd and CLAUDE_PROJECT_DIR), the spare folder or a state folder, as text in
+#   any case, as named and as the file system resolves it. A Grep or Glob with no path (the working folder, which
+#   holds .legal) is so held, and goes to the entry.
+# LEGAL_HOOK_FULL_ENTRY set to anything turns it off (test:hook-prefilter's second way); nothing turns it on.
+
+# Whether $1 is an absolute path in one plain spelling (above), with no ~.
+legal_fast_plain() {
+  case $1 in /?*) ;; *) return 1 ;; esac
+  case $1 in *//* | */./* | */../* | */. | */.. | */ | *[!\ -~]* | *\\* | *:* | *'~'*) return 1 ;; esac
+  return 0
+}
+# legal_fast_plain, and no name ending in a dot or a space.
+legal_fast_evpath() {
+  legal_fast_plain "$1" || return 1
+  case $1 in *./* | *' '/* | *. | *' ') return 1 ;; esac
+  return 0
+}
+# A name as file-identity.ts plainName reads it, less the case (compared with nocasematch): in legal_fp_p.
+legal_fast_pn() {
+  legal_fp_p=${1%%:*}
+  while :; do
+    case $legal_fp_p in *[.\ ]) legal_fp_p=${legal_fp_p%?} ;; *) break ;; esac
+  done
+}
+# Whether a part holding a wildcard may stand for a guarded name (hook.ts partMayBeGuarded, nocasematch on).
+legal_fast_wild() {
+  local raw=$1 part tr pat c k=0
+  part=${raw%%:*}
+  tr=$part
+  while :; do
+    case $tr in *[.\ ]) tr=${tr%?} ;; *) break ;; esac
+  done
+  if [ "$tr" != "$part" ]; then
+    case $raw in .*) [ $((${#part} - ${#tr})) -eq ${#raw} ] || part=$tr ;; *) part=$tr ;; esac
+  fi
+  [ -n "$part" ] || return 1
+  pat=
+  while [ "$k" -lt "${#part}" ]; do
+    c=${part:k:1}
+    case $c in
+      '*') pat="$pat*" ;;
+      '?' | '[' | ']' | '{' | '}') pat="$pat?" ;;
+      *) pat="$pat\\$c" ;;
+    esac
+    k=$((k + 1))
+  done
+  for c in "${legal_fp_names[@]}"; do
+    [[ $c == $pat ]] && return 0
+    [[ $c-0 == $pat ]] && return 0
+  done
+  return 1
+}
+# Whether a path or pattern may name a guarded folder in the entry's reading (hook.ts namesGuarded), widened: any guarded
+# name as text in any case, any ~, any byte that is not printable ASCII or a backslash, or a wildcard part that may
+# stand for one (nocasematch on).
+legal_fast_guarded() {
+  local s=$1 n p IFS='/\'
+  case $s in *[!\ -~]* | *'~'*) return 0 ;; esac
+  for n in "${legal_fp_names[@]}"; do
+    case $s in *"$n"*) return 0 ;; esac
+  done
+  case $s in *[\*\?\[\]\{\}]*) ;; *) return 1 ;; esac
+  for p in $s; do
+    case $p in *[\*\?\[\]\{\}]*) legal_fast_wild "$p" && return 0 ;; esac
+  done
+  return 1
+}
+# hook.ts patternLead: the folders a pattern names before its first part with a wildcard; all of it with none. In legal_fp_l.
+legal_fast_lead() {
+  local IFS=/ ps k last
+  legal_fp_l=
+  case $1 in *[\*\?\[\]\{\}]*) ;; *) legal_fp_l=$1; return 0 ;; esac
+  ps=($1)
+  # JSON's split keeps a last empty part after a trailing /, bash's does not: the parts before the last are the same.
+  case $1 in */) last=${#ps[@]} ;; *) last=$((${#ps[@]} - 1)) ;; esac
+  k=0
+  while [ "$k" -lt "$last" ]; do
+    case ${ps[k]} in *[\*\?\[\]\{\}]*) break ;; esac
+    if [ "$k" -eq 0 ]; then legal_fp_l=${ps[0]}; else legal_fp_l="$legal_fp_l/${ps[k]}"; fi
+    k=$((k + 1))
+  done
+  return 0
+}
+# hook.ts locate for a plain absolute path: legal_fp_R the real path of its deepest existing part (a folder by cd -P; a
+# file that is not a link by its folder's), legal_fp_T the names below it, legal_fp_F 1 where all of it exists,
+# legal_fp_S the whole. Not decided (1): a dangling link on the way, a file that is a link, a folder cd cannot enter.
+legal_fast_locate() {
+  local x=$1 up tail=
+  while [ ! -e "$x" ]; do
+    [ ! -L "$x" ] || return 1
+    up=${x%/*}
+    [ -n "$up" ] || up=/
+    [ "$up" != "$x" ] || return 1
+    if [ -n "$tail" ]; then tail="${x##*/}/$tail"; else tail=${x##*/}; fi
+    x=$up
+  done
+  if [ -d "$x" ]; then
+    builtin cd -P -- "$x" 2>/dev/null || return 1
+    legal_fp_R=$PWD
+  else
+    [ ! -L "$x" ] || return 1
+    up=${x%/*}
+    [ -n "$up" ] || up=/
+    builtin cd -P -- "$up" 2>/dev/null || return 1
+    legal_fp_R="${PWD%/}/${x##*/}"
+  fi
+  case $legal_fp_R in /*) ;; *) return 1 ;; esac
+  legal_fp_T=$tail
+  legal_fp_F=
+  [ -n "$tail" ] || legal_fp_F=1
+  if [ -z "$tail" ]; then legal_fp_S=$legal_fp_R; else legal_fp_S="${legal_fp_R%/}/$tail"; fi
+  case $legal_fp_S in *[!\ -~]* | *\\*) return 1 ;; esac
+  return 0
+}
+# file-identity.ts atOrInside(path, place), both located: $1 $2 the path's real part and names below, $3 $4 $5 the
+# place's real part, names below and whether it all exists (nocasematch on).
+legal_fast_inside() {
+  local IFS=/ a b at bt m mb nb anchor ap i r p q x y
+  x=${1#/}
+  a=($x)
+  m=${#a[@]}
+  at=($2)
+  a=("${a[@]}" "${at[@]}")
+  x=${3#/}
+  b=($x)
+  mb=${#b[@]}
+  bt=($4)
+  b=("${b[@]}" "${bt[@]}")
+  nb=${#b[@]}
+  [ "$nb" -gt 0 ] || return 0
+  anchor=$((nb - 1))
+  [ "$mb" -ge "$anchor" ] || anchor=$mb
+  ap=
+  i=0
+  while [ "$i" -lt "$anchor" ]; do
+    ap="$ap/${b[i]}"
+    i=$((i + 1))
+  done
+  [ -n "$ap" ] || ap=/
+  p=
+  i=0
+  while [ "$i" -le "$m" ]; do
+    [ -n "$p" ] || q=/
+    [ -z "$p" ] || q=$p
+    if [ -n "$5" ] && [ "$q" -ef "$3" ]; then return 0; fi
+    if [ "$q" -ef "$ap" ]; then
+      r=0
+      while [ $((anchor + r)) -lt "$nb" ]; do
+        [ $((i + r)) -lt "${#a[@]}" ] || break
+        legal_fast_pn "${a[i + r]}"
+        x=$legal_fp_p
+        legal_fast_pn "${b[anchor + r]}"
+        [[ $x == "$legal_fp_p" ]] || break
+        r=$((r + 1))
+      done
+      [ $((anchor + r)) -lt "$nb" ] || return 0
+    fi
+    [ "$i" -lt "$m" ] && p="$p/${a[i]}"
+    i=$((i + 1))
+  done
+  return 1
+}
+# The event, read by JSON's grammar with every string whole (the text split at its double quotes). Sets legal_fp_hen,
+# legal_fp_tn, legal_fp_cwd (the top level's), legal_fp_fp, legal_fp_path, legal_fp_pat, legal_fp_glob (tool_input's)
+# and legal_fp_has_* where a field is there; 1 where the text is not one JSON object read so, or a field of ours is twice
+# or not a string. States: T the top's {, V a value, W a value or ], K a key or }, k a key, C a colon, A a comma or a
+# close, E only white space.
+legal_fast_event() {
+  local IFS='"' tk n i s j c st=T stack= f= lit ti= num esc
+  num='^(-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][+-]?[0-9]+)?|true|false|null)$'
+  case $legal_in in *'\"'*) return 1 ;; esac
+  tk=($legal_in)
+  n=${#tk[@]}
+  [ $((n % 2)) -eq 1 ] || return 1
+  legal_fp_hen= legal_fp_tn= legal_fp_cwd= legal_fp_fp= legal_fp_path= legal_fp_pat= legal_fp_glob= legal_fp_seen=' '
+  i=0
+  while [ "$i" -lt "$n" ]; do
+    s=${tk[i]}
+    if [ $((i % 2)) -eq 1 ]; then
+      case $s in *[$'\x01'-$'\x1f']*) return 1 ;; esac
+      case $s in
+        *\\*)
+          esc=${s//\\\\/}
+          esc=${esc//\\[\/bfnrt]/}
+          esc=${esc//\\u[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]/}
+          case $esc in *\\*) return 1 ;; esac
+          ;;
+      esac
+      case $st in
+        V | W)
+          case $f in
+            hen) legal_fp_hen=$s ;; tn) legal_fp_tn=$s ;; cwd) legal_fp_cwd=$s ;; ti) return 1 ;;
+            fp) legal_fp_fp=$s ;; path) legal_fp_path=$s ;; pat) legal_fp_pat=$s ;; glob) legal_fp_glob=$s ;;
+          esac
+          f=
+          st=A
+          ;;
+        K | k)
+          f=
+          if [ "$stack" = o ]; then
+            case $s in hook_event_name) f=hen ;; tool_name) f=tn ;; cwd) f=cwd ;; tool_input) f=ti ;; esac
+          elif [ "$stack" = oo ] && [ "$ti" = 1 ]; then
+            case $s in file_path) f=fp ;; path) f=path ;; pattern) f=pat ;; glob) f=glob ;; esac
+          fi
+          if [ -n "$f" ]; then
+            case $legal_fp_seen in *" $f "*) return 1 ;; esac
+            legal_fp_seen="$legal_fp_seen$f "
+          fi
+          st=C
+          ;;
+        *) return 1 ;;
+      esac
+    else
+      j=0
+      while [ "$j" -lt "${#s}" ]; do
+        c=${s:j:1}
+        case $c in
+          ' ' | $'\t' | $'\n' | $'\r') ;;
+          '{')
+            case $st in T | V | W) ;; *) return 1 ;; esac
+            if [ "$f" = ti ]; then ti=1; elif [ "$ti" = 1 ]; then return 1; elif [ -n "$f" ]; then return 1; fi
+            f=
+            stack="${stack}o"
+            st=K
+            ;;
+          '[')
+            case $st in V | W) ;; *) return 1 ;; esac
+            [ -z "$f" ] || return 1
+            [ "$ti" != 1 ] || return 1
+            stack="${stack}a"
+            st=W
+            ;;
+          '}' | ']')
+            case $c$st in '}A' | '}K' | ']A' | ']W') ;; *) return 1 ;; esac
+            case $c$stack in '}'*o | ']'*a) ;; *) return 1 ;; esac
+            [ "$c$stack$ti" != '}oo1' ] || ti=2
+            stack=${stack%?}
+            st=A
+            [ -n "$stack" ] || st=E
+            ;;
+          ':') [ "$st" = C ] || return 1; st=V ;;
+          ',')
+            [ "$st" = A ] || return 1
+            case $stack in *o) st=k ;; *a) st=V ;; *) return 1 ;; esac
+            ;;
+          [-0-9a-z])
+            case $st in V | W) ;; *) return 1 ;; esac
+            [ -z "$f" ] || return 1
+            lit=
+            while [ "$j" -lt "${#s}" ]; do
+              case ${s:j:1} in [-+.0-9a-zA-Z]) lit="$lit${s:j:1}"; j=$((j + 1)) ;; *) break ;; esac
+            done
+            [[ $lit =~ $num ]] || return 1
+            st=A
+            continue
+            ;;
+          *) return 1 ;;
+        esac
+        j=$((j + 1))
+      done
+    fi
+    i=$((i + 1))
+  done
+  [ "$st" = E ] && [ "$ti" = 2 ] || return 1
+  return 0
+}
+legal_fast_read() {
+  unset CDPATH
+  LC_ALL=C
+  set -f
+  shopt -u nocasematch
+  case ${OSTYPE:-} in linux* | darwin*) ;; *) return 1 ;; esac
+  # An event longer than 4,096 bytes goes to
+  # the entry: the loops below cost up to the square of a field's length (a 75 KB glob took this function past the hook's
+  # 30 s time-out, after which the call goes ahead unguarded), and at the bound their worst case is measured in that record.
+  # So does an event with more than 160 slashes in all, or a Grep or Glob with more than 16 folders before a wildcard
+  # (below): each costs a walk of the file system per key place, and 2,000 glob parts within the 4,096 bytes took 16.7 s.
+  [ "${#legal_in}" -le 4096 ] || return 1
+  legal_t=${legal_in//[!\/]/}
+  [ "${#legal_t}" -le 160 ] || return 1
+  case $0 in */*) ;; *) return 1 ;; esac
+  [ ! -L "$0" ] && [ -f "${0%/*}/fast-places.bash" ] || return 1
+  . "${0%/*}/fast-places.bash" || return 1
+  [ -n "${legal_fp_marker:-}" ] && [ "${#legal_fp_names[@]}" -gt 0 ] && [ "${#legal_fp_below[@]}" -gt 0 ] || return 1
+  [ "${UID:-}" = "${EUID:-x}" ] || return 1
+  local pd=${CLAUDE_PROJECT_DIR:-} home=${HOME:-} acct x t raw named tS tR tT tF v d p IFS=' '
+  local -a states tmps keys seen forms leads lRs lTs lFs
+  legal_fast_plain "$pd" || return 1
+  [ ! -e "$pd/$legal_fp_marker" ] && [ ! -L "$pd/$legal_fp_marker" ] || return 1
+  legal_fast_event || return 1
+  [ "$legal_fp_hen" = PreToolUse ] || return 1
+  case " ${legal_fp_tools[*]} " in *" $legal_fp_tn "*) ;; *) return 1 ;; esac
+  legal_fast_evpath "$legal_fp_cwd" || return 1
+  shopt -s nocasematch
+  # The account's home from the password database (bash reads it for ~ while HOME is unset), as os.userInfo() reads it;
+  # HOME is read above and not used again in this subshell.
+  unset HOME
+  acct=~
+  case $acct in /*) legal_fast_plain "$acct" || return 1 ;; *) acct= ;; esac
+  case $home in /*) legal_fast_plain "$home" || return 1 ;; *) home= ;; esac
+  # The target as hook.ts guardTargetMayBe and onKeyRead name it.
+  if [ "$legal_fp_tn" = Read ]; then named=$legal_fp_fp; [ -n "$named" ] || return 1; else named=$legal_fp_path; fi
+  raw=$named
+  case $named in
+    '~') [ -n "$home" ] || return 1; named=$home raw= ;;
+    '~/'*) [ -n "$home" ] || return 1; named=$home${named#\~} raw=${raw#\~/} ;;
+  esac
+  if [ -z "$named" ]; then t=$legal_fp_cwd; else case $named in /*) t=$named ;; *) t=$legal_fp_cwd/$named ;; esac; fi
+  legal_fast_evpath "$t" || return 1
+  # A search of the project's folder or one above it (a Grep or Glob with no path among them) is held by the check at
+  # the end; said here as text, before any folder is resolved, so that the commonest such call is handed on at once.
+  if [ "$legal_fp_tn" != Read ]; then
+    for x in "$legal_fp_cwd/$legal_fp_legal" "$pd/$legal_fp_legal"; do
+      [[ $x == "$t" || $x == "$t"/* ]] && return 1
+    done
+  fi
+  [ -z "$raw" ] || ! legal_fast_guarded "$raw" || return 1
+  ! legal_fast_guarded "$t" || return 1
+  legal_fast_locate "$t" || return 1
+  tR=$legal_fp_R tT=$legal_fp_T tF=$legal_fp_F tS=$legal_fp_S
+  ! legal_fast_guarded "$tS" || return 1
+  seen=("$t" "$tS")
+  if [ "$legal_fp_tn" != Read ]; then
+    if [ "$legal_fp_tn" = Glob ]; then
+      ! legal_fast_guarded "$legal_fp_pat" || return 1
+      legal_fast_lead "$legal_fp_pat"
+      [ -z "$legal_fp_l" ] || leads=("$legal_fp_l")
+    else
+      ! legal_fast_guarded "$legal_fp_glob" || return 1
+      for x in $legal_fp_glob; do
+        case $x in *'{'*'}'* | *'}'*'{'*) v=$x ;; *) v=${x//,/ } ;; esac
+        for p in $v; do
+          case $p in '!'*) continue ;; esac
+          legal_fast_lead "$p"
+          [ -z "$legal_fp_l" ] || leads=("${leads[@]}" "$legal_fp_l")
+          [ "${#leads[@]}" -le 16 ] || return 1
+        done
+      done
+    fi
+    [ "${#leads[@]}" -le 16 ] || return 1
+    for x in "${leads[@]}"; do
+      case $x in /*) v=$x ;; *) v=$t/$x ;; esac
+      legal_fast_plain "$v" || return 1
+      legal_fast_locate "$v" || return 1
+      ! legal_fast_guarded "$legal_fp_S" || return 1
+      seen=("${seen[@]}" "$legal_fp_S")
+      # The folder as the file system resolves it, for the key's places below: a folder
+      # inside the target by its text may be a link to one that holds the key (hook-guard.ts onKeyRead reads every
+      # pattern's folder so).
+      lRs=("${lRs[@]}" "$legal_fp_R") lTs=("${lTs[@]}" "$legal_fp_T") lFs=("${lFs[@]}" "$legal_fp_F")
+    done
+  fi
+  # Every place the key may be (start-record.ts processStateDir and accountStateDir, redaction-key.ts spareKeyFolderPath).
+  x=${!legal_fp_state_env:-}
+  while :; do case $x in ?*/) x=${x%/} ;; *) break ;; esac; done
+  case $x in /*) legal_fast_plain "$x" || return 1; states=("$x/$legal_fp_app") ;; esac
+  for d in "$home" "$acct"; do
+    [ -n "$d" ] || continue
+    for p in "${legal_fp_below[@]}"; do states=("${states[@]}" "$d/$p/$legal_fp_app"); done
+  done
+  for v in "${legal_fp_tmp_envs[@]}"; do
+    x=${!v:-}
+    [ -n "$x" ] || continue
+    while :; do case $x in ?*/) x=${x%/} ;; *) break ;; esac; done
+    legal_fast_plain "$x" || return 1
+    tmps=("${tmps[@]}" "$x")
+  done
+  tmps=("${tmps[@]}" "$legal_fp_tmp_default")
+  for x in "${states[@]}"; do keys=("${keys[@]}" "$x/$legal_fp_key"); done
+  for x in "${tmps[@]}"; do keys=("${keys[@]}" "$x/$legal_fp_spare-$UID" "$x/$legal_fp_spare"); done
+  for x in "${keys[@]}"; do
+    legal_fast_locate "$x" || return 1
+    if legal_fast_inside "$tR" "$tT" "$legal_fp_R" "$legal_fp_T" "$legal_fp_F"; then return 1; fi
+    if [ "$legal_fp_tn" != Read ] && legal_fast_inside "$legal_fp_R" "$legal_fp_T" "$tR" "$tT" "$tF"; then return 1; fi
+    v=0
+    while [ "$v" -lt "${#lRs[@]}" ]; do
+      if legal_fast_inside "$legal_fp_R" "$legal_fp_T" "${lRs[v]}" "${lTs[v]}" "${lFs[v]}"; then return 1; fi
+      if legal_fast_inside "${lRs[v]}" "${lTs[v]}" "$legal_fp_R" "$legal_fp_T" "$legal_fp_F"; then return 1; fi
+      v=$((v + 1))
+    done
+  done
+  [ "$legal_fp_tn" != Read ] || return 0
+  # A Grep or Glob: no form of the target or a pattern's folders at or above a guarded place (hook.ts guardTargetMayBe).
+  forms=("$legal_fp_cwd/$legal_fp_legal" "$pd/$legal_fp_legal")
+  for x in "${tmps[@]}"; do forms=("${forms[@]}" "$x/$legal_fp_spare"); done
+  for x in "${states[@]}"; do forms=("${forms[@]}" "$x/$legal_fp_app"); done
+  for x in "${forms[@]}"; do
+    legal_fast_locate "$x" || return 1
+    forms=("${forms[@]}" "$legal_fp_S")
+  done
+  for d in "${seen[@]}"; do
+    d=${d%/}
+    [ -n "$d" ] || return 1
+    for p in "${forms[@]}"; do
+      [[ $p == "$d" ]] && return 1
+      [[ $p == "$d"/* ]] && return 1
+    done
+  done
+  return 0
+}
+# Outside a scan, the Bash group's event is read here, so that it can still be asked about --shape if the entry does
+# not run; it is handed to the entry unchanged.
+# The other PreToolUse groups' events too, so that a file-tool call can be asked whether it may reach a guarded folder
+# (legal_names_guarded above).
+# A Read, Grep or Glob the pre-filter above decides ends here, with nothing printed (no node started). On a system it
+# does not serve (native Windows), nothing of it runs, not even its subshell.
+# ONLY THE EVENT'S HEAD IS READ
+# HERE, at most 65,536 characters. Bash's read takes a pipe or a socket one byte per system call (about 1 s a megabyte
+# measured on Linux), so a Write of 40 MB kept this shim reading past Claude Code's 30 s time-out, after which the call
+# went ahead unguarded, onto a guarded file too. Where the event is longer (legal_unread), the entry is given the head and
+# the rest, unread, copied by /bin/cat (one program, at its system path; the shim's other work is builtins only) in one
+# pipe, and told so (--event-joined): an event that then does not parse, or does not arrive within its stdin limit,
+# is a copy that was cut, and the entry refuses it. The pre-filter decides only an event read whole (it decides
+# none over 4,096 bytes anyway), and where the entry does not answer, an event not read whole is a yes to both of the
+# fallback's questions (legal_names_shape, legal_names_guarded): what the shim did not read, it cannot clear.
+if [ -z "$legal_why" ] && [ "$legal_event" = PreToolUse ]; then
+  if IFS= read -r -d '' -n 65536 legal_in; then legal_unread=1; fi
+  legal_read=1
+  case ${OSTYPE:-} in
+    linux* | darwin*)
+      if [ -z "$legal_unread" ] && [ -z "$legal_tool" ] && [ -z "${LEGAL_HOOK_FULL_ENTRY+x}" ] && (legal_fast_read) </dev/null >/dev/null 2>&1; then exit 0; fi
+      ;;
+  esac
+fi
+
+# On native Windows this file's own path is read as bin/legal-scan reads its own (that file's note "NATIVE WINDOWS"):
+# MSYS's bash told apart by `pwd -W`, and only there `\` a separator and a drive letter's path absolute
+#.
+legal_msys=""
+if (cd / && pwd -W) >/dev/null 2>&1; then legal_msys=1; fi
+case "$0" in */*) ;; *\\*) [ -n "$legal_msys" ] || legal_not_run ;; *) legal_not_run ;; esac
+[ ! -L "$0" ] || legal_not_run
+if [ -n "$legal_msys" ]; then
+  legal_here="${0%[\\/]*}"
+  case "$legal_here" in /* | [\\/][\\/]* | [A-Za-z]:[\\/]*) ;; "" | [A-Za-z]:) legal_here="$legal_here/" ;; *) legal_here="./$legal_here" ;; esac
+else
+  legal_here="${0%/*}"
+  case "$legal_here" in /*) ;; "") legal_here=/ ;; *) legal_here="./$legal_here" ;; esac
+fi
+unset legal_msys
+legal_here="$(cd -P -- "$legal_here" 2>/dev/null && pwd -P)" || legal_not_run
+[ -f "$legal_here/node-choice.bash" ] || legal_not_run
+. "$legal_here/node-choice.bash" "$legal_here" || legal_not_run
+legal_entry="$LEGAL_CLI_DIR/dist/hook-entry.js"
+{ [ -n "$LEGAL_CLI_DIR" ] && [ -f "$legal_entry" ]; } || legal_not_run
+legal_cli_refusal
+# The launcher's refusal says why the program cannot run here (a path that holds a backslash outside Windows, packages
+# not installed, a plugin and a program of different versions); the hooks' message carries that same sentence.
+if [ -n "$LEGAL_CLI_REFUSAL" ]; then
+  legal_cause="$LEGAL_CLI_REFUSAL"
+  legal_not_run
+fi
+[ -n "$LEGAL_NODE" ] || legal_not_run
+legal_entry="$LEGAL_CLI_NODE_DIR/dist/hook-entry.js"
+if [ -n "$legal_unread" ]; then
+  { [ -f /bin/cat ] && [ -x /bin/cat ]; } || legal_not_run
+  legal_out="$({ printf '%s' "$legal_in" && exec /bin/cat; } | "$LEGAL_NODE" "$legal_entry" --stderr-fd=3 "--shim-seconds=$SECONDS" --event-joined 3>&2 2>/dev/null)"
+elif [ -n "$legal_read" ]; then
+  legal_out="$(printf '%s' "$legal_in" | "$LEGAL_NODE" "$legal_entry" --stderr-fd=3 "--shim-seconds=$SECONDS" 3>&2 2>/dev/null)"
+else
+  legal_out="$("$LEGAL_NODE" "$legal_entry" --stderr-fd=3 "--shim-seconds=$SECONDS" 3>&2 2>/dev/null)"
+fi
+legal_code=$?
+case "$legal_code" in
+  0 | 2)
+    if [ -n "$legal_out" ]; then printf '%s\n' "$legal_out"; fi
+    exit "$legal_code"
+    ;;
+  *) legal_not_run ;;
+esac

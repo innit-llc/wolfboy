@@ -1,0 +1,309 @@
+id: eu-dsr-004
+pack: eu-dsr
+short_name: Deleted users stay recognisable through a hash
+problem_line:
+  text: Deleted person still recognisable through a kept hash
+fix_line: Write down what the hash is for, give it an expiry, key it with a separately kept secret,
+  and tell the person.
+title: Deletion writes a one-way derivation of the erased identifier, keeping the person
+  recognisable - GDPR Art. 17(1)
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 17(1) - the duty this rule
+      tests. 'The data subject shall have the right to obtain from the controller the erasure of
+      personal data concerning him or her without undue delay and the controller shall have the
+      obligation to erase personal data without undue delay where one of the following grounds
+      applies'. THE QUESTION THIS RULE PUTS is what an erasure has to reach: a path that clears the
+      identity columns and, in the same statement, writes a derivation of one of them has kept
+      something that was made from the person's data and is kept in order to recognise them. Whether
+      that residue is itself personal data is Art. 4(1)'s question and is entry 4; whether keeping
+      it is covered by one of Art. 17(3)'s grounds is the reader's. Applies since 2018-05-25, Art.
+      99(2)."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 6(1)(f) - the ground a
+      recogniser is usually defended on, named here so the finding is not read as though there were
+      none. Processing is lawful where 'processing is necessary for the purposes of the legitimate
+      interests pursued by the controller or by a third party, except where such interests are
+      overridden by the interests or fundamental rights and freedoms of the data subject which
+      require protection of personal data, in particular where the data subject is a child.' Recital
+      47 names fraud prevention as such an interest. A block list that stops a banned account being
+      recreated, or a suppression list that stops a person who unsubscribed being mailed again, is
+      the ordinary case; the balancing test is not met by naming the interest, and Art. 17(1)(c)
+      makes an objection under Art. 21(1) succeed unless there are overriding legitimate grounds.
+      Reference only: this entry supplies the competing consideration a reader must weigh, and
+      establishes no obligation of its own."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+  - cite: General Data Protection Regulation, Regulation (EU) 2016/679, Art. 5(1)(e) - storage
+      limitation, which applies to the residue even where keeping it is defensible. Personal data
+      shall be 'kept in a form which permits identification of data subjects for no longer than is
+      necessary for the purposes for which the personal data are processed; personal data may be
+      stored for longer periods insofar as the personal data will be processed solely for archiving
+      purposes in the public interest, scientific or historical research purposes or statistical
+      purposes in accordance with Article 89(1) subject to implementation of the appropriate
+      technical and organisational measures required by this Regulation in order to safeguard the
+      rights and freedoms of the data subject ('storage limitation')'. In the trees this rule was
+      built against, none of the recogniser tables carries an expiry column, a retention constant or
+      a sweep job - which is a fact about those tables and a question for any reader of a candidate
+      here, not a finding about them.
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "General Data Protection Regulation, Regulation (EU) 2016/679, Art. 4(1) with Recital 26 -
+      whether the residue is still personal data, WRITTEN AS THE QUESTION LAYER 2 MUST ANSWER AND
+      NOT AS AN ASSERTION BY THIS DETECTOR. Art. 4(1): 'personal data' means any information
+      relating to an identified or identifiable natural person ('data subject'); an identifiable
+      natural person is one who can be identified, directly or indirectly, in particular by
+      reference to an identifier such as a name, an identification number, location data, an online
+      identifier or to one or more factors specific to the physical, physiological, genetic, mental,
+      economic, cultural or social identity of that natural person'. Recital 26: 'To determine
+      whether a natural person is identifiable, account should be taken of all the means reasonably
+      likely to be used, such as singling out, either by the controller or by another person to
+      identify the natural person directly or indirectly', and the Regulation does not apply to
+      'personal data rendered anonymous in such a manner that the data subject is not or no longer
+      identifiable'. THE FACT THAT DECIDES IT IS USUALLY IN THE CODE AND IS NEVER IN THIS LINE: a
+      digest of an e-mail address over a known input space is testable by anyone holding a candidate
+      address, which is exactly what the read side of these tables does on every sign-up - so the
+      controller is, by construction, in a position to single the person out. Where the derivation
+      is keyed with a secret the controller holds, that is a different fact and needs recording as
+      such. Reference only."
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+sunset: null
+superseded_by: null
+severity: high
+rule_confidence: 0.37
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  vocabulary:
+    identifier_words:
+      - email
+      - email_address
+      - mail
+      - username
+      - user_name
+      - login
+      - uid
+      - uuid
+      - user_id
+      - account_id
+      - customer_id
+      - subscriber_id
+      - phone
+      - phone_number
+      - msisdn
+      - subject_id
+      - identity
+      - identifier
+    digest_words:
+      - sha256
+      - sha_256
+      - sha1
+      - sha512
+      - md5
+      - digest
+      - hash
+      - hashed
+      - hmac
+      - fingerprint
+      - checksum
+    digest_primitives:
+      - hexdigest
+      - createhash
+      - create_hash
+      - hashlib.sha256
+      - hashlib.sha1
+      - hashlib.md5
+      - digest::sha256
+      - digest::sha1
+      - digest::md5
+      - openssl::hmac
+      - crypto.createhash
+      - messagedigest.getinstance
+      - sha256.new
+      - md5(
+    blocklist_stores:
+      - identity_block
+      - blocked_identities
+      - blocked_emails
+      - banned_emails
+      - banned_accounts
+      - denied_subjects
+      - blocklist
+      - blocklisted
+      - denylist
+      - banlist
+      - ban_list
+      - suppression_list
+      - suppressed_recipients
+  vocabulary_matching:
+    identifier_words:
+      case_insensitive: true
+      separator_insensitive: true
+    digest_words:
+      case_insensitive: true
+      separator_insensitive: true
+    digest_primitives:
+      case_insensitive: true
+      separator_insensitive: true
+    blocklist_stores:
+      case_insensitive: true
+      separator_insensitive: true
+  match:
+    - (?:(?<![A-Za-z0-9])|(?<=[A-Za-z0-9])(?=[A-Z][a-z]))(?&identifier_words)[_.\-]?(?&digest_words)(?![a-z])
+    - (?:(?<![A-Za-z0-9])|(?<=[A-Za-z0-9])(?=[A-Z][a-z]))(?&digest_words)[_.\-]?(?&identifier_words)(?![a-z])
+    - (?:(?<![A-Za-z0-9])|(?<=[A-Za-z0-9])(?=[A-Z][a-z]))(?&digest_primitives)[^\n]{0,60}(?&identifier_words)(?![a-z])|(?&identifier_words)[^\n]{0,60}(?&digest_primitives)
+    - \.update\([^)\n]{0,40}(?:(?<![A-Za-z0-9])|(?<=[A-Za-z0-9])(?=[A-Z][a-z]))(?&identifier_words)(?![a-z])[^\n]{0,40}\.digest\(
+    - (?:(?<![A-Za-z0-9])|(?<=[A-Za-z0-9])(?=[A-Z][a-z]))(?&blocklist_stores)
+    - "[Aa][Cc][Cc][Oo][Uu][Nn][Tt][_-]?[Bb][Ll][Oo][Cc][Kk](?:s|ed|list(?:s|ed)?)?(?![a-z])"
+    - "[Ee][Mm][Aa][Ii][Ll][_-]?[Bb][Ll][Oo][Cc][Kk]|[Ee][Mm][Aa][Ii][Ll]\\.[Bb][Ll][Oo][Cc][Kk](?!\
+      [a-z])"
+    - (?:exists\?|find_by|find_or_create_by|where|lookup|matching|blocked\?|block\?|is_?blocked|isBlocked)[^\n]{0,60}(?:(?<![A-Za-z0-9])|(?<=[A-Za-z0-9])(?=[A-Z][a-z]))(?:(?&identifier_words)[_.\-]?(?&digest_words)|(?&digest_words)[_.\-]?(?&identifier_words))(?![a-z])
+    - (?:def |function |func |fn |const |let |var
+      )(?:self\.)?(?:[Ii]s_?)?(?:[Bb]lock|[Bb]anned|[Dd]enied|[Ss]uppressed|[Rr]efused)[A-Za-z_?]{0,16}[
+      \t]*\(?[^\n]{0,40}(?:(?<![A-Za-z0-9])|(?<=[A-Za-z0-9])(?=[A-Z][a-z]))(?&identifier_words)(?![a-z])
+  match_without:
+    - (?:password|passphrase|pwd_|_secret|api_key|apiKey|access_token|refresh_token|csrf|session_token)(?![^\n]*(?:[Ee]mail|[Uu]id|[Uu]sername|[Ll]ogin|[Pp]hone|[Ii]dentity))
+  also_in_file:
+    - "[Rr]edact"
+    - (?:[Dd]elete|[Rr]emove|[Pp]urge|[Ee]rase|[Aa]nonymi[sz]e|[Dd]eactivate)[
+      _]?(?:[Aa]ccount|[Uu]ser|[Pp]rofile|[Mm]ember|[Cc]ustomer|[Ii]dentit|[Ss]ubject|[Rr]eader)
+    - "[Dd]estroy|permanently_remove|hard_delete|purge_later|account_closure|closeAccount"
+    - "[Bb]anned|[Bb]an_|banPartner|[Ss]uspend|[Bb]lock_all|blockAll"
+    - (?:[Bb]lock|[Dd]eny|[Rr]efuse)(?:ed|list|_all|All|\?)|is_?[Bb]locked
+  shared_path_exclusions:
+    - attribution_documents
+context_questions:
+  - "MANDATORY, and the detector did not check it: WHAT IS THE RESIDUE FOR, IN THE PRODUCT'S OWN
+    WORDS? Find the comment, the commit message, the migration name, the admin screen or the
+    documentation that says why this value is kept, and quote it. This is the single most useful
+    thing a reader can add, and in the tree this construct was declared from the answer was written
+    on the line above the code: a comment saying the digest exists so that redacted accounts can be
+    identified if someone provides an e-mail address. Where no such statement exists anywhere, say
+    so plainly - an undocumented recogniser is a different and worse fact than a documented one, and
+    GDPR Art. 5(2) puts the burden of being able to demonstrate the position on the controller."
+  - "IS THE DERIVATION KEYED WITH A SECRET, AND WHO HOLDS THE KEY? This decides how far the residue
+    reaches, and it is a fact about the code that no pattern here reads. An unkeyed digest of an
+    e-mail address - `Digest::SHA256.hexdigest(email)` - is testable by ANYONE holding a candidate
+    address, including a party who obtains the table; a keyed derivation -
+    `OpenSSL::HMAC.hexdigest(\"SHA256\", key, uid)` - is testable only by the holder of the key.
+    Report which it is, where the key comes from, whether it is per-installation or per-record, and
+    whether it is rotated. Then say what follows for Recital 26's reasonably-likely-means test, and
+    do not treat the presence of a key as an answer to it: the controller still holds the key and
+    still performs the lookup on every sign-up."
+  - IS THIS WRITTEN ON THE ERASURE PATH, AND WHAT ELSE DOES THAT PATH DO? The construct is a residue
+    written AT deletion time, and the gate on this rule establishes only that the file is about
+    erasure. Follow the caller. Say whether the write happens inside the same transaction, worker or
+    request that clears the person's other identity columns, and enumerate what that path nulls,
+    deletes or overwrites, so the residue can be read against it. A digest written on a sign-up
+    path, a cache path or an avatar path is a different construct and should be reported as not this
+    one.
+  - "IS THERE A READ SIDE, AND WHAT DOES IT DECIDE? A retained value that nothing looks up is a
+    leftover; a value looked up on every sign-in or sign-up is a recogniser, and the difference is
+    what this rule is named for. Find every read of the derived column or table and say what each
+    one decides - refusing a registration, refusing a login, suppressing an e-mail, raising a fraud
+    alert, merging an account. Quote the branch. Then say what the person on the other end of that
+    decision is told: a refusal whose reason cannot be given is also an Art. 12(4) question."
+  - HOW LONG IS IT KEPT, AND WHAT WOULD REMOVE IT? Art. 5(1)(e) applies to the residue whether or
+    not keeping it is defensible. Look for an expiry column, a retention constant, a scheduled
+    sweep, an administrative delete route, or any code path at all that removes a row from this
+    table, and report what you find - including finding nothing, which is the common answer. Where a
+    removal route exists, say who can reach it. Where the residue is a column on the person's own
+    surviving row rather than a separate table, say what would ever clear it.
+  - "WHICH GROUND IS CLAIMED, AND DOES IT COVER THIS? Art. 17(3) lists the cases where the erasure
+    right does not apply, and Art. 6(1)(f) is the ground a fraud or ban-evasion recogniser is
+    usually defended on - Recital 47 names fraud prevention in terms. Ask the operator which ground
+    they rely on for this specific residue and record the answer, or return needs_human. Then check
+    two things the ground does not decide by itself: whether the retention period matches the
+    purpose, and whether an objection under Art. 21(1) has been considered, because Art. 17(1)(c)
+    makes such an objection succeed unless there are overriding legitimate grounds."
+evidence_template: "{file}:{line} carries a ONE-WAY DERIVATION OF AN IDENTIFIER, or the store one
+  lives in, in a file that also carries erasure, redaction or banning context. THIS IS A QUESTION
+  ABOUT WHAT AN ERASURE LEFT BEHIND AND WHY, AND IT IS NOT A DETERMINATION THAT ANY DUTY WAS
+  BREACHED. Residues of this shape are frequently kept for reasons the law recognises - fraud
+  prevention, ban evasion, an unsubscribe suppression list, a legal retention duty - and GDPR Art.
+  17(3) lists cases where the erasure right does not apply at all. WHAT WAS ESTABLISHED, and which
+  of the four it is has to be read off the line. AN IDENTIFIER WORD JOINED TO A DIGEST WORD IN A
+  NAME - `email_sha256`, `uid_digest`, `canonical_email_hash`, `hashedEmail` - establishes that such
+  a value has a name and, where the line is a migration or a schema, that it has a column. A DIGEST
+  PRIMITIVE APPLIED TO AN IDENTIFIER - `Digest::SHA256.hexdigest(email)`, `md5($user->username)`,
+  `createHash(\"sha256\").update(address)` - establishes the operation. A BLOCK, BAN, DENY OR
+  SUPPRESSION STORE BY NAME - `sso_identity_blocks`, `canonical_email_blocks`, `banned_emails`,
+  `denylist` - establishes where such a value is kept; a store is not a derivation and an IP or
+  domain block list carries no personal identifier at all. A RECOGNITION READ - `exists?(uid_digest:
+  digest(uid))`, `matching_email(email)`, `blocked?` - establishes the half that matters most: the
+  value is looked up to recognise somebody. WHAT WAS NOT ESTABLISHED, and each is a question rather
+  than a caveat. FIRST, THE PURPOSE WAS NOT READ. The construct is defined by what the residue is
+  FOR, and that is stated in a comment, a migration name or a document, never in the operation.
+  SECOND, WHETHER THIS IS ON THE ERASURE PATH WAS NOT FOLLOWED: the gate establishes that the FILE
+  is about erasure, redaction or banning, not that this line runs when a person is erased. A digest
+  built for an avatar URL, a cache key or a sign-up cooldown is the nearest look-alike and it is
+  common. THIRD, WHETHER THE RESIDUE IS STILL PERSONAL DATA WAS NOT DECIDED. That is Art. 4(1) with
+  Recital 26's reasonably-likely-means test, it turns on whether the derivation is keyed and who
+  holds the key, and no pattern here reads either. FOURTH, THE RETENTION WAS NOT READ: whether an
+  expiry, a sweep or any removal route exists is a fact about other files, and Art. 5(1)(e) applies
+  to the residue even where keeping it is defensible. FIFTH, THE GROUND WAS NOT ESTABLISHED. Which
+  of Art. 6(1)(f)'s or Art. 17(3)'s grounds the operator relies on is asked of the operator and is
+  not inferable from source."
+remediation_template: >
+  WHAT WAS FOUND. A value derived one way from an identifier the product erases - or the block, ban
+
+  or suppression store such a value lives in - in a file that also handles erasure, redaction or
+
+  banning. This is not automatically a defect. Keeping a recogniser after a deletion is a deliberate
+
+  design decision with real reasons behind it, and the work below is about making the decision
+
+  visible, bounded and defensible rather than about removing it.
+
+
+  1. WRITE DOWN WHAT IT IS FOR, BESIDE THE CODE AND IN THE RECORD OF PROCESSING ACTIVITIES. One
+     sentence: what this value recognises, what decision it feeds, and which ground it is kept on.
+     GDPR Art. 5(2) puts the burden of being able to demonstrate the position on the controller, and
+     a residue that no document mentions cannot be demonstrated.
+  2. GIVE IT AN EXPIRY. Art. 5(1)(e) applies to the residue whether or not keeping it is defensible.
+     Add a retention column and a sweep, choose the period from the purpose - a ban-evasion
+     recogniser and a permanent suppression list have very different answers - and record why.
+  3. KEY THE DERIVATION, AND KEEP THE KEY SEPARATE. An unkeyed digest of an e-mail address is
+     testable by anyone who obtains the table, because the input space is small and enumerable. An
+     HMAC under a per-installation key held outside the same database narrows that to the controller,
+     which is what Art. 32(1)(a)'s pseudonymisation measure is about. This does not make the residue
+     stop being personal data, and it should not be described as though it did.
+  4. TELL THE PERSON, IN THE DELETION FLOW. If closing an account leaves behind a value that will
+     recognise the same address on a future sign-up, the deletion confirmation and the privacy policy
+     should say so before the person confirms. Art. 12(3) requires information on the action taken,
+     and a success message that implies nothing was kept is the mismatch this rule exists to surface.
+
+  IF SOMETHING DOES NEED TO CHANGE, the changes that are usually right, in order:
+
+
+  - STORE THE DECISION, NOT THE PERSON, where that is enough. A ban that is enforced by a device or
+    payment-instrument signal, or by a rate limit, does not need a durable derivation of the person's
+    address.
+  - NARROW THE READ SIDE. A recogniser that runs on every sign-up is a different exposure from one
+  an
+    operator queries when investigating a specific report. Where the decision does not have to be
+    automatic, make the lookup an operator action with an audit trail.
+  - REMOVE THE RESIDUE WHEN THE PURPOSE ENDS. An unban, a successful appeal, a resubscription or the
+    expiry of the retention period should all delete the row, and there should be a route that does
+    it. In the trees this construct was found in, the removal route is the part most often missing.
+  - SEPARATE THE SUPPRESSION LIST FROM THE ERASURE PATH IN THE DOCUMENTATION. Art. 21(3) makes a
+    marketing suppression list a way of honouring an objection rather than a way of defeating one,
+    and saying which of the two a given store is removes most of the ambiguity a reader of this
+    finding will otherwise carry.
+data_categories:
+  - user.contact.email
+  - user.unique_id
+  - user.account
+  - user.contact.phone_number
+fingerprint_spec: directory

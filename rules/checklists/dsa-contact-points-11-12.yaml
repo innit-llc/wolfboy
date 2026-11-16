@@ -1,0 +1,262 @@
+checklist_id: dsa-contact-points-11-12
+title: DSA Articles 11 and 12 - points of contact for authorities and for recipients
+law: Regulation (EU) 2022/2065 (Digital Services Act)
+source_url: http://publications.europa.eu/resource/celex/32022R2065
+checked_at: 2026-07-28
+scope_note: "This checklist records whether the project's published documents name the two points of
+  contact that Articles 11 and 12 require and state what those Articles require to be stated about
+  them. It does not test whether either contact point works, whether anyone answers it, or whether
+  it is kept up to date in fact - those are properties of an operating service and no document can
+  show them. It covers no other part of the Regulation: Article 13 (legal representative), Article
+  14 (terms and conditions) and the hosting-service duties in Section 2 each have their own row in
+  the coverage map, and a project that satisfies every item here has not been shown to satisfy
+  those."
+applicability:
+  question: "Two things have to be true before any item below is worth asking. First, is the project
+    an intermediary service - an information society service (one normally provided for
+    remuneration, at a distance, by electronic means and at the individual request of a recipient)
+    that transmits information in a network, or caches it, or stores information provided by a
+    recipient of the service at that recipient's request? **\"For remuneration\" does not mean the
+    user pays**: a service funded by advertising, or offered free of charge as part of an economic
+    activity, is an information society service, and answering this limb \"no\" because the service
+    is free is the commonest way to fall out of scope wrongly. Second, is it offered to recipients
+    who are established or located in the Union?"
+  quote: This Regulation shall apply to intermediary services offered to recipients of the service
+    that have their place of establishment or are located in the Union, irrespective of where the
+    providers of those intermediary services have their place of establishment.
+  cite: DSA Art. 2(1)
+  url: http://publications.europa.eu/resource/celex/32022R2065
+  checked_at: 2026-07-28
+  ask_the_user: false
+  supporting_quotes:
+    - quote: "'intermediary service' means one of the following information society services: (i) a 'mere
+        conduit' service, consisting of the transmission in a communication network of information
+        provided by a recipient of the service, or the provision of access to a communication
+        network; (ii) a 'caching' service, consisting of the transmission in a communication network
+        of information provided by a recipient of the service, involving the automatic, intermediate
+        and temporary storage of that information, performed for the sole purpose of making more
+        efficient the information's onward transmission to other recipients upon their request;
+        (iii) a 'hosting' service, consisting of the storage of information provided by, and at the
+        request of, a recipient of the service;"
+      cite: DSA Art. 3(g)
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-07-28
+      why: The definition of the service the Regulation scopes. Limb (iii) is the one that reaches
+        ordinary applications.
+    - quote: "'information society service' means a 'service' as defined in Article 1(1), point (b), of
+        Directive (EU) 2015/1535;"
+      cite: DSA Art. 3(a)
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-07-28
+      why: The head of the definition above, and the limb the first draft of this gate dropped. Every limb
+        of Article 3(g) is qualified by it.
+    - quote: any Information Society service, that is to say, any service normally provided for
+        remuneration, at a distance, by electronic means and at the individual request of a
+        recipient of services.
+      cite: Directive (EU) 2015/1535, Art. 1(1)(b)
+      url: http://publications.europa.eu/resource/celex/32015L1535
+      checked_at: 2026-07-28
+      why: What "information society service" means. This is why an on-premise installation, an internal
+        admin tool or a library that persists what a user typed is not caught by limb (iii), however
+        much storage it does.
+    - quote: Examples of 'hosting services' include categories of services such as cloud computing, web
+        hosting, paid referencing services or services enabling sharing information and content
+        online, including file storage and sharing.
+      cite: DSA Recital 29
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-07-28
+      why: The recital that settles the question this gate was first written to hedge. An ordinary
+        business application storing files its customers upload is a hosting service; the storage
+        does not have to be the headline of the product.
+    - quote: information society services are not solely restricted to services giving rise to on-line
+        contracting but also, in so far as they represent an economic activity, extend to services
+        which are not remunerated by those who receive them, such as those offering on-line
+        information or commercial communications
+      cite: Directive 2000/31/EC, Recital 18
+      url: http://publications.europa.eu/resource/celex/32000L0031
+      checked_at: 2026-07-28
+      why: What "normally provided for remuneration" means, in the e-Commerce Directive that uses the same
+        definition. A free forum, a free file-sharing site and a free social application are the
+        Digital Services Act's paradigm subjects; a gate that lets them out at the first limb would
+        report nothing at all about them.
+    - quote: Whether a specific service constitutes a 'mere conduit', 'caching' or 'hosting' service
+        depends solely on its technical functionalities, which might evolve in time, and should be
+        assessed on a case-by-case basis.
+      cite: DSA Recital 29
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-07-28
+      why: Quoted to its end, including the case-by-case clause. The classification does not turn on what
+        the product is marketed as - and it is not a blanket answer either.
+    - quote: In contrast, mere technical accessibility of a website from the Union cannot, on that ground
+        alone, be considered as establishing a substantial connection to the Union.
+      cite: DSA Recital 8
+      url: http://publications.europa.eu/resource/celex/32022R2065
+      checked_at: 2026-07-28
+      why: The limit on the territorial limb. The same recital lists what does count - language, currency,
+        a relevant top-level domain, availability in a national application store, advertising or
+        customer service in a Member State language - and most of that is visible in a repository.
+  when_unresolved: "Take the two limbs of the question separately, and answer the first one from the
+    code. Storage of information supplied by users at their request - posts, comments, uploaded
+    files, shared documents - is what limb (iii) describes, and it is usually visible in a schema,
+    an upload route or a storage bucket. Recital 29 lists cloud computing, web hosting and file
+    storage and sharing as examples, and adds that the classification depends solely on the
+    service's technical functionalities and is assessed case by case. A service whose headline is
+    invoicing or project management is therefore still a hosting service in respect of the files its
+    customers upload: **for that case, do not record the gate as unresolved.** The assessment stays
+    case by case, so that is an answer to that example rather than a blanket rule. Note what Article
+    3(i)'s \"minor and purely ancillary feature of another service or a minor functionality of the
+    principal service\" attaches to: storing *and disseminating information to the public*, which is
+    what makes a hosting service an *online platform*. It is not a way out of being a hosting
+    service. What genuinely is outside limb (iii) is information the operator records about its own
+    activity - audit logs, telemetry, internal reports - because that is not provided by a recipient
+    at the recipient's request; and anything that is not an information society service at all, such
+    as software installed and run on the customer's own premises. The second limb, whether the
+    service is offered to recipients in the Union, **is settled by the pack's standing premise**:
+    running the EU pack is treated as the statement that the service is offered into the Union, so
+    do not ask about it. Recital 8's evidence list stays quoted because it is what the premise
+    stands in for, and because under Article 3(e) an establishment in the Union is itself a
+    substantial connection - so a provider established in the Union does not escape by saying it has
+    no EU users. Where the first limb stays unsettled, record the gate as unresolved and say what
+    was missing. Do not resolve it by default in either direction: treating every project as in
+    scope produces contact-point questions for a static brochure site and for services with no EU
+    users at all, and treating none as in scope silently drops the obligation for a service that has
+    it. On size: nothing in the Regulation exempts anyone from Article 11 or Article 12, which sit
+    in Chapter III Section 1, \"Provisions applicable to all providers of intermediary services\".
+    Do not generalise that into \"Section 1 has no size exemptions\" - Article 15(2) exempts micro
+    and small enterprises from paragraph 1 of the transparency-reporting duty in the same Section,
+    and only where they are not very large online platforms. Article 19's exclusion covers Section 3
+    with the exception of Article 24(3), and Article 29 excludes them from Section 4. Three size
+    exclusions exist in this Regulation; none of them reaches Article 11 or Article 12."
+items:
+  - id: art-11-1-designated
+    article: 11(1)
+    quote: Providers of intermediary services shall designate a single point of contact to enable them
+      to communicate directly, by electronic means, with Member States' authorities, the Commission
+      and the Board referred to in Article 61 for the application of this Regulation.
+    cite: DSA Art. 11(1)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Do the documents name a single point of contact for Member States' authorities, the
+      Commission and the Board, reachable by electronic means?
+    applicability_note: "This is the authorities' channel, and it is distinct from the user-facing
+      support address that Article 12 asks about. A single address may serve both, but only where
+      the documents say so: a page offering \"contact us\" to customers does not by itself answer
+      this item. The Article says \"a single point of contact\", so a page listing three different
+      authority addresses with no indication of which one is the designated contact is worth
+      recording as partial rather than present. A page that addresses authorities generally, without
+      naming the Commission and the Board, is also partial rather than absent - record what it does
+      say."
+  - id: art-11-2-published
+    article: 11(2)
+    quote: Providers of intermediary services shall make public the information necessary to easily
+      identify and communicate with their single points of contact. That information shall be easily
+      accessible, and shall be kept up to date.
+    cite: DSA Art. 11(2)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Is the information needed to identify and reach that point of contact published in the
+      project's own documents rather than held internally?
+    applicability_note: Whether the information is in fact kept up to date cannot be read from a
+      document. Record what the document contains and, where the document carries a date, quote it;
+      do not treat an old date as an answer to this item, because a contact address can be both old
+      and correct.
+  - id: art-11-3-languages
+    article: 11(3)
+    quote: Providers of intermediary services shall specify in the information referred to in paragraph
+      2 the official language or languages of the Member States which, in addition to a language
+      broadly understood by the largest possible number of Union citizens, can be used to
+      communicate with their points of contact, and which shall include at least one of the official
+      languages of the Member State in which the provider of intermediary services has its main
+      establishment or where its legal representative resides or is established.
+    cite: DSA Art. 11(3)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Do the documents state which languages may be used to communicate with that point of contact?
+    applicability_note: "Article 11(3) has two limbs and only one of them depends on a fact outside the
+      repository. The stated set must include at least one official language of the Member State of
+      the provider's main establishment, or where its legal representative resides or is established
+      - that limb needs an answer from the person running the scan. But the set must also include,
+      in addition, \"a language broadly understood by the largest possible number of Union
+      citizens\", and that limb depends on nothing about this provider: a page naming only one
+      national language is deficient on it whatever the establishment. Record whether any languages
+      are stated, quote them, and say which of the two limbs the stated set can and cannot be judged
+      against."
+  - id: art-12-1-recipient-contact
+    article: 12(1)
+    quote: Providers of intermediary services shall designate a single point of contact to enable
+      recipients of the service to communicate directly and rapidly with them, by electronic means
+      and in a user-friendly manner, including by allowing recipients of the service to choose the
+      means of communication, which shall not solely rely on automated tools.
+    cite: DSA Art. 12(1)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Do the documents name a single point of contact through which people using the service can
+      reach the provider directly and rapidly, by electronic means and in a user-friendly manner?
+    applicability_note: 'The easiest item in this checklist to answer "yes" to for the wrong reason.
+      Almost every legal page carries some address, and most of them are not this one: a controller
+      contact given for data-protection questions answers GDPR Article 13(1)(a), a press address
+      answers nobody, and an address published for authorities is the *other* Article. Ask whether
+      the documents point a person using the service at a way of reaching the provider about the
+      service. Where the only address found is one of the others, the honest status is absent, with
+      the candidate named and dismissed in the reasoning.'
+  - id: art-12-1-choice-of-means
+    article: 12(1)
+    quote: Providers of intermediary services shall designate a single point of contact to enable
+      recipients of the service to communicate directly and rapidly with them, by electronic means
+      and in a user-friendly manner, including by allowing recipients of the service to choose the
+      means of communication, which shall not solely rely on automated tools.
+    cite: DSA Art. 12(1)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Do the documents offer the recipient more than one means of communication to choose between?
+    applicability_note: "Article 12(1) contains two requirements after \"user-friendly manner\", and
+      they fail in different ways: the recipient must be able to choose among means, and the means
+      must not rely solely on automated tools. This item asks the first. A provider offering exactly
+      one route, answered by a person, satisfies the second and not this one. \"More than one\" is
+      an inference rather than the Article's words: Article 12(1) requires the provider to allow
+      recipients \"to choose the means of communication\", and Recital 43 says providers \"should
+      allow recipients of services to choose means of direct and efficient communication\" (both
+      verified by hand; prose fields are not machine-checked). A choice of one is not a choice - but
+      say in the reasoning that this is the reading being applied."
+  - id: art-12-1-not-only-automated
+    article: 12(1)
+    quote: Providers of intermediary services shall designate a single point of contact to enable
+      recipients of the service to communicate directly and rapidly with them, by electronic means
+      and in a user-friendly manner, including by allowing recipients of the service to choose the
+      means of communication, which shall not solely rely on automated tools.
+    cite: DSA Art. 12(1)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Of the means the documents offer, is at least one of them not reliant solely on automated
+      tools - can the recipient reach a person?
+    applicability_note: 'What is forbidden is sole reliance on automated tools, not automated tools as
+      such. Recital 43 names "telephone numbers, email addresses, electronic contact forms, chatbots
+      or instant messaging" as means of rapid, direct and efficient communication, so an ordinary
+      contact form counts as a means and a chatbot is not disqualified by being one. The case this
+      item exists for is a help centre whose only route is an automated assistant with no way past
+      it. Recital 43 adds, in the sentence after that list, that "[i]t should be explicitly
+      indicated when a recipient of the service communicates with chatbots" (verified by hand; prose
+      fields are not machine-checked). That is a recital rather than an operative duty of Article
+      12, so it is not part of this item - but a page that hides which channel is automated is worth
+      naming in the reasoning. Note also what this item does not ask: Article 12(1) requires
+      communication by *electronic* means, so a postal address is not an answer here even though it
+      is plainly not automated. What the code does with a support widget is not the question either
+      - the question is what the documents offer the recipient. The same quote carries this item and
+      the one above because one sentence states both requirements; quoting the sentence in full
+      rather than the closing clause keeps "which" attached to the means of communication, where it
+      belongs.'
+  - id: art-12-2-published
+    article: 12(2)
+    quote: In addition to the obligations provided under Directive 2000/31/EC, providers of intermediary
+      services shall make public the information necessary for the recipients of the service in
+      order to easily identify and communicate with their single points of contact. That information
+      shall be easily accessible, and shall be kept up to date.
+    cite: DSA Art. 12(2)
+    url: http://publications.europa.eu/resource/celex/32022R2065
+    checked_at: 2026-07-28
+    question: Is the information recipients need in order to identify and reach that contact point
+      published where a recipient would find it?
+    applicability_note: '"Easily accessible" is about where the information sits, not only whether it
+      exists. A contact address that appears once inside a long terms-of-service document, and
+      nowhere a user would look for it, is worth recording as partial with the location quoted,
+      rather than as present.'

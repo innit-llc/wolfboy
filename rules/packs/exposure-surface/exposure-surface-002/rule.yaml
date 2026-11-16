@@ -1,0 +1,420 @@
+id: exposure-surface-002
+pack: exposure-surface
+short_name: Endpoint to personal data outside the usual sign-in
+problem_line:
+  text: Personal data served outside the product's own sign-in
+  template: "{data} served outside the product's own sign-in"
+fix_line: Make the caller check hold by default, ask the person before a new caller is served, and
+  let them withdraw it.
+title: "Standing endpoint over the personal-data store whose caller check is not the product's own
+  account model: a local OS endpoint, or an auth middleware that self-disables"
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 32(1)(b) - the controller and the processor 'shall
+      implement appropriate technical and organisational measures to ensure a level of security
+      appropriate to the risk, including inter alia as appropriate' 'the ability to ensure the
+      ongoing confidentiality, integrity, availability and resilience of processing systems and
+      services'. A standing endpoint that answers any process in the session is part of the
+      processing system whose ongoing confidentiality this subparagraph asks about, and the measure
+      that bounds it is whatever identifies the caller
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 5(1)(f) - personal data shall be 'processed in a manner
+      that ensures appropriate security of the personal data, including protection against
+      unauthorised or unlawful processing and against accidental loss, destruction or damage, using
+      appropriate technical or organisational measures'. The measure here is caller identification,
+      and the declaring anchor's own source comment says of its method that it is weak, which is a
+      fact about the measure and not a conclusion about the processing
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: GDPR (Regulation (EU) 2016/679), Art. 25(1) - the controller shall, 'both at the time of the
+      determination of the means for processing and at the time of the processing itself',
+      'implement appropriate technical and organisational measures, such as pseudonymisation, which
+      are designed to implement data-protection principles, such as data minimisation, in an
+      effective manner and to integrate the necessary safeguards into the processing in order to
+      meet the requirements of this Regulation and protect the rights of data subjects'. Whether a
+      local endpoint exists at all, and what it will answer, is a determination of the means for
+      processing
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+  - cite: "GDPR (Regulation (EU) 2016/679), Art. 25(2), third sentence - 'In particular, such measures
+      shall ensure that by default personal data are not made accessible without the individual's
+      intervention to an indefinite number of natural persons.' Cited because it is the provision
+      closest to this construct's shape, and its limits are stated rather than glossed: it speaks of
+      natural persons, and what queries this endpoint is a PROCESS. Whether an unbounded set of
+      local processes is the same question the sentence asks is not settled by this detector, and
+      context question 3 puts it to the adjudicator rather than answering it"
+    url: https://publications.europa.eu/resource/celex/32016R0679
+    checked_at: 2026-09-01
+    jurisdiction: EU
+    supports_rule_condition: false
+effective_date: 2018-05-25
+severity: medium
+rule_confidence: 0.45
+detector:
+  engine: builtin-regex
+  file_globs:
+    - "**"
+  match:
+    - org\.freedesktop\.[Ss]ecret[A-Za-z.]*
+    - (?:^|[^A-Za-z0-9])[Ff]do[Ss]ecrets[A-Za-z0-9_]*
+    - \bQLocal(?:Server|Socket)\b
+    - (?:^|[^A-Za-z0-9])_?[A-Za-z0-9]*[Ll]ocalServer\s*(?:->|\.)\s*listen\s*\(
+    - net\.Listen\s*\(\s*["'`]unix["'`]|\bAF_UNIX\b
+    - \bCreateNamedPipe[AW]?\s*\(|\bNamedPipeServer(?:Stream)?\b|\\{2}\.\\[Pp][Ii][Pp][Ee]\\
+    - \bNSXPC(?:Listener|Connection|Interface)\b|\bxpc_connection_[a-z_]+\s*\(|\bshouldAcceptNewConnection\b
+    - (?:^|[^A-Za-z0-9])(?:ClientCommunicationProtocol|clientCommService[A-Za-z0-9_]*|_clientCommServices|connectToFileProviderServices|processClientCommunicationConnections|getRemoteServiceObject|remoteObjectProxyWithErrorHandler)\b|\bconfigureAccountWith[A-Za-z0-9_]*|\bremoveAccountConfig\b
+    - "[Nn]ative[_-]?[Mm]essaging[A-Za-z0-9_]*"
+    - \bQDBusConnection\s*::\s*sessionBus\s*\(|\bregisterObject\s*\(|\bregisterService\s*\(|\bdbus_bus_request_name\s*\(
+    - /proc/[^/\n]{1,40}/(?:exe|cmdline|status)
+    - "[\"'`]/proc/?[\"'`]"
+    - \b(?:SO_PEERCRED|LOCAL_PEERCRED|LOCAL_PEERPID|SO_PEERPIDFD|getpeereid)\b
+    - \b(?:GetNamedPipeClientProcessId|xpc_connection_get_pid|xpc_connection_get_euid|getConnectionUnixProcessID|GetConnectionUnixProcessID|setConnectionCodeSigningRequirement|kSecGuestAttributePid|auditToken)\b
+    - \b(?:getSecret|GetSecret|get_secret|getSecretNoNotification|searchItems|SearchItems|search_items|unlockItems|UnlockItems)\s*\(
+    - (?:^|[^A-Za-z0-9])(?:SocketApi|socketApi|socket_api|ShellExtension|shell_extension|FinderSync|finderSync)[A-Za-z0-9_]*
+    - (?:^|[^A-Za-z0-9])(?:AccessControl(?:Dialog|Prompt)|access_control_dialog|BrowserKeyPrefix|browser_key_prefix|allowedClients?|allowed_clients?|clientAllow(?:List|list))[A-Za-z0-9_]*
+    - (?:^|[^A-Za-z0-9_])if[ \t]*\(?[ \t]*![
+      \t]*[A-Za-z0-9_$.]{0,32}(?:[Aa]uth|AUTH|[Ss]ecurit|SECURIT|[Pp]rotect|PROTECT|[Ll]ogin|LOGIN)[A-Za-z0-9_$.]{0,32}[
+      \t]*\)?[ \t]*\{?[ \t]*(?:return[ \t]+)?(?:await[
+      \t]+)?(?:next|get_response|[A-Za-z0-9_$]{1,24}[ \t]*\.[ \t]*(?:[Nn]ext|doFilter|ServeHTTP))[
+      \t]*\(|(?:^|[^A-Za-z0-9_])if[ \t]+not[
+      \t]+[A-Za-z0-9_.]{0,32}(?:auth|AUTH|Auth)[A-Za-z0-9_.]{0,32}(?:[ \t]*\([ \t]*\))?[ \t]*:[
+      \t]*return[ \t]+(?:self[ \t]*\.[ \t]*)?get_response[ \t]*\(
+    - (?:^|[^A-Za-z0-9_])I?[Ll]istening[-_]?[Pp]ipe(?![A-Za-z0-9_])|(?:^|[^A-Za-z0-9_])[Pp]ipe[-_]?(?:[Ll]istener|[Ss]erver)(?![A-Za-z0-9_])|[{,][
+      \t]*["']?path["']?[ \t]*:[
+      \t]*[A-Za-z0-9_$.\[\]'"]{0,40}(?:pipe|Pipe|PIPE|sock|Sock|SOCK)|(?:^|[^A-Za-z0-9_])listen[
+      \t]*\([^\n]{0,60}\.sock(?![A-Za-z0-9_])|["'`]unix:[/@]
+    - \?[^?:\n]{0,80}(?:[Aa]uth|AUTH|[Ss]ecur|SECUR|[Ll]ogin|LOGIN)[^?:\n]{0,80}:[^\n]{0,80}(?:[Pp]ass[A-Za-z0-9_$]{0,10}[Nn]ext|[Pp]ass[Tt]hrough|[Pp]assThru|[Nn]ext[Hh]andler|[Nn]oop[A-Za-z0-9_$]{0,12}|[Nn]oOp[A-Za-z0-9_$]{0,12}|NOOP[A-Za-z0-9_$]{0,12}|[Aa]nonymous[A-Za-z0-9_$]{0,12}|[Nn]o[Aa]uth[A-Za-z0-9_$]{0,12})|\?[^?:\n]{0,80}(?:[Pp]ass[A-Za-z0-9_$]{0,10}[Nn]ext|[Pp]ass[Tt]hrough|[Pp]assThru|[Nn]ext[Hh]andler|[Nn]oop[A-Za-z0-9_$]{0,12}|[Nn]oOp[A-Za-z0-9_$]{0,12}|[Aa]nonymous[A-Za-z0-9_$]{0,12}|[Nn]o[Aa]uth[A-Za-z0-9_$]{0,12})[^?:\n]{0,80}:[^\n]{0,80}(?:[Aa]uth|AUTH|[Ss]ecur|SECUR|[Ll]ogin|LOGIN)
+    - (?:^|[^A-Za-z0-9_$])if[ \t]*\(?[ \t]*![
+      \t]*[A-Za-z0-9_$.]{0,48}(?:[Aa]uth|AUTH|[Ss]ecurit|SECURIT|[Pp]rotect|PROTECT|[Ll]ogin|LOGIN)[A-Za-z0-9_$.]{0,48}[
+      \t]*\)?[ \t]*\{[^\n}]{0,200}?(?:^|[^A-Za-z0-9_$.])(?:next[ \t]*\.[ \t]*run|next[ \t]*\.[
+      \t]*[Nn]ext|chain[ \t]*\.[ \t]*doFilter|[A-Za-z0-9_$]{1,24}[ \t]*\.[
+      \t]*ServeHTTP|get_response|_?next)[ \t]*\(
+    - \bdomainSocketAddress[ \t]*\(|\bUnixDomainSocketAddress[ \t]*\.[ \t]*(?:of|create)[
+      \t]*\(|(?:^|[^A-Za-z0-9_$])(?:bind|listen|Listen|serve|Serve|bind_to|ListenAndServe)[A-Za-z0-9_]{0,16}[
+      \t]*\([^\n]{0,60}(?:127\.0\.0\.1|\[::1\]|["'`]::1["'`]|localhost)|["'`](?:127\.0\.0\.1|\[::1\]|::1|localhost):[0-9{$%]
+    - (?:\?\?|\|\||(?:^|[^A-Za-z0-9_$])or[ \t]|unwrap_or[A-Za-z_]{0,10}[ \t]*\(|\bgetenv[
+      \t]*\([^\n)]{0,60},|environ[ \t]*\.[ \t]*get[ \t]*\([^\n)]{0,60},|\bgetProperty[
+      \t]*\([^\n)]{0,60},|\bgetOrDefault[ \t]*\([^\n)]{0,60},)[
+      \t]*["'`][^"'`\n]{0,80}(?:dev-only|dev_only|do[-_]not[-_]use|insecure|change[-_]?me|CHANGE[-_]?ME|replace[-_]?me|REPLACE[-_]?ME|not[-_]for[-_]production|please[-_]change)
+    - android:exported[ \t]*=[ \t]*["']true["']
+    - (?:^|[^A-Za-z0-9_])(?:WearableListenerService|onMessageReceived|onDataChanged|onCapabilityChanged|getMessageClient|getDataClient|getNodeClient|AbstractThreadedSyncAdapter)(?![A-Za-z0-9_])|\bextends[
+      \t]+ContentProvider\b|(?:^|[^A-Za-z0-9_])(?:reply|respond|sendMessage|sendResponse|send_message)[
+      \t]*\([^\n)]{0,40}[Nn]ode(?:Id|ID|_id)(?![A-Za-z0-9_])
+    - (?:^|[^A-Za-z0-9_])(?:String|var|val)[
+      \t]+(?:[A-Za-z0-9_$]{0,24}(?:[Uu]ser|USER|[Ss]ubject|SUBJECT|[Gg]uest|GUEST|[Vv]isitor|VISITOR|[Mm]ember|MEMBER|[Aa]ccount|ACCOUNT|[Cc]ustomer|CUSTOMER|[Pp]rofile|PROFILE|[Pp]atron|PATRON|[Aa]ttendee|ATTENDEE|[Tt]enant|TENANT|[Pp]layer|PLAYER|[Rr]eader|READER|[Vv]iewer|VIEWER|[Ll]earner|LEARNER|[Ss]ubscriber|SUBSCRIBER|[Pp]articipant|PARTICIPANT|[Pp]erson|PERSON|[Pp]rincipal|PRINCIPAL|[Ii]dentity|IDENTITY|[Bb]orrower|BORROWER|[Pp]assenger|PASSENGER|[Aa]pplicant|APPLICANT|[Ee]mployee|EMPLOYEE|[Cc]ontact|CONTACT|[Uu]uid|UUID|[Uu]id|UID)[A-Za-z0-9_$]{0,20}|[A-Za-z0-9_$]{1,24}(?:Id|ID|_id|_ID)(?![A-Za-z0-9_$]))[
+      \t]*=[^\n]{0,80}?(?:getParameter|getParameterValues|getPathParam|getQueryParam|getFormParam)[
+      \t]*\([^\n]{0,300}?(?:setAttribute|addCookie|setCookie|[Ss]ession[ \t]*\.[ \t]*(?:put|set))[
+      \t]*\((?<!(?:isRequestedSessionIdValid|getSession[ \t]*\([
+      \t]*false|(?:validate|check|require|assert|verify)[_]?[Ss]ession|[Ii]s[_]?[Ss]ession[_]?[Vv]alid|[Ss]ession[_]?[Ii]s[_]?[Vv]alid|isAuthenticated|ensureAuthenticated|require(?:Login|Auth)|\.[
+      \t]*isNew[ \t]*\()[^\n]{0,900})|(?:req|Req|request|Request|ctx|context|Context)[ \t]*\.[
+      \t]*(?:query|params|body)[ \t]*[.\[][
+      \t]*["'`]?(?:[A-Za-z0-9_$.]{0,32}(?:[Uu]ser|USER|[Ss]ubject|SUBJECT|[Gg]uest|GUEST|[Vv]isitor|VISITOR|[Mm]ember|MEMBER|[Aa]ccount|ACCOUNT|[Cc]ustomer|CUSTOMER|[Pp]rofile|PROFILE|[Pp]atron|PATRON|[Aa]ttendee|ATTENDEE|[Tt]enant|TENANT|[Pp]layer|PLAYER|[Rr]eader|READER|[Vv]iewer|VIEWER|[Ll]earner|LEARNER|[Ss]ubscriber|SUBSCRIBER|[Pp]articipant|PARTICIPANT|[Pp]erson|PERSON|[Pp]rincipal|PRINCIPAL|[Ii]dentity|IDENTITY|[Bb]orrower|BORROWER|[Pp]assenger|PASSENGER|[Aa]pplicant|APPLICANT|[Ee]mployee|EMPLOYEE|[Cc]ontact|CONTACT|[Uu]uid|UUID|[Uu]id|UID)[A-Za-z0-9_$]{0,20}|[A-Za-z0-9_$.]{1,32}(?:Id|ID|_id|_ID)(?![A-Za-z0-9_$]))[^\n]{0,300}?(?:\.[
+      \t]*session[ \t]*[.\[]|res(?:ponse)?[ \t]*\.[ \t]*cookie[ \t]*\(|setCookie[ \t]*\(|[Ss]ession[
+      \t]*\.[ \t]*(?:set|put)[ \t]*\()(?<!(?:isRequestedSessionIdValid|getSession[ \t]*\([
+      \t]*false|(?:validate|check|require|assert|verify)[_]?[Ss]ession|[Ii]s[_]?[Ss]ession[_]?[Vv]alid|[Ss]ession[_]?[Ii]s[_]?[Vv]alid|isAuthenticated|ensureAuthenticated|require(?:Login|Auth)|\.[
+      \t]*isNew[
+      \t]*\()[^\n]{0,900})|@(?:Body|Query|Param|RequestParam|PathVariable|QueryParam|FormParam|CookieValue)[
+      \t]*\([^\n]{0,300}?(?:\.[ \t]*session[ \t]*[.\[][
+      \t]*["'`]?(?:[A-Za-z0-9_$.]{0,32}(?:[Uu]ser|USER|[Ss]ubject|SUBJECT|[Gg]uest|GUEST|[Vv]isitor|VISITOR|[Mm]ember|MEMBER|[Aa]ccount|ACCOUNT|[Cc]ustomer|CUSTOMER|[Pp]rofile|PROFILE|[Pp]atron|PATRON|[Aa]ttendee|ATTENDEE|[Tt]enant|TENANT|[Pp]layer|PLAYER|[Rr]eader|READER|[Vv]iewer|VIEWER|[Ll]earner|LEARNER|[Ss]ubscriber|SUBSCRIBER|[Pp]articipant|PARTICIPANT|[Pp]erson|PERSON|[Pp]rincipal|PRINCIPAL|[Ii]dentity|IDENTITY|[Bb]orrower|BORROWER|[Pp]assenger|PASSENGER|[Aa]pplicant|APPLICANT|[Ee]mployee|EMPLOYEE|[Cc]ontact|CONTACT|[Uu]uid|UUID|[Uu]id|UID)[A-Za-z0-9_$]{0,20}|[A-Za-z0-9_$.]{1,32}(?:Id|ID|_id|_ID)(?![A-Za-z0-9_$]))|addCookie[
+      \t]*\(|res(?:ponse)?[ \t]*\.[ \t]*cookie[ \t]*\(|setCookie[ \t]*\(|[Ss]ession[ \t]*\.[
+      \t]*(?:set|put)[ \t]*\()(?<!(?:isRequestedSessionIdValid|getSession[ \t]*\([
+      \t]*false|(?:validate|check|require|assert|verify)[_]?[Ss]ession|[Ii]s[_]?[Ss]ession[_]?[Vv]alid|[Ss]ession[_]?[Ii]s[_]?[Vv]alid|isAuthenticated|ensureAuthenticated|require(?:Login|Auth)|\.[
+      \t]*isNew[ \t]*\()[^\n]{0,900})|(?:(?:setAttribute|addCookie|setCookie|[Ss]ession[ \t]*\.[
+      \t]*(?:put|set))|res(?:ponse)?[ \t]*\.[ \t]*cookie)[ \t]*\([
+      \t]*["'`]?(?:[A-Za-z0-9_$.]{0,32}(?:[Uu]ser|USER|[Ss]ubject|SUBJECT|[Gg]uest|GUEST|[Vv]isitor|VISITOR|[Mm]ember|MEMBER|[Aa]ccount|ACCOUNT|[Cc]ustomer|CUSTOMER|[Pp]rofile|PROFILE|[Pp]atron|PATRON|[Aa]ttendee|ATTENDEE|[Tt]enant|TENANT|[Pp]layer|PLAYER|[Rr]eader|READER|[Vv]iewer|VIEWER|[Ll]earner|LEARNER|[Ss]ubscriber|SUBSCRIBER|[Pp]articipant|PARTICIPANT|[Pp]erson|PERSON|[Pp]rincipal|PRINCIPAL|[Ii]dentity|IDENTITY|[Bb]orrower|BORROWER|[Pp]assenger|PASSENGER|[Aa]pplicant|APPLICANT|[Ee]mployee|EMPLOYEE|[Cc]ontact|CONTACT|[Uu]uid|UUID|[Uu]id|UID)[A-Za-z0-9_$]{0,20}|[A-Za-z0-9_$.]{1,32}(?:Id|ID|_id|_ID)(?![A-Za-z0-9_$]))[^\n]{0,80}?(?:getParameter|getParameterValues|getPathParam|getQueryParam|getFormParam)[
+      \t]*\((?<!(?:isRequestedSessionIdValid|getSession[ \t]*\([
+      \t]*false|(?:validate|check|require|assert|verify)[_]?[Ss]ession|[Ii]s[_]?[Ss]ession[_]?[Vv]alid|[Ss]ession[_]?[Ii]s[_]?[Vv]alid|isAuthenticated|ensureAuthenticated|require(?:Login|Auth)|\.[
+      \t]*isNew[ \t]*\()[^\n]{0,900})
+  join_bracketed_constructs: true
+context_questions:
+  - "IS THE ENDPOINT LISTENING, OR IS THIS THE CLIENT HALF? Several clauses reach a protocol's
+    shared vocabulary, which both ends of it use. The construct is the product SERVING: a listener
+    created, a bus name taken, a handler answering a query. A file that only dials somebody else's
+    endpoint is the recipients pack's question, not this one, and the finding closes here."
+  - WHAT DOES A CALLER GET BACK? Read the handler. The anchors span a stored credential returned in
+    full, a search across every unlocked collection, a file's sync status, and - in one of them -
+    the account's own user name and password handed to an operating-system extension. Those are four
+    very different disclosures behind one construct; name the fields the handler actually returns
+    rather than inferring them from the endpoint's name.
+  - "WHO CAN CONNECT, AND HOW IS THAT DECIDED? This is the limb the construct turns on. Quote the
+    caller check: reading the calling process's executable path, peer credentials on the socket, a
+    code-signing requirement installed on the listener, an allowlist the product keeps, or nothing
+    at all. Then say what it establishes - a path or a process identifier says which binary is at
+    the other end and says nothing about which PERSON asked it to connect. Note where the product's
+    own source already says the check is weak; the declaring anchor's does."
+  - "IS THE PERSON ASKED, AND IS THE ANSWER REMEMBERED? Look for a prompt shown before the first
+    disclosure to a new caller, and for where the resulting permission is stored. Then ask what
+    revokes it: an association key kept in the database's custom data survives restarts and updates,
+    and the person may have no screen that lists what is currently allowed."
+  - IF THE MATCH IS A METHOD NAME RATHER THAN AN ENDPOINT, IS IT THIS PROTOCOL'S? `getSecret` and
+    `searchItems` are the desktop secret-service protocol's own method names and they are also
+    ordinary compounds any codebase may use for something unrelated. Read the enclosing class and
+    the interface it implements before writing anything down.
+  - IS THIS THE PRODUCT'S PRIMARY FEATURE OR AN AUXILIARY OPERATOR PATH? An endpoint that exists so
+    a browser extension or a file manager can do the product's job is this construct. A debug
+    console, an impersonation route or a compatibility API is `exposure-surface-001`'s. The
+    distinction is not about which is more serious - it decides which questions are worth asking and
+    which record row, if any, the surface belongs in.
+  - "IF THE MATCH IS AN AUTHORISATION MIDDLEWARE THAT SELF-DISABLES, OR A LISTENER BOUND TO A PATH,
+    FOUR THINGS THE LINE DOES NOT SAY. These two shapes were added in 2026-09-04 and both are weaker
+    than the endpoint clauses; ask all four before writing anything down. (a) IS THE SWITCH OFF IN
+    THE SHIPPED DEFAULT? A guard reading `if (!authIsConfigured) return next()` passes every request
+    through when the operator has configured no authentication method, and whether that is the
+    out-of-the-box state is an OPERATOR fact - read the product's own configuration file and its own
+    security documentation, and quote them rather than inferring the default from the code. (b) WHAT
+    IS BEHIND THE GUARD? List the routes it wraps and what each returns; a host name, an
+    operating-system user name and a proxy-asserted identity are three different disclosures and
+    only reading the handlers separates them. (c) WHO CAN REACH THE PORT? A self-disabling guard
+    usually sits in front of an ORDINARY TCP LISTENER, so this rule's phrase 'any process in the
+    user's session' is not established by the match: reachability is a deployment fact - a bind
+    address, a container network, a reverse proxy - and none of it is in the tree. Say so instead of
+    borrowing the stronger phrase. (d) FOR A PATH-BOUND LISTENER, IS THE SOCKET EVER CONFIGURED, AND
+    WHAT ARE ITS PERMISSIONS? A named pipe or UNIX-domain socket that is opt-in and unset by default
+    discloses nothing until somebody sets it, and what a socket admits is decided by its filesystem
+    mode, not by its transport."
+  - "IF THE MATCH IS A GROUP-F SHAPE, FOUR MORE THINGS THE LINE DOES NOT SAY. These four shapes were
+    added in 2026-09-09 and each of them establishes one half of something. (a) FOR A HANDLER CHOSEN
+    BY A CONDITIONAL, OR A GUARD WHOSE CONSEQUENT IS THE FRAMEWORK'S PASS-THROUGH CALL: open the
+    named handler or the flag and read it. A conditional between an authenticating handler and one
+    named for passing on says a choice is made per route; it does not say which routes take which
+    arm, and it does not say what the pass-through-named class actually does. Read the class body,
+    then read what the routes behind it return. (b) FOR AN EXPORTED PLATFORM COMPONENT: THE CALLER
+    CHECK LIVES IN THE MANIFEST, NOT IN THE PRODUCT'S ACCOUNT MODEL. On Android the whole of what
+    decides who may reach an exported service, receiver, activity or provider is the declaration
+    beside it - an `android:permission` attribute, a signature-level permission, or nothing - so
+    open the manifest entry beside the handler and quote what is there, including its absence. A
+    component declared exported with an intent filter and no permission is reachable by any
+    application installed on the device; that is a fact about the declaration, and what the
+    component then answers with is a separate read of the handler. (c) FOR A LOCAL TRANSPORT - A
+    DOMAIN SOCKET OR A LOOPBACK LISTENER - DOES ANY CALLER-IDENTITY CHECK EXIST AT ALL? THIS IS A
+    QUESTION AND NOTHING ON THE LINE ANSWERS IT. Read the handlers this transport serves and say
+    whether any of them takes an argument naming who is calling - a peer credential, an
+    authenticated principal, a session, a token - or whether the identity is decided outside the
+    process. A loopback listener has no filesystem mode to bound it, so what reaches it is decided
+    by the host and container boundary, which is a deployment fact and not in the tree; a domain
+    socket has one, and it is worth reading. (d) FOR A CREDENTIAL CONSTANT THAT NAMES ITSELF UNFIT
+    FOR PRODUCTION: is the fallback reachable in this version, and is the environment variable set
+    in the shipped deployment? Read what verifies with the value and which routes are behind it - a
+    guard that returns early for every path outside one prefix does nothing until a route exists
+    under it. Both halves are operator and version facts; read the product's own configuration, its
+    deployment documentation and its route table, and quote them rather than inferring either from
+    this line."
+  - "IF THE MATCH IS A SUBJECT IDENTIFIER TAKEN OUT OF THE REQUEST AND WRITTEN BACK AS THE CALLER'S
+    IDENTITY, THREE THINGS TO ESTABLISH BEFORE ANYTHING IS WRITTEN DOWN. This shape was added in
+    2026-09-09 and it establishes one half of something. (a) IS ANY OTHER CREDENTIAL CHECKED BEFORE
+    THE RECORDS ARE SERVED? THIS IS A QUESTION AND THE MATCHED LINE DOES NOT ANSWER IT. Follow the
+    value into the handler that uses it and list what stands between the request and the store - a
+    password, a bearer token, a signature, a session the product itself created, or nothing at all
+    beside the identifier. A FORMAT CHECK IS NOT AN ACCOUNT-MODEL CHECK: a pattern, length or
+    character-class test says the string is well formed and says nothing about who sent it. A
+    session-validity check earlier on the path does not settle it either, because a session the
+    product created for one person and a subject identifier submitted with the request are two
+    different facts. (b) IS THE IDENTIFIER PERSISTED BEFORE THE SESSION CHECK, OR AFTER IT? Read the
+    order in the source rather than summarising it: which branch returns first, and whether the
+    write into the cookie, the session or the request attribute happens on a branch reached without
+    a valid session. Quote the lines in the order they run. (c) WHO MINTS THE VALUE, AND CAN IT BE
+    GUESSED OR ENUMERATED? Find where a new one is created and say what it is made of - a random
+    UUID, a counter, an encrypted account identifier, or a value the client chose for itself - and
+    say where the person holding it can see it or replace it. None of that is on the matched line,
+    and all of it decides what the match means."
+evidence_template: "{file}:{line} matched a construct through which this product serves, or prepares
+  to serve, the personal data it holds to CALLERS ITS OWN ACCOUNT MODEL DOES NOT DECIDE - a desktop
+  secret-service bus name, a local socket or named-pipe listener, an XPC listener, a
+  native-messaging host, the process-introspection idiom that identifies a caller, a secret-serving
+  handler, the record of a caller having been allowed, an authorisation middleware whose body lets
+  the request through when nothing is configured, a listener bound to a filesystem path instead of a
+  port, a route handler chosen by a conditional between an authenticating handler and a pass-through
+  one, a listener bound to a loopback address, a credential constant that names itself unfit for
+  production standing as the fallback of an environment lookup, a component the platform declares
+  exported, or a subject identifier taken out of the request and written back as the caller's own
+  identity. THAT IS THE WHOLE OF WHAT IS ESTABLISHED: such an endpoint, or the machinery for one, is
+  present in the source. Since 2026-09-09 the match may also come from a CONSTRUCT rather than from
+  that line alone: this rule reads the bracket-balanced construct a line opens on as one folded text
+  as well, so a guard whose condition and whose pass-through call sit on different physical lines -
+  the ordinary Go and Java layout, which is the spelling shape (vii) below calls written across
+  several physical lines - is matched as a whole, and so is a method whose request-borne read and
+  whose identity write are lines apart. Where that is what happened the finding is reported on the
+  line the construct opens on and carries the span it was folded from in locations[].joined_from:
+  read those lines together, not the opening line alone. Eleven shapes reach this rule and they are
+  not equally strong. (i) The secret-service bus name and its interfaces - the strongest, because
+  the protocol exists for exactly this. (ii) A listener being created on a local transport. (iii)
+  Caller identification by process introspection, which is the limb that shows the check is not the
+  product's own account model. (iv) A handler or a per-caller permission record. (v) An
+  authorisation middleware that SELF-DISABLES - `if (!authIsConfigured) return next()` and its
+  equivalents - which shows the caller being decided nowhere at all when the operator has configured
+  nothing. (vi) A listener bound to a named pipe or a UNIX-domain socket through a LISTEN OPTION
+  rather than through a transport call, which is THE WEAKEST SHAPE IN THIS RULE and must never be
+  equated with (i) to (iii): in the tree it was written for it is opt-in, off in the shipped
+  defaults, and the authenticated middleware stack is identical whichever transport is chosen. (vii)
+  A ROUTE HANDLER CHOSEN BY A CONDITIONAL between an authenticating handler and one named for
+  passing the request on, or a negated authorisation condition whose braced consequent is the
+  framework's own pass-through call. This is shape (v)'s construct written across a choice or across
+  several physical lines; it establishes that the choice is made and NOT which routes take which
+  arm, nor what the pass-through-named class does. (viii) A LOCAL TRANSPORT WITH NO PORT OR NO HOST
+  BOUNDARY - a framework domain-socket address constructor, or a listener bound to a loopback
+  address. A DOMAIN SOCKET IS A LOCAL TRANSPORT WHOSE REACHABILITY DEPENDS ON FILESYSTEM PERMISSIONS
+  THE CODE DOES NOT STATE, and a loopback listener is the same shape WITHOUT the filesystem
+  permission - what reaches it is decided by the host and container boundary, which no source line
+  holds. WHETHER ANY CALLER-IDENTITY CHECK EXISTS IN THE HANDLERS BEHIND EITHER IS ASKED BY CONTEXT
+  QUESTION 8 (c) AND IS NOT ESTABLISHED HERE. Both spellings also occur on the CLIENT side of the
+  same protocol, which context question 1 settles. (ix) A CREDENTIAL CONSTANT THAT NAMES ITSELF
+  UNFIT FOR PRODUCTION standing as the fallback of an environment lookup: the caller check still
+  runs, against a key the source publishes, whenever the operator has configured none. It does not
+  establish that the fallback branch is reachable in the deployment or in this version, which
+  context question 8 (d) asks. (x) A COMPONENT THE PLATFORM DECLARES EXPORTED. ON ANDROID THE CALLER
+  CHECK FOR AN EXPORTED COMPONENT LIVES IN THE MANIFEST RATHER THAN IN THE PRODUCT'S OWN ACCOUNT
+  MODEL - an `android:permission` attribute, a signature-level permission, or nothing at all - SO
+  THE READER MUST OPEN THE MANIFEST ENTRY BESIDE THE HANDLER, and read the handler beside the
+  manifest entry: one clause reaches the declaration and another the handler, and neither
+  establishes what the other says. (xi) A SUBJECT IDENTIFIER TAKEN OUT OF THE REQUEST AND WRITTEN
+  BACK AS THE CALLER'S OWN IDENTITY - a request parameter, query, path, body or decorator-bound
+  value whose own name says it names a subject, written into a cookie, a session or the request's
+  identity attribute in the same construct, with no session-validity check standing before the
+  write. WHAT IT ESTABLISHES IS THAT A VALUE THE CLIENT SUPPLIED BECOMES THE KEY UNDER WHICH RECORDS
+  ARE SERVED AND IS WRITTEN BACK TO THE CLIENT. IT DOES NOT ESTABLISH THAT THE IDENTIFIER IS THE
+  BEARER CREDENTIAL: whether any other credential is checked before the records are served is a fact
+  about the routes behind this line, and CONTEXT QUESTION 9 (a) ASKS IT RATHER THAN THIS FIELD
+  ASSERTING IT. A format or length test on the value is not an account-model check, and a
+  session-validity check standing earlier on the path does not settle the question either, because a
+  valid session that then adopts a submitted identifier is the same question. Nor does the line
+  establish who mints the value, what it is made of or whether it can be enumerated (context
+  question 9 (c)); and where a SECOND FILE serves the records under that identifier, as in the tree
+  this clause was written for, this line does not reach that file and the reader must open it. THIS
+  SHAPE IS NOT ONE OF THE TWO EXAMPLES THE TITLE LISTS AFTER ITS COLON. It is inside the title's
+  main clause - a standing endpoint over the personal-data store whose caller check is not the
+  product's own account model - and outside the two illustrations that follow it, which is already
+  true of shape (ix). The title is public wording, it was not changed here, and the difference is
+  disclosed rather than glossed. WHAT THIS DETECTOR DOES NOT ESTABLISH: which local processes
+  actually connect, which is a runtime fact no source line holds (context question 1 asks whether
+  the file is even the serving half); what a caller receives (context question 2); whether the
+  person is asked first and how that answer is stored (context question 4); or, where the match is a
+  method name, that the protocol is this one at all (context question 5). AND FOR SHAPES (v) AND
+  (vi) IN PARTICULAR, IT DOES NOT ESTABLISH THAT THE TRANSPORT IS LOCAL AT ALL: a self-disabling
+  guard ordinarily sits in front of an ordinary TCP listener, so who can reach it is a deployment
+  fact and not 'any process in the user's session'; nor does it establish that the switch is off in
+  the shipped default, or that an opt-in socket is ever configured. Context question 7 asks all
+  four. Read the handler and the caller check before writing a record row."
+remediation_template: >
+  Establish direction first (context question 1): a file that only connects OUT to somebody else's
+
+  endpoint is not this construct and the finding closes there.
+
+  Read the handler and write down what a caller actually receives, field by field. Where the
+
+  endpoint hands over a credential - a stored secret, an account password given to an operating
+
+  system extension - record that separately from a status query, because they are not the same
+
+  disclosure.
+
+  Write down the caller check as it is, including what it cannot establish. An executable path or a
+
+  process identifier names a binary and not a person, and a process identifier can be reused
+
+  between the moment it is read and the moment it is trusted. Where the product's own source says
+
+  the check is weak, quote that rather than paraphrasing it.
+
+  Check that the person is asked before an unfamiliar caller is served for the first time, that the
+
+  resulting permission is visible somewhere they can find it, and that there is a way to withdraw
+
+  it. An association key stored inside the database's own custom data is durable and is easy to
+
+  ship with no screen that lists it.
+
+  Where the shipped default leaves the caller check off - a guard that steps aside when nothing is
+
+  configured, a listener that serves any caller before the person has approved one - and the answer
+
+  to who can connect (context question 3) reaches an indefinite number of people (anyone who can
+
+  reach the surface, not a group the operator names), change the default
+
+  rather than only recording it: Art. 25(2), third sentence, asks that by default personal data are
+
+  not made accessible without the individual's intervention to an indefinite number of natural
+
+  persons. Ship the check on, so that by default the data are served only after the person whose
+
+  data they are has acted - turned the surface on for their own data, approved the caller - and make
+
+  switching it off a recorded choice rather than the out-of-the-box state. An operator's switch
+  alone
+
+  is not that person's intervention: where an operator turns the surface on over other people's
+
+  data, those people have not acted, so by default their data wait until each of them has.
+
+  Where the answer is a defined group instead (an organisation's administrators reading its
+
+  employees' data), that third sentence does not reach it: Art. 25(1) and Art. 32(1)(b) still ask
+  for
+
+  measures appropriate to the risk, so record who is in the group, why it needs the access, and the
+
+  check that keeps everyone else out.
+
+  Where the product runs on more than one platform, check each transport separately: a named pipe,
+
+  a UNIX-domain socket and an XPC listener have different default reachability, and a permission
+
+  model written for one of them does not carry to the others.
+
+  Where the match is an authorisation middleware that self-disables, or a listener bound to a
+
+  filesystem path, treat it as the weakest evidence in this rule and say so in the record. For the
+
+  middleware: read the product's own configuration file and its own security documentation to
+
+  establish whether the switch is off in the shipped default, list the routes the guard wraps and
+
+  what each returns, and note that the transport is ordinarily TCP - so who can reach it is a
+
+  deployment fact and not this rule's 'any process in the user's session'. For the path-bound
+
+  listener: check whether the socket is ever configured, and read the filesystem mode it is created
+
+  with, because that and not the transport decides who may connect.
+
+  Where the match is one of the four shapes added in 2026-09-09, each one gives you half a fact and
+
+  the other half is a second file to open. For a handler chosen by a conditional, or a guard whose
+
+  braced consequent is the framework's pass-through call: open the named handler class or the flag,
+
+  read its body, and list the routes behind it. For a component the platform declares exported:
+
+  read the manifest entry and the handler together, and write down whether a permission - and which
+
+  level of it - stands between them, including when the answer is none. For a domain socket or a
+
+  loopback listener: say whether any handler behind it takes an argument naming who is calling, and
+
+  read the filesystem mode where there is one; a loopback listener has none, so record the host and
+
+  container boundary as the deployment fact it is rather than treating the address as the answer.
+
+  For a credential constant that names itself unfit for production: read what verifies with the
+
+  value, check whether any route reaches that code path in this version, and read the deployment's
+
+  own configuration to see whether the environment supplies a value at all.
+
+  This surface is ordinarily the product working as intended. Record it as a processing route with
+
+  its own caller check rather than treating its existence as the finding.
+data_categories:
+  - user.authorization.credentials
+  - user.account
+  - user.behavior
+fingerprint_spec: project
+reading_class:
+  class: enumeration
+  item: listener
+  item_source: reading

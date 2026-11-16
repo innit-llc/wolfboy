@@ -1,0 +1,106 @@
+sets:
+  markdown_documents:
+    question: Is this file Markdown or MDX?
+    patterns:
+      - pattern: \.mdx?$
+        excludes: "`README.md`, `guide.mdx`, and every other `.md` and `.mdx` file."
+    near_misses:
+      - rules:
+          - eu-retention-001
+          - eu-retention-002
+          - eu-retention-003
+          - eu-retention-004
+        pattern: \.(?:mdx?|rst|txt|adoc|asciidoc)$
+        differs_by: >
+          Adds reStructuredText, plain text and AsciiDoc. A superset; promoted separately as
+          `prose_documents`, because giving the three markdown rules the wider clause would take
+          `.rst`, `.txt` and `.adoc` away from them.
+  prose_documents:
+    question: Is this file documentation prose, in any of the formats a repository writes it in?
+    patterns:
+      - pattern: \.(?:mdx?|rst|txt|adoc|asciidoc)$
+        excludes: "`.md`, `.mdx`, `.rst`, `.txt`, `.adoc`, `.asciidoc`."
+    near_misses:
+      - rules:
+          - eu-minors-001
+        pattern: \.(?:md|mdx|markdown|rst|adoc|txt)$
+        differs_by: >
+          Adds the long `.markdown` spelling and drops `.asciidoc`. Neither a subset nor a superset,
+          by one extension in each direction.
+  openapi_documents:
+    question: >
+      Is this file an OpenAPI or Swagger interface description — a directory of them, or one of the
+      two conventional filenames?
+    patterns:
+      - pattern: (^|/)openapi[-_]?specs?(/|$)|(^|/)(?:openapi|swagger)\.(?:json|ya?ml)$
+        excludes: >
+          `openapi/`, `openapi-spec/`, `openapi_specs/`, and the files `openapi.json`,
+          `openapi.yaml`, `swagger.yml`.
+    near_misses:
+      - rules:
+          - eu-retention-002
+        pattern: (^|/)openapi[-_]?specs?(/|$)
+        differs_by: >
+          The directory branch alone, so that rule still reads a repository-root `openapi.json`. A
+          strict subset; it stays inline there rather than being widened.
+  attribution_documents:
+    question: >
+      Is this file the licence-attribution text a distribution carries — a NOTICE, a THIRD-PARTY
+      list, a CREDITS file?
+    patterns:
+      - pattern: (^|/)(NOTICE|THIRD[-_]?PARTY|THIRDPARTY|ATTRIBUTIONS?|CREDITS)[^/]*\.(txt|md|json)$
+        excludes: >
+          `NOTICE.txt`, `THIRD-PARTY-LICENSES.txt`, `ATTRIBUTIONS.md`, `CREDITS.json` and their
+          suffixed variants.
+  localisation_catalogues:
+    question: >
+      Is this file a translation catalogue — a data file of localised strings inside a localisation
+      directory, rather than a source file of behaviour that sits beside them?
+    patterns:
+      - pattern: (^|/)(?:locales?|i18n|intl|translations?|lang|langs)/(?:(?!(?:locales?|i18n|intl|translations?|lang|langs)/)[^/]+/)*[^/]+\.(?:json|ya?ml|po|pot|mo|properties|xliff|xlf|arb|strings|resx|ftl|toml|csv|xml)$
+        excludes: >
+          A catalogue-data file (`.json`, `.yaml`, `.yml`, `.po`, `.pot`, `.mo`, `.properties`,
+          `.xliff`, `.xlf`, `.arb`, `.strings`, `.resx`, `.ftl`, `.toml`, `.csv`, `.xml`) anywhere
+          below a `locale/`, `locales/`, `i18n/`, `intl/`, `translation/`, `translations/`, `lang/`
+          or `langs/` directory. This set does not remove a source file in such a directory
+          (`docs/i18n/main.js`,
+          `translations/translation-drawer/hooks/use-translation-file-operations.ts`), a module that
+          only exports a strings object (`locales/en.js`, `lang/en/admin.php`), a template or a
+          prose file there, or a file named `lang` or `i18n` with no extension.
+    near_misses:
+      - rules:
+          - eu-consent-016
+        pattern: (^|/)(?:locales?|i18n|translations?|lang|langs)/(?:(?!(?:locales?|i18n|translations?|lang|langs)/)[^/]+/)*[^/]+\.(?:json|ya?ml|po|pot|mo|properties|xliff|xlf|arb|strings|resx|ftl|toml|csv|xml)$
+        differs_by: >
+          This set's own clause without `intl`: the same catalogue-data files below the other seven
+          directory names, so it is a strict subset of the set and still reads an `intl/` directory,
+          which adopting the set would stop. Until 2026-10-30 it was this set's earlier directory
+          clause without `intl`, `(^|/)(?:locales?|i18n|translations?|lang|langs)(/|$)`, which
+          removed source files too and was neither a subset nor a superset; it was given the set's
+          extension requirement that day, after the set had been given it.
+      - rules:
+          - eu-market-001
+        pattern: (^|/)(?:i18n|locales?|translations?|lang|messages)/(?:[^/]+/)*[^/]+\.(?:json|ya?ml|po|pot|properties|ini|xml|csv)$
+        differs_by: >
+          The set's own shape since 2026-10-30 (a data file below a catalogue directory, so a `.ts`
+          file inside `i18n/` is read) with other names and formats: it adds `messages/` and `.ini`,
+          and has no `intl/`, `langs/`, `.mo`, `.xliff`, `.xlf`, `.arb`, `.strings`, `.resx`, `.ftl`
+          or `.toml`. Neither a subset nor a superset.
+  localisation_directories:
+    question: >
+      Is this file a translation catalogue — the question `localisation_catalogues` asks, written
+      with the directory names in another order?
+    patterns:
+      - pattern: (^|/)(?:i18n|locales?|translations?|lang|langs|intl)/(?:(?!(?:i18n|locales?|translations?|lang|langs|intl)/)[^/]+/)*[^/]+\.(?:json|ya?ml|po|pot|mo|properties|xliff|xlf|arb|strings|resx|ftl|toml|csv|xml)$
+        excludes: >
+          The same catalogue-data files below the same eight directory names as
+          `localisation_catalogues`. This set does not remove a source file in such a directory.
+  email_template_directories:
+    question: >
+      Is this file inside an `email/` or `emails/` directory that is NOT one of the framework route
+      roots, where the content is a message template rather than a page the product serves?
+    patterns:
+      - pattern: (^|/)(?!app/|pages/|routes/)[^/]+/[Ee]mails?/
+        excludes: >
+          `lib/emails/`, `server/email/`, `src/Emails/` — and deliberately not `app/emails/`,
+          `pages/email/` or `routes/emails/`, where the segment is a route and the file is a page.

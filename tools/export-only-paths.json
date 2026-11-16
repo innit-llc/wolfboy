@@ -1,0 +1,22 @@
+{
+  "about": "Paths this tree holds that the workspace it was exported from does not. tools/build-bundle.mjs reads them as absent when it checks rule text for paths of this repository, so a rule naming a place in the scanned project (such as .github/ISSUE_TEMPLATE) builds here as it does there.",
+  "paths": [
+    ".github",
+    ".github/ISSUE_TEMPLATE",
+    ".github/ISSUE_TEMPLATE/bug_report.md",
+    ".github/ISSUE_TEMPLATE/config.yml",
+    ".github/ISSUE_TEMPLATE/rule_miss.md",
+    ".github/ISSUE_TEMPLATE/rule_target.md",
+    ".github/PULL_REQUEST_TEMPLATE.md",
+    "CHANGELOG.md",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "GOVERNANCE.md",
+    "HOW-IT-WORKS.md",
+    "KNOWN-ISSUES.md",
+    "LICENSE",
+    "SECURITY.md",
+    "SUPPORT.md",
+    "tools/export-only-paths.json"
+  ]
+}

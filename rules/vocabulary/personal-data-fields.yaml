@@ -1,0 +1,394 @@
+lists:
+  personal_data_field_names:
+    kind: term
+    purpose: The names a personal-data attribute is spelled with in a column declaration, a form
+      control, a struct tag, an ORM field or a serialisation key — for the rules that ask whether a
+      product declares, collects or forwards data about identified people.
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - term: Date of birth
+        anchors:
+          - date_of_birth
+          - dateofbirth
+          - dob
+          - birthday
+        note: "`dob` is three letters and is kept for the reason the recipient files keep their bare brand
+          tokens: subtraction is the only operation that can create a miss. It is safe here only
+          because every clause that splices this list requires the word to sit inside a column
+          declaration, a form control, a struct tag or a serialisation key."
+      - term: Password or credential material
+        anchors:
+          - password_hash
+          - passwordhash
+          - password
+        position_bound: true
+        note: A stored password is personal data about the person it authenticates, and a hash of one is
+          still personal data — Recital 26's re-identification test is not satisfied by hashing
+          alone.
+      - term: Display name
+        anchors:
+          - display_name
+          - displayname
+        position_bound: true
+        note: "A chosen name rather than a legal one. It is personal data on the same ground as a legal
+          name: it identifies a person to other users."
+      - term: Telephone number
+        anchors:
+          - phone_number
+          - phonenumber
+          - phone
+        note: "`phone` alone is also the English word for the device. The construct guard is what separates
+          a column called `phone` from a sentence about a telephone."
+      - term: National identifier
+        anchors:
+          - national_id
+          - nationalid
+        note: A state-issued identity number. In several member states this is a national identification
+          number within GDPR Art. 87, which lets member-state law add conditions on top of the
+          Regulation.
+      - term: Postal code
+        anchors:
+          - postal_code
+          - postalcode
+          - postcode
+          - zip
+        position_bound: true
+        note: "`zip` collides with the archive format and with the verb. Kept for the same reason `dob` is,
+          and bounded by the same construct guard."
+      - term: Given name
+        anchors:
+          - first_name
+          - firstname
+        position_bound: true
+        note: The name part written first in the spellings this list reaches. It is not always the given
+          name in every naming order, which is why the entry is named for the field and the note
+          says what it holds.
+      - term: IP address
+        anchors:
+          - ip_address
+          - ipaddress
+        note: An IP address is personal data where the holder has means likely reasonably to be used to
+          identify the person behind it — Recital 26, read with Breyer (C-582/14). The rule reports
+          the field; whether the case is made is a question for the reader.
+      - term: Full name
+        anchors:
+          - full_name
+          - fullname
+        position_bound: true
+        note: A single column holding the whole name.
+      - term: Family name
+        anchors:
+          - last_name
+          - lastname
+        position_bound: true
+        note: "See `first_name`: the entry is named for the field, not for a naming order."
+      - term: Account name
+        anchors:
+          - username
+        position_bound: true
+        note: An account name is personal data wherever it can be tied to a person, which for a login
+          credential is by construction.
+      - term: Postal address
+        anchors:
+          - address
+          - street
+          - city
+        position_bound: true
+        note: "`address` also spells a memory address, an email address and a network address; `city` and
+          `street` are ordinary English. All three are bounded by the construct guard alone."
+      - term: Gender
+        anchors:
+          - gender
+        note: Recorded gender. Whether a particular column is an Art. 9 special category — which reaches
+          data concerning a natural person's sex life or sexual orientation, and not gender as such
+          — is a question for the reader and for eu-special-categories-*, never for this list.
+      - term: Tax identifier
+        anchors:
+          - tax_id
+          - taxid
+        note: A tax registration number, which several member states derive from or use as a national
+          identification number.
+      - term: Email address
+        anchors:
+          - email
+        position_bound: true
+        note: "The most-written word in the corpus that is also a field name. It is usable here for exactly
+          one reason: every clause that splices this list requires it to sit inside a construct.
+          Spliced bare it would be unusable — see `position_bound_field_names` below, which is where
+          a word of that shape belongs."
+      - term: Media playback position
+        anchors:
+          - playback_position_ticks
+        note: Where a person stopped watching. A viewing-progress record is data about that person's
+          behaviour, not about the media.
+      - term: Media play count
+        anchors:
+          - play_count
+        note: How many times a person played an item.
+      - term: Media favourite flag
+        anchors:
+          - is_favorite
+        note: An expressed preference of an identified viewer.
+      - term: Last played date
+        anchors:
+          - last_played_date
+        note: When a person last watched something.
+      - term: Last login date
+        anchors:
+          - last_login_date
+        note: When an account was last used, which is behavioural data about the account holder.
+      - term: Device identifier
+        anchors:
+          - device_id
+        position_bound: true
+        note: "POSITION-BOUND. An identifier assigned to one person's device, and the highest-volume anchor
+          in this list: a media server, for one, names a device on almost every request. Spliced
+          bare it would report a whole codebase; inside a column, tag or key declaration it reports
+          a stored device identifier."
+      - term: Normalised account name
+        anchors:
+          - normalized_username
+        note: A case- and punctuation-folded copy of a login name, kept so that two spellings of one account
+          collide. It is the same personal datum as `username`.
+      - term: Remote endpoint
+        anchors:
+          - remote_end_point
+          - remote_addr
+        note: The network address a request arrived from, under the two spellings the .NET and CGI/Rack
+          conventions give it. See `ip_address` for what makes it personal data.
+      - term: User agent string
+        anchors:
+          - user_agent
+        note: The browser and device string a client sends. It is an element of a device fingerprint and is
+          treated as personal data where it is stored against a person or a session.
+      - term: Forwarded-for header
+        anchors:
+          - x-forwarded-for
+        note: The header a proxy uses to carry the original client address. It holds the IP address the
+          direct connection has lost.
+      - term: Cloudflare connecting-IP header
+        anchors:
+          - cf-connecting-ip
+        note: Cloudflare's own name for the same datum as `x-forwarded-for`. A vendor-defined header name,
+          which is what makes it a spelling rather than a guess.
+      - term: Visitor identifier
+        anchors:
+          - visitor_id
+        note: An identifier assigned to a website visitor by analytics code, which is what Recital 30 has in
+          mind when it names online identifiers.
+      - term: Screen dimension
+        anchors:
+          - screen_width
+        note: A device characteristic collected by analytics and one of the strongest fingerprinting signals
+          for its size.
+      - term: Campaign source
+        anchors:
+          - utm_source
+        note: A campaign parameter carried on a URL. It is not itself an identifier; it is recorded against
+          one, which is why it appears in a visit record beside a visitor identifier.
+      - term: Subscriber email address
+        anchors:
+          - subscriber_email
+        note: A mailing-list subscriber's address, under the spelling a newsletter product gives it.
+      - term: Account email address
+        anchors:
+          - user_email
+        note: The account holder's address, under the compound spelling. It reaches `user.email` through
+          separator tolerance — a member access rather than a name separator — which the construct
+          guard on every splice site is what bounds.
+      - term: Numbered email address column
+        anchors:
+          - email1
+          - email2
+        note: The convention a contact record uses for a person's second and third addresses. `email1` alone
+          is not reached by `email` plus a numeric suffix in every branch of this rule, which is why
+          both are anchors.
+      - term: Vendor-scoped device identifier
+        anchors:
+          - identifier_for_vendor
+        note: "The per-vendor installation identifier an Apple-platform application reads. It identifies a
+          device rather than a person, which is exactly why Recital 30 names online identifiers: it
+          is stable across every application from one vendor on that device, so anything recorded
+          against it accumulates into a profile of whoever uses the device."
+      - term: Advertising identifier
+        anchors:
+          - advertising_identifier
+        note: The resettable advertising identifier. It is a device identifier whose declared purpose is
+          cross-application tracking, and the fact that a person can reset it is a property of the
+          identifier rather than a reason it is not personal data while it is in use.
+      - term: Android device identifier
+        anchors:
+          - android_id
+        note: "The platform's own per-application, per-device identifier. Written here in its most-separated
+          form so that the list's separator tolerance reaches the constant spelling `ANDROID_ID`,
+          the property spelling `androidId` and the squashed spelling alike, which is why no other
+          spelling is a separate anchor: a second anchor for the same word would match the same
+          lines twice and be counted twice by the list's volume check."
+    near_misses:
+      - rules:
+          - eu-dsr-001
+        alternation: string|text|citext|date|datetime|inet
+        differs_by: "Rails `t.<type> :<column>`. Adds `mobile`, `zipcode`, `bio`, `avatar`, `nationality`,
+          `password_digest`, `encrypted_password`, `last_sign_in_ip` and `last_seen_at`, and drops
+          every squashed spelling (`dateofbirth`, `nationalid`). Nine words the shared list does not
+          carry: unifying would take them away from this branch, and adding them to the shared list
+          would put `bio` and `avatar` into five other branches that were never authored for them."
+      - rules:
+          - eu-dsr-001
+        alternation: email|email_address|phone|phone_number|first_name|last_name|full_name|display_name|password|address|postcode|postal_code|date_of_birth|birthday|dob|bio|avatar|gender
+        differs_by: Rails strong parameters, `.permit(:field)`. A subset of the branch above minus the
+          storage-only columns, plus `bio` and `avatar`. It is deliberately narrower than a schema
+          list because a permitted parameter is what a controller ACCEPTS, not what a table holds.
+      - rules:
+          - eu-dsr-001
+        alternation: AbstractBaseUser|AbstractUser|BaseUserManager|USERNAME_FIELD|UserCreationForm|create_superuser|get_user_model|AUTH_USER_MODEL
+        differs_by: Django `<field> = models.XField(`. Carries `birth_date`, which the shared list does not,
+          and stops at the eleven attributes a Django user model declares in practice.
+      - rules:
+          - eu-dsr-001
+        alternation: email|phone|phone_number|first_name|last_name|full_name|date_of_birth|birth_date|address|postal_code|gender
+        differs_by: "SQLAlchemy 2.x `<field>: Mapped[`. Carries `birth_date` and the five role-qualified
+          name columns — `candidate_name`, `employee_name`, `customer_name`, `contact_name`,
+          `patient_name` — which name a DATA SUBJECT'S ROLE and belong to no general field list."
+      - rules:
+          - eu-dsr-001
+        alternation: Email|EmailAddress|PhoneNumber|FirstName|LastName|FullName|DateOfBirth|PostalCode|PasswordHash|HashedPassword
+        differs_by: Go struct fields, `Email string`. Every branch is `UpperCamelCase` because a Go field
+          must be exported to be serialised, and it carries `HashedPassword`, which the shared list
+          does not. Case tolerance on the shared list reaches the spellings but not the two words.
+      - rules:
+          - eu-dsr-001
+        alternation: email|email_address|phone|phone_number|first_name|last_name|full_name|username|password|address|postcode|postal_code|date_of_birth|birthday|dob|gender|national_id|iban|bic|account_number
+        differs_by: "Laravel migrations, `$table->string('email')`. A twenty-word subset with no squashed
+          spellings and no `city`, `street`, `zip`, `taxid` or `ip_address`. THREE OF THE TWENTY ARE
+          IN NO SHARED LIST AT ALL — `iban`, `bic` and `account_number`, added to this branch on
+          2026-08-31 after they were tested against a real personal-finance product's own migration.
+          They were written into the inline alternation and deliberately NOT into
+          `personal_data_field_names`: this branch is one of eu-dsr-001's older hardcoded lists,
+          while the shared list is spliced by that rule's newer `(?&name)` clauses, so putting three
+          payment-instrument words into the shared list would put them into every one of those
+          clauses — an HTML form control, a Go struct tag and a serialisation key among them — which
+          is a wider change than the one that was tested. A payment-account identifier is also a
+          narrower kind of thing than the general attribute names this list holds, and it belongs to
+          a construct (a declared schema column) rather than to every place a field name can be
+          written."
+      - rules:
+          - eu-dsr-001
+        alternation: public|private|protected
+        differs_by: C# auto-properties, `public string Email`. Ten branches spelled in BOTH cases
+          explicitly, which is what the shared list's `case_insensitive` flag now does for its own
+          anchors — but the ten words are a different, shorter set.
+      - rules:
+          - eu-dsr-001
+        alternation: email|tel|password
+        differs_by: '`<input name="…">`. Carries `e-mail` and `tel`, two spellings that exist in HTML form
+          controls and nowhere in a database schema. `tel` in particular is three letters that would
+          be a high-volume anchor anywhere else.'
+      - rules:
+          - eu-dsr-001
+        alternation: email|e-mail|phone|tel|firstName|first_name|lastName|last_name|fullName|full_name|dob|birthday|address|postcode|postal_code
+        differs_by: '`autocomplete="…"`. NOT A FIELD-NAME LIST AT ALL: these are the tokens the HTML
+          autofill specification defines — `given-name`, `family-name`, `bday`, `new-password`. They
+          look like the shared list and are a different vocabulary with a different owner. Recorded
+          here so the resemblance is on the record and nobody unifies them.'
+      - rules:
+          - eu-dsr-001
+        alternation: email|emailAddress|email_address|phone|phoneNumber|phone_number|mobileNumber|firstName|first_name|lastName|last_name|fullName|full_name|display_name|userName|user_name|userEmail|user_email|contactEmail|contact_email|contactName|contact_name|customerName|customer_name|candidateName|candidate_name|employeeName|employee_name|patientName|patient_name|subjectName|dateOfBirth|date_of_birth|birthDate|address1|addressLine1|address_line1|streetAddress|street_address|postalCode|postal_code|postcode|zipCode|zip_code|nationalId|national_id|taxId|ssn|passportNumber|ipAddress|ip_address
+        differs_by: "An object key followed by a string type, in TypeScript, Python and JSON Schema.
+          Fifty-one branches: every word of the shared list in `snake_case` AND `camelCase`, plus
+          `ssn`, `passportNumber`, `mobileNumber`, `subjectName`, `address1`, `addressLine1`,
+          `streetAddress`, `zipCode` and the five role-qualified name columns. The largest inline
+          list in the repository and a superset of the shared one in words, not in spellings."
+      - rules:
+          - eu-dsr-001
+        alternation: email|phone|phone_number|first_name|last_name|full_name|display_name|username|password|password_hash|address|street|city|postcode|postal_code|zip|date_of_birth|birthday|dob|gender|national_id|tax_id|ip_address
+        differs_by: Go `json:"…"` struct tags. Twenty-three branches, no squashed spellings, and no
+          `dob`-adjacent variants beyond `birthday` and `date_of_birth`.
+      - rules:
+          - eu-dsr-001
+        alternation: email|phone|phone_number|phoneNumber|first_name|firstName|last_name|lastName|full_name|fullName|display_name|displayName|username|password|password_hash|passwordHash|address|street|city|postcode|postal_code|postalCode|zip|date_of_birth|dateOfBirth|birthday|dob|gender|national_id|nationalId|tax_id|taxId|ip_address|ipAddress
+        differs_by: "Prisma schema fields, `email String`. THIRTY-FOUR BRANCHES, THE SAME COUNT AS THE
+          SHARED LIST AND A DIFFERENT SET: it spells `camelCase` variants (`phoneNumber`,
+          `firstName`, `passwordHash`, `postalCode`, `nationalId`, `taxId`, `ipAddress`) where the
+          shared list spells squashed ones (`phonenumber`, `firstname`, `passwordhash`,
+          `postalcode`, `nationalid`, `taxid`, `ipaddress`). The nearest miss in the repository, and
+          the one a careless unification would have taken."
+      - rules:
+          - eu-minors-001
+        alternation: dob|DOB|Dob
+        differs_by: The three-branch date-of-birth token inside a multilingual age-attribute pattern that
+          spells birth-date in twenty-four languages. It belongs to a rule about children's data,
+          not to a general personal-data field list, and the pattern around it is not an alternation
+          of field names at all.
+  position_bound_field_names:
+    kind: term
+    purpose: "The generic band: words that ARE personal-data field names and are also ordinary words of
+      code. IT MAY ONLY BE SPLICED INSIDE A CONSTRUCT-ANCHORED CLAUSE, never bare, and the
+      vocabulary volume test holds every importer to that. It exists so that the position work has
+      one import point instead of thirteen new inline copies."
+    matching:
+      case_insensitive: true
+      separator_insensitive: true
+    entries:
+      - term: Network address
+        anchors:
+          - ip
+          - host
+        position_bound: true
+        note: "Two words before they are a field: `ip` is also an abbreviation for intellectual property and
+          appears inside identifiers everywhere; `host` is a verb, a noun and a configuration key."
+      - term: Account identifier
+        anchors:
+          - user_id
+          - id
+        position_bound: true
+        note: The most-written identifier in every codebase, and `id` alone is written more often than any
+          other token in this list.
+      - term: Session identifier
+        anchors:
+          - session_id
+        position_bound: true
+        note: An identifier for one browsing session. Personal data when it is tied to a person, and a word
+          that appears in every framework's own plumbing.
+      - term: Referring page
+        anchors:
+          - referrer
+        position_bound: true
+        note: The page a visitor came from. It is a URL that can carry personal data, and it is also the
+          name of an HTTP header every server names.
+      - term: Request path
+        anchors:
+          - pathname
+        position_bound: true
+        note: The path part of a URL. It can carry an identifier and it is a property name in every URL
+          library.
+      - term: Contact address
+        anchors:
+          - email
+        position_bound: true
+        note: "The same word as the specific list's `email` anchor, in a list that says it may never be
+          spliced bare. Two lists are two questions and the duplicate is deliberate: this one
+          records what the word costs unbounded."
+      - term: Credential
+        anchors:
+          - password
+        position_bound: true
+        note: See `email`.
+      - term: Name
+        anchors:
+          - name
+        position_bound: true
+        note: The single most-written token measured in the eight pinned trees.
+      - term: Payload
+        anchors:
+          - data
+        position_bound: true
+        note: A word for anything at all.
+      - term: Person
+        anchors:
+          - user
+        position_bound: true
+        note: The subject of most of the code in a product that has accounts, and therefore a word that is
+          written on lines about nothing in particular.

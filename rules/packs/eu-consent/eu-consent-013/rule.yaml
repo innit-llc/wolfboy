@@ -1,0 +1,200 @@
+id: eu-consent-013
+pack: eu-consent
+short_name: Analytics tool in the product
+problem_line:
+  text: Analytics vendor gets visitor data, no consent gate found
+fix_line: Gate analytics on recorded consent or opt-in, no-persistence settings, server SDKs too;
+  decide how relays treat consent.
+title: Analytics SDK referenced or initialised (Mixpanel, Amplitude,
+  Segment/RudderStack/Jitsu/Customer.io, Matomo, Plausible)
+jurisdiction:
+  - EU
+legal_basis:
+  - cite: ePrivacy Directive 2002/58/EC, Art. 5(3) (as amended by Directive 2009/136/EC) (prior consent
+      for storing or accessing information on terminal equipment, applied to analytics cookies and
+      identifiers)
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02002L0058-20091219
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: GDPR Art. 6 (legal basis for processing analytics identifiers)
+    url: https://eur-lex.europa.eu/eli/reg/2016/679/oj
+    checked_at: 2026-07-22
+    jurisdiction: EU
+  - cite: "Directive 2009/136/EC, Art. 2(5) (replaces Art. 5(3) of Directive 2002/58/EC: the 2002
+      wording offered only a right to refuse, the replacement wording requires prior consent) and
+      Art. 4 (Member State transposition deadline 25 May 2011)"
+    url: https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009L0136
+    checked_at: 2026-07-22
+    jurisdiction: EU
+effective_date: 2011-05-25
+severity: high
+rule_confidence: 0.6
+applicability_preconditions:
+  - platform=web
+detector:
+  engine: builtin-regex
+  vocabulary:
+    analytics_vendor_names:
+      - mixpanel
+      - mxpnl
+      - amplitude
+      - segment
+      - rudderstack
+      - jitsu
+      - matomo
+      - piwik
+      - plausible
+    analytics_credential_words:
+      - key
+      - token
+      - secret
+      - write key
+      - api key
+      - site id
+      - project id
+      - url
+      - host
+      - dsn
+    analytics_sdk_packages:
+      - mixpanel-browser
+      - mixpanel-node
+      - amplitude-js
+      - "@amplitude/analytics-browser"
+      - "@amplitude/analytics-node"
+      - "@segment/analytics-next"
+      - "@segment/analytics-node"
+      - analytics-node
+      - "@rudderstack/analytics-js"
+      - rudder-sdk-node
+      - "@jitsu/js"
+      - plausible-tracker
+      - matomo-tracker
+  vocabulary_matching:
+    analytics_vendor_names:
+      case_insensitive: true
+    analytics_credential_words:
+      case_insensitive: true
+      separator_insensitive: true
+    analytics_sdk_packages:
+      case_insensitive: true
+  join_bracketed_constructs: true
+  match:
+    - "[Mm]ixpanel\\.init\\("
+    - "[^A-Za-z_]Mixpanel\\("
+    - Mixpanel::Tracker\.new
+    - Mixpanel::getInstance\(
+    - mixpanel\.NewApiClient\(
+    - MixpanelAPI
+    - cdn\.mxpnl\.com
+    - amplitude\.init\(
+    - "[^A-Za-z_]Amplitude\\("
+    - amplitude\.New(Client|Config)\(
+    - Amplitude\.getInstance\(
+    - AmplitudeAPI
+    - cdn\.amplitude\.com
+    - analytics\.load\(\s*["']
+    - analytics\.write_key\s*=
+    - Segment::Analytics\.new
+    - Segment::init\(
+    - analytics\.New\(
+    - Analytics\.builder\(
+    - "writeKey\\s*:"
+    - cdn\.segment\.com
+    - _paq\.push\(\s*\[\s*["'](setTrackerUrl|setSiteId|trackPageView)
+    - (matomo|piwik)\.js
+    - new (Matomo|Piwik)Tracker\(
+    - plausible\.io/js/script
+    - plausible\.io/js/
+    - "[\"']plausible-tracker[\"']"
+    - "[^A-Za-z_]Plausible\\("
+    - (?:matomo|piwik)\.php
+    - "[\"'](?:token_auth|idsite)[\"']|[?&](?:token_auth|idsite)="
+    - (?:^|[^A-Za-z0-9])(?:Matomo|Piwik)[A-Za-z0-9]*(?:Bulk|Track|Tracker|Tracking|Request|Client)[A-Za-z0-9]*
+    - (?:\.|::|->)\s*(?:init|Init|new|New|NewClient|NewConfig|NewApiClient|getInstance|load|builder|Builder|config|Config)\s*\([^\n]{0,240}(?&analytics_vendor_names)[A-Za-z0-9_-]{0,20}(?&analytics_credential_words)
+    - (?:^|[^A-Za-z0-9_.$])(?:init|Init|New|NewClient|NewConfig|NewApiClient|getInstance|builder|Builder)\s*\([^\n]{0,240}(?&analytics_vendor_names)[A-Za-z0-9_-]{0,20}(?&analytics_credential_words)
+    - (?:^|[^A-Za-z0-9_$])new\s+[A-Za-z_$\\][\w$.\\]*\s*\([^\n]{0,240}(?&analytics_vendor_names)[A-Za-z0-9_-]{0,20}(?&analytics_credential_words)
+    - (?<![A-Za-z0-9_./-])(?&analytics_sdk_packages)\s*(?:\.|::)\s*(?:init|Init|new|New|load|getInstance|track|identify|page)\s*\(
+    - plausible\.q\s*=\s*(?:window\.)?plausible\.q\s*\|\|
+    - (?<![A-Za-z0-9_$])plausible\.init\s*\(
+    - plausible\.init\s*=\s*(?:window\.)?plausible\.init\s*\|\|
+    - "[\"']@plausible-analytics/tracker[\"']"
+    - (?<![A-Za-z0-9_-])data-domain\s*=[^<>\n]{0,400}?(?<![A-Za-z0-9_-])data-api\s*=|(?<![A-Za-z0-9_-])data-api\s*=[^<>\n]{0,400}?(?<![A-Za-z0-9_-])data-domain\s*=
+    - "[\"']next-plausible[\"']"
+    - <PlausibleProvider\b
+    - (?<![A-Za-z0-9_$])withPlausibleProxy\s*\(
+    - <[Ss]cript\b(?:[^<>\n]|=>){0,400}?(?<![A-Za-z0-9_-])data-domain\s*=
+    - (?<![A-Za-z0-9_-])data-domain\s*=(?:[^<>\n]|=>){0,400}?(?<![A-Za-z0-9_-])data-api\s*=|(?<![A-Za-z0-9_-])data-api\s*=(?:[^<>\n]|=>){0,400}?(?<![A-Za-z0-9_-])data-domain\s*=
+    - "[\"'](?:@nuxtjs/plausible|nuxt-plausible|gatsby-plugin-plausible)[\"']"
+  resolve_import_aliases: true
+context_questions:
+  - Does initialisation sit inside a consent gate (CMP integration, or an opt-in setting)? Quote the
+    call path.
+  - Does the configuration use the SDK's cookie-disabling or anonymisation options (for example
+    Mixpanel disable_persistence)?
+  - If this is a server SDK, what reaches the vendor per event -- a stable user id, an IP address, a
+    request path -- and is any recorded consent decision consulted before the call? A server-side
+    track() runs with no browser to gate it.
+  - Is this the product's own analytics, or connector code that lets the product's users send their
+    own data to this vendor? The two have different addressees.
+evidence_template: "{file}:{line} may initialise an analytics SDK. Six of the match clauses are a
+  bare host or class name and one is an option name, so a match is often a reference rather than a
+  load, and this is deliberate. Shapes read out of the pinned corpus on 2026-08-13, alongside
+  genuine loaders: a TypeScript type or parameter declaration naming writeKey, an empty-string
+  default, a form default value and its placeholder, a proxy or rewrite destination, a line inside a
+  diff hunk, and a documentation code sample carrying a placeholder key. Read the matched line and
+  name its shape. Where the finding carries locations[].joined_from, {line} is the line the
+  construct opens on and what matched may sit several lines below it, such as a script element
+  written over several lines: read the whole span. This detector searches for no consent gate, so it
+  is not asserting that none exists: see the context questions THREE CLAUSES ADDED 2026-09-09 REACH
+  A SERVER-SIDE INGESTION RELAY rather than an SDK: the vendor's own endpoint filename (matomo.php,
+  piwik.php), its own wire parameter names idsite and token_auth in a quoted-literal or query-string
+  position, and a vendor-named relay type such as MatomoBulkRequest. THE VENDOR'S CODE NEED NOT RUN
+  IN A BROWSER FOR THE DISCLOSURE TO HAPPEN - the product's own backend can assemble the request and
+  post it - so on these three clauses THERE MAY BE NO CLIENT ARTEFACT TO GATE at all, and the
+  consent wrapper the remediation below describes may have no analogue in this code. Whether
+  anything stands in its place is for the reader to decide from the deployment; this finding does
+  not decide it. As with every other clause here the host is not tested, so a match reports a
+  self-hosted collection point exactly as it reports the vendor's own."
+remediation_template: >
+  Read the matched line first, because six of this rule's clauses are a bare host or class name and
+
+  one is an option name, so the line may be a reference and not a load. Shapes that load nothing,
+
+  all of them read out of the pinned corpus: a type or parameter declaration naming writeKey, an
+
+  empty-string default, a form default value or placeholder, a proxy or rewrite destination, a line
+
+  inside a diff hunk, a documentation code sample with a placeholder key. Shapes that do load: a
+
+  script tag or an injected loader in a page, layout or template; an SDK constructor or init call;
+
+  a server-side client. Neither list is exhaustive - name the shape you actually see rather than
+
+  picking from them. Where the matched line is not a load, find the load and apply the rest of this
+
+  to that line; where no load exists, this candidate closes with no change.
+
+  Introduce a wrapper that initialises once the CMP records consent, or use each SDK's opt-in and
+  persistence-disabled settings.
+
+  For a server SDK, read the visitor's recorded consent decision on the request path before calling
+
+  track()/capture(), since the browser gate does not apply there.
+
+  For a server-rendered layout, wrap the snippet in a condition on that same decision.
+
+  Three clauses added 2026-09-09 reach a server-side ingestion relay: the vendor's endpoint
+
+  filename, its wire parameter names and a vendor-named relay type. On those the paragraphs above
+
+  need one qualification - there may be no client artefact to gate at all, so a wrapper around an
+
+  SDK initialisation may have no analogue here. What would stand in its place is a decision about
+
+  the deployment, and this finding does not make it or assert that any particular answer is
+
+  required.
+data_categories:
+  - user.behavior
+  - user.unique_id
+fingerprint_spec: default

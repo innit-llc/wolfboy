@@ -1,0 +1,152 @@
+id: ai-transparency-005
+pack: ai-transparency
+short_name: Therapy or counselling wording in an AI feature
+problem_line:
+  text: AI placed in a therapy or counselling role
+fix_line: Keep the AI out of therapy for Illinois and Nevada users; for Utah, give required notices
+  and limit data use and ads.
+title: Therapy or counselling wording in a file that calls or configures an LLM (IL / NV / UT scope)
+jurisdiction:
+  - US
+legal_basis:
+  - cite: Illinois Wellness and Oversight for Psychological Resources Act, H.B. 1806 / Public Act
+      104-0054, in force 2025-08-01 — therapy and psychotherapy services are reserved to licensed
+      professionals, and artificial intelligence may not make independent therapeutic decisions,
+      interact directly with clients in therapeutic communication, or generate therapeutic
+      recommendations or treatment plans without review and approval by the licensed professional;
+      the Illinois Department of Financial and Professional Regulation investigates and each
+      confirmed violation carries a fine of up to $10,000
+    url: https://idfpr.illinois.gov/content/dam/soi/en/web/idfpr/news/2025/2025-08-04-idfpr-press-release-hb1806.pdf
+    checked_at: 2026-07-22
+    jurisdiction: US
+  - cite: Nevada A.B. 406 (83rd Session, 2025), amending NRS chapters 391, 433 and 629 — an equivalent
+      restriction on artificial intelligence used for professional mental or behavioral health care,
+      including a bar on representing that an AI system can provide such care
+    url: https://www.leg.state.nv.us/Session/83rd2025/Bills/AB/AB406_EN.pdf
+    checked_at: 2026-07-22
+    jurisdiction: US
+  - cite: "Utah H.B. 452 (2025 General Session), Artificial Intelligence Amendments, enacting Utah Code
+      Sec. 13-72a-101 et seq., in force 2025-05-07 (Section 9 of the enrolled bill: 'This bill takes
+      effect on May 7, 2025') — regulation of mental health chatbots that use artificial
+      intelligence technology: Sec. 13-72a-201 limits on the use of a user's personal information,
+      Sec. 13-72a-202 restrictions on advertising within the chatbot, Sec. 13-72a-203 disclosure
+      requirements owed to the user, enforced by the Division of Consumer Protection"
+    url: https://le.utah.gov/~2025/bills/hbillenr/HB0452.pdf
+    checked_at: 2026-07-22
+    jurisdiction: US
+effective_date: 2025-05-07
+severity: high
+rule_confidence: 0.5
+detector:
+  engine: builtin-regex
+  match:
+    - "[Tt]herap(y|ist)"
+    - "[Cc]ounsel(ing|or)"
+    - "[Pp]sychotherap(?:y|ist|eutic)|[Pp]sycholog(?:ist|y)|[Pp]sychiatr(?:y|ist|ic)|[Pp]sychoanaly\
+      (?:sis|st)"
+    - "[Cc]ounsell(?:ing|or)|[Pp]sychological[ _-]?(?:counsel|support|care)"
+    - (?:[Tt]reatment|[Cc]are|[Tt]herapeutic)[ _-]?[Pp]lan|[Cc]linical[
+      _-]?(?:session|assessment|intake)
+    - セラピ|カウンセリング
+  also_in_file:
+    - useChat\(|streamText\(|chat\.completions|messages\.create\(|generateText\(
+    - (?:[Cc][Hh][Aa][Tt]|[Ll][Aa][Nn][Gg][Uu][Aa][Gg][Ee])[_-][Mm][Oo][Dd][Ee][Ll]|(?:[Cc]hat|[Ll]anguage)[Mm]odel|[Ss][Yy][Ss][Tt][Ee][Mm][_-][Pp][Rr][Oo][Mm][Pp][Tt]|[Ss]ystem[Pp]rompt|(?:[Cc]hat[
+      _-]?[Mm]odel|[Ll]anguage[ _-]?[Mm]odel|[Ss]ystem[ _-]?[Pp]rompt)[\"'`\]]?[ \t]*(?:=>|[:=])
+context_questions:
+  - Does the wording put the AI itself in the position of providing therapy or counselling (the
+    restricted use), or does it refer the user to a licensed professional and disclaim treatment
+    (the direction the statutes point in)? Quote the prompt or user-facing copy that decides it.
+  - Is this feature offered to users in Illinois, Nevada or Utah?
+  - In a mental-health context, is a suicide and self-harm response protocol implemented — detection
+    of suicide risk followed by referral to a professional line? Search for it and quote it.
+evidence_template: "{file}:{line} places therapy-related wording alongside LLM code, or alongside
+  the CONFIGURATION of a model - a SETTING named for a chat model, a language model, or the standing
+  instruction such a model is given, written either as an identifier or as a labelled field followed
+  by a colon, an equals sign or a fat arrow - which since 2026-08-28 corroborates on the same
+  footing and is the weaker of the two limbs; the state restrictions on AI-delivered therapy need
+  review. Which limb corroborated decides what you are holding. Where the file calls a model, the
+  therapy wording and the call are in front of you together. Where it only configures or documents
+  one, the model call is in another file and may be in another repository, and the matched line may
+  be prose: the observed instance is a product's own administration page telling operators to create
+  a Therapist agent and naming the chat model that will speak as it, which describes a capability
+  the statutes are about - it is not itself the conduct they restrict, because a page is
+  documentation and Illinois and Nevada reach the PROVISION of therapeutic communication by an AI
+  system rather than a description of it - and an operator guide, a changelog entry or a feature
+  list would satisfy the same test. Neither limb establishes that this product delivers therapy,
+  which is what the first context question is for, and neither reads the word in context - a therapy
+  word inside a host name such as apartmenttherapy.com in a captured URL is the observed look-alike.
+  ONE LIMIT OF THE SECOND LIMB IS WORTH KNOWING BEFORE YOU READ THE FILE, because it is not fixable
+  by any text test and is not pretended away here: a page that names a model setting AND states in
+  words that no model is involved in the feature satisfies this limb and is reported, since both
+  facts really are written in it. The limb requires a setting rather than a mention, so a page that
+  only DENIES using a language model no longer corroborates on the denial alone; a page that does
+  both still does. The first context question is what settles which side of the line the wording
+  puts the AI on"
+remediation_template: >
+  This is a candidate for review against the Illinois Wellness and Oversight for Psychological
+
+  Resources Act, Nevada A.B. 406 and Utah H.B. 452, not a determination about this code. What layer
+  1
+
+  matched is a word - therapy, therapist, counseling or counselor, or their Japanese equivalents -
+  in
+
+  a file that also calls a language model. It did not establish that this product delivers therapy,
+
+  and that is the fact everything below turns on.
+
+  CORRECTION, 2026-08-28: the sentence above says "calls a language model" and that is now only half
+
+  of it. Since repair item 7f the corroborating file may instead CONFIGURE one - carry a setting
+
+  named for a chat model, a language model, or the standing instruction such a model is given -
+
+  which is how a product's own
+
+  administration documentation corroborates, and the observed instance is exactly that. Where the
+
+  second limb is what fired, the model call is somewhere else and the matched line may be prose
+
+  rather than code, so read the file before reading the finding as an implementation. A setting is
+
+  required rather than a mention, so a page that merely says the words does not corroborate; a page
+
+  that carries the setting and also disclaims using a model does, and the disclaimer is then part of
+
+  what you have to weigh rather than a reason the finding should not have been raised.
+
+  Settle it first, because the same words appear on both sides of the line. Copy that refers a user
+
+  to a licensed professional, a directory that lists therapists, a booking feature for human
+
+  sessions, a career or academic counsellor, a customer-success term of art, and a disclaimer saying
+
+  the product is not therapy all carry this vocabulary, and each of them is the direction the
+
+  statutes point in rather than the conduct they restrict. Quote the prompt text or the user-facing
+
+  copy that settles which this is; where the AI is not placed in the position of providing therapy
+  or
+
+  counselling, record that and stop.
+
+  Where the product does place it there, and where those states are in scope, the three routes are
+
+  these and they are not equivalent:
+
+  - Illinois and Nevada restrict the PROVISION, not the wording. Illinois reserves therapy and
+    psychotherapy services to licensed professionals and bars an AI system from making independent
+    therapeutic decisions, interacting directly with clients in therapeutic communication, or
+    generating therapeutic recommendations or treatment plans without a licensed professional's
+    review and approval; Nevada A.B. 406 carries an equivalent restriction on artificial intelligence
+    used for professional mental or behavioral health care and bars representing that an AI system
+    can provide such care. Where either state is in scope, no disclosure cures the offer.
+  - Utah H.B. 452 regulates rather than bars: Sec. 13-72a-203 sets disclosure duties owed to the
+    user, Sec. 13-72a-201 limits the use of the user's personal information, and Sec. 13-72a-202
+    restricts advertising inside the chatbot.
+  - Independently of all three, a mental-health surface with no suicide and self-harm response
+    protocol - detection of risk followed by referral to a professional line, 988 in the US - is the
+    gap that recurs, and it is worth reporting separately from the licensing question.
+data_categories:
+  - user.health
+fingerprint_spec: file
