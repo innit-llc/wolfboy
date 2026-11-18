@@ -138,7 +138,7 @@ check: [the sample's](examples/book-club/sample-report/report.md#not-checked).
 
 ## Status and contributing
 
-Version 0.1.0 was released on 2026-11-16. INNIT Inc. publishes WolfBoy, and it has one maintainer today, who reads
+Version 0.1.0 was released on 2026-11-16. INNIT LLC. publishes WolfBoy, and it has one maintainer today, who reads
 every issue; there is no fixed reply time. Not in this release: the AI review in CI, a mode in which the CLI calls a
 model API with your own key, and signed rule bundles ([Status](HOW-IT-WORKS.md#status)).
 
