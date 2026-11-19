@@ -1,21 +1,32 @@
 # WolfBoy
 
 WolfBoy reads your code against the law (GDPR, the EU AI Act, CCPA) and against your own privacy policy, and shows
-you where they disagree. For each place it quotes your code and names the article. Lawyers don't read code.
-Engineers don't read law. WolfBoy reads both: first on your computer with no AI, then inside your own Claude Code.
+you where they disagree. Lawyers don't read code. Engineers don't read law. WolfBoy reads both, in two steps:
+
+1. **On your computer, with no AI.** Its rules mark places in your code that concern the law. A place is a line in
+   one of your files, such as one that logs a password or loads an ad pixel. The rules mark wide on purpose, so you
+   get a list of places worth a look, not a list of problems: many may be ruled out. This step is free.
+2. **In your own Claude Code, with WolfBoy's [plugin](#step-2-the-ai-review-in-claude-code).** WolfBoy runs no AI
+   model or server of its own: AI agents in your Claude Code read each marked place, judge whether it is a problem,
+   and quote the code they relied on. Where a rule found nothing and that looks surprising for your product, they
+   also search the code themselves. The places come from the rules, not the AI, so you see them and the estimated
+   cost of judging them first. The files the agents read go to your model provider, as in any Claude Code session:
+   [how it works](HOW-IT-WORKS.md#how-it-works).
 
 ```bash
 npx wolfboy@0.1.0 scan
 ```
 
-This first step is free and uses no AI. You need Node.js 20 or later. Run it in your project's folder. It reads that
-folder on your computer, shows what it found on one screen, and writes the full list to `.legal/quick-scan.txt`. Then
-it asks up to four questions about your product (where it is offered, what it ships as). You can choose Skip on any;
-skipping switches nothing off. Nothing is sent anywhere. To have each place read and judged, install the plugin.
+That is step 1. You need Node.js 20 or later. Run it in your project's folder: it shows what it found on one screen,
+writes the full list to `.legal/quick-scan.txt`, and asks up to four questions about your product (where it is
+offered, what it ships as). You can choose Skip on any; skipping switches nothing off. Nothing is sent anywhere.
 
-See what it reports on a small sample app with five planted problems: [examples/book-club](examples/book-club/), and
-its [sample report](examples/book-club/sample-report/report.md). On that app the first step takes a few seconds. The
-report lists 14 items to fix and took about 1.9 million tokens and 5 minutes of AI review. The first item:
+Try it on [the sample app](examples/book-club/), which has five planted problems. In `examples/book-club/app` the
+rules mark 33 places in a few seconds, grouped into 17 findings. The AI review read all 33 in about 5 minutes and 1.9
+million tokens. Of the 17 findings it ruled out 2, left 1 open on a question about the product, and kept 14 to fix.
+The 14 include all five planted problems, found without comparing the privacy policy: several rules, or one rule at
+several lines, can flag one planted problem, and one finding (no age check at sign-up) was not planted. The first item
+in its [sample report](examples/book-club/sample-report/report.md):
 
 ```text
 F1 · Password or key written to a log or console
@@ -45,7 +56,12 @@ As of November 2026.
 | France | 2024 | Browser extension added to its database contact details that LinkedIn users had limited to their own connections | [€240,000](https://www.legifrance.gouv.fr/cnil/id/CNILTEXT000050791828) |
 | Sweden | 2024 | Online pharmacy's ad pixel sent shoppers' names, e-mails and phone numbers (hashed) with their purchases for over a year, through a feature the company never meant to enable | [≈ €700,000](https://www.imy.se/globalassets/dokument/beslut/2024/beslut-tillsyn-apohem.pdf), under appeal |
 
-## The full review, in Claude Code
+## Step 2: the AI review in Claude Code
+
+The review runs in a Claude Code session of its own, which WolfBoy asks you to open (see below). That session leaves
+out your repository's instruction files (CLAUDE.md, AGENTS.md), its git status and your MCP servers. Otherwise every
+reviewing agent would receive the files, the status and the servers' instructions, could take the files as
+instructions to itself, and you would pay for all of it. First, install the plugin:
 
 ```bash
 claude plugin marketplace add innit-llc/wolfboy
@@ -57,12 +73,17 @@ or later, Node.js 20 or later and git; on Windows, Git for Windows (Claude Code 
 The tests run on Linux, macOS and Windows; a full scan with the AI review has been run on Linux and WSL. To remove
 the plugin later, see [Update and remove](product/plugin/README.md#update-and-remove).
 
-Say **"Scan this repository."** in Claude Code. WolfBoy then:
+Then say **"Scan this repository."** in Claude Code. From there, WolfBoy:
 
-1. prints the command that starts the scan's own session. Run it in your terminal, in the same folder, and ask again
-   there. (The first time it also offers `npm install -g wolfboy@0.1.0`; after that the command is `wolfboy session`.)
-2. asks up to four questions about your product (where it is offered, who uses it).
-3. shows what it found and what the AI review will cost. On a project's first scan it waits for your go.
+1. prints the command that opens the review's own session. Run it in your terminal, in the same folder, and say "Scan
+   this repository." again in the session it opens. The first time it also offers `npm install -g wolfboy@0.1.0`, a
+   one-time install that shortens the command to `wolfboy session`.
+2. asks up to four questions about your product that have no saved answer yet. Answers you gave in step 1, in the
+   same folder, are reused; they are asked again only after an update changes a question, if the saved answers were
+   edited, or when you ask to review them.
+3. shows what it found and what the AI review will cost. On a project's first scan it waits for your go. A later scan
+   first asks which earlier review to carry over, then states its estimate in one sentence and starts without waiting
+   for a go.
 4. writes the report to `.legal/reports/`: what to fix first, your code quoted, the article cited.
 
 After that, in the same conversation, you can say "explain F1", "fix F1", or "F3 is not a problem because ...".
@@ -70,11 +91,11 @@ To have your privacy policy read against your code, say "compare my privacy poli
 
 ## Cost
 
-Finding the places is free and runs on your computer. The AI review uses your own Claude plan or API key. Before it
-starts, the scan shows what it will review and the estimated cost (on an API key, in money too): 1.6 to 19 million
-tokens for an 86-file app, 55 to 330 million for a 2,655-file one. A later scan on the same computer reviews again
-what changed since the last one, and everything when your answers changed or a package was added or removed:
-[the list](HOW-IT-WORKS.md#later-scans).
+Step 1 is free. Step 2, the AI review, uses your own Claude plan or API key. Before it starts, the scan shows what it
+will review and the estimated cost (on an API key, in money too): 1.6 to 19 million tokens for an 86-file app, 55 to
+330 million for a 2,655-file one. The estimate leaves out the agents' searches where rules found nothing. A later scan
+on the same computer reviews again what changed since the last one, and everything when your answers changed or a
+package was added or removed: [the list](HOW-IT-WORKS.md#later-scans).
 
 ## What leaves your computer
 
@@ -93,10 +114,10 @@ EU and US law come first. The rules cite the GDPR, the ePrivacy Directive, CCPA 
 Cyber Resilience Act, US state AI statutes (UT, NY, CA, NV, IL, TN), the Digital Services Act, the Data Act and the
 European Accessibility Act: [the table](HOW-IT-WORKS.md#what-it-reads-your-code-against) counts the rules for each.
 
-Every rule reads every text file, whatever its language. Some also read the structure of HTML, TypeScript and TSX,
-Elixir, and the ERB, HAML, Slim, Pug, Blade and HEEx templates. The package inventory reads npm, SwiftPM and CocoaPods
-manifests. By default a scan does not read tests, vendored code or build output; it prints what it held back, and
-`--read all` reads everything.
+Every rule reads every text file as text, so code in any language, Python, Java or Go included, is read. Some rules
+also read the structure of HTML, TypeScript and TSX, Elixir, and the ERB, HAML, Slim, Pug, Blade and HEEx templates.
+The list of packages your project depends on is read from npm, SwiftPM and CocoaPods manifests. By default a scan does
+not read tests, vendored code or build output; it prints what it held back, and `--read all` reads everything.
 
 ## What is in this repository
 
@@ -104,7 +125,7 @@ manifests. By default a scan does not read tests, vendored code or build output;
 |---|---|
 | [`product/packages/cli/`](product/packages/cli/) | The command-line scanner, published to npm as `wolfboy` |
 | [`product/plugin/`](product/plugin/) | The Claude Code plugin (skills, review agents and hooks), shipped in the same npm package at the same version |
-| [`rules/`](rules/) | The law rules as YAML: 120 rules in 27 packs and 18 statutory checklists. Each rule carries its legal basis, its citation and the date it was checked |
+| [`rules/`](rules/) | The law rules as YAML: 120 rules in 27 packs, and 18 checklists, each listing requirements from one law, which the policy comparison checks your own documents against. Each rule carries its legal basis, its citation and the date it was checked |
 | [`tools/`](tools/) | The script that builds the rule bundle from `rules/`: [build from source](HOW-IT-WORKS.md#build-from-source-and-try-it) |
 | [`examples/book-club/`](examples/book-club/) | The sample app and WolfBoy's report on it |
 
@@ -140,7 +161,8 @@ check: [the sample's](examples/book-club/sample-report/report.md#not-checked).
 
 Version 0.1.0 was released on 2026-11-16. INNIT LLC. publishes WolfBoy, and it has one maintainer today, who reads
 every issue; there is no fixed reply time. Not in this release: the AI review in CI, a mode in which the CLI calls a
-model API with your own key, and signed rule bundles ([Status](HOW-IT-WORKS.md#status)).
+model API with your own key, and a digital signature on the rule set the scanner loads
+([Status](HOW-IT-WORKS.md#status)).
 
 The most useful contribution is a report of code a rule should have caught and did not: open an issue with the Rule
 miss template. Pull requests are merged once the project's Contributor License Agreement is published; until then,
