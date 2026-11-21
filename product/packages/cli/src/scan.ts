@@ -56,7 +56,7 @@ import { lineKeyOf } from "./place-key.js";
 import { jobsForWalk, runCensusInWorker, runShardedBuiltin, type ResolvedJobs } from "./engine-pool.js";
 import type { ScanProgress } from "./progress.js";
 import { MAX_FILE_BYTES, MINIFIED_LINE_LIMIT } from "./walk.js";
-import { COVERAGE_LIMITS_HEADING, coverageLimits, readScopeFor } from "./read-scope.js";
+import { COVERAGE_LIMITS_HEADING, coverageLimits, isOwnWorkingFolder, readScopeFor } from "./read-scope.js";
 import {
   applicabilityByInstrument,
   candidateListLines,
@@ -89,6 +89,12 @@ export interface ScanOptions {
    * declaration. Absent (every other caller, a `--profile` of another file) settles nothing.
    */
   scopeSettlements?: ScopeSettlement[];
+  /**
+   * Fields of `profilePath` read as unanswered
+   * (declaration.ts `staleOrderFields`), handed in by the scan command only where `profilePath` is the program's
+   * declaration; the pre-launch step leaves out the same, so the profile's digest agrees.
+   */
+  profileLeftOut?: readonly string[];
   /** Walk `test/`, `spec/`, `fixtures/` and their siblings; see WalkOptions. */
   includeNonProduction?: boolean;
   /**
@@ -1145,7 +1151,7 @@ export function prepareScan(opts: ScanOptions): PreparedScan {
   // than refused — the block is printed here, before the walk, so it is the first thing the command
   // says, and the run continues with each violating field treated as unanswered. An invalid profile
   // must never make a scan quieter; see profile.ts for why that direction is the only safe one.
-  const loaded = opts.profilePath ? loadScanProfile(opts.profilePath) : null;
+  const loaded = opts.profilePath ? loadScanProfile(opts.profilePath, opts.profileLeftOut ?? []) : null;
   if (loaded && loaded.report !== "") console.log(loaded.report);
   const profile: ScanProfile | null = loaded ? loaded.profile : null;
 
@@ -2549,6 +2555,27 @@ export function leftOutWords(f: Findings): string {
   return ` / ${skipped} left out by rule (${parts.join("; ")}; each place is under excluded_by_walker)`;
 }
 
+/**
+ * The walker's refusals by its own reason, as the full report prints them under the members that count them: files and
+ * places per reason, the largest first. WolfBoy's
+ * own `.legal` at the top is left out, as the sentence above it says (read-scope.ts `isOwnWorkingFolder`): it counted
+ * there ("hidden-directory 7 file(s) in 4 place(s)" under a sentence that leaves `.legal` out, FIN4 P2 item 8).
+ */
+export function walkerReasonParts(excluded: readonly { reason: string; dir?: string; files: number | null }[]): string[] {
+  const byReason = new Map<string, { files: number; dirs: number; unknown: boolean }>();
+  for (const e of excluded) {
+    if (typeof e.dir === "string" && isOwnWorkingFolder(e.dir)) continue;
+    const r = byReason.get(e.reason) ?? { files: 0, dirs: 0, unknown: false };
+    r.files += e.files ?? 0;
+    r.dirs += 1;
+    if (e.files === null) r.unknown = true;
+    byReason.set(e.reason, r);
+  }
+  return [...byReason]
+    .sort((a, b) => b[1].files - a[1].files)
+    .map(([reason, r]) => `${reason} ${r.files}${r.unknown ? "+" : ""} file(s) in ${r.dirs} place(s)`);
+}
+
 export function summarize(f: Findings, rules: Rule[]): string {
   const ruleById = new Map(rules.map((r) => [r.id, r]));
   const lines: string[] = [];
@@ -2887,18 +2914,8 @@ export function summarize(f: Findings, rules: Rule[]): string {
   // after the block is read as belonging to the last member — the first draft of this change put the
   // walker's by-reason index under "rules that ran and produced no candidate".
   const byReasonDetail = (): string[] => {
-    if (excluded.length === 0) return [];
-    const byReason = new Map<string, { files: number; dirs: number; unknown: boolean }>();
-    for (const e of excluded) {
-      const r = byReason.get(e.reason) ?? { files: 0, dirs: 0, unknown: false };
-      r.files += e.files ?? 0;
-      r.dirs += 1;
-      if (e.files === null) r.unknown = true;
-      byReason.set(e.reason, r);
-    }
-    const parts = [...byReason]
-      .sort((a, b) => b[1].files - a[1].files)
-      .map(([reason, r]) => `${reason} ${r.files}${r.unknown ? "+" : ""} file(s) in ${r.dirs} place(s)`);
+    const parts = walkerReasonParts(excluded);
+    if (parts.length === 0) return [];
     return [
       `      the members above, by the walker's own reason: ${parts.join(" | ")} — every directory ` +
         `is named under excluded_by_walker in the findings file`,

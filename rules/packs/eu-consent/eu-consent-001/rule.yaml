@@ -2,9 +2,9 @@ id: eu-consent-001
 pack: eu-consent
 short_name: Google Tag Manager or Analytics may run before consent
 problem_line:
-  text: Google tag or Analytics contacted, no consent gate found
-fix_line: Deny Consent Mode defaults before any Google tag, gate noscript iframes, and decide how a
-  server relay treats consent.
+  text: Google tag or Analytics loads with no consent check found
+fix_line: Set Google's consent defaults to denied before any Google tag loads; load noscript or
+  server tags only after consent.
 title: GTM/GA4 host, wrapper package or container id referenced (script, noscript iframe,
   preconnect, allow-list, manifest, import or call) - Consent Mode default needs review
 jurisdiction:

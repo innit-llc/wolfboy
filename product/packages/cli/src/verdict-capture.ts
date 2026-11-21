@@ -29,11 +29,13 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { appendFileAt, makeFolder, renamePath, writeFileAt } from "./project-write.js";
 import { dirname, join, resolve } from "node:path";
 import { relativePath, slashPath } from "./project-path.js";
-import { amendedReply, amendmentReason, fieldsNamed, nameIn, type RefusalNamed, type RefusalRemoved } from "./amend.js";
+import { RESEND_RULE, WORDS_ONLY, amendedReply, amendmentReason, canonical, fieldsNamed, nameIn, outsideNamed, type Amended, type RefusalNamed, type RefusalRemoved, type ResendNote } from "./amend.js";
+import { lighterOutcome, type OutcomeWeight } from "./finding-weight.js";
 import { programFileBytes } from "./program-file.js";
 import { answerRulesAtCapture, PLACES_KEPT_DIR, refutationsFromDecisions, verdictsFromDecisions, type DecisionsConversion } from "./reading-assembly.js";
 import { carriedRepliesOfLaunchDir } from "./carried-places.js";
 import { SKELETON_FIELDS_INSTEAD } from "./reading.js";
+import { STANDING_PARTS } from "./standing.js";
 import type { Command } from "commander";
 import type { VerdictSeat } from "wolfboy-schemas";
 import { compileSchemaValidator, schemaDocument, type SchemaViolation } from "./schema-validate.js";
@@ -291,10 +293,26 @@ export function handedFromFindings(
 interface Problem {
   /** The array index the problem is about, or null for the reply as a whole. */
   item: number | null;
+  /**
+   * A key of an entry that is no
+   * field of the reply format: refused for where it is, never for what it says, so it is not part of the base the next
+   * answer amends (amend.ts `RefusalRemoved.fields`); left there, an amendment that moved it could never leave it out. As paths in the entry: `fix` beside `standing`, `standing.searched` inside it.
+   */
+  strays?: readonly string[];
   /** The field path inside the item the problem names ("" for the item itself), for de-duplication and for the note on
    * an `evidence[]` entry (`zeroHitNotes`). */
   field: string;
   text: string;
+  /**
+   * (M1) The fields beside `field`
+   * the refusal names for this problem, where its correction may change them (reading-assembly.ts `DecisionsConversion`).
+   */
+  opens?: readonly string[];
+  /**
+   * What the problem names, where its `field` alone would say too much: a
+   * `standing` problem names the parts it sets aside (`standing.<part>`), or the block (`standing`) where the block is refused.
+   */
+  names?: readonly string[];
 }
 
 const segmentsOf = (pointer: string): string[] =>
@@ -508,6 +526,50 @@ function entryFields(read: (file: string) => SchemaNode, schemaFile: string, rep
  * (part B, area γ, item 2): capture, verify and the assembly apply it as one check; it is re-exported from here. */
 export { ELEMENT_ENTRIES_MAX, elementEntryProblems } from "./verdict-verify.js";
 
+/**
+ * Where a key the reply format
+ * refuses at `path` belongs: an adjudicator's entry-level key that is a part of `standing` (standing.ts `STANDING_PARTS`;
+ * `standing` takes any value in the schema, and the capture checks its parts), else the first other place in the entry's
+ * schema whose object has a property of that name (properties, array items and local `$ref`s, a few levels deep). null
+ * where the key is a field nowhere.
+ */
+function rightPlaceOf(role: CaptureRole, read: (file: string) => SchemaNode, schemaFile: string, key: string, path: string): { path: string; holder: string; top: string; inside: boolean } | null {
+  if (key === "") return null;
+  if (role === "adjudicator" && path === "" && (STANDING_PARTS as readonly string[]).includes(key)) return { path: `standing.${key}`, holder: "standing", top: "standing", inside: true };
+  const here = path.replace(/\[\d+\]/g, "[]");
+  const found: string[] = [];
+  const seen = new Set<SchemaNode>();
+  const visit = (file: string, node: SchemaNode | undefined, at: string, depth: number): void => {
+    if (!node || typeof node !== "object" || depth > 6 || seen.has(node) || found.length > 0) return;
+    seen.add(node);
+    const ref = node.$ref;
+    if (typeof ref === "string") {
+      const [uri, pointer = ""] = ref.split("#");
+      const f = uri ? uri.slice(uri.lastIndexOf("/") + 1) : file;
+      let n: unknown = read(f);
+      for (const s of segmentsOf(pointer)) n = n && typeof n === "object" ? (n as SchemaNode)[s] : undefined;
+      visit(f, n as SchemaNode | undefined, at, depth + 1);
+    }
+    for (const branch of ["then", "else"] as const) visit(file, node[branch] as SchemaNode | undefined, at, depth + 1);
+    for (const list of ["allOf", "anyOf", "oneOf"] as const) for (const b of (Array.isArray(node[list]) ? node[list] : []) as SchemaNode[]) visit(file, b, at, depth + 1);
+    const props = node.properties as Record<string, SchemaNode> | undefined;
+    if (props && typeof props === "object") {
+      if (key in props && at !== here) found.push(at === "" ? key : `${at}.${key}`);
+      for (const [k, child] of Object.entries(props)) visit(file, child, at === "" ? k : `${at}.${k}`, depth + 1);
+    }
+    if (node.items && typeof node.items === "object") visit(file, node.items as SchemaNode, `${at}[]`, depth + 1);
+  };
+  const root = read(schemaFile);
+  visit(schemaFile, (root.items as SchemaNode | undefined) ?? root, "", 0);
+  const p = found[0];
+  if (!p) return null;
+  const holder = p.includes(".") ? p.slice(0, p.lastIndexOf(".")) : "";
+  const top = /^[a-z_]+/.exec(p)?.[0] ?? p;
+  return { path: p, holder: holder === "" ? "the entry" : holder, top, inside: holder !== "" && !here.startsWith(holder) };
+}
+
+const asRecordOf = (v: unknown): Record<string, unknown> | null => (v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : null);
+
 function schemaProblem(role: CaptureRole, spec: RoleSpec, read: (file: string) => SchemaNode, reply: unknown, e: SchemaViolation): Problem | null {
   if (e.keyword === "if") return null; // the branch's own errors say what is wrong
   const segments = segmentsOf(e.instancePath);
@@ -543,7 +605,28 @@ function schemaProblem(role: CaptureRole, spec: RoleSpec, read: (file: string) =
         lead || trail
           ? `. The key as written is ${JSON.stringify(key)}, with white space ${lead && trail ? "before and after it" : lead ? "before it" : "after it"}${fields.includes(key.trim()) ? `: write it as \`${key.trim()}\`` : ""}`
           : "";
-      return { item: index, field, text: `${label}: \`${field}\` is not a field of your reply format${allowed}${spaced}` };
+      // A part in the wrong place is
+      // refused naming its right place: DEMO5's seat put `fix` beside `standing`, was told only that `fix` is not a field,
+      // and after two refusals dropped its suggested change. Where the key is a field elsewhere in the entry (a part of
+      // `standing`, or another level of the reply format), the refusal says where, and names that field open to the
+      // amendment that moves it there (`opens`).
+      const home = rightPlaceOf(role, read, spec.schema, key.trim(), path);
+      // A part of `standing` written beside it is named by its part
+      // (`standing.fix`), never the whole block, and every answer after the refusal keeps the parts it does not name
+      // (amend.ts, `RESEND_RULE`, said once at the end of the refusal): left in neither place, the part stays where it
+      // was written and is refused again, so the way to drop it is `null` at its place.
+      const inStanding = home?.top === "standing" && home.inside;
+      // Where the block already holds that part, `null` at its place
+      // would take out the block's own part: the stray is taken out where it is (amend.ts `placeStrays`).
+      const held = inStanding && path === "" && key.trim() in (asRecordOf((item as Record<string, unknown> | undefined)?.standing) ?? {});
+      const move = !home
+        ? ""
+        : held
+          ? `. It belongs inside \`standing\`, which already holds a \`${key.trim()}\` of its own: write this one as \`null\` here to take it out, or send it there, as \`${home.path}\`, in place of that one`
+          : inStanding
+            ? `. It belongs inside \`standing\`: add it there, as \`${home.path}\`, and leave it out here, or write \`${home.path}\` as \`null\` where you no longer give it`
+            : `. It belongs ${home.inside ? `inside \`${home.holder}\`` : `in \`${home.holder}\``}: move it there, as \`${home.path}\`, and leave it out here`;
+      return { item: index, field, text: `${label}: \`${field}\` is not a field of your reply format${home && !home.inside ? " at this level" : ""}${allowed}${spaced}${move}`, ...(home ? { opens: [inStanding ? home.path : home.top] } : {}), ...(path === "" ? { strays: [key] } : {}) };
     }
     case "enum":
       return { item: index, field: path, text: `${where} is ${JSON.stringify(value)}, which is not one of ${(p.allowedValues as unknown[]).map((v) => JSON.stringify(v)).join(", ")}` };
@@ -650,6 +733,8 @@ export function renderRefusal(role: CaptureRole, problems: string[]): string {
     `Send your whole answer again: one JSON array, ${unit}, with nothing before it and nothing after it, and with every point below corrected.`,
     `What is wrong (${problems.length}):`,
     ...problems.map((p) => `- ${p}`),
+    // The one rule of every resend, said once, in the instructions' words.
+    ...(role === "adjudicator" ? [RESEND_RULE] : []),
     "",
   ].join("\n");
 }
@@ -798,7 +883,34 @@ export interface CaptureRequest {
    * accepted, kept as the reply; a change the refusal did not name is refused. `removed`: what that
    * refusal told the seat to take out, which is not part of the base (amend.ts `withoutRemoved`).
    */
-  amend?: { base: Uint8Array; named: RefusalNamed; baseFile: string; removed?: RefusalRemoved };
+  amend?: {
+    base: Uint8Array;
+    named: RefusalNamed;
+    baseFile: string;
+    removed?: RefusalRemoved;
+    /**
+     * What that refusal's own problems named, before any widening
+     * (amend.ts `nameIn` with `strict`): the merge the guard on a resend weighs against (amend.ts module comment, THE
+     * OUTCOME). Absent (a refusal recorded before the guard), `named` stands in, and only `evidence`'s pointers are left out.
+     */
+    strict?: RefusalNamed;
+  };
+  /**
+   * The finding one record entry of an adjudicator makes, as the
+   * program would report it (finding-weight.ts `outcomeWeightOf`, from the scan's findings document: reading-assembly.ts
+   * `answerRulesAtCapture`'s `weigh`); null where the document holds no such candidate. Absent, no resend is weighed.
+   */
+  weigh?: (entry: Record<string, unknown>) => OutcomeWeight | null;
+  /**
+   * (FIN3 M2 D2) The answer after the seat's last
+   * refusal (hook-capture.ts `REFUSALS_MAX`): no refusal can reach the seat any more. A `standing` refusal (a wait that
+   * names no question or fact that stood, or whose own `at` does not stand: standing.ts `checkStanding`'s `refused`) then
+   * refuses nothing. The wait is set aside as the record already holds it, its finding is placed as if nothing waited
+   * (0.1.0's placement: "to fix" at its heaviest), and every other candidate of the answer is recorded as judged, where
+   * keeping the whole answer invalid reported them all as not judged. Any other problem keeps the answer refused, as before. The same for every other part of `standing` that does not
+   * stand, now refused as a wait is: after the last refusal it is set aside and placed at its heaviest (H5a).
+   */
+  lastAnswer?: boolean;
 }
 
 export type CaptureResult =
@@ -809,6 +921,8 @@ export type CaptureResult =
       problems: string[];
       refusal: string;
       named: RefusalNamed;
+      /** What this refusal's problems named, before any widening (`CaptureRequest.amend.strict`). */
+      strict?: RefusalNamed;
       /** Fix R1: the rows and objects this refusal tells the seat to take out (amend.ts `RefusalRemoved`). */
       removed?: RefusalRemoved;
       checked?: Buffer;
@@ -819,21 +933,21 @@ export type CaptureResult =
   | { outcome: "not-written"; reason: string };
 
 /** What a refusal named (amend.ts): each problem's candidate and field; a candidate not answered, or answered twice, whole. */
-function refusalNamed(role: CaptureRole, reply: unknown, found: readonly Problem[], handed: readonly string[]): RefusalNamed {
+function refusalNamed(role: CaptureRole, reply: unknown, found: readonly Problem[], handed: readonly string[], strict = false): RefusalNamed {
   const named: RefusalNamed = {};
   if (role === "reader" || !Array.isArray(reply)) return { [role === "reader" ? "" : "*"]: ["*"] };
   const idAt = (i: number): string | null => {
     const e = reply[i] as Record<string, unknown> | null;
     return e && typeof e === "object" && typeof e.finding_id === "string" ? e.finding_id : null;
   };
-  for (const f of found) nameIn(named, f.item === null ? null : idAt(f.item), fieldsNamed(f.field));
+  for (const f of found) nameIn(named, f.item === null ? null : idAt(f.item), [...(f.names ?? fieldsNamed(f.field)), ...(f.opens ?? []).flatMap(fieldsNamed)], strict);
   const count = new Map<string, number>();
   reply.forEach((_, i) => {
     const id = idAt(i);
     if (id !== null) count.set(id, (count.get(id) ?? 0) + 1);
   });
-  for (const id of handed) if ((count.get(id) ?? 0) !== 1) nameIn(named, id, ["*"]);
-  for (const [id] of count) if (!handed.includes(id)) nameIn(named, id, ["*"]);
+  for (const id of handed) if ((count.get(id) ?? 0) !== 1) nameIn(named, id, ["*"], strict);
+  for (const [id] of count) if (!handed.includes(id)) nameIn(named, id, ["*"], strict);
   return named;
 }
 
@@ -846,9 +960,15 @@ function refusalNamed(role: CaptureRole, reply: unknown, found: readonly Problem
  * first without saying so, and a partial amendment was laid over whichever came first. The refusal says none is kept, and
  * the next answer gives that candidate whole: with no base object for it, an object of its id is read as a whole one.
  */
-function refusalRemoved(role: CaptureRole, reply: unknown, rows: Record<string, number[]> | undefined, handed: readonly string[]): RefusalRemoved | undefined {
+function refusalRemoved(role: CaptureRole, reply: unknown, rows: Record<string, number[]> | undefined, handed: readonly string[], found: readonly Problem[] = [], restored: Record<string, unknown> = {}): RefusalRemoved | undefined {
   const out: RefusalRemoved = {};
   if (rows && Object.keys(rows).length > 0) out.rows = rows;
+  // The candidates the guard on a resend took back (`lighterThanNamed`).
+  if (Object.keys(restored).length > 0) out.restored = restored;
+  // Each entry's keys that are no field.
+  const fields: Record<string, string[]> = {};
+  for (const f of found) if (f.strays && f.strays.length > 0 && f.item !== null) fields[String(f.item)] = [...new Set([...(fields[String(f.item)] ?? []), ...f.strays])].sort();
+  if (Object.keys(fields).length > 0) out.fields = fields;
   if ((role === "adjudicator" || role === "refuter") && Array.isArray(reply)) {
     const idField = CAPTURE_ROLE_SPEC[role].idField;
     const ids = reply.map((e) => (e && typeof e === "object" && !Array.isArray(e) ? (e as Record<string, unknown>)[idField] : undefined));
@@ -860,7 +980,7 @@ function refusalRemoved(role: CaptureRole, reply: unknown, rows: Record<string, 
     });
     if (objects.length > 0) out.objects = objects;
   }
-  return out.rows || out.objects ? out : undefined;
+  return out.rows || out.objects || out.fields || out.restored ? out : undefined;
 }
 
 /**
@@ -897,6 +1017,113 @@ export function answerIsChallenge(answer: Uint8Array): boolean {
   }
 }
 
+/**
+ * What the program did after the seat's last refusal with what the
+ * rule of every resend did not let stand as the seat wrote it (amend.ts `ResendNote`), written on the record of each
+ * candidate: a part written beside `standing`, never placed inside and set aside, as every part set aside is
+ * (`standing_set_aside[]`, which the order places at its heaviest and the report names); a part placed by the program,
+ * a field of the entry never moved out of `standing`, and a change of words the last refusal did not name (amend.ts
+ * `WORDS_ONLY`), in `after_last_refusal[]`. True where anything was written.
+ */
+function notesInto(recordValue: unknown, notes: readonly ResendNote[]): boolean {
+  if (notes.length === 0 || !Array.isArray(recordValue)) return false;
+  let wrote = false;
+  for (const n of notes) {
+    const entry = recordValue.find((e) => e && typeof e === "object" && !Array.isArray(e) && (e as Record<string, unknown>).finding_id === n.finding_id) as Record<string, unknown> | undefined;
+    if (!entry) continue;
+    // A stray beside a block that holds the part (`held`): only the
+    // stray is set aside, in `after_last_refusal[]`; the block's own part stands.
+    if (n.kind === "unplaced" && n.taken === "set_aside" && n.path.startsWith("standing.")) {
+      const aside = Array.isArray(entry.standing_set_aside) ? entry.standing_set_aside : [];
+      entry.standing_set_aside = [...aside, { part: n.path.slice("standing.".length), value: n.value, why: n.why }];
+    } else {
+      const after = Array.isArray(entry.after_last_refusal) ? entry.after_last_refusal : [];
+      entry.after_last_refusal = [...after, { path: n.path, ...(n.value === undefined ? {} : { value: n.value }), taken: n.taken, why: n.why }];
+    }
+    wrote = true;
+  }
+  return wrote;
+}
+
+/** An adjudicator's answer after a refusal, laid over as the refusal named it and strictly (amend.ts module comment, THE OUTCOME). */
+interface Weighed {
+  named: Amended;
+  strict: Amended;
+  /** What the refusal named strictly: the names a refusal line says. */
+  said: RefusalNamed;
+  whole: boolean;
+}
+
+const objectOf = (v: unknown): Record<string, unknown> | null => (v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : null);
+const findingIdOf = (v: unknown): string | undefined => {
+  const id = objectOf(v)?.finding_id;
+  return typeof id === "string" ? id : undefined;
+};
+
+/**
+ * THE GUARD ON A RESEND (the parent's decision: guard
+ * the outcome, not the inputs; amend.ts module comment, THE OUTCOME). For each candidate where a widening let in a change
+ * that is not words only (a change named as the refusal named it and not strictly; `WORDS_ONLY` is never read for a
+ * finding's place), the finding the answer makes as named (`recordValue`, the capture's own conversion of the merged
+ * whole) is weighed against the one the strict merge makes (the same conversion of that candidate's strict entry), each
+ * with what the program does with keys out of place after the last refusal (`notesInto`), by `req.weigh`
+ * (finding-weight.ts `outcomeWeightOf`). Where it is lighter (`lighterOutcome`), those changes are the ones that made the
+ * difference: they are refused by name, in the words of any change the refusal did not name (`outsideNamed`), and the
+ * kept answer takes each back to its value in the strict merge (`restored`), as a change the refusal did not name is
+ * never laid over; a change to words only stays. Nothing is weighed where no such change came in.
+ */
+function lighterThanNamed(req: CaptureRequest, w: Weighed, recordValue: unknown): { lines: string[]; restored: Record<string, unknown> } {
+  const out: { lines: string[]; restored: Record<string, unknown> } = { lines: [], restored: {} };
+  if (!req.weigh || !Array.isArray(w.named.merged) || !Array.isArray(w.strict.merged) || !Array.isArray(recordValue)) return out;
+  const key = (c: { id: string; field: string }): string => `${c.id} ${c.field}`;
+  const strictly = new Set(w.strict.changes.filter((c) => c.named).map(key));
+  const widened = w.named.changes.filter((c) => c.named && !strictly.has(key(c)) && !WORDS_ONLY.includes(c.field));
+  const ids = [...new Set(widened.map((c) => c.id))];
+  if (ids.length === 0) return out;
+  const strictEntries = (w.strict.merged as unknown[]).filter((e) => ids.includes(findingIdOf(e) ?? ""));
+  const conversion = req.convert ? req.convert(strictEntries) : verdictsFromDecisions(strictEntries, null);
+  if (conversion.unconvertible || !Array.isArray(conversion.record)) return out;
+  const withNotes = (entries: unknown[], notes: readonly ResendNote[]): unknown[] => {
+    const copy = structuredClone(entries.filter((e) => ids.includes(findingIdOf(e) ?? "")));
+    notesInto(copy, notes);
+    return copy;
+  };
+  const before = withNotes(conversion.record, w.strict.notes);
+  const now = withNotes(recordValue, w.named.notes);
+  for (const id of ids) {
+    const b = objectOf(before.find((e) => findingIdOf(e) === id));
+    const c = objectOf(now.find((e) => findingIdOf(e) === id));
+    const wb = b ? req.weigh(b) : null;
+    const wc = c ? req.weigh(c) : null;
+    if (!wb || !wc || lighterOutcome(wc, wb) === null) continue;
+    const made = widened.filter((x) => x.id === id);
+    out.lines.push(...outsideNamed(made.map((x) => ({ ...x, named: false })), w.said, w.whole, "adjudicator"));
+    const at = (w.named.merged as unknown[]).findIndex((e) => findingIdOf(e) === id);
+    const asNamed = objectOf((w.named.merged as unknown[])[at]);
+    const strict = objectOf((w.strict.merged as unknown[]).find((e) => findingIdOf(e) === id));
+    if (at < 0 || !asNamed || !strict) continue;
+    // Each change that made the difference, taken back to its value in the strict merge (absent where it had none).
+    const back: Record<string, unknown> = structuredClone(asNamed);
+    for (const { field } of made) {
+      if (field === "standing" || objectOf(back.standing) === null || objectOf(strict.standing) === null) {
+        if ("standing" in strict) back.standing = structuredClone(strict.standing);
+        else delete back.standing;
+        continue;
+      }
+      const part = field.slice("standing.".length);
+      const from = objectOf(strict.standing)!;
+      const to = objectOf(back.standing)!;
+      if (part in from) to[part] = structuredClone(from[part]);
+      else delete to[part];
+    }
+    // A part taken back names the entry the strict merge keeps it on, in the
+    // `evidence` this answer laid: both merges lay the same `evidence`, and neither puts back a quotation the answer took out
+    // (amend.ts `followPointers`: such a part names no entry), so the evidence is never taken back with it.
+    out.restored[String(at)] = back;
+  }
+  return out;
+}
+
 export function captureAnswer(req: CaptureRequest): CaptureResult {
   const spec = CAPTURE_ROLE_SPEC[req.role];
   const target = recordPathFor(req.role, { ...req, challenge: req.role === "refuter" && (req.challenge ?? answerIsChallenge(req.answer)) });
@@ -927,21 +1154,37 @@ export function captureAnswer(req: CaptureRequest): CaptureResult {
   // An amendment of the last refused answer (amend.ts): laid over it, and the merged whole is the answer from here on.
   let answer: Uint8Array = req.answer;
   let extracted = seatExtracted;
-  let amendment: { reason: string; outside: string[] } | undefined;
+  let amendment: { reason: string; outside: string[]; notes: ResendNote[] } | undefined;
+  // The answer laid over as named and strictly, for the guard below.
+  let weighed: Weighed | undefined;
   if (req.amend) {
     const base = firstJsonValue(req.amend.base);
     // The refuter's entry is an `if`: its ordinary shape is the `else` branch.
     const itemsNode = schemaReader()(spec.schema).items as { required?: string[]; else?: { required?: string[] } } | undefined;
     const required = itemsNode?.required ?? itemsNode?.else?.required ?? [];
     const reason = base.ok ? amendmentReason(req.role, base.value, seatExtracted.value, required, req.amend.removed) : null;
-    if (base.ok && reason) {
-      const m = amendedReply(req.role, base.value as unknown[], seatExtracted.value as unknown[], req.amend.named, req.amend.removed);
-      answer = m.bytes;
-      const merged = firstJsonValue(answer);
-      if (merged.ok) {
+    /* One rule for every resend of an adjudicator: a whole answer is laid over
+     * the kept one as an amendment is (amend.ts module comment), where its every object is keyed by a `finding_id` of its
+     * own (one that is not is refused as it stands). Where laying it over changes nothing, the seat's own bytes stay the
+     * reply, as before; where it does, the merged whole is the reply and the record says the answer was laid over. */
+    const next = seatExtracted.value;
+    const ids = Array.isArray(next) ? next.map((e) => (e && typeof e === "object" && !Array.isArray(e) ? (e as Record<string, unknown>).finding_id : undefined)) : [];
+    const keyed = Array.isArray(next) && next.length > 0 && ids.every((id) => typeof id === "string") && new Set(ids).size === ids.length;
+    const whole = !reason && req.role === "adjudicator" && keyed;
+    if (base.ok && Array.isArray(base.value) && (reason || whole)) {
+      const said = req.amend.strict ?? req.amend.named;
+      // No quotation stands in for a missing `decisive` in the merge: the
+      // decisive place is the heaviest of the finding's places, computed where it is read (finding-weight.ts `decisivePlaceOf`).
+      const m = amendedReply(req.role, base.value as unknown[], next as unknown[], req.amend.named, req.amend.removed, { lastAnswer: req.lastAnswer === true, whole, said });
+      if (req.role === "adjudicator" && req.weigh) {
+        weighed = { named: m, strict: amendedReply(req.role, base.value as unknown[], next as unknown[], said, req.amend.removed, { lastAnswer: req.lastAnswer === true, whole, strict: true, said }), said, whole };
+      }
+      const merged = firstJsonValue(m.bytes);
+      if (merged.ok && (reason || m.outside.length > 0 || m.notes.length > 0 || canonical(merged.value) !== canonical(next))) {
+        answer = m.bytes;
         extracted = merged;
-        amendment = { reason, outside: m.outside };
-      } else answer = req.answer;
+        amendment = { reason: reason ?? "it is a whole answer, laid over the refused one: what the refusal did not name keeps its value from it", outside: m.outside, notes: m.notes };
+      }
     }
   }
   const reply = extracted.value;
@@ -960,7 +1203,10 @@ export function captureAnswer(req: CaptureRequest): CaptureResult {
         : null;
   if (conversion?.unconvertible) return { outcome: "not-written", reason: conversion.unconvertible };
   const recordValue = conversion ? conversion.record : reply;
-  const convertedItems = new Set((conversion?.problems ?? []).map((p) => p.item));
+  // A `standing` problem (a wait naming no question the program asks; since any part of `standing` that does not stand)
+  // refuses the entry without making its reading the conversion's to fix first: the entry's other checks still run, so the
+  // seat reads every defect in one refusal.
+  const convertedItems = new Set((conversion?.problems ?? []).filter((p) => p.field !== "standing").map((p) => p.item));
 
   const found: Problem[] = [];
   const read = schemaReader();
@@ -991,12 +1237,19 @@ export function captureAnswer(req: CaptureRequest): CaptureResult {
       // the seat reads every defect at once, and its refusals are not spent one defect at a time.
       // A decision the conversion refused is fixed first: the record made of the others is not the seat's reading yet.
       if (convertedItems.has(i)) return;
-      for (const text of req.entryRule?.(entry as Record<string, unknown>) ?? []) found.push({ item: i, field: "reading", text: `${itemLabel(spec, reply, i)}: ${text}` });
+      // These rules hold the verdict to the reading (a dismissal over
+      // places nobody read, a verdict over a unit a reader never finished is `needs_human`): their correction may be the
+      // verdict, so they name it, with its confidence, beside the reading (amend.ts: a resend changes only what is named).
+      for (const text of req.entryRule?.(entry as Record<string, unknown>) ?? []) found.push({ item: i, field: "reading", text: `${itemLabel(spec, reply, i)}: ${text}`, opens: ["verdict", "confidence"] });
     });
   }
   for (const p of conversion?.problems ?? []) {
-    found.push({ item: p.item, field: p.field ?? "decisions", text: p.item === null ? p.text : `${itemLabel(spec, reply, p.item)}: ${p.text}` });
+    found.push({ item: p.item, field: p.field ?? "decisions", text: p.item === null ? p.text : `${itemLabel(spec, reply, p.item)}: ${p.text}`, ...(p.opens ? { opens: p.opens } : {}), ...(p.strays ? { strays: p.strays } : {}), ...(p.names ? { names: p.names } : {}) });
   }
+  /* A key the last refusal took out for where it was,
+   * which this answer neither puts in its place nor writes as `null` there, stays in the merged whole where the seat wrote
+   * it (amend.ts `placeStrays`), so the check above refuses it again with its place; after the last refusal the program
+   * places or sets it aside, and the record says which (below). */
   if (!convertedItems.has(null)) for (const text of req.replyRule?.(recordValue) ?? []) found.push({ item: null, field: "", text });
   if (req.role === "refuter") for (const p of refuterModeProblems(spec, reply, req.challenge)) found.push(p);
   zeroHitNotes(req.role, reply, found);
@@ -1004,14 +1257,20 @@ export function captureAnswer(req: CaptureRequest): CaptureResult {
     .map((f, n) => ({ f, n }))
     .sort((a, b) => (a.f.item ?? -1) - (b.f.item ?? -1) || a.n - b.n)
     .map(({ f }) => f.text);
-  const problems = [...new Set([...(amendment?.outside ?? []), ...ordered, ...(req.role === "reader" ? [] : idProblems(req.role, reply, req.ids))])];
-  if (problems.length > 0) {
-    const removed = refusalRemoved(req.role, reply, conversion?.removedRows, req.ids);
+  // The guard on a resend (amend.ts module comment, THE
+  // OUTCOME): a change only a widening let in, which makes the finding lighter than the strict merge does, is refused by name.
+  const lighter = weighed ? lighterThanNamed(req, weighed, recordValue) : { lines: [], restored: {} };
+  const problems = [...new Set([...(amendment?.outside ?? []), ...lighter.lines, ...ordered, ...(req.role === "reader" ? [] : idProblems(req.role, reply, req.ids))])];
+  // After the last refusal a wait's refusal costs only that wait (`lastAnswer`); so does every `standing` refusal: only its parts are set aside.
+  const waitOnly = new Set(req.lastAnswer ? found.filter((f) => f.field === "standing").map((f) => f.text) : []);
+  if (problems.some((p) => !waitOnly.has(p))) {
+    const removed = refusalRemoved(req.role, reply, conversion?.removedRows, req.ids, found, lighter.restored);
     return {
       outcome: "refused",
       problems,
       refusal: renderRefusal(req.role, problems),
       named: refusalNamed(req.role, reply, found, req.ids),
+      ...(req.role === "adjudicator" ? { strict: refusalNamed(req.role, reply, found, req.ids, true) } : {}),
       ...(removed ? { removed } : {}),
       ...(amendment ? { checked: Buffer.from(answer) } : {}),
       ...(conversion?.placesPassed && conversion.placesPassed.length > 0 ? { placesPassed: conversion.placesPassed } : {}),
@@ -1021,7 +1280,8 @@ export function captureAnswer(req: CaptureRequest): CaptureResult {
   // Accepted. The record is the byte slice, or, where the seat answered in decisions, the program's record made of them
   // (form 2); the whole reply is kept beside it, content-addressed, either way.
   const slice = answer.subarray(extracted.start, extracted.end);
-  const form2 = conversion?.form === 2;
+  const noted = notesInto(recordValue, amendment?.notes ?? []);
+  const form2 = conversion?.form === 2 || noted;
   const record = form2 ? Buffer.from(`${JSON.stringify(recordValue, null, 2)}\n`, "utf8") : slice;
   const replySha = sha256(answer);
   const replyRel = `${REPLIES_DIR}/${target.rel.replace(/\.json$/, "")}.${replySha.slice(0, 16)}.txt`;

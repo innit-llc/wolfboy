@@ -118,7 +118,7 @@
         "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/reasoning"
       },
       "standing": {
-        "description": "H5a stage 1 (h5a-design-2026-10-28.md sections 2.1-2.5; product/plugin/agents/legal-adjudicator.md, section `standing`): on a `violation_candidate` or `needs_human`, the finding's short structured block. Any value is taken here: the capture checks each part (S1-S6, standing.ts `checkStanding`) and sets aside a part that fails, recording it, and never refuses the answer for it; a value that is not an object is dropped whole and recorded. The record holds what stood (`standing`) and what was set aside (`standing_set_aside`)."
+        "description": "H5a stage 1 (h5a-design-2026-10-28.md sections 2.1-2.5; product/plugin/agents/legal-adjudicator.md, section `standing`): on a `violation_candidate` or `needs_human`, the finding's short structured block. Any value is taken here: the capture checks each part (S1-S6 and S8, standing.ts `checkStanding`) and refuses the answer for every part that fails, naming each with its reason, so the seat can repair it (wa-2026-11-17.md; before, only a `waits_on_answer` that did not stand was refused, r16-c-2026-11-15.md, items 2-4); after the seat's last refusal such a part is only set aside and recorded. A `question` may be the id alone, its line then `status.at`. A value that is not an object is refused, and after the last refusal dropped whole and recorded. The record holds what stood (`standing`) and what was set aside (`standing_set_aside`)."
       },
       "fix_available": {
         "$ref": "https://schemas.invalid/product/verdict.schema.json#/properties/fix_available"

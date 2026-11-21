@@ -14,32 +14,40 @@ you where they disagree. Lawyers don't read code. Engineers don't read law. Wolf
    [how it works](HOW-IT-WORKS.md#how-it-works).
 
 ```bash
-npx wolfboy@0.1.0 scan
+npx wolfboy@0.1.1 scan
 ```
 
 That is step 1. You need Node.js 20 or later. Run it in your project's folder: it shows what it found on one screen,
 writes the full list to `.legal/quick-scan.txt`, and asks up to four questions about your product (where it is
 offered, what it ships as). You can choose Skip on any; skipping switches nothing off. Nothing is sent anywhere.
 
-Try it on [the sample app](examples/book-club/), which has five planted problems. In `examples/book-club/app` the
-rules mark 33 places in a few seconds, grouped into 17 findings. The AI review read all 33 in about 5 minutes and 1.9
-million tokens. Of the 17 findings it ruled out 2, left 1 open on a question about the product, and kept 14 to fix.
-The 14 include all five planted problems, found without comparing the privacy policy: several rules, or one rule at
-several lines, can flag one planted problem, and one finding (no age check at sign-up) was not planted. The first item
-in its [sample report](examples/book-club/sample-report/report.md):
+Try it on [the sample app](examples/book-club/), which has nine planted problems. In `examples/book-club/app` the
+rules mark 44 places in about a second, grouped into 22 findings. The AI review read all 44 in about 4 minutes and 2.9
+million tokens. It ruled out 1 finding, kept 13 to fix, left 6 for you to check in your own documents, and listed 2
+more without counting them. All nine planted problems are among the 13 to fix and the 6 to check, found without
+comparing the privacy policy: several rules, or one rule at several lines, can flag one planted problem, and one of
+the 6 (no age check at sign-up) was not planted. One item in its
+[sample report](examples/book-club/sample-report/report.md):
 
 ```text
-F1 · Password or key written to a log or console
-Place: src/signup.ts:10 · console.log("new signup", { name, email, password });
-Provision: GDPR Art. 5(1)(f) and Art. 32
+F10 · Members using the Ask the club box are not told an AI model writes the answers.
+Place: src/assistant.ts:19 · const completion = await openai.chat.completions.create({
+Provision: EU AI Act, Art. 50(1)
 ```
 
 ## Track record
 
-WolfBoy's review of [Loomio](https://github.com/loomio/loomio) 3.9.0, an open-source app for group decisions, pointed
-at its sign-up step, which sent an MD5 hash of every new user's e-mail address to Gravatar, with no consent step. We
-reported it. Loomio published [GHSA-55qv-f272-488r](https://github.com/loomio/loomio/security/advisories/GHSA-55qv-f272-488r)
-and fixed it in Loomio 3.12.0.
+Problems WolfBoy pointed at in open-source projects. We reported each one to the project. Newest first.
+
+| Project | What WolfBoy pointed at | What the project did | Link |
+|---|---|---|---|
+| [Lago](https://github.com/getlago/lago-front) front end, an open-source app for usage-based billing | Session replays sent to Sentry on errors recorded page text and form values as they appeared on screen, with masking turned off | Merged a fix that turns the masking back on, and credited the report, on 2026-11-20 | [PR #4724](https://github.com/getlago/lago-front/pull/4724#issuecomment-7043541735) |
+| [Loomio](https://github.com/loomio/loomio) 3.9.0, an open-source app for group decisions | The sign-up step sent an MD5 hash of every new user's e-mail address to Gravatar, with no consent step | Published a security advisory and fixed it in Loomio 3.12.0, both on 2026-10-22 | [GHSA-55qv-f272-488r](https://github.com/loomio/loomio/security/advisories/GHSA-55qv-f272-488r) |
+
+<!-- To add a case: add a row at the top of the table, so it stays newest first, with the same four columns. Keep
+each cell short. Say what the code did and what the project did, in the project's own terms; do not call it a
+violation. Put the date in "What the project did", and link the project's own page (advisory, pull request or
+release note). -->
 
 ## Why it matters
 
@@ -76,7 +84,7 @@ the plugin later, see [Update and remove](product/plugin/README.md#update-and-re
 Then say **"Scan this repository."** in Claude Code. From there, WolfBoy:
 
 1. prints the command that opens the review's own session. Run it in your terminal, in the same folder, and say "Scan
-   this repository." again in the session it opens. The first time it also offers `npm install -g wolfboy@0.1.0`, a
+   this repository." again in the session it opens. The first time it also offers `npm install -g wolfboy@0.1.1`, a
    one-time install that shortens the command to `wolfboy session`.
 2. asks up to four questions about your product that have no saved answer yet. Answers you gave in step 1, in the
    same folder, are reused; they are asked again only after an update changes a question, if the saved answers were
@@ -147,7 +155,7 @@ in order: [what it does not do](HOW-IT-WORKS.md#what-it-does-not-do).
 </details>
 <details><summary>Can it run in CI?</summary>
 
-The rules check can, on every pull request, with no AI and no key: `npx --yes wolfboy@0.1.0 scan --target .` It counts
+The rules check can, on every pull request, with no AI and no key: `npx --yes wolfboy@0.1.1 scan --target .` It counts
 the places on the lines a pull request changes and posts one neutral check run: [more](HOW-IT-WORKS.md#in-ci).
 The AI review does not run in CI in this release.
 </details>
@@ -159,7 +167,7 @@ check: [the sample's](examples/book-club/sample-report/report.md#not-checked).
 
 ## Status and contributing
 
-Version 0.1.0 was released on 2026-11-16. INNIT LLC publishes WolfBoy, and it has one maintainer today, who reads
+Version 0.1.1 was released on 2026-11-21 (0.1.0 on 2026-11-16). INNIT LLC publishes WolfBoy, and it has one maintainer today, who reads
 every issue; there is no fixed reply time. Not in this release: the AI review in CI, a mode in which the CLI calls a
 model API with your own key, and a digital signature on the rule set the scanner loads
 ([Status](HOW-IT-WORKS.md#status)).

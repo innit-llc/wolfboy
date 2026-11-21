@@ -301,8 +301,22 @@ import { JUDGING_MARKS, JUDGING_STATES, type InstructionsState, type JudgingMark
  * orientation sheet's builders (`orientation-inputs.ts`, `orientation.ts`, `census.ts`,
  * `census-worker.ts` and the modules they import), so this bump is also the one item 6 of the design's later items
  * requires: the bump that adds them declares no earlier version.
+ * `verdict-rules-36` (0.1.1, over `verdict-rules-35`,
+ * which release 0.1.0 used and marked released, so a change to a listed file takes a new name): the capture refuses a
+ * `waits_on_answer` that names no question of the program's list and no fact in words, and sends the seat a sentence
+ * saying how to name one (`standing.ts` `checkStanding`, `reading-assembly.ts` `standingOfEntry`, `verdict-capture.ts`); the compiled-in schemas carry the minors question's "No" as settling a finding
+ * that waits on it; the agent text says `reasoning` is printed for the person. The capture also
+ * refuses every other part of `standing` that does not stand, with its reason, and sets it aside only after the seat's
+ * last refusal, or where an auto-mode seat stopped without handing its answer back (no refusal can reach it); it keeps a
+ * wait that names its question by the id alone (its line `status.at`) and a fact of up to 30 words (`standing.ts`
+ * `checkStanding`, `standingRefusal`; `reading-assembly.ts` `standingOfEntry`; `hook-capture.ts` `refusalFor`); the agent
+ * text says so. Such a refusal also names `verdict` and
+ * `confidence` where the part turns on the verdict, and `evidence` (with `decisions`) where its `at` does not resolve, so
+ * an amendment correcting it is used (`standing.ts` `STANDING_OPENS_VERDICT`, `STANDING_OPENS_QUOTATION`;
+ * `verdict-capture.ts` `refusalNamed`); the agent text says so. A reply accepted under 35 can be refused under 36, so a
+ * check on a reply changed its outcome and this version declares nothing: an earlier verdict goes back to a seat once.
  */
-export const VERDICT_RULES_VERSION = "verdict-rules-35";
+export const VERDICT_RULES_VERSION = "verdict-rules-36";
 
 /**
  * One declared link: a version that judges as the version before it. Only the link is the program's: the justification
@@ -388,6 +402,9 @@ export const VERDICT_RULES_JUDGES_AS: Readonly<Record<string, VerdictRulesLink>>
   // `verdict-rules-35` declares nothing, and must never: release 1 of the delivery design;
   // 33 was re-pinned under its own name, so a link from 35 would carry verdicts judged under rules that moved. The
   // version gate fails where this table holds an entry for 35.
+  // `verdict-rules-36` declares nothing: 0.1.1; the
+  // capture refuses a wait that names no question, and every part of `standing` that does not stand (replies 35
+  // accepted), so a check on a reply changed its outcome.
 };
 
 type Links = Readonly<Record<string, VerdictRulesLink>>;
@@ -466,6 +483,12 @@ export const VERDICT_RULES_SOURCES: readonly string[] = [
   "product/packages/cli/src/disposition.ts",
   "product/packages/cli/src/extract.ts",
   "product/packages/cli/src/file-identity.ts",
+  // The capture's guard on a resend weighs the finding an answer
+  // makes (finding-weight.ts), by the order's raise (fix-order.ts): both decide whether a resend is refused.
+  "product/packages/cli/src/finding-weight.ts",
+  "product/packages/cli/src/fix-order.ts",
+  // The guard weighs whether an answer lets a finding fold into another (key (a)).
+  "product/packages/cli/src/fold-findings.ts",
   "product/packages/cli/src/globs.ts",
   "product/packages/cli/src/hook-capture.ts",
   "product/packages/cli/src/hook-launch.ts",
@@ -538,6 +561,7 @@ export const VERDICT_RULES_SOURCES: readonly string[] = [
   "product/packages/schemas/schemas/adjudicator-reply.schema.json",
   "product/packages/schemas/schemas/reader-reply.schema.json",
   "product/packages/schemas/schemas/verdict.schema.json",
+  "product/packages/cli/src/report-budget.ts",
 ];
 
 /** The texts the digest reads, relative to the plugin's folder. */

@@ -360,6 +360,8 @@ detector:
     - \.(?:pem|crt|cer|der)$
     - (^|/)(?:CODE_OF_CONDUCT|CONTRIBUTING|SECURITY|LICENSE|LICENCE|GOVERNANCE|AUTHORS|CONTRIBUTORS)[^/]*$
     - (^|/)\.github/ISSUE_TEMPLATE/
+settling_questions:
+  - operator.special_category_condition
 context_questions:
   - "Does the matched value relate to an identified or identifiable natural person at all (GDPR Art.
     4(1))? Art 9(1) governs personal data, so this question decides most candidates first. Not

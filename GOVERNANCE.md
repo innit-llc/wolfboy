@@ -2,7 +2,7 @@
 
 ## Who maintains this
 
-WolfBoy is published by INNIT Inc. and has one maintainer today, takukanaya.
+WolfBoy is published by INNIT LLC and has one maintainer today, takukanaya.
 
 ## Two standing principles
 

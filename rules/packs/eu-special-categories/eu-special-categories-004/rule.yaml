@@ -321,6 +321,8 @@ detector:
       ygad"
     - "[Vv][Cc]ard|VCARD|[Cc]ontacts?\\.vcf|[Aa]ddress[_\\- ]?[Bb]ook"
     - plink\.exe|PLINK\.EXE|[Pp]u[Tt][Tt][Yy]
+settling_questions:
+  - operator.special_category_condition
 context_questions:
   - "Does the sequence, genotype or marker relate to an identified or identifiable natural person?
     GDPR Art. 4(1) is the gate for the whole of Art. 9, and Art. 4(13) requires the data to relate

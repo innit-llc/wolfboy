@@ -31,7 +31,18 @@ export const JUDGING_STATES: readonly InstructionsState[] = [
     "verdict_rules": "verdict-rules-35",
     "reading_spec": "3bbecc12f6e071ce39dde22f324182e7e6663942939b323b48dbf7b909eb0442",
     "released": true
+  },
+  {
+    "agent": "5e6d8ab33c604e39237abcd06a64c66fd67d5241ee9f8a0d07bdbaa51984d91e",
+    "skill": "e97f54cd0541c4c4ae0e0b86f54b30a383fc13d67cb83ed8bea0a973d95f5dec",
+    "verdict_rules": "verdict-rules-36",
+    "reading_spec": "44cebe3cbeaf8aafb7961a3301778c4752c21134b5c4110176468a7e19cb40df",
+    "released": true
   }
 ];
 
-export const JUDGING_MARKS: readonly JudgingMark[] = [];
+export const JUDGING_MARKS: readonly JudgingMark[] = [
+  {
+    "changed": "all"
+  }
+];

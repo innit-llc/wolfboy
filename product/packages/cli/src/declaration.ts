@@ -76,12 +76,19 @@ export const SETTLES_WITHOUT_REVIEW: readonly QuestionKind[] = ["scope"];
 export const ASKED_BEFORE_REVIEW_KINDS: readonly QuestionKind[] = ["scope", "condition", "feature"];
 /**
  * (the digest decision) The program's own keys of an x-question and of
- * its options: what the program does with an answer (its kind, when it is asked, the provisions it settles, what an
- * option settles as). The person never reads them, so they are not part of the question's version (`questionDigest`): a
- * change to how the program uses an answer asks no confirmed answer again; a changed text or choice still does.
+ * its options: what the program does with an answer (its kind, when it is asked, the provisions it settles). The person
+ * never reads them, so they are not part of the question's version (`questionDigest`): a change to how the program uses
+ * an answer asks no confirmed answer again; a changed text or choice still does.
+ * EXCEPT what an option settles as
+ * (`settles_as`), which is no longer a program key: it decides whether the person's answer takes a finding out of the
+ * count (`met`, `out_of_scope`), hands it to the operators (`maker`) or leaves it (`stands`), which the person reads
+ * beside the question as what the answer does. An answer given when the option did less (the minors "No", which only
+ * moved the order before 0.1.1) is asked again before it settles anything. A row recorded at a version that left
+ * `settles_as` out still counts where the question's options settle as they did in 0.1.0 (`SETTLES_AS_IN_0_1_0`,
+ * `atVersion`): what that answer does has not changed, so it is not asked again.
  */
 export const PROGRAM_QUESTION_KEYS: readonly string[] = ["kind", "when", "settles", "settled_covers", "gate"];
-export const PROGRAM_OPTION_KEYS: readonly string[] = ["settles_as"];
+export const PROGRAM_OPTION_KEYS: readonly string[] = [];
 /**
  * The variable that puts the scan on the CI path (never ask and read no answer about the
  * product: the rules of every region run, and the scan exits 0 unless --fail-on-unreviewed stops it). Exported so a gate that is not about CI drops it by this name, read from the build under
@@ -332,7 +339,9 @@ export function loadDeclarationSource(doc: unknown = schemaDocument("scan-profil
 }
 
 /** The name a region question says for its code (`{place}`); a code with no name here is said as it is. */
-export const REGION_NAMES: Readonly<Record<string, string>> = { EU: "the EU", US: "the US", JP: "Japan", CN: "China" };
+/* One map of a region's name in words, for the questions, laws.md and a
+ * finding's card (which also names the places a provision cites beyond the four the regions question asks about). */
+export const REGION_NAMES: Readonly<Record<string, string>> = { EU: "the EU", US: "the US", JP: "Japan", CN: "China", UK: "the UK", GB: "the UK", KR: "South Korea", BR: "Brazil", CA: "Canada", AU: "Australia", IN: "India", CH: "Switzerland" };
 const fill = (s: string, code: string | null): string => (code === null ? s : s.split("{code}").join(code).split("{place}").join(REGION_NAMES[code] ?? code));
 /** The x-question as asked for one jurisdiction, one part (its code is the part's number, from 1), or as it is. */
 function concrete(x: XQuestion, code: string | null): XQuestion {
@@ -353,11 +362,11 @@ function concrete(x: XQuestion, code: string | null): XQuestion {
  * program's own keys (PROGRAM_QUESTION_KEYS, and PROGRAM_OPTION_KEYS on each option), every other key in its order. For a
  * question that carries none of them this is the object itself, so its version is what it was before they existed.
  */
-function asRead(x: XQuestion): Record<string, unknown> {
+function asRead(x: XQuestion, optionKeys: readonly string[] = PROGRAM_OPTION_KEYS): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(x)) {
     if (PROGRAM_QUESTION_KEYS.includes(k)) continue;
-    out[k] = k === "options" && Array.isArray(v) ? v.map((o) => (isRecord(o) ? Object.fromEntries(Object.entries(o).filter(([ok]) => !PROGRAM_OPTION_KEYS.includes(ok))) : o)) : v;
+    out[k] = k === "options" && Array.isArray(v) ? v.map((o) => (isRecord(o) ? Object.fromEntries(Object.entries(o).filter(([ok]) => !optionKeys.includes(ok))) : o)) : v;
   }
   return out;
 }
@@ -367,6 +376,39 @@ function asRead(x: XQuestion): Record<string, unknown> {
  */
 export function questionDigest(x: XQuestion, code: string | null): string {
   return sha256(JSON.stringify(asRead(concrete(x, code))));
+}
+/**
+ * What each option settled as, in the options'
+ * order, in release 0.1.0 (scan-profile.schema.json as that release shipped it), the last release whose question versions left
+ * `settles_as` out; a question none of whose options settled as anything then has no entry. FROZEN HISTORY: never
+ * edited, and a question added later has no entry. A record of a build before 0.1.0 is read as 0.1.0's.
+ */
+const SETTLES_AS_IN_0_1_0: Readonly<Record<string, readonly (string | null)[]>> = {
+  distribution_regions: ["stands", "out_of_scope"],
+  "audience.consumer": ["stands", "out_of_scope"],
+  "scope.eaa_listed_service": ["stands", "out_of_scope", "maker"],
+  "scope.data_processing_service": ["stands", "out_of_scope", "maker"],
+  "cra.product_with_digital_elements": ["stands", "stands"],
+  "cra.data_connection": ["stands", "stands"],
+  "cra.supplied_for_distribution_or_use": ["stands", "stands"],
+  "cra.commercial_activity": ["stands", "stands"],
+  "operator.special_category_condition": ["met", "stands", "maker"],
+  "operator.ai_text_public_interest": ["stands", "met", "maker"],
+  "operator.model_purpose_stated": ["met", "stands", "maker"],
+};
+/**
+ * The question's version as 0.1.0 took it (`settles_as` left out), where a row recorded at it still counts: the question's
+ * options settle today exactly as they did in 0.1.0. Null otherwise (the row must be at `questionDigest`).
+ */
+export function versionBeforeSettlesAs(field: string, x: XQuestion, code: string | null): string | null {
+  const then = SETTLES_AS_IN_0_1_0[field];
+  const now = optionsOf(x).map((o) => (typeof o.settles_as === "string" ? o.settles_as : null));
+  if (then === undefined || JSON.stringify(then) !== JSON.stringify(now)) return null;
+  return sha256(JSON.stringify(asRead(concrete(x, code), ["settles_as"])));
+}
+/** Whether a recorded row's digest is its question's current version (`questionDigest`, or `versionBeforeSettlesAs`). */
+export function atVersion(digest: string, field: string, x: XQuestion, code: string | null): boolean {
+  return digest === questionDigest(x, code) || digest === versionBeforeSettlesAs(field, x, code);
 }
 /** Every option a question offers: its own, or those of its parts. */
 const optionsOf = (x: XQuestion): XOption[] => (x.per === "part" ? (x.parts ?? []).flatMap((p) => p.options) : x.options);
@@ -385,6 +427,8 @@ export interface PlannedQuestion {
   /** The x-question text, as the source words it (a region's code put in). */
   text: string;
   digest: string;
+  /** `versionBeforeSettlesAs`, where a row at it still counts; absent otherwise. */
+  digestBefore?: string;
   options: XOption[];
   unanswered: unknown;
   /** The person may choose several options (XQuestion.multiSelect). */
@@ -591,6 +635,10 @@ export function plannedQuestions(source: DeclarationSource, rules: Rule[], candi
       header: c.header,
       text: c.question,
       digest: questionDigest(x, code),
+      ...((): { digestBefore?: string } => {
+        const before = versionBeforeSettlesAs(field, x, code);
+        return before !== null ? { digestBefore: before } : {};
+      })(),
       options: c.options,
       unanswered: c.unanswered,
       multiSelect: c.multiSelect === true,
@@ -661,8 +709,8 @@ export function plannedQuestions(source: DeclarationSource, rules: Rule[], candi
       if (!top) continue;
       plan(field, x, top.entry, [], top.candidates, null, true);
       const q = out[out.length - 1]!;
-      // The count with a thousands separator (`countWords`).
-      q.text = `${q.text}${top.entity ? ` (${top.entity})` : ""} - named on ${countWords(top.places)} ${top.places === 1 ? "place" : "places"}.`;
+      // The count with a thousands separator (`countWords`). "named in", not "named on" (the text is not part of `questionDigest`).
+      q.text = `${q.text}${top.entity ? ` (${top.entity})` : ""} - named in ${countWords(top.places)} ${top.places === 1 ? "place" : "places"}.`;
       q.options = q.options.map((o, i) => (i === 0 && top.entity ? { ...o, description: `${top.entity}: ${o.description}` } : o));
       q.orderPlaces = top.placeKeys;
       // Asked first only where a root manifest names the tree with one of the entry's name words.
@@ -888,15 +936,17 @@ export function hintsFor(questions: PlannedQuestion[], from: unknown): Record<st
 }
 
 /** The current digest of a row's question, or null where the source no longer asks it. */
-function currentDigest(source: DeclarationSource, row: { field: string; code: string | null }): string | null {
+function rowAtVersion(source: DeclarationSource, row: { field: string; code: string | null; digest: string }): boolean {
   const f = source.fields.find((s) => s.field === row.field);
-  return f ? questionDigest(f.x, row.code ?? null) : null;
+  return f !== undefined && atVersion(row.digest, row.field, f.x, row.code ?? null);
 }
-/** The record's rows that still count: a record the file matches, each row at its question's current version. */
+/** The record's rows that still count: a record the file matches, each row at its question's current version (`atVersion`). */
 export function currentRows(source: DeclarationSource, read: ReadDeclaration): RecordRow[] {
   if (read.status !== "ok" || !read.record) return [];
-  return read.record.questions.filter((r) => currentDigest(source, r) === r.digest);
+  return read.record.questions.filter((r) => rowAtVersion(source, r));
 }
+/** A row is at a planned question's current version: its digest, or the one before `settles_as` was part of it. */
+const rowAtPlanned = (r: { digest: string }, q: PlannedQuestion): boolean => r.digest === q.digest || (q.digestBefore !== undefined && r.digest === q.digestBefore);
 
 /**
  * THE ANSWERS THAT
@@ -939,6 +989,7 @@ export function givenAnswersOf(source: DeclarationSource, read: ReadDeclaration)
  * R6: whether the scan reads the declaration this run. Only where the file's sha256 is the record's, every field the
  * file holds a value for (other than the schema's own unanswered value) is backed by a row at its question's current
  * version, and every jurisdiction of this run's rules has a row at the current version. Otherwise nothing is read.
+ * A field `staleOrderFields` names is the exception: it stops nothing, and the scan reads the file without it.
  */
 export function usable(source: DeclarationSource, read: ReadDeclaration, jurisdictions: string[]): { ok: true } | { ok: false; kind: "declaration-unconfirmed" | "declaration-question-changed"; why: string } {
   if (read.status === "none") return { ok: false, kind: "declaration-unconfirmed", why: `there is no ${read.profilePath}: nobody has answered the declaration questions yet` };
@@ -946,8 +997,9 @@ export function usable(source: DeclarationSource, read: ReadDeclaration, jurisdi
   const rows = currentRows(source, read);
   const has = (id: string): boolean => rows.some((r) => r.id === id);
   const stale: string[] = [];
+  const leftOut = new Set(staleOrderFields(source, read));
   for (const { field, x } of source.fields) {
-    if (x.per === "jurisdiction") continue;
+    if (x.per === "jurisdiction" || leftOut.has(field)) continue;
     const v = readPath(read.content, field);
     if (v === undefined || isUnansweredValue(x, v)) continue;
     if (x.per === "part") {
@@ -969,6 +1021,30 @@ export function usable(source: DeclarationSource, read: ReadDeclaration, jurisdi
 }
 
 /**
+ * THE ANSWERS LEFT OUT UNTIL GIVEN AGAIN (FIN4 P1
+ * defect 1). The fields whose question is never asked before review (`order`), whose value the file holds, and whose
+ * every row in the record was recorded at an earlier version of the question: 0.1.0's minors "No", given when it only
+ * moved the order and now asked again before it settles anything. Nothing asks an `order` question before review, so a
+ * row like that must not stop the person's other saved answers being read (`usable`, which would read none of them and
+ * run every region's rules on every scan); instead the field alone is left out of the profile the scan and the
+ * pre-launch step read (profile.ts `loadScanProfile`'s `leaveOut`), so the old answer is applied nowhere: a finding that
+ * turns on it waits on the question, the report raises it, and the review entrance asks it again. A value with no row at
+ * all is not here (it stays a stale answer, as before). Empty where the record is not confirmed.
+ */
+export function staleOrderFields(source: DeclarationSource, read: ReadDeclaration): string[] {
+  if (read.status !== "ok" || !read.record) return [];
+  const out: string[] = [];
+  for (const { field, x } of source.fields) {
+    if (x.kind !== "order" || x.per !== undefined) continue;
+    const v = readPath(read.content, field);
+    if (v === undefined || isUnansweredValue(x, v)) continue;
+    const own = read.record.questions.filter((r) => r.field === field);
+    if (own.length > 0 && !own.some((r) => rowAtVersion(source, r))) out.push(field);
+  }
+  return out;
+}
+
+/**
  * Which of the planned questions to put, in order: "the questions that settle the most candidates first",
  * in place of launches first. `mode` "scan": a question
  * with no row at its current version, or one whose row is `no-answer`. "after-answer" (the scan
@@ -984,7 +1060,7 @@ export function selectQuestions(planned: PlannedQuestion[], rows: RecordRow[], m
   const put = planned.filter((q) => {
     if (!all && !q.changes) return false;
     const r = row.get(q.id);
-    return r === undefined || r.digest !== q.digest || (mode === "scan" && r.outcome === "no-answer");
+    return r === undefined || !rowAtPlanned(r, q) || (mode === "scan" && r.outcome === "no-answer");
   });
   const units = new Map<string, PlannedQuestion[]>();
   for (const q of put) units.set(q.field, [...(units.get(q.field) ?? []), q]);
@@ -1453,7 +1529,7 @@ export function declarationPlan(planned: PlannedQuestion[], selected: PlannedQue
   const row = new Map(rows.map((r) => [r.id, r]));
   const questions = planned.map((q): DeclarationPlanRow => {
     const r = row.get(q.id);
-    const before = !asked.has(q.id) && r !== undefined && r.digest === q.digest && r.outcome !== "no-answer";
+    const before = !asked.has(q.id) && r !== undefined && rowAtPlanned(r, q) && r.outcome !== "no-answer";
     return {
       id: q.id,
       field: q.field,

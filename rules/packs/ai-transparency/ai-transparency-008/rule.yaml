@@ -327,6 +327,8 @@ detector:
   match_without:
     - ^\s*(?:\*|//|<!--)
   resolve_import_aliases: true
+settling_questions:
+  - operator.ai_text_public_interest
 context_questions:
   - "Which role does the scanned party hold for the text-generating system — provider (AI Act Art.
     3(3)) or deployer (Art. 3(4))? Art. 50(4) second subparagraph is owed by the DEPLOYER: the party

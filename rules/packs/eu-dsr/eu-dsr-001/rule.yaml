@@ -2,10 +2,10 @@ id: eu-dsr-001
 pack: eu-dsr
 short_name: Where people's data is stored and read, for access requests
 problem_line:
-  text: Personal data with no complete rights-request route found
-  template: "{data} with no complete rights-request route found"
-fix_line: Let people erase themselves and request every other right, export included; remove, not
-  only mark; tell recipients.
+  text: No full way found for people to get, fix or erase data
+  template: "{data}: no complete way found to get or erase it"
+fix_line: Let people get, correct, export and erase their data; delete rows, not only mark them;
+  tell those you shared it with.
 title: Store, schema or read surface for people, an identity disclosed, or a stubbed data-subject
   route - GDPR Arts. 15-22
 jurisdiction:
@@ -483,6 +483,60 @@ context_questions:
     the Union. Check ScanProfile.distribution_regions and any EU-facing signal in the repository,
     such as EU locales, EUR pricing or EU consent code. A region that is not in the list may not
     have been asked: that question is open, not answered no."
+  - "THE OPERATOR'S ROUTE COUNTS TOO. Art. 12(2) puts the duty on the controller: 'The controller
+    shall facilitate the exercise of data subject rights under Articles 15 to 22.' It does not
+    require that the person act alone. A request can reach the operator by any channel the operator
+    runs (a monitored address, a form, a support desk: which one is a fact about the operator, not
+    about the code), and the operator can then answer it with what the product ships. WHAT SHIPS IS
+    A FEATURE OF THE PRODUCT that an operator uses through the product's own interface or through a
+    command the product itself defines and documents: an administrator's deletion that erases the
+    person's data (question 6), a view of the person's record (access) or a structured,
+    machine-readable export of it (portability, question 5) that the operator can hand over, a
+    correction, a task or command-line subcommand of the product's own. A database console, raw SQL,
+    a framework's own console (`rails console`, `manage.py shell`, `artisan tinker`) and direct
+    access to the store are not what ships, even where a document describes them: every product with
+    a database could be answered that way, so they answer no right here. Where every right question
+    5 walks that applies to this data (questions 10 and 11 say which do not) can be answered with
+    what ships, by a route the person starts or by one the operator runs, the status is `duty_met`,
+    its `at` the line of the route that answers erasure, and its `element` the words `the operator
+    can answer the request with what ships`. A ROUTE THAT DOES NOT ACT answers its right only where
+    both of two things hold. First, the refusal rests on a ground the Regulation gives, which the
+    route's own code tests and which you name: the controller cannot identify the person (Art.
+    11(2), question 10); a request that Art. 12(5) lets the controller refuse as 'manifestly
+    unfounded or excessive, in particular because of their repetitive character', which the
+    controller must show; an exception to erasure in Art. 17(3), 'Paragraphs 1 and 2 shall not apply
+    to the extent that processing is necessary' for one of the purposes it lists, such as a
+    retention law named with its period or the defence of a legal claim (question 11); the rights
+    and freedoms of others, which limit what a copy or an export carries (Art. 15(4), Art. 20(4));
+    processing outside portability's scope (Art. 20(1)); a request for restriction in none of the
+    four cases Art. 18(1) lists; an objection the controller answers under Art. 21(1) with
+    'compelling legitimate grounds for the processing which override the interests, rights and
+    freedoms of the data subject'; or a restriction a Union or Member State law makes (Art. 23(1)).
+    Where the ground turns on a fact about the operator (the lawful basis, a retention law, a
+    national restriction), take it from the operator's declared documents or from the person running
+    the scan, never from the code's words. While such a fact is unanswered and the refusal gives
+    Art. 12(4)'s notice, write no `duty_met` on it: where every other applicable right is answered,
+    the status is `waits_on_answer`, its `at` the refusal's line, and `fact` the words `the
+    operator's ground for refusing this request: its lawful basis, a retention law or a national
+    restriction` about `L1`; where another applicable right has neither route, the finding stays
+    `duty_unmet` with that right named; and a refusal without that notice stays `duty_unmet`
+    whatever its ground. Second, the refusal tells the person what Art. 12(4) requires, the
+    controller informing the data subject 'of the reasons for not taking action and on the
+    possibility of lodging a complaint with a supervisory authority and seeking a judicial remedy'.
+    A refusal that gives that notice but rests on no such ground (a route that always declines, a
+    feature switched off, a refusal for the product's own convenience) does not answer the right:
+    Art. 12(4) is the duty that attaches to not acting, not a way of discharging the right. Where
+    any applicable right has neither route, or only such a refusal, the finding stays `duty_unmet`,
+    with that right named. Question 4's search for a route the person can start stands: it is how
+    the person reaches the controller, and an administrator's route is how the controller answers. A
+    WAY OUT HOLDS ONLY AT EVERY KEPT PLACE: a status this question gives is the finding's only where
+    every place of the finding that you or the seats before you kept has the shape that status
+    names; a kept place inside a helper or a shared function has that shape only where every call
+    that reaches it does, so walk every caller, and a caller that would be `duty_unmet` makes that
+    place `duty_unmet`. Where the kept places differ, the finding takes the heaviest of their
+    statuses (`duty_unmet`, then `waits_on_answer`, then `duty_met` or `exempt`), with its `at` and
+    its `decisive` at that place: one kept place that is `duty_unmet` makes the finding
+    `duty_unmet`."
 evidence_template: "{file}:{line} matched one of this rule's five shapes: a store, schema, model or
   form field named for people and their contact details; A NAMED PERSONAL-DATA FIELD READ, BOUND
   FROM A REQUEST OR HELD IN A SESSION - a quoted subscript read, an object accessor or property, a

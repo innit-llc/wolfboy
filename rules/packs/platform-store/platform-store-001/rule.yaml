@@ -140,6 +140,42 @@ context_questions:
     are complete about the application's own database and silent about the platform store, so that a
     person who deletes their account is told the deletion succeeded while the value remains on the
     device in a store the application no longer has any reason to touch.
+  - "WAS THE VALUE WRITTEN ONLY BECAUSE THE PERSON ASKED, AND IS IT THEIR OWN? A copy control is the
+    common case: the person presses Copy beside a value of their own that the product already shows
+    them (a share link, their own API key, the setup key of their own second factor) and the product
+    puts it on the clipboard for that person's own use. Art. 25(2) itself draws the line at the
+    person's own act: 'such measures shall ensure that by default personal data are not made
+    accessible without the individual's intervention to an indefinite number of natural persons.'
+    Where the write runs only inside the handler of such an action (quote the line that binds the
+    handler to the control, or the handler's own line with the value it copies) and the value is
+    that person's own (their own key, share link or setup secret) and no one else's, the value
+    leaves the application on the person's own act and the application keeps no copy of its own
+    there: the status is `duty_met`, its `at` that line, and its `element` the words `written only
+    on the person's own copy or download action`. A COPY BY ANYONE THE VALUE IS NOT ABOUT IS NEVER
+    THIS, whatever control they press (the operator's staff, an administrator or moderator of a team
+    or workspace, another member): the intervention Art. 25(2) names is that of the individual the
+    value is about, and theirs is missing. A copy of the values of more than one person (a column, a
+    list, every row, a team's addresses) stays `duty_unmet`, whoever makes it; so does a copy of one
+    value about someone else made by anyone but the operator's staff (a workspace administrator's, a
+    moderator's, another member's). A copy the operator's staff make is a copy the controller holds,
+    because under Art. 29 a person acting under the controller's authority 'shall not process those
+    data except on instructions from the controller'; a staff copy of one value of the one person
+    the staff member is handling (an address pasted into a reply) is left on the staff member's
+    device under the operator's own instructions to its staff, which the code cannot show: the
+    status is `waits_on_answer`, its `at` that line, and `fact` the words `how the operator's staff
+    handle a value they copy out of the product` about `L1`, never `duty_met` under the person's
+    words. It is not this where the write runs without the person's action (on load, on a timer,
+    from a notification or a background task), where what is written is more than the control shows,
+    or where the store is one the product writes for its own purposes (a launcher shortcut, a
+    widget, the system dictionary): those are the stores questions 1 to 4 ask about. Question 3's
+    note on special-category data still applies to what is copied. A WAY OUT HOLDS ONLY AT EVERY
+    KEPT PLACE: a status this question gives is the finding's only where every place of the finding
+    that you or the seats before you kept has the shape that status names; a kept place inside a
+    helper or a shared function has that shape only where every call that reaches it does, so walk
+    every caller, and a caller that would be `duty_unmet` makes that place `duty_unmet`. Where the
+    kept places differ, the finding takes the heaviest of their statuses (`duty_unmet`, then
+    `waits_on_answer`, then `duty_met` or `exempt`), with its `at` and its `decisive` at that place:
+    one kept place that is `duty_unmet` makes the finding `duty_unmet`."
 evidence_template: "{file}:{line} matched a call that writes into a store the operating system owns
   rather than into the application's own storage - one of eleven clause groups covering the system
   spelling dictionary, the platform credential index, the shared contacts, calendar and reminder
@@ -199,3 +235,4 @@ data_categories:
   - user.unique_id
   - user.behavior
 fingerprint_spec: file
+duty_about: product_runtime

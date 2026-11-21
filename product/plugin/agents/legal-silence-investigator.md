@@ -254,14 +254,14 @@ Two rules, one found and one searched for without a hit:
 ```json silence-reply
 [
   {
-    "rule_id": "example-tracking-001",
+    "rule_id": "example-location-001",
     "outcome": "construct_found",
     "searched": [
-      "the two lines the gate removed in src/tracking/pixel.ts (12 and 40), opened and read",
-      "Grep for fbq\\(|facebook.com/tr in src/: 3 hits"
+      "the two lines the gate removed in src/location/beacon.ts (12 and 40), opened and read",
+      "Grep for beacon\\.start\\(|geo.example.net/v1 in src/: 3 hits"
     ],
-    "evidence": [{ "file": "src/tracking/pixel.ts", "lines": "12", "quote": "fbq('init', PIXEL_ID);" }],
-    "reasoning": "The pixel is initialised in src/tracking/pixel.ts:12, which src/main.ts:4 imports on every page; the detector's patterns matched there and the corroboration gate removed the line.",
+    "evidence": [{ "file": "src/location/beacon.ts", "lines": "12", "quote": "beacon.start(BEACON_ID);" }],
+    "reasoning": "The location beacon is started in src/location/beacon.ts:12, which src/main.ts:4 imports on every page; the detector's patterns matched there and the corroboration gate removed the line.",
     "confidence": "high"
   },
   {
@@ -271,7 +271,7 @@ Two rules, one found and one searched for without a hit:
       "Grep for retention|ttl|expire|purge in src/ and config/: 0 hits",
       "glob for **/*cron*, **/*cleanup* over the whole tree: 0 hits"
     ],
-    "reasoning": "No deletion or expiry of stored accounts was found in src/ or config/; the searches above are the whole of what was looked at.",
+    "reasoning": "No deletion or expiry of uploaded receipts was found in src/ or config/; the searches above are the whole of what was looked at.",
     "confidence": "medium"
   }
 ]
@@ -290,6 +290,12 @@ Two rules, one found and one searched for without a hit:
   what you looked for, where, and that it had 0 hits**, and your `reasoning` names it.
 - **No preamble and no narrative around the JSON.** `searched` and `reasoning` are read; prose
   outside the JSON is read by nothing.
+- **`searched` and `contradicts_profile` are printed in the person's report, so write them for the person**
+ : a developer who has not seen your brief. Say what a field or file of the scan
+  holds instead of its name (where the product is offered, not `distribution_regions`; the scan's summary of the
+  repository, not the orientation sheet; what the person declared, not the settled premise or any other premise by its
+  name), and say what a pattern caught instead of its clause or shape letter. File paths, line numbers, the patterns you
+  searched for and the code's own names stay as they are. Write `reasoning` the same way.
 - **One object per rule you were given.** A rule you were handed and did not report on becomes a rule
   nobody looked at, reported as though nobody had been asked to — which is the silence this agent
   exists to break. `undetermined` with `searched: []` is the honest record of a rule you did not get

@@ -1613,6 +1613,11 @@ let penaltyTiersJson = null;
     for (const p of shape) errors.push(`penalty-tiers: ${p}`);
     if (shape.length === 0) {
       for (const p of penaltyTierSelfTest(tierModule, table)) errors.push(`penalty-tiers: ${p}`);
+      // A law's full name from one source each (17 Nov, d2, d3).
+      // Every abbreviated regime named where the build reads this repository's checklists, which complete the table's
+      // names; a harness's own or empty CHECKLISTS_DIR (a rules-only bundle, rules-side.mjs) cannot have them.
+      const ownChecklists = resolve(CHECKLISTS_DIR) === resolve(join(ROOT, "rules", "checklists"));
+      for (const p of tierModule.lawNameProblems(table, checklists, ownChecklists)) errors.push(`penalty-tiers: ${p}`);
       if (!process.env.RULES_DIR) {
         for (const p of tierModule.penaltyTierCoverage(rules, table)) errors.push(`penalty-tiers: ${p}`);
       }

@@ -377,6 +377,11 @@
               "type": "integer",
               "minimum": 0
             },
+            "facts": {
+              "type": "integer",
+              "minimum": 0,
+              "description": " The facts to check outside the code that findings to answer wait on, which no question of the scan asks (counted apart from `questions`, as every screen counts them). Absent from a log written before 0.1.1."
+            },
             "taken_off": {
               "type": "integer",
               "minimum": 0
@@ -447,6 +452,39 @@
             "type": "string"
           }
         },
+        "law_names": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": " Each law's full name by the short name the report uses, from the bundle the scan ran with (the report's own names), so `record` names a law in full at its first mention on its pages as the report does. Absent from a log written before 0.1.1."
+        },
+        "laws_named": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "law"
+                  ],
+                  "properties": {
+                    "law": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "description": " `laws` as the program wrote each part: its own words, and each law it names as `{law}` by the short name `law_names` is keyed by, so `record` supplies the names itself (in full at the program's first mention on a page, short after) and reads nothing else in the part. Absent from a log written before 0.1.1, where `record` prints `laws` as written."
+        },
         "items": {
           "type": "array",
           "items": {
@@ -506,6 +544,52 @@
               },
               "area": {
                 "type": "string"
+              },
+              "title_named": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "law"
+                      ],
+                      "properties": {
+                        "law": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "description": " `title` as the program wrote it where it names a law (a question's header such as \"CRA product\"): its own words, and each law as `{law}` by its short name, so `record` supplies the name as for `laws_named`. Absent where the title names no law the program named, and from a log written before 0.1.1."
+              },
+              "area_named": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "law"
+                      ],
+                      "properties": {
+                        "law": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "description": " `area` as the program wrote it where it names a law (\"Online platform duties under the DSA\"), as `title_named`."
               }
             }
           }

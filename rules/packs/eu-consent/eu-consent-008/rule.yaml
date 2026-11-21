@@ -2,7 +2,7 @@ id: eu-consent-008
 pack: eu-consent
 short_name: AdSense ads may load before consent
 problem_line:
-  text: AdSense ads load with no consent gate found
+  text: AdSense ads load with no consent check found
 fix_line: Append the AdSense tag in the CMP's consent callback, or deny Consent Mode ad categories
   first, updating only from it.
 title: AdSense script URL referenced, which may not be a load - consent signalling (TCF or Consent
@@ -124,3 +124,4 @@ data_categories:
   - user.behavior
   - user.unique_id
 fingerprint_spec: default
+duty_about: product_runtime

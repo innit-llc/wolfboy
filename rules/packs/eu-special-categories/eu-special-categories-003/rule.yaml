@@ -262,6 +262,8 @@ detector:
     - (?:[Ll]abels|[Cc]lasses|[Cc]ategories)["']?\s*(?:=>|[:=])\s*["'`]
     - "[Bb]elief[_\\s\\-]?(?:[Pp]ropagation|[Ss]tate|[Ss]pace|[Uu]pdate|[Nn]etwork|[Bb]ase|[Mm]ap)|\
       [Bb]ayesian"
+settling_questions:
+  - operator.special_category_condition
 context_questions:
   - "Is the matched value about an identified or identifiable natural person at all (GDPR Art. 4(1),
     quoted in this rule's legal_basis)? Four content shapes recur and none of them is personal data:

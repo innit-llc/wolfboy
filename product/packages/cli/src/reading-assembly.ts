@@ -25,12 +25,15 @@ import { keptPlacesNamed } from "./state-record.js";
 import { sawAt, type SeatPayload, type SeatSight } from "./seat-opened.js";
 import { isPlacePlanCandidate, lineStandsAsBeyond, placePayloadOf, PLACES_KEPT_DIR, programLineStands, readingOfPlaceDecisions, type PlaceCapture } from "./place-reply.js";
 import { loadDeclarationSource } from "./declaration.js";
-import { checkStanding, locationOverturnRefused, SHIPS_PREMISES, type ShipsPremise } from "./standing.js";
+import { outcomeWeightOf, type OutcomeWeight } from "./finding-weight.js";
+import { documentationPagesOf, premisesOfFindings } from "./second-look.js";
+import { checkStanding, locationOverturnRefused, SHIPS_PREMISES, STANDING_OPENS_VERDICT, standingRefusal, type ShipsPremise, type StandingSetAside } from "./standing.js";
 import { isPlaceId, isUnitId, placeIndexOf, placeOfUnit, unitOfPlace } from "./ref-ids.js";
 import { isKeptPlace, KEPT_DECISIONS } from "./place-bar.js";
 import { answerOfPlaces, isAnswerSeatCandidate, notApplicableBar, type AnswerCapture } from "./place-answer.js";
 import type { AnswerSeatWork } from "./answer-premises.js";
 import { placeTableOf } from "./place-fold.js";
+import type { PlaceRowIn } from "./severity-at-place.js";
 import type { Candidate, Rule } from "wolfboy-schemas";
 import { loadBundle } from "./bundle.js";
 import {
@@ -335,6 +338,12 @@ export function answerRulesAtCapture(
   convertVerdicts: (reply: unknown) => DecisionsConversion;
   convertReader: (reply: unknown, who: { finding_id: string; reader: number }) => DecisionsConversion;
   convertRefutations: (reply: unknown) => DecisionsConversion;
+  /**
+   * One record entry of an adjudicator's answer, weighed as the
+   * program would report its finding (finding-weight.ts `outcomeWeightOf`), from this document's candidate and premises;
+   * null where the document holds no such candidate. The capture's guard on a resend (verdict-capture.ts `weigh`).
+   */
+  weigh: (entry: Record<string, unknown>) => OutcomeWeight | null;
 } {
   let loaded: { candidates: Candidate[]; replies: ReaderReply[]; root: string; bundleVersion: string; shipsPremises: unknown } | null | undefined;
   const load = (): { candidates: Candidate[]; replies: ReaderReply[]; root: string; bundleVersion: string; shipsPremises: unknown } | null => {
@@ -466,7 +475,22 @@ export function answerRulesAtCapture(
     const inputs = load();
     return refutationsFromDecisions(reply, (id) => inputs?.candidates.find((c) => c.finding_id === id) ?? null, opened());
   };
-  return { verdict, reader, convertVerdicts, convertReader, convertRefutations };
+  // A candidate read place by place is weighed at the kept places its report
+  // reads: the place table made from the readers' records and this answer's own rows, as the assembly makes it
+  // (assemble-report.ts `placeTablesOf`); before, every candidate was weighed at its locations.
+  const rowsOf = (candidate: Candidate, entry: Record<string, unknown>): readonly PlaceRowIn[] =>
+    isPlacePlanCandidate(candidate) ? (placeTableOf(candidate, load()?.replies ?? [], seatRowsOfVerdict(entry).rows) as unknown as readonly PlaceRowIn[]) : [];
+  const weigh = (entry: Record<string, unknown>): OutcomeWeight | null => {
+    const inputs = load();
+    const candidate = inputs?.candidates.find((c) => c.finding_id === entry.finding_id);
+    if (!inputs || !candidate) return null;
+    const doc = { ships_premises: inputs.shipsPremises };
+    const premises = premisesOfFindings(doc);
+    const documentationPages = documentationPagesOf(doc);
+    const rows = rowsOf(candidate, entry);
+    return outcomeWeightOf(entry, candidate as unknown as Record<string, unknown>, { ...(premises ? { premises } : {}), ...(documentationPages ? { documentationPages } : {}) }, rows);
+  };
+  return { verdict, reader, convertVerdicts, convertReader, convertRefutations, weigh };
 }
 
 /**
@@ -553,8 +577,14 @@ export interface DecisionsConversion {
    * `field`: what the problem names for an amendment (amend.ts), where it is not `decisions`. An answer seat's A1-A6
    * problems name its answer whole (`*`, build unit F4): its verdict, evidence and reasoning are one answer over the fold,
    * so a fix of one may need any other (A4's is the verdict), and the merged whole is checked A1-A6 again.
+   * `opens` (M1): the fields beside
+   * `field` the problem also names, where correcting it may change them (a `standing` part refused for its verdict or for
+   * a quotation that does not resolve: standing.ts `STANDING_OPENS_VERDICT`, `STANDING_OPENS_QUOTATION`).
+   * `strays`: the keys the problem refuses for
+   * where they are, as paths in the entry (`standing.<key>` for a key inside `standing` that is no part of it), which the
+   * refusal takes out of the base a later amendment is laid over (amend.ts `RefusalRemoved.fields`).
    */
-  problems: { item: number | null; text: string; field?: string }[];
+  problems: { item: number | null; text: string; field?: string; opens?: readonly string[]; strays?: readonly string[]; names?: readonly string[] }[];
   unconvertible?: string;
   /**
    * Unit U1: per place-plan candidate, the rows that passed every place check (place-reply.ts `passed`),
@@ -785,7 +815,13 @@ export function verdictsFromDecisions(
     const candidate = entry && id && candidateOf ? candidateOf(id) : null;
     if (!entry || !candidate) return value;
     const inert = inertDismissals(candidate, entry.evidence);
-    const withStanding = standingOfEntry(inert.dropped.length > 0 ? { ...entry, evidence: inert.evidence } : entry, candidate, keptPlaceIds.get(id) ?? new Set(), placeCapture, premiseOf);
+    // A wait that names no question the program asks is refused, under
+    // `standing`, so that the seat names the question (verdict-capture.ts reads a `standing` problem as not the conversion's). So is every other part of `standing` that does not stand,
+    // naming beside `standing` the fields its correction may change (`opens`: M1 of the non-author check). `names`: what the refusal names inside `standing` (its parts, or the block).
+    const refuse = (text: string, opens?: readonly string[], strays?: readonly string[], names?: readonly string[]): void => {
+      problems.push({ item: i, text, field: "standing", names: names ?? ["standing"], ...(opens && opens.length > 0 ? { opens } : {}), ...(strays && strays.length > 0 ? { strays: strays.map((k) => `standing.${k}`) } : {}) });
+    };
+    const withStanding = standingOfEntry(inert.dropped.length > 0 ? { ...entry, evidence: inert.evidence } : entry, candidate, keptPlaceIds.get(id) ?? new Set(), placeCapture, premiseOf, refuse);
     if (inert.dropped.length === 0 && withStanding === null) return value;
     for (const d of inert.dropped) normalised.push({ item: i, finding_id: id, evidence: d.index, fields: d.fields, why: d.why });
     form = 2;
@@ -838,9 +874,12 @@ export function shipsPremiseOf(premises: unknown, root: string): (file: string) 
 /**
  * The `standing` block of one verdict entry, checked S1-S6 and S8
  * (standing.ts `checkStanding`): the parts that stand are written as the record's `standing`, every part set aside as
- * `standing_set_aside[]`, and the verdict is kept whatever failed. A block on a `not_applicable` verdict is not read and
- * is recorded as set aside whole. Null where the entry carries no block (nothing to write). An omitted
- * `ships` takes the scan's premise for the decisive place's file, where `premiseOf` gives one.
+ * `standing_set_aside[]`. A block on a `not_applicable` verdict is not read and is recorded as set aside whole. Null where
+ * the entry carries no block (nothing to write). An omitted `ships` takes the scan's premise for the
+ * decisive place's file, where `premiseOf` gives one. Wherever anything is set aside, `onRefused` is handed the
+ * sentence that refuses it, and the capture sends it back to the seat (`answerRulesAtCapture`'s conversion), as it sends
+ * back a place row that fails; the record written here is the one kept after the seat's last refusal (verdict-capture.ts
+ * `lastAnswer`) or where no capture refuses (the assembly over a record already on disk), with the verdict kept.
  */
 export function standingOfEntry(
   entry: Record<string, unknown>,
@@ -848,12 +887,24 @@ export function standingOfEntry(
   keptPlaces: ReadonlySet<string>,
   placeCapture?: () => PlaceCapture | null,
   premiseOf?: (file: string) => ShipsPremise | null,
+  /**
+   * Called with the sentence that refuses the block (standing.ts
+   * `checkStanding`'s `refused`: since any part that did not
+   * stand), and the fields beside `standing` a correction may change (`checkStanding`'s `opens`; for a block on a verdict
+   * that takes none, the verdict: M1 of the non-author check); the capture sends it back to the seat. Absent, the block is only
+   * checked and recorded, as before. `strays` (D5FIX2, F2): the keys inside the block that are no part of it
+   * (`checkStanding`'s `strays`). `names`: what the refusal names inside
+   * `standing`, each part it sets aside (`checkStanding`'s `names`), or the whole block where the block is refused.
+   */
+  onRefused?: (text: string, opens?: readonly string[], strays?: readonly string[], names?: readonly string[]) => void,
 ): Record<string, unknown> | null {
   if (!("standing" in entry)) return null;
   const { standing: raw, standing_set_aside: _given, ...rest } = entry;
   const verdict = typeof entry.verdict === "string" ? entry.verdict : "";
   if (verdict !== "violation_candidate" && verdict !== "needs_human") {
-    return { ...rest, standing_set_aside: [{ part: "standing", value: raw, why: `\`standing\` belongs on a finding you let stand; this verdict is \`${verdict}\`, so it is not read` }] };
+    const notRead: StandingSetAside[] = [{ part: "standing", value: raw, why: `\`standing\` belongs on a finding you let stand; this verdict is \`${verdict}\`, so it is not read` }];
+    onRefused?.(standingRefusal(undefined, notRead, STANDING_OPENS_VERDICT), STANDING_OPENS_VERDICT, undefined, ["standing"]);
+    return { ...rest, standing_set_aside: notRead };
   }
   const cap = placeCapture?.() ?? null;
   const checked = checkStanding(raw, {
@@ -875,6 +926,7 @@ export function standingOfEntry(
         }
       : {}),
   });
+  if (checked.refused) onRefused?.(checked.refused, checked.opens, checked.strays, checked.names);
   return { ...rest, ...(checked.standing ? { standing: checked.standing } : {}), ...(checked.setAside.length > 0 ? { standing_set_aside: checked.setAside } : {}) };
 }
 

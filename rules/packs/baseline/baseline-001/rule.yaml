@@ -100,6 +100,50 @@ context_questions:
     check, debug flag, build-time strip)?
   - Is console output forwarded to a log-collection backend (Sentry, Datadog, CloudWatch) that would
     persist the value off-host?
+  - "A FIXED SAMPLE VALUE OR A THROWAWAY VALUE, AND HOW TO RECORD IT. Some kept candidates print a
+    value that guards no real person's data: a fixed sample value written into the repository itself
+    (a demo or seed account's password or key, printed by the task that seeds it), or a throwaway
+    value of a service that exists only in development, continuous integration or tests (a CI job's
+    database container discarded after the job, a local test database). A SEED OR DEMO VALUE IS THIS
+    ONLY WHERE THE PRODUCT ITSELF KEEPS THE SEED OUT OF EVERY RUNNING INSTANCE: a check in the
+    seed's own code, or in the file that loads it, that refuses to run unless the environment is
+    development or test, with nothing that lifts it; or a file only the test runner loads. Tell that
+    guard from an operator flag by what it reads and what lifts it: the guard lists development and
+    test as the only environments the seed runs in, and reads the environment the product's own
+    shipped deployment sets (production, in its image, compose file or chart). The guard counts only
+    where that deployment, or the install its documents give, sets production, or where the guard
+    also refuses an environment left unset: where the shipped deployment leaves the environment
+    unset, the framework's own default decides (Rails and Rack fall back to development, so `abort
+    unless Rails.env.development? || Rails.env.test?` then passes), and a guard that passes that way
+    does not count. An operator flag is a check that refuses only in production (so staging or any
+    other environment runs the seed), a check that a variable, an argument or a setting lifts (an
+    `ALLOW_` or `FORCE` variable, a `--force` argument), or a check of a variable of the seed's own
+    that a deployment can set; a seed behind one counts as reachable. Where the line shows a fixed
+    sample or throwaway value, and for a seed or demo value that guard as well, the status is
+    `duty_met`, its `at` the line that shows it (the guard that keeps the seed out, the CI job or
+    test step that starts the service, or the development-only guard), and its `element` the words
+    `fixed sample or throwaway value used only in development, CI or tests`. A value the log call
+    reads at run time from the environment, a store or a request is not this, because a deployment
+    then prints whatever secret it holds, unless the code shows that only a development, CI or test
+    run supplies it. Four things are not this and stay `duty_unmet` wherever the file sits: a seed
+    or demo task that the product's start-up runs (an entrypoint or release step that runs the
+    seeds) or that an operator can run against a running instance, with no such guard, because its
+    account and its known password or key then exist on every instance that runs it; a value in a
+    real vendor's key format (a prefix such as `sk_live_`, `AKIA` or `ghp_`, which baseline-002
+    reads, or another provider's own credential format), because a live key opens that vendor's
+    service wherever it is used; a value that a shipped configuration falls back to or that a sample
+    environment file operators copy carries (a compose default, a fallback such as
+    `${NAME:-value}`), because a deployment that does not set it runs with a secret every reader of
+    the repository knows; and a value whose service also holds real people's data (a staging or
+    production database a CI job reaches). Whether the file ships is the separate part `ships`, and
+    it does not decide this. A WAY OUT HOLDS ONLY AT EVERY KEPT PLACE: a status this question gives
+    is the finding's only where every place of the finding that you or the seats before you kept has
+    the shape that status names; a kept place inside a helper or a shared function has that shape
+    only where every call that reaches it does, so walk every caller, and a caller that would be
+    `duty_unmet` makes that place `duty_unmet`. Where the kept places differ, the finding takes the
+    heaviest of their statuses (`duty_unmet`, then `waits_on_answer`, then `duty_met` or `exempt`),
+    with its `at` and its `decisive` at that place: one kept place that is `duty_unmet` makes the
+    finding `duty_unmet`."
 evidence_template: "{file}:{line} matched one of this rule's eight clauses, and the two families
   they fall into do not establish the same thing. Four clauses anchor on a console call (log, info,
   debug, warn, error) and verify the coupled construct: the secret-named expression sits inside that

@@ -156,6 +156,32 @@ context_questions:
     platform setting (Android cleartext permission, iOS App Transport Security exception), which
     domains does it cover, what is the value written beside the key (read the next line in a
     property list), and what does the app send to those domains?"
+  - "ONE SHAPE THE SHIPPED FILE SETTLES: A HOP THAT STAYS ON ONE HOST'S PRIVATE CONTAINER NETWORK.
+    Where the connection's host is a service defined in the same compose or Podman file that the
+    product ships as its deployable stack, that service publishes no port (it has no ports entry,
+    and nothing else in the file maps one), and the file puts the two on a network of that stack
+    alone (its default network, or one it declares that is not marked external), the hop runs
+    between two containers on the one machine the stack is started on and leaves it at no point: no
+    network the operator does not control carries it. GDPR Art. 32(1) asks for 'a level of security
+    appropriate to the risk', and the risk Art. 32(2) names, 'unauthorised disclosure of, or access
+    to personal data transmitted, stored or otherwise processed', needs a path someone else can
+    reach; CRA Annex I Part I point (2)(e) names, beside encryption, protection 'by using other
+    technical means', which isolation on one host is; and the Commission's Q&A in entry 4 gives
+    encryption on networks that may be intercepted. Then the status is `exempt`, its `at` the line
+    of the file that defines the database service with no published port, and `exemption` has
+    `basis` `L1` and `limb` `security appropriate to the risk: the hop never leaves one host`. Read
+    the whole file first: a published port, an external network, a swarm deployment of the same file
+    (a deploy section placing replicas across nodes, or install documentation that deploys it as a
+    stack), or a host that is not a service of that file, is not this shape, and question 1 stands.
+    Record `data` as question 4 asks whether or not this applies: the exemption is about the hop,
+    not about what crosses it. A WAY OUT HOLDS ONLY AT EVERY KEPT PLACE: a status this question
+    gives is the finding's only where every place of the finding that you or the seats before you
+    kept has the shape that status names; a kept place inside a helper or a shared function has that
+    shape only where every call that reaches it does, so walk every caller, and a caller that would
+    be `duty_unmet` makes that place `duty_unmet`. Where the kept places differ, the finding takes
+    the heaviest of their statuses (`duty_unmet`, then `waits_on_answer`, then `duty_met` or
+    `exempt`), with its `at` and its `decisive` at that place: one kept place that is `duty_unmet`
+    makes the finding `duty_unmet`."
 evidence_template: "{file}:{line} matched one of the service-connection shapes this rule reads: a
   PostgreSQL or MySQL TLS mode set to disable, allow or prefer; a TLS parameter switched off inside
   a connection string (`useSSL=false`, `tls=false`, `ssl=false`, `Encrypt=False`) or the MySQL

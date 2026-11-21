@@ -80,6 +80,29 @@ context_questions:
     that writes to an application-private store instead - React Native's AsyncStorage, an in-memory
     map, a server-side cache - carries none of the exposure this rule is about, and that is a
     dismissal with a reason rather than a finding.
+  - "DOES THE STORED VALUE OPEN ANYTHING ON ITS OWN? A value written under a token name is sometimes
+    one step of a sign-in that cannot be completed with it alone: a partial token that proves only
+    the password step, that the server accepts only together with a second factor the storage does
+    not hold, whose second-factor step limits the attempts (a counter, a lockout or a rate limit on
+    that step), and that is short-lived and removed once used. Where the server code shows that
+    (quote the check that refuses the value without the second factor, the limit on the attempts at
+    the second factor, and the line that bounds its lifetime or removes it), a script that reads the
+    value gains no access to any account or data with it alone, and the status is `exempt`, its `at`
+    that check, and `exemption` has `basis` `L1` and `limb` `security appropriate to the risk: the
+    value opens nothing alone`. GDPR Art. 32(1) asks for 'a level of security appropriate to the
+    risk'; entry 2 reaches this finding through the personal data the stolen token would open, and
+    entries 3 and 4 ask for security reasonable for what the value protects. A token that opens an
+    account, an API or a session by itself, a refresh token, a value whose lifetime nothing in the
+    code bounds, and a partial token whose second-factor step nothing limits (a script holding it
+    can keep guessing the code until one matches within its lifetime) are not this shape, whatever
+    they are called. A WAY OUT HOLDS ONLY AT EVERY KEPT PLACE: a status this question gives is the
+    finding's only where every place of the finding that you or the seats before you kept has the
+    shape that status names; a kept place inside a helper or a shared function has that shape only
+    where every call that reaches it does, so walk every caller, and a caller that would be
+    `duty_unmet` makes that place `duty_unmet`. Where the kept places differ, the finding takes the
+    heaviest of their statuses (`duty_unmet`, then `waits_on_answer`, then `duty_met` or `exempt`),
+    with its `at` and its `decisive` at that place: one kept place that is `duty_unmet` makes the
+    finding `duty_unmet`."
 evidence_template: "{file}:{line} matched a Web Storage write in ONE OF TWO SHAPES, and which one it
   is has to be read off the line first. FIRST SHAPE - a value written under a TOKEN-NAMED KEY:
   setItem with a literal key drawn from the vocabulary this rule lists, or the same write spelled as
@@ -116,3 +139,4 @@ remediation_template: |
 data_categories:
   - user.authorization.credentials
 fingerprint_spec: default
+duty_about: product_runtime

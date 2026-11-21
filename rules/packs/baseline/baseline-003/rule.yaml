@@ -197,6 +197,30 @@ context_questions:
     HTTPConnection or Net::HTTP call with no TLS on the line, a URL built with the scheme http -
     which host does it reach, and is TLS switched on anywhere the line does not show: a use_ssl
     setting on a following line, an options hash, or a TLS-terminating proxy in front of the host?"
+  - "A PLACE IN CODE THAT DOES NOT SHIP, AND HOW TO RECORD IT. A plaintext connection that only a
+    test suite, a development set-up, a continuous-integration test step or a demo opens to a
+    service of its own carries no product data: a test stack whose stores are thrown away after the
+    run, a branch only the development environment takes, a CI test job's service container, a demo
+    seed. Where the line shows that (quote the branch, the test helper, the CI test step, or the
+    file's own statement of what it is for), the status is `duty_met`, its `at` that line, and its
+    `element` the words `test, development, CI, demo or documentation code that does not ship`. Two
+    things are not this and stay `duty_unmet` wherever they sit, because the product's supply path
+    carries them: a URL in a document that tells someone how to install, configure, update or reach
+    the product (install documents, a README's set-up section, a documentation-site page, release
+    notes); and a fetch or a push in a CI, build or release workflow, test steps included, other
+    than a connection to a service the job itself starts and throws away: a download of code, a
+    tool, a package or an image that the workflow then runs or builds with (a script piped into a
+    shell, an installer, a dependency, a base image), a download or a publication of what is
+    supplied, a deployment, or a step that configures a running environment or moves its data. The
+    only documentation this covers is text that tells no one to use the URL (a reference link, an
+    old changelog entry). A WAY OUT HOLDS ONLY AT EVERY KEPT PLACE: a status this question gives is
+    the finding's only where every place of the finding that you or the seats before you kept has
+    the shape that status names; a kept place inside a helper or a shared function has that shape
+    only where every call that reaches it does, so walk every caller, and a caller that would be
+    `duty_unmet` makes that place `duty_unmet`. Where the kept places differ, the finding takes the
+    heaviest of their statuses (`duty_unmet`, then `waits_on_answer`, then `duty_met` or `exempt`),
+    with its `at` and its `decisive` at that place: one kept place that is `duty_unmet` makes the
+    finding `duty_unmet`."
 evidence_template: "{file}:{line} carries a plaintext endpoint or connection in one of the positions
   this rule reads: a URL whose scheme carries no TLS (http://, ws://, ftp://, ldap://, telnet://,
   smtp://, imap://, pop3://, redis://, amqp://, mqtt://, irc://, rtmp://, rtsp://, nntp://,

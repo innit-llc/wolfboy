@@ -18,7 +18,10 @@
  * verdict-capture.ts, in this process: the record is the same bytes the command writes for the same answer.
  *
  * At most REFUSALS_MAX refusals per seat, counted per agent id from the hook ledger on disk. The answer after
- * the last refusal is kept whole and marked invalid, and the seat is let go.
+ * the last refusal is checked as every answer is, except that an adjudicator's answer whose only defects are parts of
+ * `standing` is used with those parts set aside (verdict-capture.ts `lastAnswer`); any other defect keeps it whole and
+ * marked invalid, its candidates reported as not judged, and the seat is let go. No earlier answer of the seat is taken
+ * in its place.
  *
  * The hook ledger (`.legal/capture/hook-ledger.jsonl`) has one line per answer the hooks read: accepted,
  * refused, invalid, unbound (no `launched` event confirmed by its reservation or release line names the agent id) or not-captured
@@ -29,8 +32,11 @@
  * both transcript paths the event gave. Records and their own ledger stay the `verdict-capture` command's.
  *
  * AUTO MODE, A SEAT THAT STOPS WITH NOTHING TAKEN: its last message is read as its answer, as outside auto mode,
- * and the stop is never blocked (a blocked auto-mode stop was never probed): accepted, it is a record; refused
- * after REFUSALS_MAX refusals, invalid; refused otherwise, kept whole as not-captured with the refusal's problems.
+ * and the stop is never blocked (a blocked auto-mode stop was never probed). No refusal can reach it, so it is read as
+ * an answer after the last refusal is: accepted, or with only
+ * parts of `standing` wrong, it is a record (those parts set aside); refused for anything else after REFUSALS_MAX
+ * refusals, invalid; refused for anything else before, kept whole as not-captured with the
+ * refusal's problems, and its entry launched again (entry-answer.ts `relaunchable`).
  */
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -92,7 +98,15 @@ export interface HookLedgerLine {
   /**
    * refused: which refusal this is, what was wrong, and what it named (amend.ts: an amendment may change only that); and what it told the seat to take out, which is not part of the base the next answer amends.
    */
-  refusal?: { n: number; of: number; problems: string[]; named?: RefusalNamed; removed?: RefusalRemoved };
+  refusal?: {
+    n: number;
+    of: number;
+    problems: string[];
+    named?: RefusalNamed;
+    /** What the refusal's problems named before any widening: the guard on the next answer (verdict-capture.ts `amend.strict`). */
+    strict?: RefusalNamed;
+    removed?: RefusalRemoved;
+  };
   /**
    * Where the answer was an amendment of the seat's last refused answer: the merged
    * whole the capture checked (its sha256, length and the file it is kept in, or null where a record holds it) and the
@@ -507,11 +521,17 @@ export function refusalFor(role: CaptureRole, problems: string[], n: number, eve
     ? ""
     : role === "reader"
       ? " Or send only the decisions you change, keyed by `place` (a place row) or by `unit` (or `units`): each replaces that unit's decision in this answer, the rest is kept from it except a row this refusal tells you to remove, and the whole is checked again."
-      : " Or send only what this refusal names: for each candidate it names, its `finding_id` and the fields it names, and in `decisions` only the decisions you change, keyed by `place` (a place row) or by `unit` (or `units`). Each replaces its counterpart in this answer, everything you leave out is kept from it except a row or object this refusal tells you to remove or says is not kept, and the whole is checked again; a field the refusal did not name must be left out.";
+      : role === "adjudicator"
+        ? // The rule is the same for both forms, and the refusal above states it once (verdict-capture.ts `renderRefusal`).
+          " Or send only what this refusal names: for each candidate it names, its `finding_id` and the fields it names, and in `decisions` only the decisions you change, keyed by `place` (a place row) or by `unit` (or `units`). Either way the rule above holds, and the whole is checked again."
+        : " Or send only what this refusal names: for each candidate it names, its `finding_id` and the fields it names, and in `decisions` only the decisions you change, keyed by `place` (a place row) or by `unit` (or `units`). Each replaces its counterpart in this answer, everything you leave out is kept from it except a row or object this refusal tells you to remove or says is not kept, and the whole is checked again; a field the refusal did not name must be left out.";
   return [
     renderRefusal(role, problems).trimEnd(),
     "",
-    `This is refusal ${n} of at most ${REFUSALS_MAX}. ${how}${amend} If the answer after the last refusal is still not accepted, it is kept as it is, marked invalid, and your candidates are reported as not judged.`,
+    // An adjudicator's answer whose only defects after the last
+    // refusal are parts of `standing` is used with those parts set aside (verdict-capture.ts `lastAnswer`): said here too. A
+    // block on a verdict that takes none is not read, so "at its heaviest" is said only of a part that orders the finding (m5).
+    `This is refusal ${n} of at most ${REFUSALS_MAX}. ${how}${amend} If the answer after the last refusal is still not accepted, it is kept as it is, marked invalid, and your candidates are reported as not judged${role === "adjudicator" ? "; except where all that is still wrong with it is in `standing`: then the answer is used, those parts are set aside, and each finding is placed as if any of them that orders it were at its heaviest" : ""}.`,
   ].join("\n");
 }
 
@@ -578,7 +598,8 @@ export function noteSeatCapture(run: NonNullable<HookContext["run"]>, input: Hoo
  * Take one answer. `answer` is the text as the hook received it; `event` says which hook read it. Returns
  * the decision for that hook: a receipt, a deny or a block, or pass. `autoStop`: SubagentStop in auto mode with
  * nothing taken, where the last message is read as the answer and a refusal cannot be sent back (the stop is never
- * blocked): a refused answer is kept as not-captured, or marked invalid past the cap.
+ * blocked): it is read as an answer after the last refusal (only parts of `standing` wrong: used, those parts set aside);
+ * refused for anything else, it is kept as not-captured, or marked invalid past the cap.
  */
 export function takeAnswer(ctx: HookContext, text: string, event: HookCaptureEvent, autoStop = false, note: ReceiptNote = {}, giveUp?: string): HookDecision {
   const run = ctx.run;
@@ -689,10 +710,21 @@ export function takeAnswer(ctx: HookContext, text: string, event: HookCaptureEve
   const last = refusals.at(-1);
   const baseFile = last?.answer?.kept && last.refusal?.named ? last.answer.kept : null;
   const amend = baseFile && last?.refusal?.named && existsSync(join(run.legalDir, baseFile))
-    ? { base: programFileBytes("the refused answer kept", join(run.legalDir, baseFile)), named: last.refusal.named, baseFile, ...(last.refusal.removed ? { removed: last.refusal.removed } : {}) }
+    ? { base: programFileBytes("the refused answer kept", join(run.legalDir, baseFile)), named: last.refusal.named, baseFile, ...(last.refusal.removed ? { removed: last.refusal.removed } : {}), ...(last.refusal.strict ? { strict: last.refusal.strict } : {}) }
     : undefined;
   const replaceSetAside = (rel: string, previousSha256: string) => setAsideReplacement(run.launchDir, run.legalDir, b.entry, rel, previousSha256);
-  const result = captureAnswer({ role: b.role, seat: agentId, key: b.key || undefined, ordinal: b.ordinal, ids: b.ids, idsFrom: b.idsFrom, answer, legalDir: run.legalDir, at, via, entryRule, replyRule, convert, amend, replaceSetAside, ...(b.challenge !== undefined ? { challenge: b.challenge } : {}) });
+  // The answer after the last refusal: a wait's
+  // refusal alone then sets that wait aside instead of keeping the whole answer invalid (verdict-capture.ts `lastAnswer`). So is an auto-mode seat that stopped without handing its
+  // answer back (`autoStop`): no refusal can reach it either. Every failing part of `standing` is refused now, where before
+  // all but a wait were set aside on the first answer; without this, such an answer would be kept whole as not captured and
+  // its entry launched again (entry-answer.ts `relaunchable`, a whole new seat), for a part that before only took its
+  // heaviest value. (m3) It also
+  // sets aside at once a wait naming nothing on such a seat, which the base (refusing it since R15-B) launched again: that
+  // finding goes "to fix" at its heaviest, the 0.1.0 placement, never lighter.
+  const lastAnswer = refusals.length >= REFUSALS_MAX || autoStop;
+  // The finding each answer makes, for the guard on a resend.
+  const weigh = b.role === "adjudicator" ? rules?.weigh : undefined;
+  const result = captureAnswer({ role: b.role, seat: agentId, key: b.key || undefined, ordinal: b.ordinal, ids: b.ids, idsFrom: b.idsFrom, answer, legalDir: run.legalDir, at, via, entryRule, replyRule, convert, amend, replaceSetAside, lastAnswer, ...(weigh ? { weigh } : {}), ...(b.challenge !== undefined ? { challenge: b.challenge } : {}) });
   const amends = result.outcome === "written" ? result.entry.amends : undefined;
   if (result.outcome === "written") {
     ledger({
@@ -727,12 +759,14 @@ export function takeAnswer(ctx: HookContext, text: string, event: HookCaptureEve
         role: b.role,
         answer: { sha256: sha256(answer), bytes: answer.length, kept: merged ? merged.kept : keepWhole(run.legalDir, agentId, answer, REFUSED_DIR) },
         ...(merged ? { merged } : {}),
-        refusal: { n, of: REFUSALS_MAX, problems: result.problems, named: result.named, ...(result.removed ? { removed: result.removed } : {}) },
+        refusal: { n, of: REFUSALS_MAX, problems: result.problems, named: result.named, ...(result.strict ? { strict: result.strict } : {}), ...(result.removed ? { removed: result.removed } : {}) },
       } satisfies HookLedgerLine);
       const reason = refusalFor(b.role, result.problems, n, event);
       return auto ? { kind: "deny", reason } : { kind: "block", reason };
     }
     const kept = keepWhole(run.legalDir, agentId, answer);
+    // No earlier answer of the seat is taken in this one's
+    // place: the seat's candidates are reported as not judged.
     const keptPlaces = placesKept();
     if (keptPlaces.length > 0) noteKept(b.entry, keptPlaces);
     ledger({

@@ -24,6 +24,7 @@ import { gitRunnerOrWhy, type GitRunner } from "./child-program.js";
 import { LEGAL_COMMITTED_FILES } from "./legal-dir.js";
 import { relativePath } from "./project-path.js";
 import { inertJoin, inertPrinted, inertSlice, markdownText, markdownValue, md, ours, programText, valueShown, valueText, type Inert } from "./printed-output.js";
+import { checksFoundNothing } from "./count-words.js";
 import { appendFileAt, makeTempFolder, removePath } from "./project-write.js";
 import { fetchHonouringProxy } from "./proxied-fetch.js";
 
@@ -559,7 +560,9 @@ export function ciSummaryLines(o: CiOutcome, rules: Rule[], ev: EventFacts): Ine
       ? ours("")
       : md` · ${plural(notRead, ours("changed file"), ours("changed files"))} not read (${o.notRead.other === 0 ? ours("binary") : o.notRead.binary === 0 ? ours("outside what this scan reads") : md`${o.notRead.binary} binary, ${o.notRead.other} outside what this scan reads`})`;
   lines.push(
-    md`- **Not checked:** no AI review has run${pr === "" ? ours("") : ev.mergeGroup ? ours(" on this merge queue entry") : ours(" on this pull request")} · ${plural(silent, ours("rule"), ours("rules"))} found nothing ${o.changed === null ? ours("in this tree") : ours("on the changed files")}, which is not a clean result${o.changed === null ? ours("") : notReadWords}.`,
+    // The checks that found nothing in
+    // the sentence every surface prints, with where they looked (it said "N rules found nothing ..., which is not a clean result").
+    md`- **Not checked:** no AI review has run${pr === "" ? ours("") : ev.mergeGroup ? ours(" on this merge queue entry") : ours(" on this pull request")} · ${programText(checksFoundNothing(silent, { where: o.changed === null ? "in this tree" : "on the changed files" }))}${o.changed === null ? ours("") : notReadWords}.`,
   );
   lines.push(ours("- **Findings** come from the AI review in your own Claude Code scans. A scan of the merged code reviews these places."));
   return lines;

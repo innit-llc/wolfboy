@@ -2,7 +2,7 @@ id: eu-dsa-001
 pack: eu-dsa
 short_name: "Content people can post: a way for others to report it"
 problem_line:
-  text: Notice-and-action route for user content not found or weak
+  text: Way to report posted content to you not found or weak
 fix_line: Provide an easy electronic way to report a specific item, confirm receipt, and tell the
   reporter the decision.
 title: Store a recipient could write into - who supplies the content and the Art. 16

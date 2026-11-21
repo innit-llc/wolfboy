@@ -2,7 +2,7 @@ id: eu-consent-015
 pack: eu-consent
 short_name: Ad network script may load before consent
 problem_line:
-  text: Ad network script loads with no consent gate found
+  text: Ad network script loads with no consent check found
 fix_line: Append each vendor's ad script only from the TCF v2.3 consent callback, once that vendor's
   consent is recorded.
 title: Ad network host referenced (Criteo / Taboola / Outbrain / GPT) - per-vendor TCF consent needs
@@ -136,3 +136,4 @@ data_categories:
   - user.behavior
   - user.unique_id
 fingerprint_spec: default
+duty_about: product_runtime

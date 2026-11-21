@@ -4,14 +4,19 @@
  * The review seat answers, for every finding it lets stand (`violation_candidate`, `needs_human`), a short structured
  * block: what the finding is (`status`), which of the rule's legal bases it stands on (`duty`), what kind of data and
  * whose (`data`, `people`), how it runs (`runs`), who gets or keeps the data (`reaches`), whether the code is in what
- * ships (`ships`), the one quotation it stands on (`decisive`), in at most 20 words what happens to the people
+ * ships (`ships`), the one quotation it stands on (`decisive`), in at most `EFFECT_MAX_WORDS` words what happens to the people
  * (`effect`), and on `needs_human` what settles it (`settles`). Every part that moves the order is a closed-list value
  * tied to a quotation (`at`); the effect is shown, never read for order.
  *
- * CHECKED, NEVER REFUSED (section 2.5, following harvest H10's `inertDismissals`): a part that fails its check is set
- * aside and recorded (`standing_set_aside[]` on the record), and the verdict is kept. Only a `standing` that is not an
- * object is dropped whole, and that is recorded too. A set-aside part takes its heaviest value for the order
- * (`HEAVIEST`), and the report says so (W13).
+ * CHECKED, REFUSED, THEN SET ASIDE: a part that fails its
+ * check is refused at capture with its reason and sent back to the seat that wrote it, as a place row is (`checkStanding`'s
+ * `refused`), within the refusals every answer has (hook-capture.ts `REFUSALS_MAX`). Only the answer after the seat's
+ * last refusal, which no refusal can reach (verdict-capture.ts `lastAnswer`), and a record the capture never saw, keep
+ * the part set aside and recorded (`standing_set_aside[]` on the record), with the verdict kept. Before, every part but a
+ * wait was set aside on the first answer (section 2.5, following harvest H10's `inertDismissals`), and in the weekly 0.1.0
+ * runs 64 findings the review had answered as waiting on the person or as met fell to "to fix" on the form of one part (C1 and C5). Only a `standing` that is not an object is dropped whole, and that
+ * is recorded too. A set-aside part takes its heaviest value for the order (`HEAVIEST`, H5a: unchanged), and the report
+ * says so (W13).
  *
  * WHAT THE SEAT NEVER ANSWERS (section 2.3, D4): who the product serves (children, a health context) is only the
  * person's answer; the closed lists hold no such value, so a seat cannot set it. The penalty tier of a duty is never
@@ -19,6 +24,7 @@
  */
 
 import { STANDING_REF_ID, anchored, basisIndexOf, evidenceIndexOf } from "./ref-ids.js";
+import { EFFECT_MAX_WORDS, FIX_MAX_WORDS, headlineRowsProblem, suggestionRowsProblem } from "./report-budget.js";
 import { schemaDocument } from "./schema-validate.js";
 
 /**
@@ -70,13 +76,63 @@ export const SEVERE_DATA: ReadonlySet<string> = new Set([
 ]);
 /** `reaches` values the order counts as exposing (section 3.2, with section 9 item 3's `readable_at_rest`). */
 export const EXPOSING_REACHES: ReadonlySet<string> = new Set(["third_party", "anyone_on_path", "other_users", "readable_at_rest"]);
-export const EFFECT_MAX_WORDS = 20;
+/**
+ * `effect` and `fix` (r19-a-2026-11-16.md, P3: the change the review
+ * suggests for this code, one English line; like `effect` it is shown, never read for order or placement): their words
+ * and their rows are report-budget.ts's, the one source the report lays out the card and the first screen by.
+ */
+export { EFFECT_MAX_WORDS, FIX_MAX_WORDS };
 /** `element`: an element name the rule declares, or at most this many words. */
 export const ELEMENT_MAX_WORDS = 12;
 /** `exemption.limb`: the limb of the basis that exempts, in at most this many words. */
 export const LIMB_MAX_WORDS = 12;
-/** `fact.words`: a fact no question of the program's list carries, one English line of at most this many words. */
-export const FACT_MAX_WORDS = 20;
+/**
+ * `fact.words`: a fact no question of the program's list carries, one English line. Two numbers, as for the suggestion
+ * (report-budget.ts `FIX_ASK_WORDS`, `FIX_MAX_WORDS`): the
+ * instructions ask for `FACT_ASK_WORDS`; the capture keeps up to `FACT_MAX_WORDS` and refuses a longer one with its count.
+ * The weekly 0.1.0 runs set aside nine facts of 21 to 23 words, and each wait fell to "to fix" with the person asked
+ * nothing (C1). The report prints a fact whole, on the card under "What decides it"
+ * and on the questions page, so a kept fact of up to 30 words takes one row more there and is never cut.
+ */
+export const FACT_ASK_WORDS = 20;
+export const FACT_MAX_WORDS = 30;
+/**
+ * The profile field that says where the product is
+ * offered. It carries a question, but a finding never waits on it (rule 6 of the agent text): the program settles it once
+ * per rule before any seat is launched (per-rule-applicability.ts), so a wait on it, or a `settles` naming it, does not stand.
+ */
+export const JURISDICTION_QUESTION = "distribution_regions";
+/** True where the regions are unanswered too. Exported for the report's words (assemble-report.ts `asideReasonWords`). */
+export const JURISDICTION_WAIT = `a finding never waits on \`${JURISDICTION_QUESTION}\`, where the product is offered: the program decides that once per rule before any review, or leaves it open where it is not answered or the answer does not settle it, and either way no finding waits on it (rule 6), so write the \`status\` the code shows (S4)`;
+/**
+ * (the non-author check's M1)
+ * The fields of the verdict, beside `standing`, that a refusal of a part also names, so that an amendment of the refused
+ * answer may change them (amend.ts: a change to a field the refusal did not name is refused, and after the seat's last
+ * refusal that refusal kept the whole answer invalid). A part refused for the verdict it sits on (S6; `fix` off
+ * `violation_candidate`; `settles` off `needs_human`; a block on a verdict that takes none) is corrected by leaving it
+ * out or by changing the verdict, and its confidence with it: `STANDING_OPENS_VERDICT`. A part whose quotation does not
+ * resolve (S2) is corrected by pointing `at` at another or by adding the one it names, an `evidence[]` entry or a kept
+ * place row: `STANDING_OPENS_QUOTATION` (amend.ts names `evidence`, `decisions` and `searched` together).
+ */
+export const STANDING_OPENS_VERDICT: readonly string[] = ["verdict", "confidence"];
+export const STANDING_OPENS_QUOTATION: readonly string[] = ["evidence"];
+/**
+ * S2 for a part whose `at` (or `decisive`) names no quotation:
+ * `null`, which is what an `E<n>` becomes where an answer after a refusal took its quotation out of `evidence` and left the
+ * part as it was (amend.ts `followPointers`; the quotation is never put back). The fix said is the one the answer that removes the quotation may
+ * make: point the part at another quotation (amend.ts `repoints`); `null` there is a change of a part the refusal did not
+ * name, refused. Left as it is, the part is set aside after the last refusal.
+ */
+const NAMES_NO_ENTRY = (key: "at" | "decisive"): string =>
+  key === "at"
+    ? "`at` names no quotation: it is `null`, as an `E<n>` is where your answer after a refusal took the quotation it named out of `evidence[]` and left this part as it was; point it at another quotation; left as it is, it is set aside after your last refusal"
+    : "`decisive` names no quotation: it is `null`, as an `E<n>` is where your answer after a refusal took the quotation it named out of `evidence[]` and left `decisive` as it was; point it at another quotation; left as it is, it is set aside after your last refusal";
+/**
+ * (FIN3 M2, P12) A question id as the seat may write it: the id, or the `question:<id>`
+ * spelling its own `settles` field uses. The record holds the id. (FIN4 P2 item 4 (a)) Also the `ScanProfile.<id>` and
+ * `profile.<id>` spellings the seat's brief and five rules' context questions use, as the report's `bareQuestionId` reads them.
+ */
+const questionIdOf = (v: string): string => v.replace(/^question:/, "").replace(/^(?:ScanProfile|profile)\./, "");
 
 export type StandingPart =
   | "status"
@@ -89,6 +145,7 @@ export type StandingPart =
   | "ships"
   | "decisive"
   | "effect"
+  | "fix"
   | "settles"
   | "element"
   | "exemption"
@@ -101,7 +158,7 @@ export type StandingPart =
  * (the line of the processing this finding was traced to, `{file, line, quote}`). The capture checks each (WP1:
  * `checkStanding`, S2-S5 and S8).
  */
-export const STANDING_PARTS: readonly StandingPart[] = ["status", "question", "duty", "data", "people", "runs", "reaches", "ships", "decisive", "effect", "settles", "element", "exemption", "fact", "same_as"];
+export const STANDING_PARTS: readonly StandingPart[] = ["status", "question", "duty", "data", "people", "runs", "reaches", "ships", "decisive", "effect", "fix", "settles", "element", "exemption", "fact", "same_as"];
 
 /**
  * THE PROGRAM'S "DOES IT SHIP" PREMISE: decided once per
@@ -256,11 +313,15 @@ export function dutyAboutOf(rule: unknown): DutyAbout | undefined {
  * `scope`: who the product is offered to or what kind of service it is (an out-of-scope answer from a confirmed record
  * settles every rule whose precondition names the field); `condition`: a fact the operating organisation or the maker
  * holds that meets or fails a duty's condition; `feature`: whether the product has a feature the code can also show (an
- * answer never removes a launch; a contradiction asks the person to check the answer); `order`: moves the order only.
+ * answer never removes a launch; a contradiction asks the person to check the answer); `order`: moves the order of what
+ * to fix first, and an option of it that carries a `settles_as` also settles a finding that waits on the question (FIN3 M1 other 8: since R15-B item 3 the minors question's "No" is `met`).
  * An option's `settles_as` says what a finding waiting on the question becomes: `out_of_scope` (the rule is settled),
- * `met` (recorded), `stands` (to fix), `maker` (for each organisation that runs the product). Where each field's kind
- * and each option's value live is the question package's to decide: inside an `x-question` they would move its R1
- * digest (declaration.ts `questionDigest`) and ask every confirmed answer again.
+ * `met` (recorded), `stands` (to fix), `maker` (for each organisation that runs the product). Both live inside the
+ * field's `x-question`: its `kind` is a program key and moves no question's version; its options' `settles_as` is part of
+ * the version (declaration.ts `questionDigest`, since R16-L item 2), so a change to what an answer settles as asks that
+ * question again, while a row recorded by 0.1.0, which left `settles_as` out of the digest, still counts where the
+ * question's options settle as they did then (`versionBeforeSettlesAs`). A stale row of an `order` question is left out
+ * of the profile, not asked again before review (declaration.ts `staleOrderFields`).
  */
 export const QUESTION_KINDS = ["scope", "condition", "feature", "order"] as const;
 export type QuestionKind = (typeof QUESTION_KINDS)[number];
@@ -268,6 +329,39 @@ export const SETTLES_AS = ["out_of_scope", "met", "stands", "maker"] as const;
 export type SettlesAs = (typeof SETTLES_AS)[number];
 /** The parts the order reads; a missing or set-aside one takes `HEAVIEST`. */
 export const ORDER_PARTS: readonly StandingPart[] = ["status", "duty", "data", "runs", "reaches", "ships"];
+/**
+ * The parts that decide the status together: a wait stands only with its
+ * `question` or `fact`, `duty_met` only with its `element`, `exempt` only with its `exemption` (S4, S8). A refusal that
+ * names one of them names all five (amend.ts `nameIn`), so that correcting the status by any of them is a change it named.
+ */
+export const STANDING_STATUS_GROUP: readonly StandingPart[] = ["status", "question", "fact", "element", "exemption"];
+/**
+ * The parts a status stands only with, any status (S4, S8): what a refusal of a
+ * status names with it (`checkStanding`'s `names`), all four whatever the status was, so that its correction to another
+ * status with that status's own part (`duty_met` to `exempt` with its `exemption`, to a wait with its `fact`) is a change
+ * the refusal itself named. Before, only the refused value's own partners were named, and the guard on a resend (amend.ts,
+ * THE OUTCOME) refused such a correction.
+ */
+const STATUS_PARTNERS: readonly StandingPart[] = STANDING_STATUS_GROUP.filter((p) => p !== "status");
+/**
+ * Whether placing `value` as the part `part` of a block that does not
+ * hold it would make the finding lighter: a lower level, out of the count, or a weaker status. After the seat's last
+ * refusal a part it wrote beside `standing` and never placed is placed by the program only where this is false.
+ * - Never lighter: `duty`, `data`, `people`, `runs`, `reaches` (the level rests on the parts that stood, each missing one
+ *   at its lightest: fix-order.ts `standingOrderOf`, so a part placed can only keep or raise it, and none of them takes a
+ *   finding out of the count), and `effect` and `fix` (shown, never read for order or placement).
+ * - `status`: only `duty_unmet` is not lighter (a missing or set-aside status is placed as `duty_unmet`, `HEAVIEST`).
+ * - `ships`: a value that ships is not lighter (a missing `ships` ships); a value of `NOT_SHIPPED` can take it out.
+ * - Every other part can make a way out of "to fix" stand (`question`, `fact`, `element`, `exemption`, `settles`), fold the
+ *   finding into another (`same_as`), or lend the program's premise a not-shipped value (`decisive`): lighter.
+ */
+export function placingLightens(part: string, value: unknown): boolean {
+  const v = isObj(value) ? value.value : undefined;
+  if (["duty", "data", "people", "runs", "reaches", "effect", "fix"].includes(part)) return false;
+  if (part === "status") return v !== "duty_unmet";
+  if (part === "ships") return typeof v === "string" && NOT_SHIPPED.has(v);
+  return true;
+}
 
 /** A quotation a part points at: an `evidence[]` entry (`E<n>`), a kept place row (`P<n>`), or a line of the tree. */
 export type StandingAt = string | { file: string; line: number; quote: string };
@@ -289,6 +383,8 @@ export interface StandingRecord {
   ships?: { value: string; at?: StandingAt; premise?: { file: string; value: ShipsPremise } };
   decisive?: string;
   effect?: string;
+  /** The change the review suggests for this code; printed as its suggestion, never read for order. */
+  fix?: string;
   settles?: string;
   /** On `duty_met`: which part of the duty the status line meets. */
   element?: string;
@@ -371,6 +467,14 @@ function wordsProblem(label: string, v: unknown, max: number): string | null {
   return null;
 }
 
+/** The fields of an adjudicator's entry, from its reply schema (one copy: the schema's). */
+let entryFieldsMemo: string[] | null = null;
+export const ENTRY_FIELDS = (): string[] => {
+  if (entryFieldsMemo) return entryFieldsMemo;
+  const d = schemaDocument("adjudicator-reply.schema.json") as { items?: { properties?: Record<string, unknown> } };
+  entryFieldsMemo = Object.keys(d.items?.properties ?? {}).filter((k) => k !== "standing");
+  return entryFieldsMemo;
+};
 /**
  * S1-S6 and S8 over one verdict's `standing` (section 2.5; S8 and the premise: design-not-violations.md sections 2.1,
  * 2.5, WP1). S7, the final quote check at assembly, is `standingFacts`'s. Returns the parts that stand and every part set
@@ -381,11 +485,31 @@ function wordsProblem(label: string, v: unknown, max: number): string | null {
  * own (S3, S8); `waits_on_answer` only with its `at` and a question of the program's list (S4) or a `fact` in words about
  * a basis of the rule's own (S3, S4, S5); a `ships` that does not ship only with its `at`, or from the program's premise
  * whose manifest lines stand. A status set aside, or left out, is placed at its heaviest (`duty_unmet`).
+ *
+ * EVERY PART THAT DOES NOT STAND IS REFUSED: `refused` is
+ * set wherever anything was set aside, and names every such part with its reason, the wait's own sentence first; the
+ * set-aside record stays as it was, for a record no capture refused (an earlier run's, or the answer after a seat's last
+ * refusal: verdict-capture.ts `lastAnswer`). It began with one part (KNOWN-ISSUES
+ * 25, 33): a `waits_on_answer` that names no question of the program's list and no fact in words that stood, which set
+ * aside alone placed the finding "to fix" at its heaviest although the review said it waits on the person, the person
+ * asked nothing (the sample's children's finding named `audience.minors_possible` only in its reasoning); then a `waits_on_answer` whose own `at` does not stand (FIN3 M2 D3), and a
+ * wait on where the product is offered, which no finding waits on (rule 6). A question id may be written as its
+ * `settles` spelling, `question:<id>`, by the id alone, or as `{"value"}` without an `at`: the line it bears on is then
+ * `status.at`, as for a `fact` (the seat brief told the review to "name that question's id", and 30 waits of the weekly
+ * 0.1.0 runs did). `opens` names the fields beside
+ * `standing` that a correction may need (`STANDING_OPENS_VERDICT`, `STANDING_OPENS_QUOTATION`).
  */
-export function checkStanding(raw: unknown, input: StandingCheckInput): { standing?: StandingRecord; setAside: StandingSetAside[] } {
+export function checkStanding(raw: unknown, input: StandingCheckInput): { standing?: StandingRecord; setAside: StandingSetAside[]; refused?: string; opens?: string[]; strays?: string[]; names?: string[] } {
   const setAside: StandingSetAside[] = [];
+  const opens = new Set<string>();
+  const turnsOn = (fields: readonly string[]): void => {
+    for (const f of fields) opens.add(f);
+  };
   if (raw === undefined) return { setAside };
-  if (!isObj(raw)) return { setAside: [{ part: "standing", value: raw, why: "`standing` is one object of named parts; this value is not an object, so the block is dropped whole" }] };
+  if (!isObj(raw)) {
+    const whole: StandingSetAside[] = [{ part: "standing", value: raw, why: "`standing` is one object of named parts; this value is not an object, so the block is dropped whole" }];
+    return { setAside: whole, refused: standingRefusal(undefined, whole), names: ["standing"] };
+  }
   const out: StandingRecord = {};
   const aside = (part: StandingPart, value: unknown, why: string): void => {
     setAside.push({ part, value, why });
@@ -393,6 +517,7 @@ export function checkStanding(raw: unknown, input: StandingCheckInput): { standi
   const evidenceCount = Array.isArray(input.evidence) ? input.evidence.length : 0;
   /** S2: the at resolves; returns the at as the record holds it (a tree line moved to where it stands), or a reason. */
   const atOf = (at: unknown): { at: StandingAt } | { why: string } => {
+    if (at === null) return { why: NAMES_NO_ENTRY("at") };
     if (typeof at === "string") {
       if (!REF.test(at)) return { why: `\`at\` ${JSON.stringify(at)} is neither \`E<n>\` (an entry of this verdict's \`evidence[]\`, from E1), \`P<n>\` (a place, from P0) nor \`{file, line, quote}\`` };
       const e = evidenceIndexOf(at);
@@ -416,7 +541,10 @@ export function checkStanding(raw: unknown, input: StandingCheckInput): { standi
       return;
     }
     const a = atOf(v.at);
-    if ("why" in a) return aside(part, v, `${a.why} (S2)`);
+    if ("why" in a) {
+      turnsOn(STANDING_OPENS_QUOTATION);
+      return aside(part, v, `${a.why} (S2)`);
+    }
     (out as Record<string, unknown>)[part] = { value: v.value, at: a.at };
   };
   const many = (part: "data" | "people" | "duty", ok: (x: string) => string | null): void => {
@@ -426,7 +554,10 @@ export function checkStanding(raw: unknown, input: StandingCheckInput): { standi
     const bad = (v.value as string[]).map(ok).filter((x): x is string => x !== null);
     if (bad.length > 0) return aside(part, v, `${bad.join("; ")} (${part === "duty" ? "S3" : "S1"})`);
     const a = atOf(v.at);
-    if ("why" in a) return aside(part, v, `${a.why} (S2)`);
+    if ("why" in a) {
+      turnsOn(STANDING_OPENS_QUOTATION);
+      return aside(part, v, `${a.why} (S2)`);
+    }
     (out as Record<string, unknown>)[part] = { value: [...new Set(v.value as string[])], at: a.at };
   };
   /** S3: `L<n>` names an entry of the rule's own `legal_basis_refs`; null where it does, else why not. */
@@ -463,16 +594,32 @@ export function checkStanding(raw: unknown, input: StandingCheckInput): { standi
   // A `ships` left out, or set aside, takes the premise: "the premise stands" (design section 2.1). With no premise it
   // stays out, and the place ships (`HEAVIEST.ships`).
   if (!out.ships && premise) out.ships = { value: SHIPS_OF_PREMISE[premise.value], premise };
-  // S4: `question` names an id of the program's list, and only with `waits_on_answer`.
+  // Whether the seat said the finding waits, whether
+  // or not the status's own `at` stood: the question and the fact are checked on their own merits either way, so that one
+  // refusal names every defect of the wait (a status set aside for its `at` is refused below, not only set aside).
+  const waits = isObj(raw.status) && raw.status.value === "waits_on_answer";
+  // S4: `question` names an id of the program's list, and only with `waits_on_answer`. Named by the id alone (`"<id>"`), or as `{"value"}` with
+  // no `at`, it bears on the line of `status.at`, as a `fact` does: `bare` holds such an id until the status is known.
+  let bare: string | null = null;
   if ("question" in raw) {
     const v = raw.question;
-    if (!isObj(v) || typeof v.value !== "string") aside("question", v, '`question` is `{"value", "at"}`, `value` the id of a question of the program\'s list');
-    else if (!input.questions.has(v.value)) aside("question", v, `\`question.value\` ${JSON.stringify(v.value)} is not a question of the program's list (S4)`);
-    else if (out.status?.value !== "waits_on_answer") aside("question", v, "`question` goes only with `status` `waits_on_answer` (S4)");
-    else {
-      const a = atOf(v.at);
-      if ("why" in a) aside("question", v, `${a.why} (S2)`);
-      else out.question = { value: v.value, at: a.at };
+    const given = typeof v === "string" ? v : isObj(v) && typeof v.value === "string" ? v.value : null;
+    const ownAt = isObj(v) && "at" in v;
+    const id = given !== null ? questionIdOf(given.trim()) : "";
+    if (given === null)
+      aside("question", v, '`question` is the id of a question of the program\'s list, as `"<id>"` (its line is `status.at`) or as `{"value", "at"}`');
+    else if (id === JURISDICTION_QUESTION) aside("question", v, JURISDICTION_WAIT);
+    else if (!input.questions.has(id)) aside("question", v, `\`question.value\` ${JSON.stringify(given)} is not a question of the program's list (S4)`);
+    else if (!waits) aside("question", v, "`question` goes only with `status` `waits_on_answer` (S4)");
+    else if (!ownAt) {
+      if (out.status) out.question = { value: id, at: out.status.at };
+      else bare = id;
+    } else {
+      const a = atOf((v as Record<string, unknown>).at);
+      if ("why" in a) {
+        turnsOn(STANDING_OPENS_QUOTATION);
+        aside("question", v, `${a.why} (S2)`);
+      } else out.question = { value: id, at: a.at };
     }
   }
   // S4's other half: a fact no question of the program's list carries,
@@ -480,9 +627,9 @@ export function checkStanding(raw: unknown, input: StandingCheckInput): { standi
   if ("fact" in raw) {
     const v = raw.fact;
     const words = isObj(v) ? wordsProblem("fact.words", v.words, FACT_MAX_WORDS) : null;
-    if (!isObj(v) || typeof v.words !== "string" || typeof v.about !== "string" || !onlyKeys(v, ["words", "about"])) aside("fact", v, `\`fact\` is \`{"words", "about"}\`: the fact in at most ${FACT_MAX_WORDS} words, and the \`L<n>\` of the rule's own basis it concerns (S4)`);
-    else if (out.status?.value !== "waits_on_answer") aside("fact", v, "`fact` goes only with `status` `waits_on_answer` (S4)");
-    else if (out.question) aside("fact", v, "`fact` is for a fact no question of the program's list carries; this block names a question of the list, which is what the finding waits on (S4)");
+    if (!isObj(v) || typeof v.words !== "string" || typeof v.about !== "string" || !onlyKeys(v, ["words", "about"])) aside("fact", v, `\`fact\` is \`{"words", "about"}\`: the fact in at most ${FACT_ASK_WORDS} words, and the \`L<n>\` of the rule's own basis it concerns (S4)`);
+    else if (!waits) aside("fact", v, "`fact` goes only with `status` `waits_on_answer` (S4)");
+    else if (out.question || bare !== null) aside("fact", v, "`fact` is for a fact no question of the program's list carries; this block names a question of the list, which is what the finding waits on (S4)");
     else if (words) aside("fact", v, words);
     else {
       const about = ownBasis("fact.about", v.about);
@@ -490,13 +637,39 @@ export function checkStanding(raw: unknown, input: StandingCheckInput): { standi
       else out.fact = { words: v.words.trim(), about: v.about };
     }
   }
-  if (out.status?.value === "waits_on_answer" && !out.question && !out.fact) {
-    const why =
-      "fact" in raw
-        ? "`status` `waits_on_answer` names no question of the program's list and no fact in words that stood (S4)"
-        : "`status` `waits_on_answer` names no question of the program's list that stood (S4)";
-    setAside.push({ part: "status", value: out.status, why });
-    delete out.status;
+  // The wait's own sentence (`waitRefusal`), and the parts it already speaks for: the status, question and fact set aside
+  // with it. Every other part set aside is named after it (`standingRefusal`, at the end).
+  let waitSaid: string | undefined;
+  const waitCovered = new Set<StandingSetAside>();
+  if (waits) {
+    // (FIN3 M2 D3) A wait whose own `at` did not stand was set aside without a
+    // refusal, and the finding placed "to fix" at its heaviest with the person asked nothing, as a wait naming nothing
+    // was before R15-B item 3. The seat can repair both the same way, so both are refused.
+    const statusAt = out.status ? undefined : setAside.find((x) => x.part === "status");
+    const named = out.question !== undefined || out.fact !== undefined || bare !== null;
+    const notUsed = setAside.filter((x) => x.part === "question" || x.part === "fact");
+    if (statusAt) {
+      // A question named by its id alone takes the status's line, which did not stand: it goes as one that stood does.
+      if (bare !== null) setAside.push({ part: "question", value: raw.question, why: "`question` goes only with `status` `waits_on_answer` (S4)" });
+      // A question or a fact that stood goes only with the status it waits under, which did not stand: recorded in the
+      // message a question or a fact with no wait has always had, which the report reads (assemble-report.ts
+      // `asideReasonWords`). The refusal names the status's own cause above, not these.
+      for (const k of ["question", "fact"] as const) {
+        if (out[k] === undefined) continue;
+        setAside.push({ part: k, value: raw[k], why: `\`${k}\` goes only with \`status\` \`waits_on_answer\` (S4)` });
+        delete out[k];
+      }
+      waitSaid = waitRefusal({ statusAt: statusAt.why, named }, notUsed, input.questions);
+    } else if (!named) {
+      const why =
+        "fact" in raw
+          ? "`status` `waits_on_answer` names no question of the program's list and no fact in words that stood (S4)"
+          : "`status` `waits_on_answer` names no question of the program's list that stood (S4)";
+      setAside.push({ part: "status", value: out.status, why });
+      delete out.status;
+      waitSaid = waitRefusal({ named }, notUsed, input.questions);
+    }
+    if (waitSaid !== undefined) for (const x of setAside) if (x.part === "status" || x.part === "question" || x.part === "fact") waitCovered.add(x);
   }
   // S8's parts: which part of the duty the line at `status.at` meets;
   // the basis of the rule's own that exempts the shape at `status.at`, and its limb. Each goes only with its status (below).
@@ -527,37 +700,59 @@ export function checkStanding(raw: unknown, input: StandingCheckInput): { standi
     if (!isObj(v)) aside("same_as", v, "`same_as` is one object `{file, line, quote}`: the line of the processing this finding was traced to, as you Read it (S2)");
     else {
       const a = atOf(v);
-      if ("why" in a) aside("same_as", v, `${a.why} (S2)`);
-      else out.same_as = a.at as { file: string; line: number; quote: string };
+      if ("why" in a) {
+        turnsOn(STANDING_OPENS_QUOTATION);
+        aside("same_as", v, `${a.why} (S2)`);
+      } else out.same_as = a.at as { file: string; line: number; quote: string };
     }
   }
   if ("decisive" in raw) {
     const v = raw.decisive;
-    if (typeof v !== "string" || !REF.test(v)) aside("decisive", v, "`decisive` is `E<n>` (an entry of this verdict's `evidence[]`, from E1) or `P<n>` (a place, from P0), the one quotation the finding stands on");
+    if (v === null) {
+      turnsOn(STANDING_OPENS_QUOTATION);
+      aside("decisive", v, `${NAMES_NO_ENTRY("decisive")} (S2)`);
+    } else if (typeof v !== "string" || !REF.test(v)) aside("decisive", v, "`decisive` is `E<n>` (an entry of this verdict's `evidence[]`, from E1) or `P<n>` (a place, from P0), the one quotation the finding stands on");
     else {
       const a = atOf(v);
-      if ("why" in a) aside("decisive", v, `${a.why} (S2)`);
-      else out.decisive = v;
+      if ("why" in a) {
+        turnsOn(STANDING_OPENS_QUOTATION);
+        aside("decisive", v, `${a.why} (S2)`);
+      } else out.decisive = v;
     }
   }
   if ("effect" in raw) {
     const v = raw.effect;
-    const why = wordsProblem("effect", v, EFFECT_MAX_WORDS);
+    const why = wordsProblem("effect", v, EFFECT_MAX_WORDS) ?? headlineRowsProblem(v as string);
     if (why) aside("effect", v, why);
     else out.effect = (v as string).trim();
+  }
+  if ("fix" in raw) {
+    const v = raw.fix;
+    /* Only with `violation_candidate`: the report prints a suggested change only on a
+     * finding to fix, and one kept on a `needs_human` was printed on no page with nothing saying so (the non-author
+     * re-check, S1). Set aside with the reason, as `settles` is with the other verdicts. */
+    const why = input.verdict !== "violation_candidate" ? "`fix` goes only with `violation_candidate`: the report prints a suggested change only on a finding to fix" : (wordsProblem("fix", v, FIX_MAX_WORDS) ?? suggestionRowsProblem(v as string));
+    if (why) {
+      if (input.verdict !== "violation_candidate") turnsOn(STANDING_OPENS_VERDICT);
+      aside("fix", v, why);
+    } else out.fix = (v as string).trim();
   }
   if ("settles" in raw) {
     const v = raw.settles;
     const m = typeof v === "string" ? /^(question|law_unclear|code_not_readable):(.+)$/.exec(v) : null;
-    if (input.verdict !== "needs_human") aside("settles", v, "`settles` goes only with `needs_human`");
-    else if (!m) aside("settles", v, "`settles` is `question:<id>`, `law_unclear:<cite>` or `code_not_readable:<file>`");
-    else if (m[1] === "question" && !input.questions.has(m[2]!)) aside("settles", v, `\`settles\` names ${JSON.stringify(m[2])}, not a question of the program's list (S4)`);
-    else out.settles = v as string;
+    if (input.verdict !== "needs_human") {
+      turnsOn(STANDING_OPENS_VERDICT);
+      aside("settles", v, "`settles` goes only with `needs_human`");
+    } else if (!m) aside("settles", v, "`settles` is `question:<id>`, `law_unclear:<cite>` or `code_not_readable:<file>`");
+    else if (m[1] === "question" && questionIdOf(m[2]!) === JURISDICTION_QUESTION) aside("settles", v, JURISDICTION_WAIT);
+    else if (m[1] === "question" && !input.questions.has(questionIdOf(m[2]!))) aside("settles", v, `\`settles\` names ${JSON.stringify(m[2])}, not a question of the program's list (S4)`);
+    else out.settles = m[1] === "question" ? `question:${questionIdOf(m[2]!)}` : (v as string);
   }
   // S6: a duty met may name where data goes; a duty met with `needs_human` contradicts itself. So does an
   // exemption: the seat that shows the exempt shape and the basis that exempts it has settled the finding.
   if ((out.status?.value === "duty_met" || out.status?.value === "exempt") && input.verdict === "needs_human") {
     setAside.push({ part: "status", value: out.status, why: `\`status\` \`${out.status.value}\` with the verdict \`needs_human\` contradicts itself (S6)` });
+    turnsOn(STANDING_OPENS_VERDICT);
     delete out.status;
   }
   // S8: a status that takes the finding out of "to fix"
@@ -578,6 +773,89 @@ export function checkStanding(raw: unknown, input: StandingCheckInput): { standi
     aside("exemption", raw.exemption, "`exemption` goes only with a `status` `exempt` that stood (S8)");
     delete out.exemption;
   }
-  for (const k of Object.keys(raw)) if (!(STANDING_PARTS as readonly string[]).includes(k)) setAside.push({ part: "standing", value: { [k]: raw[k] }, why: `\`${k}\` is not a part of \`standing\`` });
-  return Object.keys(out).length > 0 ? { standing: out, setAside } : { setAside };
+  // A field of the entry written
+  // inside `standing` is named with its right place, as the capture names a part of `standing` written beside it. That field is named for the amendment that moves it there (`opens`): before,
+  // the move was refused as a change the refusal did not name, twice, and on the last answer the whole bin was not judged.
+  // Every key that is no part is refused for where it is (`strays`), so the refusal takes it out of the base: an answer
+  // after a refusal keeps every part it leaves out (amend.ts `mergeAmendment`), and could otherwise never drop it.
+  // `decisions` is never sent in an amendment, so its move is said as one of the whole answer.
+  const strays: string[] = [];
+  const moved = new Set<string>();
+  for (const k of Object.keys(raw)) {
+    if ((STANDING_PARTS as readonly string[]).includes(k)) continue;
+    strays.push(k);
+    const field = ENTRY_FIELDS().includes(k);
+    if (field) moved.add(k);
+    const move = !field ? "" : k === "decisions" ? ": it is a field of the entry, beside `standing`; send your whole answer again with it there and left out of `standing`" : ": it is a field of the entry, beside `standing`; move it there and leave it out of `standing`";
+    setAside.push({ part: "standing", value: { [k]: raw[k] }, why: `\`${k}\` is not a part of \`standing\`${move}` });
+  }
+  const refused = setAside.length > 0 ? standingRefusal(waitSaid, setAside.filter((x) => !waitCovered.has(x)), [...opens]) : undefined;
+  const opened = [...new Set([...opens, ...moved])];
+  // What the refusal names inside `standing`: each part it sets aside, by
+  // name (`standing.<part>`), never the whole block, so that every other part keeps its value from this answer (amend.ts).
+  // A key that is no part is taken out of the base (`strays`) and needs no name. A status set aside names the parts it stands only with
+  // (`STATUS_PARTNERS`), whose correction it is ("`duty_met` names no `element`"): the refusal's own naming, before any
+  // widening, so the guard on a resend (amend.ts, THE OUTCOME) weighs that correction as named. All four, whatever the status was: the correction may be
+  // another status with its own part. The other direction (a partner refused naming the status) stays a widening (amend.ts
+  // `nameIn`), guarded (V8).
+  const names = [
+    ...new Set(
+      setAside
+        .filter((x) => x.part !== "standing")
+        .flatMap((x) => [`standing.${x.part}`, ...(x.part === "status" ? STATUS_PARTNERS.map((p) => `standing.${p}`) : [])]),
+    ),
+  ];
+  return { ...(Object.keys(out).length > 0 ? { standing: out } : {}), setAside, ...(refused ? { refused, names, ...(opened.length > 0 ? { opens: opened } : {}), ...(strays.length > 0 ? { strays } : {}) } : {}) };
+}
+
+/**
+ * The sentence the capture sends back for a `standing` block
+ * with any part that did not stand (`checkStanding`'s `refused`, and a block on a verdict that takes none:
+ * reading-assembly.ts `standingOfEntry`): the wait's own sentence where a wait did not stand, then every other part set
+ * aside with the capture's reason for it, so one refusal names every defect, and what to do with each. (M1) `opens`: the fields beside
+ * `standing` the refusal also names (`STANDING_OPENS_VERDICT`, `STANDING_OPENS_QUOTATION`), said to the seat, so that an
+ * amendment that corrects the part by changing them is not refused for changing a field the refusal did not name.
+ */
+export function standingRefusal(wait: string | undefined, rest: readonly StandingSetAside[], opens: readonly string[] = []): string {
+  const said = (why: string): string => (/[.!?]$/.test(why) ? why : `${why}.`);
+  const verdict = STANDING_OPENS_VERDICT.some((f) => opens.includes(f));
+  const quotation = STANDING_OPENS_QUOTATION.some((f) => opens.includes(f));
+  return [
+    ...(wait !== undefined ? [wait] : []),
+    ...rest.map((x) => (x.part === "standing" ? said(x.why) : `\`standing.${x.part}\` was not used: ${said(x.why)}`)),
+    // Any answer after a refusal keeps every part it does not send (amend.ts
+    // `mergeAmendment`, the rule the refusal states once: verdict-capture.ts `renderRefusal`), so a part is taken out by `null`.
+    ...(rest.length > 0 ? ["Correct each part named, or write it as `null` to take it out where you cannot quote it."] : []),
+    ...(verdict ? ["Where correcting a part means changing the verdict, this refusal also names `verdict` and `confidence`."] : []),
+    ...(quotation ? ["Where correcting an `at` means adding the quotation it names, this refusal also names `evidence` and `decisions`."] : []),
+  ].join(" ");
+}
+
+/**
+ * The sentence the capture sends back for a `waits_on_answer` that names no question of the program's list and no fact
+ * that stood (`checkStanding`'s `refused`): what to write instead, the program's question ids (the jurisdiction's left
+ * out: a finding never waits on it, rule 6 of the agent text), and why a `question` or `fact` the seat gave was not used.
+ */
+function waitRefusal(o: { statusAt?: string; named: boolean }, notUsed: readonly StandingSetAside[], questions: ReadonlySet<string>): string {
+  const ids = [...questions].filter((q) => q !== JURISDICTION_QUESTION).map((q) => `\`${q}\``);
+  return [
+    // A wait whose own `at` does not stand: where the fact bears.
+    ...(o.statusAt !== undefined
+      ? [
+          `\`standing.status\` is \`waits_on_answer\`, and its \`at\` does not stand (${o.statusAt}), so the finding cannot be shown as waiting on an answer.`,
+          "Point `status.at` at the line the fact bears on: `E<n>`, an entry of this verdict's `evidence[]` (from E1), `P<n>`, a place row you kept (from P0), or `{file, line, quote}`.",
+        ]
+      : []),
+    ...(o.named
+      ? []
+      : [
+          o.statusAt !== undefined
+            ? "The block also names no question of the program's list and no fact in words that stood (S4)."
+            : "`standing.status` is `waits_on_answer`, and the block names no question of the program's list and no fact in words that stood, so the finding cannot be shown as waiting on an answer (S4).",
+          'Name the question in `standing.question` as `{"value": "<id>", "at": "E<n>"}`; naming it in `reasoning` does not count.',
+          `The question ids: ${ids.join(", ")}.`,
+          'Where none of them carries the fact, write `standing.fact` as `{"words", "about"}` instead; where no fact only the person holds decides the finding, write the `status` the code shows.',
+        ]),
+    ...notUsed.map((x) => `The \`${x.part}\` you gave was not used: ${x.why}.`),
+  ].join(" ");
 }

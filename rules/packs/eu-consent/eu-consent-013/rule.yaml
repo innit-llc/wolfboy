@@ -2,7 +2,7 @@ id: eu-consent-013
 pack: eu-consent
 short_name: Analytics tool in the product
 problem_line:
-  text: Analytics vendor gets visitor data, no consent gate found
+  text: Analytics company gets visitor data, no consent check found
 fix_line: Gate analytics on recorded consent or opt-in, no-persistence settings, server SDKs too;
   decide how relays treat consent.
 title: Analytics SDK referenced or initialised (Mixpanel, Amplitude,

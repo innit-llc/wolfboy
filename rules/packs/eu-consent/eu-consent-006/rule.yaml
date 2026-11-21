@@ -1,8 +1,8 @@
 id: eu-consent-006
 pack: eu-consent
-short_name: Fonts or images fetched from another company on page view
+short_name: Fonts or images loaded from another company's server
 problem_line:
-  text: Page view sends the visitor's IP to a font or image host
+  text: Font or image from another company gets the visitor's IP
 fix_line: Serve fonts and images from your own origin (self-host, generate or cache them), or make
   the remote fetch opt-in.
 title: Third-party asset fetched on page render - a Google Fonts host or build step, or a

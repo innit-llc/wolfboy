@@ -243,6 +243,9 @@ detector:
       \t][^<>\n]{0,120})?>)(?!(?<=:)-)(?![a-z][a-z0-9]*(?:[_-][a-z0-9]+)+(?![A-Za-z0-9+/=_.~-]))(?=[A-Za-z0-9+/=_.~-]{0,255}[0-9])(?=[A-Za-z0-9+/=_.~-]{0,255}[A-Za-z])(?=([A-Za-z0-9+/=_.~-]{16,}))\14(?![\u00C0-\uFFFF])(?=[
       \t]*(?:<|\r?$))))
     - (?<=:)(?<=(?<![A-Za-z0-9+.-])[A-Za-z][A-Za-z0-9+.-]{0,30}://[A-Za-z0-9._~%+-]{0,64}:)(?!%[A-Za-z]@)[A-Za-z0-9._~%+-]{1,128}(?=@[A-Za-z0-9\[])
+    - ^\uFEFF?(?!\s*(?://|#|\*|/\*|<!--|--\s|;))[ \t]*(?:-[ \t]+)?(?:(?:export|ENV|ARG)[
+      \t]+)?[\"']?(?=[A-Z])(?=[A-Za-z0-9]*_)(?=((?:[Pp][Aa][Ss][Ss][Ww][Oo][Rr][Dd]|[Pp][Aa][Ss][Ss][Ww][Dd]|[Ss][Ee][Cc][Rr][Ee][Tt]|[Tt][Oo][Kk][Ee][Nn]|[Aa][Pp][Ii][-_]?[Kk][Ee][Yy]|[Aa][Cc][Cc][Ee][Ss][Ss][-_]?[Kk][Ee][Yy]|[Pp][Rr][Ii][Vv][Aa][Tt][Ee][-_]?[Kk][Ee][Yy]|[Cc][Rr][Ee][Dd][Ee][Nn][Tt][Ii][Aa][Ll]|[Pp][Aa][Ss][Ss][Pp][Hh][Rr][Aa][Ss][Ee]|[Pp][Aa][Ss][Ss][Cc][Oo][Dd][Ee]|[Pp][Ww][Dd]|[Ww][Rr][Ii][Tt][Ee][-_]?[Kk][Ee][Yy]|[Aa][Uu][Tt][Hh](?![A-Za-z]))(?:_[A-Za-z0-9_]*)?))\1[\"']?[
+      \t]*(?:=>|[:=])(?![ \t]*[\"']?\$\{\{)
 context_questions:
   - "Does the literal have a credential shape at all, or is only the identifier secret-named? Answer
     that first: on the name-based clause the value can be a colour token, a dotted configuration
@@ -263,7 +266,15 @@ context_questions:
     because the file it draws from can be in this tree. Where the value is empty or is an
     interpolation, say so and close the candidate as a configuration key rather than a disclosure;
     where it is a short literal such as root, dev or password, the shape clauses would never have
-    raised it and the question is whether the deployment that ships with that default is reachable."
+    raised it and the question is whether the deployment that ships with that default is reachable.
+    A FOURTH NAME-BASED CLAUSE, added 2026-11-17, reads the second one's position where the name's
+    FIRST segment is the secret word itself (`SECRET_KEY_BASE`, `TOKEN_SIGNING_SALT`, `API_KEY`),
+    which the second one never reached; like the second, it reads no value. On either of them, an
+    interpolation that carries a fallback (`${NAME:-value}`, `${NAME-value}`) is not closed as an
+    interpolation: the fallback is the value a deployment runs with when it does not set the
+    variable, so where the fallback is a placeholder or any other literal every reader of the
+    repository can see, that shipped default is what to weigh, and question 4 does not record it as
+    a throwaway value."
   - Has the value already been committed to git? If so, the work spans history rewriting and key
     rotation, not just the working tree.
   - "IF THIS IS A PLATFORM-KEYCHAIN CLAUSE, THE QUESTION IS NOT WHETHER SOMETHING LEAKED. Four of
@@ -281,6 +292,48 @@ context_questions:
     store, a log line, a crash report - because the keychain call is then not the whole story. Where
     all three answers are unremarkable, close the candidate and record that the credential is held
     correctly."
+  - "A FIXED SAMPLE VALUE OR A THROWAWAY VALUE, AND HOW TO RECORD IT. Some kept candidates hold a
+    value that guards no real person's data: a fixed sample value written into the repository for a
+    demo or a seed (a demo or seed account's password or API key), or a throwaway value of a service
+    that exists only in development, continuous integration or tests (a CI job's database service
+    container discarded after the job, a local test database, a development-only environment file).
+    A SEED OR DEMO VALUE IS THIS ONLY WHERE THE PRODUCT ITSELF KEEPS THE SEED OUT OF EVERY RUNNING
+    INSTANCE: a check in the seed's own code, or in the file that loads it, that refuses to run
+    unless the environment is development or test, with nothing that lifts it; or a file only the
+    test runner loads. Tell that guard from an operator flag by what it reads and what lifts it: the
+    guard lists development and test as the only environments the seed runs in, and reads the
+    environment the product's own shipped deployment sets (production, in its image, compose file or
+    chart). The guard counts only where that deployment, or the install its documents give, sets
+    production, or where the guard also refuses an environment left unset: where the shipped
+    deployment leaves the environment unset, the framework's own default decides (Rails and Rack
+    fall back to development, so `abort unless Rails.env.development? || Rails.env.test?` then
+    passes), and a guard that passes that way does not count. An operator flag is a check that
+    refuses only in production (so staging or any other environment runs the seed), a check that a
+    variable, an argument or a setting lifts (an `ALLOW_` or `FORCE` variable, a `--force`
+    argument), or a check of a variable of the seed's own that a deployment can set; a seed behind
+    one counts as reachable. Where the line shows a fixed sample or throwaway value, and for a seed
+    or demo value that guard as well, the status is `duty_met`, its `at` the line that shows it (the
+    guard that keeps the seed out, the CI job or test step that starts the service, the
+    development-only file), and its `element` the words `fixed sample or throwaway value used only
+    in development, CI or tests`. Four things are not this and stay `duty_unmet` wherever the file
+    sits: a seed or demo task that the product's start-up runs (an entrypoint or release step that
+    runs the seeds) or that an operator can run against a running instance, with no such guard,
+    because its account and its known password or key then exist on every instance that runs it; a
+    value in a real vendor's key format (a prefix this rule reads, such as `sk_live_`, `AKIA` or
+    `ghp_`, or another provider's own credential format, such as an OAuth client secret a provider
+    issued), because a live key opens that vendor's service wherever it is used; a value that a
+    shipped configuration falls back to or that a sample environment file operators copy carries (a
+    compose default, a fallback such as `${NAME:-value}`), because a deployment that does not set it
+    runs with a secret every reader of the repository knows; and a value whose service also holds
+    real people's data (a staging or production database a CI job reaches). Whether the file ships
+    is the separate part `ships`, and it does not decide this. A WAY OUT HOLDS ONLY AT EVERY KEPT
+    PLACE: a status this question gives is the finding's only where every place of the finding that
+    you or the seats before you kept has the shape that status names; a kept place inside a helper
+    or a shared function has that shape only where every call that reaches it does, so walk every
+    caller, and a caller that would be `duty_unmet` makes that place `duty_unmet`. Where the kept
+    places differ, the finding takes the heaviest of their statuses (`duty_unmet`, then
+    `waits_on_answer`, then `duty_met` or `exempt`), with its `at` and its `decisive` at that place:
+    one kept place that is `duty_unmet` makes the finding `duty_unmet`."
 evidence_template: "{file}:{line} matched one of this rule's twenty-seven clauses, and they do not
   all make the same kind of claim. Sixteen are claims about the shape of the literal itself -
   fourteen vendor token prefixes (Stripe's secret and restricted keys in test mode as well as live:
@@ -374,7 +427,12 @@ evidence_template: "{file}:{line} matched one of this rule's twenty-seven clause
   weigh. On both, the location is the value itself. The count also holds two clauses this template
   did not count before: a configuration value of thirty-two or more hexadecimal characters, or of
   thirty-two or more base64 characters with a digit and both cases, under any key, and the import of
-  a keychain wrapper library."
+  a keychain wrapper library. A TWENTY-EIGHTH CLAUSE, added 2026-11-17 and appended last, reads an
+  environment-variable-shaped setting name whose first segment is the secret word, at the start of a
+  line before an assignment: the position of the environment-variable clause, which needs a segment
+  before the word. Like that clause it is a claim about the NAME and its position and none about the
+  value, which may be empty, a fallback such as a placeholder, or a reference; the location is the
+  name. The count of twenty-seven at the head of this template is left as written."
 remediation_template: |
   This is a candidate for review against GDPR Art. 32 (security of processing), not a determination
   about this code. The changes below apply where the review confirms it.

@@ -49,11 +49,25 @@
  * write its document and exit exactly as `--progress never` does.
  */
 import { basename } from "node:path";
+import { checksFoundNothing, group, plural } from "./count-words.js";
 import { placeCountOf } from "./launch-plan.js";
 import { OWN_ERASE, writeOwnErase } from "./printed-output.js";
 import { CANDIDATE_LINE_TEXT_CHARS, confirmedInRecord, productPrintedRedaction, streamableRuleIds, type FileRecord } from "./engine.js";
 import { redactCutText, type PrintedRedaction } from "./credential-redaction.js";
 import type { Findings, Rule } from "wolfboy-schemas";
+import { OWN_WORKING_FOLDER, refusedByRuleOf } from "./read-scope.js";
+
+/**
+ * THE THREE FORMATTERS THE CONSOLE REPORT SHARES WITH THIS DISPLAY, exported for that reason alone (`group` and `plural` from count-words.ts).
+ *
+ * `scan.ts`'s first screen states the same three things this block states — how many files were
+ * read, how long it took, and how many files carry a candidate — and the project's rule for two places
+ * that must agree is to export and import rather than to copy. A second `toLocaleString` call or a
+ * second "N s under a minute" rule in `report.ts` is exactly the drift this repository keeps
+ * removing: the console would say `5720 files in 51 s` beside `5,720 files in 50 s` on stderr, for
+ * one run of one tree.
+ */
+export { checksFoundNothing, group, plural };
 
 /** `--progress` as typed. `auto` is the default and means "only when stderr is a terminal". */
 export type ProgressMode = "auto" | "always" | "never";
@@ -333,11 +347,94 @@ export function areaTableLines(rows: readonly AreaRow[]): string[] {
 const READ_SCOPE_NOUN: Readonly<Record<string, string>> = { tests: "test", vendored: "vendored", build: "built" };
 
 /**
- * The one line on what the quick scan did not read and what found nothing (the mock-up's last line of screen 3).
+ * THE FOLDERS NO RULE READS, ONE
+ * COMPUTATION for the quick scan's line, the end screen, report.md, not-checked.md and the record. The `refused-by-rule`
+ * member counts every folder the walker leaves out by rule, WolfBoy's own working folder (`.legal`) among them; the
+ * report said "19+ files in machine-written folders (node_modules, .git and the like)" where the 19 were `.legal`'s and
+ * neither node_modules nor anything like it was there, while the end screen, which did not count the member at all, said
+ * "not read: none". `.legal` holds the scan's own files, never the project's, so it is not counted here (the quick scan's
+ * statistics line still names it); the folders that are counted are named from the walker's own rows. Made from read-scope.ts `refusedByRuleOf`, the one computation the scan's own sentence
+ * takes too: the dependency lock files were added into the files "in the <named> folders" (a root `package-lock.json`
+ * read as a file of `.git`); they are counted apart now, and every refused folder is named.
+ */
+export { OWN_WORKING_FOLDER };
+export interface FoldersNotRead {
+  /** Files counted in the folders refused by rule, `.legal`'s left out. */
+  files: number;
+  /** Folders whose files were not counted. */
+  uncounted: number;
+  /** Folders refused by rule, `.legal` left out: how many, where none is named. */
+  folders: number;
+  /** The folders, by the walker's rows, most files first, `.legal` left out. */
+  names: string[];
+  /** Dependency lock files and test or story files refused by their names, counted apart. */
+  lockFiles: number;
+  testFiles: number;
+  /** Files refused by their names where only the member's counts say so (no walker row tells their kind). */
+  byName?: number;
+}
+export function foldersNotReadOf(findings: Findings): FoldersNotRead | null {
+  const r = refusedByRuleOf((findings as { excluded_by_walker?: { reason?: string; dir?: string; files?: number | null }[] }).excluded_by_walker ?? []);
+  if (r.folders.length > 0 || r.lockFiles + r.testFiles > 0) {
+    return { files: r.folderFiles, uncounted: r.uncounted, folders: r.folders.length, names: r.folders.map((f) => f.dir), lockFiles: r.lockFiles, testFiles: r.testFiles };
+  }
+  /* A document whose walker rows say nothing of what the member counts (a planted one; a scan writes both): the member's
+   * counts, never less than it records ("Not read: 0 files" over two folders would hide them). Its files refused by name
+   * cannot be told apart here, so they are said as files refused by their names. `.legal` has no row to be told apart by. */
+  if (r.own !== null) return null;
+  const limit = (findings.coverage_limits?.limits ?? []).find((l) => l.id === "refused-by-rule");
+  const c = (limit?.counts ?? {}) as Record<string, number | undefined>;
+  const files = c.files_in_directories ?? 0;
+  const uncounted = (c.directories_not_enumerated ?? 0) > 0 ? 1 : 0;
+  if ((c.directories ?? 0) === 0 && (c.files ?? 0) === 0) return null;
+  return { files, uncounted, folders: c.directories ?? 0, names: [], lockFiles: 0, testFiles: 0, byName: c.files ?? 0 };
+}
+/**
+ * The words of `foldersNotReadOf`, `names` already joined in the form the screen prints (plain, or markdown): the folders,
+ * then the files refused by name, each its own part. "1+ file" had "+" with the
+ * singular: a count that is only a lower bound takes the plural.
+ */
+export function foldersNotReadWords(d: FoldersNotRead, names: string): string {
+  return foldersNotReadParts(d, names).join(", ");
+}
+/**
+ * The same parts in the three lengths the screens' 80 columns take (`notReadFolded`): `long` as the report says it, `short`
+ * without "which the scan never reads", `count` with the folders as a number. The
+ * screens keep to 80 columns: since the folders were named (r15-b item 4) the quick scan's line ran to 103 on a demo app
+ * with only `.git` left out, and nothing folded it: it folded only the files the walker did not open.
+ */
+export function foldersNotReadParts(d: FoldersNotRead, names: string, form: "long" | "short" | "count" = "long"): string[] {
+  const k = d.names.length;
+  // With no folder named, how many folders the walker refused (not only those whose files went uncounted).
+  const n = Math.max(d.folders ?? 0, d.uncounted);
+  // "the a, b, c and 1 more folders": the names shown, then how many more.
+  const which = k === 0 ? (n > 1 ? `${group(n)} folders` : "a folder") : `the ${names} ${k === 1 ? "folder" : "folders"}${k > 3 ? ` and ${group(k - 3)} more` : ""}`;
+  const plus = d.uncounted > 0;
+  const folders = Math.max(n, k);
+  const out =
+    folders === 0
+      ? []
+      : form === "count"
+        ? [`${group(folders)} ${folders === 1 ? "folder" : "folders"}`]
+        : [`${d.files > 0 ? `${group(d.files)}${plus ? "+" : ""} ${plus ? "files" : plural(d.files, "file", "files")} in ` : ""}${which}${form === "long" ? ", which the scan never reads" : ""}`];
+  if ((d.lockFiles ?? 0) > 0) out.push(`${group(d.lockFiles)} dependency lock ${plural(d.lockFiles, "file", "files")}`);
+  if ((d.byName ?? 0) > 0) out.push(`${group(d.byName ?? 0)} ${plural(d.byName ?? 0, "file", "files")} refused by ${d.byName === 1 ? "its name" : "their names"}`);
+  if ((d.testFiles ?? 0) > 0) out.push(`${group(d.testFiles)} test or story ${plural(d.testFiles, "file", "files")}${form === "long" ? ` by ${d.testFiles === 1 ? "its name" : "their names"}` : ""}`);
+  return out;
+}
+/** The folder names as `foldersNotReadWords` takes them, plain: the first three ("a, b and c"); the words say how many more. */
+export function folderNamesOf(names: readonly string[]): string {
+  const shown = names.slice(0, 3);
+  return shown.length <= 1 ? shown.join("") : `${shown.slice(0, -1).join(", ")} and ${shown[shown.length - 1]}`;
+}
+
+/**
+ * What the quick scan did not read and how many checks found nothing (the mock-up's last line of screen 3, two rows since
+ * INT-R19: `notReadLine` and `checksFoundNothing`).
  * Read from the same `coverage_limits` members' counts the full section prints the sentences of, never parsed back out
  * of a sentence; files stopped for time are files not read whole, so they are named here too.
  */
-export function notReadParts(findings: Findings): { notRead: string[]; notOpened: string[]; notOpenedFiles: number; silent: number } {
+export function notReadParts(findings: Findings): { notRead: string[]; folders: string[]; foldersShort: string[]; foldersCount: string[]; notOpened: string[]; notOpenedFiles: number; silent: number } {
   const limits = findings.coverage_limits?.limits ?? [];
   const notRead: string[] = [];
   // WHAT THE WALKER DID NOT OPEN AND WHAT NO RULE
@@ -373,37 +470,50 @@ export function notReadParts(findings: Findings): { notRead: string[]; notOpened
   const stopped = findings.stats?.files_stopped_for_time ?? 0;
   if (stopped > 0) notRead.push(`${group(stopped)} ${plural(stopped, "file", "files")} stopped for time`);
   const silent = (limits.find((l) => l.id === "rules-silent")?.counts as { rules_silent?: number } | undefined)?.rules_silent ?? 0;
-  return { notRead, notOpened, notOpenedFiles: Math.max(0, refused) + entries + lfs + notUtf8 + noRule, silent };
+  // The folders no rule reads, said once: the report's first screen words them from
+  // the same computation (assemble-report.ts `notReadMachine`), so `folders` is kept apart from `notRead`.
+  const f = foldersNotReadOf(findings);
+  const folders = f ? [foldersNotReadWords(f, folderNamesOf(f.names))] : [];
+  const foldersShort = f ? [foldersNotReadParts(f, folderNamesOf(f.names), "short").join(", ")] : [];
+  const foldersCount = f ? [foldersNotReadParts(f, folderNamesOf(f.names), "count").join(", ")] : [];
+  return { notRead, folders, foldersShort, foldersCount, notOpened, notOpenedFiles: Math.max(0, refused) + entries + lfs + notUtf8 + noRule, silent };
 }
 
 /** Every part of what was not read, as the quick scan's line and the end screens print it. */
-export function notReadAll(parts: { notRead: string[]; notOpened: string[] }): string[] {
-  return [...parts.notRead, ...parts.notOpened];
+export function notReadAll(parts: { notRead: string[]; folders?: readonly string[]; notOpened: string[] }): string[] {
+  return [...parts.notRead, ...(parts.folders ?? []), ...parts.notOpened];
 }
 
-/** The quick scan's line of the two, as the mock-up's screen 3 prints it. */
+/**
+ * The quick scan's "Not read" line, as the mock-up's screen 3 prints it. The checks that found nothing follow on a row of
+ * their own (`quickScanDoneLines`), in the one sentence every other surface prints: beside even "Not read: none" that
+ * sentence ran to 82 columns at three digits.
+ */
 export function notReadLine(findings: Findings): string {
-  const parts = notReadParts(findings);
-  const { silent } = parts;
-  return notReadFolded(
-    parts,
-    (notRead) =>
-      // "found nothing: 112 checks ·
-      // neither is a pass" read as code to a developer.
-      `  Not read: ${notRead.length === 0 ? "none" : notRead.join(", ")}${DOT}${group(silent)} ` +
-      `${plural(silent, "check", "checks")} found nothing, which is not a pass`,
-  );
+  return notReadFolded(notReadParts(findings), (notRead) => `  Not read: ${notRead.length === 0 ? "none" : notRead.join(", ")}`);
 }
 
 /**
  * THE SCREEN'S 80 COLUMNS, for every screen that prints a "Not read" line (the quick scan's and the end screen's row): where every part does not fit, the walker's
  * parts become one count of files, each named in the report's full section. `line` lays the parts out as the screen does.
  */
-export function notReadFolded(parts: { notRead: string[]; notOpened: string[]; notOpenedFiles: number }, line: (notRead: string[]) => string): string {
+export function notReadFolded(
+  parts: { notRead: string[]; folders?: readonly string[]; foldersShort?: readonly string[]; foldersCount?: readonly string[]; notOpened: string[]; notOpenedFiles: number },
+  line: (notRead: string[]) => string,
+): string {
   const n = parts.notOpenedFiles;
-  const folded = parts.notOpened.length === 0 ? null : `${group(n)} ${parts.notRead.length > 0 ? "other " : ""}${plural(n, "file", "files")}`;
+  const first = [...parts.notRead, ...(parts.folders ?? [])];
+  const folded = parts.notOpened.length === 0 ? null : `${group(n)} ${first.length > 0 ? "other " : ""}${plural(n, "file", "files")}`;
+  const fits = (l: string): boolean => [...l].length <= 80;
   const full = line(notReadAll(parts));
-  return [...full].length <= 80 || folded === null ? full : line([...parts.notRead, folded]);
+  if (fits(full)) return full;
+  // Then the folders said shorter, then counted; each the report's full section names.
+  const tries = [
+    folded === null ? null : line([...first, folded]),
+    parts.foldersShort ? line([...parts.notRead, ...parts.foldersShort, ...(folded === null ? parts.notOpened : [folded])]) : null,
+    parts.foldersCount ? line([...parts.notRead, ...parts.foldersCount, ...(folded === null ? parts.notOpened : [folded])]) : null,
+  ].filter((l): l is string => l !== null);
+  return tries.find(fits) ?? tries[tries.length - 1] ?? full;
 }
 
 /**
@@ -427,7 +537,7 @@ export function quickScanDoneLines(findings: Findings, rules: readonly Rule[]): 
   }
   lines.push("");
   if (places > 0) lines.push("  A place worth a look is not a problem yet. Step 2 reads each one.");
-  lines.push(notReadLine(findings));
+  lines.push(notReadLine(findings), `  ${checksFoundNothing(notReadParts(findings).silent)}`);
   return lines;
 }
 
@@ -526,19 +636,6 @@ const RULE_ID_WIDTH = 26;
 /** The field separator of the owner's 2026-09-16 shape, with one space on each side. */
 const DOT = " · ";
 
-/**
- * THE THREE FORMATTERS THE CONSOLE REPORT SHARES WITH THIS DISPLAY, exported for that reason alone.
- *
- * `scan.ts`'s first screen states the same three things this block states — how many files were
- * read, how long it took, and how many files carry a candidate — and the project's rule for two places
- * that must agree is to export and import rather than to copy. A second `toLocaleString` call or a
- * second "N s under a minute" rule in `report.ts` is exactly the drift this repository keeps
- * removing: the console would say `5720 files in 51 s` beside `5,720 files in 50 s` on stderr, for
- * one run of one tree.
- */
-export function group(n: number): string {
-  return n.toLocaleString("en-US");
-}
 
 /**
  * `m:ss` under an hour, `h:mm:ss` over it. Seconds are floored, never rounded up past the total.
@@ -589,9 +686,7 @@ function megabytes(bytes: number): string {
   return (bytes / (1024 * 1024)).toFixed(1);
 }
 
-export function plural(n: number, one: string, many: string): string {
-  return n === 1 ? one : many;
-}
+
 
 /**
  * THE DISPLAY. One per scan, constructed only when the stream is on.

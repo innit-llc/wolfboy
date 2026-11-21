@@ -2,9 +2,9 @@ id: eu-consent-002
 pack: eu-consent
 short_name: Meta Pixel may run before consent
 problem_line:
-  text: Meta Pixel runs with no consent gate found
-fix_line: Revoke consent first and grant on a recorded decision, or load the pixel after consent;
-  drop or gate noscript pixels.
+  text: Meta Pixel runs with no consent check found
+fix_line: Load the pixel only after the visitor agrees, or start it revoked and grant consent on
+  their choice; same for noscript.
 title: Meta Pixel init call, or a pixel URL that may be an allow-list entry - consent revoke/grant
   gate needs review
 jurisdiction:

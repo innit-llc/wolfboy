@@ -2,7 +2,7 @@ id: eu-consent-003
 pack: eu-consent
 short_name: TikTok Pixel may run before consent
 problem_line:
-  text: TikTok Pixel loads with no consent gate found
+  text: TikTok Pixel loads with no consent check found
 fix_line: Call ttq.holdConsent() before the pixel loads and grant only on a recorded decision, or
   load the script after consent.
 title: TikTok Pixel loaded - holdConsent gate needs review
@@ -79,3 +79,4 @@ data_categories:
   - user.behavior
   - user.unique_id
 fingerprint_spec: default
+duty_about: product_runtime

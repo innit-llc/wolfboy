@@ -278,6 +278,11 @@
           "type": "string",
           "minLength": 1
         },
+        "fix": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The change the review suggests for this code, one English line of at most 12 words that takes at most two rows of the report with its label (report-budget.ts `FIX_MAX_WORDS`, `SUGGESTION_ROWS`). Given with `violation_candidate` only; the capture sets it aside on any other verdict. The report prints it on a finding to fix as the review's suggestion, together with the rule's `fix_line` or a pointer to it; nothing reads it for order or placement."
+        },
         "settles": {
           "type": "string",
           "pattern": "^(question|law_unclear|code_not_readable):.+$"
@@ -307,7 +312,7 @@
           }
         },
         "fact": {
-          "description": " On `waits_on_answer` where no question of the program's list carries the fact: the fact in at most 20 English words on one line (`words`), and the `L<n>` of the basis it concerns (`about`). The line the fact bears on is `status.at`. The report asks it as a question named in words.",
+          "description": " On `waits_on_answer` where no question of the program's list carries the fact: the fact in at most 30 English words on one line (`words`; the seat is asked for 20, standing.ts `FACT_ASK_WORDS`), and the `L<n>` of the basis it concerns (`about`). The line the fact bears on is `status.at`. The report asks it as a question named in words.",
           "type": "object",
           "additionalProperties": false,
           "required": [
@@ -2007,7 +2012,7 @@
       "$ref": "#/$defs/standingRecord"
     },
     "standing_set_aside": {
-      "description": "H5a stage 1 (h5a-design-2026-10-28.md section 2.5): every part of the seat's `standing` block the capture set aside, never refusing the answer for it, with the value the seat gave and why (`part` `standing` where the whole value was not an object, or a key that is not a part). The order places a set-aside part at its heaviest value and the report says so (W13).",
+      "description": "H5a stage 1 (h5a-design-2026-10-28.md section 2.5): every part of the seat's `standing` block the capture set aside, with the value the seat gave and why: since wa-2026-11-17.md a part that fails is refused and sent back to the seat first, and is set aside only in the answer after its last refusal, in the last message of an auto-mode seat that stopped without handing its answer back (no refusal can reach it), or in a record the capture did not check (`part` `standing` where the whole value was not an object, or a key that is not a part). The order places a set-aside part at its heaviest value and the report says so (W13).",
       "type": "array",
       "items": {
         "type": "object",
@@ -2030,6 +2035,7 @@
               "ships",
               "decisive",
               "effect",
+              "fix",
               "settles",
               "element",
               "exemption",
@@ -2038,6 +2044,36 @@
             ]
           },
           "value": {},
+          "why": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "after_last_refusal": {
+      "description": "What the capture did, after the seat's last refusal, with what the seat's answer wrote that it does not keep as written, one entry each, written by the capture and never by a seat: a change the last refusal did not name to words never read for the finding's place (`reasoning`, `standing.effect`, `standing.fix`; `set_aside`: the words of the answer before are kept), a part of `standing` written beside it and never placed inside by the review (`placed` by the program where that does not make the finding lighter; one that would is in `standing_set_aside` instead), or a field of the entry written inside `standing` and never moved (`set_aside`). `path` is the entry's field or `standing.<part>`; `value` is what the seat wrote there.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "taken",
+          "why"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": {},
+          "taken": {
+            "enum": [
+              "placed",
+              "set_aside"
+            ]
+          },
           "why": {
             "type": "string",
             "minLength": 1

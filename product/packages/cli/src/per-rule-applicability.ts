@@ -109,8 +109,11 @@ const EU_MEMBER_STATES = new Set([
  */
 const EEA_NON_EU = new Set(["IS", "LI", "NO"]);
 
-/** Does a region the person declared cover a jurisdiction the rule declares? */
-function covers(declared: string, ruleJurisdiction: string): boolean {
+/**
+ * Does a region the person declared cover a jurisdiction the rule declares? Exported for the report's provisions, whose
+ * "your answers" is this test.
+ */
+export function covers(declared: string, ruleJurisdiction: string): boolean {
   if (declared === ruleJurisdiction) return true;
   if (declared === "EU" && EU_MEMBER_STATES.has(ruleJurisdiction)) return true;
   if (ruleJurisdiction === "EU" && (EU_MEMBER_STATES.has(declared) || EEA_NON_EU.has(declared))) {
@@ -209,6 +212,10 @@ export function perRuleApplicability(
     else byGroup.set(key, [c]);
   }
 
+  /* (FIN5 Q1 item 3, D1) The rules an answer about where
+   * the product is offered leaves open (the person answered, but the question does not carry a law the rule cites), apart
+   * from the rules whose regions are unanswered: the seat is told to say the one or the other (`settledPremise`). */
+  const leftOpenByAnswer = new Set<string>();
   const answerFor = (rule: Rule): PerRuleQuestion => {
     const question =
       `Is this product made available in any of ${JSON.stringify(rule.jurisdiction)}, which is ` +
@@ -222,6 +229,7 @@ export function perRuleApplicability(
       // territorial test of every law it cites (region-reach.ts); a law it does not carry leaves the rule open. And only by the No of the question of each law's own place.
       const open = allNo ? regimesLeftOpen(rule, (place) => notOffered.some((n) => within(place, n))) : [];
       const ruledOut = allNo && open.length === 0;
+      if (allNo && !ruledOut) leftOpenByAnswer.add(rule.id);
       return {
         question,
         answer: reached ? "applies" : ruledOut ? "does_not_apply" : "unanswered",
@@ -256,6 +264,7 @@ export function perRuleApplicability(
     // CLOSED_LIST_PARTS carry (region-reach.ts): a place it leaves out answers whether the product is offered there.
     const openClosed = hit ? [] : regimesLeftOpen(rule, (place) => !declared!.some((d) => covers(d, place)), "closed-list");
     if (!hit && openClosed.length > 0) {
+      leftOpenByAnswer.add(rule.id);
       return { question, answer: "unanswered", answered_from, declared: declared, because: notCarried(rule, declared!, openClosed, "closed-list") };
     }
     return {
@@ -348,7 +357,7 @@ export function perRuleApplicability(
       adjudicate,
       ...(adjudicate ? {} : { not_adjudicated_as: "not applicable by declaration" as const }),
       ...(settled !== null ? { settled_by: { field: settled.s.field, answer: settled.s.answer, recorded_at: settled.s.recorded_at } } : {}),
-      settled_premise: settledPremise(rule, jq, premises, settled?.s ?? null),
+      settled_premise: settledPremise(rule, jq, premises, settled?.s ?? null, leftOpenByAnswer.has(rule.id)),
       candidates: mine.length,
       locations: places,
       groups,
@@ -444,13 +453,16 @@ function readPath(profile: ScanProfile | null, path: string): unknown {
 /**
  * The sentence a seat is handed in place of deriving the answer itself. It names the rule, the
  * answer, the field the answer came from and the value that field holds, so a seat citing it is
- * citing a declaration and a reader can check it against `.legal/profile.json` in one line.
+ * citing a declaration and a reader can check it against `.legal/profile.json` in one line. For a rule in jurisdiction it asks the seat to
+ * say what the premise says where it bears on the answer, as the agent text does, never to cite it by an internal name:
+ * the seat's reasoning is printed for the person.
  */
 function settledPremise(
   rule: Rule,
   jq: PerRuleQuestion,
   premises: PerRuleQuestion[] | undefined,
   settled: ScopeSettlement | null = null,
+  leftOpenByAnswer = false,
 ): string {
   const head =
     settled !== null
@@ -459,11 +471,20 @@ function settledPremise(
         `scope answer that puts it out of scope. No seat is launched for it.`
       : jq.answer === "applies"
       ? `Settled before dispatch: ${rule.id} is in jurisdiction for this product. ${jq.because} ` +
-        `Do not re-decide it; cite it as the settled jurisdiction premise.`
+        `Do not re-decide it; where it bears on your answer, say what it says.`
       : jq.answer === "does_not_apply"
         ? `Settled before dispatch: ${rule.id} is not applicable by declaration. ${jq.because} ` +
           `No seat is launched for it.`
-        : `Not settled: ${jq.because} Adjudicate on the merits and carry the open question.`;
+        : // Said for the person, and never a wait (rule 6).
+          // (FIN5 Q1 D1) "not answered" only where it is so. Once at most: the report says it beside each
+          // law, and "where it bears on your answer" was read as every answer (the sample's reasoning closed almost every
+          // paragraph with it).
+          `Not settled: ${jq.because} Adjudicate on the merits. Where the product is offered is open, and the report already says it beside each law, ` +
+          `so say it in \`reasoning\` once at most, and only where it bears on your answer: say in plain words ` +
+          (leftOpenByAnswer
+            ? `what the answer about where the product is offered leaves open for this rule`
+            : `that where the product is offered is not answered`) +
+          `; a finding never waits on it (rule 6).`;
   const tail = (premises ?? [])
     .map((p) => ` Premise ${p.answered_from}: ${p.answer} — ${p.because}`)
     .join("");

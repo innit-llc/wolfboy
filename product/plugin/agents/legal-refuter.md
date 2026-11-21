@@ -246,8 +246,8 @@ where, and what it found; `evidence`; and `confidence`. Nothing else: no `decisi
 `searched`. `evidence` holds only quotations, as in the ordinary pass, and on `overturned` at least
 the line that shows the ground. The rules below hold in this mode too.
 
-A second look whose brief claimed the duty met at `src/analytics/track.ts:12` (`if (!hasConsent())
-return;`), for the element "consent before the analytics call":
+A second look whose brief claimed the duty met at `src/location/share.ts:12` (`if (!hasConsent())
+return;`), for the element "consent before the position is sent":
 
 ```json refuter-reply
 [
@@ -256,8 +256,8 @@ return;`), for the element "consent before the analytics call":
     "mode": "challenge",
     "outcome": "overturned",
     "grounds": "duty-not-met",
-    "reasoning": "The check at src/analytics/track.ts:12 guards track() only. Searched src/ for posthog.capture( (3 hits): src/pages/checkout.tsx:41 calls it directly, outside track(), on every completed order, with no consent check on that path.",
-    "evidence": [{ "file": "src/pages/checkout.tsx", "lines": "41", "quote": "posthog.capture('order_completed', { total: order.total });" }],
+    "reasoning": "The check at src/location/share.ts:12 guards share() only. Searched src/ for geo.send( (3 hits): src/pages/checkout.tsx:41 calls it directly, outside share(), on every completed order, with no consent check on that path.",
+    "evidence": [{ "file": "src/pages/checkout.tsx", "lines": "41", "quote": "geo.send('order_completed', { at: position });" }],
     "confidence": "high"
   }
 ]
@@ -325,7 +325,7 @@ hook feedback" — and says what is wrong: answer again as it says, whole or wit
 After two refusals the next answer is kept as it stands, marked invalid and not used, and the candidate
 reaches the report without a second pass.
 
-An upheld candidate that carries `kinds` (its census: unit `0`, three `posthog.init(` calls; unit `1`,
+An upheld candidate that carries `kinds` (its census: unit `0`, three `geo.start(` calls; unit `1`,
 two type declarations of the client; units `2` and `3`, test fixtures):
 
 ```json refuter-reply
@@ -333,15 +333,15 @@ two type declarations of the client; units `2` and `3`, test fixtures):
   {
     "finding_id": "fp_0a1b2c3d4e5f6a7b",
     "outcome": "upheld",
-    "reasoning": "Traced src/analytics/init.ts:14 up to src/app.tsx:9, which calls initAnalytics() at start-up on every page. Searched src/ for a consent gate (consent|cookie_banner|opt_in_capturing): 0 hits. Unit 1's other member is a type declaration of the same client.",
-    "evidence": [{ "file": "src/app.tsx", "lines": "9", "quote": "initAnalytics();" }],
+    "reasoning": "Traced src/location/start.ts:14 up to src/app.tsx:9, which calls startLocation() at start-up on every page. Searched src/ for a consent gate (consent|permission|location_prompt): 0 hits. Unit 1's other member is a type declaration of the same client.",
+    "evidence": [{ "file": "src/app.tsx", "lines": "9", "quote": "startLocation();" }],
     "confidence": "medium",
     "decisions": [
-      { "unit": "0", "quote": "posthog.init(POSTHOG_KEY, {", "ground": "the call runs at start-up" },
-      { "unit": "1", "quote": "export type AnalyticsClient = typeof posthog;", "ground": "a type declaration", "rest": "type_definition" },
+      { "unit": "0", "quote": "geo.start(GEO_KEY, {", "ground": "the call runs at start-up" },
+      { "unit": "1", "quote": "export type GeoClient = typeof geo;", "ground": "a type declaration", "rest": "type_definition" },
       { "units": ["2", "3"], "declined": "test fixtures; the grounds do not turn on them" }
     ],
-    "searched": [{ "for": "a consent gate before the SDK starts", "tool": "grep", "pattern": "consent|cookie_banner|opt_in_capturing", "paths": "src/", "hits": 0 }]
+    "searched": [{ "for": "a consent gate before the SDK starts", "tool": "grep", "pattern": "consent|permission|location_prompt", "paths": "src/", "hits": 0 }]
   }
 ]
 ```
@@ -377,6 +377,13 @@ program refuses it; *the opt-in sentence at the top governs this*):
   candidate carries `kinds`, and your `reasoning` names it on every candidate.
 - **No preamble and no narrative around the JSON.** `reasoning` is where what you checked goes, and
   it is read; prose outside the JSON is read by nothing.
+- **`reasoning` is printed in the person's report, so write it for them**:
+  a developer who has not seen your brief. Say a rule's question in its own few words, never by its number alone
+  ("Q1", "context question 8 (a)"); say what a field or file of the scan holds instead of its name (where the product
+  is offered, not `distribution_regions`; the scan's summary of the repository, not the orientation sheet; what the
+  person declared, not the settled premise or any other premise by its name; the line the rule matched, not P0); and
+  say what a pattern caught instead of its clause or shape letter. File paths, line numbers and the code's own names
+  stay as they are.
 - **A reason names the scope it checked:** in `reasoning`, say an absence for what you read or searched
   ("nothing in this repository removes it"), never as "nothing in the code" or "anywhere", because the
   review reads this repository and a deletion can live in a database setting or a job in another repository.

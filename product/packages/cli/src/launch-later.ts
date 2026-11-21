@@ -72,7 +72,7 @@ import { LEDGER_FILE, recordPathFor } from "./verdict-capture.js";
 import { readRegularFile } from "./project-read.js";
 import { findingsChangedProblem } from "./log-digest.js";
 import { placeId, placeIndexOf } from "./ref-ids.js";
-import { CHALLENGE_MODE, challengeEntryId, challengeOf, isChallengeEntry, locationChallengeOf, premisesOfFindings, type Challenge } from "./second-look.js";
+import { CHALLENGE_MODE, challengeEntryId, challengeOf, documentationPagesOf, isChallengeEntry, locationChallengeOf, premisesOfFindings, type Challenge } from "./second-look.js";
 import { declaredInapplicableOf, loadDeclarationSource, type DeclarationSource } from "./declaration.js";
 
 /** The program's question source for the second look's row-5 test, read once; null where it cannot be read (no kind known). */
@@ -658,6 +658,9 @@ export function buildChallengeEntries(
   const fv = isObject(fdoc.value) ? fdoc.value : {};
   const documented = new Map((Array.isArray(fv.candidates) ? fv.candidates : []).filter(isObject).map((c) => [str(c.finding_id) ?? "", c] as const));
   const premises = premisesOfFindings(fv);
+  // The pages the premise classes as
+  // documentation, which a seat's own `documentation` reaches whole: the capture reads them as the assembly does.
+  const documentationPages = documentationPagesOf(fv);
   // Only second looks: where the run has the second check, the finding's
   // ordinary refuter entry is another seat, asked another question, and never stands in for this one.
   const listed = new Map<string, string>();
@@ -693,7 +696,7 @@ export function buildChallengeEntries(
     const dutyAbout = str(ruleBlock?.duty_about) ?? str(whole?.duty_about) ?? undefined;
     // WP4's question kinds, so a "check your answer" finding (row 5) is not due one.
     const declaredInapplicable = whole ? declaredInapplicableOf(declarationSource(), whole.declared_inapplicable_preconditions) : [];
-    const due = whole ? objects.map((v) => challengeOf({ record: v, candidate: whole, ...(role ? { role } : {}), ...(dutyAbout ? { dutyAbout } : {}), declaredInapplicable, ...(premises ? { premises } : {}), secondCheck: a.secondCheck === true })) : [];
+    const due = whole ? objects.map((v) => challengeOf({ record: v, candidate: whole, ...(role ? { role } : {}), ...(dutyAbout ? { dutyAbout } : {}), declaredInapplicable, ...(premises ? { premises } : {}), ...(documentationPages ? { documentationPages } : {}), secondCheck: a.secondCheck === true })) : [];
     const challenge = due.find((c) => c !== null) ?? null;
     if (challenge === null) continue;
     if (objects.length > 1) {

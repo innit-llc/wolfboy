@@ -380,7 +380,10 @@ function amendmentProblem(legalDir: string, e: LedgerEntry, own: string, amendme
     let made: string;
     try {
       if (!base.ok || !next.ok) throw new Error(base.ok ? next.ok ? "" : next.problem : base.problem);
-      made = sha256(amendedReply(e.role, base.value as unknown[], next.value as unknown[], r.refusal.named, r.refusal.removed).bytes);
+      // The record's own link was the answer after the seat's last refusal where the
+      // hook had refused it `REFUSALS_MAX` times (hook-capture.ts `lastAnswer`): the merge then sets aside and places as the capture did.
+      const lastAnswer = link.what === "the record's reply" && refused.length >= REFUSALS_MAX;
+      made = sha256(amendedReply(e.role, base.value as unknown[], next.value as unknown[], r.refusal.named, r.refusal.removed, { lastAnswer }).bytes);
     } catch (err) {
       return not(`the amendment cannot be laid over ${link.base} (${(err as Error).message})`);
     }

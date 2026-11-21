@@ -2,7 +2,7 @@ id: eu-consent-024
 pack: eu-consent
 short_name: Session recording built into the product
 problem_line:
-  text: "Built-in session replay: consent or masking floor not found"
+  text: "Built-in session replay: consent or basic masking not found"
 fix_line: Start capture only after recorded consent, and set the masking floor in the product, not
   in a configuration value.
 title: This product implements its own session recorder - the capture call, the store it writes to,

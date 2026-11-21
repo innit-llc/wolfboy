@@ -1,10 +1,10 @@
 id: eu-dsr-002
 pack: eu-dsr
-short_name: Erasure, export or objection action to review
+short_name: Delete, export or opt-out feature found, to review
 problem_line:
-  text: "Rights route flaw: reach, access, format, timing or promise"
-fix_line: Record the route, make it reach every copy or record why a copy is kept, and give people a
-  way to request it.
+  text: Problem found in a delete, export or opt-out feature
+fix_line: Make the feature act on every copy of the data, or record why a copy is kept, and give
+  people a way to ask for it.
 title: Erasure, export or objection action named over a person-shaped store - implementation needs
   review - GDPR Arts. 15-22, or a file hand-out with no such noun on the line
 jurisdiction:
@@ -318,6 +318,73 @@ context_questions:
     code that no document mentions is the other, and it belongs in the record of processing
     activities that Art. 5(2) and Art. 30(1) ask the controller to be able to produce. Report both
     lists and the difference between them, and state plainly which items you could not check.
+  - "WHEN THE ROUTE IS THE OPERATOR'S, OR SAYS WHY IT DOES NOT ACT YET. Question 2 separates a route
+    the person reaches from one an administrator runs; both serve the duty Art. 12(2) puts on the
+    controller, 'The controller shall facilitate the exercise of data subject rights under Articles
+    15 to 22.' Where the route this line belongs to lets the operator answer a request that reached
+    it some other way (an administrator's deletion that erases, an export or a view of the person's
+    record the operator can hand over, a correction), or answers the person with a step the request
+    itself needs and how to take it (ending a contract or a subscription that is still running,
+    handing over what other people share with them, or confirming who they are only where the
+    controller has 'reasonable doubts concerning the identity of the natural person making the
+    request', as Art. 12(6) allows), the step free of charge, the right staying available once it is
+    taken and the answer within question 4's month, or refuses on a ground the Regulation gives that
+    its own code tests and tells the person what Art. 12(4) requires, 'the reasons for not taking
+    action and on the possibility of lodging a complaint with a supervisory authority and seeking a
+    judicial remedy', and question 3 finds that it reaches the data it names, the status is
+    `duty_met`, its `at` the line of that route, and its `element` the words `the operator can
+    answer the request with what ships`. The grounds, each to be named where a refusal rests on it:
+    the controller cannot identify the person (Art. 11(2)), in the cases of Art. 11(1), for Arts. 15
+    to 20 only, and not where the person gives information that identifies them; a request that is
+    manifestly unfounded or excessive, which the controller must show (Art. 12(5)); an exception to
+    erasure that Art. 17(3) lists, such as a retention law named with its period or the defence of a
+    legal claim; the rights and freedoms of others, which limit what a copy or an export carries
+    (Art. 15(4), Art. 20(4)); processing outside portability's scope (Art. 20(1)); a request for
+    restriction in none of the four cases Art. 18(1) lists; compelling legitimate grounds that
+    override an objection to processing based on Art. 6(1)(e) or (f) (Art. 21(1)), shown for that
+    one objection and never against an objection to direct marketing, which Art. 21(3) ends; a
+    restriction a Union or Member State law makes (Art. 23(1)). Where a ground turns on a fact about
+    the operator (the lawful basis, a retention law, a national restriction), take it from the
+    operator's declared documents or from the person running the scan, never from the code's words.
+    While that fact is unanswered and the refusal gives Art. 12(4)'s notice, write no `duty_met` on
+    it: the status is `waits_on_answer`, its `at` the refusal's line, and `fact` the words `the
+    operator's ground for refusing this request: its lawful basis, a retention law or a national
+    restriction` about `L1`; a refusal without that notice stays `duty_unmet` whatever its ground. A
+    stub, a fixed refusal that says neither why nor how, a step the request does not need (a copy of
+    an identity document from a person who is already signed in, where nothing in the route shows a
+    doubt about who is asking; a fee; a postal letter; a call to a support line), a refusal that
+    gives Art. 12(4)'s notice but rests on no such ground (a route that always declines, a feature
+    switched off), and an erasure that stops short of what question 3 lists are not this and stay
+    `duty_unmet`: Art. 12(4) is the duty that attaches to not acting, not a way of discharging the
+    right. A WAY OUT HOLDS ONLY AT EVERY KEPT PLACE: a status this question gives is the finding's
+    only where every place of the finding that you or the seats before you kept has the shape that
+    status names; a kept place inside a helper or a shared function has that shape only where every
+    call that reaches it does, so walk every caller, and a caller that would be `duty_unmet` makes
+    that place `duty_unmet`. Where the kept places differ, the finding takes the heaviest of their
+    statuses (`duty_unmet`, then `waits_on_answer`, then `duty_met` or `exempt`), with its `at` and
+    its `decisive` at that place: one kept place that is `duty_unmet` makes the finding
+    `duty_unmet`."
+  - "A PLACE IN CODE THAT DOES NOT SHIP, AND HOW TO RECORD IT. A route that only a test suite, a
+    development set-up, a continuous-integration job or a demo runs handles no one's request: a test
+    that deletes an account it created, a seed or end-to-end task over the accounts it seeded
+    itself. Where the code shows that, quoting the line that keeps it out of every running
+    environment (a check that refuses to run unless the environment is development or test, or a
+    test file only the test runner loads), the status is `duty_met`, its `at` that line, and its
+    `element` the words `test, development, CI, demo or documentation code that does not ship`.
+    Three things are not this and stay `duty_unmet` wherever they sit, because the rights are served
+    there over real people's data: a command, task, script or admin CLI that an operator can run
+    against a running environment (a rake task, a manage.py command, a console script) with no such
+    refusal in its own code; a scheduled job or a deployment step that acts on a running
+    environment's data; and a document that tells an operator how to answer a request. A check that
+    refuses only when a variable is unset (an opt-in flag the operator can set) is not such a
+    refusal. A WAY OUT HOLDS ONLY AT EVERY KEPT PLACE: a status this question gives is the finding's
+    only where every place of the finding that you or the seats before you kept has the shape that
+    status names; a kept place inside a helper or a shared function has that shape only where every
+    call that reaches it does, so walk every caller, and a caller that would be `duty_unmet` makes
+    that place `duty_unmet`. Where the kept places differ, the finding takes the heaviest of their
+    statuses (`duty_unmet`, then `waits_on_answer`, then `duty_met` or `exempt`), with its `at` and
+    its `decisive` at that place: one kept place that is `duty_unmet` makes the finding
+    `duty_unmet`."
 evidence_template: "{file}:{line} names an ERASURE, EXPORT, RECTIFICATION OR OBJECTION ROUTE over a
   person-shaped record, WITHOUT any not-implemented marker on the line. THIS IS AN EXISTENCE FINDING
   AND NOT A COMPLIANCE FINDING, and that distinction is the whole of how it should be read: it

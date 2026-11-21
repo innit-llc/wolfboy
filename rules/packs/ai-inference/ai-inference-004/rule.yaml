@@ -141,6 +141,8 @@ detector:
       \t]*)?readNet(?:FromCaffe|FromTensorflow|FromTorch|FromDarknet|FromONNX|FromModelOptimizer|FromTFLite)?[
       \t]*\(|(?:^|[^A-Za-z0-9_])blobFromImages?(?:WithParams)?[
       \t]*\(|\b(?:HOGDescriptor|CascadeClassifier)(?:_[A-Za-z][A-Za-z0-9]*)?\b
+settling_questions:
+  - operator.model_purpose_stated
 context_questions:
   - "WHAT IS THE MODEL RUN OVER, AND WHOSE CONTENT IS IT? Read backwards from the call to the value
     it receives. There are three materially different answers: the person's own draft or photograph,

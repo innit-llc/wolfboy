@@ -199,6 +199,8 @@ detector:
     - (^|/)(emails?|mail|mailer)/(?!.*\.(tsx|jsx|vue|svelte)$)
     - (^|/)(emails?|mail|mailer)/([^/]*/)*[^/]*[Ee]mail[^/]*\.(tsx|jsx|vue|svelte)$
     - (^|/)(jquery|yuilib|tcpdf|tinymce|htmlpurifier|phpspreadsheet|guzzlehttp|country-flag-icons)[^/]*/
+settling_questions:
+  - scope.eaa_listed_service
 context_questions:
   - "Is this product one of the services listed in EAA Art. 2(2), provided to consumers — an
     e-commerce service (Art. 3(30): provided at a distance, through websites or mobile device-based

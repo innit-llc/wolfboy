@@ -1,11 +1,11 @@
 id: recipients-004
 pack: recipients
-short_name: Sign-in company that may receive data
+short_name: Line naming a sign-in or access-check company
 problem_line:
-  text: Personal data sent to a sign-in or access service
+  text: Personal data sent to a sign-in or access-check company
   template: "{data} sent to {recipient}"
-fix_line: "Unless you publish and host this identity service, record it as a recipient: its company,
-  data, where established, role."
+fix_line: "Unless you run the service yourself, record the company as a recipient: what it receives,
+  where established, its role."
 title: Identity or access vendor named in the tree - candidate recipient for the record of
   processing activities
 jurisdiction:

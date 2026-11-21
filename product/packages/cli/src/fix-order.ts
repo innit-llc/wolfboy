@@ -15,10 +15,10 @@
  * lightest, so a level is raised only on what the review established ("never raised on an assumed answer", D1). A
  * finding waiting on an answer is never raised. Nothing here lowers a level (T9).
  *
- * Pure functions only: no file is read here. Not in the capture's closure (`VERDICT_RULES_SOURCES`): the order changes no
- * verdict.
+ * Pure functions only: no file is read here. In the capture's closure (`VERDICT_RULES_SOURCES`) since: the capture's guard on a resend reads the raise
+ * (finding-weight.ts `outcomeWeightOf`), so a change here can change which resend is refused.
  */
-import type { TierOfBasis } from "./penalty-tier.js";
+import { provisionCovered, type TierOfBasis } from "./penalty-tier.js";
 import { jurisdictionAnsweredOut } from "./per-rule-applicability.js";
 import { regimeCarried, regimePlace } from "./region-reach.js";
 import { EXPOSING_REACHES, HEAVIEST, NOT_SHIPPED, SEVERE_DATA, SHIPS_MAY_DECIDE, type StandingRecord } from "./standing.js";
@@ -88,6 +88,9 @@ export interface RuleBasis {
    * (the rule's `legal_basis[].url` and `checked_at`), for the finding file's Provisions (mock M3a, M7); never ordered on. */
   url?: string;
   checked_at?: string;
+  /** The rule keeps this basis for reference, not as the duty it tests
+   * (`legal_basis[].supports_rule_condition: false`): a separate duty (CRA Art 14 beside Annex I Part II). Never ordered on. */
+  separate?: boolean;
 }
 
 export interface StandingOrderInput {
@@ -114,6 +117,13 @@ export interface StandingOrderInput {
    * lowers the order.
    */
   dutyAbout?: string;
+  /**
+   * The effective `ships` of every kept place, as the disposition reads
+   * them (disposition.ts `effectiveShipsOf`): a not-shipped value lowers the order only where every kept place is shown
+   * not to ship, so a finding another kept place keeps counted is ordered, and raised, as one that ships. Absent (an
+   * order asked with no kept places), the seat's value alone decides, as before.
+   */
+  shipsKept?: readonly (string | undefined)[];
 }
 
 /**
@@ -181,6 +191,165 @@ export interface StandingOrder {
   needsHuman: boolean;
 }
 
+/** One entry of `DATA_FREE_PROVISIONS`: the provisions of one regime (the table's forms, `"every"` for the whole law), and why. */
+export interface DataFreeEntry {
+  regime: string;
+  provisions: readonly string[] | "every";
+  why: string;
+}
+
+/**
+ * THE PROVISIONS WHOSE DUTY DOES NOT DEPEND ON THE PERSONAL DATA INVOLVED, the one
+ * list the order reads (`dutyFreeOfData`). Each entry is a legal reading and says why; a provision not listed keeps the data
+ * in the ranking. It holds provisions, not laws: a law some of whose duties or fines are weighed by the data's categories or
+ * by minors is listed only for the provisions that are not (`DATA_FREE_LEFT_OUT` names those left out, and why).
+ * DEMO6 ranked both CRA findings "at the worst case ... (special-category data)", a category neither duty turns on; D6FIX's
+ * fix read whole laws as free of data and also dropped data the review had established and the person's answers (the
+ * non-author check, C1 and C2). Adding a provision here is a legal decision: the test pins the rules it makes data-free.
+ */
+export const DATA_FREE_PROVISIONS: readonly DataFreeEntry[] = [
+  {
+    regime: "cra",
+    provisions: ["Annex I Part II", "Annex II", "13(2)-(25)", "14(1)", "14(2)"],
+    why: "The vulnerability handling requirements (Annex I Part II), the information and instructions for the user (Annex II), the manufacturer's obligations of Art. 13(2) to (25) and its notification of actively exploited vulnerabilities (Art. 14(1) and (2)) are owed for every product with digital elements, whatever data it processes; no data category or minors decides whether they apply or their fine tier (Art. 64(2)). Annex I Part I and Art. 13(1), which makes it binding, are left out: Part I(2)(e), (f), (g) and (m) have the data as their object. So is Art. 14(3) to (5): whether an incident is severe turns on the data it affects (Art. 14(5)(a)).",
+  },
+  {
+    regime: "cra",
+    provisions: ["Annex VII"],
+    why: "The content of the technical documentation the manufacturer keeps, owed whatever data the product processes. Fined under Art. 64(2) through Art. 13(4) and 13(8) (the table's heavier reading) or under Art. 64(3) through Art. 31, whose content Annex VII is: neither turns on the data. Not on the first non-author check's list: added because eu-cra-002's own basis cites Annex VII beside Art. 13(8).",
+  },
+  {
+    regime: "eaa",
+    provisions: "every",
+    why: "The accessibility requirements (Arts 4 and 13, Annex I) are owed to every user whatever data the product processes, and the penalties (Art. 30) are weighed by the extent and seriousness of the non-compliance and the units or persons affected, not by a data category.",
+  },
+  {
+    regime: "ai-act",
+    provisions: ["50(1)", "50(2)", "50(4)"],
+    why: "Telling people they are dealing with an AI system (Art. 50(1)), marking generated output (50(2)) and disclosing deep fakes and generated text on matters of public interest (50(4)) are owed whatever data is processed; their fine (Art. 99(4)(g)) names no data category.",
+  },
+  {
+    regime: "data-act",
+    provisions: ["23", "30", "34"],
+    why: "Switching between data processing services (Arts 23 and 30, Chapter VI) and the interoperability of services used in parallel (Art. 34, Chapter VIII) are owed whatever data the customer holds; their penalties are the Member States' under Art. 40(1), which Art. 40(4)'s route through GDPR Art. 83 does not reach.",
+  },
+  {
+    regime: "dsa",
+    provisions: ["17"],
+    why: "The statement of reasons to a recipient whose information a hosting provider restricts is owed whatever the information holds; no data category or minors decides the duty or its fine (Art. 52(3)).",
+  },
+  {
+    regime: "us-ny-gbl-47",
+    provisions: ["47"],
+    why: "Art. 47 (Secs. 1700 to 1704): the safeguards and notifications of an AI companion model (Secs. 1701 and 1702) are owed to every user; no data category or minors decides them. Only Art. 47: the table reads every New York General Business Law cite under this regime, and other articles are defined by minors (Art. 48) or by categories of private information (Sec. 899-aa).",
+  },
+  {
+    regime: "cn-ai-labelling",
+    provisions: "every",
+    why: "The labels on AI-generated content (the Labelling Measures and GB 45438-2025) are owed on every such output whatever data is processed.",
+  },
+];
+
+/**
+ * Provisions of the laws above that `DATA_FREE_PROVISIONS` leaves out, and why: for
+ * the reader of the list and for its test, which holds that none of them is ever covered. A regime the list does not name
+ * at all (the GDPR, ePrivacy, the APPI, the CCPA, the FTC Act, Utah's AI law, California S.B. 243 and the like) keeps the
+ * data in throughout.
+ */
+export const DATA_FREE_LEFT_OUT: readonly { regime: string; provision: string; why: string }[] = [
+  { regime: "data-act", provision: "40(4)", why: "It lets the GDPR supervisory authorities fine infringements of Chapters II, III and V under GDPR Art. 83, whose Art. 83(2)(g) weighs the categories of personal data affected." },
+  { regime: "data-act", provision: "4", why: "One article of Chapter II (Arts 3 to 7), which Art. 40(4) reaches." },
+  { regime: "data-act", provision: "9", why: "One article of Chapter III (Arts 8 to 12), which Art. 40(4) reaches." },
+  { regime: "data-act", provision: "20", why: "One article of Chapter V (Arts 14 to 22), which Art. 40(4) reaches." },
+  { regime: "dsa", provision: "26(3)", why: "No advertising based on profiling with special categories of personal data: defined by the data." },
+  { regime: "dsa", provision: "28(1)", why: "The measures for the privacy, safety and security of minors on a platform accessible to them: defined by minors." },
+  { regime: "dsa", provision: "28(2)", why: "No advertising based on profiling with a minor's personal data: defined by minors." },
+  { regime: "ai-act", provision: "5(1)(g)", why: "The prohibition of biometric categorisation: defined by biometric data." },
+  { regime: "ai-act", provision: "50(3)", why: "Informing people exposed to emotion recognition or biometric categorisation: defined by biometric data." },
+  { regime: "ai-act", provision: "50", why: "A cite of Art. 50 naming no paragraph could be Art. 50(3)." },
+  // The CRA's Annex I Part I, Art. 13(1) and Art. 14(3)
+  // to (5), and the New York General Business Law outside Art. 47.
+  { regime: "cra", provision: "Annex I Part I(2)(e)", why: "Protecting the confidentiality of stored, transmitted or otherwise processed data, personal or other: the data is its object, and what it requires is set by the risk assessment over the assets to be protected (Part I(2) chapeau, Art. 13(3))." },
+  { regime: "cra", provision: "Annex I Part I(2)(f)", why: "Protecting the integrity of stored, transmitted or otherwise processed data, personal or other: the data is its object." },
+  { regime: "cra", provision: "Annex I Part I(2)(g)", why: "Processing only data, personal or other, that are adequate, relevant and limited to what is necessary (data minimisation): the data is its object." },
+  { regime: "cra", provision: "Annex I Part I(2)(m)", why: "Letting users securely and easily remove on a permanent basis all data and settings: the data is its object." },
+  { regime: "cra", provision: "Annex I Part I", why: "The essential requirements of the product's properties, applied on the basis of the cybersecurity risk assessment (Part I(2) chapeau), which weighs the assets to be protected." },
+  { regime: "cra", provision: "Annex I", why: "A cite of Annex I naming no Part could be Part I." },
+  { regime: "cra", provision: "13(1)", why: "The operative clause of Annex I Part I: it goes with it." },
+  { regime: "cra", provision: "13", why: "A cite of Art. 13 naming no paragraph could be Art. 13(1)." },
+  { regime: "cra", provision: "14(3)", why: "The notification of severe incidents: whether an incident is severe turns on whether it affects sensitive or important data (Art. 14(5)(a))." },
+  { regime: "cra", provision: "14(4)", why: "The content of the notifications of Art. 14(3)'s severe incidents." },
+  { regime: "cra", provision: "14(5)", why: "Defines a severe incident, among others by its effect on sensitive or important data (point (a))." },
+  { regime: "cra", provision: "14", why: "A cite of Art. 14 naming no paragraph could be Art. 14(3) to (5)." },
+  { regime: "us-ny-gbl-47", provision: "48", why: "The prohibition of unsafe AI companion features for minors: defined by minors." },
+  { regime: "us-ny-gbl-47", provision: "Sec. 899-aa", why: "The notification of a breach of private information: defined by categories of private information. The reader reads no provision from a Section cited alone, so such a cite keeps the data in." },
+];
+
+/** Whether one provision a duty cite names is on `DATA_FREE_PROVISIONS` for its regime. */
+function provisionFreeOfData(regimeId: string, label: string): boolean {
+  return DATA_FREE_PROVISIONS.some((e) => e.regime === regimeId && (e.provisions === "every" || provisionCovered(e.provisions, label)));
+}
+
+/**
+ * Condition (b) of `dutyFreeOfData`: every duty provision the finding rests on is on
+ * `DATA_FREE_PROVISIONS`. Those are the provisions the table reads as carrying a duty or its fine (`dutyProvisions`: not a
+ * recital, a definition or a line of no duty) in each basis the rule rests its condition on (every basis but one it keeps
+ * for reference, `separate`) and in each the review's `duty` names. At least one must carry a duty; a basis the table cannot
+ * resolve, a resolver that throws or an answer without `dutyProvisions` keeps the data in. A law listed whole counts
+ * whatever provision is named, or none.
+ */
+export function provisionsFreeOfData(x: Pick<StandingOrderInput, "verdict" | "candidate" | "ruleBases" | "tierOf">): boolean {
+  if (!x.tierOf) return false;
+  const refs = listOf(x.candidate?.legal_basis_refs);
+  const raw = x.verdict?.standing;
+  const st = raw && typeof raw === "object" && !Array.isArray(raw) ? (raw as StandingRecord) : {};
+  const named = new Set(listOf(st.duty?.value).map((r) => basisIndexOf(r)).filter((i): i is number => i !== null));
+  let duties = 0;
+  for (let i = 0; i < refs.length; i++) {
+    if (x.ruleBases?.[i]?.separate === true && !named.has(i)) continue;
+    let t: OrderBasis;
+    try {
+      t = x.tierOf(refs[i] as string, x.ruleBases?.[i]?.jurisdiction);
+    } catch {
+      return false;
+    }
+    if (t.unresolved === true) return false;
+    if (t.tier === "no_duty") continue;
+    // A fine is read as part of the duty it fines (C3), so a basis
+    // that names only fines of a law this list names is no duty of its own: the duties it fines are read in their own
+    // bases. A fine of a law the list does not name (GDPR Art. 83) keeps the data in, as does a cite naming a fine beside a
+    // duty, whose fine is then read as a provision.
+    if (t.penalty === true && DATA_FREE_PROVISIONS.some((e) => e.regime === t.regimeId)) continue;
+    duties++;
+    if (DATA_FREE_PROVISIONS.some((e) => e.regime === t.regimeId && e.provisions === "every")) continue;
+    if (!Array.isArray(t.dutyProvisions) || t.dutyProvisions.length === 0) return false;
+    if (!t.dutyProvisions.every((p) => provisionFreeOfData(t.regimeId, p))) return false;
+  }
+  return duties > 0;
+}
+
+/**
+ * Whether a finding is ranked without the data. Only where both hold:
+ * (a) no data stood for it - the review established none (`data`, read as the order reads it: nothing from a record the
+ * quote check invalidated); (b) `provisionsFreeOfData`. Then a missing `data` is not placed at its heaviest. In every
+ * other case the data is ranked as it always was: what the review established, or the heaviest where it established none. The person's Minors and Health answers are not part of (a):
+ * `orderTierOf` applies them to the data the review established (Minors to data about people, Health to
+ * `records_about_people`), and a duty on the list turns on neither. With them in (a), a Yes put a CRA finding the review
+ * found `not_about_data` back at "special-category data", DEMO6's defect. A rule that names data
+ * categories of its own (the candidate's `data_categories`, copied from the rule) is never ranked without the data either,
+ * as under D6FIX: ai-transparency-004 (a cloned voice, `user.biometric`) rests only on listed provisions and would
+ * otherwise enter, unreviewed.
+ */
+export function dutyFreeOfData(x: Pick<StandingOrderInput, "verdict" | "candidate" | "ruleBases" | "tierOf" | "answers">): boolean {
+  const cats = x.candidate?.data_categories;
+  if (Array.isArray(cats) && cats.length > 0) return false;
+  const raw = x.verdict?.standing;
+  const st = raw && typeof raw === "object" && !Array.isArray(raw) ? (raw as StandingRecord) : {};
+  const stood = x.verdict?.quote_check_outcome === "invalidated" ? [] : listOf(st.data?.value);
+  if (stood.length > 0) return false;
+  return provisionsFreeOfData(x);
+}
+
 const strOf = (v: unknown): string => (typeof v === "string" ? v : "");
 const listOf = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : []);
 const TIER_RANK: Record<string, number> = { top: 0, not_top: 1, no_duty: 2 };
@@ -223,9 +392,14 @@ export function standingOrderOf(x: StandingOrderInput): StandingOrder {
   const topForOrder = duties.some((b) => b.tier === "top");
   const topStood = duties.some((b) => b.tier === "top" && b.unresolved !== true);
 
+  // A finding no data stood for, whose every duty provision is on the list of those
+  // that do not turn on the data, is ranked without it (`dutyFreeOfData`); every other finding exactly as before D6FIX.
+  const dataFree = dutyFreeOfData(x);
   const dataStood = listOf(got("data")?.value);
-  if (dataStood.length === 0) heaviest.push("data");
-  const data = dataStood.length > 0 ? dataStood : [...HEAVIEST.data];
+  if (dataStood.length === 0 && !dataFree) heaviest.push("data");
+  const data = dataStood.length > 0 ? dataStood : dataFree ? [] : [...HEAVIEST.data];
+  const dataRanked = dataFree ? ["no_personal_data"] : data;
+  const dataStoodRanked = dataStood.length > 0 ? dataStood : ["no_personal_data"];
   const people = listOf(got("people")?.value);
   const runsV = strOf(got("runs")?.value);
   if (!runsV) heaviest.push("runs");
@@ -241,14 +415,14 @@ export function standingOrderOf(x: StandingOrderInput): StandingOrder {
   const questionV = strOf(got("question")?.value) || (settlesV.startsWith("question:") ? settlesV.slice("question:".length) : "");
   const waits = !answeredWait && (status === "waits_on_answer" || (x.verdict.verdict === "needs_human" && settlesV.startsWith("question:")));
   const answers = x.answers ?? {};
-  const tier = orderTierOf({ top: !dutyKnown || topForOrder, data, people, runs, reaches }, answers);
+  const tier = orderTierOf({ top: !dutyKnown || topForOrder, data: dataRanked, people, runs, reaches }, answers);
   // The raise rests on the parts that stood: each missing one at its lightest (no duty in the top tier, no personal data,
   // a non-default setting, nobody reached), so a heaviest placement never raises a level.
   const standingTier = statusV
-    ? orderTierOf({ top: topStood, data: dataStood.length > 0 ? dataStood : ["no_personal_data"], people, runs: runsV || "non_default_setting", reaches: reachesV || "nobody" }, answers)
+    ? orderTierOf({ top: topStood, data: dataStoodRanked, people, runs: runsV || "non_default_setting", reaches: reachesV || "nobody" }, answers)
     : null;
   const standingTierWithoutDuty = statusV
-    ? orderTierOf({ top: false, data: dataStood.length > 0 ? dataStood : ["no_personal_data"], people, runs: runsV || "non_default_setting", reaches: reachesV || "nobody" }, answers)
+    ? orderTierOf({ top: false, data: dataStoodRanked, people, runs: runsV || "non_default_setting", reaches: reachesV || "nobody" }, answers)
     : null;
   const standingTierDutyOnly = statusV
     ? orderTierOf({ top: topStood, data: ["no_personal_data"], people: [], runs: runsV || "non_default_setting", reaches: reachesV || "nobody" }, answers)
@@ -259,7 +433,8 @@ export function standingOrderOf(x: StandingOrderInput): StandingOrder {
   // not-shipped value lowers the order only for a rule declaring `duty_about: product_runtime`. For every other rule (a
   // live credential, a document, a release duty) the value is placed as the file is shown to be, by weight, as `product`
   // is: before, a counted credential in a test file sat in group 3 and was never raised by weight.
-  const shipsLowers = x.dutyAbout === SHIPS_MAY_DECIDE && NOT_SHIPPED.has(ships);
+  const everyKeptNotShipped = x.shipsKept === undefined || (x.shipsKept.length > 0 && x.shipsKept.every((v) => typeof v === "string" && NOT_SHIPPED.has(v)));
+  const shipsLowers = x.dutyAbout === SHIPS_MAY_DECIDE && NOT_SHIPPED.has(ships) && everyKeptNotShipped;
   const group: OrderGroup =
     shipsLowers
       ? 3

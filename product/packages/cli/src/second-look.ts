@@ -38,7 +38,9 @@
  */
 
 import { createHash } from "node:crypto";
-import { dispositionOf, effectiveShipsOf, type DispositionInput, type SecondLook } from "./disposition.js";
+import { type DispositionInput, type SecondLook } from "./disposition.js";
+import { claimOf, decisivePlaceOf, dispositionInputOfRecord } from "./finding-weight.js";
+import type { PlaceRowIn } from "./severity-at-place.js";
 import { evidenceIndexOf, placeId, placeIndexOf } from "./ref-ids.js";
 import { NOT_SHIPPED, SHIPS_PREMISES, locationOverturnStands, shipsLentByPremise, type ShipsPremise, type StandingAt, type StandingRecord } from "./standing.js";
 
@@ -125,29 +127,23 @@ export function premisesOfFindings(findings: unknown): Map<string, string> | und
 }
 
 /**
- * The claim of a finding that rests on the seat's word alone, or null. `input` is the finding's disposition input as its
- * caller resolved it; its answers, role and second look are not read (a placement by an answer or by the rule's role is
- * not the seat's word, and a second look is what this decides on). `decisivePremise` is the program's premise for the
- * decisive place's file, as a `ships` value, where one was recorded.
+ * The files whose ships premise is
+ * `documentation` (findings.json `ships_premises`: plain prose the product does not render, ships-premise.ts), or
+ * undefined where the scan recorded no premise. It lends no value (`premisesOfFindings` reads it as shipping); it is read
+ * only where a seat's own `documentation` agrees with it (disposition.ts `effectiveShipsOf`). The one reading, for the
+ * capture's second look and the assembly alike.
  */
-export function claimOf(x: { input: DispositionInput; level: string; role?: string; decisivePremise?: string }): ChallengeClaim | null {
-  if (x.level !== "high" || x.input.verdict !== "violation_candidate" || x.role === "inventory") return null;
-  const placed = dispositionOf({ ...x.input, answers: new Map(), role: undefined, secondLook: undefined }).disposition;
-  const st = x.input.standing;
-  if (placed === "recorded") {
-    const s = st?.status?.value;
-    return s === "duty_met" || s === "exempt" ? s : null;
-  }
-  if (placed === "not_shipped") {
-    const ships = st?.ships;
-    // The capture filled it from the premise, or the seat agreed with it without a line of its own: the build files' word.
-    if (!ships || ships.premise !== undefined || !NOT_SHIPPED.has(ships.value)) return null;
-    // The seat and the premise both say the decisive place does not ship.
-    if (x.decisivePremise !== undefined && NOT_SHIPPED.has(x.decisivePremise)) return null;
-    return "not_shipped";
-  }
-  return null;
+export function documentationPagesOf(findings: unknown): Set<string> | undefined {
+  const sp = isObject(findings) && isObject(findings.ships_premises) ? findings.ships_premises : null;
+  if (!sp) return undefined;
+  return new Set(Object.entries(sp).filter(([, row]) => isObject(row) && row.premise === "documentation").map(([file]) => file));
 }
+
+/**
+ * The claim of a finding that rests on the seat's word alone, or null: finding-weight.ts `claimOf`, re-exported here (the capture's guard on a resend asks it too, and this module reads a
+ * record through finding-weight.ts, so it lives there).
+ */
+export { claimOf };
 
 /**
  * The claim of a high finding the first review ruled out (`not_applicable`), or null: only
@@ -157,19 +153,6 @@ export function claimOf(x: { input: DispositionInput; level: string; role?: stri
  */
 export function dismissalClaimOf(x: { verdict: string; level: string; role?: string; secondCheck: boolean }): "not_applicable" | null {
   return x.secondCheck && x.level === "high" && x.verdict === "not_applicable" && x.role !== "inventory" ? "not_applicable" : null;
-}
-
-/** The file a `decisive` reference names, from the record's evidence or the candidate's locations; else the first of either. */
-function decisiveFileOf(record: Json, candidate: Json): string | undefined {
-  const st = isObject(record.standing) ? record.standing : {};
-  const evidence = Array.isArray(record.evidence) ? record.evidence : [];
-  const locations = Array.isArray(candidate.locations) ? candidate.locations : [];
-  const ei = evidenceIndexOf(st.decisive);
-  const pi = placeIndexOf(st.decisive);
-  const fileOf = (v: unknown): string | undefined => (isObject(v) && str(v.file) !== "" ? str(v.file) : undefined);
-  if (ei !== null && fileOf(evidence[ei])) return fileOf(evidence[ei]);
-  if (pi !== null && fileOf(locations[pi])) return fileOf(locations[pi]);
-  return evidence.map(fileOf).find((f) => f !== undefined) ?? locations.map(fileOf).find((f) => f !== undefined);
 }
 
 /** The line a part's `at` names: an evidence entry, a place of the candidate, or a line of the tree. */
@@ -219,8 +202,17 @@ export function challengeFrom(claim: ChallengeClaim, record: Json, candidate: Js
  * candidate as the payload holds it, the rule's role and the scan's premises. The level is the rule's (no raise is known
  * before the assembly); the kept places are the candidate's locations (a place-read candidate's kept rows are the
  * assembly's), and the assembly asks again with its own (`claimOf`).
+ *
+ * THE CAPTURE ASKS WHEREVER THE ASSEMBLY COULD FIND A NOT-SHIPPED CLAIM. A place-read candidate's kept
+ * places are decided by its place seats, which the capture does not know: the assembly reads only the places they kept,
+ * so a `ships` the seat gave for one place (P1) can take the finding out there while every location read together here
+ * still ships, and no look was ever asked. Row 4 holds on a set of kept places only where it holds on each of them kept
+ * alone, so where no claim is found over every location, a place-read candidate is asked the not-shipped claim if any one
+ * location, kept alone, would give it. That may ask a look the kept places later make needless (a paid seat, never a
+ * finding left out); and a look the assembly finds due that none answered no longer lets row 4 take the finding out
+ * (disposition.ts `rowFourShipsOf`).
  */
-export function challengeOf(a: { record: Json; candidate: Json; role?: string; dutyAbout?: string; declaredInapplicable?: readonly { field: string; kind?: string }[]; premises?: ReadonlyMap<string, string>; secondCheck?: boolean }): Challenge | null {
+export function challengeOf(a: { record: Json; candidate: Json; role?: string; dutyAbout?: string; declaredInapplicable?: readonly { field: string; kind?: string }[]; premises?: ReadonlyMap<string, string>; documentationPages?: ReadonlySet<string>; secondCheck?: boolean }): Challenge | null {
   // A ruled-out finding: its claim is the verdict word's, in a shape with the second check.
   if (a.record.verdict === "not_applicable") {
     const claim = dismissalClaimOf({ verdict: "not_applicable", level: str(a.candidate.severity), ...(a.role ? { role: a.role } : {}), secondCheck: a.secondCheck === true });
@@ -228,20 +220,31 @@ export function challengeOf(a: { record: Json; candidate: Json; role?: string; d
   }
   const st = isObject(a.record.standing) ? (a.record.standing as StandingRecord) : undefined;
   if (!st) return null;
-  const setAside = (Array.isArray(a.record.standing_set_aside) ? a.record.standing_set_aside : []).map((x) => str(isObject(x) ? x.part : undefined)).filter((p) => p !== "");
-  const decisiveFile = decisiveFileOf(a.record, a.candidate);
-  const keptFiles = (Array.isArray(a.candidate.locations) ? a.candidate.locations : []).map((l) => str(isObject(l) ? l.file : undefined)).filter((f) => f !== "");
-  const input: DispositionInput = {
-    verdict: str(a.record.verdict),
-    standing: st,
-    ...(setAside.length > 0 ? { setAside } : {}),
-    ships: effectiveShipsOf({ ...(st.ships ? { seat: st.ships.value } : {}), ...(decisiveFile ? { decisiveFile } : {}), keptFiles, ...(a.premises ? { premises: a.premises } : {}) }),
-    ...(a.dutyAbout ? { dutyAbout: a.dutyAbout } : {}),
-    // WP4's kinds: a feature answer the candidate stands against is row 5.
-    ...(a.declaredInapplicable && a.declaredInapplicable.length > 0 ? { declaredInapplicable: a.declaredInapplicable } : {}),
+  /* The record read into a disposition input by the one reading the report and
+   * the capture's guard share (finding-weight.ts `dispositionInputOfRecord`, `decisivePlaceOf`): before, this module read
+   * it a second way (its own decisive file and lines, its own `ships` line), and `P<n>` named another place than the
+   * report's. Its kept places are the candidate's locations (no rows: the assembly's kept rows are its own); a location
+   * kept alone is a stand-in row of that place. */
+  const rule = str(a.candidate.rule_id);
+  const facts = { ...(a.premises ? { premises: a.premises } : {}), ...(a.documentationPages ? { documentationPages: a.documentationPages } : {}), ...(a.dutyAbout ? { duties: new Map([[rule, a.dutyAbout]]) } : {}) };
+  const extra = a.declaredInapplicable && a.declaredInapplicable.length > 0 ? { declared: a.declaredInapplicable } : {};
+  const claimAt = (rows: readonly PlaceRowIn[]): ChallengeClaim | null => {
+    const input = dispositionInputOfRecord(a.record, a.candidate, rows, facts, extra);
+    // With no usable `decisive`, the heaviest place, weighed with the same facts.
+    const decisiveFile = decisivePlaceOf(a.record, rows, a.candidate, facts)?.file;
+    const decisivePremise = decisiveFile !== undefined ? a.premises?.get(decisiveFile) : undefined;
+    return claimOf({ input, level: str(a.candidate.severity), ...(a.role ? { role: a.role } : {}), ...(decisivePremise !== undefined ? { decisivePremise } : {}) });
   };
-  const decisivePremise = decisiveFile !== undefined ? a.premises?.get(decisiveFile) : undefined;
-  const claim = claimOf({ input, level: str(a.candidate.severity), ...(a.role ? { role: a.role } : {}), ...(decisivePremise !== undefined ? { decisivePremise } : {}) });
+  let claim = claimAt([]);
+  const placeRead = isObject(a.candidate.reading_plan) && a.candidate.reading_plan.unit === "place";
+  if (claim === null && placeRead && st.ships && NOT_SHIPPED.has(st.ships.value)) {
+    const locs = Array.isArray(a.candidate.locations) ? a.candidate.locations : [];
+    for (let i = 0; i < locs.length && claim === null; i++) {
+      const l = locs[i];
+      // A kept place row (place-bar.ts `KEPT_DECISIONS`) standing in for the location, as the assembly would hold it kept alone.
+      if (isObject(l) && str(l.file) !== "" && claimAt([{ place: placeId(i), file: str(l.file), line: Number(l.start_line) || 1, decision: "is_the_construct" }]) === "not_shipped") claim = "not_shipped";
+    }
+  }
   return claim === null ? null : challengeFrom(claim, a.record, a.candidate);
 }
 

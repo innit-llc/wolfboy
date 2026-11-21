@@ -1,10 +1,10 @@
 id: safeguard-reach-002
 pack: safeguard-reach
-short_name: Data-limiting control that cannot reach its target
+short_name: Delete, expiry or limit step that may miss its data
 problem_line:
-  text: Data-limiting control that does not reach its target
-fix_line: Restore a dead check or drop its switch, clear each named store, purge flagged objects,
-  reach or record no-expiry rows.
+  text: Delete, expiry or limit step that misses its data
+fix_line: "Make the step act on the data: delete flagged rows, clear every copy, set an expiry, or
+  fix what switches it off."
 title: Data-limiting control whose predicate, binding or presence cannot reach what it is for
 jurisdiction:
   - EU

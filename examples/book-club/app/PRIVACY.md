@@ -1,6 +1,6 @@
 # Privacy policy - Example Book Club
 
-Example Book Club runs this website at bookclub.example.com.
+Your book club runs this website with Example Book Club, software from Example Club Software GmbH.
 
 ## What we collect
 

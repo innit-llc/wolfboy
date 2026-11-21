@@ -57,24 +57,24 @@ legal_basis:
     url: http://publications.europa.eu/resource/celex/32016R0679
     checked_at: 2026-07-27
     jurisdiction: EU
-  - cite: "GDPR Art. 4(25): \"'information society service' means a service as defined in point (b) of
-      Article 1(1) of Directive (EU) 2015/1535 of the European Parliament and of the Council\". That
-      definition, quoted from the Official Journal text of Directive (EU) 2015/1535 (CELEX
-      32015L1535, English), retrieved 2026-07-27: \"'service' means any Information Society service,
-      that is to say, any service normally provided for remuneration, at a distance, by electronic
-      means and at the individual request of a recipient of services\", where 'at a distance' means
-      'the service is provided without the parties being simultaneously present', 'by electronic
-      means' means 'sent initially and received at its destination by means of electronic equipment
-      for the processing (including digital compression) and storage of data, and entirely
-      transmitted, conveyed and received by wire, by radio, by optical means or by other
-      electromagnetic means', and 'at the individual request of a recipient of services' means
-      'provided through the transmission of data on individual request'. Directive (EU) 2015/1535
-      Annex I carries an indicative list of services outside the definition. An ordinary hosted web
-      or mobile application is an information society service on this definition; 'normally provided
-      for remuneration' describes the class of service, not this instance, so a product free at the
-      point of use is not thereby outside it."
+  - cite: "GDPR Art. 4(25), by way of Directive (EU) 2015/1535 Art. 1(1)(b): \"'information society
+      service' means a service as defined in point (b) of Article 1(1) of Directive (EU) 2015/1535
+      of the European Parliament and of the Council\". That definition, quoted from the Official
+      Journal text of Directive (EU) 2015/1535 (CELEX 32015L1535, English), retrieved 2026-07-27:
+      \"'service' means any Information Society service, that is to say, any service normally
+      provided for remuneration, at a distance, by electronic means and at the individual request of
+      a recipient of services\", where 'at a distance' means 'the service is provided without the
+      parties being simultaneously present', 'by electronic means' means 'sent initially and
+      received at its destination by means of electronic equipment for the processing (including
+      digital compression) and storage of data, and entirely transmitted, conveyed and received by
+      wire, by radio, by optical means or by other electromagnetic means', and 'at the individual
+      request of a recipient of services' means 'provided through the transmission of data on
+      individual request'. Directive (EU) 2015/1535 Annex I carries an indicative list of services
+      outside the definition. An ordinary hosted web or mobile application is an information society
+      service on this definition; 'normally provided for remuneration' describes the class of
+      service, not this instance, so a product free at the point of use is not thereby outside it."
     url: http://publications.europa.eu/resource/celex/32015L1535
-    checked_at: 2026-07-27
+    checked_at: 2026-11-15
     jurisdiction: EU
     supports_rule_condition: false
   - cite: "GDPR Art. 6(1)(a): 'Processing shall be lawful only if and to the extent that at least one of
@@ -288,14 +288,15 @@ legal_basis:
     checked_at: 2026-07-27
     jurisdiction: GR
     supports_rule_condition: false
-  - cite: "NATIONAL AGE - HR 16. Derogation: NO, and by express enactment rather than by silence: Zakon
-      o provedbi Opće uredbe o zaštiti podataka (Narodne novine 42/2018) članak 19. stavak 1.:
-      'obrada osobnih podataka djeteta zakonita je ako dijete ima najmanje 16 godina'. IN FORCE
-      2018-05-25 (the Act's closing formula: 'stupa na snagu 25. svibnja 2018'). The single later
-      amendment concerns the supervisory authority's salary coefficients and does not touch članak
-      19. PRIMARY: Narodne novine, the official Croatian gazette, fetched and grepped."
+  - cite: "NATIONAL AGE - HR 16. Derogation: NO, and by express enactment rather than by silence.
+      Provision: Zakon o provedbi Opće uredbe o zaštiti podataka (Narodne novine 42/2018), članak
+      19. stavak 1.: 'obrada osobnih podataka djeteta zakonita je ako dijete ima najmanje 16
+      godina'. IN FORCE 2018-05-25 (the Act's closing formula: 'stupa na snagu 25. svibnja 2018').
+      The single later amendment concerns the supervisory authority's salary coefficients and does
+      not touch članak 19. PRIMARY: Narodne novine, the official Croatian gazette, fetched and
+      grepped."
     url: https://narodne-novine.nn.hr/clanci/sluzbeni/2018_05_42_805.html
-    checked_at: 2026-07-27
+    checked_at: 2026-11-15
     jurisdiction: HR
     supports_rule_condition: false
   - cite: "NATIONAL AGE - HU 16. Derogation: NO - Hungary legislated no lower age, so the GDPR default
@@ -312,16 +313,16 @@ legal_basis:
     jurisdiction: HU
     supports_rule_condition: false
   - cite: "NATIONAL AGE - IE 16. Derogation: NO, but by express enactment rather than by silence, and
-      the distinction is worth carrying: Data Protection Act 2018 (No. 7 of 2018) section 31(1) -
-      'The age of a child specified for the purposes of Article 8 is 16 years of age.' Section 31(2)
-      narrows information society services for Irish purposes to exclude preventive or counselling
-      services, tracking Recital 38, and section 31(3) required a review of subsection (1) within
-      three to four years of commencement; the Act's official amendments table shows no subsequent
-      amendment to section 31, so the review did not move the figure. IN FORCE 2018-05-25 (Data
-      Protection Act 2018 (Commencement) Order 2018, S.I. No. 174 of 2018). PRIMARY: the electronic
-      Irish Statute Book, fetched and grepped."
+      the distinction is worth carrying. Provision: Data Protection Act 2018 (No. 7 of 2018),
+      section 31(1): 'The age of a child specified for the purposes of Article 8 is 16 years of
+      age.' Section 31(2) narrows information society services for Irish purposes to exclude
+      preventive or counselling services, tracking Recital 38, and section 31(3) required a review
+      of subsection (1) within three to four years of commencement; the Act's official amendments
+      table shows no subsequent amendment to section 31, so the review did not move the figure. IN
+      FORCE 2018-05-25 (Data Protection Act 2018 (Commencement) Order 2018, S.I. No. 174 of 2018).
+      PRIMARY: the electronic Irish Statute Book, fetched and grepped."
     url: https://www.irishstatutebook.ie/eli/2018/act/7/section/31/enacted/en/html
-    checked_at: 2026-07-27
+    checked_at: 2026-11-15
     jurisdiction: IE
     supports_rule_condition: false
   - cite: "NATIONAL AGE - IT 14. Derogation: YES. Provision: Codice in materia di protezione dei dati
@@ -374,17 +375,17 @@ legal_basis:
     checked_at: 2026-07-27
     jurisdiction: LV
     supports_rule_condition: false
-  - cite: "NATIONAL AGE - MT 13. Derogation: YES, at the floor. Provision: NOT the Data Protection Act
-      itself, which is why a search of Chapter 586 finds nothing - Subsidiary Legislation 586.11,
+  - cite: "NATIONAL AGE - MT 13. Derogation: YES, at the floor. Provision: Subsidiary Legislation
+      586.11, regulation 4: 'The processing of personal data of a child in relation to information
+      society services shall be lawful where the child is thirteen years of age.' The instrument is
       the Processing of Child's Personal Data in relation to the Offer of Information Society
-      Services Regulations (Legal Notice 179 of 2018), regulation 4: 'The processing of personal
-      data of a child in relation to information society services shall be lawful where the child is
-      thirteen years of age.' IN FORCE 2018-06-01 per the instrument's own commencement line;
-      legislation.mt dates the single published version 2018-06-04 and records no later version.
-      PRIMARY: legislation.mt, the official Maltese legislation service, the regulations' PDF
-      fetched and the text extracted and grepped."
-    url: https://legislation.mt/eli/sl/586.11/eng
-    checked_at: 2026-07-27
+      Services Regulations (Legal Notice 179 of 2018), and NOT the Data Protection Act itself, which
+      is why a search of Chapter 586 finds nothing. IN FORCE 2018-06-01 per the instrument's own
+      commencement line; legislation.mt dates the single published version 2018-06-04 and records no
+      later version. PRIMARY: legislation.mt, the official Maltese legislation service, the
+      regulations' PDF fetched and the text extracted and grepped."
+    url: https://legislation.mt/eli/sl/586.11/eng/pdf
+    checked_at: 2026-11-15
     jurisdiction: MT
     supports_rule_condition: false
   - cite: "NATIONAL AGE - NL 16. Derogation: NO - the Netherlands legislated no lower age, so the GDPR
@@ -471,16 +472,18 @@ legal_basis:
     checked_at: 2026-07-27
     jurisdiction: SI
     supports_rule_condition: false
-  - cite: "NATIONAL AGE - SK 16. Derogation: NO, and by express enactment rather than by silence: zákon
-      č. 18/2018 Z. z. o ochrane osobných údajov § 15 ods. 1 restates the GDPR figure -
-      'Prevádzkovateľ v súvislosti s ponukou služieb informačnej spoločnosti spracuva osobné údaje
-      na základe súhlasu dotknutej osoby zákonne, ak dotknutá osoba dovršila 16 rokov veku' - with
-      the legal representative's consent below 16. IN FORCE 2018-05-25 (the Act's own final clause:
-      'Tento zákon nadobúda účinnosť 25. mája 2018'). The consolidated snapshot valid from
-      2024-07-01 carries § 15 unchanged. PRIMARY: slov-lex.sk, the official Slovak legal information
-      portal, fetched and grepped."
+  - cite: "NATIONAL AGE - SK 16. Derogation: NO, and by express enactment rather than by silence.
+      Provision: zákon č. 18/2018 Z. z. o ochrane osobných údajov, § 15 ods. 1: 'Prevádzkovateľ v
+      súvislosti s ponukou služieb informačnej spoločnosti spracúva osobné údaje na základe súhlasu
+      dotknutej osoby zákonne, ak dotknutá osoba dovŕšila 16 rokov veku'. It restates the GDPR
+      figure, with the legal representative's consent below 16. IN FORCE 2018-05-25 (the Act's own
+      final clause: 'Tento zákon nadobúda účinnosť 25. mája 2018'). The consolidated snapshot valid
+      from 2024-07-01 carries § 15 unchanged. PRIMARY: slov-lex.sk, the official Slovak legal
+      information portal, fetched and grepped. CORRECTION 2026-11-15: two words of the quotation,
+      spracúva and dovŕšila, had lost a diacritic until § 15 ods. 1 was read again on that
+      snapshot."
     url: https://static.slov-lex.sk/static/SK/ZZ/2018/18/20240701.html
-    checked_at: 2026-07-27
+    checked_at: 2026-11-15
     jurisdiction: SK
     supports_rule_condition: false
 effective_date: 2018-05-25
@@ -541,6 +544,8 @@ detector:
     - \.(?:css|scss|sass|less|styl)$
     - (^|/)(?:seeds?|factories|testdata|test-data|sample[-_]?data)(/|$)
     - (^|/)seed(?:s|-data)?\.[a-z]+$
+settling_questions:
+  - audience.minors_possible
 context_questions:
   - "THE APPLICABILITY QUESTION, and the one to answer first, because a negative answer ends the
     review. Is this service offered DIRECTLY TO A CHILD, in the sense of GDPR Art. 8(1)? No detector

@@ -2,9 +2,9 @@ id: eu-consent-014
 pack: eu-consent
 short_name: Tracking script placed on a page
 problem_line:
-  text: Tracking tag loads with the page, no consent gate found
-fix_line: Load the tag only once consent is recorded, or, for a container snippet, set the vendor's
-  pre-consent default first.
+  text: Tracking script loads with the page, no consent check found
+fix_line: Load the tag only after the visitor agrees; for a tag manager snippet, first set the
+  vendor's consent default to denied.
 title: Script or pixel placement, or the machinery for one, in a file naming a tag vendor, a beacon
   constant or a slot name, or a collector address - prior consent needs review
 jurisdiction:
@@ -321,3 +321,4 @@ remediation_template: >
 data_categories:
   - user.behavior
 fingerprint_spec: default
+duty_about: product_runtime

@@ -40,15 +40,11 @@
  */
 import { writeSync } from "node:fs";
 import { inspect } from "node:util";
-import { PROGRAM_MARKER_RE, redactPrintedText, redactStringsInPlace, type PrintedRedaction } from "./credential-redaction.js";
-import { productPrintedRedaction } from "./product-redaction.js";
-import { codeSpan } from "./report-form.js";
+import { redactPrintedText, redactStringsInPlace } from "./credential-redaction.js";
+import { codeSpan, encodePath, markdownEscaped, printedOutputRedaction } from "./report-form.js";
 import { controlEscape, valueText } from "./value-text.js";
 
-/** The printed redaction from the CLI's own copy of `baseline-002`, compiled once (product-redaction.ts), the report's. */
-export function printedOutputRedaction(): PrintedRedaction {
-  return productPrintedRedaction();
-}
+export { printedOutputRedaction };
 
 const JSON_START = /^\s*[[{]/;
 
@@ -227,6 +223,22 @@ export function linkTarget(s: string): Inert {
   );
 }
 /**
+ * Here, not in report-form.ts, which no longer loads
+ * this module, so the hooks' static import graph holds no printed redaction. A code place's link target from a report file: `up` is the way from the report file's folder to the project's root
+ * (`../../../` from `.legal/reports/scan-<stamp>/`), `file` the place's path relative to the root. Where the report
+ * lies outside the project, `up` is null and the target is the place's absolute `file:` address (`root` absolute).
+ */
+export function codeTarget(up: string | null, root: string, file: string, line: number | null): Inert {
+  const at = line !== null && line > 0 ? `#L${line}` : "";
+  // The printed redaction first, as in every producer:
+  // the path is percent-encoded here, which hides a credential's shape from `linkTarget`'s own redaction.
+  if (up === null) return linkTarget(`file://${encodePath(enteredValue(`${root.replace(/\/+$/, "")}/${file}`))}${at}`);
+  // From a report in the project's root (`up` is ""), the target starts "./",
+  // so that a root file named `https:x` or `vscode:x` is a relative path and never a link with a scheme (FR5 item 5).
+  return linkTarget(`${up === "" ? "./" : up}${encodePath(enteredValue(file))}${at}`);
+}
+
+/**
  * An `Inert` text on one line, cut to `max` characters with "…": its white space runs one space. A cut can leave a
  * backslash or a backtick run without its pair, which CommonMark reads as the character itself.
  */
@@ -296,11 +308,6 @@ export function inertLines(s: Inert): Inert[] {
   return s.split("\n").map(asInert);
 }
 
-/** ASCII punctuation that opens no construct of CommonMark, GFM's tables, markdown-it's strikethrough and linkify or VS Code's math, in any position. */
-const MARKDOWN_INERT = new Set([..."/,;'\"?%^{}"]);
-const isWordChar = (c: string | undefined): boolean => c !== undefined && /[\p{L}\p{N}]/u.test(c);
-const isSpaceOrEnd = (c: string | undefined): boolean => c === undefined || /\s/.test(c);
-
 /**
  * One value of the project or of a seat (a file or folder name, a place, a
  * matched line, a seat's sentence) as inert Markdown text: the one function every such value passes on its way into a
@@ -320,58 +327,9 @@ const isSpaceOrEnd = (c: string | undefined): boolean => c === undefined || /\s/
 export function markdownText(s: Raw): Inert {
   return escapedText(enteredValue(s));
 }
-/**
- * `markdownText`'s escapes of a value `enteredValue` returned. The printed redaction runs on the value BEFORE its
- * escapes: an escape splits a credential's shape
- * (`API_TOKEN\=...`, `eyJ...\.eyJ...`), so step 13's net over the finished file and the log's net no longer recognise it
- * and the value reached not-checked.md and the log in clear. It runs once more after `valueText`, for a shape that reads
- * only on one line. The marker it leaves is kept as it is below, for its readers (an inert `[...]`: no `(`, `[` or
- * definition follows).
- */
+/** `markdownText`'s escapes of a value `enteredValue` returned (report-form.ts `markdownEscaped`), as `Inert`. */
 function escapedText(r: string): Inert {
-  return redactPrintedText(printedOutputRedaction(), valueText(r))
-    .split(PROGRAM_MARKER_SPLIT())
-    // A `:` right after the marker is escaped: at a block's start `[marker]: url` would define a link reference.
-    .map((part, i) => (i % 2 === 1 ? part : i > 0 && part.startsWith(":") ? `\\:${inertPart(part.slice(1))}` : inertPart(part)))
-    .join("") as Inert;
-}
-/** `PROGRAM_MARKER_RE` as one capturing group, for `split`. */
-/* Made on first use, not at load: credential-redaction.js and this module import each other, and a module that loads
- * credential-redaction first reaches this one before PROGRAM_MARKER_RE is set (a ReferenceError at load). */
-let programMarkerSplit: RegExp | null = null;
-const PROGRAM_MARKER_SPLIT = (): RegExp => (programMarkerSplit ??= new RegExp(`(${PROGRAM_MARKER_RE.source.replace(/\((?!\?)/g, "(?:")})`));
-/**
- * A digit run that is a whole word up to `i` and could mark an ordered list: one that reads as 1 (the one marker that
- * can interrupt a paragraph), or any that starts the value, which may itself start a block (a list item's content, a
- * paragraph).
- */
-const listOneBefore = (t: readonly string[], i: number): boolean => {
-  let j = i;
-  while (j > 0 && /\d/.test(t[j - 1] as string)) j--;
-  return j < i && (j === 0 || (/\s/.test(t[j - 1] as string) && Number(t.slice(j, i).join("")) === 1));
-};
-function inertPart(text: string): string {
-  const t = [...text];
-  let out = "";
-  for (let i = 0; i < t.length; i++) {
-    const c = t[i] as string;
-    const prev = t[i - 1];
-    // A `/` after a `/` is escaped: linkify reads `//host:port/path` as a link with no dot in the host (`//localhost`).
-    if (!/[!-/:-@[-`{-~]/.test(c) || (MARKDOWN_INERT.has(c) && !(c === "/" && prev === "/"))) {
-      out += c;
-      continue;
-    }
-    const next = t[i + 1];
-    const kept =
-      (c === "-" && prev !== undefined && !/\s/.test(prev)) ||
-      (c === "_" && isWordChar(prev) && isWordChar(next)) ||
-      (c === "." && prev !== undefined && !listOneBefore(t, i) && isSpaceOrEnd(next)) ||
-      (c === ")" && prev !== undefined && !listOneBefore(t, i)) ||
-      (c === "(" && prev !== undefined) ||
-      (c === ":" && next !== "/");
-    out += kept ? c : `\\${c}`;
-  }
-  return out;
+  return asInert(markdownEscaped(r));
 }
 
 /**

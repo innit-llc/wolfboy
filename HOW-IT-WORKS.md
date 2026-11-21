@@ -155,12 +155,12 @@ steps:
       persist-credentials: false
   - uses: actions/setup-node@<commit SHA>
     with: { node-version: 22 }
-  - name: Install WolfBoy 0.1.0, checked by its digest
+  - name: Install WolfBoy 0.1.1, checked by its digest
     working-directory: ${{ runner.temp }}
     run: |
-      npm pack wolfboy@0.1.0
-      echo "268dfa258e7f3ae6ed7f32cce5e555e3463b3e29edd902675acf4da587b9efb0  wolfboy-0.1.0.tgz" | sha256sum -c -
-      tar -xzf wolfboy-0.1.0.tgz
+      npm pack wolfboy@0.1.1
+      echo "4f47600b065ae14941c40c33c4c73361610f5040c859f2a06e9a96a8c6178265  wolfboy-0.1.1.tgz" | sha256sum -c -
+      tar -xzf wolfboy-0.1.1.tgz
       cd package && npm ci --ignore-scripts --install-strategy=hoisted
   - name: WolfBoy rules check (no AI review)
     run: node "$RUNNER_TEMP/package/dist/index.js" scan --target .
@@ -168,7 +168,7 @@ steps:
       GITHUB_TOKEN: ${{ github.token }}
 ```
 
-Shorter: `npx --yes wolfboy@0.1.0 scan --target .` in place of the two steps above (the README's form; it checks no
+Shorter: `npx --yes wolfboy@0.1.1 scan --target .` in place of the two steps above (the README's form; it checks no
 digest).
 
 - Keep `actions/checkout`'s default `ref` (the pull request's merge commit). A job that checks out the pull request's

@@ -1,6 +1,6 @@
 # Known issues
 
-Known problems in WolfBoy 0.1.0.
+Known problems in WolfBoy 0.1.1.
 When one is fixed, it moves to the changelog.
 
 ## Whether a law applies
@@ -22,14 +22,6 @@ rule is still reviewed.** A region answer settles a whole
 law, not one article of it, so the rule on data from
 connected devices (Data Act Article 4) is reviewed with its
 question open. It costs review time and hides nothing.
-
-**4. Counts of open questions can mislead.** After a "no"
-rules a law out, the line listing the laws still counts that
-law's other questions as open, though no answer to them
-changes the result. The summary at the end of a run says
-"no question open" whenever no finding waits on an answer,
-even while questions about the product are open; the line
-listing the laws shows those.
 
 **5. A reason can name questions you were not asked.** If
 your scan profile lists `distribution_regions` without
@@ -134,6 +126,17 @@ rests on is not yet confirmed on Windows. Where it does not,
 WolfBoy reviews the finding again: more cost, nothing
 hidden.
 
+**48. A special-category answer saved by WolfBoy 0.1.0
+sets all your saved answers aside.** The question about a
+written condition for special categories of data (health,
+biometric or genetic data, for example) changed in 0.1.1. If
+you answered it with 0.1.0, the scan uses none of your saved
+answers, so every region's rules run (more findings and more
+review cost, nothing hidden), until you answer that question
+again: say "review my answers" in Claude Code, or run
+`npx wolfboy@0.1.1 scan --review-declaration` in your
+project's folder.
+
 ## Running it in Claude Code
 
 **19. Start Claude Code in the folder of the project you
@@ -167,63 +170,87 @@ checks clear"). The report is what WolfBoy wrote: read it.
 
 ## The report
 
-**24. A summary over 20 words is replaced.** Where the
-review's one-sentence summary of a finding runs past 20
-words, the report shows "(it ran to 21 words, and this
-report takes at most 20)" in its place. The reasoning is
-still shown.
-
-**25. A finding that waits on your answer can be listed "to
-fix".** Where the review says a finding waits on your answer
-but names no question, the report places it under "to fix".
-
-**26. A finding can point to two different places.**
-`report.md` can show a finding at one place and the
-finding's own page at another. Both are shown; check both.
-
-**27. The record for your team.** `report.md` does not link
-to it (it is in `.legal/records/`), and its "Prepared" date
-is in UTC, so it can be a day off your local date.
-
-**28. A provision can be listed under a note instead of its
-name.** Where a rule's citation of a national law opens with
-a note, a finding's list of provisions shows the note where
-the law's name belongs ("NATIONAL AGE", "NOT VERIFIED
-AGAINST A PRIMARY SOURCE"). The link beside it goes to the
-law.
-
-**29. "1 question settles" can count a question that does
-not exist.** The report can say one question settles a
-finding to answer, and the finding's page can ask for your
-answers, while the same page says the scan has no question
-for it yet. Such a finding is listed again on every scan;
-its page says what to check, and with whom.
-
-**30. "What the rule says to do" includes directions to the
-AI review.** That section shows the rule's text in full, and
-parts of it are written for the review that reads your code
-("Read the matched line first"), not for you.
+**28. Six countries' provisions are listed by the rule's
+note.** Germany, Hungary, Luxembourg, the Netherlands and
+Poland set no age of their own, and Romania, on the
+evidence the rule could read, set none either, so the
+GDPR's 16 applies and the children's-data rule names no
+national provision for them: the list of provisions shows
+the rule's note ("NATIONAL AGE - DE 16") where a law's name
+belongs. The link beside it goes to the law.
 
 **31. The review's reasoning can use internal words.** The
-reasoning shown in full can number the rule's questions (Q1,
-Q2, ...) without saying them, and name the scan's own
-fields (`distribution_regions`) and working files (the
-"orientation sheet").
+review is asked to say the rule's questions in words and to
+describe the scan's own fields and working files instead of
+naming them, but the reasoning is the AI's own writing and
+is shown in full.
 
-**32. "Not read" can name folders that are not there.**
-`report.md` and the record can say "Not read: 19+ files in
-machine-written folders (node_modules, .git and the like)"
-when the files are WolfBoy's own `.legal` folder, which is
-never read. `.legal/quick-scan.txt` names them.
+**36. "decide" on a finding that waits on a fact asks for an
+answer.** Saying "decide F12" to Claude for such a finding
+answers "answer the question instead", although no question
+asks for that fact, and no command records it. The finding
+stays "to answer".
 
-**33. A finding about children can be rated high without a
-sign of a young audience.** In the sample, the book-club
-app's children's-data finding is "to fix · high" although
-the review found nothing aimed at children: where the
-review says a finding waits on your answer but names no
-question, the report places the finding as if the duty were
-not met and the code shipped. Answer the audience question
-(say "review my answers" to Claude) to settle it.
+**38. A "Yes" to the minors question puts the children's-data
+finding "to fix".** "Minors may plausibly use it" is wider
+than the GDPR's test (a service offered directly to a
+child), but a "Yes" leaves the finding "to fix".
+
+**39. Your minors answer is not compared with the code.** A
+"No" is applied even where the code looks built for
+children. The same holds for the other answers about who
+uses the product and the conditions you confirm.
+
+**40. "Not read" can miss a long line left unread.** Where
+the scan leaves out an over-long line (in a minified file,
+for example), `report.md` says so ("1 with lines not read"),
+but the end screen and `.legal/quick-scan.txt` say "Not
+read: none".
+
+**41. The AI review can spend a retry on the regions
+question.** One of the review's instructions still names
+the question about where the product is offered as one a
+finding may wait on. Such a wait is refused and the review
+is asked again, which costs review time; the finding is not
+lost.
+
+**42. A minors answer saved by WolfBoy 0.1.0 is left out
+without a note when a teammate's answers are confirmed.**
+The answer is not used either way; only the scan's note
+saying so is missing on that path.
+
+**43. One problem can be reported as several findings.**
+When one piece of code is named by several checks, or the
+same problem sits in several places, each becomes its own
+finding, so a report can count more findings than there are
+problems. Fixing one problem can close several findings.
+
+**44. "Ships as" has no answer for software your customers
+install.** The question offers a website, a mobile app and
+an API. If your customers install and run the product
+themselves, choose the nearest answer or leave it open;
+leaving it open switches nothing off.
+
+**45. "You said" for a region you only left off your list.**
+Where your answers list the regions the product is offered
+in but name none where it is not, some lines of `laws.md`
+and `not-checked.md` say "you said the product is not
+offered" in a region you only left off the list. The
+outcome follows your list; only the wording is wrong.
+
+**46. An earlier answer can settle a finding after the AI
+review is asked again.** When WolfBoy sends the AI review's
+answer back for a correction and the corrected answer ties a
+finding to a different question, one you have already
+answered, your answer can settle that finding although the
+correction was not asked to change the question: the finding
+is then listed but not counted. Read the findings your
+answers settled.
+
+**47. The review's reasoning can state a fact wrongly.** It
+is the AI's own writing, for example about where a company
+is established. The lines of code it quotes are checked
+against your files; the reasoning around them is not.
 
 ## For people who build WolfBoy
 

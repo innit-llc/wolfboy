@@ -37,15 +37,16 @@
  */
 import { createHash } from "node:crypto";
 import { existsSync, realpathSync, statSync } from "node:fs";
-import { orientationSheetBeside } from "./rests-on.js";
+import { orientationSheetBeside, SEAT_SEARCH_FOR } from "./rests-on.js";
 import { makeFolder, makeTempFolder, removeEmptyFolder, removePath, renamePath, writeFileAt } from "./project-write.js";
 import { basename, dirname, isAbsolute, join, resolve } from "node:path";
 import { relativePath } from "./project-path.js";
 // The title of a finding to fix, from its rule's lines.
 import { problemLineFor, type RuleLineSlot } from "./rule-lines.js";
 import type { RuleLines } from "./bundle.js";
-import { valueText, controlsEscaped, markdownText, markdownProse, markdownCode, md, ours, inertJoin, inertCut, programText, inertLines, inertRedacted, inertRelinked, inertTrim, inertSlice, inertUnlisted, inertCell, inertCapital, inertSliceFrom, linkTarget, spanText, inSpan, type Inert, type Raw, type Spanned } from "./printed-output.js";
-import { anchorOfHeading, codeSpan, codeSpanParts, codeTarget, cutTitle, firstSentence, hexOf, labelOf, plainFileName, REPORT_WIDTH, rowsAt, shortIdsOf, wrapProse } from "./report-form.js";
+import { codeTarget, valueText, controlsEscaped, markdownText, markdownProse, markdownCode, md, ours, inertJoin, inertCut, programText, inertLines, inertRedacted, inertRelinked, inertTrim, inertSlice, inertUnlisted, inertCell, inertCapital, inertSliceFrom, linkTarget, spanText, inSpan, type Inert, type Raw, type Spanned } from "./printed-output.js";
+import { anchorOfHeading, codeSpan, codeSpanParts, cutTitle, firstSentence, hexOf, labelOf, plainFileName, REPORT_WIDTH, rowsAt, shortIdsOf, wrapProse } from "./report-form.js";
+import { CARD_ROWS, EFFECT_MAX_WORDS, FIRST_SCREEN_ROWS, GROUP_CARD_ROWS, LAWS_LINE_ROWS, SUGGESTION_LABEL, headlineFits, suggestionFits } from "./report-budget.js";
 import { appendStateRecord, readStateRecord } from "./state-record.js";
 import { endScreenCopyLines, type CopyOnRecord } from "./deep-copy-text.js";
 import { deepCopiesOnRecord, linkedFilesSeen, readDeepRecord, withDeeperChecks, type DeepRecordLine, type LinkedFilesSeen } from "./deepen.js";
@@ -56,14 +57,18 @@ import { adjudicatePlanDigestName, commandSessions, earlierRunChosenName, previo
 import type { Command } from "commander";
 import type { Candidate, EvidenceLog, Findings, FindingsContextPayloadRow, Rule, ScanProfile } from "wolfboy-schemas";
 import { itemLabelsOfCandidate, matchedWordsLabel } from "./item-label.js";
-import { answersUsedOf, ciSet, DECLARATION_PLAN_FILE, declaredInapplicableOf, givenAnswersOf as confirmedAnswersOf, loadDeclarationSource, NOT_ASKED_LATER, preconditionField, questionKindOf, readDeclaration, reviewDeclarationCommand, type DeclarationSource } from "./declaration.js";
+import { answersUsedOf, ciSet, DECLARATION_PLAN_FILE, REGION_NAMES, declaredInapplicableOf, givenAnswersOf as confirmedAnswersOf, loadDeclarationSource, NOT_ASKED_LATER, NOT_ASKED_NONE, preconditionField, questionKindOf, readDeclaration, reviewDeclarationCommand, type DeclarationSource } from "./declaration.js";
 import { basisAnsweredOut, compareKeys, orderAnswersOf, orderKeyOf, raisedByWeight, raisedOnDutyAlone, type ResolvedBasis, type RuleBasis, type StandingOrder, type StandingOrderInput, standingOrderOf, tierIfAnswered, type TierOf } from "./fix-order.js";
-import { jurisdictionAnsweredOut } from "./per-rule-applicability.js";
-import { dispositionOf, effectiveShipsOf, countsAsProblem, type Disposition, type DispositionInput, type DispositionResult, type GivenAnswer, type SecondLook } from "./disposition.js";
+import { covers, jurisdictionAnsweredOut } from "./per-rule-applicability.js";
+import { regimeCarried, regimePlace } from "./region-reach.js";
+import { dispositionOf, lineSpansOf, rowFourShipsOf, countsAsProblem, ruleSettlersOf, type Disposition, type DispositionInput, type DispositionResult, type GivenAnswer, type LineSpan, type SecondLook } from "./disposition.js";
+import { RESEND_WHY } from "./amend.js";
+import { decisivePlaceOf, dispositionInputOfRecord } from "./finding-weight.js";
 import { foldFindings, type Fold, type FoldEntry } from "./fold-findings.js";
-import { CHALLENGE_CLAIMS, claimOf, dismissalClaimOf, isChallengeRecord, lookAnswerOf, lookLeavesOverturnToPerson, premisesOfFindings, type ChallengeClaim } from "./second-look.js";
-import { NOT_SHIPPED, SHIPS_OF_PREMISE, dutyAboutOf, findingRoleOf, locationOverturnStands, refutationGrounds, refutationUnusable, type StandingRecord } from "./standing.js";
-import { headingEnd, loadPenaltyTiers, type PenaltyTierTable, type TierOfBasis, tierOfBasis } from "./penalty-tier.js";
+import { CHALLENGE_CLAIMS, claimOf, dismissalClaimOf, documentationPagesOf, isChallengeRecord, lookAnswerOf, lookLeavesOverturnToPerson, premisesOfFindings, type ChallengeClaim } from "./second-look.js";
+import { JURISDICTION_WAIT, NOT_SHIPPED, SHIPS_OF_PREMISE, dutyAboutOf, findingRoleOf, locationOverturnStands, refutationGrounds, refutationUnusable, type StandingRecord } from "./standing.js";
+import { headingEnd, lawFullNamesOf, lawShortName, loadPenaltyTiers, type PenaltyTierTable, type TierOfBasis, tierOfBasis } from "./penalty-tier.js";
+import { lawFirstName, lawLaterName, lawMark, lawMarked, lawMarkParts, lawMarksResolved, lawMarksShort, lawsMarkedIn, type LawNames } from "./law-names.js";
 import { adjudicatePlan, derivedFileContent, PreviousRunUnreadable, readPreviousRun, type PreviousRun } from "./adjudicate-plan.js";
 import { readingInputsOfRun } from "./run-reading.js";
 import { endRunLines, legalLayoutRefusals, readHookedRun, supersededRefutationFiles, type HookedRun, type NotJudgedSets } from "./assemble-hooked.js";
@@ -85,7 +90,7 @@ import { recordReportFiles } from "./report-files.js";
 import { readLaunchEvents, runShapeFromAnswer, type LaunchEvent } from "./launch-plan.js";
 import { profileDigest, removalsOf } from "./scan.js";
 import { SHIPPED_WORDS, applicabilityByInstrument, notShippedWords } from "./report.js";
-import { group, notReadAll, notReadFolded, notReadParts, plural } from "./progress.js";
+import { checksFoundNothing, foldersNotReadOf, foldersNotReadWords, group, notReadFolded, notReadParts, plural, type FoldersNotRead } from "./progress.js";
 import { gitRunnerOrWhy } from "./child-program.js";
 import type { RecordSummary } from "./record.js";
 import {
@@ -118,8 +123,9 @@ import { isShippedIdentity, openBundle } from "./bundle.js";
 import { composeSeverities, dataSetAside, FLOW_RULES, OUTSIDE_OPERATOR_RULES, PLAINTEXT_RULES, transportWordsAt, type CandidateIn, type PlaceRowIn, type SeverityRaise, type TransportWords } from "./severity-at-place.js";
 import { KEPT_DECISIONS } from "./place-bar.js";
 import { readRegularFile } from "./project-read.js";
+import { refusedByRuleOf, refusedByRuleSentence } from "./read-scope.js";
 import { DECISION_WORDS, decidedApplies, decisionViewOf, readDecisionRecord, type DecisionEntry, type DecisionRecord, type DecisionView, type ListName, type ListedRow, type OpenPoint } from "./decisions.js";
-import { basisIndexOf, evidenceIndexOf, isPlaceId, isUnitId, placeIndexOf, placeOfUnit } from "./ref-ids.js";
+import { basisIndexOf, evidenceIndexOf, isUnitId, placeIndexOf, placeOfUnit } from "./ref-ids.js";
 
 type Obj = Record<string, unknown>;
 type Seat = "adjudicator" | "refuter" | "silence-investigator";
@@ -134,8 +140,11 @@ function placeReasonWords(reason: string): string {
 
 /** What the tier words read of a resolved basis (penalty-tier.ts `TierOfBasis`). */
 type TierWordsBasis = Pick<TierOfBasis, "tier" | "tiered" | "penaltyCite" | "unresolved" | "penaltyText" | "penaltyAppliesFrom">;
-/** How W19 prints a part the review's block did not establish. */
-const NOT_ESTABLISHED = "not established by the review";
+/** How W19 prints a part the review's block did not establish.
+ * Said as what the report could use, as the clause under it says: DEMO6's
+ * CRA page read "In the shipped product: not established by the review" above reasoning that said the clubs receive the
+ * very files; the review gave none it could use, which is all the report knows (a part set aside reads the same). */
+const NOT_ESTABLISHED = "no answer from the review this report could use";
 /** One sentence with its own closing mark: a full stop is added only where the text ends without one. */
 const sentenceOf = (text: string): string => (/[.!?]["')\]]?$/.test(text.trim()) ? text.trim() : `${text.trim()}.`);
 /** The word before a provision's checked day ("checked 20 Aug 2026"). */
@@ -159,7 +168,13 @@ export const PROVISION_CHECKED_WORD = "checked";
 export function readableProvisionUrl(url: string, cite: string): string {
   const m = /^https?:\/\/publications\.europa\.eu\/resource\/celex\/([0-9A-Za-z()-]+)$/.exec(url);
   if (!m) return url;
-  const art = /\bArt(?:icle)?s?\.?\s*(\d+)/.exec(cite);
+  /* The article OF THE LINKED ACT: where the name
+   * names that act by its number followed by an article ("GDPR Art. 4(25), by way of Directive (EU) 2015/1535 Art.
+   * 1(1)(b)", linked to the directive), that article; else the first article the name gives, as before. The GDPR's
+   * Art. 4 was the anchor on the directive's page (FIN3 M1 other 6). */
+  const act = /^[0-9](\d{4})[A-Z]+0*(\d+)/.exec(m[1]);
+  const own = act ? new RegExp(`\\b${act[1]}/${act[2]}\\)?,?\\s+Art(?:icle)?s?\\.?\\s*(\\d+)`).exec(cite) : null;
+  const art = own ?? /\bArt(?:icle)?s?\.?\s*(\d+)/.exec(cite);
   return `https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:${m[1]}${art ? `#art_${art[1]}` : ""}`;
 }
 
@@ -221,6 +236,14 @@ export const CARRY_NOT_FOLLOWED: readonly { id: string; words: string }[] = [
 const orList = (items: readonly { words: string }[]): string =>
   items.length === 1 ? items[0]!.words : `${items.slice(0, -1).map((i) => i.words).join(", ")} or ${items[items.length - 1]!.words}`;
 
+/**
+ * Facts named in words, which no question of the scan settles. "to check with the organisation that runs it" read as a third party to a small team
+ * that is that organisation.
+ */
+const factsToCheck = (f: number): string => `${group(f)} ${f === 1 ? "fact" : "facts"} to check outside the code`;
+
+/** A law's decision in words, the one source of every page's. */
+const LAW_VERDICT_WORDS: Record<string, string> = { unresolved: "not decided", applies: "applies", "does-not-apply": "does not apply", "likely-applies": "likely applies", "likely-does-not-apply": "likely does not apply", "not-applicable": "does not apply" };
 export const WORDS = inertWords({
   /** skill L12, verbatim. */
   disclaimer:
@@ -243,17 +266,69 @@ export const WORDS = inertWords({
   /** skill L191 (the bold clause) with a draft lead. */
   regionsUnanswered: "The distribution regions were not answered: **no rule was ruled out on jurisdiction, and none could be.**",
   /** draft heading for the step 3a block (skill L189: "the applicability block from step 3a"). */
-  applicabilityHeading: "## Which instruments reach this project",
+  /* Below laws.md's first section, which answers "which laws apply to me": the laws
+   * whose reach turns on what the product is (the gates of rules/gates/), each said in one line, its conditions folded. */
+  applicabilityHeading: "## Laws whose reach depends on what the product is",
+  /** laws.md's first section: every law the findings cite, and why each applies here. */
+  /* What the findings cite and what was done with each, never "which laws apply to
+   * this project" said as a fact: the scan does not decide that; the person's answers and the findings do. */
+  lawsAppliedHeading: "## The laws the findings cite",
+  lawsAppliedNone: "No finding of this scan cites a law.",
+  /* 17 Nov (the third non-author re-check, d1): the laws line is bounded by
+   * the rows it prints (report-budget.ts `LAWS_LINE_ROWS`), so "that the findings cite" is said by the sentences that open
+   * it (the places not answered) and not again in each count after it; laws.md's list says which laws they are. */
+  // The lead, from the region answers the scan read: every place left unanswered, or those no answer covered.
+  /* Said only where no region was answered at all, and of the laws the findings cite:
+   * never "the laws of a place were all applied", which this version's checks do not cover. */
+  lawsAppliedAllOpen: (places: Inert) => `You did not say where the product is offered, so the laws of ${places} that the findings cite were applied.`,
+  lawsAppliedSomeOpen: (places: Inert, n: number) => `You did not say whether the product is offered in ${places}, so ${n === 1 ? "its" : "their"} laws that the findings cite were applied.`,
+  /* Counted with their places, never named here: a list of names
+   * ("Applied: GDPR, APPI (Japan), CRA, EAA and FTC Act.") stood beside a law's own sentence that it does not apply or is
+   * not decided, named a law a second way, and ran to two rows of the first screen (the non-author re-check). A law whose reach
+   * depends on what the product is, not decided or not applying, is counted in neither: its own sentence says it. */
+  lawsAppliedCount: (n: number, places: Inert, byAnswers: boolean) =>
+    `${byAnswers ? "By your answers, " : ""}${byAnswers ? group(n) : `${group(n).charAt(0).toUpperCase()}${group(n).slice(1)}`} ${n === 1 ? "law" : "laws"}${places ? ` of ${places}` : ""} ${n === 1 ? "was" : "were"} applied.`,
+  /** A law the person's No for its region did not decide (region-reach.ts `regimeCarried`). */
+  lawsKeptDespiteNo: (n: number, places: Inert) =>
+    `${group(n).charAt(0).toUpperCase()}${group(n).slice(1)} ${n === 1 ? "law" : "laws"}${places ? ` of ${places}` : ""} ${n === 1 ? "stays" : "stay"} in although you said the product is not offered there, because that answer alone does not decide ${n === 1 ? "it" : "them"}.`,
+  lawsAppliedNoPlace: (n: number) =>
+    `${group(n).charAt(0).toUpperCase()}${group(n).slice(1)} ${n === 1 ? "law" : "laws"} that no answer about where the product is offered bears on ${n === 1 ? "was" : "were"} applied.`,
+  lawsLeftOutCount: (n: number, places: Inert) => `${group(n).charAt(0).toUpperCase()}${group(n).slice(1)} ${n === 1 ? "law" : "laws"}${places ? ` of ${places}` : ""} ${n === 1 ? "was" : "were"} left out by your answers.`,
+  /** A law the findings cite whose reach depends on what the product is, where that is not decided or it does not apply. */
+  lawGated: (law: Inert, verdict: Inert, n: number) => `- **${law}**: cited by ${group(n)} ${n === 1 ? "finding" : "findings"}; whether it applies to the product: ${verdict} (below, under *Laws whose reach depends on what the product is*).`,
+  lawsAppliedList: "Each law below is cited by at least one finding of this scan and was applied:",
+  lawNotApplied: (law: Inert, place: Inert, n: number) =>
+    `Not applied: **${law}**, because you said the product is not offered in ${place}; it was left out of the ${group(n)} ${n === 1 ? "finding that cites" : "findings that cite"} it.`,
+  lawApplied: (law: Inert, why: Inert, n: number) => `- **${law}**: ${why} Cited by ${group(n)} ${n === 1 ? "finding" : "findings"}.`,
+  lawWhy: {
+    open: (place: Inert) => `applied, because you did not say whether the product is offered in ${place}.`,
+    yes: (place: Inert) => `applied, because you said the product is offered in ${place}.`,
+    no: (place: Inert) => `left out of every finding, because you said the product is not offered in ${place}.`,
+    // A region No that does not carry this law's territorial test (region-reach.ts `regimeCarried`).
+    noOpen: (place: Inert) => `applied: you said the product is not offered in ${place}, but that answer alone does not decide this law, so it stays in.`,
+    none: "applied.",
+  },
+  lawsAppliedChange: 'To change an answer about where the product is offered, say "review my answers" to Claude.',
+  /** A gate's verdict in plain words. */
+  // One word for each decision on every page ("probably applies" and "likely applies" were two).
+  lawVerdictWords: LAW_VERDICT_WORDS,
+  /** A gate's one line: the law, its verdict, and how many of its conditions are met and open. */
+  lawGateLine: (law: Inert, cite: Inert, verdict: Inert, met: number, total: number, open: number) =>
+    `- **${law}** (${cite}): ${verdict}.${total === 0 ? "" : total === 1 ? ` Its one condition ${open > 0 ? "is open" : "is met"}.` : ` ${group(met)} of its ${group(total)} conditions ${met === 1 ? "is" : "are"} met${open > 0 ? ` and ${group(open)} ${open === 1 ? "is" : "are"} open` : ""}.`}`,
+  lawGateFold: (n: number) => `The ${group(n)} ${n === 1 ? "condition" : "conditions"} that decide it, and what the code suggests`,
+  lawGateFoldOther: "Its exemptions, the conditions that only add detail, and the checklists it covers",
+  lawGateFoldAll: "Its conditions, and the checklists it covers",
   /** draft */
-  applicabilityNone: "No instrument's reach was assessed in this scan.",
+  applicabilityNone: "No law whose reach depends on what the product is was assessed in this scan.",
   /** draft */
   applicabilityLine: (law: Inert, cite: Inert, verdict: Inert, because: Inert) => `- **${law}** (${cite}): ${verdict} — ${because}`,
   /** draft */
-  openQuestion: (limb: Inert) => `  - Open question: ${limb}`,
+  openQuestion: (limb: Inert) => `  - Open condition: ${limb}`,
   /* laws.md: an instrument's open
    * questions in words, grouped by what an answer does (scope.ts: a required limb closes the gate on "false", an exemption
    * on "true"; a limb that does not bear on the verdict only annotates a finding). */
-  lawRequiredHead: (n: number) => `  - ${group(n)} ${n === 1 ? "question decides" : "questions decide"} whether this law reaches your product:`,
+  // A law's own conditions are not the questions about the product the report counts.
+  lawRequiredHead: (n: number) => `  - ${group(n)} ${n === 1 ? "condition decides" : "conditions decide"} whether this law reaches your product:`,
   lawExemptHead: (n: number) => `  - ${group(n)} ${n === 1 ? "exemption" : "exemptions"}: a yes to one takes your product out of this law, so answer only one that may fit:`,
   lawQuestion: (question: Inert, id: Spanned, suggested?: Inert) => `    - ${question} (\`${id}\`)${suggested === undefined ? "" : ` ${suggested}`}`,
   /* Where the code suggests an answer to an
@@ -264,24 +339,26 @@ export const WORDS = inertWords({
   /* The same words as the console (scan.ts): a
    * web manifest or service worker said as what it is; a dependency as a library; and, on the product question, what a
    * tree holding nothing users install or run looks like - never a yes the code cannot tell apart from a hosted service. */
-  lawSuggestedWebClient: (where: Spanned, more: number) =>
-    `A web manifest or service worker: \`${where}\`${more > 0 ? ` and ${group(more)} more ${more === 1 ? "place" : "places"}` : ""} - an installable client if users install it to run on their side, not a product if it is used only in the browser (the Commission's CRA guidance, paragraphs 20 and 21); only you can confirm which.`,
+  lawSuggestedWebClient: (where: Spanned, more: number, cra: Inert = programText(lawMark("CRA"))) =>
+    `A web manifest or service worker: \`${where}\`${more > 0 ? ` and ${group(more)} more ${more === 1 ? "place" : "places"}` : ""} - an installable client if users install it to run on their side, not a product if it is used only in the browser (the Commission's ${cra} guidance, paragraphs 20 and 21); only you can confirm which.`,
   lawSuggestedDependency: (where: Spanned, more: number, against: boolean) =>
     `The code holds only a dependency here: \`${where}\`${more > 0 ? ` and ${group(more)} more ${more === 1 ? "place" : "places"}` : ""}${against ? ", against your answer of no" : ""}; it names a library that may or may not open a connection, and only you can confirm it.`,
   lawShowsNothingInstalled:
     "The code shows nothing users install or run on their side (no package, app bundle, installer, browser extension or release); a web app or API you run on your own servers looks like this; only you can confirm it.",
   lawDetail: (n: number, ids: Spanned[]) =>
-    `  - ${group(n)} more ${n === 1 ? "question adds" : "questions add"} detail to a finding and ${n === 1 ? "does" : "do"} not decide whether this law applies: ${ids.map((i) => `\`${i}\``).join(", ")}`,
+    `  - ${group(n)} more ${n === 1 ? "condition adds" : "conditions add"} detail to a finding and ${n === 1 ? "does" : "do"} not decide whether this law applies: ${ids.map((i) => `\`${i}\``).join(", ")}`,
   lawRecordable:
-    '  - This version records an answer only to a question that "review my answers" asks; any other question here stays open, and no rule was switched off for an open one.',
+    '  - These conditions are not counted among the questions about the product: "review my answers" records an answer only to a condition it asks about, and any other stays open; no check was switched off for an open one.',
   /** Said once before the instruments whose reach was not tested. */
-  notAssessedLead: "The reach of the laws below is not tested by this version (their scope tests are still written as prose); no rule was switched off for them.",
+  /* In words, with the count; the checklists' names folded below it. */
+  notAssessedLead: (n: number) => `This version cannot yet tell whether ${group(n)} more ${n === 1 ? "checklist of legal duties applies" : "checklists of legal duties apply"} to you, so ${n === 1 ? "it was" : "they were"} not assessed. No check was switched off because of that.`,
+  notAssessedFold: (n: number) => `The ${group(n)} ${n === 1 ? "checklist" : "checklists"} not assessed`,
   /** draft */
   contradiction: (limb: Inert, by: Inert, n: number) => `  - Declared by ${by} and contradicted by the code: ${limb} (${n} location${n === 1 ? "" : "s"})`,
   /** draft */
-  notAssessed: (what: Inert) => `- Not assessed: ${what}`,
+  notAssessed: (what: Inert) => `- ${what}`,
   /** Under an instrument's one block, the checklists whose entries print that same block. */
-  applicabilityShared: (ids: Inert[]) => `  - One answer for ${ids.length} checklists that ask the same questions of this tree: ${ids.join(", ")}`,
+  applicabilityShared: (ids: Inert[]) => `  - One answer for ${ids.length} checklists that ask the same questions: ${ids.join(", ")}`,
   /** Under each block of an instrument whose checklists were answered differently, the one it is. */
   applicabilityChecklist: (id: Inert) => `  - Checklist: ${id}`,
   /** The carry line in the words the rest of the report uses (not-applicable.md's
@@ -298,6 +375,11 @@ export const WORDS = inertWords({
     (notChosen > 0
       ? ` ${notChosen} other ${notChosen === 1 ? "answer" : "answers"} of that scan ${notChosen === 1 ? "was" : "were"} not used: ${notChosen === 1 ? "it" : "each"} matched a possible problem this scan found - the same rule over lines with the same text, or the same finding - and that possible problem was either compared with another answer of that scan instead (only one answer is compared with each possible problem, and one about the same rule over lines with the same text goes first) or given to this scan's review, because that scan did not record which of several such lines ${notChosen === 1 ? "it" : "each"} answered.`
       : ""),
+  /* A fold for bookkeeping (the readability review of 2026-11-16, P7 and P10): the
+   * only HTML a report file holds, three exact line forms the form pass (`formMarkdown`) leaves as they are. */
+  foldOpen: "<details>",
+  foldSummary: (text: Inert) => `<summary>${text}</summary>`,
+  foldClose: "</details>",
   /** draft heading */
   findingsHeading: "## Findings",
   /** draft */
@@ -339,8 +421,11 @@ export const WORDS = inertWords({
   /** draft */
   whyModel: (fact: Inert) => `- Why: the review could not settle it from the code — ${fact}`,
   /** draft */
-  evidence: (file: Spanned, lines: Spanned, quote: Spanned, roles: Inert[] = []) =>
-    `- Evidence: \`${file}:${lines}\` — \`${quote}\`${roles.length > 0 ? ` (cited as ${roles.join(" and as ")})` : ""}`,
+  /* The quotation is a whole code
+   * span (`markdownCode`), opened by as many backticks as it needs: a quoted line holding a backtick (a template string)
+   * was printed with its backticks turned into single quotes, which is not the line the review quoted. */
+  evidence: (file: Spanned, lines: Spanned, quote: Inert, roles: Inert[] = []) =>
+    `- Evidence: \`${file}:${lines}\` — ${quote}${roles.length > 0 ? ` (cited as ${roles.join(" and as ")})` : ""}`,
   /** What an evidence entry is cited as, by its `role` (and its `name`). */
   evidenceRole: (role: Inert, name: Inert) =>
     role === "premise"
@@ -550,6 +635,9 @@ export const WORDS = inertWords({
   dismissedNone: "No item in this run is in this state.",
   /** draft */
   dismissed: (ruleId: Inert, findingId: Spanned, reason: Inert) => `- ${ruleId} \`${findingId}\`: not applicable — ${reason}`,
+  /** On the pages of findings judged not a problem, in their name (n5); not-checked.md's
+   * partly checked answers keep "not applicable", which their heading and lead explain. */
+  dismissedJudged: (ruleId: Inert, findingId: Spanned, reason: Inert) => `- ${ruleId} \`${findingId}\`: judged not a problem — ${reason}`,
   /** skill L189/L168 ("labelled as such") with draft wording. */
   overturned: (ruleId: Inert, findingId: Spanned, grounds: Inert, reason: Inert) =>
     `- ${ruleId} \`${findingId}\`: **overturned by the second review** (${grounds}) — ${reason}`,
@@ -565,24 +653,25 @@ export const WORDS = inertWords({
   byDeclaration: (ruleId: Inert, findingId: Spanned, because: Inert, regions: Inert, from: Inert, date: Inert = ours("")) =>
     `- ${ruleId} \`${findingId}\`: *not applicable by declaration* — ${because} (declared regions: ${regions}; answered from ${from}${date ? ` on ${date}` : ""})`,
   /** skill L190, verbatim heading. */
-  notEstablished: "## WHAT WAS NOT ESTABLISHED",
+  /* Plain headings, in sentence case (they were in capitals and italics, the skill's labels). */
+  notEstablished: "## What this scan did not establish",
   /** skill L190, verbatim subsection headings. */
-  gapFound: "### *gap found — detector missed it*",
-  apparentlyAbsent: "### *apparently absent — searched, nothing found*",
-  unknownNotChecked: "### *unknown — not checked*",
+  gapFound: "### Seen in the code, reported by no check",
+  apparentlyAbsent: "### Looked for and not found",
+  unknownNotChecked: "### Not looked into",
   /** draft heading (skill L190: "reported under their own heading"). */
-  notEvaluated: "### *not evaluated*",
+  notEvaluated: "### Checks switched off",
   /** skill L190 label used as a heading. */
-  notApplicableByDeclaration: "### *not applicable by declaration*",
+  notApplicableByDeclaration: "### Checks set aside by your answers",
   /** skill L191, verbatim headings. */
-  didNotRead: "### *What this scan did not read*",
-  filesNotRead: "### *Files that were not read*",
-  linesNotRead: "### *Lines that were not read*",
+  didNotRead: "### What this scan did not read",
+  filesNotRead: "### Files that were not read",
+  linesNotRead: "### Lines that were not read",
   /** draft: renamed from "Questions nobody answered", which
    * named questions the program chose not to ask; each row now says what became of its question (`questionStatus`). */
   /** one heading for the one item (it was "Questions still open"). */
-  questionsUnanswered: "### *Questions open*",
-  answersNotTaken: "### *Answers this scan did not take at face value*",
+  questionsUnanswered: "### Questions open",
+  answersNotTaken: "### Answers this scan did not take at face value",
   notAdjudicated: "### *Candidates not adjudicated in this run*",
   /** (A-63; relay integration part B, milestone 3): candidates whose seat's answer stayed invalid, as the hook's receipt says they are reported. */
   notJudgedInvalid: "### *Candidates nobody judged: the seat's answer could not be used*",
@@ -644,8 +733,18 @@ export const WORDS = inertWords({
   /** (build unit F4, A7) */
   notAnsweredKeptMore: (n: number) => `  - and ${n} more place${n === 1 ? "" : "s"} where the construct was found; every one is in the evidence log and the per-place table.`,
   /** (build unit F4, design section 3 "How the person sees it"): how every place of a finding was read. */
-  placesRead: (read: number, places: number, window: number, fact: number, summary: number, unchecked: number, why: Inert) =>
-    `- Places: ${read} of ${places} place${places === 1 ? "" : "s"} read: ${window} by opening the lines around the match, ${fact} from the matched line alone (a prose line or catalogue entry the program checked holds no code; not opened)${summary > 0 ? `, ${summary} from a summary of a data file's records that the program checked` : ""}; ${unchecked} not checked${why ? ` (${why})` : ""}.`,
+  /* Only the ways that read a place: "1 by opening the lines around the match, 0 from the
+   * matched line alone (the program found ...); 0 not checked" was 40 words, most of them about a zero. */
+  placesRead: (read: number, places: number, window: number, fact: number, summary: number, unchecked: number, why: Inert) => {
+    const ways = [
+      window > 0 ? [window, "by opening the lines around the match"] : null,
+      // What was not opened is said, as before the readability round dropped it.
+      fact > 0 ? [fact, "from the matched line alone: the program found it was text or a list entry, not code, so the lines around it were not opened"] : null,
+      summary > 0 ? [summary, "from a summary of a data file's records that the program checked"] : null,
+    ].filter((x): x is [number, string] => x !== null);
+    const how = ways.length === 1 && ways[0]?.[0] === read ? `, ${ways[0][1]}` : ways.length > 0 ? `: ${ways.map(([n, w]) => `${n} ${w}`).join(", ")}` : "";
+    return `- Places: ${read} of ${places} place${places === 1 ? "" : "s"} read${how}${unchecked > 0 ? `; ${unchecked} not checked${why ? ` (${why})` : ""}` : ""}.`;
+  },
   /** (build unit F4): why a place was not checked, in plain words. */
   placeReason: (reason: Inert) => placeReasonWords(reason),
   /** (build unit F4) */
@@ -673,9 +772,11 @@ export const WORDS = inertWords({
   /** (build unit F4) */
   placeHowWindow: (lines: Inert) => `${lines} read by opening the lines around the match`,
   /** (build unit F4): a fact place is given, never opened. */
-  placeHowFact: (lines: Inert) => `${lines} read from the matched line alone, which the program checked (not opened)`,
+  // What was not opened is the lines
+  // around the match, for this place; "(not opened)" read as the file, beside "Files read" naming it (DEMO5's PRIVACY.md).
+  placeHowFact: (lines: Inert) => `${lines} read from the matched line alone, which the program checked (the lines around it not opened)`,
   /** (build unit F4) */
-  placeHowSummary: (lines: Inert) => `${lines} read from a summary of the data file's records that the program checked (not opened)`,
+  placeHowSummary: (lines: Inert) => `${lines} read from a summary of the data file's records that the program checked (the lines around it not opened)`,
   /** Places whose row an earlier scan wrote and this one carried. */
   placeHowCarried: (lines: Inert) => `${lines} carried from an earlier scan (not read in this one)`,
   /** What they rested on is named from the one list the carry
@@ -702,7 +803,8 @@ export const WORDS = inertWords({
   placesItemsMissing: (n: number, first: Inert, more: number) =>
     `- ${n} place${n === 1 ? "" : "s"} found to be what this rule looks for ${n === 1 ? "names" : "name"} no item, so the list of items may leave one out: ${first}${more > 0 ? `, and ${more} more` : ""}; every one is a row of the per-place table.`,
   /** (build unit F4) */
-  placesTable: (path: Spanned) => `- Every place, with how it was decided: \`.legal/${path}\` (one row per place; the row of place P<n> is line n + 2).`,
+  // The file's first line is about the finding, not a place (its header says P<n> is line n + 2).
+  placesTable: (path: Spanned) => `- Every place, with how it was decided: \`.legal/${path}\` (after a first line about the finding, then one line for each place).`,
   /** (build unit F4, review R18): the rules read on a model other than their own setting. */
   modelOverride: (said: Inert) => `*${said}*`,
   /** (A-63) */
@@ -715,7 +817,7 @@ export const WORDS = inertWords({
   noLedgerChecked:
     "No capture ledger was checked: this run's records were not taken through the plugin's hook, so nothing on disk shows that each record is the answer its seat returned.",
   /** (A-63; O10): candidates the scanner suppressed, kept by a diagnostic run, that no verdict answers. */
-  suppressedHeading: "### *Candidates the scanner suppressed*",
+  suppressedHeading: "### *Set aside by the scanner, not reviewed*",
   /** (A-63; O10) */
   suppressedRow: (findingId: Spanned, reason: Inert) =>
     `- \`${findingId}\` — the scanner suppressed it (${reason}) and this run did not adjudicate it: it is not dismissed, cleared or not applicable.`,
@@ -730,7 +832,13 @@ export const WORDS = inertWords({
   /** draft */
   emptySection: "No entry in this run.",
   /** draft */
-  gapRow: (ruleId: Inert, title: Inert) => `- ${ruleId} — ${title}: the construct was found and this rule did not raise it.`,
+  // With the check's first provision, which its raw title carried (n8).
+  gapRow: (ruleId: Inert, title: Inert, provision: Inert = ours("")) => `- ${ruleId} — ${title}${provision ? ` (${provision})` : ""}: what this check looks for is in the code, at the lines below, and the check did not report it.`,
+  /** What the gap rows are, and whether the person must act; report.md's line links here. */
+  gapLead:
+    "The review looked into these checks and found what each one looks for at the lines quoted below, although the check itself reported nothing. They are not counted among the findings, and no review judged whether they are a problem. Read each one: if it is a problem in your code, fix it as you would a finding.",
+  /** For report.md's first screen (R19-F places it): the count and the link, in words that say what to do. */
+  gapFirst: (n: number, target: Inert, ref = false) => `Seen in the code but reported by no check: **${group(n)}**. Read ${n === 1 ? "it" : "each"}; ${n === 1 ? "it" : "each"} may be a problem the scan did not count: [${n === 1 ? "where" : "each"}]${ref ? `[${target}]` : `(${target})`}`,
   /** draft */
   absentRow: (ruleId: Inert, title: Inert) => `- ${ruleId} — ${title}: searched, and nothing was found.`,
   /** draft */
@@ -741,6 +849,15 @@ export const WORDS = inertWords({
   /** A rule with no candidate has no place, and its row says so instead of printing its evidence
    * template, whose `{file}:{line}` stand for the place of a match. */
   noPlaceSilent: "the scan raised no place for this rule, so none is shown here; whether what it looks for is absent was not established",
+  /** Said once over the checks nobody looked into (it was each row's tail), and the fold's summary.
+   * In the one sentence (`checksFoundNothing`). */
+  unknownLead: (n: number) => `${checksFoundNothing(n)}. Nobody looked into ${n === 1 ? "it" : "them"} further.`,
+  unknownFold: (n: number) => `The ${group(n)} ${n === 1 ? "check" : "checks"}, one line each, with what ${n === 1 ? "it looks" : "each looks"} for`,
+  unknownRowPlain: (ruleId: Inert, title: Inert) => `- ${ruleId} — ${title}`,
+  /** An "apparently absent" row whose search quoted no line (it read as "the search above did not happen"). */
+  searchedUnquoted: "  - The review quoted no line of code for this search, so the program had nothing to check it against.",
+  /** The empty sections, joined into one line after the last (each was a heading and "No entry in this run."). */
+  nothingInRun: (names: Inert) => `Nothing to list in this run under: ${names}.`,
   /** A rule whose own patterns DID match, and whose matches the scan's corroboration step
    * then set aside (findings.json `matches_removed_by_corroboration`), must not read as a rule that matched nothing. */
   noPlaceCorroborated: (n: number) =>
@@ -754,10 +871,22 @@ export const WORDS = inertWords({
   /** draft: what `notEvaluatedRow` says when the scan named no unmet precondition. */
   notEvaluatedWhyUnnamed: "a declaration",
   /** draft */
-  outOfJurisdictionRow: (ruleId: Inert, title: Inert, regions: Inert, premise: Inert) =>
-    `- ${ruleId} — ${title}: the declared regions (${regions}) are outside this rule's reach${premise ? ` — ${premise}` : ""}`,
+  /* In the person's words: the program's own note ("Settled before
+   * dispatch ... per-rule-applicability.ts ... No seat is launched for it") was printed after the row. The check ran,
+   * as the row "Checks run" says; what the answer set aside is a further look at why it found nothing. */
+  outOfJurisdictionRow: (ruleId: Inert, title: Inert, places: Inert) =>
+    `- ${ruleId} — ${title}: ${places ? `its laws are those of ${places}, where you said the product is not offered` : "its laws are those of places where you said the product is not offered"}; it ran and found nothing, and because of your answer the scan did not look further into why.`,
   /** draft */
   limitRow: (sentence: Inert, lift: Spanned | null) => `- ${sentence}${lift ? ` Re-scan with: \`${lift}\`` : ""}`,
+  /** not-checked.md's "What this scan did not read", from the scan's counts (`notReadRowsOf`). */
+  notReadNothingNames: { "read-scope:tests": "test files", "read-scope:vendored": "bundled third-party code", "read-scope:build": "build output" } as Record<string, string>,
+  notReadNothing: (names: readonly Inert[]) => `- No ${names.length <= 1 ? names.join("") : `${names.slice(0, -1).join(", ")} or ${names[names.length - 1]}`} ${names.length > 1 || names[0] === "test files" ? "were" : "was"} found in this tree, so nothing was skipped as such.`,
+  notReadRulesRun: (run: number, open: number, out: number) =>
+    `- Checks run: all ${group(run)} that this version has. ${open > 0 || out > 0 ? `${group(open)} of them depend on a question about the product that no answer gave, and your answers put ${group(out)} out of scope; all of them ran anyway.` : "None of them waits on an answer about the product."}`,
+  // The one sentence, with the count of the checks that ran.
+  notReadRulesSilent: (n: number, run: number) => `- ${checksFoundNothing(n, { ran: run })}; each one is listed on this page.`,
+  /** The kinds of path the scanner refuses by rule, as not-checked.md's row names them. */
+  refusedByRuleWhat: "machine-written trees and files (such as .git and dependency lock files) and dot-directories other than .well-known and .github",
   /** draft */
   fileNotReadRow: (file: Spanned, reason: Inert) => `- \`${file}\` — ${reason}`,
   /** draft: the details `fileNotReadRow` appends in brackets. */
@@ -775,13 +904,20 @@ export const WORDS = inertWords({
   noGroundNamed: "no ground named",
   unrecordedLocation: "an unrecorded location",
   /** draft */
-  questionRow: (expr: Spanned, rules: Inert, status: Inert = ours("")) => `- \`${expr}\` — ${status ? `${status}; ` : ""}holds open: ${rules}`,
+  // The question in words, its id beside (laws.md showed six of ten as ids only).
+  questionRow: (expr: Spanned, rules: Inert, status: Inert = ours(""), header: Inert = ours(""), text: Inert = ours(""), n = 2) =>
+    `- ${header && text ? `**${header}**: ${text}` : `\`${expr}\``} — ${status ? `${status}. ` : ""}Your answer decides whether ${n === 1 ? "this check applies" : `these ${group(n)} checks apply`}: ${rules}.`,
+  /** On a question's one row in laws.md: what else the same answer decides. */
+  questionAlsoChecks: (k: number, rule: Inert, at: Spanned) => `The same answer also decides ${group(k)} ${k === 1 ? "finding" : "findings"} of "${rule}" (the review found \`${at}\`).`,
+  questionAlsoMoves: (k: number, which: Inert = ours("")) => `Your answer also moves ${group(k)} ${k === 1 ? "finding" : "findings"}${which ? ` (shown as ${which})` : ""} up the list to fix, or leaves ${k === 1 ? "it" : "them"} where ${k === 1 ? "it is" : "they are"}.`,
+  questionAlsoHolds: (n: number, rules: Inert) => `Your answer also decides whether ${n === 1 ? "this check applies" : `these ${group(n)} checks apply`}: ${rules}.`,
   /** draft: what became of the question, read from the run's `declaration-plan.json` (one computation). */
   questionStatus: {
     asked: "you were asked and did not answer",
     before: "you chose not to answer",
-    later: (cmd: Spanned) => `not asked before this scan; your answer is used from the next scan (say "review my answers", or run \`${cmd}\`)`,
-    none: "not asked: the plan found no answer to it changes this scan",
+    // The command is printed once, at the end of laws.md's questions.
+    later: 'not asked before this scan; your answer is used from the next scan. Answer it: say "review my answers" to Claude',
+    none: "not asked: no answer to it would change this scan",
     noPlan: "no answer in your declaration",
     // The scan's plan was not taken: what it says of this question is not known.
     notTaken: (why: Inert) => `not known: the scan's declaration plan ${why}, so the report does not use it`,
@@ -790,8 +926,14 @@ export const WORDS = inertWords({
   answerContradicted: (expr: Spanned, rule: Inert, where: Inert) =>
     `- \`${expr}\` — CONTRADICTED: ${rule} raised a candidate on this subject at ${where}; the answer and the code disagree.`,
   /** draft, from skill L191 ("never worded as a clearance"). */
-  answerNotContradicted: (expr: Spanned, rules: Inert) =>
+  /* The question by its words and the person's answer, never the field's
+   * name (`features.genai_media`), which the person never saw. */
+  answerNotContradicted: (question: Inert, rules: Inert) =>
+    `- ${question} — ${rules} ran and raised nothing, so this pass did not contradict the answer.`,
+  /** A field the question source does not name: its own name, as before. */
+  answerNotContradictedField: (expr: Spanned, rules: Inert) =>
     `- \`${expr}\` — ${rules} ran and raised nothing, so this pass did not contradict the answer.`,
+  answerInWords: (header: Inert, label: Inert) => (label ? `**${header}** (you answered ${label})` : `**${header}**`),
   /** draft, from skill L191 (the sixth heading's content; names no resume command). */
   notAdjudicatedBody: (n: number, shape: Inert, chosenBy: Inert) =>
     `${n} candidate${n === 1 ? " was" : "s were"} not adjudicated in this run. The run shape was *${shape}* (${chosenBy === "user" ? "chosen by the person" : "the default, used without asking"}). ` +
@@ -826,7 +968,9 @@ export const WORDS = inertWords({
   numberListNotKept: (why: Inert) => `The F-numbers of this report were not kept for later runs (${why}), so a later run may number these findings differently.`,
   /** The report-files record (report-files.ts) refused. */
   /* Words */
-  deeperNotRead: (why: Inert) => `WolfBoy could not read this computer's record of deeper checks (${why}), so each finding's file says "None." under "Deeper checks", even where a check is on record.`,
+  /* A finding's file has a "Deeper checks" section only once a check
+   * is on record (R19-F's P7), so where the record cannot be read the files have none; it said they say "None." there. */
+  deeperNotRead: (why: Inert) => `WolfBoy could not read this computer's record of deeper checks (${why}), so no finding's file has a "Deeper checks" section, even where a check is on record.`,
   renderInputNotKept: (why: Inert) => `WolfBoy could not keep what this report was made from (${why}), so a decision you record about a finding shows in the next scan's report, not in this one.`,
   reportFilesNotRecorded: (why: Inert) => `WolfBoy could not record which report files it wrote (${why}), so "explain", "fix" and "what was ruled out" cannot print this report; open its files in the editor.`,
   reviewOfDay: (day: Inert) => `the review of ${day}`,
@@ -835,43 +979,175 @@ export const WORDS = inertWords({
   laterRuledOut: "ruled out: [its verdict](ruled-out.md)",
   laterNoVerdict: "no verdict in this run",
   firstTitle: (project: Inert, day: Inert) => `# ${project} · compliance review${day ? ` · ${day}` : ""}`,
-  firstNeeds: (n: number, toFix: number, lv: { high: number; medium: number; low: number }, clarify: number, answer: number, questions: number, decidedFix = 0, decidedClarify = 0) =>
-    `**Needs your action: ${group(n)}**: ${group(toFix)} to fix (${group(lv.high)} high, ${group(lv.medium)} medium, ${group(lv.low)} low${decidedFix > 0 ? `; ${group(decidedFix)} decided by you` : ""}) · ${group(clarify)} to clarify${decidedClarify > 0 ? ` (${group(decidedClarify)} decided by you)` : ""} · ${group(answer)} to answer${answer > 0 ? `, which ${group(questions)} ${questions === 1 ? "question settles" : "questions settle"} ("review my answers")` : ""}`,
+  // A fact named in words is not a question: "review my answers" does not settle it.
+  firstNeeds: (n: number, toFix: number, lv: { high: number; medium: number; low: number }, clarify: number, answer: number, questions: number, facts: number, decidedFix = 0, decidedClarify = 0) =>
+    `**Needs your action: ${group(n)}**: ${group(toFix)} to fix (${group(lv.high)} high, ${group(lv.medium)} medium, ${group(lv.low)} low${decidedFix > 0 ? `; ${group(decidedFix)} decided by you` : ""}) · ${group(clarify)} to clarify${decidedClarify > 0 ? ` (${group(decidedClarify)} decided by you)` : ""} · ${group(answer)} to answer${
+      // With both, one verb for the two ("…, and 1 fact to check" had none).
+      answer === 0 ? "" : questions > 0 && facts > 0 ? `, which ${group(questions)} ${questions === 1 ? "question" : "questions"} ("review my answers") and ${factsToCheck(facts)} settle` : questions > 0 ? `, which ${group(questions)} ${questions === 1 ? "question settles" : "questions settle"} ("review my answers")` : facts > 0 ? `: ${factsToCheck(facts)}` : ""
+    }`,
   firstTaken: (n: number, ruled: number, scope: number, notCounted: number, setAside = 0, scopeBy = "your answers") =>
     `**Taken off the list: ${group(n)}**: [${group(ruled)} ruled out](ruled-out.md) by one AI review each, which can miss a real problem${scope > 0 ? ` · ${group(scope)} out of scope by ${scopeBy}` : ""}${setAside > 0 ? ` · ${group(setAside)} set aside by the scanner, not reviewed` : ""}${notCounted > 0 ? ` · ${group(notCounted)} not counted` : ""}`,
   firstLaws: (parts: readonly Inert[], review: Inert) => `[Laws](laws.md): ${parts.join(" · ")} · ${review}`,
+  /* The first screen's counts as sentences, each with its verb (the readability review of
+   * 2026-11-16: "Needs your action: 15: 12 to fix ... which 1 question ... settle" was 32 words with the verb at the end). */
+  needsHead: (n: number, reviewed: Inert) =>
+    `${n === 0 ? "**No finding needs your action.**" : `**${group(n)} ${n === 1 ? "finding needs" : "findings need"} your action.**`}${reviewed ? ` ${reviewed}` : ""}`,
+  needsFix: (n: number, levels: readonly Inert[], decided: number) =>
+    `- ${group(n)} to fix${levels.length > 0 ? `: ${listWords(levels)}` : ""}.${decided > 0 ? ` You decided ${group(decided)} of them; they stay counted.` : ""}`,
+  needsLevel: (n: number, level: Inert) => `${group(n)} ${level}`,
+  needsClarify: (n: number, decided: number) =>
+    `- ${group(n)} to clarify: the review left ${n === 1 ? "it" : "them"} to a person to judge.${decided > 0 ? ` You decided ${group(decided)} of them; they stay counted.` : ""}`,
+  needsWait: (n: number, questions: number, facts: number) => {
+    const parts = [questions > 0 ? `${group(questions)} ${questions === 1 ? "question" : "questions"} to answer` : "", facts > 0 ? `${group(facts)} ${facts === 1 ? "fact" : "facts"} to check in your own documents` : ""].filter(Boolean);
+    return `- ${group(n)} ${n === 1 ? "waits" : "wait"} on you${parts.length > 0 ? `: ${parts.join(", and ")}` : ""}.`;
+  },
+  takenRuled: (n: number) =>
+    `${group(n)} more ${n === 1 ? "was" : "were"} judged not a problem, each by one AI review, which can miss a real problem: [see ${n === 1 ? "it" : n === 2 ? "both" : "them"}](#judged-not-a-problem).`,
+  takenScope: (n: number, by: string) => `${group(n)} ${n === 1 ? "was" : "were"} left out of scope by ${by}.`,
+  takenSetAside: (n: number) => `${group(n)} ${n === 1 ? "was" : "were"} set aside by the scanner and not reviewed.`,
+  takenNotCounted: (n: number) => `${group(n)} more ${n === 1 ? "is" : "are"} listed below but not counted as ${n === 1 ? "a problem" : "problems"}.`,
+  /* The laws line in sentences, from the scan's own answers and verdicts. */
+  lawsLead: "[Laws](laws.md):",
+  /* The conditions only the person can confirm are counted beside every decision, as the
+   * old laws item counted them (r13-l D-2: with every condition met, the exclusions decide and are counted); "likely
+   * applies" said as a sentence. */
+  lawDecision: (law: Inert, verdict: string, open: number) => {
+    const tail = open > 0 ? `: ${group(open)} ${open === 1 ? "condition" : "conditions"} only you can confirm` : "";
+    return verdict === "unresolved"
+      ? `Whether the ${law} applies is not decided${tail}.`
+      : verdict === "applies"
+        ? `The ${law} applies${tail}.`
+        : verdict === "does-not-apply"
+          ? `The ${law} does not apply${tail}.`
+          : /^likely-/.test(verdict)
+            ? `The ${law} ${LAW_VERDICT_WORDS[verdict] ?? verdict.replace(/-/g, " ")}${tail}.`
+            : `The ${law}: ${verdict.replace(/-/g, " ")}${tail}.`;
+  },
+  /* Where no law's applicability was assessed: said of those laws, by laws.md's own name
+   * for them, never as if no law had been applied. */
+  lawsNoneSentence: "No law whose reach depends on what the product is was assessed.",
+  /** The laws line's last form (`lawsLineOf`): the decisions counted. */
+  lawsDecisionsCounted: (n: number, open: number) =>
+    `For each of ${group(n)} ${n === 1 ? "law" : "laws"} whose reach depends on what the product is, the laws page says whether it applies${open > 0 ? `: ${group(open)} ${open === 1 ? "condition" : "conditions"} only you can confirm` : ""}.`,
+  /** Several laws of one decision in one sentence ("the A, the B and 3 more laws"). */
+  lawsDecision: (laws: Inert, verdict: string, open: number) => {
+    const tail = open > 0 ? `: ${group(open)} ${open === 1 ? "condition" : "conditions"} only you can confirm` : "";
+    const they = `${laws.charAt(0).toUpperCase()}${laws.slice(1)}`;
+    return verdict === "unresolved"
+      ? `Whether ${laws} apply is not decided${tail}.`
+      : verdict === "applies"
+        ? `${they} apply${tail}.`
+        : verdict === "does-not-apply"
+          ? `${they} do not apply${tail}.`
+          : /^likely-/.test(verdict)
+            ? `${they} likely ${verdict.slice("likely-".length).replace(/-/g, " ").replace(/applies$/, "apply")}${tail}.`
+            : `${they}: ${verdict.replace(/-/g, " ")}${tail}.`;
+  },
+  whoseSentence: {
+    own: (day: Inert) => `The scan used your answers${day ? ` of ${day}` : ""}.`,
+    team: (day: Inert) => `The scan used the team's answers${day ? ` of ${day}` : ""}, confirmed by you.`,
+    file: (file: Inert) => `The scan used the answers in ${file}.`,
+    none: `The scan did not use your saved answers, so every region's rules ran; say "review my answers" to use them.`,
+  },
+  /* Not checked on the first screen in one line; the block itself follows the findings,
+   * and comes back to the top where any place has no verdict or a finding was read only in part. */
+  /* And what was not read, where anything was: the first screen kept "Not read"
+   * before P6, and the brief keeps the counts of what was not checked on it (shape check (f) of test:assemble-report). */
+  /* Without "verdict", a working word on the first screen (shape check (e)):
+   * "every place the scan found was reviewed", and a carried answer said as a finding judged in an earlier review. */
+  /* `opening`: where a place has no verdict and the first screen
+   * cannot hold the block on top with two Fix first entries, the line opens with that count instead (`notCheckedOpening`). */
+  notCheckedOne: (rulesN: number, questions: number, carried: number, also: readonly Inert[], notRead: readonly Inert[] = [], opening = "every place the scan found was reviewed.") =>
+    `**Not checked**: ${opening} ${checksFoundNothing(rulesN)}${notRead.length > 0 ? `; not read: ${notRead.join(" · ")}` : ""}${questions > 0 ? `; ${group(questions)} ${questions === 1 ? "question" : "questions"} about the product ${questions === 1 ? "is" : "are"} open` : ""}${carried > 0 ? `; ${group(carried)} ${carried === 1 ? "finding was" : "findings were"} judged in an earlier review and not read again` : ""}${also.length > 0 ? `; also ${also.join("; ")}` : ""}; your privacy policy was not compared as a whole. [What was not checked](#not-checked)`,
+  /* (the owner, 2026-11-16: "a hook makes it easy to follow") One finding on the front page:
+   * what happened as its headline, then its level and the check's title, its code line, and what to do. */
+  entryHead: (f: Inert, part: Inert, headline: Inert) => `- **${f}${part} · ${headline}**`,
+  entryPart: (i: number, n: number) => ` (${i} of ${n})`,
+  entryWhatToDo: (t: Inert) => `What to do: ${t}`,
+  /* The review's own suggestion for this code, said as its suggestion, and the rule's
+   * line beneath it, so a wrong suggestion is never taken for the rule's advice. */
+  // The label is report-budget.ts's, the source of the rows it takes.
+  entryReviewFix: (t: Inert) => `${SUGGESTION_LABEL} ${t}`,
+  /* "The rule's general advice:" took a third row for 32 of the
+   * 120 rules' lines; with "In general:" every rule's line keeps to two (test-report-front-page holds it over the bundle). */
+  entryRuleFix: (t: Inert) => `In general: ${t}`,
+  entryDecides: (t: Inert) => `What decides it: ${t}`,
+  entryQuestion: (q: Inert) => `What decides it: your answer to "${q}"; say "review my answers".`,
+  entryFact: (fact: Inert, cite: Inert) => `What to check in your own documents: ${fact}${cite ? ` (${cite})` : ""}.`,
+  allToFixBelow: (n: number) => `All ${group(n)} to fix are listed [below, by area](#to-fix-by-area).`,
+  legendWorstOf: "⚑ ranked by assuming the worst, because the review could not tell; the finding's page says what.",
+  legendPreview: "In VS Code, Ctrl+Shift+V (Mac: Cmd+Shift+V) opens the preview, and Ctrl+click opens a link.",
+  /* Where findings meet on one line of code: a view added, nothing merged or uncounted. */
+  sharedHeading: "## Findings that share a line of code",
+  sharedLead: "Each of these lines is named by more than one finding. Each finding is still counted and needs its own look; this list only shows where they meet.",
+  sharedLine: (place: Inert, findings: readonly Inert[]) => `- ${place}: ${listWords(findings)}`,
+  /* The findings judged not a problem, on the front page under their count. */
+  judgedHeading: "## Judged not a problem",
+  judgedLead: (n: number) =>
+    `${group(n)} ${n === 1 ? "finding was" : "findings were"} judged not a problem, each by one AI review, which can miss a real problem. [ruled-out.md](ruled-out.md) has ${n === 1 ? "it" : "each"} in full.`,
+  judgedSummary: (n: number) => `${n === 1 ? "The finding" : `The ${group(n)}`}, each with its reason`,
+  judgedItem: (title: Inert, place: Inert, reason: Inert, page: Inert) => `- ${title}, at ${place}: ${reason} ([its page](${page}))`,
+  judgedMore: (n: number) => `And ${group(n)} more, in [ruled-out.md](ruled-out.md).`,
+  /* "To answer" holds the findings a question decides; a fact to check has its own list. */
+  toAnswerQuestionsLead: "These findings wait on your answer to a question about the product. The questions, with what each decides and how to answer: [laws.md](laws.md#questions-open).",
+  toCheckHeading: "## To check in your own documents",
+  toCheckLead: "These findings wait on a fact the code cannot show. Each one names the fact; check it in your own records, such as your record of processing.",
+  /* The closing counts as sentences, in "About this report". */
+  coverageSentence: (ran: number, matched: number, silent: number, searched: number, notEvaluated: number) =>
+    `${group(ran)} ${ran === 1 ? "check" : "checks"} ran. ${group(matched)} matched something. ${group(silent)} matched nothing; the review looked further into ${group(searched)} of those.${notEvaluated > 0 ? ` ${group(notEvaluated)} more ${notEvaluated === 1 ? "was" : "were"} not run.` : ""}`,
 
   /* The Not checked block of the first screen in mock M2's form (design 3.1 item 5). */
+  /* In plain words: "Nothing here is known to be in order" read as "nothing in this
+   * report is right", and "a clean result" is an idiom. "Places without a verdict" is approved wording (design 3.1 item
+   * 5), kept. */
+  notCheckedOpening: (places: number, partly: number) =>
+    `places without a verdict: **${group(places)}**${partly > 0 ? `; findings the AI read only in part: **${group(partly)}**` : ""}.`,
   notCheckedFirst: (places: number, partly: number) =>
-    `Nothing here is known to be in order. Places without a verdict: **${group(places)}** · findings the AI read only in part: **${group(partly)}**`,
-  rulesNothing: (n: number, ref: number | null) => `Rules that found nothing: ${group(n)}${n > 0 && ref !== null ? `, which is not a clean result: [each][${ref}]` : ""}`,
-  rulesNothingHeading: "### Rules that found nothing",
-  // The count the first screen links here, said where it links.
+    `No part of the code is declared free of problems. Places without a verdict: **${group(places)}**. Findings the AI read only in part: **${group(partly)}**.`,
+  // The one sentence (it was "Checks that found nothing: N, which ...").
+  rulesNothing: (n: number, ref: number | null) => `${checksFoundNothing(n)}${n > 0 && ref !== null ? `: [each][${ref}]` : ""}`,
+  rulesNothingHeading: "### Checks that found nothing",
+  // The count the first screen links here, said where it links. In the one sentence (`checksFoundNothing`).
   rulesNothingLead: (n: number, listed: number) =>
     n === listed
-      ? `${group(n)} ${n === 1 ? "rule" : "rules"} found nothing in this scan${n > 0 ? `; ${n === 1 ? "it is" : "each is"} below` : ""}. Finding nothing is not a clean result.`
-      : `${group(n)} ${n === 1 ? "rule" : "rules"} found nothing in this scan; ${group(listed)} of them ${listed === 1 ? "was" : "were"} looked into, below. Finding nothing is not a clean result.`,
-  notReadLine: (parts: readonly Inert[]) => `Not read: ${parts.length > 0 ? parts.join(" · ") : "0 files"}: [every file](not-checked.md)`,
+      ? `${checksFoundNothing(n)}${n > 0 ? `; ${n === 1 ? "it is" : "each is"} below` : ""}.`
+      : `${checksFoundNothing(n)}; ${group(listed)} of them ${listed === 1 ? "is" : "are"} below.`,
+  // The link goes to the section, which names what was not read (it listed no file): a
+  // reference, numbered after the code places, as "Rules that found nothing" links its own (the raw view's short targets).
+  notReadLine: (parts: readonly Inert[], ref: number) => (parts.length > 0 ? `Not read: ${parts.join(" · ")}: [details][${ref}]` : `Not read: none ([details][${ref}])`),
   notReadMoreFolders: (n: number) => `and ${group(n)} more`,
   notReadPart: {
     "files-refused": (n: number) => `${group(n)} binary, large or not scanned`,
     "files-outside": (n: number) => `${group(n)} ${n === 1 ? "link" : "links"} outside the folder`,
-    "files-not-read": (n: number) => `${group(n)} read to no rule`,
+    "files-not-read": (n: number) => `${group(n)} read to no check`,
     "lines-not-read": (n: number) => `${group(n)} with lines not read`,
     "did-not-read": (n: number) => `${group(n)} coverage ${n === 1 ? "note" : "notes"}`,
   } as Record<string, (n: number) => string>,
-  policyNotCompared: 'Privacy policy not compared: say "compare my privacy policy"',
-  fixRest: (n: number) => `The other ${group(n)} to fix ${n === 1 ? "is" : "are"} [below, by area](#to-fix-by-area), in this order.`,
+  /* On the block's "Also not checked" line, not an item of its own: the block
+   * keeps mock M2's six items at most (design 3.1 item 5; R19-F's second author found a seventh). */
+  policyAlso: 'your privacy policy as a whole (a finding that quotes it looked at that line only; to compare it, say "compare my privacy policy")',
+  // "The other 8 to fix" counted the entries left (a card can hold several findings)
+  // beside "14 to fix": 3 + 8 is not 14. The rest is named by the headline's own count, in one row at 75 columns.
+  fixRest: (total: number) => `The rest of the ${group(total)} are [below, by area](#to-fix-by-area), in this order.`,
   clarifyHeading: "## To clarify",
-  clarifyRest: (n: number) => `The other ${group(n)} to clarify ${n === 1 ? "is" : "are"} [below, by area](#to-fix-by-area).`,
+  clarifyRest: (total: number) => `The rest of the ${group(total)} to clarify are [below, by area](#to-fix-by-area).`,
+  /** Where the first screen shows none of them: one line under Fix first, no empty section. */
+  clarifyAllBelow: (n: number) => `All ${group(n)} to clarify are listed [below, by area](#to-fix-by-area).`,
+  allBelowBoth: (fix: number, clarify: number) => `All ${group(fix)} to fix and ${group(clarify)} to clarify are [below, by area](#to-fix-by-area).`,
   /* (design 3.2.1; mock M9) To clarify on a later run: the new or moved-in
    * points are listed, the rest counted as open since the earlier review. */
   clarifyLaterRest: (moreNew: number, open: number, listedAny: boolean, asOf: Inert) =>
     `- ${[moreNew > 0 ? `${group(moreNew)} more new: [changes.md](changes.md#new-or-higher)` : "", open > 0 ? `${group(open)} ${listedAny ? "more " : ""}open, ${asOf}: [all](#to-fix-by-area)` : ""].filter(Boolean).join(" · ")}`,
+  /** The same where To clarify has no heading on the first screen: the line says what they are (it stood under "Now to fix" and read as more to fix, the non-author re-check). */
+  clarifyLaterNamed: (moreNew: number, open: number, asOf: Inert) =>
+    `To clarify: ${[moreNew > 0 ? `${group(moreNew)} new, [changes.md](changes.md#new-or-higher)` : "", open > 0 ? `${group(open)} open, ${asOf}: [all](#to-fix-by-area)` : ""].filter(Boolean).join(" · ")}.`,
   openPoint: (text: Inert) => `open: ${text}`,
   legendVsCode: "VS Code: Ctrl+Shift+V to format (Mac: Cmd+Shift+V) · Ctrl+click a link",
   legendWorst: "⚑ placed as if the worst case held",
   identityHeading: "About this report",
+  /* Where the person's decisions are kept, said once on report.md (a finding's page said it
+   * under "Your decisions" until that section came to be printed only where a decision is on record). */
+  decisionsKept: 'Your decisions about findings ("decide F1: …") are kept on this computer, for this folder; they do not go with the repository.',
   identityCommit: (commit: Inert) => `Commit ${commit}.`,
   identityNumbers: (note: { kind: "taken"; label: Inert } | { kind: "start"; from: number } | { kind: "differs"; label: Inert; count: number } | null) =>
     note === null
@@ -881,12 +1157,32 @@ export const WORDS = inertWords({
         : note.kind === "start"
           ? `F-numbers start at F${note.from}: this computer had no list for this folder; the 6-character ids are unchanged.`
           : `F-numbers follow this computer's list; ${note.label} numbered ${note.count} ${note.count === 1 ? "finding" : "findings"} differently. In commits and tickets, quote the 6-character id.`,
+  /** Where the record for a team is made and kept: report.md named neither. */
+  identityRecord: 'For your team or an auditor: say "make a record of the review", and Claude writes one under `.legal/records/`.',
   cardWaits: (question: Inert) => `Waits on your answer: ${question}`,
+  /** A finding that waits on a fact in words: no answer of the person's settles it. */
+  cardWaitsFact: (rule: Inert) => `Waits on a fact to check: ${rule}`,
   cardNotOpened: (n: number) => `${group(n)} ${n === 1 ? "place" : "places"} the AI did not open`,
   cardRegionsUnanswered: "regions not answered",
   cardYourAnswers: "your answers",
   cardNotAnswered: "not answered",
-  cardReasonBelow: "The review's reasoning is below.",
+  /* A region the person answered No for, whose law stays in because that
+   * answer alone does not decide it (the FTC Act, Utah's law): "not answered" was untrue of it. */
+  cardAnsweredNo: "you said it is not offered there; that answer alone does not decide this law",
+  /* The same No read from a closed list: the place is one the person did not list. */
+  cardListedNo: "you did not list it among the places the product is offered; that answer alone does not decide this law",
+  /* The card's region words (`regionWordsOf`). */
+  regionsOffered: (names: Inert) => (names ? `offered in ${names}, as you said` : "offered where you said"),
+  regionsNotSaid: (names: Inert) => `you have not said whether the product is offered in ${names}`,
+  regionsNotSaidAny: "you have not said where the product is offered",
+  /* On a card that names several laws ("GDPR Art. 32 · FTC Act Sec. 5"),
+   * the law the answer does not decide is named first, in words short enough that the provisions still fit the card's three
+   * rows; a No read from a closed list is said as what the person did: they did not list the place. */
+  regionsSaidNo: (names: Inert, laws: Inert, n: number, listed: boolean) =>
+    laws
+      ? `${laws}: ${listed ? `you did not list ${names}` : `you answered No for ${names}`}, and that alone does not decide ${n > 1 ? "them" : "it"}`
+      : `${listed ? `you did not list ${names} among the places the product is offered` : `you said it is not offered in ${names}`}, but that answer alone does not decide this law`,
+  cardReasonBelow: "The review's full reasoning is below.",
   cardGuidanceBelow: "The rule's guidance is below.",
   cardDisposition: {
     to_fix: "To fix",
@@ -898,30 +1194,67 @@ export const WORDS = inertWords({
     for_operators: "Not counted: for operators",
     folded: "Not counted: same as another",
   } as Record<string, string>,
+  /**
+   * A recorded finding's card says why it is not
+   * counted, by the reason its line gives (`recordedReasonOf`): "met or exempt" was printed for a finding the person's
+   * answer settles (the minors "No" puts the service outside Art. 8, which is neither) and for a record of processing.
+   */
+  cardRecorded: {
+    met_or_exempt: "Not counted: met or exempt",
+    answer: "Not counted: settled by your answer",
+    inventory: "Not counted: a record of processing",
+  } as Record<string, string>,
   cardReviewOf: (day: Inert) => `review of ${day}`,
   cardBack: "report",
   cardCounsel: "Review by qualified counsel recommended.",
   cardPlace: "Place",
-  cardOwnLine: (link: Inert) => `(the line the raise rests on; the finding's own line is ${link})`,
+  /* After the card's Place, where its level was raised for another line. */
+  cardRaiseLine: (link: Inert) => `(its level was raised because of ${link}; "About this finding" says why)`,
   cardProvision: "Provision",
   cardNoProvision: "none in the regions you answered",
+  /* The card's regions past the first few: "EU, AT, BE and 25 more: not answered". */
+  cardMoreRegions: (n: number): string => `and ${n} more`,
   cardMoreBelow: (n: number, after: boolean) => (after ? `and ${n} more` : `${n} ${n === 1 ? "provision" : "provisions"}, listed below`),
+  /** (causes.md, R5b) A provision's later date, beside it on the provision line. */
+  provisionFrom: (date: Inert, inPart: boolean) => ` (${inPart ? "in part " : ""}from ${date})`,
+  /* Beside a provision that applies later, one that applies already says
+   * so: DEMO6's CRA page dated the finding's duty 2027-12-11 and listed Art. 14, in force since 11 Sep 2026, with no date,
+   * so the review's "nothing chargeable today" stood unanswered. A basis the rule keeps for reference only is a separate
+   * duty, which this finding does not test. */
+  provisionNow: (separate: boolean) => (separate ? " (applies already, as a separate duty this finding does not test)" : " (applies already)"),
   cardReason: "Reason",
   cardWhatToDo: "What to do",
-  cardSettles: "What settles it",
-  cardSettlesLaw: "That is a point of law, not something the code shows; record it once counsel has settled it.",
+  /* The rule's line beneath the review's suggestion, where the card has no row for it in
+   * full: it stays whole under "What the rule says to do", which is never folded. */
+  cardRuleFixBelow: "The rule's general advice is under *What the rule says to do*, below.",
+  cardRuleFixAfter: "The rule's general advice is below.",
+  /** After the suggestion on the front page's compact entry (17 Nov): where the rule's line is. */
+  entryRuleFixOnPage: "The rule's general advice is on the finding's page.",
+  /** A group's card: each finding's suggestion stands under that finding in the list. */
+  cardGroupFixes: "The AI review's suggestion for each finding is under that finding, below.",
+  cardGroupFixesAfter: "Each finding's own suggestion is under it, below.",
+  cardSettles: "What decides it",
+  /* After the review's citation and a comma (it read "GDPR Art 5(1)(e) That is a point of
+   * law, ..." as one run-on sentence before 17 Nov). */
+  cardSettlesLaw: "a point of law the code cannot settle; ask counsel and record the answer.",
   cardSettlesCode: (file: Inert) => `the review could not read ${file}, a file in this repository; record what it holds, or run the scan again with it readable.`,
   cardSettlesNone: "the review named nothing; its reasoning is below.",
   cardAnswerSettles: 'your answer about the product; say "review my answers".',
+  /** A finding that waits on a fact in words: no answer of the person's settles it. */
+  // Shorter, so the card keeps its reason: laws.md says the scan has no question for it.
+  cardFactSettles: (fact: Inert, cite: Inert) => `${fact} (${cite}).`,
+  /** The card's disposition and the label of a finding that waits on a fact. */
+  cardToCheck: "To check",
+  labelToCheck: "a fact to check in your own documents",
   cardNotCounted: "Why it is not counted",
   cardSay: (f: Inert, kind: Inert) =>
     kind === "to_fix"
-      ? `Say: "fix ${f}" · "decide ${f}: …" · "look deeper at ${f}"`
+      ? `In Claude Code, say: "fix ${f}" · "decide ${f}: …" · "look deeper at ${f}"`
       : kind === "counsel"
-        ? `Say: "decide ${f}: counsel says …" · "look deeper at ${f}"`
+        ? `In Claude Code, say: "decide ${f}: counsel says …" · "look deeper at ${f}"`
         : kind === "answer"
-          ? `Say: "review my answers" · "explain ${f}"`
-          : `Say: "explain ${f}"`,
+          ? `In Claude Code, say: "review my answers" · "explain ${f}"`
+          : `In Claude Code, say: "explain ${f}"`,
   /* A group's list names its findings, not its places: a place is one
    * location, a file and a line. Each entry names its own place count, a place two findings share
    * counted at the first entry that holds it, so the entries add up to the title's "(N places)". `placesOfGroupEntry`
@@ -940,15 +1273,32 @@ export const WORDS = inertWords({
    * (`explain.ts`), so a change to one is a change to its reader. */
   provisionSource: (url: Inert, checked: Inert): string =>
     `${url ? `: ${provisionLink(url)}` : ""}${checked ? `${url ? " ·" : ":"} ${PROVISION_CHECKED_WORD} ${checked}` : ""}`,
+  /* The notes a provision's citation opens with, as the rule wrote them. */
+  provisionNotes: (notes: Inert, n: number): string => ` · the rule's ${n === 1 ? "note" : "notes"}: ${notes}`,
   filesRead: (n: number): string => `Files read (${n})`,
-  searchesRun: (n: number): string => `Searches run (${n})`,
+  /* Says what it counts:
+   * the searches the review wrote down in its answer (its `searched` rows, rests-on.ts), which a later run replays. It is
+   * not a count of the search tool's runs: a search the review ran and did not write down is not in it. */
+  searchesRun: (n: number): string => `Searches recorded for this finding (${n})`,
+  /* The searches the capture took from the review's session (rows marked
+   * `SEAT_SEARCH_FOR`), which one review ran for every finding it was given: DEMO6 listed them as each finding's own, so a
+   * deletion page showed the minors search and the OpenAI page the RSS search. The finding's own label stays short enough
+   * for explain's one read line (80 characters). */
+  searchesSeat: (n: number): string => `Other searches the same review ran, not tied to one finding (${n})`,
   sectionNone: "None.",
-  reasoningHeading: "The review's reasoning, in full",
+  reasoningHeading: "What the review found",
+  /* The closed line of each fold on a finding's page: plain words (`FOLD_LINE`). */
+  reasoningFold: "The review's reasoning, in full",
+  readFold: "The files, searches and lines the review read",
+  provisionsFold: (n: number) => (n === 1 ? "The provision, with its link to the law" : `The ${n} provisions, with links to the law`),
+  aboutFold: "Ids and labels, for support",
   evidenceHeading: "Evidence",
   readHeading: "How it was read",
   provisionsHeading: "Provisions",
   provisionsNoText: "The citations and their links only: WolfBoy ships no text of the law.",
-  guidanceHeading: "What the rule says to do, in full",
+  guidanceHeading: "What the rule says to do",
+  /* Where the rule's full text went: it is the review's, not the person's. */
+  guidanceForReview: "The rule's full text is written for the AI review that read your code, not for you; ask Claude to show it if you want to read it.",
   decisionsHeading: "Your decisions",
   decisionsNone: "None recorded in this folder on this computer.",
   /* The person's decisions (design rf11 3.4). */
@@ -966,12 +1316,13 @@ export const WORDS = inertWords({
   /** `looked`: the high ones due a second look (a run with the second check). */
   /** `high`: the high ones of the kind a run with the second check looks at, looked at or not. */
   ruledOutTitle: (n: number, looked = 0, high = looked) =>
-    `# Ruled out · ${group(n)} ${n === 1 ? "verdict" : "verdicts"}, one review each${looked > 0 ? `, and a second look at ${looked >= high ? `the ${looked === 1 ? "high one" : `${group(looked)} high ones`}` : `${group(looked)} of the ${group(high)} high ${high === 1 ? "one" : "ones"}`}` : ""}`,
+    `# Judged not a problem · ${group(n)} ${n === 1 ? "finding" : "findings"}, one review each${looked > 0 ? `, and a second look at ${looked >= high ? `the ${looked === 1 ? "high one" : `${group(looked)} high ones`}` : `${group(looked)} of the ${group(high)} high ${high === 1 ? "one" : "ones"}`}` : ""}`,
   /** Said as a condition, not as an admission that a problem is missed. */
-  ruledOutIntro: "Nothing re-checks a ruled-out verdict: if one is a real problem, this review will not catch it. Each rule's file lists its verdicts.",
+  /* In the pages' name, "judged not a problem" (the re-check's n5). */
+  ruledOutIntro: "Nothing checks these findings a second time: if one is a real problem, this review will not catch it. Each check's file lists them.",
   /** The same, for a run with the second check, where each high one was due a second look. */
   ruledOutIntroLooked:
-    "This run's shape has the second check, so each high ruled-out verdict was due a second look, which tries to show the rule applies after all; its answer is beside the verdict. Nothing re-checks the others: if one of them is a real problem, this review will not catch it. Each rule's file lists its verdicts.",
+    "This run's shape has the second check, so each high finding judged not a problem was due a second look, which tries to show the check's concern applies after all; its answer is beside the finding. Nothing checks the others a second time: if one of them is a real problem, this review will not catch it. Each check's file lists its findings.",
   /**
    * The same, computed from the rows: `fresh`, the
    * high ones judged in this run (each due a look); `carriedLooked`, carried ones whose own run gave a look; `carriedNone`,
@@ -980,13 +1331,13 @@ export const WORDS = inertWords({
   ruledOutIntroRows: (secondCheck: boolean, fresh: number, carriedLooked: number, carriedNone: number): string => {
     const one = (n: number, a: string, b: string): string => (n === 1 ? a : b);
     const parts: string[] = [];
-    if (secondCheck && fresh > 0) parts.push("This run's shape has the second check, so each high ruled-out verdict judged in this run was due a second look, which tries to show the rule applies after all; its answer is beside the verdict.");
-    else if (secondCheck) parts.push("This run's shape has the second check, and gives a second look to each high ruled-out verdict it judges.");
+    if (secondCheck && fresh > 0) parts.push("This run's shape has the second check, so each high finding judged not a problem in this run was due a second look, which tries to show the check's concern applies after all; its answer is beside the finding.");
+    else if (secondCheck) parts.push("This run's shape has the second check, and gives a second look to each high finding it judges not a problem.");
     else parts.push("This run's shape has no second check.");
-    if (carriedLooked > 0) parts.push(`${group(carriedLooked)} high ruled-out ${one(carriedLooked, "verdict was", "verdicts were")} carried from an earlier run that gave ${one(carriedLooked, "it", "them")} a second look; ${one(carriedLooked, "its", "their")} answer is beside the verdict.`);
+    if (carriedLooked > 0) parts.push(`${group(carriedLooked)} high ${one(carriedLooked, "finding", "findings")} judged not a problem ${one(carriedLooked, "was", "were")} carried from an earlier run that gave ${one(carriedLooked, "it", "them")} a second look; ${one(carriedLooked, "its", "their")} answer is beside ${one(carriedLooked, "it", "each")}.`);
     if (carriedNone > 0)
-      parts.push(`${group(carriedNone)} high ruled-out ${one(carriedNone, "verdict", "verdicts")} carried from an earlier run had no second look. To have ${one(carriedNone, "it", "them")} looked at, run the scan again with the second check and, when it asks for your earlier run, do not name one.`);
-    parts.push("Nothing re-checks the others: if one of them is a real problem, this review will not catch it. Each rule's file lists its verdicts.");
+      parts.push(`${group(carriedNone)} high ${one(carriedNone, "finding", "findings")} judged not a problem and carried from an earlier run had no second look. To have ${one(carriedNone, "it", "them")} looked at, run the scan again with the second check and, when it asks for your earlier run, do not name one.`);
+    parts.push("Nothing checks the others a second time: if one of them is a real problem, this review will not catch it. Each check's file lists its findings.");
     return parts.join(" ");
   },
   /** After the line naming the report's path. */
@@ -999,11 +1350,13 @@ export const WORDS = inertWords({
   /** In place of the end screen, where CI is set. */
   endScreenInCi:
     "  The report's summary is not printed here: this runs in CI, where the output is a job's log that anyone who can read the repository may read. The findings are in the report named above and the files beside it.",
-  ruledOutRuleTitle: (plain: Inert, n: number) => `${plain} · ruled out ${group(n)} ${n === 1 ? "time" : "times"}`,
-  ruledOutIndex: "all ruled out",
+  ruledOutRuleTitle: (plain: Inert, n: number) => `${plain} · judged not a problem ${group(n)} ${n === 1 ? "time" : "times"}`,
+  ruledOutIndex: "all judged not a problem",
   outOfScopeHeading: "## Out of scope by your answers",
   /** laws.md's provisions limited to a region answered No. */
-  regionLimitedHeading: "## Not applying on your answers",
+  /* Each entry under it gives the check's laws that apply ("Law:") and
+   * those your answers left out: "Not applying on your answers" stood over laws that do apply. */
+  regionLimitedHeading: "## Laws your answers left out, check by check",
   reportTitle: (project: Inert) => `# Scan report: ${project}`,
   detailsTitle: (project: Inert) => `# Every finding, with its evidence: ${project}`,
   notCheckedTitle: (project: Inert) => `# Not checked: ${project}`,
@@ -1015,7 +1368,7 @@ export const WORDS = inertWords({
   /** The first screen's second line. It ends with the scan's id, as the old title did. */
   scanned: (parts: readonly Inert[]) => `Scanned ${parts.join(" · ")}`,
   scannedFiles: (n: number) => `${n.toLocaleString("en")} files read`,
-  scannedRules: (n: number) => `${n} rules`,
+  scannedRules: (n: number) => `${n} checks`,
   scannedId: (id: Spanned) => `scan \`${id}\``,
   /** The first screen's count of what stands. */
   topFix: (high: number, medium: number, low: number, counsel: number) =>
@@ -1034,7 +1387,7 @@ export const WORDS = inertWords({
   /** What the zero count adds, in bold, where the Not checked block lists anything else. */
   topUncheckedBut: ", but not everything was checked",
   /** Each further line of the Not checked block, as the count line names it. */
-  topUncheckedAlso: { noAnswer: "", answers: "answers not fully read", rules: "rules", notRead: "what was not read", also: "other items" } as Record<ScreenLine, string>,
+  topUncheckedAlso: { noAnswer: "", answers: "answers not fully read", rules: "checks", notRead: "what was not read", also: "other items" } as Record<ScreenLine, string>,
   /** A run whose shape has no second check, said as a fact of the shape. */
   topNoSecondCheck: "No second check ran: the way you chose to run this scan does not include one, so each finding stands as the first review judged it.",
   fixHeading: "## Fix first",
@@ -1066,7 +1419,10 @@ export const WORDS = inertWords({
   /** (design 3.1 item 5, as mock M9 shows it): on a run that carries verdicts,
    * the first screen's Not checked item for them; the carry line itself opens not-checked.md. */
   // Dated by the earlier review, and its log's mark where it is not the one WolfBoy wrote.
-  carriedItem: (n: number, from: Inert, mark: Inert) => `Verdicts carried: **${group(n)}**, from [${from}](not-checked.md)${mark ? ` (its log ${mark})` : ""}; not re-read in this one`,
+  /* On the block's "Also" line, in the first screen's one line's words ("Verdicts carried"
+   * named the same count a second way, and as an item of its own it made the block seven items, the design allows six). */
+  carriedAlso: (n: number, from: Inert, mark: Inert) =>
+    `${group(n)} ${n === 1 ? "finding was" : "findings were"} judged in [${from}](not-checked.md)${mark ? ` (its log ${mark})` : ""} and not read again`,
   /** The earlier log's digest mark (log-digest.ts), as the carried line says it; "" where the log is the one WolfBoy wrote. */
   carriedMark: { matches: "", changed: "changed since WolfBoy wrote it", none: "has no digest on this computer", unread: "could not be checked on this computer" } as Readonly<Record<string, string>>,
   /** Every other line of the block, its lead by line (`noAnswer` is the line above). */
@@ -1079,13 +1435,14 @@ export const WORDS = inertWords({
     "no-usable-answer": (n: number) => `**${n}** whose review's answer could not be used`,
     "not-reviewed": (n: number) => `**${n}** not reviewed in this run (the way you chose to run it)`,
     partly: (n: number) => `**${n} "not applicable" ${n === 1 ? "answer holds" : "answers hold"} only for the places that were read**`,
-    gap: (n: number) => `**${n} ${n === 1 ? "rule" : "rules"}** found what ${n === 1 ? "it looks" : "they look"} for where the scan raised nothing (not judged)`,
-    absent: (n: number) => `**${n} ${n === 1 ? "rule was" : "rules were"}** searched and ${n === 1 ? "looks" : "look"} absent (not proven)`,
-    "not-checked-rules": (n: number) => `**${n} ${n === 1 ? "rule" : "rules"}** found nothing and nobody checked that`,
-    "not-evaluated": (n: number) => `**${n} ${n === 1 ? "rule was" : "rules were"}** not evaluated (switched off)`,
-    "by-declaration": (n: number) => `**${n} ${n === 1 ? "rule was" : "rules were"}** set aside by the regions you declared`,
+    gap: (n: number) => `**${n} ${n === 1 ? "check" : "checks"}** found what ${n === 1 ? "it looks" : "they look"} for where the scan raised nothing (not judged)`,
+    absent: (n: number) => `**${n} ${n === 1 ? "check was" : "checks were"}** searched and ${n === 1 ? "looks" : "look"} absent (not proven)`,
+    // The one sentence (no screen prints this kind's line today: its count is the block's own item).
+    "not-checked-rules": (n: number) => `${checksFoundNothing(n)}, and nobody looked into ${n === 1 ? "it" : "them"} further`,
+    "not-evaluated": (n: number) => `**${n} ${n === 1 ? "check was" : "checks were"}** not evaluated (switched off)`,
+    "by-declaration": (n: number) => `**${n} ${n === 1 ? "check was" : "checks were"}** set aside by the regions you declared`,
     "did-not-read": (n: number) => `**${n} coverage ${n === 1 ? "note" : "notes"}** on what this scan read past`,
-    "files-not-read": (n: number) => `**${n.toLocaleString("en")} ${n === 1 ? "file" : "files"}** opened and read to no rule`,
+    "files-not-read": (n: number) => `**${n.toLocaleString("en")} ${n === 1 ? "file" : "files"}** opened and read to no check`,
     "lines-not-read": (n: number) => `**${n.toLocaleString("en")} ${n === 1 ? "file" : "files"}** with lines not read`,
     "files-refused": (n: number) => `**${n.toLocaleString("en")} ${n === 1 ? "file" : "files"}** not opened: binary, too large or of a type not scanned`,
     // A link the scanned folder holds to a file outside it, never read.
@@ -1138,15 +1495,16 @@ export const WORDS = inertWords({
   notReadScopeLift: (lift: Spanned) => ` (\`${lift}\` reads them)`,
   /** "+" where a folder's files were not counted (`directories_not_enumerated`), as the
    * coverage note in not-checked.md says it: a count the scan did not finish is never printed as exact. */
-  notReadMachine: (n: number, notCounted: number) =>
-    n > 0 || notCounted === 0
-      ? `${n.toLocaleString("en")}${notCounted > 0 ? "+" : ""} files in machine-written folders (node_modules, .git and the like)`
-      : `${notCounted.toLocaleString("en")} machine-written ${notCounted === 1 ? "folder" : "folders"} (node_modules, .git and the like) whose files were not counted`,
+  // The folders no rule reads, in the words of the one computation every screen
+  // prints (progress.ts `foldersNotReadOf`, `foldersNotReadWords`): `.legal` left out, the folders named from the walker's rows.
+  notReadMachine: (d: FoldersNotRead, names: Inert) => foldersNotReadWords(d, names),
   notReadBinary: (n: number) => `${n.toLocaleString("en")} binary or very large files`,
-  notReadNoRule: (n: number) => `${n.toLocaleString("en")} files opened and read to no rule`,
+  notReadNoRule: (n: number) => `${n.toLocaleString("en")} files opened and read to no check`,
   notReadLines: (n: number, file: Spanned | null) => `${n} over-long ${n === 1 ? "line" : "lines"}${file ? ` in \`${file}\`` : ""}`,
-  lawLine: (law: Inert, verdict: Inert, open: number) => `${law} ${verdict}${open > 0 ? ` (${open} ${open === 1 ? "question" : "questions"} about the product open)` : ""}`,
-  lawsNone: "no law's reach was assessed",
+  // A law's own conditions, which "review my answers" does not record: not called questions.
+  lawLine: (law: Inert, verdict: Inert, open: number) => `${law} ${verdict}${open > 0 ? ` (${open} ${open === 1 ? "condition" : "conditions"} only you can confirm)` : ""}`,
+  lawsNone: "no law whose reach depends on what the product is was assessed",
+
   /** (design 3.3 Whose answers, on every screen; mock M17): whose answers
    * about the product the scan used, from its log's `answers_used`; short on the laws line, long in laws.md. */
   whoseShort: {
@@ -1166,21 +1524,21 @@ export const WORDS = inertWords({
     file: (file: Inert) => `Answers about the product this scan used: the file ${file}, read as given.`,
     none: `Answers about the product this scan used: none; every region's rules ran, and saved answers were not used (say "review my answers").`,
   },
-  lawsRegions: "the regions you distribute to were not answered, so no rule was ruled out on jurisdiction",
+  lawsRegions: "you did not say where the product is offered, so no check was set aside for that",
   laws: (lines: readonly Inert[], notAssessed: number) =>
     `**Laws**: ${lines.join("; ")}${notAssessed > 0 ? `; ${notAssessed} other ${notAssessed === 1 ? "checklist" : "checklists"} not assessed` : ""}. See [laws.md](laws.md).`,
   otherFiles: (nNa: number) =>
     `Other files: [details.md](details.md) (every finding with its evidence) · [not-checked.md](not-checked.md) · [not-applicable.md](not-applicable.md) (${nNa} ${nNa === 1 ? "answer" : "answers"}, each with its reason) · [laws.md](laws.md)`,
   byAreaHeading: "## To fix by area",
-  byAreaIntro: "Each line is one kind of problem, with where it is. Open a place for its evidence, what the review said and what to do.",
-  byAreaNone: "No finding stands, and nothing is listed as not checked by area. What was not read is under Not checked above.",
+  byAreaIntro: "Each finding says what happened, the line of code, and what to do. Its page has the evidence and the review's reasoning.",
+  /* "Not checked" is no longer above (P6 moved it below the findings, back on top
+   * only where a place has no verdict): the sentence links it instead of giving a direction. */
+  byAreaNone: "No finding stands, and nothing is listed as not checked by area. What was not read is under [Not checked](#not-checked).",
   /** The findings that stand are all decided by you (design 3.4). */
-  byAreaAllDecided: "Each finding that stands is decided by you, and still counted: [Decided by you](#decided-by-you). Nothing is listed as not checked by area; what was not read is under Not checked above.",
+  byAreaAllDecided: "Each finding that stands is decided by you, and still counted: [Decided by you](#decided-by-you). Nothing is listed as not checked by area; what was not read is under [Not checked](#not-checked).",
   areaHead: (area: Inert, counts: Inert) => `### ${area} (${counts})`,
   ruleLine: (level: Inert, plain: Inert, n: number, where: Inert) => `- **${level}** · ${plain}${n > 1 ? ` (${n})` : ""}: ${where}`,
   counselMark: "needs your judgement",
-  /** A Fix-first group says how many of its findings need judgement. */
-  counselOf: (k: number, n: number) => (n === 1 ? "needs your judgement" : `${k} of ${n} ${k === 1 ? "needs" : "need"} your judgement`),
   areaNoAnswer: (plain: Inert, n: number, places: number, high: boolean, anchor: Inert) =>
     `- **not checked**${high ? " · high" : ""} · ${plain}: ${n} possible ${n === 1 ? "problem" : "problems"}, ${places} ${places === 1 ? "place" : "places"}, no answer: [not-checked.md](not-checked.md)`,
   /** The work list's line for "not applicable" answers of a second review that quoted nothing. */
@@ -1194,20 +1552,13 @@ export const WORDS = inertWords({
   goesTo: (data: Inert, to: Inert) => `${data} go to ${to}`,
   /** Where no kind of data is established, no placeholder "data". */
   goesToUnnamed: (to: Inert) => `what it sends goes to ${to}`,
-  /** Beside a Fix-first link that shows the line a raise rests on. */
-  raiseLineIs: (own: Spanned) => ` (the line the raise rests on; the finding's own line is \`${own}\`)`,
-  /** A place row's reason, the review's words said as the review's. */
-  reviewSaidOfPlace: (text: Inert) => `the review said of this place: ${text}`,
   /** What the data travel over and who can read them there, in the words of the rule whose
    * place establishes the transport (severity-at-place.ts `TRANSPORT_WITHOUT_PROTECTION`, the form the place's own
    * clause or scheme tells) - never one sentence for every transport. */
   transport: (over: Inert, reads: Inert) => ` over ${over}, which ${reads}`,
-  involves: (data: Inert) => `involves ${data}`,
+  involves: (data: Inert) => `data involved: ${data}`,
   credentialWhere: (names: Inert) => `${names}; open the file at that line to see the value (it is not printed)`,
   aCredential: "a credential",
-  raisedFrom: (from: Inert) => ` Raised from ${from}: what reaches this place makes it high.`,
-  /** A finding raised because another finding of the same sending, at the same line, is high. */
-  raisedByFlow: (from: Inert, other: Inert) => ` Raised from ${from}: the same sending, at this line, is high under "${other}".`,
   /* Words W1-W21 (W20 not built: D7). */
   /* Words NV1-NV14 of the NV design.
    * Those marked "WP3" are not in the design's list: each says a count or a
@@ -1235,7 +1586,7 @@ export const WORDS = inertWords({
     `${lead} **Question for you**: ${question} Your answer decides ${k} ${k === 1 ? "finding" : "findings"} (${levels}; ${rules}). Until you answer, ${k === 1 ? "it is" : "they are"} not counted as ${k === 1 ? "a problem" : "problems"} and not cleared either.`,
   /** NV4: a fact a seat named in words that no question of the program carries. */
   factSlotNV: (lead: Inert, fact: Inert, cite: Inert, k: number, rule: Inert) =>
-    `${lead} **To check with the organisation that runs it**: ${fact} (${cite}). This decides ${k} ${k === 1 ? "finding" : "findings"} of "${rule}". The scan has no question for this yet, so it lists it again on every scan.`,
+    `${lead} **A fact to check outside the code**: ${fact} (${cite}). This decides ${k} ${k === 1 ? "finding" : "findings"} of "${rule}". The scan has no question for this yet, so it lists it again on every scan.`,
   /** NV12: an answer of the person's the review found the code disagrees with. */
   checkAnswerNV: (lead: Inert, header: Inert, answer: Inert, at: Spanned, k: number, rule: Inert) =>
     `${lead} **Check your answer**: you answered "${header}: ${answer}", but the review found \`${at}\`. Which is right decides ${k} ${k === 1 ? "finding" : "findings"} of "${rule}".`,
@@ -1297,7 +1648,14 @@ export const WORDS = inertWords({
     `You told us each organisation that runs the product decides "${header}". ${k === 1 ? "This finding depends" : `These ${k} findings depend`} on its answer: ${question}`,
   /** NV14: on the head, and on the finding counted with it. */
   foldHeadNV: (p: number, links: Inert) => `Also at ${p} more ${p === 1 ? "place that is" : "places that are"} the same processing (${links}).`,
-  foldedNV: (head: Inert, why: Inert) => `Counted with ${head}${why ? `: ${why}` : ""}.`,
+  /* `where`: where report.md lists the head. */
+  foldedNV: (head: Inert, where: Inert, why: Inert) => `Counted with ${head} (${where})${why ? `: ${why}` : ""}.`,
+  /** The head of a fold that has an F-number: a finding counted as a problem, listed in the sections above. */
+  foldedHeadAbove: "listed above",
+  /** The head of a fold that has none: a finding not counted as a problem, listed in a section of its own. */
+  foldedHeadUnder: (section: Inert) => `listed under "${section}"`,
+  /** A head with no F-number, named by its line. */
+  foldedHeadAt: (link: Inert) => `the finding at ${link}`,
   foldedDocumentsNV: "this file documents the feature that finding shows in the product",
   foldedTracedNV: (at: Spanned) => `the review traced this line to \`${at}\` of that finding`,
   /**
@@ -1390,31 +1748,56 @@ export const WORDS = inertWords({
     exemption: "the exemption and the legal basis it rests on",
     question: "the question or the fact it waits on",
     settles_as: "what your answer means for it",
+    settling_question: "a question whose answer decides this rule",
     verdict: "a verdict",
   } as Record<string, string>,
   /** The section headings below the first screen (design section 3.2). */
   /** design 3.1's "To answer" below the first screen: the findings waiting on answers. */
   questionsHeading: "## To answer",
   /** [section 12]: the lead of "To answer"; the questions themselves are listed once, in laws.md. */
-  toAnswerLead: "These findings wait on your answers. The questions, in words, with what each settles and how to answer it: [laws.md](laws.md#questions-open).",
+  /** A fact named in words is not a question: where one waits, the lead says where it is named. */
+  toAnswerLead: (questions: boolean, facts: boolean) =>
+    !facts
+      ? "These findings wait on your answers. The questions, in words, with what each settles and how to answer it: [laws.md](laws.md#questions-open)."
+      : !questions
+        ? "These findings wait on a fact to check outside the code; each finding's page names its fact."
+        : "These findings wait on your answers, or on a fact to check outside the code. The questions, in words, with what each settles and how to answer it: [laws.md](laws.md#questions-open); a fact to check is named on its finding's page.",
   /** laws.md's list of every open question. */
   questionsOpenHeading: "## Questions open",
   /** [section 12]: the lead of the rules' unanswered fields in laws.md's "Questions open" (they were not-checked.md's "Questions still open"). */
-  questionsRulesLead: "The questions the rules read that no answer gave, and the rules each holds open:",
+  questionsRulesLead: "Questions that decide whether some checks apply to your product. Each check named below ran anyway; from the next scan, your answer decides whether it applies:",
+  /** laws.md: the entrance under a question, and the command once at the end. */
+  /* A question that moves the order is asked by a review of the answers
+   * only once a report has raised it (declaration.ts: `questions_raised[]`, planned on the review entrance): DEMO6's
+   * person had said "review my answers" before the report, and its five rounds never asked it. */
+  lawsEntrance: '   Answer it: say "review my answers" to Claude. A review of your answers asks it once a report has raised it, as this one does; one started before this report could not.',
+  lawsCommandOnce: (command: Spanned) => `To answer any question on this page, say "review my answers" to Claude in this project; your answers are used from the next scan. Without Claude, run this in a terminal instead: \`${command}\``,
   /**
    * [section 12] not-checked.md's one item "Questions open" (design 4: count, the findings they would settle, how to
    * answer; the full list in words in laws.md): `s` questions settling `k` findings, `o` that change only the order, `p`
    * more the rules read holding `r` rules open.
    */
-  questionsOpenItem: (s: number, k: number, o: number, p: number, r: number, command: Spanned): string => {
-    const settles = [
-      s > 0 ? `${group(s)} ${s === 1 ? "question" : "questions"} would settle ${group(k)} ${k === 1 ? "finding" : "findings"} to answer` : "",
-      o > 0 ? `${group(o)} ${o === 1 ? "question changes" : "questions change"} only the order` : "",
+  // Led by the one count of open questions (`openQuestionsOf`), its parts
+  // summing to it; a fact named in words apart, since no answer of the person's settles it.
+  questionsOpenItem: (n: number, s: number, k: number, o: number, p: number, r: number, x: number, f: number, kf: number, command: Spanned): string => {
+    const parts = [
+      // "decide", and checks, in words (it was "settle" and "hold rules open").
+      s > 0 ? `${group(s)} would decide ${group(k)} ${k === 1 ? "finding" : "findings"} to answer` : "",
+      o > 0 ? `${group(o)} ${o === 1 ? "changes" : "change"} only the order` : "",
+      p > 0 ? `${group(p)} ${p === 1 ? "decides" : "decide"} whether ${group(r)} ${r === 1 ? "check applies" : "checks apply"}` : "",
+      x > 0 ? `${group(x)} ${x === 1 ? "other" : "others"} the scan did not ask` : "",
     ].filter(Boolean);
-    const held = p > 0 ? `${group(p)} more ${p === 1 ? "question" : "questions"} the rules read ${p === 1 ? "holds" : "hold"} ${group(r)} ${r === 1 ? "rule" : "rules"} open` : "";
-    const all = [settles.join(", and "), held].filter(Boolean).join("; ");
-    return `- ${all}. Every question in words: [laws.md](laws.md#questions-open). Answer them for the next scan: say "review my answers" to Claude, or run \`${command}\` in a terminal.`;
+    const facts = f > 0 ? `${factsToCheck(f)} would decide ${group(kf)} ${kf === 1 ? "finding" : "findings"} to answer; the scan has no question for ${f === 1 ? "it" : "them"}.` : "";
+    if (n === 0) return `- ${facts} In words: [laws.md](laws.md#questions-open).`;
+    return `- ${group(n)} ${n === 1 ? "question" : "questions"} about the product ${n === 1 ? "is" : "are"} open${parts.length > 0 ? `: ${parts.join("; ")}` : ""}.${facts ? ` Also ${facts}` : ""} Every question in words, and how to answer without Claude: [laws.md](laws.md#questions-open). Answer them for the next scan: say "review my answers" to Claude.`;
   },
+  /** The one count on the first screen's Not checked, where it is not 0. */
+  // One row at the report's width: the first screen keeps to 45 rows at 75 columns, and
+  // laws.md's list, which the line links, says how to answer; the end screen keeps 'say "review my answers"'. Two colons in a row ("open: 10: [each]") read as a list of one. One row at 75 columns.
+  questionsOpenFirst: (n: number) => `Questions about the product open: ${group(n)} ([each](laws.md#questions-open))`,
+  /** laws.md: the questions the declaration plan did not ask that no rule here reads. */
+  questionsPlanLead: "The other questions the scan did not ask:",
+  planQuestionRow: (header: Inert, text: Inert, status: Inert) => `- **${header}**: ${text} — ${status}.`,
   /** [item 23]: the product question whose answer would move the order to fix (W7), in "Questions open". */
   questionMovesOpen: (question: Inert, k: number) =>
     `- **Question for you**: ${question} The order to fix assumes nothing about who the people are; your answer moves ${k} ${k === 1 ? "finding" : "findings"} up or leaves ${k === 1 ? "it" : "them"} where ${k === 1 ? "it is" : "they are"}.`,
@@ -1422,6 +1805,12 @@ export const WORDS = inertWords({
   notShippedHeading: "## Not part of the shipped product",
   setAsideHeading: "## Set aside on your answers",
   forOperatorsHeading: "## For each organisation that runs it",
+  /** The findings counted with another. */
+  foldedHeading: "## Counted with another finding",
+  /* True for every head: one counted as a problem, recorded, not shipped, or for
+   * operators. Before, "a finding listed above, so it is counted once" was untrue under a head not counted, or listed below. */
+  foldedLead:
+    "Each does the same processing as another finding of the same rule, named beside it, and is counted with that finding, not on its own: as a problem only where that finding is one. Each keeps its own page and evidence.",
   /** details.md's meta label by disposition (design section 3.2; taken from NV3, NV5, NV8, NV12-NV14). */
   dispositionLabel: {
     question: "question for you",
@@ -1431,8 +1820,6 @@ export const WORDS = inertWords({
     for_operators: "for each organisation that runs it",
     folded: "counted with another finding",
   } as Record<string, string>,
-  /** W2: a Fix-first item's first line where the review gave its effect. */
-  fixEffect: (i: number, effect: Inert, count: Inert, rule: Inert) => `${i}. **${effect}**${count} — found by "${rule}".`,
   /** W2b: a Fix-first item's second line where the review's block stood. */
   /* `runs` is "" where how it runs did not stand: a part the review did not
    * establish is never stated as a fact (W13, beside it, says so and what it is placed as). */
@@ -1462,7 +1849,9 @@ export const WORDS = inertWords({
   /** W8: the kinds of data, from the review's block. */
   standingData: {
     contact: "names or contact details",
-    identifier: "account ids, IP addresses or device ids",
+    /* (causes.md, R2) The seat's word says identifier, not which:
+     * "account ids, IP addresses or device ids" made a team id or a session cookie an IP address. */
+    identifier: "ids or other identifiers",
     content: "what people wrote or uploaded",
     records_about_people: "records kept about people",
     images_or_video_of_people: "images or video of people",
@@ -1471,7 +1860,7 @@ export const WORDS = inertWords({
     biometric_template: "biometric templates that identify people",
     special_category_field: "special-category data (health, beliefs, ethnicity and the like)",
     criminal_or_violence_field: "data on offences or violence",
-    credential: "a password or key that opens people's data (the value is not printed)",
+    credential: "passwords or keys",
     financial: "payment or financial data",
     no_personal_data: "no personal data",
   } as Record<string, string>,
@@ -1489,7 +1878,9 @@ export const WORDS = inertWords({
   standingRuns: {
     default: "on the shipped defaults",
     default_setting_fixes: "on the shipped defaults, until a setting turns it off",
-    feature_in_use: "whenever the feature is turned on",
+    // The seat's word is "whenever a
+    // feature someone turns on is used"; "turned on" read as a switch the code does not have (DEMO5's closing route).
+    feature_in_use: "whenever someone uses the feature",
     non_default_setting: "only after a setting is changed from its default",
   } as Record<string, string>,
   /**
@@ -1508,7 +1899,11 @@ export const WORDS = inertWords({
     const words = b.unresolved
       ? `this report could not tell what fine ${regime} sets for this duty, and ranks it with the heaviest duties`
       : t.basis === "fine_list"
-        ? `a duty in ${regime}'s ${tierName} fine tier (${b.penaltyCite})`
+        ? // The law named once: the penalty provision names it ("set by
+          // GDPR Art 83(4)(a)"); before, it said it twice ("of the GDPR, set by GDPR Art 83(4)(a)").
+          String(b.penaltyCite ?? "").startsWith(lawMarksShort(String(regime)))
+          ? `a duty in the ${tierName} fine tier, set by ${b.penaltyCite}`
+          : `a duty in the ${tierName} fine tier of the ${regime}, set by ${b.penaltyCite}`
         : t.basis === "unlisted"
           ? `a duty no fine list of ${regime} names${t.memberStates ? `; ${t.memberStates} leaves its penalties to national law` : ""}; this report ranks it with the ${tierName} tier`
           : t.memberStates && t.routes && t.routes.length > 0
@@ -1524,11 +1919,14 @@ export const WORDS = inertWords({
     return `${words}${later}`;
   },
   /** W12's last clause: "the higher fine tier" only where the regime has tiers and a fine list names the duty. */
-  raiseUnder: (regime: Inert, b: TierWordsBasis): string =>
+  /* The raise's clause names its law as the tier phrase does, by the penalty provision as
+   * the bundle carries it ("set by GDPR Art 83(5)(a)"): the sentence is kept in the log (`severity_raised[].because`), where
+   * the program cannot supply a name by its id, so it writes none of its own. */
+  raiseUnder: (b: TierWordsBasis): string =>
     b.tier !== "top" || b.unresolved
       ? ""
       : (b.penaltyText?.basis ?? (b.tiered ? "fine_list" : "no_tiers")) === "fine_list"
-        ? `, under a duty in ${regime}'s higher fine tier`
+        ? `, under a duty in the higher fine tier${b.penaltyCite ? `, set by ${b.penaltyCite}` : ""}`
         : `, under a duty this report ranks with the heaviest`,
   /** W11, a later date: the whole duty applies later, or some of the provisions the cite names do. */
   appliesFrom: (date: Inert) => `; applies from ${date}; prepare now`,
@@ -1551,18 +1949,25 @@ export const WORDS = inertWords({
    * the person's words: `asideReason`).
    */
   standingNotEstablished: (absent: readonly Inert[], aside: readonly { parts: readonly Inert[]; why: Inert }[], as: readonly Inert[]) => {
-    const clauses = absent.length > 0 ? [`The review did not establish ${listWords(absent)}`] : [];
+    // Said as what the report could
+    // use, not as what the review found: DEMO5's page said "did not establish whether the code ships" above reasoning that
+    // said the route is mounted and called. The report reads the review's short answers, not its prose.
+    const clauses = absent.length > 0 ? [`The review gave no short answer this report could use on ${listWords(absent)} (its reasoning, below, may say more)`] : [];
     for (const a of aside) {
       const many = a.parts.length > 1;
       clauses.push(`${clauses.length === 0 ? "The review's" : "its"} ${many ? "answers" : "answer"} on ${listWords(a.parts)} ${many ? "were" : "was"} not used (${a.why})`);
     }
-    return `${clauses.join("; ")}; it is placed as if ${listWords(as)}.`;
+    // (R1) The order's
+    // assumption said as one: "it is placed as if it ran on the shipped defaults and the data went to a third party" read
+    // as a statement about the code, beside lines that showed the opposite (a feature off by default, an export to the
+    // requester). The placement is unchanged (H5a); only its words say it is an assumption.
+    return `${clauses.join("; ")}; this report ranks it at the worst case for ${as.length === 1 ? "that" : "each"} (${listWords(as)}), an assumption, not what the code was shown to do.`;
   },
   /**
    * W13: a `standing` that is not an object, dropped whole. The review
    * gave it, in no form the report reads: said once, not as six parts the review did not establish.
    */
-  standingBlockNotUsed: (as: readonly Inert[]) => `The review's answers on this finding were given in no form this report reads, so none was used; it is placed as if ${listWords(as)}.`,
+  standingBlockNotUsed: (as: readonly Inert[]) => `The review's answers on this finding were given in no form this report reads, so none was used; this report ranks it at the worst case for each (${listWords(as)}), an assumption, not what the code was shown to do.`,
   /** Why a part the review gave was not used, in the person's words. */
   asideReason: {
     tooLong: (n: number, max: number) => `it ran to ${n} words, and this report takes at most ${max}`,
@@ -1580,6 +1985,8 @@ export const WORDS = inertWords({
     noQuestionNamed: "the review said it waits on your answer and named no question",
     questionNotQuoted: (why: Inert) => `the question named is one this program asks, but what the review quoted for it was not used: ${why}`,
     questionOtherForm: "the question named was not in a form this report reads",
+    /** A wait on where the product is offered (standing.ts `JURISDICTION_WAIT`). */
+    jurisdictionWait: "a finding never waits on where the product is offered; the scan decides that for each rule, or leaves it open where you have not answered it or your answer does not settle it",
     noQuestionStood: "no question it waits on could be used",
     questionWithoutWait: "a question goes only with a finding that waits on your answer",
     /** A duty the person's region answer set aside (S3's region half). */
@@ -1604,13 +2011,29 @@ export const WORDS = inertWords({
     noQuestionNorFact: (why: Inert | null) =>
       why === null ? "no question or fact it waits on could be used" : `the review said it waits on a fact, and the fact was not used (${why})`,
     sameAsForm: "the line it was traced to was not given as one line of the code",
+    /** A part written beside the short answer and never moved inside it (amend.ts `RESEND_WHY`). */
+    notPlaced: "the review wrote it outside its short answer and did not move it in when asked",
     otherForm: "it was not in a form this report reads",
   },
   /** A part the review gave that was set aside, in its slot (was W19's "not used (...)"). */
   partSetAside: NOT_ESTABLISHED,
   effectNotUsed: (why: Inert) => `the review's statement of what happens to the people was not used (${why}).`,
+  /** A headline or suggestion set aside, said on the page, never silently (17 Nov). */
+  effectNotTitle: "The review's sentence under *Why it matters* was too long to use as this finding's title, so the check's title is used.",
+  /**
+   * A headline or suggestion the review gave after its last
+   * refusal, which that refusal did not ask for: the capture set it aside (`after_last_refusal[]`), and the page says so.
+   */
+  effectAfterLastRefusal: "The review's headline came after its last refusal, which did not ask for it, so it is not used; the check's title is used.",
+  fixAfterLastRefusal: "The review's suggested change came after its last refusal, which did not ask for it, so it is not used; the card gives the rule's general advice instead.",
+  fixSetAside: (tooLong: boolean) =>
+    tooLong
+      ? "The review's suggested change for this code was too long to print, so the card gives the rule's general advice instead."
+      : "The review's suggested change for this code could not be used, so the card gives the rule's general advice instead.",
+  /** A suggestion on a finding that is not one to fix (17 Nov, S1). */
+  fixNotToFix: "The review also suggested a change to this code. It is not printed, because this finding is not one to fix.",
   notEstablishedPart: { status: "whether the duty is met", duty: "which duty it breaches", data: "what data it handles", runs: "how it runs", reaches: "who gets the data", ships: "whether the code ships" } as Record<string, string>,
-  heaviestAs: { status: "the duty were not met", duty: "the duty were among the heaviest", data: "it handled special-category data", runs: "it ran on the shipped defaults", reaches: "the data went to a third party", ships: "the code shipped" } as Record<string, string>,
+  heaviestAs: { status: "the duty not met", duty: "a duty among the heaviest", data: "special-category data", runs: "running on the shipped defaults", reaches: "the data going to a third party", ships: "the code shipping" } as Record<string, string>,
   /** W14: the law line by the person's answers. */
   lawByAnswers: (applying: Inert, out: Inert, answer: Inert) => `Law: ${applying || "none on your answers"}.${out ? ` Not applying on your answers: ${out} (${answer}).` : ""}`,
   /** W15: the "then" line, with what needs judgement by kind. */
@@ -1638,15 +2061,17 @@ export const WORDS = inertWords({
    * runs and ships is "" where that part did not stand, and is then printed as not established, never as the heaviest
    * value the order placed it at; the effect is one sentence, its own full stop kept and never doubled.
    */
+  /* One fact a row, not a chain of labels in one paragraph (the readability review:
+   * "Six labels, nested brackets"). */
   whyItMatters: (effect: Inert, data: Inert, people: Inert, runs: Inert, ships: Inert, law: Inert) =>
-    `- Why it matters: ${sentenceOf(effect || "the review gave no effect")} Data: ${data || NOT_ESTABLISHED}. Whose: ${people || NOT_ESTABLISHED}. How it runs: ${runs || NOT_ESTABLISHED}. In the product: ${ships || NOT_ESTABLISHED}.${law ? ` Duty: ${law}.` : ""}`,
+    `- Why it matters: ${sentenceOf(effect || "the review gave no effect")}\n  - Data involved: ${data || NOT_ESTABLISHED}.\n  - Whose data: ${people || NOT_ESTABLISHED}.\n  - When it runs: ${runs || NOT_ESTABLISHED}.\n  - In the shipped product: ${ships || NOT_ESTABLISHED}.${law ? `\n  - Law: ${law}.` : ""}`,
   shipsPhrase: {
     product: "yes",
     documented_example: "the example deployment the documentation tells people to use",
     maker_site: "the maker's own website",
     development: "development and CI only",
     test: "tests only",
-    depends_on_deployment: "depends on how it is deployed",
+    depends_on_deployment: "it depends on how you deploy it",
   } as Record<string, string>,
   /** W21: an item standing against an answer the person gave (group 1). */
   againstAnswer: (header: Inert, answer: Inert | null) =>
@@ -1654,8 +2079,6 @@ export const WORDS = inertWords({
   /** A candidate whose own answer was read, set aside with its file because of another one. */
   asideWithItsFile: (record: Inert, own: number, other: number, why: Inert) =>
     `set aside with the whole answer file ${record}: this candidate's own answer, at position ${own + 1}, was read, but the answer at position ${other + 1} of the same file could not be used (${why})`,
-  /** A Fix-first group at the place an earlier group showed: one line, the number it shares. */
-  fixSamePlace: (n: number, link: Inert, more: Inert) => ` The same place as ${n} above: ${link}${more}`,
   moreKinds: (n: number) => `${n} more ${n === 1 ? "kind" : "kinds"}`,
   /** The data words of a place row (place-fold.ts `data`), as the first screen says them. */
   dataWords: {
@@ -1687,8 +2110,12 @@ export const WORDS = inertWords({
     ["device-telemetry-", "Data sent from people's devices"],
     ["presence-", "Showing who is online"],
     ["ai-", "AI features"],
-    ["eu-dsa-", "Online platform duties (Digital Services Act)"],
-    ["eu-cra-", "Product security duties (Cyber Resilience Act)"],
+    /* The law by its id (`lawMark`): the page names it in full where the heading is the
+     * program's first mention of it, short after (`formMarkdown`); the log keeps the short name (`summary.items[].area`)
+     * and the law by its id (`area_named`), for the record. Before 17 Nov it wrote both names here, a second copy of
+     * two full names the bundle's check could not see. */
+    ["eu-dsa-", `Online platform duties under the ${lawMark("DSA")}`],
+    ["eu-cra-", `Product security duties under the ${lawMark("CRA")}`],
     ["eu-data-act-", "Data access and switching (Data Act)"],
     ["eu-market-", "Selling across EU countries"],
     // The two families an earlier version left under "Other".
@@ -1698,6 +2125,9 @@ export const WORDS = inertWords({
   areaOther: "Other",
   /** details.md, one rule's head and one finding's added line. */
   ruleNamed: (id: Spanned, title: Inert) => `Rule \`${id}\`: ${title}`,
+  /** A page of findings judged not a problem names its check as a check (n5). */
+  checkNamed: (id: Spanned, title: Inert) => `Check \`${id}\`: ${title}`,
+  ruledOutFindingHeading: (short: string) => `Finding ${short}`,
   lawOfRule: (refs: Inert) => `Law: ${refs}`,
   whatToDo: "What to do",
   reviewSaid: (text: Inert) => `- What the review said: ${text}`,
@@ -1705,7 +2135,8 @@ export const WORDS = inertWords({
   reviewSaidOfPlaceFull: (text: Inert) => `- What the review said of this place: ${text}`,
   detailsNone: "No finding stands in this scan: nothing was returned as a problem or for your judgement.",
   /** not-checked.md and not-applicable.md. */
-  notCheckedIntro: "Nothing on this page is decided. A place here may hold a problem; reading it is the way to know.",
+  // "place" is the program's word for a line of code.
+  notCheckedIntro: "Nothing on this page has been decided. Anything listed here may still hold a problem; reading it is the way to know.",
   ruleGroup: (plain: Inert, id: Spanned) => `${plain} (rule \`${id}\`)`,
   /**
    * Under each rule whose places have
@@ -1716,12 +2147,13 @@ export const WORDS = inertWords({
   /** The intro counts each kind of answer by how its record says it was settled, and says "read" only
    * of answers a review read. */
   notApplicableIntro: (n: number, kinds: readonly Inert[]) =>
-    `${n} ${n === 1 ? "answer" : "answers"}, each with its reason: ${kinds.join("; ")}. ${WORDS.ruledOutNotHere}`,
+    `${n} ${n === 1 ? "finding" : "findings"}, each with its reason: ${kinds.join("; ")}. ${WORDS.ruledOutNotHere}`,
   /** Said whether or not the file holds a verdict: an answer resting on
    * places nobody read is in not-checked.md either way. */
-  ruledOutNotHere: "An answer that rests on places nobody read is not here: it is in [not-checked.md](not-checked.md).",
+  // "findings" and "checks", the pages' names (the re-check's n5, 17 Nov).
+  ruledOutNotHere: "A finding that rests on places nobody read is not here: it is in [not-checked.md](not-checked.md).",
   notApplicableKind: {
-    read: (k: number) => `${k} read by the review in this scan and found not to be what the rule looks for`,
+    read: (k: number) => `${k} read by the review in this scan and found not to be what the check looks for`,
     overturned: (k: number) => `${k} overturned by the second review`,
     /* An answer given in this scan over places read in an earlier scan and carried is not "read by the review
      * in this scan" - its carried places were not read again in this one (each says so in its place lines). */
@@ -1939,6 +2371,8 @@ export interface AssembleInput {
   shortNames?: ReadonlyMap<string, string>;
   /** Each rule's two presentation lines (the bundle's `rule-lines.json`); absent or empty for a bundle with none, where titles are the rules' `short_name`. */
   ruleLines?: Readonly<Record<string, RuleLines>>;
+  /** Each law's full name by its short name, from the bundle (penalty-tier.ts `lawFullNamesOf`). */
+  lawFullNames?: Readonly<Record<string, string>>;
   /** Each rule's `finding_role` from the bundle (rule.schema.json); absent = `duty_check`. */
   ruleRoles?: ReadonlyMap<string, string>;
   /**
@@ -1947,6 +2381,12 @@ export interface AssembleInput {
    * findings never take row 4.
    */
   ruleDuties?: ReadonlyMap<string, string>;
+  /**
+   * Each rule's `settling_questions` from the bundle
+   * (disposition.ts `settlingQuestionsOf`, `ruleSettlersOf`): the questions whose answer may settle its finding. A rule
+   * absent here lists none, and no answer moves its findings off "to fix".
+   */
+  ruleSettlers?: ReadonlyMap<string, readonly string[]>;
   /**
    * The second look's outcome by finding id, laid over what the
    * assembly reads itself (a test's injection; the run's own outcomes come from its challenge records and entries below).
@@ -2325,6 +2765,16 @@ export function readAgainOf(candidate: Obj | undefined, verdict: Obj, previous: 
 }
 
 export function assemble(input: AssembleInput): AssembleResult {
+  // This run's law names for every page's form pass (`lawNamesNow`).
+  const before = lawNamesNow;
+  lawNamesNow = input.lawFullNames ?? {};
+  try {
+    return assembleNamed(input);
+  } finally {
+    lawNamesNow = before;
+  }
+}
+function assembleNamed(input: AssembleInput): AssembleResult {
   const refusals: Refusal[] = [...(input.refusals ?? [])];
   /* The rule the report and the log are redacted with (step 13), and one string redacted on its own, as a row is: for
    * what a line takes from outside the log. */
@@ -3110,10 +3560,6 @@ export function assemble(input: AssembleInput): AssembleResult {
     // The rule's `duty_about` from the map the disposition reads (one
     // source): a not-shipped `ships` lowers the order only where it is `product_runtime`.
     const dutyAbout = dctx.duties?.get(rule);
-    const oi: StandingOrderInput = { verdict: it.verdict, candidate: it.candidate, declaredRegions, answers, answered, ...(bases ? { ruleBases: bases } : {}), ...(regionsOut ? { regionsOut } : {}), ...(input.tierOf ? { tierOf: input.tierOf } : {}), ...(dutyAbout ? { dutyAbout } : {}) };
-    const o = standingOrderOf(oi);
-    it.order = o;
-    it.orderInput = oi;
     // The disposition, from the record, the candidate and the program's facts.
     const rowsHere = (input.placeRows?.get(str(it.verdict.finding_id)) ?? []) as readonly PlaceRowIn[];
     const dIn = dispositionInputOf(it, dctx, rowsHere);
@@ -3122,18 +3568,27 @@ export function assemble(input: AssembleInput): AssembleResult {
      * high only here, read place by place, or its record never examined) keeps its placement and is marked as not answered,
      * never shown as settled on the first review's word alone. The fold (12e)
      * runs after this, on each finding's own placement, and never folds a finding under a lighter head (fold-findings.ts
-     * guard 2): the claim is asked of the finding as placed on its own, and a folded finding keeps its mark. */
+     * guard 2): the claim is asked of the finding as placed on its own, and a folded finding keeps its mark. A look not answered never lets
+     * row 4 take the finding out on the seat's `ships` (disposition.ts `rowFourShipsOf`); asked before the order, so the
+     * order reads the same `ships` row 4 does. */
     if (!it.secondLook) {
       if (firstReviewClaimOf(it, dctx, rowsHere, it.raise?.severity ?? str(it.candidate?.severity), dIn) !== null) {
         it.secondLook = { outcome: "not_answered", due: true };
         dIn.secondLook = "not_answered";
       }
     }
+    // The order reads the kept places' effective `ships` as row 4 does.
+    const shipsKept = rowFourShipsOf(dIn)?.kept ?? [];
+    const oi: StandingOrderInput = { verdict: it.verdict, candidate: it.candidate, declaredRegions, answers, answered, ...(bases ? { ruleBases: bases } : {}), ...(regionsOut ? { regionsOut } : {}), ...(input.tierOf ? { tierOf: input.tierOf } : {}), ...(dutyAbout ? { dutyAbout } : {}), shipsKept };
+    const o = standingOrderOf(oi);
+    it.order = o;
+    it.orderInput = oi;
     it.disp = dispositionOf(dIn);
     const ruleLevel = str(it.candidate?.severity);
     // D1 = B: a raise by weight only for a finding to fix (design section 2.2), on the parts that stood.
     if (!countsAsProblem(it.disp.disposition) || !raisedByWeight(o) || (it.raise?.severity ?? ruleLevel) === "high" || (ruleLevel !== "medium" && ruleLevel !== "low")) continue;
-    const at = decisivePlaceOf(it.verdict, (input.placeRows?.get(str(it.verdict.finding_id)) ?? []) as readonly PlaceRowIn[], it.candidate);
+    // The place the raise rests on: the decisive place as the disposition read it.
+    const at = decisivePlaceOf(it.verdict, (input.placeRows?.get(str(it.verdict.finding_id)) ?? []) as readonly PlaceRowIn[], it.candidate, dctx);
     const r: SeverityRaise = {
       finding_id: str(it.verdict.finding_id),
       rule_id: rule,
@@ -3148,8 +3603,8 @@ export function assemble(input: AssembleInput): AssembleResult {
       standing: { order_tier: o.standingTier as "O1" | "O2", duty: o.topBasis ? [o.topBasis.cite] : [], data: o.heaviest.includes("data") ? [] : [...o.data], people: [...o.people], runs: o.heaviest.includes("runs") ? "not_established" : o.runs, reaches: o.heaviest.includes("reaches") ? "not_established" : o.reaches, ships: o.ships },
       // A raise the duty's tier alone carries says so, naming no other part.
       because: inertTrim(raisedOnDutyAlone(o)
-        ? WORDS.raisedByDutyAlone(markdownText(ruleLevel), o.topBasis ? WORDS.raiseUnder(programText(o.topBasis.regime || citationOf(o.topBasis.cite)), o.topBasis) : ours(""), standingRunsWords(o))
-        : WORDS.raisedByWeight(markdownText(ruleLevel), standingDataWords(o), standingPeopleWords(o, answers), standingRunsWords(o), o.topBasis ? WORDS.raiseUnder(programText(o.topBasis.regime || citationOf(o.topBasis.cite)), o.topBasis) : ours(""))
+        ? WORDS.raisedByDutyAlone(markdownText(ruleLevel), o.topBasis ? WORDS.raiseUnder(o.topBasis) : ours(""), standingRunsWords(o))
+        : WORDS.raisedByWeight(markdownText(ruleLevel), standingDataWords(o), standingPeopleWords(o, answers), standingRunsWords(o), o.topBasis ? WORDS.raiseUnder(o.topBasis) : ours(""))
       ),
     };
     // A transport raise this one replaces keeps its words in details.md.
@@ -3453,7 +3908,7 @@ export function assemble(input: AssembleInput): AssembleResult {
     });
   }
   const readAgainTotal = readAgainTotalOf(plan, items);
-  const reportArgs: ReportArgs = { declarationPlan: input.declarationPlan ?? null, declarationPlanNotTaken: input.declarationPlanNotTaken ?? null, logPath: input.logPath === undefined ? undefined : printed(input.logPath), unconfirmed: unconfirmedLines, findings, plan, items, preSettled, unknownRules, silences, unadjudicated, suppressions, summary, shape: shape as string, chosenBy: chosenBy as string, deferred, candidates, silent, notJudged: reportNotJudged, ledgerChecked: input.ledgerChecked, modelOverrides: reportOverrides, raises: shownRaises, questions, profile: input.profile ?? null, placeRows: reportRows, shortNames: reportNames, ruleLines: input.ruleLines, comparison: obj(log.comparison) ?? null, ruleBases: input.ruleBases, reportName: input.reportName, reportPlace: input.reportPlace, numbering: input.numbering, ...(redaction ? { printed: (t: string) => redactPrintedText(redaction, t) } : {}) };
+  const reportArgs: ReportArgs = { declarationPlan: input.declarationPlan ?? null, declarationPlanNotTaken: input.declarationPlanNotTaken ?? null, logPath: input.logPath === undefined ? undefined : printed(input.logPath), unconfirmed: unconfirmedLines, findings, plan, items, preSettled, unknownRules, silences, unadjudicated, suppressions, summary, shape: shape as string, chosenBy: chosenBy as string, deferred, candidates, silent, notJudged: reportNotJudged, ledgerChecked: input.ledgerChecked, modelOverrides: reportOverrides, raises: shownRaises, questions, profile: input.profile ?? null, placeRows: reportRows, shortNames: reportNames, ruleLines: input.ruleLines, lawFullNames: input.lawFullNames, comparison: obj(log.comparison) ?? null, ruleBases: input.ruleBases, reportName: input.reportName, reportPlace: input.reportPlace, numbering: input.numbering, ...(redaction ? { printed: (t: string) => redactPrintedText(redaction, t) } : {}) };
   /* ONE MODEL, ONE COUNT: the report's files and
    * the end of the run's screen are made from the same model, so their counts come from one computation of the
    * dispositions (one real re-scan printed "19 to fix first" on the screen against "21" in report.md). */
@@ -3463,7 +3918,9 @@ export function assemble(input: AssembleInput): AssembleResult {
   /* DECISIONS ARE AN OVERLAY AFTER COUNTS (design rf11 3.4): every count above (the
    * model's `counts`, `resultCounts`, the log) is made; only now is the person's record read, and it changes which list
    * a finding is shown in, never a number. test:assemble-report holds the counts and the log equal with and without it. */
-  if (input.personDecisions) model.decisions = decisionViewOf(input.personDecisions(), listedRows, input.completedAt.slice(0, 10));
+  // A decision's end date is compared with the
+  // computer's own day, as every day the report writes (`localDayOfInstant`); before, with the UTC day.
+  if (input.personDecisions) model.decisions = decisionViewOf(input.personDecisions(), listedRows, localDayOfInstant(input.completedAt));
   const built = buildReportFiles(reportArgs, model);
   // The end of the run's screen, from the same model the report is built from (the mock-up's screen 10).
   const end = endSummaryOf(model, redaction ? (t: string) => redactPrintedText(redaction, t) : (t: string) => t);
@@ -3763,6 +4220,8 @@ interface ReportArgs {
   shortNames?: ReadonlyMap<string, string>;
   /** Each rule's two presentation lines (the bundle's `rule-lines.json`); absent or empty for a bundle with none, where titles are the rules' `short_name`. */
   ruleLines?: Readonly<Record<string, RuleLines>>;
+  /** Each law's full name by its short name, from the bundle (penalty-tier.ts `lawFullNamesOf`). */
+  lawFullNames?: Readonly<Record<string, string>>;
   /** Each rule's bases (the input's `ruleBases`), for `settledExclusionsOf`. */
   ruleBases?: ReadonlyMap<string, readonly RuleBasis[]>;
   /** The main file's name as written (`report.md`, or the name `--out-report <path>.md` gave it). */
@@ -4037,13 +4496,10 @@ function entriesWithin(entries: readonly (readonly Inert[])[], rows: number, pri
   }
   return n;
 }
-/** How many places a work-list line links before "and N more". */
-const WORK_LIST_LINKS = 3;
-
-function listWords(xs: readonly Inert[]): Inert;
-function listWords(xs: readonly string[]): string;
-function listWords(xs: readonly string[]): string {
-  return xs.length <= 1 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`;
+function listWords(xs: readonly Inert[], and?: "and" | "or"): Inert;
+function listWords(xs: readonly string[], and?: "and" | "or"): string;
+function listWords(xs: readonly string[], and: "and" | "or" = "and"): string {
+  return xs.length <= 1 ? xs.join("") : `${xs.slice(0, -1).join(", ")} ${and} ${xs[xs.length - 1]}`;
 }
 
 /** A place row as the report reads it (place-fold.ts `PlaceTableRow`; `why` is the seat's short line for the place). */
@@ -4053,7 +4509,7 @@ type ReportRow = PlaceRowIn & { why?: string };
 interface ReportModel {
   a: ReportArgs;
   project: string;
-  titleOf: Map<string, string>;
+
   plainOf: (ruleId: string) => Inert;
   sevOf: (it: Item) => string;
   heldOf: (it: Item) => ReportRow[];
@@ -4099,12 +4555,29 @@ export interface DispositionCounts {
   counsel: number;
   /** Findings in a question slot (`question`, `check_answer`), and how many slots they make. */
   waiting: number;
+  /**
+   * The slots that are questions the person can answer ("review my answers"): a
+   * question of the program's list (`waits_on_answer`) or an answer to check (`check_answer`). A fact named in words is not
+   * a question (the scan has none for it): `facts` counts those slots, and no screen calls them questions. Counted by
+   * question id, once each (`settlingQuestionIdsOf`, r16-r D1), as `openQuestionsOf` counts them.
+   */
   questions: number;
+  facts: number;
   recorded: number;
   notShipped: number;
   forOperators: number;
   folded: number;
   settled: number;
+}
+/** A question's id without the profile's prefix (`ScanProfile.features.ugc` and `features.ugc` are one question). */
+const bareQuestionId = (field: string): string => field.replace(/^(?:ScanProfile|profile)\./, "");
+/**
+ * THE ONE SET of questions that settle findings to answer: the ids of the slots that are
+ * questions the person can answer (`waits_on_answer`, `check_answer`), each once. `check_answer` makes one slot per answer
+ * AND rule, so two rules checking one answer are two slots and one question: every screen counts this set, never the slots.
+ */
+function settlingQuestionIdsOf(slots: readonly QuestionSlot[]): Set<string> {
+  return new Set(slots.filter((q) => q.kind === "waits_on_answer" || q.kind === "check_answer").map((q) => bareQuestionId(q.question)));
 }
 function dispositionCountsOf(shown: readonly Item[], sevOf: (it: Item) => string, slots: readonly QuestionSlot[], settled: number): DispositionCounts {
   const d = (it: Item): Disposition => dispositionOfItem(it);
@@ -4114,7 +4587,8 @@ function dispositionCountsOf(shown: readonly Item[], sevOf: (it: Item) => string
     toFix: { high: toFix.filter((it) => sevOf(it) === "high").length, medium: toFix.filter((it) => sevOf(it) === "medium").length, low: toFix.filter((it) => sevOf(it) !== "high" && sevOf(it) !== "medium").length },
     counsel: n("counsel"),
     waiting: n("question") + n("check_answer"),
-    questions: slots.filter((q) => q.kind !== "order_moving").length,
+    questions: settlingQuestionIdsOf(slots).size,
+    facts: slots.filter((q) => q.kind === "fact").length,
     recorded: n("recorded"),
     notShipped: n("not_shipped"),
     forOperators: n("for_operators"),
@@ -4123,6 +4597,18 @@ function dispositionCountsOf(shown: readonly Item[], sevOf: (it: Item) => string
   };
 }
 
+/**
+ * THE FINDINGS NOT COUNTED AS
+ * PROBLEMS, in one list: every count of them a screen states (report.md's "N more are listed below", the end screen's and
+ * the record's "not counted") is this list's length, and `belowSectionsOf` writes one section per disposition of
+ * `NOT_COUNTED` over the same list, linking every finding in it. DEMO5's report said "1 more is listed below" of a finding
+ * counted with another (`folded`), which no section listed: it was reachable only from its head's page.
+ */
+const NOT_COUNTED = ["recorded", "not_shipped", "for_operators", "folded"] as const satisfies readonly Disposition[];
+type NotCounted = (typeof NOT_COUNTED)[number];
+function notCountedOf(m: { shown: readonly Item[]; dispOf: (it: Item) => Disposition }): Item[] {
+  return m.shown.filter((it) => (NOT_COUNTED as readonly string[]).includes(m.dispOf(it)));
+}
 const ruleOfRecord = (m: ReportModel, u: Obj): string => str(m.candidateById.get(str(u.finding_id))?.rule_id) || WORDS.ruleNotInFindings;
 const sevOfRecord = (m: ReportModel, u: Obj): string => m.a.raises?.get(str(u.finding_id))?.severity ?? str(m.candidateById.get(str(u.finding_id))?.severity);
 const placesOfRecord = (m: ReportModel, u: Obj): number =>
@@ -4134,30 +4620,6 @@ const sumOf = <T>(xs: readonly T[], f: (x: T) => number): number => xs.reduce((n
  * words, the evidence log's `standing[]` rows and the question slots of Fix first (W5, W7).
  * ---------------------------------------------------------------------------------------------- */
 
-/** The `decisive` quotation's place (`E<n>` an entry of the verdict's evidence, `P<n>` a kept place row), or null (T6). */
-function decisivePlaceOf(v: Obj, rows: readonly PlaceRowIn[], c?: Obj): { file: string; line: number } | null {
-  const d = str(obj(v.standing)?.decisive);
-  // ref-ids.ts: `E<n>` counts from E1, `P<n>` from P0 (the smoke test's decisive `P0` was refused here too).
-  const ei = evidenceIndexOf(d);
-  if ((ei !== null || isPlaceId(d)) && v.quote_check_outcome !== "invalidated") {
-    if (ei !== null) {
-      const e = obj(arr(v.evidence)[ei]);
-      const line = parseInt(str(e?.lines), 10);
-      if (e && str(e.file) && line > 0) return { file: str(e.file), line };
-    } else {
-      const r = rows.find((x) => x.place === d && KEPT_DECISIONS.has(str(x.decision)));
-      if (r) return { file: r.file, line: r.line };
-    }
-  }
-  if (c === undefined) return null;
-  // Where the decisive place is not at hand (a raise must name one): the first kept place, quotation, or matched line.
-  const h = rows.find((x) => KEPT_DECISIONS.has(str(x.decision)));
-  if (h) return { file: h.file, line: h.line };
-  const e = arr(v.evidence).map(obj).find((x): x is Obj => !!x);
-  if (e && parseInt(str(e.lines), 10) > 0) return { file: str(e.file), line: parseInt(str(e.lines), 10) };
-  const l = arr(c.locations).map(obj).find((x): x is Obj => !!x);
-  return l ? { file: str(l.file), line: Number(l.start_line) || 1 } : null;
-}
 /**
  * W8: the data a block names; "" where the review did not establish them: the placeholder "data" printed there named no kind and read as a
  * reason for a raise that rested on the duty alone.
@@ -4200,8 +4662,8 @@ function laterWordsOf(b: ResolvedBasis, day: string): Inert {
  * W11: the duty's cite and tier words, where a duty stood; `day` is the scan's date (laterWordsOf). The cite is printed
  * as the law line prints it (`citationOf`: up to the first explanation), never the bundle's whole cite.
  */
-const lawWordsOf = (o: StandingOrder, day: string): Inert =>
-  o.topBasis ? md`${programText(citationOf(o.topBasis.cite))} (${WORDS.tierWords(programText(o.topBasis.regime || citationOf(o.topBasis.cite)), o.topBasis, laterWordsOf(o.topBasis, day))})` : ours("");
+const lawWordsOf = (m: ReportModel, o: StandingOrder, day: string): Inert =>
+  o.topBasis ? md`${programText(citationOf(o.topBasis.cite))} (${WORDS.tierWords(o.topBasis.regime ? lawNameOf(m, o.topBasis.regime) : programText(citationOf(o.topBasis.cite)), o.topBasis, laterWordsOf(o.topBasis, day))})` : ours("");
 /** The resolver with the bundle's table bound, each cite and jurisdiction resolved once. */
 export function tierOfMemo(table: PenaltyTierTable): TierOf {
   const seen = new Map<string, ReturnType<TierOf>>();
@@ -4213,7 +4675,7 @@ export function tierOfMemo(table: PenaltyTierTable): TierOf {
   };
 }
 /** The scan's own date (the findings document's `completed_at`), against which a later date is read. */
-const scanDayOf = (m: ReportModel): string => (/^\d{4}-\d{2}-\d{2}/.test(str(m.a.findings.completed_at)) ? str(m.a.findings.completed_at).slice(0, 10) : "");
+const scanDayOf = (m: ReportModel): string => (/^\d{4}-\d{2}-\d{2}/.test(str(m.a.findings.completed_at)) ? localDayOfInstant(str(m.a.findings.completed_at)).slice(0, 10) : "");
 /**
  * Why the capture set a part aside, in the person's words. The
  * reason the record holds (`standing_set_aside[].why`) is the program's own message to the seat (standing.ts, place-reply.ts
@@ -4222,7 +4684,9 @@ const scanDayOf = (m: ReportModel): string => (/^\d{4}-\d{2}-\d{2}/.test(str(m.a
 export function asideReasonWords(why: string): Inert {
   // Each form is read whole, its code at the message's end: the seat's own
   // value (a word, a file name) stands inside the message, before the program's words, and cannot pick another reason. S5 holds for every part in words: `effect`, and fixes A-D's `element`,
-  // `exemption.limb` and `fact.words` (standing.ts `wordsProblem`, one message form for all four).
+  // `exemption.limb` and `fact.words` (standing.ts `wordsProblem`, one message form for all four). (FIN4 P2 item 3) A wait on where the product is
+  // offered, set aside after the seat's last refusal, said in words (was "it was not in a form this report reads").
+  if (why === JURISDICTION_WAIT) return WORDS.asideReason.jurisdictionWait;
   const words = /^`(?:effect|element|exemption\.limb|fact\.words)` has (\d+) words; at most (\d+) \(S5\)$/.exec(why);
   if (words) return WORDS.asideReason.tooLong(Number(words[1]), Number(words[2]));
   const noRead = /^your transcript shows no Read of (.+) covering line (\d+) \(C9\) \(S2\)$/.exec(why);
@@ -4233,6 +4697,8 @@ export function asideReasonWords(why: string): Inert {
   if (/^`at` quotes a line, and no tree was at hand to check it against \(C9's rule\): a quotation nobody checked gives no fact \(S2\)$/.test(why)) return WORDS.asideReason.noTree;
   if (/^`at` \S+ is not a place row of this candidate that you kept and that passed the place checks \(S2\)$/.test(why)) return WORDS.asideReason.notKept;
   if (/^`at` \S+ names no entry of this verdict's `evidence\[\]` \(it holds \d+, E1 to E-?\d+\) \(S2\)$/.test(why)) return WORDS.asideReason.noEntry;
+  // A part whose quotation an answer after a refusal took out (standing.ts `NAMES_NO_ENTRY`).
+  if (/^`(?:at|decisive)` names no quotation: it is `null`, .+ \(S2\)$/.test(why)) return WORDS.asideReason.noEntry;
   if (/^`(?:effect|element|exemption\.limb|fact\.words)` is one line \(S5\)$/.test(why)) return WORDS.asideReason.notOneLine;
   if (/^`(?:effect|element|exemption\.limb|fact\.words)` is English \(S5\)$/.test(why)) return WORDS.asideReason.notEnglish;
   if (why === "`status` `duty_met` with the verdict `needs_human` contradicts itself (S6)") return WORDS.asideReason.contradicts;
@@ -4253,6 +4719,9 @@ export function asideReasonWords(why: string): Inert {
   if (STATUS_WAIT_NO_QUESTION.test(why)) return WORDS.asideReason.noQuestionStood;
   if (why === "`question` goes only with `status` `waits_on_answer` (S4)") return WORDS.asideReason.questionWithoutWait;
   if (/^`question\.value` .+ is not a question of the program's list \(S4\)$|^`settles` names .+, not a question of the program's list \(S4\)$/.test(why)) return WORDS.asideReason.noQuestion;
+  // A part never placed inside `standing` (amend.ts `RESEND_WHY.lighter`, `.noBlock`). A stray beside a block that holds the part is no longer set aside
+  // here (`after_last_refusal[]`); a block that is no object, where it could not be placed, is (`RESEND_WHY.noBlock`).
+  if (/^`[a-z_]+` was written beside `standing` and never placed inside it after the refusals that said where it belongs(?:; placed there it would make the finding lighter|, and `standing` is not an object it can be placed in), so after the last refusal it is set aside$/.test(why)) return WORDS.asideReason.notPlaced;
   if (/\(S3\)$/.test(why)) return WORDS.asideReason.notOwnBasis;
   if (/\(S1\)$/.test(why)) return WORDS.asideReason.notInList;
   return WORDS.asideReason.otherForm;
@@ -4286,6 +4755,7 @@ function statusPartAsideWords(why: string, rowOf: (part: string) => Obj | undefi
  */
 export function waitAsideWords(questionWhy: string | null): Inert {
   if (questionWhy === null) return WORDS.asideReason.noQuestionNamed;
+  if (questionWhy === JURISDICTION_WAIT) return WORDS.asideReason.jurisdictionWait;
   if (/^`question\.value` .+ is not a question of the program's list \(S4\)$/.test(questionWhy)) return WORDS.asideReason.noQuestion;
   if (/ \(S2\)$/.test(questionWhy)) return WORDS.asideReason.questionNotQuoted(asideReasonWords(questionWhy));
   return WORDS.asideReason.questionOtherForm;
@@ -4299,6 +4769,84 @@ function regionNoWords(jurisdictions: readonly (string | undefined)[]): Inert {
  * person's region answer set aside (`regionOut`, S3's region half) is not used for that reason, as the law line beside it
  * says, never "not established".
  */
+/**
+ * Whether the review gave words at `path` (`standing.fix` or
+ * `standing.effect`) after its last refusal that the capture set aside (verdict.schema.json `after_last_refusal[]`, a
+ * change the last refusal did not name: amend.ts `WORDS_ONLY`). Such words, and the ones they replaced, are not used. Only such a change (its `why` is amend.ts `RESEND_WHY.unnamed`): a stray
+ * `fix` or `effect` written beside a block that holds its own (`RESEND_WHY.taken`, kind `held`) is set aside while the
+ * block's own words are kept and used, and those were not given after the last refusal.
+ */
+function laterWordsAside(v: Obj, path: "standing.fix" | "standing.effect"): boolean {
+  return arr(v.after_last_refusal).some((x) => str(obj(x)?.path) === path && str(obj(x)?.taken) === "set_aside" && str(obj(x)?.why) === RESEND_WHY.unnamed);
+}
+/**
+ * The review's sentence on what
+ * happens to the people (`standing.effect`), as the report prints it. The capture keeps it only up to its word count
+ * (standing.ts `EFFECT_MAX_WORDS`, S5) and records a longer one as set aside, with the review's words; a sentence of 21 or 22
+ * words was then replaced by the report's own rule ("it ran to 22 words, and this report takes at most 20"), so the person
+ * read no summary at all. The count is a target for the review, not a fact about the finding: the sentence decides nothing
+ * (no placement reads it), so where the length was its only fault the review's own words are printed, as they were written.
+ * One the capture set aside for anything else (more than one line, not a string) is still not printed; nor is one that is
+ * not in English, which the capture checks after the count and so never reached.
+ */
+export function reviewEffectOf(v: Obj): string {
+  if (laterWordsAside(v, "standing.effect")) return "";
+  const kept = str(obj(v.standing)?.effect);
+  if (kept) return kept;
+  const row = arr(v.standing_set_aside).map(obj).find((x) => str(x?.part) === "effect");
+  const value = row?.value;
+  // Its words or its rows on the front page (report-budget.ts): length alone.
+  if (typeof value !== "string" || !/^`effect` (?:has \d+ words|takes \d+ rows of (?:the finding's card title|a finding's entry on the report's front page)); at most \d+ \(S5\)$/.test(str(row?.why))) return "";
+  if (/[\r\n]/.test(value) || /[\u3000-\u303f\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af\uff00-\uffef]/.test(value)) return "";
+  return value.trim();
+}
+/**
+ * The review's suggested change for this code (`standing.fix`, R19-A's field: one line
+ * naming the file, the line and the change), only as the review kept it: a `fix` set aside is never printed, and a record
+ * the quotation check invalidated gives none. Always printed with its label and the rule's line beneath (`actionLinesOf`).
+ */
+export function reviewFixOf(v: Obj): string {
+  if (v.quote_check_outcome === "invalidated" || laterWordsAside(v, "standing.fix")) return "";
+  const fix = str(obj(v.standing)?.fix).replace(/\s+/g, " ").trim();
+  /* Only one within today's words and rows (report-budget.ts): a
+   * record an earlier version kept (40 words) would take the card's reason and the rule's line, as the capture now refuses. */
+  return /[\u3000-\u303f\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af\uff00-\uffef]/.test(fix) || !suggestionFits(fix) ? "" : fix;
+}
+/**
+ * NEVER SILENTLY (the parent's decision of 17 Nov): where the capture or the report
+ * set the review's headline or its suggested change aside, the finding's page says so in one plain line, unfolded, under
+ * "What the review found". Before, a suggestion set aside was printed nowhere and nothing said so (the person saw the
+ * rule's advice and could not know the review had written one), and a headline set aside for its length gave the page
+ * the check's title with no word why. A headline or suggestion the quotation check invalidated is said by that check.
+ */
+function setAsideTextLinesOf(m: ReportModel, it: Item): Inert[] {
+  const v = it.verdict;
+  if (v.quote_check_outcome === "invalidated") return [];
+  const out: Inert[] = [];
+  const kept = str(obj(v.standing)?.effect);
+  // A headline given after the last refusal, set aside by the capture.
+  if (laterWordsAside(v, "standing.effect")) out.push(md`- ${WORDS.effectAfterLastRefusal}`);
+  else if (reviewEffectOf(v) !== "" && !(kept !== "" && !/[\r\n]/.test(kept) && headlineFits(kept))) out.push(md`- ${WORDS.effectNotTitle}`);
+  const keptFix = str(obj(v.standing)?.fix).trim();
+  const row = arr(v.standing_set_aside).map(obj).find((x) => str(x?.part) === "fix");
+  // A suggestion given after the last refusal, set aside by the
+  // capture: not printed, nor the one before it (`reviewFixOf`), the page saying so and the card giving the rule's general
+  // advice instead (legal-adjudicator.md, the `fix` part).
+  if (laterWordsAside(v, "standing.fix")) {
+    out.push(md`- ${m.dispOf(it) === "to_fix" ? WORDS.fixAfterLastRefusal : WORDS.fixNotToFix}`);
+    return out;
+  }
+  /* The reason said is the one that set it aside (the third non-author re-check,
+   * d4): too long where its words or rows were over (`suggestionFits`, or the capture's row says so), else "could not be
+   * used" (its script, its form). Before, any kept suggestion the report refused was called too long. */
+  if (m.dispOf(it) === "to_fix" && reviewFixOf(v) === "" && (keptFix !== "" || row)) out.push(md`- ${WORDS.fixSetAside(keptFix !== "" ? !suggestionFits(keptFix.replace(/\s+/g, " ")) : /\b(?:words?|rows?)\b/.test(str(row?.why)))}`);
+  /* A suggestion on a finding that is not one to fix is printed nowhere (the report prints
+   * one only on a finding to fix); the page says so, never silently (the re-check's S1: a kept `fix` on a finding to
+   * clarify vanished). The capture now refuses a `fix` given with `needs_human`; this line covers a `violation_candidate`
+   * the order places elsewhere and a record from an earlier version. */
+  if (m.dispOf(it) !== "to_fix" && (keptFix !== "" || row)) out.push(md`- ${WORDS.fixNotToFix}`);
+  return out;
+}
 function setAsideOf(v: Obj, o?: StandingOrder): Map<string, Inert> {
   const out = new Map<string, Inert>();
   const rows = arr(v.standing_set_aside).map(obj);
@@ -4452,9 +5000,12 @@ const ORDER_MOVING: readonly { field: string; which: "minors" | "health" }[] = [
 /** What the disposition reads from the run, made once per assembly. */
 interface DispositionContext {
   premises?: ReadonlyMap<string, string>;
+  /** The files whose premise is `documentation`. */
+  documentationPages?: ReadonlySet<string>;
   answers: ReadonlyMap<string, GivenAnswer>;
   roles?: ReadonlyMap<string, string>;
   duties?: ReadonlyMap<string, string>;
+  settlers?: ReadonlyMap<string, readonly string[]>;
   secondLooks?: ReadonlyMap<string, SecondLook>;
 }
 /**
@@ -4482,7 +5033,8 @@ function givenAnswersOf(profile: Obj | null): Map<string, GivenAnswer> {
  * telling a location look from a look at the first review's claim.
  */
 function firstReviewClaimOf(it: Item, ctx: DispositionContext, rows: readonly PlaceRowIn[], level: string, dIn: DispositionInput = dispositionInputOf(it, ctx, rows)): ReturnType<typeof claimOf> {
-  const decisiveFile = decisivePlaceOf(it.verdict, rows.filter((r) => KEPT_DECISIONS.has(str(r.decision))), it.candidate)?.file;
+  // With no usable `decisive`, the heaviest place (the disposition's own).
+  const decisiveFile = decisivePlaceOf(it.verdict, rows.filter((r) => KEPT_DECISIONS.has(str(r.decision))), it.candidate, ctx)?.file;
   const decisivePremise = decisiveFile !== undefined ? ctx.premises?.get(decisiveFile) : undefined;
   return claimOf({ input: dIn, level, ...(typeof dIn.role === "string" ? { role: dIn.role } : {}), ...(decisivePremise !== undefined ? { decisivePremise } : {}) });
 }
@@ -4508,47 +5060,27 @@ function dispositionContextOf(findings: Obj, input: AssembleInput): DispositionC
   // A premise the program does not know is `unknown`, which ships (design section 5.2); the one reading of the document's
   // premises, which the second look's launch side reads too (second-look.ts).
   const premises = premisesOfFindings(findings);
+  const documentationPages = documentationPagesOf(findings);
   return {
     ...(premises ? { premises } : {}),
+    ...(documentationPages ? { documentationPages } : {}),
     answers: givenAnswersOf(input.profile ?? null),
     ...(input.ruleRoles ? { roles: input.ruleRoles } : {}),
     ...(input.ruleDuties ? { duties: input.ruleDuties } : {}),
+    ...(input.ruleSettlers ? { settlers: input.ruleSettlers } : {}),
     ...(input.secondLooks ? { secondLooks: input.secondLooks } : {}),
   };
 }
 /**
  * One finding's disposition input, resolved from its record, its candidate, its kept place rows and the run's facts
- * (design section 2.1). A record the final quotation check invalidated gives no part (S7): its block is set aside whole.
+ * (design section 2.1): finding-weight.ts `dispositionInputOfRecord`, the one reading the capture's guard on a resend
+ * shares.
  */
 function dispositionInputOf(it: Item, ctx: DispositionContext, rows: readonly PlaceRowIn[]): DispositionInput {
-  const v = it.verdict;
-  const id = str(v.finding_id);
-  const invalid = v.quote_check_outcome === "invalidated";
-  const raw = obj(v.standing);
-  const st = !invalid && raw ? (raw as StandingRecord) : undefined;
-  const setAside = [...new Set([...arr(v.standing_set_aside).map((x) => str(obj(x)?.part)).filter(Boolean), ...(invalid && raw ? ["standing"] : [])])];
-  const kept = rows.filter((r) => KEPT_DECISIONS.has(str(r.decision)));
-  const keptFiles = kept.length > 0 ? kept.map((r) => r.file) : arr(it.candidate?.locations).map((l) => str(obj(l)?.file)).filter(Boolean);
-  const seat = typeof st?.ships?.value === "string" ? st.ships.value : undefined;
-  const decisiveFile = decisivePlaceOf(v, kept, it.candidate)?.file;
-  // Row 5's input through declaration.ts's one reading (WP4's kinds).
-  const declared = declaredInapplicableOf(declarationSourceOf(), it.candidate?.declared_inapplicable_preconditions);
-  const role = ctx.roles?.get(str(it.candidate?.rule_id));
-  const dutyAbout = ctx.duties?.get(str(it.candidate?.rule_id));
-  const second = ctx.secondLooks?.get(id);
-  const folded = it.foldedUnder;
-  return {
-    verdict: str(v.verdict),
-    ...(st ? { standing: st } : {}),
-    ...(setAside.length > 0 ? { setAside } : {}),
-    ...(folded ? { foldedUnder: folded } : {}),
-    ships: effectiveShipsOf({ ...(seat !== undefined ? { seat } : {}), ...(decisiveFile !== undefined ? { decisiveFile } : {}), keptFiles, ...(ctx.premises ? { premises: ctx.premises } : {}) }),
-    ...(declared.length > 0 ? { declaredInapplicable: declared } : {}),
-    answers: ctx.answers,
-    ...(role ? { role } : {}),
-    ...(dutyAbout ? { dutyAbout } : {}),
-    ...(second ? { secondLook: second } : {}),
-  };
+  return dispositionInputOfRecord(it.verdict, it.candidate, rows, ctx, {
+    ...(it.foldedUnder ? { foldedUnder: it.foldedUnder } : {}),
+    declared: declaredInapplicableOf(declarationSourceOf(), it.candidate?.declared_inapplicable_preconditions),
+  });
 }
 /**
  * One finding as the fold reads it (fold-findings.ts): its own disposition and level,
@@ -4702,7 +5234,6 @@ function reportModel(a: ReportArgs): ReportModel {
   return {
     a,
     project: (target && basename(target.replace(/[\\/]+$/, ""))) || str(a.findings.scan_id) || "(unnamed)",
-    titleOf,
     plainOf,
     sevOf,
     heldOf,
@@ -4747,9 +5278,65 @@ function namingPlaceOf(v: Obj, rows: readonly PlaceRowIn[], c: Obj | undefined):
   const l = arr(c?.locations).map(obj).filter((x): x is Obj => !!x)[0];
   return l ? `${str(l.file)}:${Number(l.start_line)}` : WORDS.unrecordedLocation;
 }
-/** Where the report puts one finding: `namingPlaceOf` over its kept place rows. */
+/**
+ * A FINDING COUNTED WITH
+ * ANOTHER IS SHOWN AT ITS OWN LINE, never at the line of the other finding the review traced it to (`foldedBecause.at`;
+ * for a documentation page folded with no traced line, the line that finding is shown at):
+ * shown there, it read as that finding's line (DEMO5's privacy-policy promise was shown at the closing route's line). The
+ * first of the ordinary order (its decisive quotation, its kept places) that is not at that line; then its own matched
+ * lines, before its quotations, which may quote the other finding's line first. Null where the finding is not folded, or
+ * where every line it has is that line: it is then named as any finding is.
+ */
+function foldedOwnPlaceOf(m: ReportModel, it: Item): { file: string; line: number; spans?: LineSpan[]; row?: ReportRow; decisive?: true } | null {
+  if (m.dispOf(it) !== "folded" || !it.foldedUnder) return null;
+  // A fold with no traced line (a documentation page, key (a)): the line the other finding is shown at.
+  const head = it.foldedBecause?.at ? undefined : m.itemById.get(str(it.foldedUnder));
+  const shown = head ? /^(.*):(\d+)$/.exec(namingPlaceOf(head.verdict, m.heldOf(head), head.candidate)) : null;
+  const at = it.foldedBecause?.at ?? (shown ? { file: shown[1]!, line: Number(shown[2]) } : undefined);
+  if (!at) return null;
+  const covers = (file: string, spans: readonly LineSpan[]): boolean => file === at.file && spans.some((x) => at.line >= x.from && at.line <= x.to);
+  const rows = m.heldOf(it);
+  const d = decisivePlaceOf(it.verdict, rows);
+  if (d && !covers(d.file, d.spans ?? [{ from: d.line, to: d.line }])) return { ...d, decisive: true };
+  const row = rows.find((r) => !covers(r.file, [{ from: r.line, to: r.line }]));
+  if (row) return { file: row.file, line: row.line, row };
+  for (const l of arr(it.candidate?.locations).map(obj)) {
+    const file = str(l?.file);
+    const from = Number(l?.start_line);
+    if (file && Number.isFinite(from) && from > 0 && !covers(file, [{ from, to: Math.max(from, Number(l?.end_line) || from) }])) return { file, line: from };
+  }
+  for (const e of arr(it.verdict.evidence).map(obj)) {
+    const spans = e ? lineSpansOf(e.lines) : [];
+    if (e && str(e.file) && spans.length > 0 && !covers(str(e.file), spans)) return { file: str(e.file), line: spans[0]!.from, spans };
+  }
+  return null;
+}
+/** Where the report puts one finding: `namingPlaceOf` over its kept place rows; a folded finding at its own line. */
 function placeOf(m: ReportModel, it: Item): string {
+  const own = foldedOwnPlaceOf(m, it);
+  if (own) return `${own.file}:${own.line}`;
   return namingPlaceOf(it.verdict, m.heldOf(it), it.candidate);
+}
+/**
+ * (R4) The held row at
+ * the place a finding is shown at (`namingPlaceOf`): at the review's decisive place where one stood (its line, or a line
+ * of its quotation's span), else the first held row, which is then the place shown. The card's reason is this row's.
+ * Before, the reason was always the first held row's, so a finding shown at its decisive line printed the reason of
+ * another line (a CI download's under a route; a translation entry's under its handler). None where no held row is at the
+ * decisive place: the card then says the review's reasoning is below, never another place's.
+ */
+function rowAtShownPlace(m: ReportModel, it: Item): ReportRow | undefined {
+  const rows = m.heldOf(it);
+  // A folded finding's shown place is `foldedOwnPlaceOf`'s: the row there.
+  const own = foldedOwnPlaceOf(m, it);
+  if (own && !own.decisive) return own.row;
+  const d = own ?? decisivePlaceOf(it.verdict, rows);
+  if (!d) return rows[0];
+  const ei = evidenceIndexOf(str(obj(it.verdict.standing)?.decisive));
+  const span = ei === null ? "" : str(obj(arr(it.verdict.evidence)[ei])?.lines);
+  const to = /^\d+\s*-\s*(\d+)$/.exec(span.trim());
+  const end = to ? Number(to[1]) : d.line;
+  return rows.find((r) => r.file === d.file && r.line === d.line) ?? rows.find((r) => r.file === d.file && r.line >= d.line && r.line <= end);
 }
 /** A finding named by its place, linked to its own file (in a group's file, to its place's section). */
 const detailLink = (m: ReportModel, it: Item): Inert => {
@@ -4759,6 +5346,16 @@ const detailLink = (m: ReportModel, it: Item): Inert => {
   return md`[${inSpan(code(placeOf(m, it)))}](${linkTarget(target)})`;
 };
 const areaOf = (ruleId: string): Inert => (WORDS.areas.find(([p]) => ruleId.startsWith(p)) ?? [ours(""), WORDS.areaOther])[1];
+/** A text of the program's for the log, as its own words and each law it names by its id (`{law}`): the record's form. */
+const lawNamedParts = (t: string, printedText: (t: string) => string): (string | { law: string })[] => lawMarkParts(t).map((x) => (typeof x === "string" ? printedText(x) : x));
+/**
+ * The program's own words from its question table (a header, a question, what an answer
+ * settles: scan-profile.schema.json's `x-question`), escaped as a value is, each law they name given by its id
+ * (law-names.ts `lawsMarkedIn`), so the page names it in full at the program's first mention and short after.
+ */
+const ownWords = (s: string): Inert => markedText(lawsMarkedIn(s, lawNamesNow));
+/** A program text that may name a law by its id (`lawMark`), escaped as a value is, its marks left for the page to resolve. */
+const markedText = (s: string): Inert => inertJoin(lawMarkParts(s).map((p) => (typeof p === "string" ? markdownText(p) : programText(lawMark(p.law)))), ours(""));
 const areaRank = (area: string): number => {
   const i = WORDS.areas.findIndex(([, n]) => n === area);
   return i < 0 ? WORDS.areas.length : i;
@@ -4850,7 +5447,7 @@ function standingWhyOf(m: ReportModel, it: Item): Inert {
   if (o.ships === "maker_site" || o.ships === "documented_example") parts.push((WORDS.shipsWords[o.ships] ?? ((x: Inert) => x))(at("ships")));
   if (arr(it.candidate?.declared_inapplicable_preconditions).length > 0 && m.dispOf(it) !== "check_answer") parts.push(...againstAnswerWords(m, it));
   // Data that did not stand are not named, not even as "data".
-  const why = WORDS.fixWhy(standingDataWords(o), standingPeopleWords(o, answers), standingRunsWords(o), lawWordsOf(o, scanDayOf(m)));
+  const why = WORDS.fixWhy(standingDataWords(o), standingPeopleWords(o, answers), standingRunsWords(o), lawWordsOf(m, o, scanDayOf(m)));
   if (why) parts.push(why);
   const ne = notEstablishedWords(o, it.verdict);
   if (ne) parts.push(ne);
@@ -4863,12 +5460,17 @@ function againstAnswerWords(m: ReportModel, it: Item): Inert[] {
       const t = questionTextOf(field);
       const v = valueAt(m.a.profile ?? null, field);
       // Never an answer the profile does not hold.
-      return WORDS.againstAnswer(markdownText(t.header), textOrNull(t.labelOf(v) ?? (v === undefined ? null : String(v))));
+      return WORDS.againstAnswer(ownWords(t.header), textOrNull(t.labelOf(v) ?? (v === undefined ? null : String(v))));
     });
 }
 
-/** The two lines of one Fix-first group (proposal section 1, item 2). */
-function fixLines(m: ReportModel, i: number, group: Item[], placeOfEarlier: ReadonlyMap<string, number>): { place: string; lines: Inert[]; facts: { body: Inert; short: Inert; why: string; place: string; decisive: Item } } {
+/**
+ * The facts of one group of findings a card and a list entry print: what is involved, where it goes and how, and the
+ * place. Only these are read since R19-F; the two list lines this
+ * function also made (with the place's reason) were printed nowhere, and are gone: report.md's entries carry no reason by
+ * design (R19-F), the finding's card and page carry it whole.
+ */
+function fixFactsOf(m: ReportModel, group: Item[]): { body: Inert; short: Inert; why: string; place: string; decisive: Item } {
   const it0 = group[0] as Item;
   const rule = str(it0.candidate?.rule_id);
   /* Where a finding of the group was raised, the line speaks of the place the raise rests on: its
@@ -4884,7 +5486,7 @@ function fixLines(m: ReportModel, i: number, group: Item[], placeOfEarlier: Read
    * whose they are, from the block; the place rows' six words keep deciding the transport raise as before. */
   const o = it0.order;
   const answers = orderAnswersOf(m.a.profile ?? null);
-  const blockData = !!o && o.hasBlock && !o.heaviest.includes("data");
+  const blockData = !!o && o.hasBlock && !o.heaviest.includes("data") && o.data.length > 0;
   const peopleW = o && blockData ? standingPeopleWords(o, answers) : "";
   const dp =
     o && blockData
@@ -4894,7 +5496,7 @@ function fixLines(m: ReportModel, i: number, group: Item[], placeOfEarlier: Read
   if (rule === CREDENTIAL_RULE_ID) {
     const names = [...new Set(held.map((r) => str(r.item)).filter(Boolean))];
     facts.push(WORDS.credentialWhere(inertJoin(names.map((n) => md`${inSpan(code(n))}`), ours(", ")) || WORDS.aCredential));
-  } else if (FLOW_RULES.has(rule)) {
+  } else if (FLOW_RULES.has(rule) && !recipientNotOutside(rule, o)) {
     const source = it0.candidate ? programItemSourceOf(it0.candidate as unknown as Candidate) : null;
     const to = held.map((r) => recipientOf(rule, source, r)).filter((x): x is string => !!x);
     // FLOW_RULES' words for a rule that is not an outside recipient describe the construct ("a secret in a URL query built
@@ -4906,50 +5508,12 @@ function fixLines(m: ReportModel, i: number, group: Item[], placeOfEarlier: Read
   // The transport's words follow what its place establishes (`Item.transport`); a place that is no transport has none.
   const tw = (raised?.raise?.plaintext ? raised : group.find((it) => it.transport))?.transport;
   const how = tw ? WORDS.transport(markdownText(tw.over), markdownText(tw.reads)) : ours("");
-  const raisedFrom = r0?.rule_severity;
-  const raisedWords = !r0
-    ? ours("")
-    : r0.basis === "standing"
-      ? md` ${markdownProse(r0.because)}`
-      : r0.basis === "flow" && r0.flow
-        ? WORDS.raisedByFlow(markdownText(r0.rule_severity), m.plainOf(r0.flow.rule_id))
-        : WORDS.raisedFrom(markdownText(r0.rule_severity));
-  // How many of the group's findings need judgement, where the group holds more than one.
-  const nCounsel = group.filter((it) => it.label === "counsel").length;
-  const counsel = nCounsel > 0 ? md` (${WORDS.counselOf(nCounsel, group.length)})` : ours("");
   const body = inertTrim(md`${inertJoin(facts, ours(", "))}${how}`);
-  // The item line leads with the review's effect where its block gave one, and names the rule after it.
-  const effect = o?.hasBlock ? said(str(obj(it0.verdict.standing)?.effect), 170) : ours("");
-  const count = md`${group.length > 1 ? md` (${group.length})` : ours("")}${counsel}`;
-  const head = effect
-    ? md`${WORDS.fixEffect(i, effect, count, m.plainOf(rule))}${raisedFrom ? raisedWords : ours("")}`
-    : md`${i}. **${m.plainOf(rule)}**${count}${body ? md`: ${body}` : ours("")}.${raisedFrom ? raisedWords : ours("")}`;
-  const places = placesOfItems(m, group);
-  const shownRow = callRows[0] ?? m.heldOf(it0)[0];
-  // The second line: the block's data, people, how it runs and the duty's tier
-  // where they stood; for an item of group 1-3 the words that say why it is not counted as to fix; what was not established.
-  /* A block's item takes the block's words whatever part did not
-   * stand (W13 says which; they no longer print how it runs as a fact). Before, an item whose `runs` did not stand fell
-   * back to the place row's reason, the seat's own prose: the second smoke test printed "...and I found no deploymen…".
-   * Where a place row's reason is printed (an item with no block), it is the review's, said as such, and cut only
-   * between words (`oneLine`). */
-  const rowWhy = said(str(shownRow?.why), 170);
-  const why = rule === CREDENTIAL_RULE_ID && !(o && blockData) ? ours("") : o?.hasBlock ? standingWhyOf(m, it0) : rowWhy ? WORDS.reviewSaidOfPlace(rowWhy) : ours("");
+  // (R4) The reason is the shown place's own (`rowAtShownPlace`).
+  const shownRow = callRows[0] ?? rowAtShownPlace(m, it0);
   const place = raised && r0 && r0.basis !== "standing" ? `${r0.file}:${r0.line}` : placeOf(m, it0);
-  const sameAs = placeOfEarlier.get(place);
-  // The line a raise rests on, shown on purpose, says what it is
-  // where it is not the line that names the finding on every other screen.
-  const own = placeOf(m, raised ?? it0);
-  const link = md`[${inSpan(code(place))}](${linkTarget(m.files?.byId.get(str((raised ?? it0).verdict.finding_id))?.file ?? "report.md")})${place !== own ? WORDS.raiseLineIs(code(own)) : ours("")}`;
-  const more = places > 1 ? md` ${WORDS.morePlaces(places - 1)}` : ours("");
-  /* A group that opens at the place an earlier group of the list already showed is that same
-   * sending seen by another check; it is one line, marked with the number it shares the place with, and the place's own
-   * line is not written twice. */
   const sentence = (t: Inert): Inert => (t ? md`${inertCapital(t)}.` : ours(""));
-  const cardFacts = { body: sentence(body), short: sentence(inertTrim(inertJoin(facts, ours(", ")))), why: str(shownRow?.why), place, decisive: raised ?? it0 };
-  return sameAs === undefined
-    ? { place, facts: cardFacts, lines: [head, md`   ${link}${more}${why ? md` — ${why}` : ours("")}`] }
-    : { place, facts: cardFacts, lines: [md`${head}${WORDS.fixSamePlace(sameAs, link, more)}${why ? md` — ${why}` : ours("")}`] };
+  return { body: sentence(body), short: sentence(inertTrim(inertJoin(facts, ours(", ")))), why: str(shownRow?.why), place, decisive: raised ?? it0 };
 }
 
 /** `report.md`: the first screen, then the work list by area, then the coverage sentence and the disclaimer. */
@@ -5002,6 +5566,12 @@ function waitQuestionOf(it: Item): string {
   return settles.startsWith("question:") ? settles.slice("question:".length) : "";
 }
 /** NV5-NV7 and the answered "met": why a `recorded` finding records processing and is not counted. */
+/** Why a recorded finding is recorded, in the order `recordedWhyOf` gives its line. */
+function recordedReasonOf(it: Item): "met_or_exempt" | "answer" | "inventory" {
+  const status = str(obj(obj(it.verdict.standing)?.status)?.value);
+  if (status === "duty_met" || status === "exempt") return "met_or_exempt";
+  return waitQuestionOf(it) ? "answer" : "inventory";
+}
 function recordedWhyOf(m: ReportModel, it: Item): Inert {
   const st = obj(it.verdict.standing) as StandingRecord | null;
   const status = str(obj(st?.status)?.value);
@@ -5016,7 +5586,7 @@ function recordedWhyOf(m: ReportModel, it: Item): Inert {
   if (q) {
     const t = questionTextOf(q);
     const v = valueAt(m.a.profile ?? null, q);
-    return WORDS.answeredMetNV(markdownText(t.header), markdownText(t.labelOf(v) ?? String(v)));
+    return WORDS.answeredMetNV(ownWords(t.header), markdownText(t.labelOf(v) ?? String(v)));
   }
   return WORDS.inventoryNV;
 }
@@ -5036,26 +5606,31 @@ function notShippedWhyOf(m: ReportModel, it: Item): { reason: string; words: Ine
   return { reason, words: (WORDS.notShippedNV[reason] as (x: Spanned) => Inert)(code(line)) };
 }
 /** One question slot's line (NV3, NV4, NV12), with `lead` "3." in Fix first or "-" in laws.md's Questions open. */
-function slotLines(m: ReportModel, q: QuestionSlot, lead: Inert, rules: Inert): Inert[] {
+// `inLaws`: laws.md prints the command once, at the end of its questions.
+function slotLines(m: ReportModel, q: QuestionSlot, lead: Inert, rules: Inert, inLaws = false): Inert[] {
   const levels = WORDS.levelsWords(q.levels);
   const rule = m.plainOf(q.rules[0] ?? "");
   const first = m.itemById.get(q.findingIds[0] ?? "");
   if (q.kind === "fact") return [WORDS.factSlotNV(lead, markdownText(q.fact?.words ?? q.text), markdownText(q.fact?.cite ?? ""), q.findingIds.length, rule)];
-  const entrance = WORDS.questionEntrance(code(reviewDeclarationCommand()));
-  if (q.kind === "check_answer") return [WORDS.checkAnswerNV(lead, markdownText(q.header), markdownText(q.answer ?? ""), code(first ? placeOf(m, first) : WORDS.unrecordedLocation), q.findingIds.length, rule), entrance];
-  return [WORDS.questionSlotNV(lead, markdownText(q.text), q.findingIds.length, levels, rules), entrance];
+  const entrance = inLaws ? WORDS.lawsEntrance : WORDS.questionEntrance(code(reviewDeclarationCommand()));
+  if (q.kind === "check_answer") return [WORDS.checkAnswerNV(lead, ownWords(q.header), markdownText(q.answer ?? ""), code(first ? placeOf(m, first) : WORDS.unrecordedLocation), q.findingIds.length, rule), entrance];
+  return [WORDS.questionSlotNV(lead, ownWords(q.text), q.findingIds.length, levels, rules), entrance];
 }
-/** A rule's line in a section below the first screen: its level, plain name and count, then its findings' links. */
-function sectionRuleLines(m: ReportModel, its: readonly Item[], why?: (it: Item) => Inert): Inert[] {
+/**
+ * The lines of one list below the findings, by rule: each rule's level, plain name and count, then its findings' links. Every finding of a list of
+ * findings not counted as problems is linked (`notCountedOf`): the first screen says they are "listed below", so none is
+ * left as "and N more". `seen`: each finding is added where its link is
+ * written, so that `belowSectionsOf`'s proof counts what was printed, not what was selected.
+ */
+function sectionRuleLines(m: ReportModel, its: readonly Item[], why?: (it: Item) => Inert, seen?: Set<Item>): Inert[] {
   const out: Inert[] = [];
   const lines = [...groupBy(its, (it) => `${m.sevOf(it)} ${str(it.candidate?.rule_id)}`).values()].sort(
     (x, y) => (SEVERITY_RANK[m.sevOf(x[0] as Item)] ?? 3) - (SEVERITY_RANK[m.sevOf(y[0] as Item)] ?? 3) || y.length - x.length || (str(x[0]?.candidate?.rule_id) < str(y[0]?.candidate?.rule_id) ? -1 : 1),
   );
   for (const gl of lines) {
-    const links = gl.slice(0, WORK_LIST_LINKS).map((it) => detailLink(m, it));
-    if (gl.length > WORK_LIST_LINKS) links.push(WORDS.andMore(gl.length - WORK_LIST_LINKS));
+    const links = gl.map((it) => (seen?.add(it), detailLink(m, it)));
     out.push(WORDS.ruleLine(markdownText(m.sevOf(gl[0] as Item)), m.plainOf(str(gl[0]?.candidate?.rule_id)), gl.length, inertJoin(links, ours(", "))));
-    if (why) for (const it of gl.slice(0, WORK_LIST_LINKS)) out.push(md`  - ${detailLink(m, it)}: ${why(it)}`);
+    if (why) for (const it of gl) out.push(md`  - ${detailLink(m, it)}: ${why(it)}`);
   }
   return out;
 }
@@ -5150,12 +5725,12 @@ function settledAnswersOf(m: ReportModel): { header: string; answer: string; dat
     if (sb) {
       const field = str(sb.field);
       const t = questionTextOf(field);
-      return { key: `${field}\n${JSON.stringify(sb.answer)}\n${str(sb.recorded_at)}`, header: t.header, answer: t.labelOf(sb.answer) ?? String(sb.answer), date: str(sb.recorded_at).slice(0, 10), covers: t.covers ?? "", scope: true, p };
+      return { key: `${field}\n${JSON.stringify(sb.answer)}\n${str(sb.recorded_at)}`, header: t.header, answer: t.labelOf(sb.answer) ?? String(sb.answer), date: localDayOfInstant(str(sb.recorded_at)).slice(0, 10), covers: t.covers ?? "", scope: true, p };
     }
     const field = str(p.answered_from).replace(/^(?:ScanProfile|profile)\./, "");
     const regions = arr(p.declared_regions).map(str).join(", ");
     // A region settlement's date, where the confirmed record holds it.
-    const date = markdownText(str(p.answered_at).slice(0, 10));
+    const date = markdownText(localDayOfInstant(str(p.answered_at)).slice(0, 10));
     return { key: `${field}\n${regions}\n${date}`, header: questionTextOf(field).header, answer: regions, date, covers: "", scope: false, p };
   });
   // A region answer takes no exclusion sentence: the rule's own region is the one answered out.
@@ -5170,29 +5745,32 @@ function settledAnswersOf(m: ReportModel): { header: string; answer: string; dat
 }
 /**
  * THE SECTIONS BELOW THE FIRST SCREEN: To answer
- * (design 3.1), Recorded: duty met, exempt, or a record of processing, Not part of the shipped product, Set aside on your answers, For each organisation
- * that runs it. Each is written where it holds anything, and every finding in it links to its evidence in details.md.
+ * (design 3.1), Recorded: duty met, exempt, or a record of processing, Not part of the shipped product, Set aside on your
+ * answers, For each organisation that runs it, Counted with another finding (last since D5FIX2, F5). Each is written where
+ * it holds anything, and every finding in it links to its evidence in details.md.
  */
 function belowSectionsOf(m: ReportModel): Inert[] {
   const out: Inert[] = [];
-  const of = (d: Disposition): Item[] => m.shown.filter((it) => m.dispOf(it) === d);
-  const items = (q: QuestionSlot): Item[] => q.findingIds.map((id) => m.itemById.get(id)).filter((it): it is Item => !!it);
   // Design 3.1's "To answer": the findings waiting on an answer, by rule, with
   // the link to the one list of the questions in words (`laws.md`, the parent's ruling (a)); no question text here.
-  const slots = (m.a.questions ?? []).filter((q) => q.kind !== "order_moving");
-  const waiting = [...new Set(slots.flatMap((q) => items(q)))];
-  if (waiting.length > 0) out.push(WORDS.questionsHeading, ours(""), WORDS.toAnswerLead, ours(""), ...sectionRuleLines(m, waiting), ours(""));
   out.push(...decidedSectionLines(m));
+  // One list (`notCountedOf`), one
+  // section per disposition of it: the count the first screen states is that list's length, so nothing it counts is unlisted.
+  const notCounted = notCountedOf(m);
+  // Each finding is marked listed where its link is printed (`sectionRuleLines`'s
+  // `seen`). Before, it was marked when its section selected it, so the proof below could never fail.
+  const listedHere = new Set<Item>();
+  const of = (d: NotCounted): Item[] => notCounted.filter((it) => m.dispOf(it) === d);
   const recorded = of("recorded");
-  if (recorded.length > 0) out.push(WORDS.recordedHeading, ours(""), ...sectionRuleLines(m, recorded, (it) => recordedWhyOf(m, it)), ours(""));
+  if (recorded.length > 0) out.push(WORDS.recordedHeading, ours(""), ...sectionRuleLines(m, recorded, (it) => recordedWhyOf(m, it), listedHere), ours(""));
   const notShipped = of("not_shipped");
   if (notShipped.length > 0) {
     out.push(WORDS.notShippedHeading, ours(""));
     const order = ["ci", "development", "test", "documentation", "outside"];
     const why = new Map(notShipped.map((it) => [it, notShippedWhyOf(m, it)] as const));
-    for (const reason of order) {
+    for (const reason of [...order, ...new Set([...why.values()].map((w) => w.reason).filter((r) => !order.includes(r)))]) {
       const its = notShipped.filter((it) => why.get(it)?.reason === reason);
-      if (its.length > 0) out.push(...sectionRuleLines(m, its, (it) => why.get(it)?.words ?? ours("")));
+      if (its.length > 0) out.push(...sectionRuleLines(m, its, (it) => why.get(it)?.words ?? ours(""), listedHere));
     }
     out.push(ours(""));
   }
@@ -5202,7 +5780,7 @@ function belowSectionsOf(m: ReportModel): Inert[] {
     for (const g of settled) {
       const ids = new Set(g.rows.map((p) => str(p.finding_id)));
       const locs = a2l(m, ids);
-      out.push(md`- ${WORDS.setAsideNV(markdownText(g.header), markdownText(g.answer), g.date ? md` on ${markdownText(g.date)}` : ours(""), [...new Set(g.rows.map((p) => md`"${m.plainOf(str(p.rule_id))}"`))], locs.places, locs.files, code(reviewDeclarationCommand()), programText(g.covers), g.excluded)}`);
+      out.push(md`- ${WORDS.setAsideNV(ownWords(g.header), markdownText(g.answer), g.date ? md` on ${markdownText(g.date)}` : ours(""), [...new Set(g.rows.map((p) => md`"${m.plainOf(str(p.rule_id))}"`))], locs.places, locs.files, code(reviewDeclarationCommand()), ownWords(g.covers), g.excluded)}`);
     }
     out.push(ours(""));
   }
@@ -5211,12 +5789,112 @@ function belowSectionsOf(m: ReportModel): Inert[] {
     out.push(WORDS.forOperatorsHeading, ours(""));
     for (const [q, its] of groupBy(operators, (it) => waitQuestionOf(it))) {
       const t = questionTextOf(q);
-      out.push(md`- ${WORDS.forOperatorsNV(markdownText(t.header), its.length, markdownText(t.text))}`, ...sectionRuleLines(m, its).map((l) => md`  ${l}`));
+      out.push(md`- ${WORDS.forOperatorsNV(ownWords(t.header), its.length, ownWords(t.text))}`, ...sectionRuleLines(m, its, undefined, listedHere).map((l) => md`  ${l}`));
     }
     out.push(ours(""));
   }
+  // Last, so that the finding each is counted with, counted or not, is listed
+  // above it (its line says where).
+  const folded = of("folded");
+  if (folded.length > 0) out.push(WORDS.foldedHeading, ours(""), WORDS.foldedLead, ours(""), ...sectionRuleLines(m, folded, (it) => foldedWhyOf(m, it), listedHere), ours(""));
+  // The construction's own proof: a finding of the list that no section above took is a program error, never a silent gap.
+  const left = notCounted.filter((it) => !listedHere.has(it));
+  if (left.length > 0) throw new Error(`report.md would count ${left.length} finding(s) not counted as problems that no section lists (${left.map((it) => m.dispOf(it)).join(", ")})`);
   return out;
 }
+/**
+ * The findings waiting on the person, in two lists by what decides them (design 3.1's
+ * "To answer", split): a question about the product ("To answer"), and a fact the code cannot show, checked in the
+ * person's own records ("To check in your own documents"). Each finding an entry, as on the first screen.
+ */
+function waitingSectionsOf(m: ReportModel, legend: { due: boolean; done: boolean }): Inert[] {
+  const out: Inert[] = [];
+  const fm = m.files as FileModel;
+  const slots = (m.a.questions ?? []).filter((q) => q.kind !== "order_moving");
+  const inSlots = new Set(slots.flatMap((q) => q.findingIds));
+  const factOnly = (it: Item): boolean => factOnlyOf(m, it);
+  const answers = entryItemsOf(fm.listed.filter((l) => l.kind === "answer")).filter((x) => inSlots.has(idOf(x.it)) || m.dispOf(x.it) === "question" || m.dispOf(x.it) === "check_answer");
+  const section = (heading: Inert, lead: Inert, xs: { l: Listed; it: Item }[]): void => {
+    if (xs.length === 0) return;
+    out.push(heading, ours(""), lead, ours(""));
+    for (const { l, it } of xs) {
+      const p = placeParts(placeOf(m, it));
+      out.push(...entryLines(m, l, it, md`[${inSpan(code(placeOf(m, it)))}](${codeTarget(upOf(m.a, 0), rootOf(m.a), p.file, p.line)})`, entryPageOf(m, l, it)));
+      if (flagged(it)) legend.due = true;
+    }
+    out.push(ours(""));
+    if (legend.due && !legend.done) out.push(WORDS.legendWorstOf, ours(""));
+    if (legend.due) legend.done = true;
+  };
+  section(WORDS.questionsHeading, WORDS.toAnswerQuestionsLead, answers.filter((x) => !factOnly(x.it)));
+  section(WORDS.toCheckHeading, WORDS.toCheckLead, answers.filter((x) => factOnly(x.it)));
+  return out;
+}
+
+/** A finding that waits on a fact the code cannot show, and on no question. */
+function factOnlyOf(m: ReportModel, it: Item): boolean {
+  const slots = (m.a.questions ?? []).filter((q) => q.kind !== "order_moving" && q.findingIds.includes(idOf(it)));
+  return !(it.order?.question ?? waitQuestionOf(it)) && slots.some((q) => q.kind === "fact") && !slots.some((q) => q.kind !== "fact");
+}
+
+/**
+ * WHERE FINDINGS MEET: each line of code that more than one finding names (the line every
+ * screen names a finding by, `placeOf`), with the F-numbers that name it. A view added below the findings: every finding
+ * stays listed and counted, and nothing says one change closes them (the review's risk: it is not always true).
+ */
+function sharedLineLines(m: ReportModel): Inert[] {
+  const fm = m.files as FileModel;
+  const counted = fm.listed.filter((l) => l.kind !== "other" && l.n !== null);
+  const byPlace = new Map<string, Listed[]>();
+  for (const l of counted)
+    for (const it of l.items) {
+      const place = placeOf(m, it);
+      if (!place) continue;
+      const ls = byPlace.get(place) ?? [];
+      if (!ls.includes(l)) ls.push(l);
+      byPlace.set(place, ls);
+    }
+  const shared = [...byPlace].filter(([, ls]) => ls.length > 1);
+  if (shared.length === 0) return [];
+  const out: Inert[] = [WORDS.sharedHeading, ours(""), WORDS.sharedLead, ours("")];
+  for (const [place, ls] of shared) {
+    const p = placeParts(place);
+    out.push(WORDS.sharedLine(md`[${inSpan(code(place))}](${codeTarget(upOf(m.a, 0), rootOf(m.a), p.file, p.line)})`, ls.map((l) => md`[${fOf(l)}](${linkTarget(l.file)})`)));
+  }
+  out.push(ours(""));
+  return out;
+}
+
+/** The text's whole sentences from its start within `max` characters (at least the first), never cut with "…". */
+function sentencesWithin(text: string, max: number): string {
+  const parts = text.split(/(?<=[.!?])\s+(?=[A-Z0-9"'(])/);
+  let out = parts[0] ?? "";
+  for (const p of parts.slice(1)) {
+    if (out.length + 1 + p.length > max) break;
+    out = `${out} ${p}`;
+  }
+  return out;
+}
+/** The most findings judged not a problem the front page lists under their fold. */
+const JUDGED_SHOWN = 20;
+/**
+ * THE FINDINGS JUDGED NOT A PROBLEM, on the front page: their count and the warning
+ * outside the fold, and under it each one's title, line and the review's first sentence of why, with a link to its page
+ * (`ruled-out/`, which `ruledOutFiles` named before this file is made). The count's sentence on the first screen links here.
+ */
+function judgedLines(m: ReportModel): Inert[] {
+  const n = m.dismissed.length;
+  if (n === 0) return [];
+  const items = m.dismissed.slice(0, JUDGED_SHOWN).map((it) => {
+    const p = placeParts(placeOf(m, it));
+    const reason = sentencesWithin(oneLine(str(obj(it.verdict.refutation)?.reasoning) || str(it.verdict.reasoning), 4000), 300);
+    const page = m.files?.ruledOutOf?.get(idOf(it)) ?? "ruled-out.md";
+    return WORDS.judgedItem(m.plainOf(ruleIdOf(it)), md`[${inSpan(code(placeOf(m, it)))}](${codeTarget(upOf(m.a, 0), rootOf(m.a), p.file, p.line)})`, reason ? proseOf(reason) : WORDS.cardReasonBelow, linkTarget(page));
+  });
+  const more = n > JUDGED_SHOWN ? [ours(""), WORDS.judgedMore(n - JUDGED_SHOWN)] : [];
+  return [WORDS.judgedHeading, ours(""), WORDS.judgedLead(n), ours(""), ...foldOf(WORDS.judgedSummary(n), [...items, ...more]), ours("")];
+}
+
 /** The places and files of the candidates `ids` (their locations as the scan recorded them). */
 function a2l(m: ReportModel, ids: ReadonlySet<string>): { places: number; files: number } {
   const locs = [...ids].flatMap((id) => arr(m.candidateById.get(id)?.locations).map(obj).filter((l): l is Obj => !!l));
@@ -5227,7 +5905,9 @@ function buildMainReport(m: ReportModel): Inert {
   const { a } = m;
   if (!m.files) m.files = fileModelOf(m);
   const refs: Inert[] = [];
-  const out: Inert[] = firstScreenLines(m, refs);
+  const legend = { due: false, done: false };
+  const screen = { blockBelow: false };
+  const out: Inert[] = firstScreenLines(m, refs, legend, screen);
   out.push(ours(""));
   const isHigh = (it: Item) => m.sevOf(it) === "high";
   const level = (xs: Item[], l: string) => xs.filter((it) => m.sevOf(it) === l);
@@ -5263,7 +5943,7 @@ function buildMainReport(m: ReportModel): Inert {
     const counts = ["high", "medium", "low"].map((l) => [l, level(held, l).length] as const).filter(([, n]) => n > 0).map(([l, n]) => md`${n} ${markdownText(l)}`);
     const nu = un.reduce((n, u) => n + u.n, 0);
     if (nu > 0) counts.push(md`${nu} not checked`);
-    out.push(WORDS.areaHead(markdownText(area), inertJoin(counts, ours(", "))), ours(""));
+    out.push(WORDS.areaHead(markedText(area), inertJoin(counts, ours(", "))), ours(""));
     // One line per rule and level, high first: a rule raised at one place shows that place on its own line. Within a level, in the order key's order; findings waiting on one answer on a line of
     // their own, marked with the question.
     const lineKey = (g: Item[]): number[] => g.map((it) => (it.order ? orderKeyOf(it.order) : [0, 0, 0, 0])).sort(compareKeys)[0] ?? [0, 0, 0, 0];
@@ -5274,11 +5954,14 @@ function buildMainReport(m: ReportModel): Inert {
         y.length - x.length ||
         (str(x[0]?.candidate?.rule_id) < str(y[0]?.candidate?.rule_id) ? -1 : 1),
     );
-    for (const gl of lines) {
-      const links = gl.slice(0, WORK_LIST_LINKS).map((it) => md`${detailLink(m, it)}${it.label === "counsel" && !it.order?.question ? md` (${WORDS.counselMark})` : ours("")}`);
-      if (gl.length > WORK_LIST_LINKS) links.push(WORDS.andMore(gl.length - WORK_LIST_LINKS));
-      const q = gl[0]?.order?.question;
-      out.push(md`${WORDS.ruleLine(markdownText(m.sevOf(gl[0] as Item)), m.plainOf(str(gl[0]?.candidate?.rule_id)), gl.length, inertJoin(links, ours(", ")))}${q ? WORDS.waitsOn(markdownText(questionTextOf(q).header)) : ours("")}`);
+    /* One entry per finding, in the list's order (high first, then by fix order), each
+     * with its headline, level and title, code line and what to do; a group's findings each, "(1 of 2)". Before, one line
+     * per rule linked its places, so seven findings on two script tags read as "seven problems in cookies". */
+    const inArea = new Set(held);
+    for (const { l, it } of entryItemsOf((m.files as FileModel).listed).filter((x) => inArea.has(x.it))) {
+      const p = placeParts(placeOf(m, it));
+      out.push(...entryLines(m, l, it, md`[${inSpan(code(placeOf(m, it)))}](${codeTarget(upOf(m.a, 0), rootOf(m.a), p.file, p.line)})`, entryPageOf(m, l, it)));
+      if (flagged(it)) legend.due = true;
     }
     for (const u of un)
       out.push(
@@ -5289,16 +5972,22 @@ function buildMainReport(m: ReportModel): Inert {
             : WORDS.areaPartly(m.plainOf(u.rule), u.n, linkTarget(u.anchor)),
       );
     out.push(ours(""));
+    if (legend.due && !legend.done) out.push(WORDS.legendWorstOf, ours(""));
+    if (legend.due) legend.done = true;
   }
 
+  out.push(...waitingSectionsOf(m, legend));
+  out.push(...sharedLineLines(m));
+  // The Not checked block, below the findings, unless it stays on top (`uncheckedOnTop`).
+  if (!uncheckedOnTop(m) || screen.blockBelow) out.push(...uncheckedBlockLines(m, refs), ours(""));
+  out.push(...judgedLines(m));
   out.push(...belowSectionsOf(m));
 
-  /* The closing coverage sentence, and the disclaimer. */
+  /* The closing coverage sentences (in "About this report"), and the disclaimer. */
   const withCandidates = new Set(a.candidates.map((c) => str(c.rule_id))).size;
   const evaluatedSilent = a.silent.filter((r) => str(r.state) !== "not-evaluated");
   const searched = evaluatedSilent.filter((r) => a.silences.has(str(r.rule_id))).length;
-  out.push(WORDS.coverage(withCandidates + evaluatedSilent.length, withCandidates, evaluatedSilent.length, searched, a.silent.length - evaluatedSilent.length), ours(""));
-  out.push(...identityLines(m));
+  out.push(...identityLines(m, WORDS.coverageSentence(withCandidates + evaluatedSilent.length, withCandidates, evaluatedSilent.length, searched, a.silent.length - evaluatedSilent.length)));
   out.push(ours("---"), ours(""), md`*${WORDS.disclaimer}*`, ours(""));
   // The code places' reference definitions close the file (design 3.1.1 rule 2).
   if (refs.length > 0) out.push(...refs.map((t, i) => md`[${i + 1}]: ${t}`));
@@ -5309,26 +5998,41 @@ function buildMainReport(m: ReportModel): Inert {
  * The sentence that says where a finding is and why (NV4, NV5-NV9, NV12-NV14),
  * and, for a finding to fix by default, the part the review did not give (`missing`, besides the status W13 already names).
  */
+/**
+ * Why a finding is counted with another, naming that finding by its F-number. Before, the link's label was the other finding's line of code, which read as
+ * this finding's own place.
+ */
+function foldedWhyOf(m: ReportModel, it: Item): Inert {
+  const head = m.itemById.get(str(it.foldedUnder));
+  const at = it.foldedBecause?.at;
+  const why = it.foldedBecause?.key === "documentation" ? WORDS.foldedDocumentsNV : at ? WORDS.foldedTracedNV(code(`${at.file}:${at.line}`)) : ours("");
+  const l = head ? m.files?.byId.get(idOf(head)) : undefined;
+  /* A head with an F-number is a finding counted as a problem, listed above (the
+   * section of findings counted with another comes last); one without is not counted, named "the finding at" its line,
+   * with the section that lists it. Before, such a head was named by its line alone, which read as this finding's place. */
+  if (head && l && l.n !== null) return WORDS.foldedNV(md`[${fOf(l)}](${linkTarget(l.items.length > 1 ? `${l.file}#${anchorOfHeading(WORDS.groupMemberHeading(markdownText(l.short)))}` : l.file)})`, WORDS.foldedHeadAbove, why);
+  if (!head) return WORDS.foldedNV(md`${inSpan(code(str(it.foldedUnder)))}`, WORDS.foldedHeadAbove, why);
+  const d = m.dispOf(head);
+  const section = d === "recorded" ? WORDS.recordedHeading : d === "not_shipped" ? WORDS.notShippedHeading : d === "for_operators" ? WORDS.forOperatorsHeading : null;
+  return WORDS.foldedNV(WORDS.foldedHeadAt(detailLink(m, head)), section ? WORDS.foldedHeadUnder(inertSliceFrom(section, 3)) : WORDS.foldedHeadAbove, why);
+}
 function dispositionLinesOf(m: ReportModel, it: Item): Inert[] {
   const d = m.dispOf(it);
   const rule = m.plainOf(str(it.candidate?.rule_id));
-  if (d === "recorded") return [md`- ${recordedWhyOf(m, it)}`];
-  if (d === "not_shipped") return [md`- ${notShippedWhyOf(m, it).words}`];
-  if (d === "folded") {
-    const head = m.itemById.get(str(it.foldedUnder));
-    const at = it.foldedBecause?.at;
-    const why = it.foldedBecause?.key === "documentation" ? WORDS.foldedDocumentsNV : at ? WORDS.foldedTracedNV(code(`${at.file}:${at.line}`)) : ours("");
-    return [md`- ${WORDS.foldedNV(head ? detailLink(m, head) : md`${inSpan(code(str(it.foldedUnder)))}`, why)}`];
-  }
+  /* A head names the findings counted with it whatever its own place: before, a
+   * head recorded, not shipped or for operators returned before its members, so its page never named them. */
+  const members = m.shown.filter((x) => m.dispOf(x) === "folded" && str(x.foldedUnder) === str(it.verdict.finding_id));
+  const memberLines = members.length > 0 ? [md`- ${WORDS.foldHeadNV(sumOf(members, (x) => Math.max(m.heldOf(x).length, 1)), inertJoin(members.map((x) => detailLink(m, x)), ours(", ")))}`] : [];
+  if (d === "recorded") return [md`- ${recordedWhyOf(m, it)}`, ...memberLines];
+  if (d === "not_shipped") return [md`- ${notShippedWhyOf(m, it).words}`, ...memberLines];
+  if (d === "folded") return [md`- ${foldedWhyOf(m, it)}`];
   if (d === "for_operators") {
     const t = questionTextOf(waitQuestionOf(it));
-    return [md`- ${WORDS.forOperatorsNV(markdownText(t.header), 1, markdownText(t.text))}`];
+    return [md`- ${WORDS.forOperatorsNV(ownWords(t.header), 1, ownWords(t.text))}`, ...memberLines];
   }
   const slot = (m.a.questions ?? []).find((q) => q.kind !== "order_moving" && q.findingIds.includes(str(it.verdict.finding_id)));
   if ((d === "question" || d === "check_answer") && slot && slot.kind !== "waits_on_answer") return slotLines(m, slot, ours("-"), md`"${rule}"`).slice(0, 1);
-  const out: Inert[] = [];
-  const members = m.shown.filter((x) => m.dispOf(x) === "folded" && str(x.foldedUnder) === str(it.verdict.finding_id));
-  if (members.length > 0) out.push(md`- ${WORDS.foldHeadNV(sumOf(members, (x) => Math.max(m.heldOf(x).length, 1)), inertJoin(members.map((x) => detailLink(m, x)), ours(", ")))}`);
+  const out: Inert[] = [...memberLines];
   if (d !== "to_fix") return out;
   const seat = str(obj(obj(it.verdict.standing)?.ships)?.value);
   const pr = premiseOfFile(m, placeOf(m, it).replace(/:\d+$/, ""));
@@ -5424,7 +6128,7 @@ function secondLookLinesOf(m: ReportModel, it: Item): Inert[] {
 }
 
 /** One "not applicable" answer's own lines (overturned or dismissed): its reason and what is said beside it. */
-function dismissedLinesOf(m: ReportModel, it: Item): Inert[] {
+function dismissedLinesOf(m: ReportModel, it: Item, judged = false): Inert[] {
   const { a } = m;
   const lines: Inert[] = [];
   const ruleId = str(it.candidate?.rule_id);
@@ -5439,7 +6143,7 @@ function dismissedLinesOf(m: ReportModel, it: Item): Inert[] {
     // answered), as its own sub-item like the lines above it.
     if (it.lookOn !== undefined) for (const l of secondLookLinesOf(m, it)) lines.push(md`  ${l}`);
   } else {
-    lines.push(WORDS.dismissed(markdownText(ruleId), code(str(it.verdict.finding_id)), said(str(it.verdict.reasoning))));
+    lines.push((judged ? WORDS.dismissedJudged : WORDS.dismissed)(markdownText(ruleId), code(str(it.verdict.finding_id)), said(str(it.verdict.reasoning))));
     if (it.carriedFrom) lines.push(md`  ${WORDS.carried(earlierRun(a, it.carriedFrom))}`);
     // The second look at a high finding ruled out (agreed, or not answered), beside it.
     if (it.lookOn === "not_applicable") for (const l of secondLookLinesOf(m, it)) lines.push(md`  ${l}`);
@@ -5598,12 +6302,15 @@ function uncheckedKinds(m: ReportModel): UncheckedKind[] {
       gap.length,
       section(
         WORDS.gapFound,
-        gap.flatMap((r) => {
+        [ours(WORDS.gapLead), ours(""), ...gap.flatMap((r) => {
           const id = str(r.rule_id);
-          const lines = [WORDS.gapRow(markdownText(id), programText(m.titleOf.get(id) ?? ""))];
-          for (const e of arr(r.evidence).map(obj)) if (e) lines.push(md`  ${WORDS.evidence(code(str(e.file)), code(str(e.lines)), code(oneLine(str(e.quote), 300)))}`);
+          const cite = str(m.a.ruleBases?.get(id)?.[0]?.cite);
+          // The cite's name (`citationOf`), as the card prints it: never
+          // the rule's working notes after it ("... THE QUESTION THIS RULE PUTS IS WHETHER ...", the sample's not-checked.md).
+          const lines = [WORDS.gapRow(markdownText(id), m.plainOf(id), cite ? programText(shortCite(citationOf(cite))) : ours(""))];
+          for (const e of arr(r.evidence).map(obj)) if (e) lines.push(md`  ${WORDS.evidence(code(str(e.file)), code(str(e.lines)), markdownCode(oneLine(str(e.quote), 300)))}`);
           return lines;
-        }),
+        })],
       ),
     ),
   );
@@ -5616,40 +6323,42 @@ function uncheckedKinds(m: ReportModel): UncheckedKind[] {
         WORDS.apparentlyAbsent,
         absent.flatMap((r) => {
           const id = str(r.rule_id);
-          const lines = [WORDS.absentRow(markdownText(id), programText(m.titleOf.get(id) ?? ""))];
+          const lines = [WORDS.absentRow(markdownText(id), m.plainOf(id))];
           for (const s of arr(r.searched)) lines.push(WORDS.searchedRow(markdownCode(oneLine(str(s), 300))));
           const raw = a.silences.get(id)?.record;
           if (raw && str(raw.contradicts_profile)) lines.push(WORDS.contradictsProfile(said(str(raw.contradicts_profile))));
-          if (r.quote_check_outcome === "no_evidence") lines.push(md`  ${WORDS.unchecked(WORDS.uncheckedThisRow)}`);
+          if (r.quote_check_outcome === "no_evidence") lines.push(ours(WORDS.searchedUnquoted));
           return lines;
         }),
       ),
     ),
   );
   const unknown = byOutcome("not_checked");
-  const unknownKind = kind(
-    "not-checked-rules",
-    unknown.length,
-    section(
-      WORDS.unknownNotChecked,
-      unknown.flatMap((r) => {
+  /* The sentence every plain row repeated is said once above the list, and the list (one line a
+   * check) is folded with its count outside; a row with more to say (its matches set aside, the review's word, an answer
+   * that did not hold) keeps it. */
+  const unknownRows = unknown.flatMap((r) => {
         const id = str(r.rule_id);
         // No place to fill a template with; the row says so.
         const invalid = a.notJudged?.silences.get(id);
         const silentRow = a.silent.find((s) => str(s.rule_id) === id);
         const removed = silentRow ? removalsOf({ matches_removed_by_corroboration: silentRow.matches_removed_by_corroboration as number | undefined }) : 0;
-        const lines = [WORDS.unknownRow(markdownText(id), programText(m.titleOf.get(id) ?? ""), removed > 0 ? WORDS.noPlaceCorroborated(removed) : WORDS.noPlaceSilent, invalid ? ours("") : markdownText(str(r.note)))];
+        const note = invalid ? ours("") : markdownText(str(r.note));
+        const lines = [removed > 0 || note ? WORDS.unknownRow(markdownText(id), m.plainOf(id), removed > 0 ? WORDS.noPlaceCorroborated(removed) : WORDS.noPlaceSilent, note) : WORDS.unknownRowPlain(markdownText(id), m.plainOf(id))];
         if (invalid) lines.push(WORDS.silenceInvalidAnswer(markdownText(invalid.seat), code(invalid.kept)));
         const s = a.silences.get(id);
         if (s && r.outcome_before_quote_check !== undefined) lines.push(WORDS.silenceInvalidated(markdownText(str(r.outcome_before_quote_check)), said(firstNote(s))));
         return lines;
-      }),
-    ),
+      });
+  const unknownKind = kind(
+    "not-checked-rules",
+    unknown.length,
+    section(WORDS.unknownNotChecked, unknown.length > 0 ? [WORDS.unknownLead(unknown.length), ours(""), ...foldOf(WORDS.unknownFold(unknown.length), unknownRows)] : []),
   );
   // The silent rules nobody checked are said on the first screen even at zero (the asymmetry: a zero said).
   kinds.push({ ...unknownKind, screen: WORDS.uncheckedKind["not-checked-rules"](unknown.length) });
   const notEvaluated = byOutcome("not_evaluated");
-  kinds.push(kind("not-evaluated", notEvaluated.length, section(WORDS.notEvaluated, notEvaluated.map((r) => WORDS.notEvaluatedRow(markdownText(str(r.rule_id)), programText(m.titleOf.get(str(r.rule_id)) ?? ""), markdownText(str(r.note)) || WORDS.notEvaluatedWhyUnnamed)))));
+  kinds.push(kind("not-evaluated", notEvaluated.length, section(WORDS.notEvaluated, notEvaluated.map((r) => WORDS.notEvaluatedRow(markdownText(str(r.rule_id)), m.plainOf(str(r.rule_id)), markdownText(str(r.note)) || WORDS.notEvaluatedWhyUnnamed)))));
   const outside = byOutcome("out_of_jurisdiction");
   kinds.push(
     kind(
@@ -5657,7 +6366,11 @@ function uncheckedKinds(m: ReportModel): UncheckedKind[] {
       outside.length,
       section(
         WORDS.notApplicableByDeclaration,
-        outside.map((r) => WORDS.outOfJurisdictionRow(markdownText(str(r.rule_id)), programText(m.titleOf.get(str(r.rule_id)) ?? ""), markdownText(arr(pra?.declared_regions).map(str).join(", ")), markdownText(str(r.note)))),
+        outside.map((r) => {
+          // The places the rule's laws are of, in words (`REGION_NAMES`).
+          const places = [...new Set((m.a.ruleBases?.get(str(r.rule_id)) ?? []).map((b) => str(b.jurisdiction)).filter(Boolean))];
+          return WORDS.outOfJurisdictionRow(markdownText(str(r.rule_id)), m.plainOf(str(r.rule_id)), listWords(places.map((x) => programText(REGION_NAMES[x] ?? x))));
+        }),
       ),
     ),
   );
@@ -5675,7 +6388,15 @@ function uncheckedKinds(m: ReportModel): UncheckedKind[] {
     const num = (k: string) => Number(n[k] ?? 0) || 0;
     const scope = WORDS.notReadScope[str(l.id)];
     if (scope && num("files") > 0) counted.push(md`${markdownText(num("files").toLocaleString("en"))} ${scope}${typeof l.lift === "string" && l.lift ? WORDS.notReadScopeLift(code(l.lift)) : ours("")}`);
-    if (str(l.id) === "refused-by-rule" && num("files_in_directories") + num("files") + num("directories_not_enumerated") > 0) counted.push(WORDS.notReadMachine(num("files_in_directories") + num("files"), num("directories_not_enumerated")));
+    if (str(l.id) === "refused-by-rule") {
+      const d = foldersNotReadOf(f as unknown as Findings);
+      if (d) {
+        // The names as markdown, in `folderNamesOf`'s form: the first three ("a, b and c"); the words say how many more.
+        const shown = d.names.slice(0, 3).map((x) => markdownCode(valueText(x)));
+        const names = shown.length <= 1 ? inertJoin(shown, ours("")) : md`${inertJoin(shown.slice(0, -1), ours(", "))} and ${inertJoin(shown.slice(-1), ours(""))}`;
+        counted.push(WORDS.notReadMachine(d, names));
+      }
+    }
     if (str(l.id) === "not-readable-as-code") {
       // Counted by their own kinds below where findings.json names the files; said here only where it does not.
       if (num("refused_by_the_walker") > 0 && refused.length === 0) counted.push(WORDS.notReadBinary(num("refused_by_the_walker")));
@@ -5688,7 +6409,14 @@ function uncheckedKinds(m: ReportModel): UncheckedKind[] {
    * were not counted keeps its "+" on the first screen. */
   const scopeWords = new Set(Object.values(WORDS.notReadScope));
   const onScreen = counted.filter((c) => ![...scopeWords].some((w) => c.includes(` ${w}`)));
-  kinds.push({ ...kind("did-not-read", limits.length, section(WORDS.didNotRead, limits.map((o) => WORDS.limitRow(markdownText(str(o.sentence)), typeof o.lift === "string" ? code(o.lift) : null))), WORDS.uncheckedNotes(counted)), ...(onScreen.length > 0 ? { parts: onScreen } : {}) });
+  /* The refused-by-rule row from the one computation the first screen takes (read-scope.ts
+   * `refusedByRuleOf`), not the sentence a scan wrote into findings.json: a scan before 0.1.1 counted WolfBoy's own `.legal`
+   * among the directories ("2 directories holding 19+ files" beside a first screen naming only `.git`). */
+  const refusedRows = refusedByRuleOf(arr(f.excluded_by_walker).map((x) => obj(x) ?? {}));
+  // A document whose walker rows hold nothing of it (a planted one) keeps the sentence it carries.
+  const rowsHold = refusedRows.folders.length > 0 || refusedRows.lockFiles + refusedRows.testFiles > 0 || refusedRows.own !== null;
+  const sentenceOf = (o: Obj): string => (str(o.id) === "refused-by-rule" && rowsHold ? refusedByRuleSentence(refusedRows, WORDS.refusedByRuleWhat) : str(o.sentence));
+  kinds.push({ ...kind("did-not-read", limits.length, section(WORDS.didNotRead, notReadRowsOf(limits, sentenceOf)), WORDS.uncheckedNotes(counted)), ...(onScreen.length > 0 ? { parts: onScreen } : {}) });
   const filesNotRead = arr(f.files_not_read).map((r) => obj(r) ?? {});
   const wholeForTime = filesNotRead.filter((o) => str(o.reason) === "time-budget").length;
   const partForTime = partial.filter((o) => o.stopped_for_time !== undefined).length;
@@ -5774,12 +6502,12 @@ function uncheckedKinds(m: ReportModel): UncheckedKind[] {
     mm.set(expr, set);
   };
   for (const c of [...a.candidates, ...a.silent]) for (const e of arr(c.declared_inapplicable_preconditions).map(str)) note(answers, e, str(c.rule_id));
-  const ruleList = (ids: Set<string>): Inert => inertJoin([...ids].sort().map((id) => md`${markdownText(id)} (${programText(m.titleOf.get(id) ?? "")})`), ours("; "));
+  const ruleList = (ids: Set<string>): Inert => inertJoin([...ids].sort().map((id) => md`${markdownText(id)} (${m.plainOf(id)})`), ours("; "));
   // The parent's ruling (a): one item "Questions open" (design 4: the count, the
   // findings they would settle, how to answer, the link to the full list in words in laws.md); the rows of the fields the
   // rules read went to that list, so the questions are listed in one place.
   const open = openQuestionsOf(m);
-  kinds.push(kind("questions", open.count, section(WORDS.questionsUnanswered, open.count > 0 ? [open.item] : [])));
+  kinds.push(kind("questions", open.count, section(WORDS.questionsUnanswered, open.item !== "" ? [open.item] : [])));
   kinds.push(
     kind(
       "answers-not-taken",
@@ -5788,7 +6516,12 @@ function uncheckedKinds(m: ReportModel): UncheckedKind[] {
         WORDS.answersNotTaken,
         [...answers.keys()].sort().map((e) => {
           const hit = m.contradictedBy.get(e) ?? contradictionOf(e, a.candidates);
-          return hit ? WORDS.answerContradicted(code(e), markdownText(hit.rule), markdownText(hit.where)) : WORDS.answerNotContradicted(code(e), ruleList(answers.get(e) as Set<string>));
+          if (hit) return WORDS.answerContradicted(code(e), markdownText(hit.rule), markdownText(hit.where));
+          const field = preconditionField(e).replace(/^(?:ScanProfile|profile)\./, "");
+          const qt = questionTextOf(field);
+          if (qt.header === field) return WORDS.answerNotContradictedField(code(e), ruleList(answers.get(e) as Set<string>));
+          const label = qt.labelOf(valueAt(m.a.profile ?? null, field));
+          return WORDS.answerNotContradicted(WORDS.answerInWords(ownWords(qt.header), label ? ownWords(label) : ours("")), ruleList(answers.get(e) as Set<string>));
         }),
       ),
     ),
@@ -5871,7 +6604,7 @@ export function questionStatusOf(plan: Obj | null, expr: string, notTaken: Inert
   const st = new Set(rows.map((q) => str(q.status)));
   if (rows.length === 0) return WORDS.questionStatus.noPlan;
   if (st.has("asked")) return WORDS.questionStatus.asked;
-  if (st.has(NOT_ASKED_LATER)) return WORDS.questionStatus.later(code(reviewDeclarationCommand()));
+  if (st.has(NOT_ASKED_LATER)) return ours(WORDS.questionStatus.later);
   if (st.has("answered before")) return WORDS.questionStatus.before;
   return WORDS.questionStatus.none;
 }
@@ -5943,6 +6676,40 @@ export function carriedPastLines(a: { plan: Record<string, unknown> }): Inert[] 
 }
 
 /**
+ * "What this scan did not read", in words, from the scan's own counts (as the refused-by-rule row is,
+ * r16-r D4): the kinds of path that held nothing back are one line, with no rule file named; the run's rule counts say
+ * "checks" and name no field of findings.json. Any note that held something back, or that names an option to lift it,
+ * keeps the scanner's own sentence, verbatim.
+ */
+function notReadRowsOf(limits: readonly Obj[], sentenceOf: (o: Obj) => string): Inert[] {
+  const rows: Inert[] = [];
+  const nothing: string[] = [];
+  let at = -1;
+  for (const o of limits) {
+    const id = str(o.id);
+    const c = obj(o.counts) ?? {};
+    const num = (k: string): number => Number(c[k] ?? 0) || 0;
+    const named = WORDS.notReadNothingNames[id];
+    if (named && o.read !== true && num("files") === 0 && num("directories") === 0 && num("directories_read_despite_name") === 0) {
+      if (at < 0) at = rows.length;
+      nothing.push(named);
+      continue;
+    }
+    if (id === "rules-not-run" && o.lift === null && num("rules_run") > 0 && num("rules_run") === num("rules_in_bundle")) {
+      rows.push(WORDS.notReadRulesRun(num("rules_run"), num("unanswered_preconditions"), num("declared_inapplicable")));
+      continue;
+    }
+    if (id === "rules-silent" && o.lift === null && c.rules_silent !== undefined && c.rules_run !== undefined) {
+      rows.push(WORDS.notReadRulesSilent(num("rules_silent"), num("rules_run")));
+      continue;
+    }
+    rows.push(WORDS.limitRow(markdownText(sentenceOf(o)), typeof o.lift === "string" ? code(o.lift) : null));
+  }
+  if (nothing.length > 0) rows.splice(at, 0, WORDS.notReadNothing(nothing.map((x) => programText(x))));
+  return rows;
+}
+
+/**
  * THE ONE COUNT of the rules that found nothing (rf11-b1a-2026-11-06.md 12.7):
  * `n` is the scan's own count (its coverage limit "rules-silent") where the scan gave one, never fewer than the rules
  * not-checked.md lists under "Rules that found nothing" (`listed`: the three kinds under that heading, each a rule that
@@ -5961,14 +6728,24 @@ function buildNotChecked(m: ReportModel): Inert {
   const out: Inert[] = [WORDS.notCheckedTitle(markdownText(m.project)), ours(""), WORDS.backToReport(linkTarget(m.a.reportName ?? "report.md")), ours(""), WORDS.notCheckedIntro, ours("")];
   out.push(...runWideLines(m));
   out.push(WORDS.notEstablished, ours(""));
+  /* A section that holds nothing is named in one line after the last, not printed as a heading
+   * over "No entry in this run." (five of them in the sample). */
+  const empty: Inert[] = [];
   for (const k of uncheckedKinds(m)) {
     // The first screen's "Rules that found nothing" links here: one plain heading over the three sections it counts.
     if (k.key === "gap") {
       const rn = rulesNothingOf(m);
       out.push(WORDS.rulesNothingHeading, ours(""), WORDS.rulesNothingLead(rn.n, rn.listed), ours(""));
     }
+    const [head, , only] = k.lines;
+    // "What this scan did not read" keeps its heading: report.md's first screen links to it.
+    if (k.n === 0 && k.key !== "did-not-read" && head !== undefined && only === WORDS.emptySection && k.lines.length <= 4) {
+      empty.push(programText(head.replace(/^#+\s*/, "").replace(/\*/g, "")));
+      continue;
+    }
     out.push(...k.lines);
   }
+  if (empty.length > 0) out.push(WORDS.nothingInRun(inertJoin(empty, ours("; "))), ours(""));
   out.push(ours("---"), ours(""), md`*${WORDS.disclaimer}*`, ours(""));
   return inertJoin(out, ours("\n"));
 }
@@ -5980,22 +6757,50 @@ function buildNotChecked(m: ReportModel): Inert {
  * and the product question that changes only the order, W7), and the fields the rules read that no answer gave, each with
  * the rules it holds open. `not-checked.md`'s item and `laws.md`'s list are both written from it.
  */
-function openQuestionsOf(m: ReportModel): { count: number; item: Inert; slots: QuestionSlot[]; fields: Map<string, Set<string>> } {
+function openQuestionsOf(m: ReportModel): { count: number; item: Inert; slots: QuestionSlot[]; fields: Map<string, Set<string>>; more: string[]; planMore: Obj[] } {
   const rank = (q: QuestionSlot): number => (q.kind === "check_answer" ? 0 : 1);
   const slots = [...(m.a.questions ?? [])].sort((x, y) => compareKeys(x.key, y.key) || rank(x) - rank(y));
   const fields = new Map<string, Set<string>>();
   for (const c of [...m.a.candidates, ...m.a.silent]) {
     for (const e of arr(c.unanswered_preconditions).map(str)) fields.set(e, (fields.get(e) ?? new Set<string>()).add(str(c.rule_id)));
   }
-  const settling = slots.filter((q) => q.kind !== "order_moving");
+  // A fact named in words is not a question; its slot is counted apart.
+  const bare = bareQuestionId;
+  const settling = slots.filter((q) => q.kind === "waits_on_answer" || q.kind === "check_answer");
   const settled = new Set(settling.flatMap((q) => q.findingIds)).size;
-  const order = slots.length - settling.length;
-  const bare = (field: string): string => field.replace(/^(?:ScanProfile|profile)\./, "");
-  const asked = new Set(slots.map((q) => bare(q.question)));
+  const facts = slots.filter((q) => q.kind === "fact");
+  /* ONE COUNT WITH ONE MEANING: a question about the product that "review my answers"
+   * asks and no answer at hand gives. Each question once, by its id: the questions findings wait on (and the answers to
+   * check), the order's question where it settles no finding, the questions the rules read, and the questions the scan's
+   * declaration plan did not ask (the start screen counted these and said the report lists them). A fact in words is not
+   * one, and neither is a law's own condition in laws.md, which "review my answers" does not record. */
+  // The same set the counts every screen takes are made from.
+  const settlingIds = settlingQuestionIdsOf(slots);
+  const order = new Set(slots.filter((q) => q.kind === "order_moving" && !settlingIds.has(bare(q.question))).map((q) => bare(q.question))).size;
+  const asked = new Set(slots.filter((q) => q.kind !== "fact").map((q) => bare(q.question)));
   const more = [...fields.keys()].filter((e) => !asked.has(bare(preconditionField(e))));
   const held = new Set(more.flatMap((e) => [...(fields.get(e) as Set<string>)])).size;
-  const count = slots.length + more.length;
-  return { count, item: count > 0 ? WORDS.questionsOpenItem(settling.length, settled, order, more.length, held, code(reviewDeclarationCommand())) : ours(""), slots, fields };
+  const known = new Set([...asked, ...more.map((e) => bare(preconditionField(e)))]);
+  const planMore: Obj[] = [];
+  for (const q of arr(m.a.declarationPlan?.questions).map(obj)) {
+    if (!q || (str(q.status) !== NOT_ASKED_LATER && str(q.status) !== NOT_ASKED_NONE)) continue;
+    const id = str(q.id) || str(q.field);
+    // A question of one region is its own question; any other is the field's.
+    const key = typeof q.code === "string" && q.code !== "" ? id : bare(str(q.field));
+    if (key === "" || known.has(key)) continue;
+    known.add(key);
+    planMore.push(q);
+  }
+  const count = settlingIds.size + order + more.length + planMore.length;
+  const factFindings = new Set(facts.flatMap((q) => q.findingIds)).size;
+  return {
+    count,
+    item: count + facts.length > 0 ? WORDS.questionsOpenItem(count, settlingIds.size, settled, order, more.length, held, planMore.length, facts.length, factFindings, code(reviewDeclarationCommand())) : ours(""),
+    slots,
+    fields,
+    more,
+    planMore,
+  };
 }
 
 /**
@@ -6006,22 +6811,71 @@ function openQuestionsOf(m: ReportModel): { count: number; item: Inert; slots: Q
  * open" listed before).
  */
 function questionsOpenLines(m: ReportModel): Inert[] {
-  const { slots, fields } = openQuestionsOf(m);
-  if (slots.length === 0 && fields.size === 0) return [];
+  const { slots, fields, more, planMore } = openQuestionsOf(m);
+  if (slots.length === 0 && fields.size === 0 && planMore.length === 0) return [];
   const out: Inert[] = [ours(""), WORDS.questionsOpenHeading, ours("")];
-  for (const q of slots) {
-    const rules = listWords(q.rules.slice(0, 3).map((r) => md`"${m.plainOf(r)}"`).concat(q.rules.length > 3 ? [WORDS.andMore(q.rules.length - 3)] : []));
-    const lines = q.kind === "order_moving" ? [WORDS.questionMovesOpen(markdownText(q.text), q.findingIds.length), WORDS.questionEntrance(code(reviewDeclarationCommand()))] : slotLines(m, q, ours("-"), rules);
-    const [head, ...rest] = lines;
-    if (head !== undefined) out.push(head, ...rest.map((l) => md`  ${inertTrim(l)}`));
+  const ruleList = (ids: Set<string>): Inert => inertJoin([...ids].sort().map((id) => md`${markdownText(id)} (${m.plainOf(id)})`), ours("; "));
+  /* ONE ROW FOR EACH QUESTION, as the count counts it (`openQuestionsOf`): the slots of one
+   * question (an answer two rules check, the minors question a finding waits on and the order turns on) and the rules it
+   * holds open are said on that question's row; the fields' list holds only the questions no slot asks. A fact is its own. */
+  const bare = bareQuestionId;
+  const keyOf = (q: QuestionSlot): string => (q.kind === "fact" ? q.question : bare(q.question));
+  const rank = (q: QuestionSlot): number => (q.kind === "waits_on_answer" ? 0 : q.kind === "check_answer" ? 1 : q.kind === "order_moving" ? 2 : 3);
+  const groups = [...groupBy(slots, keyOf).values()];
+  const heldBy = new Map<string, Set<string>>();
+  for (const [e, ids] of fields) {
+    const k = bare(preconditionField(e));
+    heldBy.set(k, new Set([...(heldBy.get(k) ?? []), ...ids]));
   }
-  if (fields.size > 0) {
-    const ruleList = (ids: Set<string>): Inert => inertJoin([...ids].sort().map((id) => md`${markdownText(id)} (${programText(m.titleOf.get(id) ?? "")})`), ours("; "));
+  for (const group of groups) {
+    const [q, ...others] = [...group].sort((x, y) => rank(x) - rank(y));
+    if (!q) continue;
+    const rules = listWords(q.rules.slice(0, 3).map((r) => md`"${m.plainOf(r)}"`).concat(q.rules.length > 3 ? [WORDS.andMore(q.rules.length - 3)] : []));
+    const lines = q.kind === "order_moving" ? [WORDS.questionMovesOpen(ownWords(q.text), q.findingIds.length), WORDS.lawsEntrance] : slotLines(m, q, ours("-"), rules, true);
+    const [head, ...rest] = lines;
+    if (head === undefined) continue;
+    const also: Inert[] = [];
+    for (const o of others) {
+      const first = m.itemById.get(o.findingIds[0] ?? "");
+      if (o.kind === "check_answer") also.push(WORDS.questionAlsoChecks(o.findingIds.length, m.plainOf(o.rules[0] ?? ""), code(first ? placeOf(m, first) : WORDS.unrecordedLocation)));
+      // Which findings the answer moves, by the numbers the report gives them.
+      else if (o.kind === "order_moving") also.push(WORDS.questionAlsoMoves(o.findingIds.length, findingNumbersOf(m, o.findingIds)));
+    }
+    const held = q.kind === "fact" ? undefined : heldBy.get(keyOf(q));
+    if (held && held.size > 0) also.push(WORDS.questionAlsoHolds(held.size, ruleList(held)));
+    out.push(head, ...also.map((l) => md`  ${l}`), ...rest.map((l) => md`  ${inertTrim(l)}`));
+  }
+  if (more.length > 0) {
     if (slots.length > 0) out.push(ours(""));
     out.push(WORDS.questionsRulesLead, ours(""));
-    for (const e of [...fields.keys()].sort()) out.push(WORDS.questionRow(code(e), ruleList(fields.get(e) as Set<string>), questionStatusOf(m.a.declarationPlan ?? null, e, textOrNull(m.a.declarationPlanNotTaken))));
+    // Each in words, as not-checked.md's "Every question in words" promises, its id beside.
+    for (const e of [...more].sort()) {
+      const field = preconditionField(e);
+      const t = questionTextOf(field);
+      const known = t.text !== field;
+      const held = fields.get(e) as Set<string>;
+      out.push(WORDS.questionRow(code(e), ruleList(held), questionStatusOf(m.a.declarationPlan ?? null, e, textOrNull(m.a.declarationPlanNotTaken)), known ? ownWords(t.header) : ours(""), known ? ownWords(t.text) : ours(""), held.size));
+    }
   }
+  // The questions the plan did not ask that no rule here reads, in the plan's words.
+  if (planMore.length > 0) {
+    if (slots.length > 0 || more.length > 0) out.push(ours(""));
+    out.push(WORDS.questionsPlanLead, ours(""));
+    for (const q of planMore) {
+      const status = str(q.status) === NOT_ASKED_LATER ? ours(WORDS.questionStatus.later) : WORDS.questionStatus.none;
+      out.push(WORDS.planQuestionRow(ownWords(str(q.header) || str(q.id)), ownWords(str(q.question)), status));
+    }
+  }
+  out.push(ours(""), WORDS.lawsCommandOnce(code(reviewDeclarationCommand())));
   return out;
+}
+
+/** Findings by the numbers the report gives them ("F1, F4 and F7"). */
+function findingNumbersOf(m: ReportModel, ids: readonly string[]): Inert {
+  const listed = m.files?.listed ?? [];
+  const found = ids.map((id) => listed.find((l) => l.items.some((it) => idOf(it) === id)));
+  // Two findings on one page share its number; a finding no page lists leaves the line without numbers, never short.
+  return found.every((l) => !!l) ? listWords([...new Set(found as Listed[])].sort((x, y) => (x.n ?? Infinity) - (y.n ?? Infinity)).map((l) => fOf(l))) : ours("");
 }
 
 /**
@@ -6064,7 +6918,8 @@ export function lawQuestionsOf(x: Obj): Inert[] {
   const required = known.filter((id) => bears(id) && str(limb(id).closes_gate_when) !== "true");
   const exempt = known.filter((id) => bears(id) && str(limb(id).closes_gate_when) === "true");
   const detail = known.filter((id) => !bears(id));
-  const asked = (id: string): Inert => WORDS.lawQuestion(markdownText(oneLine(str(limb(id).question), 400) || id), code(id), suggested.get(id));
+  // In full: the question is the law's own definition, folded in laws.md; a cut changed its meaning.
+  const asked = (id: string): Inert => WORDS.lawQuestion(markdownText(oneLine(str(limb(id).question), 4000) || id), code(id), suggested.get(id));
   if (required.length > 0) out.push(WORDS.lawRequiredHead(required.length), ...required.map(asked));
   if (exempt.length > 0) out.push(WORDS.lawExemptHead(exempt.length), ...exempt.map(asked));
   if (detail.length > 0) out.push(WORDS.lawDetail(detail.length, detail.map((id) => code(id))));
@@ -6128,7 +6983,208 @@ function decidingOpenOf(x: Obj): string[] {
   return conditions.length > 0 ? conditions : deciding;
 }
 
-/** `laws.md`: the applicability block (step 3a), as the report opened with it in earlier versions. */
+/**
+ * THE LAWS THE FINDINGS CITE, AND WHY EACH APPLIES HERE: laws.md's first section answers "which laws
+ * apply to me". Each finding that stands names its provisions (`legal_basis_refs`); each provision's law is the penalty
+ * table's regime (the order's own resolver, `tierOf`), and whether it applies is the region answer the scan read for that
+ * law's place (region-reach.ts `regimePlace`), by the same membership rule the provisions list uses (`basisAnsweredOut`,
+ * `covers`). Guidance and court decisions (no regime) are not laws and are not listed. Exported for report.md's line.
+ */
+export interface LawCited {
+  name: string;
+  place: string;
+  status: "open" | "yes" | "no" | "noOpen" | "none";
+  findings: number;
+}
+export function lawsCitedOf(m: ReportModel): LawCited[] {
+  const pra = obj(m.a.findings.per_rule_applicability);
+  const declared = pra?.declared_regions;
+  const yes = Array.isArray(declared) && !declared.map(str).includes("unknown") ? declared.map(str) : null;
+  const regionsOut = Array.isArray(pra?.regions_not_offered) ? arr(pra?.regions_not_offered).map(str) : undefined;
+  const byName = new Map<string, { name: string; place: string; statuses: Set<LawCited["status"]>; ids: Set<string> }>();
+  for (const it of m.shown) {
+    const oi = it.orderInput;
+    if (!oi?.tierOf) continue;
+    arr(it.candidate?.legal_basis_refs).map(str).forEach((ref, n) => {
+      if (!ref) return;
+      const j = oi.ruleBases?.[n]?.jurisdiction;
+      let t: { regime: string; regimeId: string };
+      try {
+        t = oi.tierOf?.(ref, j) ?? { regime: "", regimeId: "" };
+      } catch {
+        return;
+      }
+      if (!t.regime || !t.regimeId) return;
+      const place = regimePlace(t.regimeId) ?? "";
+      const status: LawCited["status"] = !place
+        ? "none"
+        : basisAnsweredOut(oi, j, ref)
+          ? "no"
+          : jurisdictionAnsweredOut(place, Array.isArray(declared) ? declared.map(str) : null, regionsOut) && !regimeCarried(t.regimeId, Array.isArray(regionsOut) ? "place-question" : "closed-list")
+            ? "noOpen"
+            : yes !== null && yes.some((d) => covers(d, place))
+              ? "yes"
+              : "open";
+      const e = byName.get(t.regime) ?? { name: t.regime, place, statuses: new Set(), ids: new Set() };
+      e.statuses.add(status);
+      e.ids.add(idOf(it));
+      byName.set(t.regime, e);
+    });
+  }
+  // A law is left out only where every provision of it was; where any applied, the law is said as applied.
+  const rank: LawCited["status"][] = ["open", "noOpen", "yes", "none", "no"];
+  return [...byName.values()]
+    .map((e) => ({ name: e.name, place: e.place, status: rank.find((r) => e.statuses.has(r)) ?? "none", findings: e.ids.size }))
+    .sort((x, y) => Number(x.status === "no") - Number(y.status === "no") || y.findings - x.findings || x.name.localeCompare(y.name));
+}
+
+/** The places whose laws were applied because no answer covered them, in words ("the EU, the US and Japan"); "" for none. */
+export function lawsOpenPlacesOf(laws: readonly LawCited[]): { words: string; n: number; all: boolean } {
+  const open = [...new Set(laws.filter((l) => l.status === "open" && l.place).map((l) => l.place))].sort();
+  const words = listWords(open.map((p) => REGION_NAMES[p] ?? p));
+  const answered = laws.some((l) => l.status === "yes" || l.status === "no" || l.status === "noOpen");
+  return { words, n: open.length, all: !answered };
+}
+
+/**
+ * WHAT WAS DONE WITH THE LAWS THE FINDINGS CITE, as the person's answers support it: one
+ * source for laws.md's opening and report.md's laws line. "You did not say where the product is offered" only where no
+ * region was answered at all (it was said wherever every cited law's region was open, a "No" to another region
+ * notwithstanding); the laws are named, never "the laws of a place were all applied"; a law the answers left out is said
+ * apart from those applied.
+ */
+function lawsAppliedSentencesOf(m: ReportModel, laws: readonly LawCited[] = lawsCitedOf(m)): Inert[] {
+  if (laws.length === 0) return [WORDS.lawsAppliedNone];
+  const pra = obj(m.a.findings.per_rule_applicability);
+  const said = arr(pra?.declared_regions).map(str).some((d) => d !== "" && d !== "unknown") || arr(pra?.regions_not_offered).length > 0;
+  // A law not decided or not applying is said by its own sentence only.
+  const gated = lawGatedOf(m);
+  const ungated = laws.filter((l) => !gated.has(l.name));
+  const applied = ungated.filter((l) => l.status !== "no");
+  const left = laws.filter((l) => l.status === "no");
+  const placesOf = (xs: readonly LawCited[]): Inert => markdownText(listWords([...new Set(xs.map((l) => l.place).filter(Boolean))].sort().map((p) => REGION_NAMES[p] ?? p)));
+  const open = lawsOpenPlacesOf(ungated);
+  // The places and a count, not each law's name, on the first screen (the names are laws.md's list).
+  if (!said) return open.n > 0 ? [WORDS.lawsAppliedAllOpen(markdownText(open.words))] : applied.length > 0 ? [WORDS.lawsAppliedCount(applied.length, placesOf(applied), false)] : [];
+  /* "By your answers" only of a law the person's Yes made apply (the non-author
+   * second re-check, R1: a law that stays in although the person said No for its region was counted as applied by
+   * the answers, the opposite of what the answer did). Such a law is counted apart, with why it stays; a law of no
+   * region the answers ask about is counted as applied, by no answer. */
+  const byAnswer = applied.filter((l) => l.status === "yes");
+  const kept = applied.filter((l) => l.status === "noOpen");
+  const noPlace = applied.filter((l) => l.status === "none");
+  return [
+    ...(open.n > 0 ? [WORDS.lawsAppliedSomeOpen(markdownText(open.words), open.n)] : []),
+    ...(byAnswer.length > 0 ? [WORDS.lawsAppliedCount(byAnswer.length, placesOf(byAnswer), true)] : []),
+    ...(kept.length > 0 ? [WORDS.lawsKeptDespiteNo(kept.length, placesOf(kept))] : []),
+    ...(noPlace.length > 0 ? [WORDS.lawsAppliedNoPlace(noPlace.length)] : []),
+    ...(left.length > 0 ? [WORDS.lawsLeftOutCount(left.length, placesOf(left))] : []),
+  ];
+}
+/**
+ * ONE NAME FOR A LAW on every page: the program's penalty table's
+ * (the name a finding's provisions are counted under, `tierOf`), for a law a finding cites and for a law whose reach
+ * depends on what the product is alike; a law the table does not name keeps its short name (`lawShortName`). Before, the
+ * front page said "CRA" and "the Cyber Resilience Act" in one paragraph (the non-author re-check), and laws.md printed a
+ * Directive by its full name. A resolver that names a law for an empty citation is not the table, and is not used.
+ */
+function lawNamerOf(m: ReportModel): (law: string) => string {
+  const t = m.shown.find((it) => it.orderInput?.tierOf)?.orderInput?.tierOf;
+  let table = false;
+  try {
+    table = !!t && !t("", undefined)?.regimeId;
+  } catch {
+    table = false;
+  }
+  return (law: string): string => {
+    if (table && t) {
+      try {
+        const r = t(law, undefined);
+        if (r?.regime) return r.regime;
+      } catch {
+        /* the short name below */
+      }
+    }
+    return lawShortName(law);
+  };
+}
+/**
+ * A LAW'S TWO NAMES (the parent's decision of 17 Nov, the decision on law names): each page names a law
+ * in full with its short form at the first mention ("the Cyber Resilience Act (CRA)"), then by the short form, which is
+ * the penalty table's name (`lawNamerOf`). The full names come from the bundle (penalty-tier.ts `lawFullNamesOf`: a
+ * checklist's `law`, else the table's `full_name`), handed in as `lawFullNames`; the report holds none of its own (17 Nov:
+ * the third non-author re-check, d3, found five of its twelve repeating the checklists'). A law named by
+ * its number (an act cited for its definitions only) or a bill named by its letters is named in full wherever the program
+ * names it. The rule is the program's own words only: a sentence the program composes names a law by its id here
+ * (law-names.ts `lawMark`), and the page resolves the marks in reading order (`formMarkdown`; the record on its blocks).
+ * Words the program did not write are never renamed: the review's, the person's, a path, the project's name, and the
+ * bundle's titles and citations as it carries them.
+ */
+/** A law the program names, by its id: in full with its short form at the page's first such mention, short after (`formMarkdown`). */
+function lawNameOf(_m: ReportModel, short: string): Inert {
+  return programText(lawMark(short));
+}
+/** The laws whose reach depends on what the product is, by the one name, where that is not decided or they do not apply. */
+function lawGatedOf(m: ReportModel): Map<string, string> {
+  const nameOf = lawNamerOf(m);
+  const out = new Map<string, string>();
+  for (const [law, xs] of groupBy(arr(m.a.findings.applicability).map(obj).filter((x): x is Obj => !!x), (x) => str(x.law))) {
+    const verdict = str(xs[0]?.verdict);
+    if (verdict !== "applies" && verdict !== "likely-applies") out.set(nameOf(law), verdict);
+  }
+  return out;
+}
+
+function lawsAppliedLines(m: ReportModel): Inert[] {
+  const laws = lawsCitedOf(m);
+  const out: Inert[] = [WORDS.lawsAppliedHeading, ours("")];
+  if (laws.length === 0) return [...out, WORDS.lawsAppliedNone, ours("")];
+  out.push(inertJoin(lawsAppliedSentencesOf(m, laws), ours(" ")), ours(""));
+  const gated = lawGatedOf(m);
+  const applied = laws.filter((l) => l.status !== "no" && !gated.has(l.name));
+  if (applied.length > 0) out.push(WORDS.lawsAppliedList, ours(""));
+  for (const l of applied) {
+    const place = markdownText(REGION_NAMES[l.place] ?? l.place);
+    const why = l.status === "none" ? ours(WORDS.lawWhy.none) : WORDS.lawWhy[l.status](place);
+    out.push(WORDS.lawApplied(lawNameOf(m, l.name), why, l.findings));
+  }
+  // Never called applied beside its own decision that it is not decided or does not apply.
+  const gatedCited = laws.filter((l) => l.status !== "no" && gated.has(l.name));
+  if (gatedCited.length > 0) out.push(...(applied.length > 0 ? [ours("")] : []), ...gatedCited.map((l) => WORDS.lawGated(lawNameOf(m, l.name), programText(WORDS.lawVerdictWords[gated.get(l.name) ?? ""] ?? (gated.get(l.name) ?? "").replace(/-/g, " ")), l.findings)));
+  // A law the answers left out is not among those applied: said apart, below the list.
+  for (const l of laws.filter((x) => x.status === "no")) out.push(ours(""), WORDS.lawNotApplied(lawNameOf(m, l.name), markdownText(REGION_NAMES[l.place] ?? l.place), l.findings));
+  if (laws.some((l) => l.place)) out.push(ours(""), ours(WORDS.lawsAppliedChange));
+  out.push(ours(""));
+  return out;
+}
+
+/**
+ * A gate's block in laws.md: one line in words (the law, its verdict, its conditions met and open), what
+ * the code shows on the product question where it shows it, and then, folded, the questions in the law's own words with
+ * their ids (`lawQuestionsOf`), the checklists the block answers and any contradiction of an answer.
+ */
+function lawGateLines(x: Obj, block: { entries: Obj[]; apart: boolean }, nameOf: (law: string) => Inert = (law) => markdownText(lawShortName(law))): Inert[] {
+  const limbs = arr(x.limbs).map(obj).filter((l): l is Obj => !!l);
+  const required = limbs.filter((l) => l.bears_on_verdict === true && str(l.closes_gate_when) !== "true");
+  const open = decidingOpenOf(x).filter((id) => required.some((l) => str(l.limb_id) === id)).length;
+  // The one name (`lawNamerOf`), not a second copy of the short-name rule.
+  const law = nameOf(str(x.law));
+  const vw = WORDS.lawVerdictWords[str(x.verdict)];
+  const verdict = vw !== undefined ? programText(vw) : markdownText(str(x.verdict).replace(/-/g, " "));
+  const out: Inert[] = [WORDS.lawGateLine(law, markdownText(str(x.cite)), verdict, required.length - open, required.length, open)];
+  const product = suggestedByCodeOf(x).get(CRA_PRODUCT_LIMB);
+  if (product && arr(x.unresolved_limbs).map(str).includes(CRA_PRODUCT_LIMB)) out.push(md`  ${product}`);
+  out.push(ours(""));
+  const inner: Inert[] = [...lawQuestionsOf(x)];
+  if (block.entries.length > 1) inner.push(WORDS.applicabilityShared(block.entries.map((e) => markdownText(str(e.checklist_id)))));
+  else if (block.apart) inner.push(WORDS.applicabilityChecklist(markdownText(str(x.checklist_id))));
+  for (const c of arr(x.contradictions).map(obj)) if (c) inner.push(WORDS.contradiction(markdownText(str(c.limb_id)), markdownText(str(c.declared_by)), Number(c.evidence_count ?? 0)));
+  if (inner.length > 0) out.push(...foldOf(open > 0 ? ours(WORDS.lawGateFoldAll) : ours(WORDS.lawGateFoldOther), inner));
+  return out;
+}
+
+/** `laws.md`: the laws the findings cite first, then the
+ * applicability block (step 3a), as the report opened with it in earlier versions. */
 function buildLaws(m: ReportModel): Inert {
   const { a } = m;
   const f = a.findings;
@@ -6138,21 +7194,25 @@ function buildLaws(m: ReportModel): Inert {
   if (!pra || regions === null || regions === undefined) out.push(WORDS.regionsUnanswered, ours(""));
   const whose = whoseAnswersOf(m, "long");
   if (whose) out.push(whose, ours(""));
+  // A law named in full at its first mention on the page, short after (the page's pass, `formMarkdown`).
+  const nameOf = lawNamerOf(m);
+  out.push(...lawsAppliedLines(m));
   out.push(WORDS.applicabilityHeading, ours(""));
   const app = arr(f.applicability).map(obj).filter((x): x is Obj => !!x);
   if (app.length === 0) out.push(WORDS.applicabilityNone);
-  for (const block of applicabilityBlocksOf(app)) {
-    const x = block.entries[0] as Obj;
-    out.push(WORDS.applicabilityLine(markdownText(str(x.law)), markdownText(str(x.cite)), markdownText(str(x.verdict)), said(str(x.because))));
-    if (block.entries.length > 1) out.push(WORDS.applicabilityShared(block.entries.map((e) => markdownText(str(e.checklist_id)))));
-    else if (block.apart) out.push(WORDS.applicabilityChecklist(markdownText(str(x.checklist_id))));
-    out.push(...lawQuestionsOf(x));
-    for (const c of arr(x.contradictions).map(obj)) if (c) out.push(WORDS.contradiction(markdownText(str(c.limb_id)), markdownText(str(c.declared_by)), Number(c.evidence_count ?? 0)));
-  }
-  if (arr(f.applicability_not_assessed).length > 0) out.push(ours(""), WORDS.notAssessedLead, ours(""));
-  for (const n of arr(f.applicability_not_assessed)) {
-    const o = obj(n);
-    out.push(WORDS.notAssessed(markdownText(o ? str(o.checklist_id) || str(o.law) || canonical(o) : str(n))));
+  for (const block of applicabilityBlocksOf(app)) out.push(...lawGateLines(block.entries[0] as Obj, block, (law) => lawNameOf(m, nameOf(law))));
+  const notAssessed = arr(f.applicability_not_assessed);
+  if (notAssessed.length > 0) {
+    out.push(ours(""), WORDS.notAssessedLead(notAssessed.length), ours(""));
+    out.push(
+      ...foldOf(
+        WORDS.notAssessedFold(notAssessed.length),
+        notAssessed.map((n) => {
+          const o = obj(n);
+          return WORDS.notAssessed(markdownText(o ? str(o.checklist_id) || str(o.law) || canonical(o) : str(n)));
+        }),
+      ),
+    );
   }
   /* The places out of scope by the person's answers (they were in not-applicable.md): each
    * rule settled by an answer, the answer quoted with its date, by rule. */
@@ -6162,10 +7222,10 @@ function buildLaws(m: ReportModel): Inert {
       // A rule settled by a scope answer (WP4's `settled_by`):
       // the answer quoted, its date, the candidate and its places (NV11); a region answer as today.
       const sb = obj(arr(obj(a.findings.per_rule_applicability)?.rules).map(obj).find((r) => str(r?.rule_id) === str(p.rule_id))?.settled_by);
-      if (!sb) return { rule: str(p.rule_id), lines: [WORDS.byDeclaration(markdownText(str(p.rule_id)), code(str(p.finding_id)), said(str(p.because)), markdownText(arr(p.declared_regions).map(str).join(", ")), markdownText(str(p.answered_from)), markdownText(str(p.answered_at).slice(0, 10)))] };
+      if (!sb) return { rule: str(p.rule_id), lines: [WORDS.byDeclaration(markdownText(str(p.rule_id)), code(str(p.finding_id)), said(str(p.because)), markdownText(arr(p.declared_regions).map(str).join(", ")), markdownText(str(p.answered_from)), markdownText(localDayOfInstant(str(p.answered_at)).slice(0, 10)))] };
       const t = questionTextOf(str(sb.field));
       const places = arr(m.candidateById.get(str(p.finding_id))?.locations).length;
-      return { rule: str(p.rule_id), lines: [md`- ${markdownText(str(p.rule_id))} ${inSpan(code(str(p.finding_id)))}: ${WORDS.byAnswerNV(markdownText(t.header), markdownText(t.labelOf(sb.answer) ?? String(sb.answer)), markdownText(str(sb.recorded_at).slice(0, 10)), places, programText(t.covers ?? ""), settledExclusionsOf(a.ruleBases, [str(p.rule_id)]))}`] };
+      return { rule: str(p.rule_id), lines: [md`- ${markdownText(str(p.rule_id))} ${inSpan(code(str(p.finding_id)))}: ${WORDS.byAnswerNV(ownWords(t.header), markdownText(t.labelOf(sb.answer) ?? String(sb.answer)), markdownText(localDayOfInstant(str(sb.recorded_at)).slice(0, 10)), places, ownWords(t.covers ?? ""), settledExclusionsOf(a.ruleBases, [str(p.rule_id)]))}`] };
     }),
   ];
   out.push(...regionLimitedLines(m));
@@ -6207,6 +7267,8 @@ export interface EndSummary {
     carried: number;
     /** Rules that found nothing: `rulesNothingOf`, the same count the first screen and not-checked.md say. */
     silent: number;
+    /** The one count of open questions (`openQuestionsOf`), as the report says it. */
+    questionsOpen: number;
     fixFirst: { f: string; short: string; title: string; place: string; more: number }[];
     startsAt: number | null;
     /** The earlier review the carried verdicts come from ("4 Nov"), and its log's mark. */
@@ -6245,7 +7307,8 @@ function endSummaryOf(m: ReportModel, printedText: (t: string) => string): EndSu
   const listed = new Set(inFixFirst);
   const toFix = m.shown.filter((it) => m.dispOf(it) === "to_fix");
   const first = [...inFixFirst, ...toFix.filter((it) => !listed.has(it))].slice(0, 3).map((it) => ({
-    title: printedText(((l) => (l ? titleOfListed(m, l).replace(/ \(\d+ places\)$/, "") : m.plainOf(ruleIdOf(it))))(m.files?.byId.get(idOf(it)))),
+    // The end screen is not a page: a law the program named in a title is said by its short name.
+    title: printedText(lawMarksShort(((l) => (l ? titleOfListed(m, l).replace(/ \(\d+ places\)$/, "") : m.plainOf(ruleIdOf(it))))(m.files?.byId.get(idOf(it))))),
     place: valueText(printedText(placeOf(m, it))),
   }));
   if (!m.files) m.files = fileModelOf(m);
@@ -6253,10 +7316,11 @@ function endSummaryOf(m: ReportModel, printedText: (t: string) => string): EndSu
   const fixFirst = m.files.listed
     .filter((l) => l.kind === "to_fix" && !decidedListed(m, l))
     .slice(0, 3)
-    .map((l) => ({ f: fOf(l), short: l.short, title: printedText(titleOfListed(m, l).replace(/ \(\d+ places\)$/, "")), place: valueText(printedText(placeOf(m, l.items[0] as Item))), more: placesOfListed(m, l) - 1 }));
+    .map((l) => ({ f: fOf(l), short: l.short, title: printedText(lawMarksShort(headlineOf(m, l).text)), place: valueText(printedText(placeOf(m, l.items[0] as Item))), more: placesOfListed(m, l) - 1 }));
   const note = m.files.numbers.note;
   const lt = laterOf(m);
-  const titleOf = (l: Listed): string => printedText(titleOfListed(m, l).replace(/ \(\d+ places\)$/, ""));
+  // A finding is named as report.md names it: the review's sentence, else the check's title.
+  const titleOf = (l: Listed): string => printedText(headlineOf(m, l).text);
   const screenLater = lt
     ? {
         day: lt.day,
@@ -6283,11 +7347,12 @@ function endSummaryOf(m: ReportModel, printedText: (t: string) => string): EndSu
     laws: lawPartsOf(m),
     ruledOut: m.dismissed.length,
     outOfScope: c.settled,
-    notCounted: c.recorded + c.notShipped + c.forOperators + c.folded,
+    notCounted: notCountedOf(m).length,
     noVerdict: sumOf(noAnswer, (u) => placesOfRecord(m, u)),
     partly: m.unread.length,
     carried: carriedCountOf(m.a),
     silent: rulesNothingOf(m).n,
+    questionsOpen: openQuestionsOf(m).count,
     fixFirst,
     startsAt: note?.kind === "start" ? note.from : null,
     ...((cf) => (screenLater ? { carriedFrom: cf[0].replace(/^the review of /, ""), carriedMark: cf[1], later: screenLater } : { carriedFrom: cf[0].replace(/^the review of /, ""), carriedMark: cf[1] }))(carriedFromOf(m)),
@@ -6320,9 +7385,23 @@ function notReadItemsOf(
     ...parts.notRead.map((x) => markdownText(x)),
     ...Object.keys(WORDS.notReadPart)
       .filter((key) => nOf(key as UncheckedKey) > 0)
-      .flatMap((key) => kinds.find((k) => k.key === key)?.parts ?? [(WORDS.notReadPart[key] as (n: number) => Inert)(nOf(key as UncheckedKey))]),
+      // The coverage notes have no count of their own:
+      // where none of them counted anything left unread (only WolfBoy's own `.legal` refused), they add nothing, so the
+      // line says "none" as the quick scan and the end screen do, not "7 coverage notes" (FIN4 P2 D8-1).
+      .flatMap((key) => kinds.find((k) => k.key === key)?.parts ?? (key === "did-not-read" ? [] : [(WORDS.notReadPart[key] as (n: number) => Inert)(nOf(key as UncheckedKey))])),
   ];
   return { folders, rest };
+}
+
+/**
+ * An inline Markdown part as the plain words it renders to: a code span's text as it
+ * stands, a backslash escape as the character it escapes. For the record's summary, whose writer escapes what it prints.
+ */
+export function plainOfInline(t: string): string {
+  return t
+    .split(/(`[^`]*`)/)
+    .map((part) => (part.startsWith("`") && part.endsWith("`") && part.length >= 2 ? part.slice(1, -1) : part.replace(/\\([!-/:-@[-`{-~])/g, "$1")))
+    .join("");
 }
 
 /**
@@ -6341,7 +7420,7 @@ export function recordSummaryOf(m: ReportModel, end: EndSummary, printedText: (t
   const toFix = c.toFix.high + c.toFix.medium + c.toFix.low;
   // The same terms as the first screen's two group lines (`firstScreenLines`), so the totals cannot differ.
   const setAside = (m.a.suppressions ?? []).length;
-  const notCounted = c.recorded + c.notShipped + c.forOperators + c.folded;
+  const notCounted = notCountedOf(m).length;
   const parts = notReadParts(f as unknown as Findings);
   const { folders, rest } = notReadItemsOf(m, uncheckedKinds(m), parts);
   const disposition = { to_fix: "to_fix", counsel: "to_clarify", answer: "to_answer" } as const;
@@ -6349,17 +7428,26 @@ export function recordSummaryOf(m: ReportModel, end: EndSummary, printedText: (t
     .filter((l): l is Listed & { kind: keyof typeof disposition } => l.kind in disposition)
     .map((l) => {
       const it = l.items[0] as Item;
+      /* One title for one F-number on every page: the record (record.ts) is
+       * written from this list, and printed the rule's label where report.md and the finding's page print the review's
+       * headline (`headlineOf`), so DEMO6's F1 had two names. */
+      const title = headlineOf(m, l).text;
+      const area = areaOf(ruleIdOf(it));
       return {
         f: fOf(l),
         short: l.short,
         finding_ids: l.items.map((x) => str(x.verdict.finding_id)),
-        title: printedText(titleOfListed(m, l)),
+        // The log keeps each law the program named by its short name, and, where the text
+        // names one, the same words with the law by its id (`lawNamedParts`), so the record supplies its name (record.ts).
+        title: printedText(lawMarksShort(title)),
+        ...(lawMarked(title) ? { title_named: lawNamedParts(title, printedText) } : {}),
         place: valueText(printedText(placeOf(m, it))),
         more_places: Math.max(0, placesOfListed(m, l) - 1),
         provisions: provisionsOf(m, it).map((p) => printedText(p.cite)),
         disposition: disposition[l.kind],
         level: m.sevOf(it),
-        area: areaOf(ruleIdOf(it)),
+        area: lawMarksShort(area),
+        ...(lawMarked(area) ? { area_named: lawNamedParts(area, printedText) } : {}),
       };
     });
   const commit = str(obj(f.repository)?.commit) || str(f.commit);
@@ -6377,6 +7465,8 @@ export function recordSummaryOf(m: ReportModel, end: EndSummary, printedText: (t
       to_clarify: c.counsel,
       to_answer: c.waiting,
       questions: c.questions,
+      // Beside the questions, as every screen counts them.
+      facts: c.facts,
       taken_off: m.dismissed.length + c.settled + setAside + notCounted,
       ruled_out: m.dismissed.length,
       out_of_scope: c.settled,
@@ -6390,9 +7480,16 @@ export function recordSummaryOf(m: ReportModel, end: EndSummary, printedText: (t
       rules_nothing: rulesNothingOf(m).n,
       carried: sc.carried,
       folders: folders.map(printedText),
-      not_read: rest.map(printedText),
+      // Plain words: the record escapes what it prints, so Markdown here showed its
+      // backticks and backslashes ("the \`\.git\` folder").
+      not_read: rest.map((x) => printedText(plainOfInline(x))),
     },
     laws: sc.laws.map(printedText),
+    // The report's law names, for the record's pages (record.ts).
+    law_names: { ...(m.a.lawFullNames ?? {}) },
+    // The same parts with each law the program names by its id, so the record supplies
+    // its names as the report's pages do (one function, `lawPartsOf`, makes both).
+    laws_named: lawPartsOf(m, (law) => lawMark(lawNamerOf(m)(law))).map((p) => lawNamedParts(p, printedText)),
     items,
   };
 }
@@ -6452,10 +7549,22 @@ export interface FileModel {
   ruledOutOf?: Map<string, string>;
 }
 
+/** The calendar day of an instant on this computer's clock, `YYYY-MM-DD`; a value that is not an instant, as it is. */
+export function localDayOfInstant(iso: string): string {
+  if (!/^\d{4}-\d{2}-\d{2}T/.test(iso)) return iso;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  const two = (n: number): string => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${two(d.getMonth() + 1)}-${two(d.getDate())}`;
+}
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-/** "4 Nov 2026" from an ISO date or time; "" where it does not read. */
+/**
+ * "4 Nov 2026" from an ISO date or time; "" where it does not read. An instant is said as the day on this computer's clock, the person's own,
+ * as the record says it (record.ts `localDayOf`): DEMO5's report said "17 Nov" (UTC) of a scan run on 18 Nov, beside a
+ * record that said "18 Nov". A date with no time is said as it is.
+ */
 export function dayWords(iso: string): Inert {
-  const d = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  const d = /^(\d{4})-(\d{2})-(\d{2})/.exec(localDayOfInstant(iso));
   /* Digits and a month's name only: `programText` is that claim. */
   return d ? md`${Number(d[3])} ${programText(MONTHS[Number(d[2]) - 1] ?? (d[2] as string))} ${programText(d[1] as string)}` : ours("");
 }
@@ -6535,7 +7644,8 @@ function listedRowsOf(m: ReportModel): ListedRow[] {
   const fm = m.files as FileModel;
   const unread = new Set(m.unread);
   return fm.listed.flatMap((l) => {
-    const title = titleOfListed(m, l);
+    // The log's row keeps a law the program named in the title by its short name.
+    const title = lawMarksShort(titleOfListed(m, l));
     return l.items.map((it) => {
       const held = m.heldOf(it);
       // The kept places as the comparison reads them (place-key.ts): the held rows'
@@ -6815,8 +7925,22 @@ const placesOfItems = (m: ReportModel, items: readonly Item[]): number => new Se
 const placesOfListed = (m: ReportModel, l: Listed): number => placesOfItems(m, l.items);
 
 /**
+ * (R3 and R6) Whether a
+ * finding of a rule whose construct is a recipient outside the operator (`OUTSIDE_OPERATOR_RULES`) is one whose review
+ * established that no outside party gets the data (`reaches` stood, as `operator_only` or `nobody`): then the report names
+ * no recipient for it (the rule's fixed phrase, "a third-party script host", or the hosts its rows name) and says what is
+ * involved instead. The fixed phrase is the rule's, true of what the check looks for and not of every place it matches:
+ * the weekly reads found the maker's own release feed, its own analytics host and its own billing service named so. (the non-author check's M2) Only
+ * there: every other `reaches` (`anyone_on_path`, `readable_at_rest`, `kept`, `other_users`, `not_about_data`) says nothing
+ * of who receives the data, and for any other flow rule (a send with no encryption, a non-HTTP transport) the host is the
+ * destination, not a claim that it is outside, so the line names it and stays one sentence, as before W-A. Where `reaches`
+ * did not stand, the words are as before.
+ */
+const recipientNotOutside = (rule: string, o: StandingOrder | undefined): boolean =>
+  OUTSIDE_OPERATOR_RULES.has(rule) && !PLAINTEXT_RULES.has(rule) && !!o && o.hasBlock && !o.heaviest.includes("reaches") && (o.reaches === "operator_only" || o.reaches === "nobody");
+/**
  * The facts at a group's decisive place that a rule's title template may name
- * (`rule-lines.ts` slots), from the rows `fixLines` says them from: `data`, the kinds of data (the review's block where it
+ * (`rule-lines.ts` slots), from the rows `fixFactsOf` says them from: `data`, the kinds of data (the review's block where it
  * established them, else the place rows' data words; none where it names no personal data or more than three kinds);
  * `recipient`, who receives them, only for a rule in `FLOW_RULES` (the hosts or vendor names the rows hold, else the
  * rule's own words for its recipient). An empty fact is missing, and the title is then the rule's general text.
@@ -6830,7 +7954,7 @@ function titleFactsOf(m: ReportModel, group: readonly Item[]): Partial<Record<Ru
   const callRows = raised ? m.heldOf(raised).filter(inCall) : [];
   const held = callRows.length > 0 ? callRows : group.flatMap((it) => m.heldOf(it));
   const o = it0.order;
-  const blockData = !!o && o.hasBlock && !o.heaviest.includes("data");
+  const blockData = !!o && o.hasBlock && !o.heaviest.includes("data") && o.data.length > 0;
   const kinds = blockData && o
     ? o.data.filter((d) => d !== "no_personal_data").map((d) => WORDS.standingData[d] ?? d)
     : Object.keys(WORDS.dataWords)
@@ -6838,7 +7962,7 @@ function titleFactsOf(m: ReportModel, group: readonly Item[]): Partial<Record<Ru
         .map((w) => WORDS.dataWords[w] as string);
   const data = kinds.length > 0 && kinds.length <= 3 ? listWords(kinds) : "";
   let recipient = "";
-  if (FLOW_RULES.has(rule)) {
+  if (FLOW_RULES.has(rule) && !recipientNotOutside(rule, o)) {
     const source = it0.candidate ? programItemSourceOf(it0.candidate as unknown as Candidate) : null;
     const to = held.map((r) => recipientOf(rule, source, r)).filter((x): x is string => !!x);
     recipient = to.length > 0 ? listWords([...new Set(to)].slice(0, 3)) : (OUTSIDE_OPERATOR_RULES.get(rule) ?? "");
@@ -6858,7 +7982,9 @@ function titleOfListed(m: ReportModel, l: Listed): Inert {
   const rule = ruleIdOf(it);
   if (l.kind === "answer") {
     const q = it.order?.question ?? waitQuestionOf(it);
-    return WORDS.cardWaits(q ? markdownText(questionTextOf(q).header) : m.plainOf(rule));
+    // A fact in words is not a question: its title says what it waits on.
+    if (!q && factOf(it)) return WORDS.cardWaitsFact(m.plainOf(rule));
+    return WORDS.cardWaits(q ? ownWords(questionTextOf(q).header) : m.plainOf(rule));
   }
   const lineOf = l.kind === "to_fix" ? problemLineFor(m.a.ruleLines?.[rule], titleFactsOf(m, l.items)) : null;
   // A rule's problem line is filled with facts of the code (a recipient's name): inert text as a whole.
@@ -6875,7 +8001,7 @@ function marksOf(l: Listed): Inert {
 }
 
 /** One provision of a finding's rule, as the card and the file say it. */
-type Provision = { cite: Inert; region: Inert; whose: Inert; url: Inert; checked: Inert };
+type Provision = { cite: Inert; region: Inert; whose: Inert; url: Inert; checked: Inert; notes: Inert[]; from: Inert; now?: { separate: boolean }; law: Inert };
 /** A finding's provisions with their regions, those of regions answered No left out (design 4, "Laws and provisions"). */
 function provisionsOf(m: ReportModel, it: Item): Provision[] {
   const c = it.candidate ?? {};
@@ -6884,7 +8010,18 @@ function provisionsOf(m: ReportModel, it: Item): Provision[] {
   const yes = Array.isArray(declared) ? new Set(declared.map(str)) : null;
   const out: Provision[] = [];
   const seen = new Set<string>();
-  arr(c.legal_basis_refs).map(str).forEach((ref, n) => {
+  /* (R5b) The bases the
+   * review stood the finding on (`standing.duty`, where it stood) first, in its order, then the rule's others in the rule's
+   * order: the line showed the rule's first two whatever the review said, so a finding the review rested on Art 32(1)(b)
+   * read "Art 17(1) · Art 5(1)(c)". And a provision that applies later carries its date on the line (`provisionFrom`), as the
+   * duty line does: a CRA cite read as a present duty. Nothing is left out; only the order and the date change. */
+  const refs = arr(c.legal_basis_refs).map(str);
+  const duty = it.verdict.quote_check_outcome === "invalidated" ? [] : arr(obj(obj(it.verdict.standing)?.duty)?.value).map((x) => basisIndexOf(str(x)));
+  const order = [...new Set([...duty.filter((i): i is number => i !== null && i < refs.length), ...refs.map((_, n) => n)])];
+  const day = scanDayOf(m);
+  const ahead = (d: string | undefined): boolean => !!d && (day === "" || d > day);
+  order.forEach((n) => {
+    const ref = refs[n] ?? "";
     if (!ref) return;
     const region = str(oi?.ruleBases?.[n]?.jurisdiction);
     // The basis's link and checked day (the rule's own, mock M3a).
@@ -6892,12 +8029,33 @@ function provisionsOf(m: ReportModel, it: Item): Provision[] {
     const checked = dayWords(str(oi?.ruleBases?.[n]?.checked_at));
     if (oi && basisAnsweredOut(oi, region || undefined, ref)) return;
     const cite = citationOf(ref);
-    if (seen.has(cite)) return;
-    seen.add(cite);
-    const whose = yes === null ? WORDS.cardRegionsUnanswered : region && yes.has(region) ? WORDS.cardYourAnswers : WORDS.cardNotAnswered;
+    /* Each provision once by its name and its link, so two provisions printed
+     * with the same words are both listed, each with its own link. */
+    const key = `${cite}\n${url}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    /* "Your answers" where a region answered Yes covers the provision's region, by the
+     * per-rule test's own membership rule (`covers`: a Yes for the EU covers each member state), never an exact match. */
+    /* A region answered No whose law stays in (`basisAnsweredOut` false:
+     * the answer does not carry the law's own test) is said as an answer No, never "not answered". */
+    const saidNo = !!region && !!oi && jurisdictionAnsweredOut(region, oi.declaredRegions, oi.regionsOut);
+    /* A No read from a closed list (the scan records no `regions_not_offered`: a
+     * place left out of the list the person gave) is never said as "you said". */
+    const whose = saidNo ? (Array.isArray(oi?.regionsOut) ? WORDS.cardAnsweredNo : WORDS.cardListedNo) : yes === null ? WORDS.cardRegionsUnanswered : region && [...yes].some((d) => covers(d, region)) ? WORDS.cardYourAnswers : WORDS.cardNotAnswered;
     /* The rule's bases as the bundle states them (program text); the region a code from the same bundle. */
-    out.push({ cite: programText(cite), region: programText(region), whose, url: programText(url), checked });
+    const t = oi?.tierOf?.(ref, region || undefined);
+    const later = (t?.appliesLater ?? []).filter((l: { appliesFrom: string }) => ahead(l.appliesFrom)).map((l: { appliesFrom: string }) => l.appliesFrom).sort();
+    const from = t && ahead(t.appliesFrom) && later.length === (t.appliesLater ?? []).length ? WORDS.provisionFrom(programText(str(t.appliesFrom)), false) : later.length > 0 ? WORDS.provisionFrom(programText(later[0] ?? ""), true) : ours("");
+    // A duty in force now (no later date), marked once another provision of the finding is dated later (below). Never a fine (`penalty`: AI Act Art. 99(3), CRA Art. 64(2)): it is part of the
+    // duty it fines, not a duty of its own, and cannot apply to that duty before the duty does.
+    const now = !!t && t.tier !== "no_duty" && t.unresolved !== true && t.penalty !== true && !ahead(t.appliesFrom) && later.length === 0;
+    // The law the provision is of, for the card's region words.
+    const law = t?.regime ? lawNameOf(m, t.regime) : programText(shortCite(cite));
+    out.push({ cite: programText(cite), region: programText(region), whose, url: programText(url), checked, notes: citationNotesOf(ref).map((x) => programText(x)), from, ...(now ? { now: { separate: oi?.ruleBases?.[n]?.separate === true } } : {}), law });
   });
+  /* Where a provision of the finding applies later, each that applies
+   * already says so, and a separate one says it is not what the finding tests. */
+  if (out.some((p) => String(p.from) !== "")) for (const p of out) if (p.now && String(p.from) === "") p.from = WORDS.provisionNow(p.now.separate);
   return out;
 }
 
@@ -6905,23 +8063,48 @@ function provisionsOf(m: ReportModel, it: Item): Provision[] {
  * "(EU: your answers · US: not answered)": each region of the provisions shown once, the regions with the same words
  * together ("EU, JP, US: regions not answered").
  */
-function regionWordsOf(ps: readonly { region: Inert; whose: Inert }[]): Inert {
+function regionWordsOf(ps: readonly { region: Inert; whose: Inert; law: Inert }[]): Inert {
   const byWhose = new Map<Inert, Inert[]>();
+  const lawsBy = new Map<Inert, Inert[]>();
   for (const p of ps) {
     const rs = byWhose.get(p.whose) ?? [];
     if (p.region && !rs.includes(p.region)) rs.push(p.region);
     byWhose.set(p.whose, rs);
+    const ls = lawsBy.get(p.whose) ?? [];
+    if (p.law && !ls.includes(p.law)) ls.push(p.law);
+    lawsBy.set(p.whose, ls);
   }
-  const parts = [...byWhose].map(([whose, rs]) => (rs.length > 0 ? md`${inertJoin(rs, ours(", "))}: ${whose}` : whose));
-  return parts.length > 0 ? md` (${inertJoin(parts, ours(" · "))})` : ours("");
+  const severalLaws = new Set(ps.map((p) => p.law).filter(Boolean)).size > 1;
+  /* In words, once on the card: "(EU, JP, US: not answered)" read as "the law is not
+   * answered", and "EU, AT, BE and 25 more" named states the person was never asked about. A member state's provision
+   * goes with the EU's where the EU is named (each is listed under "Provisions"). */
+  const namesOf = (rs: Inert[]): Inert => {
+    const eu = rs.includes(ours("EU"));
+    const shown = rs.filter((r) => !(eu && EU_MEMBER_STATES.has(r))).map((r) => programText(REGION_NAMES[r] ?? r));
+    return programText(listWords(shown, "or"));
+  };
+  const parts = [...byWhose].map(([whose, rs]) =>
+    whose === WORDS.cardYourAnswers
+      ? rs.length > 0 ? WORDS.regionsOffered(namesOf(rs)) : WORDS.regionsOffered(ours(""))
+      : whose === WORDS.cardNotAnswered && rs.length > 0
+        ? WORDS.regionsNotSaid(namesOf(rs))
+        : (whose === WORDS.cardAnsweredNo || whose === WORDS.cardListedNo) && rs.length > 0
+          ? // The laws that answer does not decide, by name: a card names several.
+            WORDS.regionsSaidNo(namesOf(rs), severalLaws ? listWords(lawsBy.get(whose) ?? []) : ours(""), (lawsBy.get(whose) ?? []).length, whose === WORDS.cardListedNo)
+          : WORDS.regionsNotSaidAny,
+  );
+  return parts.length > 0 ? md` (${inertJoin([...new Set(parts)], ours("; "))})` : ours("");
 }
+/* The regions a provision names, in words on the card: `REGION_NAMES`, the one
+ * map of declaration.ts that laws.md and the questions use too. */
+const EU_MEMBER_STATES = new Set(["AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR", "HU", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PL", "PT", "RO", "SK", "SI", "ES", "SE"]);
 
 /**
  * A provision's short form for the card (design 5: "at most two in short form"): the citation without the description
  * in parentheses at its end ("GDPR Art. 32 (security of processing; ...)" is "GDPR Art. 32"); a point such as "(2)(e)" is
  * kept. The file's "Provisions" section gives each in full.
  */
-function shortCite(cite: string): string {
+export function shortCite(cite: string): string {
   const t = cite.trimEnd();
   /* Every parenthesised part holding a space is left to the
    * "Provisions" section, wherever it stands: the description at the end, and an act's official reference after its
@@ -6946,66 +8129,47 @@ function shortCite(cite: string): string {
 }
 
 /**
- * The card's reason (design 5): what the code does at the decisive place (its `why`), then what happens to people (the
- * effect, at most 20 words). Where the place's `why` is missing or over its budget, the program's own fact line stands in
- * its place with the pointer to the reasoning below: the data, who receives it and the transport, or, where that is
- * longer than `FACT_LINE_MAX` (the card's 15 rows, design 6), the data and who receives it; with neither, the pointer.
- * A raise is said in the file's "About this finding" section, not on the card.
- */
-const FACT_LINE_MAX = 200;
-/* The reason's forms, longest first: the card takes the first that keeps it
- * within its rows (design 6: 15 rows at 75 columns), now that "What to do" is the rule's fix_line (up to 120 characters,
- * two rows): the full reason; the place's `why` and the pointer; the fact line and the pointer; the pointer alone. */
-function reasonFormsOf(m: ReportModel, it: Item, f: { body: Inert; short: Inert; why: string } = { body: ours(""), short: ours(""), why: "" }): Inert[] {
-  const first = reasonOf(m, it, f);
-  const cut = (t: Inert): Inert => { const at = t.lastIndexOf(", ", FACT_LINE_MAX); return at > 40 ? md`${inertSlice(t, at)}.` : ours(""); };
-  const factLine = f.body.length <= FACT_LINE_MAX ? f.body : f.short || cut(f.body);
-  // A block item whose `runs` the review did not establish keeps release/rc's
-  // card: a place reason over 170 characters is dropped, never cut (the h5a check, section 9 item 4), and a shorter one is
-  // printed (FX4b item 2). The record's proposal asks which of the two rules the design means; elsewhere `cardWhyOf` cuts.
-  const placeWhy = oneLine(f.why || str(m.heldOf(it)[0]?.why), 400);
-  const rawWhy = it.order?.hasBlock && it.order.heaviest.includes("runs") && placeWhy.length > 170 ? "" : placeWhy;
-  const why = cardWhyOf(rawWhy);
-  const end = (t: Inert): Inert => (/[.!?…]$/.test(t) ? t : md`${t}.`);
-  const forms = [first, why ? md`${end(why)} ${WORDS.cardReasonBelow}` : ours(""), factLine ? md`${end(factLine)} ${WORDS.cardReasonBelow}` : ours(""), f.short ? md`${end(f.short)} ${WORDS.cardReasonBelow}` : ours(""), WORDS.cardReasonBelow];
-  return [...new Set(forms.filter(Boolean))];
-}
-/**
- * The place's `why` as the card gives it:
- * whole where it fits in 170 characters; else its first sentence where that fits; else cut at a word before 166 characters
- * and marked "…". A reason over the budget gave the card only the pointer to the reasoning below (21 of 24 to-fix cards in
- * one recorded run); the reasoning below is still whole.
+ * The place's `why` as the card gives it.
+ * RR3-12 gave the card its first sentence, or a cut at a word marked "…", where the why ran over 170 characters (before
+ * it, such a reason gave the card only the pointer). Now whole, always: the reason is
+ * never cut (the parent's decision of 17 Nov), and the rest of a cut reason was on no unfolded page (for a finding
+ * with the review's block, on no page at all). A long reason makes the card longer; nothing else does (`cardLines`).
  */
 export function cardWhyOf(rawWhy: string): Inert {
-  if (rawWhy.length <= 170) return markdownText(rawWhy);
-  const first = /^(.{20,169}?[.!?])(?=\s)/.exec(rawWhy)?.[1];
-  if (first) return markdownText(first);
-  const at = rawWhy.lastIndexOf(" ", 166);
-  return at > 40 ? markdownText(`${rawWhy.slice(0, at).replace(/[\s,;:]+$/, "")} …`) : ours("");
+  return markdownText(rawWhy);
 }
-/** A finding card's rows at most (design 6): a single place's card, and a group's card before its "Places". */
-const CARD_ROWS = 15;
-const GROUP_CARD_ROWS = 13;
-function reasonOf(m: ReportModel, it: Item, f: { body: Inert; short: Inert; why: string } = { body: ours(""), short: ours(""), why: "" }): Inert {
-  /* A fact line that is only the transport (no data, no recipient) has no short
-   * form: over the budget it is cut at its last clause that fits, so the card still says what the place establishes. */
-  const cut = (t: Inert): Inert => { const at = t.lastIndexOf(", ", FACT_LINE_MAX); return at > 40 ? md`${inertSlice(t, at)}.` : ours(""); };
-  const factLine = f.body.length <= FACT_LINE_MAX ? f.body : f.short || cut(f.body);
-  // A block item whose `runs` the review did not establish keeps release/rc's
-  // card: a place reason over 170 characters is dropped, never cut (the h5a check, section 9 item 4), and a shorter one is
-  // printed (FX4b item 2). The record's proposal asks which of the two rules the design means; elsewhere `cardWhyOf` cuts.
-  const placeWhy = oneLine(f.why || str(m.heldOf(it)[0]?.why), 400);
-  const rawWhy = it.order?.hasBlock && it.order.heaviest.includes("runs") && placeWhy.length > 170 ? "" : placeWhy;
-  const why = cardWhyOf(rawWhy);
-  const effect = oneLine(str(obj(it.verdict.standing)?.effect), 400);
-  const shortEffect = effect && effect.split(/\s+/).length <= 20 ? markdownText(effect) : ours("");
+/** A finding card's rows at most (design 6): a single place's card, and a group's card before its "Places".
+ * 16, one more than design 6's 15, by the parent's decision of 2026-11-16: the
+ * page's title is now the review's sentence (P1), a row longer on most cards, and at 15 the reason gave up the review's own
+ * why for the pointer alone. The raw-view gate holds the same number. */
+// CARD_ROWS and GROUP_CARD_ROWS are report-budget.ts's.
+/**
+ * THE REASON, IN ONE FORM AND WHOLE, ON EVERY CARD AND IN EVERY GROUP'S LIST (the parent's
+ * decision for 17 Nov: what a person must see never gives way, on any card or list, in any shape; the reason is part
+ * of it). The review's reason at the decisive place, whole, with what happens to the people where the card does not
+ * already say it (design 5: the reason and the effect, the program's fact line "where either is missing"): the review's
+ * effect where it is short and not the page's title; where the card shows no effect at all, the program's fact line,
+ * whole; where the review wrote no reason at the place, the fact line or the effect, whole, and the pointer to the
+ * reasoning below; with neither, the pointer alone. Where the title is the effect, the data, the people and how it runs
+ * stand unfolded under "Why it matters", and the card does not give a second account of them. One
+ * helper, so the card and a group's list cannot differ (the third non-author re-check, d6: the card's two copies of
+ * this preparation were edited twice). Before, the card chose among shorter forms by its rows (the fact line beside a
+ * reason gave way), cut the fact line at 200 characters, and dropped a place reason over 170 characters on a block item
+ * whose `runs` the review did not give (the re-check's D1), which was then on no page. A long reason makes the card
+ * longer; nothing that must be seen is given up for it (`cardLines`).
+ */
+function cardReasonOf(m: ReportModel, it: Item, f: { body: Inert; why: string } = { body: ours(""), why: "" }, effectShown = false): Inert {
+  const why = cardWhyOf(oneLine(f.why || str(rowAtShownPlace(m, it)?.why), Infinity));
+  const effect = oneLine(reviewEffectOf(it.verdict), Infinity);
+  /* Where the page's title is the effect, the reason does not say it a second time; where
+   * the reason would then be only the pointer below, it says the effect (the readability review's P12: "Reason: The
+   * review's reasoning is below." gave no reason). */
+  const shortEffect = !effectShown && effect && effect.split(/\s+/).length <= EFFECT_MAX_WORDS ? markdownText(effect) : ours("");
   const end = (s: Inert): Inert => (/[.!?…]$/.test(s) ? s : md`${s}.`);
-  if (!why) return factLine ? md`${end(factLine)} ${WORDS.cardReasonBelow}` : WORDS.cardReasonBelow;
-  // Design 5 "where either is missing": with no effect (or one over 20
-  // words) the program's fact line says what happens to the data, as the old first screen's entry did.
-  const text = inertJoin([why, shortEffect || factLine].filter(Boolean).map(end), ours(" "));
-  if (text.length <= 360) return text;
-  return shortEffect ? WORDS.cardReasonBelow : md`${end(why)} ${WORDS.cardReasonBelow}`;
+  if (!why) return f.body ? md`${end(f.body)} ${WORDS.cardReasonBelow}` : effect ? md`${end(markdownText(effect))} ${WORDS.cardReasonBelow}` : WORDS.cardReasonBelow;
+  // Design 5 "where either is missing": with no effect (or one over its words)
+  // the program's fact line says what happens to the data, as the old first screen's entry did.
+  return inertJoin([why, shortEffect || (effectShown ? ours("") : f.body)].filter(Boolean).map(end), ours(" "));
 }
 
 /**
@@ -7014,103 +8178,248 @@ function reasonOf(m: ReportModel, it: Item, f: { body: Inert; short: Inert; why:
  */
 function actionOf(m: ReportModel, it: Item): Inert {
   const fix = str(m.a.ruleLines?.[ruleIdOf(it)]?.fix_line);
+  // A law the rule's line names is named in full at its page's first mention (17 Nov).
   if (fix) return proseOf(fix);
   const first = firstSentence(oneLine(str(it.candidate?.remediation_template).replace(/[#*_`>]/g, " "), 400));
   return first && first.length <= 120 ? proseOf(first) : WORDS.cardGuidanceBelow;
 }
 
 const CARD_QUOTE_MAX = 71;
-const CARD_PROVISION_ROWS = 2;
+/* Three rows (was two, design 5): a law named in full at its first mention on the page (the
+ * parent's decision on law names, 17 Nov) takes most of a row, and with two rows the line fell to the count of provisions
+ * alone on a card with room to spare (the sample's F1). On a card over its rows the region words, then the second and third
+ * rows give way (`cardLines`). */
+const CARD_PROVISION_ROWS = 3;
 
 /** The matched line at a place: the evidence quotation at that place, or the first one; "" where none. */
-function quoteAt(it: Item, place: { file: string; line: number | null }): string {
+function quoteAt(it: Item, place: { file: string; line: number | null }, rows: readonly PlaceRowIn[] = []): string {
+  /* Only a quotation of that line: the evidence at it, else a kept place row whose
+   * seat decided at it. Before, a place with neither took the first quotation, another line's text (the sample's F9
+   * showed `src/account.ts:20` with line 19's). None is better than another line's. */
+  const first = (x: unknown): number => Number(String(x ?? "").split("-")[0]);
   const ev = arr(it.verdict.evidence).map(obj).filter((e): e is Obj => !!e);
-  const at = ev.find((e) => str(e.file) === place.file && Number(String(e.lines ?? "").split("-")[0]) === place.line) ?? ev[0];
-  const q = oneLine(str(at?.quote), 400);
+  const at = ev.find((e) => str(e.file) === place.file && first(e.lines) === place.line);
+  const row = at ? undefined : rows.find((r) => r.file === place.file && first(r.line_decided ?? r.line) === place.line && !!r.quote);
+  const q = oneLine(str(at?.quote ?? row?.quote), 400);
   /* 71 characters, not design 5's 76: with the two-space indent and
    * the code span's marks, 71 is the length that fits one 75-column row (a correction of design 5's figure). */
   return Array.from(q).length > CARD_QUOTE_MAX ? `${Array.from(q).slice(0, CARD_QUOTE_MAX - 1).join("")}…` : q;
 }
 
-/** A place as a link from a file `depth` folders below the report folder, with its matched line where one is given. */
+/**
+ * A place as a link from a file `depth` folders below the report folder, with its matched line where one is given. The
+ * label is code, as report.md prints a place: a path is never prose ().
+ */
 function placeLink(m: ReportModel, place: string, depth: number): Inert {
   const p = placeParts(place);
-  return md`[${markdownText(place)}](${codeTarget(upOf(m.a, depth), rootOf(m.a), p.file, p.line)})`;
+  return md`[${inSpan(code(place))}](${codeTarget(upOf(m.a, depth), rootOf(m.a), p.file, p.line)})`;
 }
 
 /** The top of a finding's own file (design 5; mocks M3, M4, M5): logical lines, wrapped later. */
-function cardLines(m: ReportModel, l: Listed): Inert[] {
+function cardLines(m: ReportModel, l: Listed, refs: Inert[] = []): Inert[] {
   const it = l.items[0] as Item;
   const d = m.dispOf(it);
   const f = fOf(l);
   const day = dayWords(str(m.a.findings.completed_at));
-  const out: Inert[] = [md`# ${l.n !== null ? md`${f} · ` : ours("")}${titleOfListed(m, l)}`, ours("")];
+  /* (the owner, 2026-11-16) The page leads with what happened, the review's plain
+   * sentence (`headlineOf`); the check's title follows on the status line. Where the review wrote none, the title leads. */
+  const h = headlineOf(m, l);
+  /* A finding at more than one place says how many on its card,
+   * as before R19-F: where the title leads (no review sentence) it is the title with its count; where the sentence leads,
+   * the status line's title carries it. A finding to answer is titled by its rule, as R19-F has it, and never counted. */
+  const out: Inert[] = [md`# ${l.n !== null ? md`${f} · ` : ours("")}${h.effect || l.kind === "answer" ? h.text : titleOfListed(m, l)}`, ours("")];
+  // The fact a to-answer finding waits on, where its slot is one (no question settles it). Its citation in the card's short form, as the Provision line gives it: in full it
+  // took the card's last row, and the reason gave up its words for it (F12 of the sample).
+  const factSlot = l.kind === "answer" ? (m.a.questions ?? []).find((q) => q.kind === "fact" && l.items.some((x) => q.findingIds.includes(str(x.verdict.finding_id)))) : undefined;
   const level = l.kind === "to_fix" ? md` · ${markdownText(m.sevOf(it))}` : ours("");
   const decided = m.decisions !== undefined && (l.kind === "to_fix" || l.kind === "counsel") && decidedListed(m, l) ? ours(" · decided by you") : ours("");
-  out.push(md`- ${programText(WORDS.cardDisposition[d] ?? d)}${level}${decided}${marksOf(l)} · ${markdownText(l.short)}${day ? md` · ${WORDS.cardReviewOf(day)}` : ours("")} · [${WORDS.cardBack}](../${linkTarget(m.a.reportName ?? "report.md")})`);
+  // A finding that waits on a fact, not a question, is one "to check", never "to answer".
+  const placed = d === "recorded" ? WORDS.cardRecorded[recordedReasonOf(it)] : l.kind === "answer" && factOnlyOf(m, it) ? WORDS.cardToCheck : WORDS.cardDisposition[d];
+  out.push(md`- ${programText(placed ?? d)}${level}${decided}${marksOf(l)}${h.effect ? md` · ${l.kind === "answer" ? ruleTitleOf(m, l) : titleOfListed(m, l)}` : ours("")} · ${markdownText(l.short)}${day ? md` · ${WORDS.cardReviewOf(day)}` : ours("")} · [${WORDS.cardBack}](../${linkTarget(m.a.reportName ?? "report.md")})`);
   // The counsel mark stays on every to-clarify finding and every decided high finding (design 3.4): nothing removes it.
   if (l.kind === "counsel" || l.items.some((x) => x.label === "counsel") || (decided !== "" && l.items.some((x) => m.sevOf(x) === "high"))) out.push(md`- ${WORDS.cardCounsel}`);
   out.push(...decisionCardLines(m, l));
   /* The program's own facts at the decisive place (design 5: the place a raise
    * rests on, its data, its recipients, the transport it establishes), the words today's first screen printed. */
-  const facts = fixLines(m, 1, l.items, new Map()).facts;
+  const facts = fixFactsOf(m, l.items);
+  /* The place rows, with each code link written in the line
+   * (`byRef` false) or as a numbered reference whose target the file's last lines hold (`byRef` true; `placeTargets`). */
+  let placeAt = -1;
+  let placeRows: (byRef: boolean) => Inert[] = () => [];
+  const placeTargets: Inert[] = [];
   if (l.items.length === 1) {
-    const place = facts.place;
-    const q = quoteAt(it, placeParts(place));
-    const link = placeLink(m, place, 1);
-    /* A link longer than the row's room stands on a row of its own,
-     * and a "·" after it would then take a row alone: the matched line follows a hard break instead (mock M3's two
-     * rows where the link fits beside "Place:"). */
-    const head = md`- ${WORDS.cardPlace}: ${link}`;
-    if (q && Array.from(`${head} ·`).length > REPORT_WIDTH) out.push(md`${head}\\`, md`  ${markdownCode(q)}`);
-    else out.push(md`${head}${q ? md` · ${markdownCode(q)}` : ours("")}`);
+    /* The card names the finding by the line every other screen names it by
+     * (`placeOf`: report.md, the end screen, a group's list, the record); a line a raise rests on is said after it. Before,
+     * the card led with the raise's line (the sample's F3: public/index.html:9, another finding's line, where report.md
+     * gave src/avatar.ts:6). */
+    const place = placeOf(m, it);
+    const q = quoteAt(it, placeParts(place), m.heldOf(it));
     /* Where the Place is the line a raise rests on, the finding's own line
      * is said on the next row, a link to the code, so the person finds it in its own file (the old fix line's words). */
-    const own = placeOf(m, it);
-    if (own && own !== place) out.push(md`${out.pop() ?? ours("")}\\`, md`  ${WORDS.cardOwnLine(placeLink(m, own, 1))}`);
+    const raiseAt = facts.place && facts.place !== place ? facts.place : "";
+    for (const at of [place, raiseAt].filter(Boolean)) {
+      const p = placeParts(at);
+      placeTargets.push(codeTarget(upOf(m.a, 1), rootOf(m.a), p.file, p.line));
+    }
+    placeRows = (byRef) => {
+      const link = byRef ? md`[${inSpan(code(place))}][1]` : placeLink(m, place, 1);
+      /* A link longer than the row's room stands on a row of its own,
+       * and a "·" after it would then take a row alone: the matched line follows a hard break instead (mock M3's two
+       * rows where the link fits beside "Place:"). */
+      const head = md`- ${WORDS.cardPlace}: ${link}`;
+      const rows = q && Array.from(`${head} ·`).length > REPORT_WIDTH ? [md`${head}\\`, md`  ${markdownCode(q)}`] : [md`${head}${q ? md` · ${markdownCode(q)}` : ours("")}`];
+      if (raiseAt) rows.push(md`${rows.pop() ?? ours("")}\\`, md`  ${WORDS.cardRaiseLine(byRef ? md`[${inSpan(code(raiseAt))}][2]` : placeLink(m, raiseAt, 1))}`);
+      return rows;
+    };
+    placeAt = out.length;
+    out.push(...placeRows(false));
   }
   const ps = provisionsOf(m, it);
-  out.push(provisionLine(ps));
-  const reasons = reasonFormsOf(m, facts.decisive, facts);
-  const reasonAt = out.length;
-  out.push(md`- ${WORDS.cardReason}: ${reasons[0]}`);
-  if (l.kind === "to_fix") out.push(md`- ${WORDS.cardWhatToDo}: ${actionOf(m, it)}`);
-  else if (l.kind === "counsel") out.push(md`- ${WORDS.cardSettles}: ${settlesWordsOf(it)}`);
+  let provAt = out.length;
+  out.push(provisionLine(m, ps));
+  // The reason in its one form, whole (`cardReasonOf`): it never gives way.
+  out.push(md`- ${WORDS.cardReason}: ${cardReasonOf(m, facts.decisive, facts, h.effect)}`);
+  /* The review's suggestion for this code, labelled as its, with the rule's line beneath.
+   * A suggestion is one finding's: a single finding's card prints it; a group's card
+   * prints the rule's line, and each finding's suggestion stands under that finding in the group's list. What to do is
+   * one of the things a person must see: with a suggestion, the rule's line or a pointer to it always stands beside it
+   * (the parent's second decision of 17 Nov: never neither); a group's card keeps its line that sends the reader to each
+   * finding's own suggestion. `todoForms` are what to do's forms, longest first: the rule's line on its own row; a row
+   * that says where it is ("What the rule says to do", below, never folded); that pointer as a sentence after the
+   * suggestion. Before, the last form was the suggestion alone, and a card with a long reason gave up the rule's line and
+   * its pointer altogether (the third non-author re-check, D2). */
+  const own = l.items.length === 1 ? reviewFixOf(it.verdict) : "";
+  let todoForms: Inert[][] = [];
+  if (l.kind === "to_fix" && own) {
+    const suggestion = md`- ${WORDS.entryReviewFix(markdownText(sentenceOf(own)))}`;
+    todoForms = [[suggestion, md`- ${WORDS.entryRuleFix(actionOf(m, it))}`], [suggestion, md`- ${WORDS.cardRuleFixBelow}`], [md`${suggestion} ${WORDS.cardRuleFixAfter}`]];
+  } else if (l.kind === "to_fix" && l.items.length > 1 && l.items.some((x) => reviewFixOf(x.verdict) !== "")) {
+    const todo = md`- ${WORDS.cardWhatToDo}: ${actionOf(m, it)}`;
+    todoForms = [[todo, md`- ${WORDS.cardGroupFixes}`], [md`${todo} ${WORDS.cardGroupFixesAfter}`]];
+  }
+  let todoAt = out.length;
+  let todoK = 0;
+  const setTodo = (k: number): void => {
+    out.splice(todoAt, (todoForms[todoK] ?? []).length, ...(todoForms[k] ?? []));
+    todoK = k;
+  };
+  if (todoForms.length > 0) out.push(...(todoForms[0] ?? []));
+  else if (l.kind === "to_fix") out.push(md`- ${WORDS.cardWhatToDo}: ${actionOf(m, it)}`);
+  else if (l.kind === "counsel") out.push(md`- ${WORDS.cardSettles}: ${settlesWordsOf(m, it)}`);
+  else if (l.kind === "answer" && factSlot) out.push(md`- ${WORDS.cardSettles}: ${WORDS.cardFactSettles(markdownText(factSlot.fact?.words ?? factSlot.text), markdownText(shortCite(factSlot.fact?.cite ?? "")))}`);
   else if (l.kind === "answer") out.push(md`- ${WORDS.cardSettles}: ${WORDS.cardAnswerSettles}`);
   else out.push(md`- ${WORDS.cardNotCounted}: ${inertCut(inertUnlisted(dispositionLinesOf(m, it)[0] ?? ours("")), 300) || programText(WORDS.cardDisposition[d] ?? d)}`);
-  out.push(md`- ${WORDS.cardSay(f, markdownText(l.kind))}`);
-  // The reason gives up rows, in the order of its forms, until the card fits.
+  // A finding waiting on a fact is not settled by "review my answers": the page offers only what the person can say.
+  let sayAt = out.length;
+  out.push(md`- ${WORDS.cardSay(f, markdownText(factSlot ? "fact" : l.kind))}`);
+  /* WHAT A PERSON MUST SEE NEVER GIVES WAY (the parent's second decision of 17 Nov, after
+   * four rounds of checks each found a new way the card's give-way forms dropped or cut something: shrink the surface).
+   * Kept on every card in every shape: the status and level, the title, the place with its line, the reason whole, and what
+   * to do (with a suggestion, the rule's line or its pointer). ONLY THESE GIVE WAY, IN THIS ORDER, FROM THIS ONE PLACE, for
+   * every card kind (to fix with or without a suggestion, to clarify, to answer, to check, a group's card): the blank row
+   * under the title; the place's link in its long form, for a numbered reference whose target is at the end of the file
+   * (the place, its line and the link stay); the line of what to say in Claude Code (the same three requests on every card
+   * and on the end screen); the region words of the provision line; the provision line's second row (the provisions and
+   * where each applies are the page's "Provisions" section). Then what to do takes its shorter forms (`todoForms`), never
+   * fewer than the suggestion with the rule's line or its pointer. Where the card still runs over its rows, it does so
+   * with nothing left to give: the raw-view gate allows a card over its rows only where every one of these steps was taken
+   * (the raw-view gate). */
   const cap = l.items.length > 1 ? GROUP_CARD_ROWS : CARD_ROWS;
-  const rowsOfCard = (): number => formMarkdown([...out]).split("\n").reduce((n, x) => n + rowsAt(x), 0);
-  for (const r of reasons.slice(1)) {
-    if (rowsOfCard() <= cap) break;
-    out[reasonAt] = md`- ${WORDS.cardReason}: ${r}`;
+  let tight = false;
+  const rowsOfCard = (): number => {
+    const rows = formMarkdown([...out]).split("\n");
+    if (tight && rows[1] === "") rows.splice(1, 1);
+    return rows.reduce((k, x) => k + rowsAt(x), 0);
+  };
+  /* A code link's target is a path the program does not choose: an absolute `file:`
+   * address where the report lies outside the project, as long as the folders above it. As a numbered reference, its
+   * target is at the end of the file (`placeTargets`, written by `findingFileLines`), as report.md's first screen links
+   * its code places. Nothing is dropped: the place, its line and the link stay on the card. */
+  let byRefDone = false;
+  const toRef = (): boolean => {
+    if (placeAt < 0 || byRefDone) return false;
+    const inline = placeRows(false);
+    const byRef = placeRows(true);
+    out.splice(placeAt, inline.length, ...byRef);
+    // Every row after the place moves with it.
+    const dr = byRef.length - inline.length;
+    provAt += dr;
+    todoAt += dr;
+    sayAt += dr;
+    refs.push(...placeTargets);
+    byRefDone = true;
+    return true;
+  };
+  const say = out[sayAt];
+  const giveWay: (() => boolean)[] = [
+    () => (tight = true),
+    toRef,
+    () => {
+      if (out[sayAt] !== say) return false;
+      out.splice(sayAt, 1);
+      return true;
+    },
+    () => {
+      out[provAt] = provisionLine(m, ps, false);
+      return true;
+    },
+    () => {
+      out[provAt] = provisionRow(m, ps);
+      return true;
+    },
+    ...todoForms.slice(1).map((_, k) => (): boolean => {
+      setTodo(k + 1);
+      return true;
+    }),
+  ];
+  let fits = rowsOfCard() <= cap;
+  for (const step of giveWay) {
+    if (fits) break;
+    if (step()) fits = rowsOfCard() <= cap;
   }
+  if (tight && out[1] === "") out.splice(1, 1);
   return out;
 }
 
 /**
- * The card's provision line: at most two provisions in short form (design 5), within two rows at the report's width. Where they do not fit, the card names those that fit and "and N
- * more", a link to the file's "Provisions" section, which keeps the full list.
+ * The card's provision line: at most two provisions in short form (design 5), within three rows at the report's width. Where they do not fit, the card names those that fit and "and N
+ * more", a link to the file's "Provisions" section, which keeps the full list. `regions`
+ * false is the card's fourth step of what gives way (`cardLines`): the same line without its region words.
  */
-function provisionLine(ps: readonly Provision[]): Inert {
+function provisionLine(m: ReportModel, ps: readonly Provision[], regions = true): Inert {
   const target = linkTarget(`#${anchorOfHeading(WORDS.provisionsHeading)}`);
   const lineOf = (k: number): Inert => {
-    const shown = ps.slice(0, k).map((p) => programText(shortCite(p.cite)));
+    const shown = ps.slice(0, k).map((p) => md`${programText(shortCite(p.cite))}${p.from}`);
     const rest = ps.length - k;
     const body = shown.length > 0 ? inertJoin(shown, ours(" · ")) : ps.length > 0 ? ours("") : WORDS.cardNoProvision;
     const more = rest > 0 ? md`[${WORDS.cardMoreBelow(rest, shown.length > 0)}](${target})` : ours("");
-    return md`- ${WORDS.cardProvision}: ${inertJoin([body, more].filter(Boolean), ours(" "))}${regionWordsOf(ps)}`;
+    return md`- ${WORDS.cardProvision}: ${inertJoin([body, more].filter(Boolean), ours(" "))}${regions ? regionWordsOf(ps) : ours("")}`;
   };
   const rowsOf = (line: Inert): number => formMarkdown([line]).split("\n").filter((l) => l !== "").reduce((n, l) => n + rowsAt(l), 0);
   for (let k = Math.min(2, ps.length); k > 0; k--) if (rowsOf(lineOf(k)) <= CARD_PROVISION_ROWS) return lineOf(k);
   return lineOf(0);
 }
 
+/**
+ * The provision line in one row, the card's fifth step of what gives way: the provisions
+ * that fit, and how many more, linked; no region words. Where not even one provision fits a row, the count alone, linked
+ * (before, this fell back to the two-row line with its region words, after every step had been taken).
+ */
+function provisionRow(m: ReportModel, ps: readonly Provision[]): Inert {
+  const target = linkTarget(`#${anchorOfHeading(WORDS.provisionsHeading)}`);
+  for (let k = Math.min(2, ps.length); k > 0; k--) {
+    const rest = ps.length - k;
+    const line = md`- ${WORDS.cardProvision}: ${inertJoin(ps.slice(0, k).map((p) => md`${programText(shortCite(p.cite))}${p.from}`), ours(" · "))}${rest > 0 ? md` [${WORDS.cardMoreBelow(rest, true)}](${target})` : ours("")}`;
+    if (formMarkdown([line]).split("\n").filter((l) => l !== "").length <= 1) return line;
+  }
+  return ps.length > 0 ? md`- ${WORDS.cardProvision}: [${WORDS.cardMoreBelow(ps.length, false)}](${target})` : md`- ${WORDS.cardProvision}: ${WORDS.cardNoProvision}`;
+}
+
 /** What settles a finding to clarify: the review's own statement (`standing.settles`), with the program's words for its kind. */
-function settlesWordsOf(it: Item): Inert {
+function settlesWordsOf(m: ReportModel, it: Item): Inert {
   const s = it.order?.settles ?? "";
-  if (s.startsWith("law_unclear:")) return md`${proseOf(s.slice("law_unclear:".length))} ${WORDS.cardSettlesLaw}`;
+  // The citation is the review's own words (its `settles`): printed as written, never renamed.
+  if (s.startsWith("law_unclear:")) return md`${proseOf(s.slice("law_unclear:".length).replace(/[\s.;,]+$/, ""))}, ${WORDS.cardSettlesLaw}`;
   if (s.startsWith("code_not_readable:")) return WORDS.cardSettlesCode(markdownCode(s.slice("code_not_readable:".length)));
   return s ? proseOf(s.replace(/^[a-z_]+:/, "")) : WORDS.cardSettlesNone;
 }
@@ -7121,7 +8430,8 @@ function settlesWordsOf(it: Item): Inert {
  * THE GENERATOR `explain` prints through (unit B2): `findingFileText(m, files, l)`.
  */
 function findingFileLines(m: ReportModel, l: Listed): Inert[] {
-  const out = cardLines(m, l);
+  const refs: Inert[] = [];
+  const out = cardLines(m, l, refs);
   const group = l.items.length > 1;
   const partsOf = new Map(l.items.map((it) => [it, itemParts(m, it)] as const));
   const shortOf = (it: Item): Inert => markdownText(m.files?.shortOf.get(idOf(it)) ?? hexOf(idOf(it)));
@@ -7132,55 +8442,98 @@ function findingFileLines(m: ReportModel, l: Listed): Inert[] {
     const counted = new Set<string>();
     l.items.forEach((it, i) => {
       const place = placeOf(m, it);
-      const why = oneLine(str(m.heldOf(it)[0]?.why), 120);
+      // Each member's own headline (the review's sentence), never a reason cut with "…".
+      const hm = headlineOf(m, l, it);
+      /* And each member's reason, whole, in the card's one form (`cardReasonOf`): the
+       * parent's decision for 17 Nov (what a person must see never gives way, on any card or list). Before, a member
+       * without a headline had its place reason cut at 120 characters with "…", and one with a headline had none here; for a
+       * member with the review's block that reason was printed on no page (the third non-author re-check, D3). */
+      const mf = fixFactsOf(m, [it]);
+      const reason = md`   ${WORDS.cardReason}: ${cardReasonOf(m, mf.decisive, mf, hm.effect)}`;
       const own = [...new Set(placeKeysOf(m, it))];
       const fresh = own.filter((k) => !counted.has(k));
       for (const k of fresh) counted.add(k);
       const count = WORDS.groupEntryPlaces(fresh.length, own.length - fresh.length);
-      out.push(md`${i + 1}. ${placeLink(m, place, 1)}\\`, md`   [${shortOf(it)}](${linkTarget(`#${anchorOfHeading(WORDS.groupMemberHeading(shortOf(it)))}`)}) · ${count}${why ? md` · ${proseOf(why)}` : ours("")}`);
+      // The review's suggestion for this finding's code, labelled, under this finding only.
+      const fix = l.kind === "to_fix" ? reviewFixOf(it.verdict) : "";
+      const entry = md`   [${shortOf(it)}](${linkTarget(`#${anchorOfHeading(WORDS.groupMemberHeading(shortOf(it)))}`)}) · ${count}${hm.effect ? md` · ${hm.text}` : ours("")}`;
+      out.push(md`${i + 1}. ${placeLink(m, place, 1)}\\`, md`${entry}\\`, ...(fix ? [md`${reason}\\`, md`   ${WORDS.entryReviewFix(markdownText(sentenceOf(fix)))}`] : [reason]));
     });
   }
-  const section = (heading: Inert, pick: (p: ItemParts) => Inert[]): void => {
+  /* Each section's heading stays open, so a link to it (the card's "and N more", a
+   * group's list, report.md's entries) lands on what the person sees; what is only bookkeeping is folded under it
+   * (`fold`): the review's full reasoning, how it was read, the provisions' list, the finding's ids. Never folded: the
+   * card, "Why it matters" and every line that says what was not established, the evidence, what the rule says to do. */
+  const section = (heading: Inert, pick: (p: ItemParts) => Inert[], fold?: Inert, folded?: (p: ItemParts) => Inert[]): void => {
     out.push(ours(""), md`## ${heading}`, ours(""));
-    const all = l.items.map((it) => ({ it, lines: pick(partsOf.get(it) as ItemParts) }));
-    if (all.every((x) => x.lines.length === 0)) {
+    const all = l.items.map((it) => ({ it, lines: pick(partsOf.get(it) as ItemParts), hidden: folded ? folded(partsOf.get(it) as ItemParts) : [] }));
+    if (all.every((x) => x.lines.length === 0 && x.hidden.length === 0)) {
       out.push(WORDS.sectionNone);
       return;
     }
+    const body: Inert[] = [];
     for (const x of all) {
-      if (group) out.push(heading === WORDS.reasoningHeading ? md`### ${WORDS.groupMemberHeading(shortOf(x.it))}` : md`${WORDS.groupMemberHeading(shortOf(x.it))}:`, ours(""));
-      out.push(...(x.lines.length > 0 ? x.lines : [WORDS.sectionNone]), ours(""));
+      const member = (lines: Inert[]): void => {
+        if (group && heading !== WORDS.reasoningHeading) lines.push(md`${WORDS.groupMemberHeading(shortOf(x.it))}:`, ours(""));
+      };
+      if (group && heading === WORDS.reasoningHeading) out.push(md`### ${WORDS.groupMemberHeading(shortOf(x.it))}`, ours(""));
+      if (fold && !folded) {
+        member(body);
+        body.push(...(x.lines.length > 0 ? x.lines : [WORDS.sectionNone]), ours(""));
+        continue;
+      }
+      if (!fold) member(out);
+      out.push(...(x.lines.length > 0 ? x.lines : x.hidden.length > 0 ? [] : [WORDS.sectionNone]), ...(x.lines.length > 0 || x.hidden.length === 0 ? [ours("")] : []));
+      if (fold && x.hidden.length > 0) out.push(...foldOf(fold, x.hidden), ours(""));
+    }
+    if (fold && !folded) {
+      while (body[body.length - 1] === "") body.pop();
+      out.push(...foldOf(fold, body));
     }
     while (out[out.length - 1] === "") out.pop();
   };
-  section(WORDS.reasoningHeading, (p) => p.reasoning);
+  section(WORDS.reasoningHeading, (p) => p.reasoning, WORDS.reasoningFold, (p) => p.full);
   section(WORDS.evidenceHeading, (p) => p.evidence);
-  section(WORDS.readHeading, (p) => p.read);
+  section(WORDS.readHeading, (p) => p.read, WORDS.readFold);
   const it0 = l.items[0] as Item;
   const ps = provisionsOf(m, it0);
   out.push(ours(""), md`## ${WORDS.provisionsHeading}`, ours(""));
   if (ps.length === 0) out.push(WORDS.sectionNone);
-  for (const p of ps) out.push(md`- ${p.cite}${p.region ? md` (${p.region}: ${p.whose})` : md` (${p.whose})`}${WORDS.provisionSource(p.url, p.checked)}`);
-  out.push(ours(""), WORDS.provisionsNoText); // its own paragraph, not a continuation of the last provision's item
+  const provisionLines = ps.map((p) => md`- ${p.cite}${p.region ? md` (${p.region}: ${p.whose})` : md` (${p.whose})`}${p.from}${WORDS.provisionSource(p.url, p.checked)}${p.notes.length > 0 ? WORDS.provisionNotes(inertJoin(p.notes, ours("; ")), p.notes.length) : ours("")}`);
+  // its own paragraph, not a continuation of the last provision's item
+  if (ps.length > 0) out.push(...foldOf(WORDS.provisionsFold(ps.length), [...provisionLines, ours(""), WORDS.provisionsNoText]));
+  else out.push(ours(""), WORDS.provisionsNoText);
   out.push(ours(""), md`## ${WORDS.guidanceHeading}`, ours(""));
-  /* The rule's guidance as the scan copied it from the bundle the program ships (its Markdown meant): program text. */
+  /* The rule's line for the person (`fix_line`, the card's "What to do"), never its
+   * `remediation_template`, which the review is handed and which most rules write as directions to it ("Read the matched
+   * line first", "return needs_human"): printed here in full, it told the person to do the review's work. A bundle with no
+   * line for the person keeps the rule's text, the only guidance it has (program text, its Markdown meant). */
   const guidance = str(it0.candidate?.remediation_template).trim();
-  out.push(...(guidance ? inertLines(programText(guidance)) : [WORDS.sectionNone]));
-  out.push(ours(""), md`## ${WORDS.decisionsHeading}`, ours(""), ...decisionHistoryLines(m, l));
-  out.push(ours(""), md`## ${WORDS.deeperHeading}`, ours(""), WORDS.deeperNone(fOf(l)));
+  const forPerson = str(m.a.ruleLines?.[ruleIdOf(it0)]?.fix_line);
+  if (forPerson) out.push(proseOf(forPerson), ...(guidance ? [ours(""), WORDS.guidanceForReview] : []));
+  else out.push(...(guidance ? inertLines(programText(guidance)) : [WORDS.sectionNone]));
+  // "Your decisions" only where one is on record (or the record could not be read);
+  // "Deeper checks" only ever said "None": the card's say-line offers "look deeper" (the readability review's P7).
+  const decisions = decisionHistoryLines(m, l);
+  if (!(decisions.length === 1 && decisions[0] === WORDS.decisionsNone)) out.push(ours(""), md`## ${WORDS.decisionsHeading}`, ours(""), ...decisions);
   out.push(ours(""), md`## ${WORDS.aboutHeading}`, ours(""));
+  const about: Inert[] = [];
   const nums = m.files?.numbers;
   const gi = m.files ? m.files.listed.filter((x) => x.kind !== "other").indexOf(l) : -1;
   const also = gi >= 0 ? nums?.alsoShownAs.get(gi) : undefined;
-  if (also && also.length > 0) out.push(WORDS.alsoShownAs(also.map((n) => markdownText(fNumber(n)))));
+  if (also && also.length > 0) about.push(WORDS.alsoShownAs(also.map((n) => markdownText(fNumber(n)))));
   const was = gi >= 0 ? nums?.shownInCarried.get(gi) : undefined;
-  if (was !== undefined && nums?.note?.kind === "differs") out.push(WORDS.shownInCarried(markdownText(fNumber(was)), markdownText(nums.note.label)));
+  if (was !== undefined && nums?.note?.kind === "differs") about.push(WORDS.shownInCarried(markdownText(fNumber(was)), markdownText(nums.note.label)));
   for (const it of l.items) {
     const p = partsOf.get(it) as ItemParts;
-    out.push(...p.about);
-    out.push(WORDS.aboutLine(markdownText(idOf(it)), markdownText(ruleIdOf(it)), markdownText(str(m.a.findings.scan_id))), ours(""));
+    about.push(...p.about);
+    about.push(WORDS.aboutLine(markdownText(idOf(it)), markdownText(ruleIdOf(it)), markdownText(str(m.a.findings.scan_id))), ours(""));
   }
+  while (about[about.length - 1] === "") about.pop();
+  out.push(...foldOf(WORDS.aboutFold, about));
   while (out[out.length - 1] === "") out.pop();
+  // The card's code links written as references (`cardLines`): their targets, after a blank line that ends the fold above.
+  if (refs.length > 0) out.push(ours(""), ...refs.map((t, i) => md`[${i + 1}]: ${t}`));
   return out;
 }
 
@@ -7197,6 +8550,35 @@ function findingFileText(m: ReportModel, l: Listed): Inert {
  * continuation indented to the marker's width); headings, table rows, reference definitions, rules and fenced blocks left
  * as they are; and every `<` outside a code span that would open an HTML tag escaped, so no file holds HTML.
  */
+/**
+ * A fold's own lines, the only HTML a report file holds:
+ * a line that is exactly `<details>` or `</details>`, or a `<summary>` of words with no `<`, `>`, backslash, backtick,
+ * square bracket or line break. A value cannot write one: every value reaches a file escaped (`markdownText` escapes `<`)
+ * or in a code span, so a line made of a value never starts with a bare `<`. One rule for the form pass, `explain` and
+ * the raw-view gate (the raw-view gate holds the same expression).
+ */
+export const FOLD_LINE = /^(?:<details>|<\/details>|<summary>[^<>\\`[\]\n]*<\/summary>)$/;
+/**
+ * BOOKKEEPING FOLDED: `lines` under a fold whose closed line says
+ * `summary`. Only for what the person need not read to act (the review's full reasoning, how it was read, the provisions'
+ * list, the finding's ids, the ruled-out list under its count, laws.md's long conditions, not-checked.md's lists under
+ * their counts): a finding's status, level, reason, code line and what to do, and every count of what was not checked, are
+ * never folded. A blank line after the summary and before the end, so GitHub and VS Code render the Markdown inside. A
+ * summary that is not plain words is left unfolded (`FOLD_LINE`), never escaped into text; nothing to fold makes no fold.
+ */
+function foldOf(summary: Inert, lines: readonly Inert[]): Inert[] {
+  const head = WORDS.foldSummary(summary);
+  if (!FOLD_LINE.test(head) || lines.length === 0) return [...lines];
+  return [ours(WORDS.foldOpen), head, ours(""), ...lines, ours(""), ours(WORDS.foldClose)];
+}
+
+export { lawFirstName, lawLaterName };
+/**
+ * The law names of the assembly running now (`assemble` sets them for its run and puts
+ * back what was there), so the form pass every page leaves through resolves the program's marks (`lawNameOf`) with them:
+ * no builder hands them on.
+ */
+let lawNamesNow: LawNames = {};
 export function formMarkdown(lines: readonly Inert[], width: number = REPORT_WIDTH): Inert {
   const out: string[] = [];
   let fenced = false;
@@ -7204,13 +8586,20 @@ export function formMarkdown(lines: readonly Inert[], width: number = REPORT_WID
    * line of every file whatever wrote it (`controlsEscaped`): an ESC, CR, U+2028 or C1 control of a value cannot reach a
    * file. A line break of a value cannot be told from the file's own here: a value that may hold one goes through
    * `valueText` where its line is made (`code`, a place's link label, the end screen's place). */
-  for (const raw of lines.flatMap((l) => l.split("\n")).map(controlsEscaped)) {
+  // The page's one tracker of the laws the program names (`lawNameOf`): each law's first
+  // mark in full with its short form, in reading order, later ones short (law-names.ts `lawMarksResolved`); a name is
+  // escaped as any text of the page. Nothing but the marks is read: no word the program did not write is renamed.
+  const named = lawMarksResolved(lines.flatMap((l) => l.split("\n")), lawNamesNow, (t) => String(markdownText(t)));
+  for (const raw of named.map(controlsEscaped)) {
     if (/^\s*(```|~~~)/.test(raw)) {
       fenced = !fenced;
       out.push(raw);
       continue;
     }
-    if (fenced || raw.trim() === "" || /^#{1,6}\s/.test(raw) || /^\s*\|/.test(raw) || /^\s{0,3}\[[^\]]+\]:\s/.test(raw) || /^(-{3,}|\*{3,})\s*$/.test(raw)) {
+    /* THE ONE HTML THE FILES HOLD: a fold's own lines, each a whole
+     * line at column 0 (`foldOf`, `FOLD_LINE`), kept as they are. No value can make one: every value reaches a line escaped
+     * (`markdownText`, `proseOf` and `code` write a `<` as `\<` or inside a code span). */
+    if (fenced || raw.trim() === "" || FOLD_LINE.test(raw) || /^#{1,6}\s/.test(raw) || /^\s*\|/.test(raw) || /^\s{0,3}\[[^\]]+\]:\s/.test(raw) || /^(-{3,}|\*{3,})\s*$/.test(raw)) {
       out.push(raw.trimEnd());
       continue;
     }
@@ -7260,16 +8649,18 @@ function ruledOutFiles(m: ReportModel): Record<string, string> {
     const name = `ruled-out/${plainFileName(m.plainOf(rule), taken)}.md`;
     if (m.files) for (const it of g) (m.files.ruledOutOf ??= new Map()).set(idOf(it), name);
     index.push(md`- [${markdownText(labelOf(m.plainOf(rule)))}](${linkTarget(name)}) · ${markdownText(m.sevOf(g[0] as Item))} · ${groupOf(g.length)}`);
-    const out: Inert[] = [md`# ${WORDS.ruledOutRuleTitle(m.plainOf(rule), g.length)}`, ours(""), md`- [${WORDS.cardBack}](../${linkTarget(m.a.reportName ?? "report.md")}) · [${WORDS.ruledOutIndex}](../ruled-out.md)`, md`- ${inertUnlisted(WORDS.ruleNamed(code(rule), programText(m.titleOf.get(rule) ?? "")))}`, ours("")];
+    const out: Inert[] = [md`# ${WORDS.ruledOutRuleTitle(m.plainOf(rule), g.length)}`, ours(""), md`- [${WORDS.cardBack}](../${linkTarget(m.a.reportName ?? "report.md")}) · [${WORDS.ruledOutIndex}](../ruled-out.md)`, md`- ${inertUnlisted(WORDS.checkNamed(code(rule), m.plainOf(rule)))}`, ours("")];
     for (const it of g) {
       const short = markdownText(m.files?.shortOf.get(idOf(it)) ?? hexOf(idOf(it)));
       const reason = oneLine(str(obj(it.verdict.refutation)?.reasoning) || str(it.verdict.reasoning), 400);
-      const first = firstSentence(reason).slice(0, 120);
-      out.push(md`- ${placeLink(m, placeOf(m, it), 1)}\\`, md`  [${short}](${linkTarget(`#${anchorOfHeading(`Verdict ${short}`)}`)})${first ? md` · ${proseOf(first)}` : ours("")}`);
+      // Cut at a sentence or a word,
+      // marked "…" (`oneLine`), never inside a word: a plain slice cut "connect.facebook.net" to "connect", unmarked.
+      const first = oneLine(firstSentence(reason), 160);
+      out.push(md`- ${placeLink(m, placeOf(m, it), 1)}\\`, md`  [${short}](${linkTarget(`#${anchorOfHeading(WORDS.ruledOutFindingHeading(short))}`)})${first ? md` · ${proseOf(first)}` : ours("")}`);
     }
     for (const it of g) {
       const short = markdownText(m.files?.shortOf.get(idOf(it)) ?? hexOf(idOf(it)));
-      out.push(ours(""), md`### Verdict ${short}`, ours(""), ...dismissedLinesOf(m, it), ...placeLinesOfAnswer(it, vendorSoftwareOf(m.a.profile ?? null)));
+      out.push(ours(""), md`### ${WORDS.ruledOutFindingHeading(short)}`, ours(""), ...dismissedLinesOf(m, it, true), ...placeLinesOfAnswer(it, vendorSoftwareOf(m.a.profile ?? null)));
       if (it.readAgain) out.push(md`  ${WORDS.readAgain(it.readAgain.checked, it.readAgain.settled, it.readAgain.previous, earlierRun(a, it.readAgain.scan_id))}`);
     }
     files[name] = formMarkdown(composedNet(a, out.map((line) => inertRelinked(line, ours("../")))));
@@ -7282,13 +8673,15 @@ function ruledOutFiles(m: ReportModel): Record<string, string> {
 /** One finding's lines, by the section of its file they belong to (design 3.1.1): what was `itemLines`, kept line for line. */
 interface ItemParts {
   reasoning: Inert[];
+  /** The review's own paragraphs in full: folded under the open lines of `reasoning`. */
+  full: Inert[];
   evidence: Inert[];
   read: Inert[];
   about: Inert[];
 }
 function itemParts(m: ReportModel, it: Item): ItemParts {
   const { a } = m;
-  const p: ItemParts = { reasoning: [], evidence: [], read: [], about: [] };
+  const p: ItemParts = { reasoning: [], full: [], evidence: [], read: [], about: [] };
   const summaryList = (k: string) => arr(a.summary[k]).map(str);
   const marks = (prefix: string) => ({
     elided: summaryList("elided_quotes").some((x) => x.startsWith(prefix)),
@@ -7299,7 +8692,9 @@ function itemParts(m: ReportModel, it: Item): ItemParts {
   // The label is the disposition's.
   const d = m.dispOf(it);
   const label =
-    d === "counsel"
+    (d === "question" || d === "check_answer") && factOnlyOf(m, it)
+      ? WORDS.labelToCheck
+      : d === "counsel"
       ? WORDS.labelCounsel
       : d !== "to_fix"
         ? (WORDS.dispositionLabel[d] ?? WORDS.labelCandidate)
@@ -7314,12 +8709,12 @@ function itemParts(m: ReportModel, it: Item): ItemParts {
   if (it.raisedAlso) p.about.push(WORDS.severityRaisedAlso(markdownText(it.raisedAlso.severity), markdownProse(it.raisedAlso.because)));
   // The review's reasoning in full first (today's report printed none for a finding that stands). Not beside a record the
   // quotation check invalidated: its reasoning rests on lines the check could not find.
-  if (str(it.verdict.reasoning) && it.verdict.quote_check_outcome !== "invalidated") p.reasoning.push(WORDS.reviewSaid(said(str(it.verdict.reasoning), 4000)));
+  if (str(it.verdict.reasoning) && it.verdict.quote_check_outcome !== "invalidated") p.full.push(WORDS.reviewSaid(said(str(it.verdict.reasoning), 4000)));
   /* A finding with no block: the review's reason at its place, in full
    * and said as the review's (the old Fix-first item printed it cut at 170; the card's "reasoning is below" points here).
    * A block's finding takes the block's words instead (fix-h5a-order-2026-10-28.md, section 9, item 4). */
-  const placeWhy = it.order?.hasBlock ? "" : oneLine(str(m.heldOf(it)[0]?.why), 4000);
-  if (placeWhy && it.verdict.quote_check_outcome !== "invalidated") p.reasoning.push(WORDS.reviewSaidOfPlaceFull(proseOf(placeWhy)));
+  const placeWhy = it.order?.hasBlock ? "" : oneLine(str(m.heldOf(it)[0]?.why), Infinity);
+  if (placeWhy && it.verdict.quote_check_outcome !== "invalidated") p.full.push(WORDS.reviewSaidOfPlaceFull(proseOf(placeWhy)));
   /* What the review's block established, what settles a finding that
    * needs judgement, what was not established, and why an item of group 1-3 is not counted as to fix. */
   const o = it.order;
@@ -7327,21 +8722,22 @@ function itemParts(m: ReportModel, it: Item): ItemParts {
     const answers = orderAnswersOf(a.profile ?? null);
     if (o.settles?.startsWith("law_unclear:")) p.reasoning.push(md`- ${WORDS.counselLaw(markdownText(o.settles.slice("law_unclear:".length)), placedWords(d))}`);
     else if (o.settles?.startsWith("code_not_readable:")) p.reasoning.push(md`- ${WORDS.counselCode(code(o.settles.slice("code_not_readable:".length)), placedWords(d))}`);
-    if (o.question) p.reasoning.push(md`-${WORDS.waitsOn(markdownText(questionTextOf(o.question).header))}`);
+    if (o.question) p.reasoning.push(md`-${WORDS.waitsOn(ownWords(questionTextOf(o.question).header))}`);
     if (o.hasBlock) {
       const aside = setAsideOf(it.verdict, o);
       // A part set aside is printed as not established,
       // as an absent part is: "In the product: not used (...)" read as "not used in the product" and could make a person drop a
       // real finding. Why it was set aside is said in the bullet after (`notEstablishedWords`).
       const or = (words: Inert, part: string): Inert => words || (aside.has(part) ? ours(WORDS.partSetAside) : ours(""));
-      const effect = said(str(obj(it.verdict.standing)?.effect), 400) || (aside.has("effect") ? WORDS.effectNotUsed(aside.get("effect") ?? ours("")) : ours(""));
+      const effect = said(reviewEffectOf(it.verdict), 400) || (aside.has("effect") ? WORDS.effectNotUsed(aside.get("effect") ?? ours("")) : ours(""));
       const ships = o.heaviest.includes("ships") ? ours("") : (WORDS.shipsPhrase[o.ships] ?? markdownText(o.ships));
-      p.reasoning.push(WORDS.whyItMatters(effect, or(standingDataWords(o), "data"), or(standingPeopleWords(o, answers), "people"), or(standingRunsWords(o), "runs"), or(ships, "ships"), or(lawWordsOf(o, scanDayOf(m)), "duty")));
+      p.reasoning.push(WORDS.whyItMatters(effect, or(standingDataWords(o), "data"), or(standingPeopleWords(o, answers), "people"), or(standingRunsWords(o), "runs"), or(ships, "ships"), or(lawWordsOf(m, o, scanDayOf(m)), "duty")));
     }
     const ne = notEstablishedWords(o, it.verdict);
     if (ne) p.reasoning.push(md`- ${ne}`);
     if (o.hasBlock && (o.ships === "maker_site" || o.ships === "documented_example" || (arr(c.declared_inapplicable_preconditions).length > 0 && d !== "check_answer"))) p.reasoning.push(md`- ${standingWhyOf(m, it)}`);
   }
+  p.reasoning.push(...setAsideTextLinesOf(m, it));
   p.reasoning.push(...dispositionLinesOf(m, it));
   p.read.push(...secondLookLinesOf(m, it));
   p.reasoning.push(...(it.whyLines ?? []));
@@ -7376,10 +8772,19 @@ function itemParts(m: ReportModel, it: Item): ItemParts {
  */
 function restsOnReadLines(ro: Obj | undefined): Inert[] {
   if (!ro) return [];
-  const files = [...new Set(arr(ro.files).map(obj).filter((f): f is Obj => !!f && f.missing !== true).map((f) => str(f.path)).filter(Boolean))];
-  const searches = [...new Set(arr(ro.searches).map(obj).filter((x): x is Obj => !!x).map((x) => str(x.pattern)).filter(Boolean))];
+  // Every block the verdict's seats
+  // recorded what they opened and searched in: the verdict's own, each place's (a candidate read place by place records its
+  // seats' sight per place, `place-premises.ts`) and its answer seat's. DEMO5 printed "Searches run (0)" on 11 pages whose
+  // reasoning said the review searched: those were read place by place, and only the verdict's own block was counted.
+  const blocks = [ro, ...arr(ro.places).map(obj), obj(ro.answer)].filter((b): b is Obj => !!b);
+  const files = [...new Set(blocks.flatMap((b) => arr(b.files)).map(obj).filter((f): f is Obj => !!f && f.missing !== true).map((f) => str(f.path)).filter(Boolean))];
+  /* The review's own rows for this finding, then the session's rows the
+   * capture wrote (`SEAT_SEARCH_FOR`), each pattern once, under its own label. */
+  const rows = blocks.flatMap((b) => arr(b.searches)).map(obj).filter((x): x is Obj => !!x);
+  const searches = [...new Set(rows.filter((x) => str(x.for) !== SEAT_SEARCH_FOR).map((x) => str(x.pattern)).filter(Boolean))];
+  const seat = [...new Set(rows.filter((x) => str(x.for) === SEAT_SEARCH_FOR).map((x) => str(x.pattern)).filter((x) => x !== "" && !searches.includes(x)))];
   const list = (xs: string[]): Inert => (xs.length === 0 ? ours(".") : md`: ${inertJoin(xs.map(markdownCode), ours(" · "))}`);
-  return [md`- ${WORDS.filesRead(files.length)}${list(files)}`, md`- ${WORDS.searchesRun(searches.length)}${list(searches)}`];
+  return [md`- ${WORDS.filesRead(files.length)}${list(files)}`, md`- ${WORDS.searchesRun(searches.length)}${list(searches)}`, ...(seat.length > 0 ? [md`- ${WORDS.searchesSeat(seat.length)}${list(seat)}`] : [])];
 }
 
 /** One row as `reviewWords` counts it. */
@@ -7400,11 +8805,20 @@ function reviewRowsOf(m: ReportModel): ReviewRow[] {
  * first line ("short") and `record.html`'s How line (record.ts, from the log's rows). Until 2026-11-12 the three read the
  * shape alone, so a "+ second check" run that carried a finding never refuted said "findings to fix reviewed twice".
  */
-export function reviewWords(once: boolean, rows: readonly ReviewRow[], form: "long" | "short"): string {
+export function reviewWords(once: boolean, rows: readonly ReviewRow[], form: "long" | "short" | "sentence"): string {
   const fix = rows.filter((r) => r.toFix);
   const toFix = fix.length;
   const twice = fix.filter((r) => r.refuted).length;
   const carried = fix.filter((r) => !r.refuted && r.carried).length === toFix - twice;
+  /* report.md's first screen says it as a sentence, with its verb; the end screen and the
+   * record keep their forms. */
+  if (form === "sentence") {
+    if (toFix === 0 || (once && twice === 0)) return once ? "Each finding was reviewed once." : "Each finding to fix was reviewed twice.";
+    if (twice === toFix) return "Each finding to fix was reviewed twice.";
+    if (twice === 0) return `Each finding to fix was reviewed once${carried ? ", in an earlier run" : ""}.`;
+    // The verb agrees with its count ("1 of the 2 ... was").
+    return `${group(twice)} of the ${group(toFix)} findings to fix ${twice === 1 ? "was" : "were"} reviewed twice, and ${group(toFix - twice)} ${carried ? `${toFix - twice === 1 ? "was" : "were"} reviewed once, in an earlier run` : "once"}.`;
+  }
   const long = form === "long";
   if (toFix === 0 || (once && twice === 0)) return once ? (long ? "each place reviewed once" : "each place once") : long ? "findings to fix reviewed twice" : "findings to fix twice";
   if (twice === toFix) return long ? "findings to fix reviewed twice" : "findings to fix twice";
@@ -7414,124 +8828,448 @@ export function reviewWords(once: boolean, rows: readonly ReviewRow[], form: "lo
     : `${group(twice)} of ${group(toFix)} to fix twice, ${group(toFix - twice)} once`;
 }
 
+/** report.md's first screen keeps to this many rows at 75 columns (design 6; the raw-view gate). */
+// FIRST_SCREEN_ROWS is report-budget.ts's.
+/** The rows To clarify's entries may take on the first screen, where there are any. */
+const FIRST_SCREEN_CLARIFY_ENTRY_ROWS = 14;
+/** The rows a block of logical lines takes once formed and printed. */
+function rowsOfLines(lines: readonly Inert[], printed: (t: string) => string): number {
+  // Blank lines are rows too (the raw-view gate counts every line above "To fix by area").
+  return formMarkdown(lines.map((x) => inertRedacted(x, printed))).replace(/\n$/, "").split("\n").reduce((k, l) => k + rowsAt(l), 0);
+}
+
 /**
- * `report.md`'s first screen (design 3.1 "Report first screen"; mock M2): the title, the two count groups and the laws
- * line, Not checked (places without a verdict first), Fix first (up to five entries within ten rows), To clarify (up to
- * three within eight rows) and the legend. The code places are reference links whose definitions close the file (`refs`).
+ * (the owner, 2026-11-16: "something that catches the eye; a hook makes it easy to follow") A FINDING'S
+ * HEADLINE: the review's plain sentence of what happens (`standing.effect`, the sentence its "Why it matters" opens with),
+ * else, where the review wrote none, it was set aside, or the record failed the quotation check, the check's title (the
+ * coordinator's ruling of 2026-11-16). Never empty.
  */
-function firstScreenLines(m: ReportModel, refs: Inert[]): Inert[] {
+function headlineOf(m: ReportModel, l: Listed, it?: Item): { text: Inert; effect: boolean } {
+  /* A group's own headline (its page's title, the end screen's row)
+   * is its check's title: the first member's sentence headed a page whose second finding said another (the re-check's
+   * n1). Each member's sentence stays on its own entry and under its own heading. */
+  if (it === undefined && l.items.length > 1) return { text: ruleTitleOf(m, l), effect: false };
+  return headlineOfItem(m, l, it ?? (l.items[0] as Item));
+}
+function headlineOfItem(m: ReportModel, l: Listed, it: Item): { text: Inert; effect: boolean } {
+  // The kept sentence only: one set aside (even for its length, which "Why it matters" still prints) is no headline.
+  const kept = str(obj(it.verdict.standing)?.effect);
+  // And one within today's words and rows (report-budget.ts), as the capture keeps it. Not one the review replaced after its last refusal.
+  const effect = it.verdict.quote_check_outcome === "invalidated" || laterWordsAside(it.verdict, "standing.effect") || /[\r\n]/.test(kept) || !headlineFits(kept) ? "" : oneLine(kept, 400);
+  return effect ? { text: markdownText(sentenceOf(`${effect.charAt(0).toUpperCase()}${effect.slice(1)}`)), effect: true } : { text: ruleTitleOf(m, l), effect: false };
+}
+/** The check's title as the page names it, without a group's place count. */
+function ruleTitleOf(m: ReportModel, l: Listed): Inert {
+  const rule = ruleIdOf(l.items[0] as Item);
+  if (l.kind === "answer") return m.plainOf(rule);
+  const lineOf = l.kind === "to_fix" ? problemLineFor(m.a.ruleLines?.[rule], titleFactsOf(m, l.items)) : null;
+  return lineOf !== null ? markdownText(lineOf) : m.plainOf(rule);
+}
+/** One finding's marks (legend: `WORDS.legendWorstOf`), and the places the AI did not open. */
+function itemMarksOf(it: Item): Inert {
+  const worst = (it.order?.heaviest?.length ?? 0) > 0;
+  const notOpened = it.notChecked?.places ?? 0;
+  return md`${worst ? ours(" ⚑") : ours("")}${notOpened > 0 ? md` · ${WORDS.cardNotOpened(notOpened)}` : ours("")}`;
+}
+const flagged = (it: Item): boolean => (it.order?.heaviest?.length ?? 0) > 0;
+/** The fact or the question a finding to answer waits on, as its entry says it. */
+function waitLineOf(m: ReportModel, it: Item): Inert | null {
+  const slots = (m.a.questions ?? []).filter((q) => q.kind !== "order_moving" && q.findingIds.includes(idOf(it)));
+  const fact = slots.find((q) => q.kind === "fact");
+  const question = it.order?.question ?? waitQuestionOf(it);
+  // The question itself, as "review my answers" asks it ("Minors" was its header).
+  if (question) return WORDS.entryQuestion(ownWords(questionTextOf(question).text || questionTextOf(question).header));
+  if (fact) return WORDS.entryFact(markdownText(fact.fact?.words ?? fact.text), markdownText(shortCite(fact.fact?.cite ?? "")));
+  const q = slots.find((x) => x.kind !== "fact");
+  return q ? WORDS.entryQuestion(ownWords(q.header)) : null;
+}
+/**
+ * ONE FINDING ON THE FRONT PAGE, so the person need not open its page to know what it
+ * is: what happened (the headline), its level and the check's title with a link to its page, its code line with the
+ * line's own text, and what to do (or what decides it). `link` is the place's link (a reference on the first screen).
+ */
+function entryLines(m: ReportModel, l: Listed, it: Item, link: Inert, page: Inert, compact = false): Inert[] {
+  const h = headlineOf(m, l, it);
+  const n = l.items.length;
+  const part = n > 1 ? WORDS.entryPart(l.items.indexOf(it) + 1, n) : ours("");
+  const level = l.kind === "counsel" ? md`${markdownText(m.sevOf(it))}${itemMarksOf(it)} · ${programText(WORDS.cardDisposition.counsel ?? "")}` : md`${markdownText(m.sevOf(it))}${itemMarksOf(it)}`;
+  // The F-number is the link to the finding's page (its 6-character id means nothing to a reader).
+  const meta = inertJoin([level, ...(h.effect ? [ruleTitleOf(m, l)] : [])], ours(" · "));
+  const place = placeOf(m, it);
+  const q = quoteAt(it, placeParts(place), m.heldOf(it));
+  // The finding's other places counted beside its first, as Fix
+  // first said them before R19-F ("+N more places"): one code line shown never reads as one place.
+  const others = placesOfItems(m, [it]) - 1;
+  const at = others > 0 ? md`${link} ${WORDS.morePlaces(others)}` : link;
+  /* THE COMPACT FORM, for the first screen where two entries do not
+   * fit in the full one: the level on the code line's row, the check's title left to the finding's page and the list
+   * below, and the review's suggestion with a sentence saying where the rule's general advice is (the finding's page and
+   * the list below give it): with a suggestion, the rule's line or a pointer to it always stands (the parent's decision
+   * for 17 Nov; before, the compact form gave the suggestion alone). The headline, the level, the code line, its text
+   * and what to do stay. */
+  const lead = compact ? md`${level} · ${at}` : at;
+  const codeLines = !q ? [md`  ${lead}`] : Array.from(`  ${lead} · ${markdownCode(q)}`).length <= REPORT_WIDTH ? [md`  ${lead} · ${markdownCode(q)}`] : [md`  ${lead}`, md`  ${markdownCode(q)}`];
+  const last: Inert[] =
+    l.kind === "to_fix"
+      ? actionLinesOf(m, it, compact).map((x) => md`  ${x}`)
+      : l.kind === "counsel"
+        ? [md`  ${WORDS.entryDecides(settlesWordsOf(m, it))}`]
+        : l.kind === "answer"
+          ? [waitLineOf(m, it)].filter((x): x is Inert => x !== null).map((x) => md`  ${x}`)
+          : [];
+  const body = compact ? [...codeLines, ...last] : [md`  ${meta}`, ...codeLines, ...last];
+  return [md`${WORDS.entryHead(md`[${fOf(l)}](${page})`, part, h.text)}\\`, ...body.map((x, i) => (i < body.length - 1 ? md`${x}\\` : x))];
+}
+/** What to do: the review's suggestion for this code where it wrote one, labelled as its, with the rule's line beneath; else the rule's line. */
+function actionLinesOf(m: ReportModel, it: Item, compact = false): Inert[] {
+  const own = reviewFixOf(it.verdict);
+  if (!own) return [WORDS.entryWhatToDo(actionOf(m, it))];
+  const suggestion = WORDS.entryReviewFix(markdownText(sentenceOf(own)));
+  return compact ? [md`${suggestion} ${WORDS.entryRuleFixOnPage}`] : [suggestion, WORDS.entryRuleFix(actionOf(m, it))];
+}
+/** A finding's page as a front-page entry links it: a group's member at its own heading. */
+function entryPageOf(m: ReportModel, l: Listed, it: Item, firstScreen = false): Inert {
+  const short = m.files?.shortOf.get(idOf(it)) ?? hexOf(idOf(it));
+  const member = `${l.file}#${anchorOfHeading(WORDS.groupMemberHeading(markdownText(short)))}`;
+  /* On the first screen a link target keeps to 24 characters (the raw-view
+   * gate): a group member whose heading's target is longer links its group's page, which opens on the members; the
+   * same entry below the first screen links the member's own heading. */
+  return linkTarget(l.items.length > 1 && !(firstScreen && Array.from(member).length > 24) ? member : l.file);
+}
+/** The entries of a list's findings, one per finding (a group's findings each), in the list's order. */
+const entryItemsOf = (ls: readonly Listed[]): { l: Listed; it: Item }[] => ls.flatMap((l) => l.items.map((it) => ({ l, it })));
+
+/** The laws of one decision the first screen and the end screen name; the rest are counted. */
+const LAWS_NAMED = 3;
+/**
+ * THE LAW DECISIONS BY VERDICT: the laws of one verdict said once, at most three named and
+ * the rest counted, their conditions summed (six laws not decided took 12 of the first screen's 45 rows, one sentence each).
+ */
+function lawGroupsOf<T = string>(app: readonly Obj[], nameOf: (law: string) => T = lawShortName as unknown as (law: string) => T, named: number = LAWS_NAMED): { verdict: string; names: T[]; more: number; open: number }[] {
+  const byLaw = [...groupBy(app, (x) => str(x.law)).values()];
+  return [...groupBy(byLaw, (xs) => str(xs[0]?.verdict)).entries()].map(([verdict, laws]) => ({
+    verdict,
+    names: laws.slice(0, named).map((xs) => nameOf(str(xs[0]?.law))),
+    more: Math.max(0, laws.length - named),
+    open: laws.reduce((n, xs) => n + lawOpenCountOf(xs), 0),
+  }));
+}
+/** A law's conditions only the person can confirm, as every laws line counts them (none once a "no" rules it out). */
+const lawOpenCountOf = (xs: readonly Obj[]): number => (xs.every((x) => str(x.verdict) === "does-not-apply") ? 0 : new Set(xs.flatMap((x) => decidingOpenOf(x))).size);
+/** The laws line's sentences: the regions, each law's decision, whose answers. */
+function lawSentencesOf(m: ReportModel, named: number = LAWS_NAMED): Inert[] {
+  const f = m.a.findings;
+  const app = arr(f.applicability).map(obj).filter((x): x is Obj => !!x);
+  // One sentence per decision, its laws named (three at most) and counted (`lawGroupsOf`),
+  // each in full at its first mention on the page (the page's pass, `formMarkdown`).
+  const nameOf = lawNamerOf(m);
+  const groups = lawGroupsOf(app, (law) => lawNameOf(m, nameOf(law)), Math.max(1, named));
+  /* The last of the laws line's forms (`lawsLineOf`): the decisions
+   * counted in one sentence, laws.md naming each. */
+  const counted = named === 0 && groups.length > 0 ? [WORDS.lawsDecisionsCounted(new Set(app.map((x) => str(x.law))).size, groups.reduce((n, g) => n + g.open, 0))] : null;
+  const laws = counted ?? groups.map((g) =>
+    g.names.length === 1 && g.more === 0
+      ? WORDS.lawDecision(g.names[0] ?? ours(""), g.verdict, g.open)
+      : WORDS.lawsDecision(listWords([...g.names.map((n) => md`the ${n}`), ...(g.more > 0 ? [programText(`${group(g.more)} more ${g.more === 1 ? "law" : "laws"}`)] : [])]), g.verdict, g.open),
+  );
+  /* What was done with the laws the findings cite: laws.md's own computation and
+   * sentences (`lawsAppliedSentencesOf`), so the front page and laws.md cannot disagree. */
+  const unsaid = lawsCitedOf(m).length > 0 ? lawsAppliedSentencesOf(m) : [];
+  const u = answersUsedOf(m.a.declarationPlan ?? null);
+  const day = (iso: string | undefined): Inert => markdownText(dayWords(iso ?? "").replace(/ \d{4}$/, ""));
+  const whose = !u
+    ? null
+    : u.whose === "own"
+      ? WORDS.whoseSentence.own(day(u.saved_at))
+      : u.whose === "team"
+        ? WORDS.whoseSentence.team(day(u.saved_at))
+        : u.whose === "file"
+          ? WORDS.whoseSentence.file(markdownText(u.file ?? ""))
+          : u.reason === "no-saved-answers"
+            ? null
+            : WORDS.whoseSentence.none;
+  return [...unsaid, ...(laws.length > 0 ? laws : [WORDS.lawsNoneSentence]), ...(whose ? [whose] : [])];
+}
+
+/**
+ * THE LAWS LINE HELD TO ITS ROWS BY THE PROGRAM: at most
+ * `LAWS_LINE_ROWS` rows as printed (report-budget.ts), so the first screen keeps room for its Fix first entries however
+ * many laws turn on what the product is. Fewer laws named in each decision's sentence, then the decisions counted in one
+ * sentence; every count stays, and laws.md names each law. Before, only the tests read the bound: seven laws whose reach
+ * depends on what the product is printed nine rows (the fourth non-author re-check, m2).
+ */
+function lawsLineOf(m: ReportModel, from: number = LAWS_NAMED): Inert {
+  const rows = (l: Inert): number => formMarkdown([l]).split("\n").filter((x) => x !== "").reduce((k, x) => k + rowsAt(x), 0);
+  let line = ours("");
+  for (const named of [LAWS_NAMED, 2, 1, 0].filter((n) => n <= from)) {
+    line = md`${WORDS.lawsLead} ${inertJoin(lawSentencesOf(m, named), ours(" "))}`;
+    if (rows(line) <= LAWS_LINE_ROWS) break;
+  }
+  return line;
+}
+
+/**
+ * The Not checked block (design 3.1 item 5, mock M2's form): places without a verdict
+ * first, then rules that found nothing, what was not read, the open questions, the policy, every other kind with a count.
+ * Its "[each][n]" links are references numbered after those already taken.
+ */
+function uncheckedBlockLines(m: ReportModel, refs: Inert[], onTop = false): Inert[] {
+  const { a } = m;
+  const noAnswer = [...a.unadjudicated, ...(a.suppressions ?? [])];
+  const kinds = uncheckedKinds(m);
+  const rulesN = rulesNothingOf(m).n;
+  const notRead = notReadWordsOf(m, kinds);
+  const onOtherItems = new Set<UncheckedKey>(["places-not-opened", "gap", "absent", "not-checked-rules", "questions"]);
+  const also = kinds.filter((k) => KIND_LINE[k.key] !== "noAnswer" && KIND_LINE[k.key] !== "notRead" && !onOtherItems.has(k.key) && k.screen !== "").map((k) => k.screen);
+  const out: Inert[] = [WORDS.uncheckedHeading, ours(""), md`- ${WORDS.notCheckedFirst(sumOf(noAnswer, (u) => placesOfRecord(m, u)), m.unread.length)}`];
+  const carriedN = carriedCountOf(m.a);
+  const rulesRef = rulesN > 0 ? refs.length + 1 : null;
+  if (rulesRef !== null) refs.push(linkTarget(`not-checked.md#${anchorOfHeading(WORDS.rulesNothingHeading.replace(/^#+ /, ""))}`));
+  const notReadRef = refs.length + 1;
+  refs.push(linkTarget(`not-checked.md#${anchorOfHeading(WORDS.didNotRead.replace(/^#+ /, ""))}`));
+  // The one count of open questions, as the end screen and not-checked.md say it.
+  const questionsOpen = openQuestionsOf(m).count;
+  out.push(md`- ${WORDS.rulesNothing(rulesN, rulesRef)}`, md`- ${WORDS.notReadLine(notRead, notReadRef)}`, ...(questionsOpen > 0 ? [md`- ${WORDS.questionsOpenFirst(questionsOpen)}`] : []));
+  out.push(WORDS.uncheckedLine(WORDS.uncheckedLead.also, [...(carriedN > 0 ? [WORDS.carriedAlso(carriedN, ...carriedFromOf(m))] : []), ...also, ours(WORDS.policyAlso)]));
+  // On the first screen (the block on top) a link target keeps to 24
+  // characters (the raw-view gate): the gap line links its section by a reference, numbered after those taken.
+  const gap = gapLineOf(m, kinds, false, onTop ? refs : undefined);
+  if (gap) out.push(md`- ${gap}`);
+  return out;
+}
+/** What was not read, as the block's "Not read" item and the first screen's one line both say it: the first three folders, "and N more", then every other part. */
+function notReadWordsOf(m: ReportModel, kinds: readonly UncheckedKind[]): Inert[] {
+  const { folders, rest } = notReadItemsOf(m, [...kinds], notReadParts(m.a.findings as unknown as Findings));
+  return [...folders.slice(0, 3).map((x) => markdownCode(x)), ...(folders.length > 3 ? [WORDS.notReadMoreFolders(folders.length - 3)] : []), ...rest];
+}
+/** The line that sends the reader to what the review saw and no check reported; none where there is none. */
+function gapLineOf(m: ReportModel, kinds: readonly UncheckedKind[] = uncheckedKinds(m), here = false, refs?: Inert[]): Inert | null {
+  const n = kinds.find((k) => k.key === "gap")?.n ?? 0;
+  if (n > 0 && refs) {
+    refs.push(linkTarget(`not-checked.md#${anchorOfHeading(WORDS.gapFound.replace(/^#+ /, ""))}`));
+    return WORDS.gapFirst(n, ours(`${refs.length}`), true);
+  }
+  // On the first screen a link target keeps to 24 characters (the raw-view gate): it points at the block below, which links the entries.
+  return n > 0 ? WORDS.gapFirst(n, here ? linkTarget(`#${anchorOfHeading(WORDS.uncheckedHeading.replace(/^#+ /, ""))}`) : linkTarget(`not-checked.md#${anchorOfHeading(WORDS.gapFound.replace(/^#+ /, ""))}`)) : null;
+}
+/** Whether the Not checked block stays on top: a place without a verdict, or a finding read only in part. */
+function uncheckedOnTop(m: ReportModel): boolean {
+  const noAnswer = [...m.a.unadjudicated, ...(m.a.suppressions ?? [])];
+  return sumOf(noAnswer, (u) => placesOfRecord(m, u)) > 0 || m.unread.length > 0;
+}
+
+/**
+ * `report.md`'s first screen (design 3.1 "Report first screen"; mock M2, as the readability review of 2026-11-16 changed
+ * it): the title, the counts in sentences, the laws line, Not checked in one line (its block on top where a place has no
+ * verdict), Fix first (each finding's headline, code line and what to do, as many as the screen holds) and To clarify. The
+ * code places are reference links whose definitions close the file (`refs`).
+ */
+function firstScreenLines(m: ReportModel, refs: Inert[], legend: { due: boolean; done: boolean }, screen: { blockBelow: boolean } = { blockBelow: false }): Inert[] {
   const { a } = m;
   const f = a.findings;
   const fm = m.files as FileModel;
   const day = dayWords(str(f.completed_at));
+  const printed = a.printed ?? ((t: string) => t);
   const out: Inert[] = [WORDS.firstTitle(markdownText(m.project), day), ours("")];
   const hc = m.counts;
   const toFix = hc.toFix.high + hc.toFix.medium + hc.toFix.low;
-  out.push(md`- ${WORDS.firstNeeds(toFix + hc.counsel + hc.waiting, toFix, hc.toFix, hc.counsel, hc.waiting, hc.questions, decidedIn(m, "to_fix"), decidedIn(m, "counsel"))}`);
-  const notCounted = hc.recorded + hc.notShipped + hc.forOperators + hc.folded;
-  // The group holds every row the end screen prints under it, the set-aside ones included (design 6: "Taken off the list"
-  // is ruled out, out of scope, set aside and not counted), so its total is the sum of its rows on both screens.
+  const levels = (["high", "medium", "low"] as const).filter((l) => hc.toFix[l] > 0).map((l) => WORDS.needsLevel(hc.toFix[l], ours(l)));
+  out.push(WORDS.needsHead(toFix + hc.counsel + hc.waiting, programText(reviewWords(a.deferred, reviewRowsOf(m), "sentence"))));
+  out.push(WORDS.needsFix(toFix, levels, decidedIn(m, "to_fix")));
+  if (hc.counsel > 0) out.push(WORDS.needsClarify(hc.counsel, decidedIn(m, "counsel")));
+  if (hc.waiting > 0) out.push(WORDS.needsWait(hc.waiting, hc.questions, hc.facts));
+  out.push(ours(""));
+  const notCounted = notCountedOf(m).length;
+  // The group holds every row the end screen prints under "Taken off the list" (design 6), each now its own sentence.
   const setAside = (a.suppressions ?? []).length;
-  const scopeBy = answersUsedOf(m.a.declarationPlan ?? null)?.whose === "team" ? WORDS.scopeByTeam : undefined;
-  out.push(md`- ${WORDS.firstTaken(m.dismissed.length + hc.settled + setAside + notCounted, m.dismissed.length, hc.settled, notCounted, setAside, scopeBy)}`);
-  const lawParts = lawPartsOf(m);
-  out.push(md`- ${WORDS.firstLaws(lawParts, programText(reviewWords(a.deferred, reviewRowsOf(m), "long")))}`);
-  /* Not checked: always, a zero said, places without a verdict first: one line per `ScreenLine`, each
-   * the phrases of the kinds counted on it, from the list `not-checked.md` is made from. */
-  const noAnswer = [...a.unadjudicated, ...(a.suppressions ?? [])];
-  const kinds = uncheckedKinds(m);
-  /* M2's form (design 3.1 item 5, at most 6 items): the counts the end screen prints (`endSummaryOf`), rules that found
-   * nothing with a link to their section, what was not read with up to three folders by name, the policy, and every other
-   * kind with a count on one "Also not checked" line. The questions stay in `not-checked.md` only (design 3.1 item 5, rf10). */
+  const scopeBy = answersUsedOf(m.a.declarationPlan ?? null)?.whose === "team" ? WORDS.scopeByTeam : ours("your answers");
+  const taken = [
+    m.dismissed.length > 0 ? WORDS.takenRuled(m.dismissed.length) : null,
+    hc.settled > 0 ? WORDS.takenScope(hc.settled, scopeBy) : null,
+    setAside > 0 ? WORDS.takenSetAside(setAside) : null,
+    notCounted > 0 ? WORDS.takenNotCounted(notCounted) : null,
+  ].filter((x): x is Inert => x !== null);
+  if (taken.length > 0) out.push(inertJoin(taken, ours(" ")), ours(""));
+  const lawsAt = out.length;
+  out.push(lawsLineOf(m), ours(""));
+  /* The Not checked block on top (a place without a verdict), or
+   * the one line. Where the block on top leaves no room for two Fix first entries (the measuring below), the one line
+   * takes its place, opening with the places without a verdict, and the block follows the findings, as it does where no
+   * place lacks one: the counts of what was not checked stay on the first screen, its details one link away. */
+  const onTop = uncheckedOnTop(m);
+  const refsTop = [...refs];
+  const blockTop = onTop ? [...uncheckedBlockLines(m, refsTop, true), ours("")] : [];
+  const blockLine: Inert[] = (() => {
+    const kinds = uncheckedKinds(m);
+    const onOtherItems = new Set<UncheckedKey>(["places-not-opened", "gap", "absent", "not-checked-rules", "questions"]);
+    const also = kinds.filter((k) => KIND_LINE[k.key] !== "noAnswer" && KIND_LINE[k.key] !== "notRead" && !onOtherItems.has(k.key) && k.screen !== "").map((k) => k.screen);
+    const noAnswer = [...a.unadjudicated, ...(a.suppressions ?? [])];
+    const opening = onTop ? WORDS.notCheckedOpening(sumOf(noAnswer, (u) => placesOfRecord(m, u)), m.unread.length) : undefined;
+    // What was not read, in the block's own parts.
+    const gap = gapLineOf(m, kinds, true);
+    return [WORDS.notCheckedOne(rulesNothingOf(m).n, openQuestionsOf(m).count, carriedCountOf(m.a), also, notReadWordsOf(m, kinds), opening), ours(""), ...(gap ? [gap, ours("")] : [])];
+  })();
+  const beforeBlock = out.splice(0, out.length);
   // A decided entry leaves Fix first and the to-clarify list for "Decided by you" (design 3.4).
   const fixes = fm.listed.filter((l) => l.kind === "to_fix" && !decidedListed(m, l));
-  const printed = a.printed ?? ((t: string) => t);
   /* (design 3.2.1; mock M9) On a later run that compared, "Now to fix" takes
    * Fix first's place and holds only the findings to fix that are new or higher, each with what changed; the others are
-   * named by the still-to-fix lines. Its rows give up what the since section and those lines take (45 rows in all). */
+   * named by the still-to-fix lines. */
   const later = laterOf(m);
   const lt = later && later.c.compared ? later : null;
+  const laterLines = later ? [...sinceSectionLines(later), ours("")] : [];
   const listedFix = lt ? lt.up.filter((l) => l.kind === "to_fix") : fixes;
-  // Fix first's entries, two logical lines each, their code place numbered after the references already taken.
-  const fixEntries = listedFix.slice(0, FIRST_SCREEN_FIXES).map((l, i) => {
-    const it = l.items[0] as Item;
-    const place = placeOf(m, it);
-    const p = placeParts(place);
-    const more = placesOfListed(m, l) > 1 ? md` ${WORDS.morePlaces(placesOfListed(m, l) - 1)}` : ours("");
-    return {
-      target: codeTarget(upOf(m.a, 0), rootOf(m.a), p.file, p.line),
-      lines: [md`- ${fOf(l)} · ${titleOfListed(m, l)}${lt ? md` · ${upNoteOf(m, lt, l)}` : ours("")}\\`, md`  ${markdownText(m.sevOf(it))}${marksOf(l)} · [${markdownText(l.short)}](${linkTarget(l.file)}) · [${markdownText(place)}][${refs.length + i + 1}]${more}`],
-    };
-  });
-  const fixShown = entriesWithin(fixEntries.map((e) => e.lines), lt ? FIRST_SCREEN_FIX_ROWS - LATER_FIRST_ROWS : FIRST_SCREEN_FIX_ROWS, printed);
-  // The same counts and names the end screen prints (`notReadParts`), so the two cannot disagree.
-  const parts = notReadParts(f as unknown as Findings);
-  const rulesN = rulesNothingOf(m).n;
-  const rulesRef = rulesN > 0 ? refs.length + fixShown + 1 : null;
-  // One computation of what was not read, for this screen and the record (`recordSummaryOf`).
-  const { folders, rest } = notReadItemsOf(m, kinds, parts);
-  const notRead = [...folders.slice(0, 3).map((x) => markdownCode(x)), ...(folders.length > 3 ? [WORDS.notReadMoreFolders(folders.length - 3)] : []), ...rest];
-  const onOtherItems = new Set<UncheckedKey>(["places-not-opened", "gap", "absent", "not-checked-rules", "questions"]);
-  const also = kinds.filter((k) => KIND_LINE[k.key] !== "noAnswer" && KIND_LINE[k.key] !== "notRead" && !onOtherItems.has(k.key) && k.screen !== "").map((k) => k.screen);
-  if (out[out.length - 1] !== "") out.push(ours("")); // M2: a blank line before each heading of the first screen
-  out.push(WORDS.uncheckedHeading, md`- ${WORDS.notCheckedFirst(sumOf(noAnswer, (u) => placesOfRecord(m, u)), m.unread.length)}`);
-  const carriedN = carriedCountOf(m.a);
-  if (carriedN > 0) out.push(md`- ${WORDS.carriedItem(carriedN, ...carriedFromOf(m))}`);
-  out.push(md`- ${WORDS.rulesNothing(rulesN, rulesRef)}`, md`- ${WORDS.notReadLine(notRead)}`, md`- ${WORDS.policyNotCompared}`);
-  if (also.length > 0) out.push(WORDS.uncheckedLine(WORDS.uncheckedLead.also, also));
-  out.push(ours(""));
-  if (later) out.push(...sinceSectionLines(later), ours(""));
-  // Fix first: up to five entries of what is to fix, in fix order, within M2's ten rows (FIRST_SCREEN_FIX_ROWS).
-  out.push(lt ? WORDS.nowHeading : WORDS.fixHeading);
-  // A first run (or one that compared nothing) whose findings to fix are all decided.
-  if (listedFix.length === 0)
-    out.push(
-      lt
-        ? lt.upAll.some((l) => l.kind === "to_fix") ? WORDS.nowAllDecided : WORDS.nowNone
-        : fm.listed.some((l) => l.kind === "to_fix" && decidedListed(m, l)) ? WORDS.fixAllDecided : WORDS.fixNone,
-    );
-  for (const e of fixEntries.slice(0, fixShown)) {
-    refs.push(e.target);
-    out.push(...e.lines);
-  }
-  if (listedFix.length > fixShown) out.push(ours(""), lt ? WORDS.nowRest(listedFix.length - fixShown) : WORDS.fixRest(fixes.length - fixShown));
-  // Counted as before, decided entries included; the first named is one not decided.
-  if (lt && lt.stillAll.length > 0) {
-    const first = lt.still[0];
-    const high = lt.stillAll.filter((l) => m.sevOf(l.items[0] as Item) === "high").length;
-    out.push(ours(""), first ? WORDS.stillToFix(lt.stillAll.length, high, md`${fOf(first)} · ${titleOfListed(m, first)} · [${markdownText(first.short)}](${linkTarget(first.file)})`) : WORDS.stillAllDecided(lt.stillAll.length, high));
-  }
-  out.push(ours(""));
-  // The Not checked block's "[each][n]" (numbered after the code places, as in M2) targets its section of not-checked.md.
-  if (rulesRef !== null) refs.push(linkTarget(`not-checked.md#${anchorOfHeading(WORDS.rulesNothingHeading.replace(/^#+ /, ""))}`));
   const clarify = fm.listed.filter((l) => l.kind === "counsel" && !decidedListed(m, l));
-  if (clarify.length > 0) {
-    out.push(WORDS.clarifyHeading);
-    /* (design 3.2.1; mock M9) On a later run that compared, the section lists
-     * the new or moved-in points (at most three, each with what changed), so a new point for counsel is never only a +1,
-     * and one line counts the rest: the new ones not listed, and those open as in the earlier review. */
-    const fresh = lt ? clarify.filter((l) => lt.noteOf.has(l)) : clarify;
-    const items = fresh.slice(0, FIRST_SCREEN_CLARIFY).map((l) => [md`- ${fOf(l)} · ${titleOfListed(m, l)}${lt ? md` · ${inertAfterClarify(lt.noteOf.get(l) ?? ours(""))}` : ours("")} · [${markdownText(l.short)}](${linkTarget(l.file)})\\`, md`  ${WORDS.openPoint(settlesWordsOf(l.items[0] as Item))}`]);
-    const shown = entriesWithin(items, lt ? FIRST_SCREEN_CLARIFY_ROWS - 1 : FIRST_SCREEN_CLARIFY_ROWS, printed);
-    for (const lines of items.slice(0, shown)) out.push(...lines);
-    if (lt) {
-      const open = clarify.length - fresh.length;
-      if (fresh.length > shown || open > 0) out.push(WORDS.clarifyLaterRest(fresh.length - shown, open, shown > 0, lt.day ? md`as on ${markdownText(lt.day)}` : md`as in ${lt.earlier}`));
-    } else if (clarify.length > shown) out.push(ours(""), WORDS.clarifyRest(clarify.length - shown));
-    out.push(ours(""));
+  const fresh = lt ? clarify.filter((l) => lt.noteOf.has(l)) : clarify;
+  // The head of the screen, the Not checked block on top or in one line, and the references it takes.
+  let short = !onTop;
+  const headOf = (oneLine: boolean): Inert[] => [...beforeBlock, ...(oneLine ? blockLine : blockTop), ...laterLines];
+  let head = headOf(short);
+  let refBase = short ? refs.length : refsTop.length;
+  // Fix first's entries, one per finding, each its code place numbered after the references already taken.
+  const fixItems = entryItemsOf(listedFix);
+  const fixEntriesOf = (compact: boolean): { target: Inert; lines: Inert[]; flag: boolean }[] =>
+    fixItems.map(({ l, it }, i) => {
+      const p = placeParts(placeOf(m, it));
+      const note = lt && l.items[0] === it ? md` · ${upNoteOf(m, lt, l)}` : ours("");
+      const lines = entryLines(m, l, it, md`[${inSpan(code(placeOf(m, it)))}][${refBase + i + 1}]`, entryPageOf(m, l, it, true), compact);
+      return { target: codeTarget(upOf(m.a, 0), rootOf(m.a), p.file, p.line), lines: note ? [md`${inertSlice(lines[0] ?? ours(""), (lines[0] ?? ours("")).length - 1)}${note}\\`, ...lines.slice(1)] : lines, flag: flagged(it) };
+    });
+  let fixEntries = fixEntriesOf(false);
+  /* THE FIRST SCREEN IS MEASURED, NOT RESERVED: the
+   * rest of the screen (Fix first, what is still to fix on a later run, To clarify, the legend) is laid out for a number of
+   * Fix first and To clarify entries, and the whole is counted the way the raw-view gate counts it (every row above "To fix
+   * by area", the blank line before it included). Fix first keeps as many entries as fit, at least one; To clarify keeps
+   * its share (`FIRST_SCREEN_CLARIFY_ENTRY_ROWS`) where it fits, and gives entries up before Fix first's first one does;
+   * only where even one Fix first entry cannot fit (a Not checked block on top that fills the screen) does it go. The
+   * second author of R19-F found the estimate of the rows below Fix first short by up to seven (the block, To clarify's
+   * rest line and blank lines, a legend due to a To clarify entry), so the first screen ran to 48-52 rows. */
+  const restLine = WORDS.allToFixBelow(toFix);
+  const clarifyItems = entryItemsOf(fresh).map(({ l, it }) => {
+    const p = placeParts(placeOf(m, it));
+    return { l, it, target: codeTarget(upOf(m.a, 0), rootOf(m.a), p.file, p.line) };
+  });
+  const clarifyEntriesFrom = (base: number, k: number = clarifyItems.length): Inert[][] =>
+    clarifyItems.slice(0, k).map(({ l, it }, i) => {
+      const lines = entryLines(m, l, it, md`[${inSpan(code(placeOf(m, it)))}][${base + i + 1}]`, entryPageOf(m, l, it, true));
+      const note = lt && l.items[0] === it ? md` · ${inertAfterClarify(lt.noteOf.get(l) ?? ours(""))}` : ours("");
+      return note ? [md`${inertSlice(lines[0] ?? ours(""), (lines[0] ?? ours("")).length - 1)}${note}\\`, ...lines.slice(1)] : lines;
+    });
+  const tailOf = (fixK: number, clarK: number): { lines: Inert[]; refs: Inert[]; due: boolean } => {
+    const t: Inert[] = [];
+    const added: Inert[] = [];
+    let due = legend.due;
+    t.push(lt ? WORDS.nowHeading : WORDS.fixHeading, ours(""));
+    // A first run (or one that compared nothing) whose findings to fix are all decided.
+    if (listedFix.length === 0)
+      t.push(
+        lt
+          ? lt.upAll.some((l) => l.kind === "to_fix") ? WORDS.nowAllDecided : WORDS.nowNone
+          : fm.listed.some((l) => l.kind === "to_fix" && decidedListed(m, l)) ? WORDS.fixAllDecided : WORDS.fixNone,
+      );
+    for (const e of fixEntries.slice(0, fixK)) {
+      added.push(e.target);
+      t.push(...e.lines);
+      if (e.flag) due = true;
+    }
+    // The rest line follows the entries after one blank line, and the heading after its own.
+    const clarBelow = clarify.length > 0 && clarK === 0;
+    const both = clarBelow && !lt && fixItems.length > fixK;
+    if (fixItems.length > fixK) t.push(...(fixK > 0 ? [ours("")] : []), lt ? WORDS.nowRest(fixItems.length - fixK) : both ? WORDS.allBelowBoth(toFix, clarifyItems.length) : restLine);
+    // Counted as before, decided entries included; the first named is one not decided.
+    if (lt && lt.stillAll.length > 0) {
+      const first = lt.still[0];
+      const high = lt.stillAll.filter((l) => m.sevOf(l.items[0] as Item) === "high").length;
+      t.push(ours(""), first ? WORDS.stillToFix(lt.stillAll.length, high, md`${fOf(first)} · ${headlineOf(m, first).text} · [${markdownText(first.short)}](${linkTarget(first.file)})`) : WORDS.stillAllDecided(lt.stillAll.length, high));
+    }
+    /* To clarify showing none of its findings has no section on this screen (its
+     * heading, blank lines and rest line took four rows Fix first's entry needed): one line under Fix first says where
+     * they are, "All N", never "The rest of the N" of none shown. */
+    const open = clarify.length - fresh.length;
+    if (clarBelow && !both) t.push(ours(""), lt ? WORDS.clarifyLaterNamed(clarifyItems.length, open, lt.day ? md`as on ${markdownText(lt.day)}` : md`as in ${lt.earlier}`) : WORDS.clarifyAllBelow(clarifyItems.length));
+    t.push(ours(""));
+    if (clarify.length > 0 && clarK > 0) {
+      t.push(WORDS.clarifyHeading, ours(""));
+      /* (design 3.2.1; mock M9) On a later run that compared, the section lists
+       * the new or moved-in points, each with what changed, and one line counts the rest. */
+      const entries = clarifyEntriesFrom(refBase + added.length, clarK);
+      entries.slice(0, clarK).forEach((lines, i) => {
+        added.push((clarifyItems[i] as { target: Inert }).target);
+        t.push(...lines);
+        if (flagged((clarifyItems[i] as { it: Item }).it)) due = true;
+      });
+      if (lt) {
+        if (clarifyItems.length > clarK || open > 0) t.push(WORDS.clarifyLaterRest(clarifyItems.length - clarK, open, clarK > 0, lt.day ? md`as on ${markdownText(lt.day)}` : md`as in ${lt.earlier}`));
+      } else if (clarifyItems.length > clarK) t.push(ours(""), WORDS.clarifyRest(m.counts.counsel));
+      t.push(ours(""));
+    }
+    if (due && !legend.done) t.push(WORDS.legendWorstOf);
+    return { lines: t, refs: added, due };
+  };
+  // The rows the screen takes as report.md prints it: its trailing blank lines dropped, then the one blank line the
+  // report writes before "To fix by area".
+  /* Where values are hidden (step 13 runs: `a.printed`), the pointer step 13 puts under the title, and its blank line, are
+   * rows of this screen too (a run of the tests ran to 47 rows without them); the longer of its two forms is counted. */
+  const pointerRows = a.printed ? rowsOfLines([WORDS.redactionPointer(markdownText(anchorOfHeading(WORDS.identityHeading)), true), ours("")], printed) : 0;
+  const rowsWith = (fixK: number, clarK: number): number => {
+    const all = [...head, ...tailOf(fixK, clarK).lines];
+    while (all[all.length - 1] === "") all.pop();
+    return rowsOfLines(all, printed) + 1 + pointerRows;
+  };
+  const clarShare = clarifyItems.length > 0 ? entriesWithin(clarifyEntriesFrom(refBase + fixEntries.length, FIRST_SCREEN_CLARIFY_ENTRY_ROWS), FIRST_SCREEN_CLARIFY_ENTRY_ROWS, printed) : 0;
+  // At most what fits on a screen alone, so the measuring below lays out a few entries, never every finding.
+  let fixK = entriesWithin(fixEntries.map((e) => e.lines), FIRST_SCREEN_ROWS, printed);
+  let clarK = clarShare;
+  /* Fix first keeps two entries where it has two (one where one):
+   * To clarify's entries give way first, then each entry takes its compact form (`entryLines`), and only then does Fix
+   * first give up an entry. With the review's texts at the capture's limits (report-budget.ts) an entry is at most seven
+   * rows in its full form and six in its compact one. */
+  const minFix = Math.min(2, fixEntries.length);
+  while (fixK > minFix && rowsWith(fixK, clarK) > FIRST_SCREEN_ROWS) fixK -= 1;
+  while (clarK > 0 && rowsWith(fixK, clarK) > FIRST_SCREEN_ROWS) clarK -= 1;
+  if (fixK > 0 && rowsWith(fixK, clarK) > FIRST_SCREEN_ROWS) fixEntries = fixEntriesOf(true);
+  if (!short && fixK > 0 && rowsWith(fixK, clarK) > FIRST_SCREEN_ROWS) {
+    short = true;
+    head = headOf(true);
+    refBase = refs.length;
+    fixEntries = fixEntriesOf(true);
   }
-  const worst = fm.listed.some((l) => l.items.some((it) => (it.order?.heaviest?.length ?? 0) > 0));
-  out.push(md`${WORDS.legendVsCode}${worst ? ours("\\") : ours("")}`);
-  if (worst) out.push(WORDS.legendWorst);
+  /* Before Fix first gives up an entry, the laws line takes its shorter forms (fewer laws
+   * named in each decision, then the decisions counted; laws.md names each): its counts stay, and so do the entries. Each
+   * law named in full at its first mention takes rows the line's short names did not. */
+  for (const named of [2, 1, 0]) {
+    if (fixK < minFix || rowsWith(fixK, clarK) <= FIRST_SCREEN_ROWS) break;
+    beforeBlock[lawsAt] = lawsLineOf(m, named);
+    head = headOf(short);
+  }
+  while (fixK > 0 && rowsWith(fixK, clarK) > FIRST_SCREEN_ROWS) fixK -= 1;
+  /* Where Fix first shows every entry it has, To clarify takes the rows left
+   * over beyond its share, one entry at a time while the whole still fits: a short report no longer sends a second
+   * point to clarify "below, by area" with half the screen empty. */
+  while (fixK === fixEntries.length && clarK < clarifyItems.length && rowsWith(fixK, clarK + 1) <= FIRST_SCREEN_ROWS) clarK += 1;
+  const tail = tailOf(fixK, clarK);
+  if (!short) refs.splice(0, refs.length, ...refsTop);
+  screen.blockBelow = onTop && short;
+  out.push(...head);
+  refs.push(...tail.refs);
+  out.push(...tail.lines);
+  if (tail.due && !legend.done) {
+    legend.due = true;
+    legend.done = true;
+  }
+  while (out[out.length - 1] === "") out.pop();
   return out;
 }
 
 /** The laws line's parts: each law with its verdict and open questions, and the regions where none was answered. */
-function lawPartsOf(m: ReportModel): Inert[] {
+function lawPartsOf(m: ReportModel, nameOf: (law: string) => string = lawNamerOf(m)): Inert[] {
   const f = m.a.findings;
   const app = arr(f.applicability).map(obj).filter((x): x is Obj => !!x);
-  const laws = [...groupBy(app, (x) => str(x.law)).values()].map((xs) =>
-    WORDS.lawLine(markdownText(str(xs[0]?.law).replace(/^Regulation \(EU\) \d+\/\d+ \((.+)\)$/, "$1")), markdownText(str(xs[0]?.verdict).replace(/-/g, " ")), new Set(xs.flatMap((x) => decidingOpenOf(x))).size),
+  // The pages' words for a decision ("not decided", not "unresolved"), one part per
+  // decision as the first screen says it (`lawGroupsOf`). (KNOWN-ISSUES 4) Once a
+  // "no" rules the law out, no answer to the rest changes it.
+  const laws = lawGroupsOf(app, nameOf).map((g) =>
+    WORDS.lawLine(markedText(listWords([...g.names, ...(g.more > 0 ? [`${group(g.more)} more`] : [])])), WORDS.lawVerdictWords[g.verdict] ?? markdownText(g.verdict.replace(/-/g, " ")), g.open),
   );
   const pra = obj(f.per_rule_applicability);
   const regions = pra ? pra.declared_regions : undefined;
@@ -7558,12 +9296,14 @@ function whoseAnswersOf(m: ReportModel, form: "short" | "long"): Inert | null {
 }
 
 /** The report's identity line and what the numbers say once (design 4 "Identity line", 3.5). */
-function identityLines(m: ReportModel): Inert[] {
+function identityLines(m: ReportModel, coverage?: Inert): Inert[] {
   const f = m.a.findings;
   const out: Inert[] = [md`## ${WORDS.identityHeading}`, ours("")];
+  // The scan's counts, said once here (they stood under "Decided by you").
+  if (coverage) out.push(coverage, ours(""));
   const stats = obj(f.stats) ?? {};
   const scanned = [
-    markdownText(str(f.completed_at).slice(0, 10)),
+    markdownText(localDayOfInstant(str(f.completed_at)).slice(0, 10)),
     stats.files_scanned !== undefined ? WORDS.scannedFiles(Number(stats.files_scanned) || 0) : ours(""),
     stats.rules_evaluated !== undefined ? WORDS.scannedRules(Number(stats.rules_evaluated) || 0) : ours(""),
     str(f.scan_id) ? WORDS.scannedId(code(str(f.scan_id))) : ours(""),
@@ -7573,6 +9313,10 @@ function identityLines(m: ReportModel): Inert[] {
   if (commit) out.push(WORDS.identityCommit(markdownText(commit)), ours(""));
   const note = m.files?.numbers.note;
   out.push(WORDS.identityNumbers(note ? (note.kind === "start" ? note : { ...note, label: markdownText(note.label) }) : null), ours(""));
+  out.push(ours(WORDS.identityRecord), ours(""));
+  if (coverage) out.push(ours(WORDS.decisionsKept), ours(""));
+  // How to read the file in VS Code, at the bottom (it stood in the first screen).
+  if (coverage) out.push(WORDS.legendPreview, ours(""));
   return out;
 }
 
@@ -7594,10 +9338,12 @@ function buildReportFiles(a: ReportArgs, model?: ReportModel): ReportFiles {
   const m = model ?? reportModel(a);
   if (!m.files) m.files = fileModelOf(m);
   const net = (t: Inert): Inert => inertJoin(composedNet(a, [t]), ours("\n"));
+  // The ruled-out pages are named before report.md, which links each of them.
+  const ruled = ruledOutFiles(m);
   const files: ReportFiles = {
     "report.md": buildMainReport(m),
     "not-checked.md": net(buildNotChecked(m)),
-    ...ruledOutFiles(m),
+    ...ruled,
     "laws.md": net(buildLaws(m)),
   };
   // (mock M9b) What changed, in full, on a run that carried from an earlier review.
@@ -7651,7 +9397,7 @@ export function evidenceLines(v: Obj, m: { elided: boolean; short: boolean; reda
     if (role && !g.roles.includes(role)) g.roles.push(role);
     groups.set(key, g);
   }
-  const lines = [...groups.values()].map((g) => WORDS.evidence(code(g.file), code(g.lines), code(oneLine(g.quote, 300)), g.roles));
+  const lines = [...groups.values()].map((g) => WORDS.evidence(code(g.file), code(g.lines), markdownCode(oneLine(g.quote, 300)), g.roles));
   if (m?.elided) lines.push(WORDS.elided);
   if (m?.short) lines.push(WORDS.short);
   if (m?.redacted) lines.push(WORDS.redacted);
@@ -7716,13 +9462,76 @@ export function notCheckedLines(nc: NotCheckedPlaces, indent: Inert = ours(""), 
  * stays in findings.json (`legal_basis_refs`), which the log's reader holds beside it.
  */
 export function citationOf(ref: string): string {
+  return citationPartsOf(ref).name;
+}
+
+/** The notes a cite opens with (`citationPartsOf`), as the rule wrote them; none for a cite that opens with its name. */
+export function citationNotesOf(ref: string): string[] {
+  return citationPartsOf(ref).notes;
+}
+
+/**
+ * A cite's name and the notes it opens with. A sentence of the cite's opening
+ * written in capitals is the rule's note on that row ("NOT VERIFIED AGAINST A PRIMARY SOURCE.", "NATIONAL AGE - AT
+ * 14."), never the provision's name: printed as the name, the 27 national rows of the children's rule were "NATIONAL
+ * AGE" or "NOT VERIFIED AGAINST ...", and the finding's list, which shows each name once, kept 3 of them. After the
+ * notes, the name is the cite's own `Provision:` field where it has one (to its colon or quotation: the field holds
+ * abbreviations such as "BGBl. I" that a sentence end would cut), else the last note, whole. A cite with no such note
+ * is read as before (`headingOf`).
+ */
+function citationPartsOf(ref: string): { name: string; notes: string[] } {
+  const flat = ref.replace(/\s+/g, " ").trim();
+  const notes: string[] = [];
+  let rest = flat;
+  for (let m = CAPITALS_NOTE.exec(rest); m && (m[1]?.match(/\p{Lu}{2,}/gu) ?? []).length >= 2; m = CAPITALS_NOTE.exec(rest)) {
+    notes.push((m[1] ?? "").trim());
+    rest = rest.slice(m[0].length);
+  }
+  if (notes.length === 0) return { name: headingOf(flat), notes };
+  const field = PROVISION_FIELD.exec(rest.slice(0, quotationAt(rest)));
+  const name = field ? fieldNameOf(rest.slice(field.index + field[0].length)) : "";
+  if (name) return { name, notes };
+  return { name: notes[notes.length - 1] ?? headingOf(flat), notes: notes.slice(0, -1) };
+}
+
+/** An opening sentence with no small letter ("NATIONAL AGE - AT 14. "); a note where it holds two capital words. */
+const CAPITALS_NOTE = /^([^\p{Ll}.]+)\.\s+(?=\S)/u;
+/** The cite's own label for the provision it rests on, at its start or after a sentence. */
+const PROVISION_FIELD = /(?:^|\.\s)Provision:\s+/;
+
+/** Where a cite's first quotation opens (a double mark, or a single one after a space or parenthesis); else its length. */
+function quotationAt(c: string): number {
+  for (let i = 0; i < c.length; i++) {
+    const ch = c[i];
+    if (ch === '"' || ch === "“" || ch === "”" || ch === "‘") return i;
+    if ((ch === "'" || ch === "’") && (i === 0 || /[\s(]/.test(c[i - 1] ?? ""))) return i;
+  }
+  return c.length;
+}
+
+/** A `Provision:` field's name: up to its colon or quotation, before a parenthesis left open there. */
+function fieldNameOf(field: string): string {
+  const colon = field.search(/:\s/);
+  let end = Math.min(quotationAt(field), colon < 0 ? field.length : colon);
+  let depth = 0;
+  let open = -1;
+  for (let i = 0; i < end; i++) {
+    if (field[i] === "(") {
+      if (depth === 0) open = i;
+      depth++;
+    } else if (field[i] === ")") depth = Math.max(0, depth - 1);
+  }
+  if (depth > 0 && open > 0) end = open;
+  return field.slice(0, end).replace(/[\s,;.]+$/, "");
+}
+
+function headingOf(flat: string): string {
   /* The cite's heading, whole, where the penalty resolver reads it to end
    * (`headingEnd`: the first dash, colon, opening quotation mark or sentence end), never its prose cut part-way. Before,
    * this cut at a few marks within 200 characters or else at 160 characters, mid-word ("terminal equipment, appli…"), or
    * after a sentence of prose ("... CELEX 02002L0058-20091219. The paragraph opens"). A heading end inside a parenthesis
    * steps back to before that parenthesis, so none is left open. A
    * sentence end before a number ends it too: the Code of Practice heading ran on past "... vice-chairs." into "38 pages". */
-  const flat = ref.replace(/\s+/g, " ").trim();
   let end = headingEnd(flat, { sentenceBeforeNumber: true });
   let depth = 0;
   let open = -1;
@@ -8686,11 +10495,13 @@ function assembleOnce(opts: RunOptions, cwd: string): { exitCode: number; lines:
   const redaction: PrintedRedaction | null = productPrintedRedaction();
   let bundleDir = opts.bundle ?? "";
   let ruleLines: Readonly<Record<string, RuleLines>> = {};
+  let checklistsOpened: readonly unknown[] = [];
   try {
     // --bundle, else LEGAL_BUNDLE_DIR, else the bundle shipped with this program.
     const opened = openBundle("assemble-report", opts.bundle ? at(opts.bundle) : undefined);
     bundleDir = opened.dir;
     ruleLines = opened.ruleLines;
+    checklistsOpened = opened.checklists;
     premise = premiseInputs(at(opts.target), bundleDir);
     // The penalty-tier table from the same bundle, its digest checked against the manifest.
     tiers = loadPenaltyTiers(bundleDir);
@@ -9132,12 +10943,15 @@ function assembleOnce(opts: RunOptions, cwd: string): { exitCode: number; lines:
     ),
     placeRows: new Map([...placeTables].map(([id, t]) => [id, t.table])),
     ruleLines,
+    lawFullNames: lawFullNamesOf(tiers, checklistsOpened),
     shortNames: new Map([...premise.rules].filter(([, r]) => typeof r.short_name === "string" && r.short_name.trim() !== "").map(([id, r]) => [id, (r.short_name as string).trim()] as const)),
     // Each rule's role from
     // the bundle, read by the one reader of it (standing.ts `findingRoleOf`): `inventory` only where the rule declares it.
     ruleRoles: new Map([...premise.rules].map(([id, r]) => [id, findingRoleOf(r)] as const)),
     // Each rule's `duty_about` from the bundle, through its one reader.
     ruleDuties: new Map([...premise.rules].flatMap(([id, r]) => { const d = dutyAboutOf(r); return d ? [[id, d] as const] : []; })),
+    // Each rule's `settling_questions`, through its one reader.
+    ruleSettlers: ruleSettlersOf(premise.rules.values()),
     ownDomainEndpoints: ownDomainEndpointsOf(launchDir, findings),
     // The profile the scan read, each rule's bases with their regions and the bundle's tier table, for
     // the order (fix-order.ts); each cite is resolved once.
@@ -9148,7 +10962,8 @@ function assembleOnce(opts: RunOptions, cwd: string): { exitCode: number; lines:
       // The link and the day it was checked, for the Provisions section.
       const u = (b as { url?: unknown }).url;
       const at = (b as { checked_at?: unknown }).checked_at;
-      return { cite: b.cite, ...(typeof j === "string" && j ? { jurisdiction: j } : {}), ...(typeof u === "string" && /^https?:\/\/\S+$/.test(u) ? { url: u } : {}), ...(typeof at === "string" && at ? { checked_at: at } : {}) };
+      const separate = (b as { supports_rule_condition?: unknown }).supports_rule_condition === false;
+      return { cite: b.cite, ...(typeof j === "string" && j ? { jurisdiction: j } : {}), ...(typeof u === "string" && /^https?:\/\/\S+$/.test(u) ? { url: u } : {}), ...(typeof at === "string" && at ? { checked_at: at } : {}), ...(separate ? { separate } : {}) };
     })] as const)),
     // Only the plan whose digest the scan kept in the state folder.
     declarationPlan: boundPlan.plan,
@@ -9375,11 +11190,13 @@ export function endScreenLines(result: AssembleResult, findings: Obj, reportPath
     ? [
         [d.toFix.high + d.toFix.medium + d.toFix.low, "to fix", `${group(d.toFix.high)} high · ${group(d.toFix.medium)} medium · ${group(d.toFix.low)} low`],
         [d.counsel, "for you to decide", "the code alone cannot settle them"],
-        ...(d.waiting > 0 ? [[d.waiting, "wait on your answer", `${group(d.questions)} ${plural(d.questions, "question", "questions")}, in the report`] as [number, string, string]] : []),
-        ...(d.recorded > 0 ? [[d.recorded, "recorded", "the duty is met or exempt, or a record of processing"] as [number, string, string]] : []),
+        // A fact to check is not a question; the recorded row names the answer.
+        ...(d.waiting > 0 ? [[d.waiting, "wait on your answer", `${[d.questions > 0 || d.facts === 0 ? `${group(d.questions)} ${plural(d.questions, "question", "questions")}` : "", d.facts > 0 ? `${group(d.facts)} ${plural(d.facts, "fact", "facts")} to check` : ""].filter(Boolean).join(" and ")}, in the report`] as [number, string, string]] : []),
+        ...(d.recorded > 0 ? [[d.recorded, "recorded", "the duty is met or exempt, your answer settles it, or a record of processing"] as [number, string, string]] : []),
         ...(d.notShipped > 0 ? [[d.notShipped, "not shipped", "in files that are not part of the shipped product"] as [number, string, string]] : []),
         ...(d.forOperators > 0 ? [[d.forOperators, "for operators", "each organisation that runs it decides"] as [number, string, string]] : []),
-        ...(d.folded > 0 ? [[d.folded, "counted with another", "the same processing as a finding to fix"] as [number, string, string]] : []),
+        // The head may be any finding of the same rule, counted or not.
+        ...(d.folded > 0 ? [[d.folded, "counted with another", "the same processing as another finding of the same rule"] as [number, string, string]] : []),
       ]
     : [];
   const rows: [number, string, string][] = d ? [...held, [c.not_applicable, "ruled out by Claude", "each with its reason in the report"]] : [
@@ -9406,7 +11223,9 @@ export function endScreenLines(result: AssembleResult, findings: Obj, reportPath
     `  ${"Report".padEnd(14)}  ${reportPath}`,
     // The quick scan's 80-column fold, the one function both print through.
     notReadFolded(parts, (items) => `  ${"Not read".padEnd(14)}  ${items.length === 0 ? "none" : items.join(", ")}`),
-    `  ${"Found nothing".padEnd(14)}  ${group(parts.silent)} ${plural(parts.silent, "check", "checks")} - that does not mean the code is fine`,
+    // The one sentence, on a row of its own: under the 14-column
+    // label it ran past 80 columns at three digits ("Found nothing   N checks - that does not mean the code is fine").
+    `  ${checksFoundNothing(parts.silent)}`,
     "",
     "  Possible issues for you to judge, not legal conclusions.",
     END_SCREEN_CLOSE,
@@ -9440,9 +11259,24 @@ function endScreenRf11(result: AssembleResult, d: DispositionCounts, sc: NonNull
   const toFix = d.toFix.high + d.toFix.medium + d.toFix.low;
   const took = reviewSeconds === null ? "" : ` · AI review ${humanSeconds(Math.round(reviewSeconds))}`;
   const block: string[] = [];
-  const fit = (line: string): string => (line.length <= 80 ? line : `${line.slice(0, 79)}…`);
+  // A row too wide is cut at a word, never inside one ("the regions you ... answ…").
+  const fit = (line: string): string => (Array.from(line).length <= 80 ? line : cutTitle(line, 80));
+  /** A row that says something whole goes on over more rows, broken between words, never cut. */
+  const foldedRow = (text: string, indent: number): string[] => {
+    const rows: string[] = [];
+    let row = "";
+    for (const w of text.split(" ")) {
+      const next = row === "" ? w : `${row} ${w}`;
+      if (row.trim() !== "" && Array.from(next).length > 80) {
+        rows.push(row);
+        row = `${" ".repeat(indent)}${w}`;
+      } else row = next;
+    }
+    if (row.trim() !== "") rows.push(row);
+    return rows.map(fit);
+  };
   block.push(fit(`WolfBoy · ${sc.project}${sc.day ? ` · ${sc.day}` : ""}${took}, ${sc.review ?? (sc.once ? "each place once" : "findings to fix twice")}`));
-  block.push(fit(`Laws: ${sc.laws.join(" · ")}`));
+  block.push(...foldedRow(`Laws: ${sc.laws.join(" · ")}`, 7));
   /* (design 3.2.1; mock M8) A later run's since block: three rows under
    * "Since <date>", and one more naming a high finding that is lower or gone; one row where the run could not compare. */
   const L = sc.later;
@@ -9460,12 +11294,21 @@ function endScreenRf11(result: AssembleResult, d: DispositionCounts, sc: NonNull
   const row = (n: number, what: string, note: string): string => fit(`  ${group(n).padStart(5)}  ${what.padEnd(12)}  ${note}`.trimEnd());
   block.push(`  Needs your action: ${group(toFix + d.counsel + d.waiting)}`);
   // Mock M8: "· 2 decided by you" inside the same row; the row's number never changes.
-  block.push(row(toFix, "to fix", `${group(d.toFix.high)} high · ${group(d.toFix.medium)} medium · ${group(d.toFix.low)} low${sc.decided.toFix > 0 ? ` · ${group(sc.decided.toFix)} decided by you` : ""}`));
-  block.push(row(d.counsel, "to clarify", sc.decided.counsel > 0 ? `${group(sc.decided.counsel)} decided by you · law, or code the AI could not read` : "a point of law, or code the AI could not read"));
-  block.push(row(d.waiting, "to answer", d.waiting > 0 ? `${group(d.questions)} ${d.questions === 1 ? "question settles" : "questions settle"} them: "review my answers"` : "no question open"));
+  /* A zero is left out as the first screen leaves it out: a level with no finding, and
+   * the rows "to clarify" and "to answer" where none is (the readability review's P5). */
+  const levels = (["high", "medium", "low"] as const).filter((l) => d.toFix[l] > 0).map((l) => `${group(d.toFix[l])} ${l}`);
+  block.push(row(toFix, "to fix", `${levels.join(" · ")}${sc.decided.toFix > 0 ? `${levels.length > 0 ? " · " : ""}${group(sc.decided.toFix)} decided by you` : ""}`));
+  if (d.counsel > 0) block.push(row(d.counsel, "to clarify", sc.decided.counsel > 0 ? `${group(sc.decided.counsel)} decided by you · law, or code the AI could not read` : "a point of law, or code the AI could not read"));
+  // The questions that settle them, and the facts to check apart (no question settles a fact).
+  const qWords = `${group(d.questions)} ${d.questions === 1 ? "question" : "questions"}`;
+  const fWords = factsToCheck(d.facts);
+  if (d.waiting > 0) block.push(row(d.waiting, "to answer", d.facts === 0 ? `${qWords} to answer: say "review my answers"` : d.questions === 0 ? fWords : `${qWords} ("review my answers") · ${group(d.facts)} ${d.facts === 1 ? "fact" : "facts"} to check`));
   const setAside = c.suppressed;
-  block.push(fit(`  Taken off the list: ${group(sc.ruledOut + sc.outOfScope + setAside + sc.notCounted)}, by one AI review each or by your answers`));
-  block.push(row(sc.ruledOut, "ruled out", "by that one review; it can miss a real problem"));
+  // Said only where something was taken off, as the first screen says it (n6).
+  const takenOff = sc.ruledOut + sc.outOfScope + setAside + sc.notCounted;
+  if (takenOff > 0) block.push(fit(`  Taken off the list: ${group(takenOff)}, by one AI review each or by your answers`));
+  // The pages' name for it ("judged not a problem"), and their words for why it may be wrong.
+  if (sc.ruledOut > 0) block.push(row(sc.ruledOut, "judged not a problem", "by one AI review each; it can miss a real problem"));
   if (sc.outOfScope > 0) block.push(row(sc.outOfScope, "out of scope", answersUsedOf(result.log)?.whose === "team" ? WORDS.scopeByTeamEnd : "by your answers about the product"));
   if (setAside > 0) block.push(row(setAside, "set aside", "by the scanner, not reviewed"));
   if (sc.notCounted > 0) block.push(row(sc.notCounted, "not counted", "met · not shipped · for operators · same as another"));
@@ -9475,14 +11318,42 @@ function endScreenRf11(result: AssembleResult, d: DispositionCounts, sc: NonNull
   block.push(fit(`  Not checked  ${group(sc.noVerdict)} ${sc.noVerdict === 1 ? "place" : "places"} without a verdict · ${group(sc.partly)} ${sc.partly === 1 ? "finding" : "findings"} the AI read only in part`));
   // (as mock M8 shows it): the carried count, as the first screen's Not checked item.
   if (sc.carried > 0) {
-    block.push(fit(`${pad}${group(sc.carried)} ${sc.carried === 1 ? "verdict" : "verdicts"} carried from ${sc.carriedFrom || "the earlier run"}, not re-read in this one`));
+    // In the first screen's words ("verdicts carried" named it a second way).
+    block.push(fit(`${pad}${group(sc.carried)} ${sc.carried === 1 ? "finding" : "findings"} judged in an earlier review, not read again`));
     // A marked log is named on a row of its own, so the line keeps to 80 columns.
-    if (sc.carriedMark) block.push(fit(`${pad}  its log ${sc.carriedMark}`));
+    block.push(fit(`${pad}  from ${sc.carriedFrom || "the earlier run"}${sc.carriedMark ? ` · its log ${sc.carriedMark}` : ""}`));
   }
-  block.push(fit(`${pad}${group(sc.silent)} ${sc.silent === 1 ? "rule" : "rules"} found nothing, which is not a clean result`));
-  // What the walker did not open is counted here too (`notReadAll`), as on the quick scan's screen.
-  const allNotRead = notReadAll(parts);
-  block.push(fit(`${pad}not read: ${allNotRead.length === 0 ? "none" : `${allNotRead.slice(0, 3).join(", ")}${allNotRead.length > 3 ? `, and ${allNotRead.length - 3} more` : ""}`}`));
+  // The first screen's words for the same count (it said "rules ... not a clean result").
+  block.push(fit(`${pad}${checksFoundNothing(sc.silent)}`));
+  // What the walker did not open is counted here too, as on the quick scan's screen. Folded as the quick scan folds it (`notReadFolded`:
+  // the folders said shorter, then counted), so what the row names is never cut off mid-word (FIN4 P2 D8-2).
+  // Where even the shortest fold is wider than this screen's indented row, its parts go on over a second row, broken
+  // between parts, never cut.
+  const lead = `${pad}not read: `;
+  const itemsOf = new Map<string, string[]>();
+  const folded = notReadFolded(parts, (items) => {
+    const l = `${lead}${items.length === 0 ? "none" : items.join(", ")}`;
+    itemsOf.set(l, items);
+    return l;
+  });
+  if ([...folded].length <= 80) block.push(folded);
+  else {
+    const items = itemsOf.get(folded) ?? [];
+    const rows: string[] = [];
+    let row = "";
+    items.forEach((item, i) => {
+      const piece = i < items.length - 1 ? `${item},` : item;
+      const next = row === "" ? piece : `${row} ${piece}`;
+      if (row !== "" && [...`${lead}${next}`].length > 80) {
+        rows.push(row);
+        row = piece;
+      } else row = next;
+    });
+    if (row !== "") rows.push(row);
+    block.push(...rows.map((r, i) => fit(`${i === 0 ? lead : " ".repeat(lead.length)}${r}`)));
+  }
+  // The one count of open questions, as the report's first screen says it.
+  if (sc.questionsOpen > 0) block.push(fit(`${pad}questions about the product open: ${group(sc.questionsOpen)} · say "review my answers"`));
   block.push(`${pad}privacy policy not compared: say "compare my privacy policy"`);
   // One line, only where the records were kept outside the account-home default.
   const folderLine = stateFolderLine(result.log);

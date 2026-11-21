@@ -15,7 +15,7 @@ import { existsSync, lstatSync, readdirSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Command } from "commander";
-import { dayWords, formMarkdown, reviewWords, writeBothOrNeither, type ReviewRow } from "./assemble-report.js";
+import { dayWords, formMarkdown, localDayOfInstant, reviewWords, writeBothOrNeither, type ReviewRow } from "./assemble-report.js";
 import { gitRunnerOrWhy } from "./child-program.js";
 import { redactPrintedText, redactStringsInPlace, type PrintedRedaction } from "./credential-redaction.js";
 import { productPrintedRedaction } from "./engine.js";
@@ -24,15 +24,19 @@ import { basisRowsOf, comparisonOf, goneRowsOf, type ChangeClass } from "./compa
 import { DIGEST_WORDS, digestMarkOf, readLogDigests } from "./log-digest.js";
 import { commandSessions } from "./plugin-sessions.js";
 import { laterComparisonOf } from "./later-run.js";
-import { group } from "./progress.js";
+import { checksFoundNothing, group } from "./progress.js";
 import { readRegularFile } from "./project-read.js";
 import { markdownCode, markdownText, md, ours, inertJoin, inertLines, inertRedacted, inertCell, programText, type Inert } from "./printed-output.js";
 import { codeSpan, codeSpanParts, codeSpanTexts } from "./report-form.js";
+import { lawMark, lawMarksResolved, type LawNames } from "./law-names.js";
 import { decisionViewOf, listedOfLog, readDecisionRecord } from "./decisions.js";
 import { deeperChecksForRecord } from "./deepen.js";
 import { processStateDir } from "./start-record.js";
 
 /** One finding that stands, as the record lists it on page 2: no code line, no link. */
+/** A text as the program wrote it: its own words, and each law it names by its id (the log's `laws_named`, `title_named`, `area_named`). */
+export type LawNamed = (string | { law: string })[];
+
 export interface RecordItem {
   f: string;
   short: string;
@@ -44,6 +48,9 @@ export interface RecordItem {
   disposition: "to_fix" | "to_clarify" | "to_answer";
   level: string;
   area: string;
+  /** `title` and `area` with each law the program named by its id; absent where none is, and from a log written before 0.1.1. */
+  title_named?: LawNamed;
+  area_named?: LawNamed;
 }
 
 /** The evidence log's `summary` (evidence-log.schema.json), written by the assembly (`recordSummaryOf`). */
@@ -61,6 +68,8 @@ export interface RecordSummary {
     to_clarify: number;
     to_answer: number;
     questions: number;
+    /** Absent from a log written before 0.1.1. */
+    facts?: number;
     taken_off: number;
     ruled_out: number;
     out_of_scope: number;
@@ -69,6 +78,10 @@ export interface RecordSummary {
   };
   not_checked: { no_verdict: number; partly: number; rules_nothing: number; carried: number; folders: string[]; not_read: string[] };
   laws: string[];
+  /** The report's law names; absent from a log written before 0.1.1. */
+  law_names?: Record<string, string>;
+  /** `laws` with each law the program names by its id; absent from a log written before 0.1.1. */
+  laws_named?: LawNamed[];
   items: RecordItem[];
 }
 
@@ -100,6 +113,24 @@ export interface RecordDeepCheck {
   level_found: string;
   level_review: string;
 }
+
+/**
+ * The calendar day of an instant on this computer's
+ * clock, as `YYYY-MM-DD`. "Prepared" printed the instant's UTC day, a day off the person's own date for part of every day
+ * east or west of UTC. The record is made when the person asks for it, on their computer, so its day is theirs; a value
+ * that is not an instant is returned as it is.
+ */
+export function localDayOf(iso: string): string {
+  // One function with the report's.
+  return localDayOfInstant(iso);
+}
+/**
+ * EVERY DAY THE RECORD WRITES, ONE FUNCTION: the local
+ * day of an instant (`localDayOf`) in the report's words (`dayWords`). Only "Prepared" was local, so a record made in
+ * California at 21:00 read "Prepared 14 Nov" above answers "given … 15 Nov" (UTC). A value that is a day already is said as
+ * it is. The laws line is the report's own words (`summary.laws`), with the report's day.
+ */
+const day = (iso: string): string => dayWords(localDayOf(iso));
 
 /** Each part of page 2 that is not the log's, read through one function; null means its source is absent. */
 export interface RecordSources {
@@ -177,8 +208,10 @@ export const RECORD_WORDS = {
   exceptAside: (n: number) => `the ${group(n)} set aside by the scanner`,
   laws: (parts: string[]) => `Laws: ${parts.join(" · ")}.`,
   notChecked: "Not checked",
+  // The checks that found nothing in
+  // the sentence every surface prints (it said "N rules found nothing, which does not mean their duties are met").
   ncCounts: (places: number, partly: number, rules: number) =>
-    `Places without a verdict: ${group(places)} · findings the AI read only in part: ${group(partly)} · ${group(rules)} ${rules === 1 ? "rule" : "rules"} found nothing, which does not mean ${rules === 1 ? "its duties are" : "their duties are"} met.`,
+    `Places without a verdict: ${group(places)} · findings the AI read only in part: ${group(partly)} · ${checksFoundNothing(rules)}.`,
   ncNotRead: (folders: string[], rest: string[]) =>
     `Not read: ${[folders.length > 0 ? `the ${folders.length === 1 ? "folder" : "folders"} ${listWords(folders)}` : "", ...rest].filter(Boolean).join("; ") || "nothing"}.`,
   ncFolderCount: (n: number) => `${group(n)} ${n === 1 ? "folder" : "folders"}`,
@@ -200,9 +233,11 @@ export const RECORD_WORDS = {
   needsRest: " · to fix",
   levels: (n: number, h: number, m: number, l: number) => `${group(n)} (${group(h)} high, ${group(m)} medium, ${group(l)} low)`,
   clarify: "· to clarify (a point of law, or code the AI could not read)",
-  answer: "· to answer (questions about the product not answered)",
+  // A finding to answer waits on a question or on a fact to check, which is not a question.
+  answer: "· to answer (a question about the product, or a fact to check outside the code)",
   taken: (n: number) => `Taken off the list: ${group(n)}`,
-  takenRest: " · ruled out by one AI review each, which can miss",
+  // The report's name for it, "judged not a problem" ("ruled out" named it a second way).
+  takenRest: " · judged not a problem by one AI review each, which can miss a real problem",
   scope: "· out of scope by the answers about the product",
   aside: "· set aside by the scanner, not reviewed",
   notCounted: "· not counted (already met, not shipped, for operators, same as another)",
@@ -218,7 +253,7 @@ export const RECORD_WORDS = {
   deeper: (n: number | null) => `Deeper checks of findings that stand: ${n === null || n === 0 ? "none" : group(n)}.`,
   sinceHead: (day: string) => (day ? `Since the review of ${day}:` : "Since the earlier review:"),
   since: (up: number, lower: number, gone: number, ruled: number, decisions: number | null) =>
-    `new or higher ${group(up)} · lower or gone ${group(lower + gone + ruled)}${gone + ruled > 0 ? ` (${[gone > 0 ? `${group(gone)} gone, which is not the same as fixed` : "", ruled > 0 ? `${group(ruled)} now ruled out` : ""].filter(Boolean).join("; ")})` : ""}${decisions !== null && decisions > 0 ? ` · ${group(decisions)} ${decisions === 1 ? "decision" : "decisions"} recorded` : ""}.`,
+    `new or higher ${group(up)} · lower or gone ${group(lower + gone + ruled)}${gone + ruled > 0 ? ` (${[gone > 0 ? `${group(gone)} gone, which is not the same as fixed` : "", ruled > 0 ? `${group(ruled)} now judged not a problem` : ""].filter(Boolean).join("; ")})` : ""}${decisions !== null && decisions > 0 ? ` · ${group(decisions)} ${decisions === 1 ? "decision" : "decisions"} recorded` : ""}.`,
   sinceNoHead: "Since an earlier review:",
   sinceNone: "this run was compared with none.",
   sinceNot: (why: string) => `not compared (${why}).`,
@@ -235,16 +270,16 @@ export const RECORD_WORDS = {
   decisionsHead: "Decisions",
   decisionsNone: "None recorded on the computer that made this record.",
   decisionLine: (d: RecordDecision, title: string, short: string, reason: string | null) =>
-    `${RECORD_WORDS.kindName[d.kind] ?? d.kind}, ${dayWords(d.date) || d.date}${d.ends ? `, ends ${dayWords(d.ends) || d.ends}` : ", no end date"}: ${title} (${short}). ${reason === null ? "" : `Reason: ${reason}. `}${d.still_counted ? "Still counted." : "Not counted."}${d.counsel_mark ? " Review by qualified counsel recommended." : ""}`,
+    `${RECORD_WORDS.kindName[d.kind] ?? d.kind}, ${day(d.date) || d.date}${d.ends ? `, ends ${day(d.ends) || d.ends}` : ", no end date"}: ${title} (${short}). ${reason === null ? "" : `Reason: ${reason}. `}${d.still_counted ? "Still counted." : "Not counted."}${d.counsel_mark ? " Review by qualified counsel recommended." : ""}`,
   noReason: "no reason given",
   kindName: { keep: "Kept as it is", misread: "Marked as misread", counsel: "Counsel's answer", withdrawn: "Withdrawn" } as Record<string, string>,
   deepHead: "Deeper checks",
   deepNone: "None of the findings that stand.",
   deepLine: (c: RecordDeepCheck, title: string, short: string) =>
-    `${dayWords(c.date) || c.date}: ${title} (${short}). Ran: ${c.what_ran}. Level found: ${c.level_found}; the review's: ${c.level_review}.`,
-  ruledHead: "Ruled out",
+    `${day(c.date) || c.date}: ${title} (${short}). Ran: ${c.what_ran}. Level found: ${c.level_found}; the review's: ${c.level_review}.`,
+  ruledHead: "Judged not a problem",
   ruled: (n: number) =>
-    `${group(n)} ${n === 1 ? "finding was" : "findings were"} ruled out by one AI review each. The list is kept with the report on the computer that made this record (ruled-out.md), not in this record.`,
+    `${group(n)} ${n === 1 ? "finding was" : "findings were"} judged not a problem by one AI review each. The list is kept with the report on the computer that made this record (ruled-out.md), not in this record.`,
   findingGone: "a finding not in this record",
 };
 
@@ -313,9 +348,9 @@ function answersLine(log: Record<string, unknown>, countsOnly: boolean): string 
   const commit = o(u.commit);
   const words =
     whose === "own"
-      ? RECORD_WORDS.whoseOwn(dayWords(s(u.saved_at)))
+      ? RECORD_WORDS.whoseOwn(day(s(u.saved_at)))
       : whose === "team"
-        ? RECORD_WORDS.whoseTeam(dayWords(s(u.saved_at)), commit ? s(commit.id).slice(0, 7) || null : null, commit ? s(commit.author) || null : null, dayWords(s(u.confirmed_at)))
+        ? RECORD_WORDS.whoseTeam(day(s(u.saved_at)), commit ? s(commit.id).slice(0, 7) || null : null, commit ? s(commit.author) || null : null, day(s(u.confirmed_at)))
         : whose === "file"
           ? RECORD_WORDS.whoseFile(countsOnly ? "" : s(u.file))
           : RECORD_WORDS.whoseNone(RECORD_WORDS.noneReason[s(u.reason)] ?? "no reason recorded");
@@ -331,8 +366,8 @@ function carriedReviewsOf(log: Record<string, unknown>): { oldest: string; unkno
   const c = laterComparisonOf(log.comparison);
   if (!c) return { oldest: "", unknown: 0 };
   const days = c.changes.filter((r) => r.carried).map((r) => c.reviewed.get(r.id) ?? null);
-  const known = days.filter((d): d is string => d !== null && dayWords(d) !== "").sort();
-  return { oldest: known.length > 0 ? dayWords(known[0] as string) : "", unknown: days.length - known.length };
+  const known = days.filter((d): d is string => d !== null && day(d) !== "").sort();
+  return { oldest: known.length > 0 ? day(known[0] as string) : "", unknown: days.length - known.length };
 }
 
 /** The record's blocks: page 1 (design 3.7 items 1-7) and page 2. One generator for `record.md` and `record.html`. */
@@ -344,10 +379,10 @@ export function recordBlocks(r: RecordInput): Block[] {
   const out: Block[] = [{ t: "h1", text: RECORD_WORDS.title(sm.project) }];
   out.push({ t: "p", parts: [{ b: RECORD_WORDS.firstLine }, ` ${RECORD_WORDS.firstLineRest(r.version)}`] });
   if (r.logMark) out.push({ t: "p", parts: [RECORD_WORDS.logNotConfirmed(r.logMark.name, r.logMark.mark)] });
-  out.push({ t: "p", parts: [RECORD_WORDS.prepared(dayWords(r.preparedAt))] });
+  out.push({ t: "p", parts: [RECORD_WORDS.prepared(day(r.preparedAt))] });
   // 3. What was examined.
   const code = sm.code.commit
-    ? RECORD_WORDS.commit(sm.project, sm.code.commit.slice(0, 7), dayWords(s(sm.code.commit_date)), sm.code.tree_changed === true)
+    ? RECORD_WORDS.commit(sm.project, sm.code.commit.slice(0, 7), day(s(sm.code.commit_date)), sm.code.tree_changed === true)
     : RECORD_WORDS.noCommit(sm.project, sm.code.commit_why ?? "no commit was recorded");
   const except = [c.out_of_scope > 0 ? RECORD_WORDS.exceptScope(c.out_of_scope) : "", c.set_aside > 0 ? RECORD_WORDS.exceptAside(c.set_aside) : ""].filter(Boolean);
   out.push({ t: "h2", text: RECORD_WORDS.examined });
@@ -357,11 +392,11 @@ export function recordBlocks(r: RecordInput): Block[] {
       [RECORD_WORDS.code(code, sm.code.files_read, sm.code.rules, s(bundle.version) || "unnamed")],
       [answersLine(log, r.countsOnly)],
       [RECORD_WORDS.how(s(log.agent_model) || "model not recorded", s(log.agent_effort), except, reviewWords(sm.review.once, reviewRowsOfLog(log), "long"), sm.review.second_looks)],
-      ...(sm.laws.length > 0 ? [[RECORD_WORDS.laws(sm.laws)]] : []),
+      ...(sm.laws.length > 0 ? [[RECORD_WORDS.laws(lawPartsNamed(sm))]] : []),
     ],
   });
   // 4. Not checked, directly under it.
-  const carriedFrom = dayWords(s(o(o(log.comparison)?.earlier)?.completed_at));
+  const carriedFrom = day(s(o(o(log.comparison)?.earlier)?.completed_at));
   const reviews = carriedReviewsOf(log);
   const folders = r.countsOnly ? (nc.folders.length > 0 ? [RECORD_WORDS.ncFolderCount(nc.folders.length)] : []) : nc.folders;
   out.push({ t: "h2", text: RECORD_WORDS.notChecked });
@@ -423,6 +458,7 @@ export function recordBlocks(r: RecordInput): Block[] {
   // Page 2: the findings that stand, by area; each decision; each deeper check; the ruled-out count and where it is kept.
   out.push({ t: "page2" }, { t: "h2", text: RECORD_WORDS.standHead });
   const areas = [...new Set(sm.items.map((it) => it.area))];
+  const areaNamed = (area: string): string => namedOr(area, sm.items.find((it) => it.area === area)?.area_named);
   if (sm.items.length === 0) out.push({ t: "p", parts: [RECORD_WORDS.standNone] });
   else if (r.countsOnly) {
     out.push({ t: "p", parts: [RECORD_WORDS.standCounts] });
@@ -438,18 +474,18 @@ export function recordBlocks(r: RecordInput): Block[] {
             return `${group(ys.length)} ${RECORD_WORDS.dispWords[d]}${lv.length > 0 ? ` (${lv.join(", ")})` : ""}`;
           })
           .filter(Boolean);
-        return [RECORD_WORDS.areaCounts(area, parts)];
+        return [RECORD_WORDS.areaCounts(areaNamed(area), parts)];
       }),
     });
   } else {
     for (const area of areas) {
-      out.push({ t: "h3", text: area });
+      out.push({ t: "h3", text: areaNamed(area) });
       out.push({
         t: "ul",
         items: sm.items
           .filter((it) => it.area === area)
           .map((it): Inline[] => [
-            { b: `${it.f} · ${it.title}` },
+            { b: `${it.f} · ${titleNamed(it)}` },
             " · ",
             { code: it.place },
             `${it.more_places > 0 ? ` ${RECORD_WORDS.morePlaces(it.more_places)}` : ""}${it.provisions.length > 0 ? ` · ${it.provisions.join(", ")}` : ""} · ${RECORD_WORDS.dispWords[it.disposition]}${it.disposition === "to_fix" ? `, ${it.level}` : ""} · `,
@@ -468,7 +504,7 @@ export function recordBlocks(r: RecordInput): Block[] {
         ...new Map(
           decided.map((d) => {
             const it = itemOf(sm, d.finding_id);
-            const line = RECORD_WORDS.decisionLine(d, it?.title ?? RECORD_WORDS.findingGone, it?.short ?? d.finding_id, r.countsOnly ? null : (d.reason ?? RECORD_WORDS.noReason));
+            const line = RECORD_WORDS.decisionLine(d, it ? titleNamed(it) : RECORD_WORDS.findingGone, it?.short ?? d.finding_id, r.countsOnly ? null : (d.reason ?? RECORD_WORDS.noReason));
             return [`${it?.short ?? d.finding_id}\u0000${line}`, [line] as Inline[]] as const;
           }),
         ).values(),
@@ -477,11 +513,61 @@ export function recordBlocks(r: RecordInput): Block[] {
   out.push({ t: "h2", text: RECORD_WORDS.deepHead });
   const deep = (r.deeperChecks ?? []).filter((x) => itemOf(sm, x.finding_id));
   if (deep.length === 0) out.push({ t: "p", parts: [RECORD_WORDS.deepNone] });
-  else out.push({ t: "ul", items: deep.map((x) => [RECORD_WORDS.deepLine(x, itemOf(sm, x.finding_id)?.title ?? "", itemOf(sm, x.finding_id)?.short ?? "")]) });
+  else out.push({ t: "ul", items: deep.map((x) => [RECORD_WORDS.deepLine(x, ((it) => (it ? titleNamed(it) : ""))(itemOf(sm, x.finding_id)), itemOf(sm, x.finding_id)?.short ?? "")]) });
   out.push({ t: "h2", text: RECORD_WORDS.ruledHead }, { t: "p", parts: [RECORD_WORDS.ruled(c.ruled_out)] });
-  return out;
+  return blocksLawNamed(out, sm.law_names ?? {});
 }
 
+/**
+ * The laws line's parts as the program wrote them (`summary.laws_named`), each law it
+ * names by its id (law-names.ts `lawMark`); a log without them (before 0.1.1), or whose parts do not match `laws`, gives
+ * `laws` as written.
+ */
+function lawPartsNamed(sm: RecordSummary): string[] {
+  const named = sm.laws_named;
+  if (!Array.isArray(named) || named.length !== sm.laws.length) return sm.laws;
+  return sm.laws.map((kept, i) => namedOr(kept, named[i]));
+}
+/** A text the log keeps as written (`kept`) where the program named a law in it, from its named form: each law by its id (`lawMark`). Taken only where it is the kept text with each law by its short name; otherwise the kept text. */
+function namedOr(kept: string, named: unknown): string {
+  if (!Array.isArray(named)) return kept;
+  const parts = named.map((x: unknown) => (typeof x === "string" ? x : x && typeof x === "object" && typeof (x as { law?: unknown }).law === "string" ? { law: (x as { law: string }).law } : null));
+  if (parts.some((x) => x === null)) return kept;
+  const short = parts.map((x) => (typeof x === "string" ? x : (x as { law: string }).law)).join("");
+  return short === kept ? parts.map((x) => (typeof x === "string" ? x : lawMark((x as { law: string }).law))).join("") : kept;
+}
+
+/**
+ * The record's pages name each law the program names in full at its first mention, short
+ * after, as the report's do: the marks of the blocks (`lawPartsNamed`, `areaMarkedOf`) resolved in reading order by the
+ * one tracker (law-names.ts `lawMarksResolved`), before either page is written from them. Nothing else in a block is read:
+ * a finding's title, a provision as the bundle carries it, a place or the project's name is never renamed.
+ */
+function blocksLawNamed(blocks: readonly Block[], names: LawNames): Block[] {
+  const texts: string[] = [];
+  const add = (text: string): void => void texts.push(text);
+  const inline = (xs: readonly Inline[]): void => xs.forEach((x) => (typeof x === "string" ? add(x) : "b" in x ? add(x.b) : add(x.code)));
+  for (const b of blocks) {
+    if (b.t === "h1" || b.t === "h2" || b.t === "h3") add(b.text);
+    else if (b.t === "p") inline(b.parts);
+    else if (b.t === "ul") b.items.forEach(inline);
+    else if (b.t === "table") b.rows.forEach((row) => (inline(row.label), add(row.count)));
+  }
+  const named = lawMarksResolved(texts, names);
+  let k = 0;
+  const next = (): string => named[k++] ?? "";
+  const back = (xs: readonly Inline[]): Inline[] => xs.map((x) => (typeof x === "string" ? next() : "b" in x ? { b: next() } : { code: next() }));
+  return blocks.map((b): Block => {
+    if (b.t === "h1" || b.t === "h2" || b.t === "h3") return { t: b.t, text: next() };
+    if (b.t === "p") return { t: "p", parts: back(b.parts) };
+    if (b.t === "ul") return { t: "ul", items: b.items.map(back) };
+    if (b.t === "table") return { t: "table", rows: b.rows.map((row) => ({ label: back(row.label), count: next() })) };
+    return b;
+  });
+}
+
+/** An item's title with each law the program named in it by its id (`namedOr`). */
+const titleNamed = (it: RecordItem): string => namedOr(it.title, it.title_named);
 const itemOf = (sm: RecordSummary, id: string): RecordItem | undefined => sm.items.find((it) => it.finding_ids.includes(id));
 
 /** "**x:** rest" as parts. */
@@ -599,7 +685,7 @@ export function sinceFromComparison(log: Record<string, unknown>): SinceResult {
   if (!cmp || !earlier) return { kind: "none" };
   if (earlier.compared === false) return { kind: "not", why: s(earlier.why) || "the earlier review holds nothing to compare with" };
   const n = (k: ChangeClass) => a(cmp.changes).filter((x) => s(o(x)?.change) === k).length;
-  return { kind: "counts", day: dayWords(s(earlier.completed_at)), up: n("new_or_higher"), lower: n("lower_or_moved"), gone: n("gone"), ruled: n("now_ruled_out"), at: s(earlier.completed_at) || null };
+  return { kind: "counts", day: day(s(earlier.completed_at)), up: n("new_or_higher"), lower: n("lower_or_moved"), gone: n("gone"), ruled: n("now_ruled_out"), at: s(earlier.completed_at) || null };
 }
 
 /**

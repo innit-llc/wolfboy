@@ -2,7 +2,7 @@ id: eu-consent-004
 pack: eu-consent
 short_name: PostHog may start capturing before consent
 problem_line:
-  text: PostHog captures with no consent gate found
+  text: PostHog captures with no consent check found
 fix_line: Start PostHog opted out and opt in on recorded consent, or go cookieless; on server SDKs,
   check consent before capture.
 title: PostHog constructor or init call (browser or server SDK), or a snippet of one -

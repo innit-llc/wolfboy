@@ -104,6 +104,59 @@ context_questions:
   - Is the wildcard paired with credentialed requests (Access-Control-Allow-Credentials, cookies,
     Authorization headers)? Browsers reject that combination, but hand-rolled servers and proxies
     still emit it.
+  - "DOES THE HEADER OPEN ANYTHING A PAGE ON ANOTHER SITE COULD NOT ALREADY FETCH? A wildcard that a
+    browser applies only to requests carrying none of the person's credentials gives another site's
+    script what any client on the open network can fetch directly, and nothing more. Two shapes do
+    no more than that: the response carries no personal data and sits behind no authentication (an
+    error body holding a status and a message, a public static asset, a health check); or the
+    resource's only access control is a value the request itself carries, such as a signed link or a
+    token in its URL, which a page on another site would already have to hold. Where the header is
+    the literal wildcard (not an origin echoed back from the request), nothing sets
+    Access-Control-Allow-Credentials to true on the same response (question 2), the server is not
+    one reachable only from a private network whose position is its access control, and one of those
+    two shapes holds, the status is `exempt`, its `at` the line that shows the shape (the handler
+    that writes the body, or the check of the signed link), and `exemption` has `basis` `L1` and
+    `limb` `security appropriate to the risk: the response opens nothing new`. GDPR Art. 32(1) asks
+    for 'a level of security appropriate to the risk', and Art. 32(2) sizes that risk by
+    'unauthorised disclosure of, or access to personal data transmitted, stored or otherwise
+    processed'; CRA Annex I Part I point (2) opens 'On the basis of the cybersecurity risk
+    assessment referred to in Article 13(2) and where applicable, products with digital elements
+    shall:'; and entries 3 and 4 reach this finding only where the endpoint returns personal data or
+    is authenticated. An origin reflected from the request, a credentialed response, an endpoint
+    behind a session or reachable only on an internal address, and a body that carries anything
+    about a person are not this shape. A WAY OUT HOLDS ONLY AT EVERY KEPT PLACE: a status this
+    question gives is the finding's only where every place of the finding that you or the seats
+    before you kept has the shape that status names; a kept place inside a helper or a shared
+    function has that shape only where every call that reaches it does, so walk every caller, and a
+    caller that would be `duty_unmet` makes that place `duty_unmet`. Where the kept places differ,
+    the finding takes the heaviest of their statuses (`duty_unmet`, then `waits_on_answer`, then
+    `duty_met` or `exempt`), with its `at` and its `decisive` at that place: one kept place that is
+    `duty_unmet` makes the finding `duty_unmet`."
+  - "A PLACE IN CODE THAT DOES NOT SHIP, AND HOW TO RECORD IT. A cross-origin header that only a
+    development server, a test helper or a continuous-integration job sends reaches none of the
+    product's users: a bundler's development-server section, a header a test sets on a fake server.
+    Where the line shows that (quote the section or the branch that limits it to development or
+    tests), the status is `duty_met`, its `at` that line, and its `element` the words `test,
+    development, CI, demo or documentation code that does not ship`. Two things are not this and
+    stay `duty_unmet` wherever they sit, because the configuration the maker documents is what
+    operators run: a setting that applies when operators run the product as it ships or as its
+    documents tell them to (the default or production section of a configuration file the product
+    ships, an example or default configuration, a sample environment file, a deployment chart or
+    manifest, a server, proxy or ingress file); and a document that recommends a cross-origin
+    setting to an operator (install documents, a README, a documentation-site page). The
+    development-server section of a configuration file the product ships (a bundler's `dev_server`
+    block, a section keyed to the development environment) is not such a setting: it applies only
+    when someone runs the development server, so it takes this way out, unless the product's
+    documents tell operators to run that server. A setting in a shared or default section that the
+    production section inherits is such a setting. A demo is covered only where nothing tells an
+    operator to run it as configured. A WAY OUT HOLDS ONLY AT EVERY KEPT PLACE: a status this
+    question gives is the finding's only where every place of the finding that you or the seats
+    before you kept has the shape that status names; a kept place inside a helper or a shared
+    function has that shape only where every call that reaches it does, so walk every caller, and a
+    caller that would be `duty_unmet` makes that place `duty_unmet`. Where the kept places differ,
+    the finding takes the heaviest of their statuses (`duty_unmet`, then `waits_on_answer`, then
+    `duty_met` or `exempt`), with its `at` and its `decisive` at that place: one kept place that is
+    `duty_unmet` makes the finding `duty_unmet`."
 evidence_template: "{file}:{line} is one of the four shapes this rule screens: an origin wildcard, a
   framework switch that allows every origin, a constructor called with no origin argument, or an
   Access-Control-Allow-Origin header named or set to any value at all. The third establishes only

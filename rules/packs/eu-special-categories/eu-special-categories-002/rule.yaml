@@ -303,6 +303,8 @@ detector:
     - (?<![A-Za-zÀ-ɏ])[Ff]ace[A-Za-z_]{0,16}[^\n]{0,60}(?:[Cc]osine[_\-]?[Ss]imilarity|COSINE[_\-]?SIMILARITY|[Ee]uclidean[_\-]?[Dd]istance|EUCLIDEAN[_\-]?DISTANCE)
   match_without:
     - ^\s*(?:\*|//|/\*|#|<!--|--\s)
+settling_questions:
+  - operator.special_category_condition
 context_questions:
   - "Is the matched value biometric data within GDPR Art. 4(14) at all - personal data resulting
     from specific technical processing relating to the physical, physiological or behavioural

@@ -15,6 +15,7 @@
  */
 import { existsSync, readFileSync, realpathSync, statSync } from "node:fs";
 import { delimiter, dirname, join, resolve } from "node:path";
+import { homedir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { StartupRefusal } from "./startup-refusal.js";
 import { readRegularFile } from "./project-read.js";
@@ -181,7 +182,25 @@ export function personCommand(args: readonly string[], personArgs: readonly stri
     const self = real(join(here, manifest.bin));
     if (self !== null && BIN_NAME.test(manifest.binName) && onPath(manifest.binName, self, pathList)) return [manifest.binName, ...personArgs.map(toldWord)].join(" ");
   }
+  // The plugin's launcher under the
+  // person's home folder is told from `~/`, which bash expands to that folder: the report and quick-scan.txt, which a
+  // person may share, then hold no user name, and the command runs as before. Not on Windows, where Git Bash's HOME may
+  // name another folder than the one this program reads as home (start-record.ts), so the full path stays there.
+  const launcher = pluginLauncher();
+  const home = homeFolder();
+  if (launcher !== null && process.platform !== "win32" && home !== "" && launcher.startsWith(`${home}/`) && launcher.length > home.length + 1) {
+    return [`~/${toldQuoted(launcher.slice(home.length + 1))}`, ...args.map(toldWord)].join(" ");
+  }
   return scannerCommand(args);
+}
+
+/** This program's home folder (`os.homedir()`), without a trailing separator; "" where it cannot be read. */
+function homeFolder(): string {
+  try {
+    return homedir().replace(/\/+$/, "");
+  } catch {
+    return "";
+  }
 }
 
 /** A package spec written bare: an npm name and an exact version, no character a shell gives a meaning to. */

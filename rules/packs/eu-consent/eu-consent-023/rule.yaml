@@ -2,7 +2,7 @@ id: eu-consent-023
 pack: eu-consent
 short_name: Third-party script added from a configured address
 problem_line:
-  text: "Configured script: consent gate or notice slot not found"
+  text: "Configured script: consent check or notice entry not found"
 fix_line: Give deployers a consent gate, a notice slot or a banner hook, or say in settings that
   consent is theirs.
 title: Third-party script injected into a public page from a configured URL - prior consent needs review
@@ -219,5 +219,6 @@ data_categories:
   - user.device.ip_address
   - user.behavior
 fingerprint_spec: project
+duty_about: product_runtime
 reading_class:
   class: existence

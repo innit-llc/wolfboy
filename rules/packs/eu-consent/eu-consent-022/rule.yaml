@@ -131,6 +131,26 @@ context_questions:
     literal - a domain-scoped key, a per-site key, a key built from a subscription id - resolve the
     template and report the shape of the key rather than a single example, because the finding
     otherwise understates what is stored.
+  - "A WRAPPER WITH NO PURPOSE OF ITS OWN. Where the matched line is inside a storage helper that
+    only passes on what its callers hand it (a setItem wrapper, a storage module), the storing has
+    the purposes of its callers, and Art. 5(3) and its exemption are decided by purpose: the
+    paragraph's second sentence exempts storage 'strictly necessary in order for the provider of an
+    information society service explicitly requested by the subscriber or user to provide the
+    service.' Walk every caller, as question 5 asks. Where a caller is itself a finding of this
+    rule, write `same_as` with that caller's line, so the storing is counted once, at the caller,
+    where its purpose is read. Where every value the wrapper stores is strictly necessary in that
+    sense, the status is `exempt`, its `at` the wrapper's own line, and `exemption` has `basis` `L1`
+    and `limb` `strictly necessary for a service the user explicitly requested`. Where any caller
+    stores a value that is not, and no finding of this rule holds that caller's line, the wrapper is
+    where that storing is visible: the status is `duty_unmet`, with that caller named in
+    `reasoning`. A WAY OUT HOLDS ONLY AT EVERY KEPT PLACE: a status this question gives is the
+    finding's only where every place of the finding that you or the seats before you kept has the
+    shape that status names; a kept place inside a helper or a shared function has that shape only
+    where every call that reaches it does, so walk every caller, and a caller that would be
+    `duty_unmet` makes that place `duty_unmet`. Where the kept places differ, the finding takes the
+    heaviest of their statuses (`duty_unmet`, then `waits_on_answer`, then `duty_met` or `exempt`),
+    with its `at` and its `decisive` at that place: one kept place that is `duty_unmet` makes the
+    finding `duty_unmet`."
 evidence_template: "{file}:{line} WRITES A VALUE INTO A STORE THAT LIVES ON THE VISITOR'S DEVICE.
   That act, and not the meaning of the value, is what ePrivacy Art. 5(3) attaches its consent
   requirement to: the paragraph speaks of the storing of information, or the gaining of access to
@@ -255,3 +275,4 @@ data_categories:
   - user.unique_id
   - user.device
 fingerprint_spec: file
+duty_about: product_runtime

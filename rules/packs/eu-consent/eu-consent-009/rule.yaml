@@ -60,3 +60,4 @@ remediation_template: |
 data_categories:
   - user.unique_id
 fingerprint_spec: default
+duty_about: product_runtime

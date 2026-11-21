@@ -147,3 +147,4 @@ data_categories:
   - user.device
   - user.behavior
 fingerprint_spec: file
+duty_about: product_runtime

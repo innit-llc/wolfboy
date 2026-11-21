@@ -1,13 +1,13 @@
 import type { Command } from "commander";
-import { ours } from "./printed-output.js";
+import { ours, type Inert } from "./printed-output.js";
 import { existsSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
-import { PROVISION_CHECKED_WORD, WORDS } from "./assemble-report.js";
+import { FOLD_LINE, PROVISION_CHECKED_WORD, WORDS } from "./assemble-report.js";
 import { idsOfHandle, NUMBER_LIST_KIND, parseNumberList } from "./number-list.js";
 import { explainCopyLines } from "./deep-copy-text.js";
 import { deepCopiesOnRecord } from "./deepen.js";
 import { latestReport, readReportFile, type ReportFilesEntry } from "./report-files.js";
-import { codeSpanTexts, isReportFileTarget, labelText, markdownUnescaped } from "./report-form.js";
+import { codeSpanParts, codeSpanTexts, isReportFileTarget, labelText, markdownUnescaped } from "./report-form.js";
 import { processStateDir } from "./start-record.js";
 import { legalTidyLines } from "./legal-tidy.js";
 import { readStateRecord } from "./state-record.js";
@@ -69,9 +69,10 @@ export const EXPLAIN_WORDS = {
   moreFindings: (n: number, places: number | null) =>
     `[${n} more ${n === 1 ? "finding" : "findings"}${places === null ? "" : `, ${places} ${places === 1 ? "place" : "places"},`} in the file]`,
   ruledOutVerdict: (short: string, title: string) =>
-    `${short} is a ruled-out verdict, not a finding, so it has no finding's file and nothing is proposed to fix. Its review's reasoning is the section "Verdict ${short}" of its rule's file (${title}):`,
-  ruledOutCandidate: (short: string, title: string) => `${short} · ruled out · ${title}`,
-  noSection: (short: string, path: string) => `${path} holds no section for the ruled-out verdict ${short}, so it is not pointed at.`,
+    `${short} was judged not a problem, so it has no file among the findings to fix and nothing is proposed to fix. Its review's reasoning is the section "Finding ${short}" of its check's file (${title}):`,
+  // 17 Nov (d7): the pages' words, "judged not a problem" and "finding".
+  ruledOutCandidate: (short: string, title: string) => `${short} · judged not a problem · ${title}`,
+  noSection: (short: string, path: string) => `${path} holds no section for the finding ${short} judged not a problem, so it is not pointed at.`,
 };
 
 /** The terminal width the printed lines are held to (the one line allowed past it is a path, which is never cut). */
@@ -135,8 +136,12 @@ export function nameLineOf(text: string, file: string): string {
   let where = "";
   if (at0 >= 0) {
     LINK.lastIndex = 0;
-    const m = LINK.exec(placeRow);
-    where = m ? labelText(m[1] ?? "") : placeRow.slice(lead.length).replace(/\\$/, "").trim();
+    // A place's label is code (`[`src/a.ts:3`](...)`): its text, a bracket in it included.
+    const parts = codeSpanParts(placeRow.slice(lead.length).trim());
+    const spanned = parts.length > 1 && parts[0] === "[" ? codeSpanTexts(parts[1] ?? "")?.[0] : undefined;
+    // Or a numbered reference (`[label][1]`), which a card too long for its rows uses.
+    const m = spanned === undefined ? (LINK.exec(placeRow) ?? /\[((?:\\.|[^\]\\])*)\]\[\d+\]/.exec(placeRow)) : null;
+    where = spanned ?? (m ? labelText(m[1] ?? "") : placeRow.slice(lead.length).replace(/\\$/, "").trim());
   } else {
     // A group's count is its places, the sum of its entries' own counts, which
     // is the title's "(N places)" (never the number of entries, which are findings); the title's count is not said twice.
@@ -191,7 +196,11 @@ function numbersOf(stateDir: string | null, target: string): { ok: true; byId: M
   return { ok: true, byId: new Map([...list.byId].map(([id, v]) => [id, v.n] as const)) };
 }
 
-/** A ruled-out verdict's place in its rule's file: the file, the 1-based line of its `### Verdict <short>` heading. */
+/**
+ * A ruled-out verdict's place in its rule's file: the file, the 1-based line of its `### Finding <short>` heading
+ * ( the pages' name since 17 Nov; a report an earlier
+ * version wrote has `### Verdict <short>`, read the same).
+ */
 interface VerdictAt {
   id: string;
   short: string;
@@ -209,11 +218,16 @@ function verdictAt(entry: ReportFilesEntry, id: string, file: string): { ok: tru
   const hex = id.replace(/^fp_/, "");
   let found: { short: string; line: number } | null = null;
   for (let i = 0; i < lines.length; i++) {
-    const short = /^### Verdict ([0-9a-f]{6,64})$/.exec(lines[i] as string)?.[1];
+    const short = /^### (?:Finding|Verdict) ([0-9a-f]{6,64})$/.exec(lines[i] as string)?.[1];
     if (short !== undefined && hex.startsWith(short) && (found === null || short.length > found.short.length)) found = { short, line: i + 1 };
   }
   if (found === null) return { ok: false, why: EXPLAIN_WORDS.noSection(hex.slice(0, 6), got.path) };
-  return { ok: true, at: { id, short: found.short, file, path: got.path, line: found.line, title: terminalLine(lines[0] ?? "") ?? "" } };
+  /* The check's name: the file's
+   * title without its count (" · judged not a problem 1 time"), which the line says already ("9a4e07c · judged not a
+   * problem · <name> · judged not a problem 1 time" before). */
+  const title = terminalLine(lines[0] ?? "") ?? "";
+  const named = title.includes(" · ") ? title.slice(0, title.lastIndexOf(" · ")) : title;
+  return { ok: true, at: { id, short: found.short, file, path: got.path, line: found.line, title: named } };
 }
 
 /** The finding's file a handle names in the latest report, a ruled-out verdict's section, or the lines to print instead. */
@@ -290,6 +304,8 @@ function sectionOf(body: readonly string[], heading: string): string[] | null {
   const out: string[] = [];
   for (const l of body.slice(at + 1)) {
     if (l.startsWith("## ")) break;
+    // A fold's own lines are not words: the terminal shows what the fold holds.
+    if (FOLD_LINE.test(l)) continue;
     out.push(l);
   }
   while (out[0] === "") out.shift();
@@ -307,7 +323,16 @@ function regionWordsOfRow(row: string): { rest: string; words: string } | null {
   if (!m) return null;
   const whose = [WORDS.cardYourAnswers, WORDS.cardNotAnswered, WORDS.cardRegionsUnanswered];
   const words = m[1] as string;
-  if (!words.split(" · ").every((p) => whose.some((w) => p === w || p.endsWith(`: ${w}`)))) return null;
+  /* Since R19-F's P12 the card
+   * says them as sentences joined by "; " (`regionsOffered`, `regionsNotSaid`, `regionsNotSaidAny`): each part is one of
+   * those, read by their own words around the names they hold; the earlier "EU: your answers" parts are still read. */
+  const shapeOf = (f: (names: Inert) => string): ((p: string) => boolean) => {
+    const [a = "", b = ""] = f(ours("\u0000")).split("\u0000");
+    return (p) => p.length > a.length + b.length && p.startsWith(a) && p.endsWith(b);
+  };
+  const sentences = [shapeOf(WORDS.regionsOffered), shapeOf(WORDS.regionsNotSaid), (p: string) => p === WORDS.regionsNotSaidAny || p === WORDS.regionsOffered(ours(""))];
+  const old = words.split(" · ").every((p) => whose.some((w) => p === w || p.endsWith(`: ${w}`)));
+  if (!old && !words.split("; ").every((p) => sentences.some((ok) => ok(p)))) return null;
   return { rest: row.slice(0, m.index), words };
 }
 
@@ -465,7 +490,12 @@ function firstScreenOf(text: string, file: string, path: string, shape: ScreenSh
         for (const part of parts) {
           const code = /^`+\s?(.*?)\s?`+$/.exec(part.trim());
           if (code) shown.push(cutTo(code[1] as string, room));
-          else shown.push(...wrapWords(terminalLine(part) ?? "", room));
+          else {
+            // The place is a link whose label is code (`[`src/a.ts:2`][1]`): its text, as before.
+            const line = terminalLine(part) ?? "";
+            const label = r.label === WORDS.cardPlace ? /^`+\s?(.*?)\s?`+$/.exec(line.trim()) : null;
+            shown.push(...wrapWords(label ? (label[1] as string) : line, room));
+          }
         }
       }
       const kept = shown.length > shape.rowLines ? [...shown.slice(0, shape.rowLines - 1), cutTo(`${shown[shape.rowLines - 1] as string} …`, room)] : shown;
@@ -612,7 +642,7 @@ export function ruledOutLines(o: { target: string; stateDir: string | null }): {
       r.file,
       // A verdict's entry is its place, then its short id (a link to its section) and its reason, wrapped over rows; the
       // file's other list items (the links back, the rule's name) are not verdicts.
-      items.filter((it) => /\]\(#verdict-/.test(it)).map((it) => {
+      items.filter((it) => /\]\(#(?:finding|verdict)-/.test(it)).map((it) => {
         const [placeRow, ...rows] = it.split("\n");
         const idRow = rows.join(" ");
         const place = (terminalLine(placeRow ?? "") ?? "").replace(/^-\s*/, "");

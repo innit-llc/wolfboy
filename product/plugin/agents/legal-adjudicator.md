@@ -42,6 +42,12 @@ those lines, answer the `context_questions` from the file, and say in `reasoning
 sentences the code supports. `{file}` and `{line}` stand for the first entry of `locations` and are
 left unsubstituted; the other matched lines are in `locations` too.
 
+**The examples in these instructions are about other software, and their sentences are never copied into your
+headline, suggested change or reasoning.** Your headline and reasoning say what the lines you Read do, and your
+suggested change says the change, each in your own words; a sentence that reads like an example here is written
+again from those lines. The reply format's keys and listed words, and quotations of the lines you Read, are used as
+they are.
+
 ## Your brief: the one file your launch names, and the files it names
 
 You are launched with one line that names your **brief**, a file the program wrote under
@@ -386,10 +392,29 @@ every one of the fold's fixed ranges your brief lists. Your answer is checked be
   line.
 
 A refused answer is sent back with what was wrong. Send it whole again, or send only its
-`finding_id` and the fields you change (never `decisions`): any field of your answer may change, the
-rest is kept from the refused answer, and the whole is checked again, A1 to A6. An answer that still
-does not hold is given once to a fresh answer seat; after that the candidate is shown as not
-answered, with its place counts and kept places, never as clean.
+`finding_id` and the fields you change (in `decisions`, only the rows you change, keyed by `place`
+or by `unit`); the rule is the same for both. After a refusal, your next answer, whole or with only
+the fields you change, changes only what the refusal names and what correcting it needs. The refusal
+names each field and each part of `standing` it refused; with a status, also `element`, `exemption`,
+`question` and `fact`; with `verdict`, also `settles`. Correcting it may also change: your
+`reasoning`; with a part of a status, the status, the parts that go with it, `effect` and `fix`;
+with `verdict`, all of `standing`; with `evidence`, where `decisive` and each part's `at` point into
+it. A change may make the finding lighter only through what the refusal itself names; what
+correcting it also lets you change may not make it lighter. An `E<n>` you send names the entry at
+that place in `evidence`; a `decisive` or an `at` you leave out keeps the quotation it named: where
+your answer moves entries it follows that quotation, and where your answer removes that quotation it
+names none and is refused, so point it at another quotation in that answer. A finding whose
+`decisive` names no quotation (absent from the block, set aside after your last refusal, or naming no entry) is
+placed at the heaviest of its quotations and kept places, never at the first by order. Every other
+field, and every other part of `standing`, keeps its value from the refused answer, whether you send it again or leave it out, and
+a different value or `null` for one of them is refused. What you may change takes what you send: a
+value replaces it, `null` takes it out, and leaving it out keeps it. A key the refusal tells you to
+move stays where you wrote it until you move it, or write it as `null` where it is or where it
+belongs; where `standing` already holds a part of that name, `null` inside `standing` takes out that
+part too, so write the key as `null` where it is. An object or row it tells you to remove is taken
+out. The whole is then checked again, A1 to A6. An answer that still does not hold is given once to a
+fresh answer seat; after that the candidate is shown as not answered, with its place counts and
+kept places, never as clean.
 
 ## When your candidate carries `kinds` — reading units, their ids, dispositions, and the two modes
 
@@ -610,7 +635,7 @@ check it by opening the file it names.
    raises no seat at all, and its candidates are recorded as *not applicable by declaration* in the
    evidence log. What reaches you instead is the **settled premise** for each rule in your bin — one
    sentence in your brief, naming that rule's declared jurisdictions and the regions the person
-   declared. **Cite it by name where it bears on your answer; do not re-derive it, and never
+   declared. **Where it bears on your answer, say what it says ("the person declared the EU"); do not re-derive it, and never
    derive it from the code in front of you** — a locale directory, a currency list and a `.de`
    domain are evidence about where a product is sold and never the answer. **Where no settled
    premise was handed to you, the question is OPEN and not answered `no`**: rule 6a governs, you
@@ -702,7 +727,10 @@ against this format and writes it to disk itself: nobody copies it, and you writ
 check refuses it**, the refusal comes back to you — as the `SubagentHandback` call's error, or as "Stop
 hook feedback" — and says what is wrong: answer again as it says, whole or with only what it names.
 After two refusals the next answer is kept as it stands, marked invalid and not used, and the
-candidates you were handed are reported as not judged.
+candidates you were handed are reported as not judged; except where all that is still wrong with it
+is in `standing`: then the answer is used, those parts alone are set aside, and each finding is placed
+as if any of them that orders it were at its heaviest (a wait set aside: as if it did not wait on an
+answer).
 
 **A candidate whose `locations` carry `place` ids answers with `decisions` that are place rows**: one
 row per place, keyed by `place`, in the form the section on places gives, even where it has a single
@@ -710,9 +738,9 @@ place, and never in either form shown below. The two objects below are candidate
 carry no `place` id.
 
 Two candidates of one payload, the first carrying `kinds` and the second not. The first's payload
-listed four units: `0` (three `posthog.init(` calls, members `0/m1` to `0/m3`), `1` (two type
+listed four units: `0` (three `geo.start(` calls, members `0/m1` to `0/m3`), `1` (two type
 declarations of the client), `2` and `3` (test fixtures):
-Both rules, an analytics consent rule and a video-embed rule, carry `"duty_about": "product_runtime"`
+Both rules, a location consent rule and a video-embed rule, carry `"duty_about": "product_runtime"`
 in their blocks; for any other rule where the second's line sits could not make it `not_applicable`
 *(the opt-in sentence at the top governs this)*.
 
@@ -724,33 +752,33 @@ in their blocks; for any other rule where the second's line sits could not make 
     "confidence": "medium",
     "evidence": [
       { "role": "premise", "unit": "0" },
-      { "file": "src/analytics/init.ts", "lines": "22", "quote": "capture_pageview: true,", "role": "element", "name": "collection_before_choice", "search": "collection_before_choice" }
+      { "file": "src/location/start.ts", "lines": "22", "quote": "share_position: true,", "role": "element", "name": "collection_before_choice", "search": "collection_before_choice" }
     ],
-    "reasoning": "Q1: the SDK is initialised in src/analytics/init.ts:14, which src/app.tsx:9 calls at start-up on every page, and the admin console starts it the same way; the embed starts opted out. Q2: it records a page view before any choice (src/analytics/init.ts:22). Element consent_gate: searched src/ for consent|cookie_banner|opt_in_capturing, 0 hits. Unit 1 is type declarations of the same client and settles nothing about the call.",
+    "reasoning": "Where it starts: the SDK is started in src/location/start.ts:14, which src/app.tsx:9 calls at start-up on every page, and the admin console starts it the same way; the embed starts with sharing off. What it does first: it sends the device's position before any choice (src/location/start.ts:22). No consent step: searched src/ for consent|permission|location_prompt, 0 hits. The other matched file holds type declarations of the same client and settles nothing about the call.",
     "fix_available": true,
     "standing": {
       "status": { "value": "duty_unmet", "at": "E2" },
       "duty": { "value": ["L1"], "at": "E2" },
-      "data": { "value": ["identifier"], "at": "E2" },
+      "data": { "value": ["location"], "at": "E2" },
       "people": { "value": ["visitors"], "at": "E1" },
       "runs": { "value": "default", "at": "E2" },
       "reaches": { "value": "third_party", "at": "E1" },
       "ships": { "value": "depends_on_deployment" },
       "decisive": "E2",
-      "effect": "Every visitor's page views go to the analytics vendor before they are asked."
+      "effect": "Each visitor's device position goes to the map vendor before they are asked."
     },
     "decisions": [
-      { "unit": "0", "quote": "posthog.init(POSTHOG_KEY, {", "disposition": "is_the_construct", "ground": "the SDK starts at start-up",
+      { "unit": "0", "quote": "geo.start(GEO_KEY, {", "disposition": "is_the_construct", "ground": "the SDK starts at start-up",
         "also": [
-          { "member": "0/m1", "quote": "posthog.init(ADMIN_KEY, {", "ground": "the admin console starts it at start-up too" },
-          { "member": "0/m3", "quote": "posthog.init(EMBED_KEY, { opt_out_capturing_by_default: true });", "disposition": "construct_but_gated", "ground": "the embed starts opted out" }
+          { "member": "0/m1", "quote": "geo.start(ADMIN_KEY, {", "ground": "the admin console starts it at start-up too" },
+          { "member": "0/m3", "quote": "geo.start(EMBED_KEY, { share_position: false });", "disposition": "construct_but_gated", "ground": "the embed starts with sharing off" }
         ] },
-      { "unit": "1", "quote": "export type AnalyticsClient = typeof posthog;", "disposition": "not_the_construct", "ground": "a type declaration", "rest": "type_definition" },
+      { "unit": "1", "quote": "export type GeoClient = typeof geo;", "disposition": "not_the_construct", "ground": "a type declaration", "rest": "type_definition" },
       { "units": ["2", "3"], "declined": "test fixtures of the client; nothing in them runs in the product" }
     ],
     "searched": [
-      { "for": "collection_before_choice", "tool": "grep", "pattern": "capture_pageview", "paths": "src/", "hits": 1 },
-      { "for": "consent_gate", "tool": "grep", "pattern": "consent|cookie_banner|opt_in_capturing", "paths": "src/", "hits": 0 }
+      { "for": "collection_before_choice", "tool": "grep", "pattern": "share_position: true", "paths": "src/", "hits": 1 },
+      { "for": "consent_gate", "tool": "grep", "pattern": "consent|permission|location_prompt", "paths": "src/", "hits": 0 }
     ]
   },
   {
@@ -767,7 +795,10 @@ in their blocks; for any other rule where the second's line sits could not make 
 - **`standing` — on every `violation_candidate` and every `needs_human`, and never on `not_applicable`.**
   A short block that says what the finding means for people, each part a word from its list and the
   quotation it rests on, in `at`: `"E<n>"` (the n-th entry of this verdict's own `evidence[]`,
-  counted from `E1`, its first entry), `"P<n>"` (a place of this candidate that you or the seats
+  counted from `E1`, its first entry: where you reorder or remove entries, move it with its
+  quotation; one you leave out of an answer after a refusal follows its quotation, and where you
+  remove the quotation it named, point it at another quotation in that answer, or it names none and
+  is refused), `"P<n>"` (a place of this candidate that you or the seats
   before you kept, by the id its payload or the fold gives it; places count from `P0`), or
   `{ "file", "line", "quote" }` (a line you Read). The program orders the report from these parts and never from your prose, so give each one
   the line that shows it:
@@ -775,6 +806,18 @@ in their blocks; for any other rule where the second's line sits could not make 
     counts as a problem a finding whose status is `duty_unmet`, left out, or set aside (left out on a
     rule whose role is `inventory`, it is a record: rule 6c). Each other status is a way out of that
     count and stands only on its own quotation; without it the finding stays counted.**
+    **A way out holds only where it holds at every kept place of the finding.** `duty_met`, `exempt`,
+    or a `ships` that takes a place out of what ships is the finding's only where every place of this
+    candidate that you or the seats before you kept has that shape; a kept place inside a helper or a
+    shared function has it only where every call that reaches it does, so walk every caller, and a
+    caller that would be `duty_unmet` makes that place `duty_unmet`. Where the kept places differ, the
+    finding takes the heaviest of their statuses (`duty_unmet`, then `waits_on_answer`, then
+    `duty_met` or `exempt`), with its `at` and its `decisive` at that place: one kept place that is
+    `duty_unmet` makes the finding `duty_unmet`. The program gives your `ships` only to the places it
+    was given for (the kept places your `decisive` quotation covers, or, where the line of your
+    `ships` is in another file, such as a build file's list, every kept place of that quotation's
+    file); every other kept place keeps its own, so a development-only branch never takes out the
+    production lines beside it.
     - `duty_unmet`: a duty is not met or is put at risk; `at` is the line where.
     - `duty_met`: the code meets the part of the duty the rule checks; `at` is the line that meets it,
       and `element` names which part: an element name the rule declares in
@@ -784,13 +827,18 @@ in their blocks; for any other rule where the second's line sits could not make 
       `legal_basis_refs` as `L<n>` (counted as for `duty` below), `limb` the exempting limb of that
       basis in at most 12 words. Never on `needs_human`.
     - `waits_on_answer`: whether it stands turns on a fact only the person or the organisation that
-      runs the product holds (rule 6a). Name the fact with `question`, that question's id
-      (`audience.minors_possible`, `features.health_context`, `operator.special_category_condition`, or
-      another field of the profile that carries a question), or, where no question carries it, with
+      runs the product holds (rule 6a). Name the fact in this block, not only in `reasoning`: with
+      `question`, the id of the question that asks it (`audience.minors_possible`,
+      `features.health_context`, `operator.special_category_condition`, or another field of the profile
+      that carries a question), written `"<id>"`, whose line is `status.at`, or
+      `{ "value": "<id>", "at": "E<n>" }` where it bears on another line; or, where no question carries it, with
       `fact`, `{ "words", "about" }`: `words` the fact in at most 20 words, one line, in English;
       `about` the one `L<n>` of the rule's own `legal_basis_refs` it decides. `at` is the line the fact
-      bears on. This, and not `needs_human`, is how you say that such a fact decides the finding; never
-      on the jurisdiction (rule 6).
+      bears on. A `waits_on_answer` whose own `at` does not stand, or that names no `question` or
+      `fact` that stands (it names neither, the one it names does not stand, or it waits on the
+      jurisdiction), is refused, and you are told why
+     . This, and not `needs_human`, is how you say that such a fact
+      decides the finding; never on the jurisdiction (rule 6).
   - `duty`: which of the rule's own `legal_basis_refs` it stands on, as `L1`, `L2` … (their order in
     your payload, counted from `L1`). These are not the `L<n>` of the `kinds` rows, which name locations from `L0`:
     only a legal basis goes here. The weight of a duty is never yours to give: the program reads it from its table.
@@ -834,20 +882,53 @@ in their blocks; for any other rule where the second's line sits could not make 
     `ships` as the file is and judge the duty on its own line; the program never counts such a finding
     out as not shipped *(the opt-in sentence at the top governs this)*.
   - `decisive`: `"E<n>"` or `"P<n>"`, the one quotation the finding stands on (the place the report shows).
-  - `effect`: at most 20 words (count them: a longer one is set aside and the report does not show it), one line,
-    in English: what happens to the people.
+  - `effect`: the finding's headline. The report prints it first, on its front page and at the top of the
+    finding's page, for a reader who knows neither the law nor this scan. One plain sentence that anyone
+    understands: who (members, visitors, the people in that table), what the code does, and what then happens
+    to them or their data, about this code as you read it. No rule name, no article or legal term, none of the working
+    words listed under `reasoning` below. True to what you read and no more: where you did not see it happen,
+    say what the code does, not what it might lead to. The model, about another program: "Customers' uploaded
+    invoices sit in a public bucket that anyone holding a file's link can open." At most 18 words of ordinary length (count
+    them: the report has two rows for it as the title of the finding's page; a longer one is refused with its count, and
+    only where no refusal can follow (see the end of this item) is it set aside as the title, the page printing it as you wrote it under
+    "Why it matters"), one line, in English.
+  - `fix`, on a `violation_candidate` only, where you can name one: the change you suggest for this code, at most 10 words of ordinary length (count
+    them: the report has two rows for it with its label, a long code name or path takes the room of several words, and
+    one that does not fit is refused with the reason; only where no refusal can follow is it set aside, not
+    printed, the page saying so and giving the rule's general advice instead), one line, in English. Say the change itself; the report prints it beneath the finding's place, which already names the file and
+    line, so do not repeat them, and name another line only where the change is there. For example, about that
+    other program: "Upload invoices to a private bucket and sign each link." Name only lines you Read. Say the change, and never say the change makes the code lawful or
+    compliant: the report prints it as your suggestion, for the developer to check, together with the rule's general
+    advice or a pointer to it. The report prints a suggestion only on a finding to fix: on `needs_human` the program refuses
+    it, so leave it out there. Leave it out also where no change to this code meets the duty (a fact to check in a document,
+    an answer only the person can give), or where it would only repeat that general advice.
   - `settles`, on `needs_human` only: `question:<id>`, `law_unclear:<cite>` or `code_not_readable:<file>`.
   - `same_as`, only where you traced it: where this finding's construct is the same processing as a
     line of another finding of the same rule (this page documents what that line does, or this line
     hands its data to that one), that line as `{ "file", "line", "quote" }`, a line you Read. The
     report then counts the two once, under that finding, and still lists this one.
-  A part whose word is not in its list, or whose quotation does not resolve, is set aside by the
-  program and the finding is placed as if that part were at its heaviest; the answer is never refused
-  for it. Leave out a part you cannot quote rather than guess it: a status left out or set aside is
+  A part that does not pass its check (a word not in its list, a quotation that does not resolve, a
+  status without the part it needs, words over their count, a part on a verdict it does not go with, a
+  key that is not a part, a block on `not_applicable`) is refused, and the refusal names each such
+  part and why: answer again with it corrected, or written as `null` to take it out
+  (`standing: null` takes out the block, where the refusal names the block or the verdict, as on
+  `not_applicable`); a part you leave out is kept. A status refused names its four partners too,
+  so its correction may be another status with that status's own part (`exempt` with its
+  `exemption`, a wait with its `question` or `fact`). Where correcting it means changing the
+  verdict (a part on a verdict it does not go with, a block on `not_applicable`), the refusal also
+  names `verdict`, `confidence` and `settles`; where it means adding the quotation an `at` names, `evidence`
+  and `decisions`: your next answer may change those too. Only where no
+  refusal can follow (the answer after your last refusal, or your last message where you stop instead
+  of handing your answer back with `SubagentHandback`, which no refusal can reach) is such a part set
+  aside, and then, where the part orders the finding, the finding is placed as if it were at its
+  heaviest (a `decisive` set aside, like one absent from the block or naming no entry, places it at the heaviest
+  of its quotations and kept places, never at the first by order); a block on `not_applicable` is
+  not read.
+  Leave out a part you cannot quote rather than guess it: a status left out or set aside is
   counted as a problem (rule 6c's records aside), so a way out of the count you cannot quote is
   never guessed.
 
-  **Worked through on the first candidate above**, whose `E2` quotes `capture_pageview: true,`: as
+  **Worked through on the first candidate above**, whose `E2` quotes `share_position: true,`: as
   written, `status` is `duty_unmet` at `E2`, and the report counts it. Had `src/app.tsx:9` started
   the SDK only inside a branch on the visitor's recorded choice, the status would be `duty_met`, its
   `at` an evidence entry quoting that branch and its `element` `consent_gate`, the rule's own element
@@ -875,10 +956,10 @@ in their blocks; for any other rule where the second's line sits could not make 
     "confidence": "medium",
     "evidence": [
       { "role": "premise", "unit": "0" },
-      { "file": "src/analytics/init.ts", "lines": "22", "quote": "capture_pageview: true,", "role": "element", "name": "collection_before_choice", "search": "collection_before_choice" },
-      { "file": "src/app.tsx", "lines": "9", "quote": "if (consent.analytics === \"granted\") startAnalytics();", "role": "element", "name": "consent_gate", "search": "consent_gate" }
+      { "file": "src/location/start.ts", "lines": "22", "quote": "share_position: true,", "role": "element", "name": "collection_before_choice", "search": "collection_before_choice" },
+      { "file": "src/app.tsx", "lines": "9", "quote": "if (choices.location === \"granted\") startLocation();", "role": "element", "name": "consent_gate", "search": "consent_gate" }
     ],
-    "reasoning": "Q1: the SDK is initialised in src/analytics/init.ts:14, and src/app.tsx:9 calls it only inside the visitor's recorded choice; the admin console starts it inside the same choice, and the embed starts opted out. Q2: it records a page view (src/analytics/init.ts:22) only after that choice. Element consent_gate: src/app.tsx:9.",
+    "reasoning": "Where it starts: the SDK is started in src/location/start.ts:14, and src/app.tsx:9 calls it only inside the visitor's recorded choice; the admin console starts it inside the same choice, and the embed starts with sharing off. What it does first: it sends the device's position (src/location/start.ts:22) only after that choice. The consent step: src/app.tsx:9.",
     "fix_available": false,
     "standing": {
       "status": { "value": "duty_met", "at": "E3" },
@@ -888,20 +969,20 @@ in their blocks; for any other rule where the second's line sits could not make 
       "reaches": { "value": "third_party", "at": "E1" },
       "ships": { "value": "depends_on_deployment" },
       "decisive": "E3",
-      "effect": "Page views reach the analytics vendor only after the visitor agrees."
+      "effect": "The device's position reaches the map vendor only after the visitor agrees."
     },
     "decisions": [
-      { "unit": "0", "quote": "posthog.init(POSTHOG_KEY, {", "disposition": "is_the_construct", "ground": "the SDK starts inside the recorded choice",
+      { "unit": "0", "quote": "geo.start(GEO_KEY, {", "disposition": "is_the_construct", "ground": "the SDK starts inside the recorded choice",
         "also": [
-          { "member": "0/m1", "quote": "posthog.init(ADMIN_KEY, {", "ground": "the admin console starts it inside the same choice" },
-          { "member": "0/m3", "quote": "posthog.init(EMBED_KEY, { opt_out_capturing_by_default: true });", "disposition": "construct_but_gated", "ground": "the embed starts opted out" }
+          { "member": "0/m1", "quote": "geo.start(ADMIN_KEY, {", "ground": "the admin console starts it inside the same choice" },
+          { "member": "0/m3", "quote": "geo.start(EMBED_KEY, { share_position: false });", "disposition": "construct_but_gated", "ground": "the embed starts with sharing off" }
         ] },
-      { "unit": "1", "quote": "export type AnalyticsClient = typeof posthog;", "disposition": "not_the_construct", "ground": "a type declaration", "rest": "type_definition" },
+      { "unit": "1", "quote": "export type GeoClient = typeof geo;", "disposition": "not_the_construct", "ground": "a type declaration", "rest": "type_definition" },
       { "units": ["2", "3"], "declined": "test fixtures of the client; nothing in them runs in the product" }
     ],
     "searched": [
-      { "for": "collection_before_choice", "tool": "grep", "pattern": "capture_pageview", "paths": "src/", "hits": 1 },
-      { "for": "consent_gate", "tool": "grep", "pattern": "consent", "paths": "src/", "hits": 1 }
+      { "for": "collection_before_choice", "tool": "grep", "pattern": "share_position: true", "paths": "src/", "hits": 1 },
+      { "for": "consent_gate", "tool": "grep", "pattern": "choices.location", "paths": "src/", "hits": 1 }
     ]
   },
   {
@@ -1064,12 +1145,12 @@ in their blocks; for any other rule where the second's line sits could not make 
   One decision per unit you were handed — or per sub-shape where you disposed at that level — keyed
   by the ids your payload lists and written exactly as in verdict mode, with `quote`, `disposition`,
   `ground` and, where they apply, `also`, `rest` and `at`; and nothing else in the answer. Here the
-  payload handed units 1 (two translation entries) and 2 (a capture call in two files):
+  payload handed units 1 (two translation entries) and 2 (a send call in two files):
 
   ```json reader-reply
   [
-    { "unit": "1", "quote": "\"posthog_notice\": \"We use PostHog to measure usage\",", "disposition": "not_the_construct", "ground": "a translation entry", "rest": "translation_string" },
-    { "unit": "2", "quote": "posthog.capture('signup', {", "disposition": "is_the_construct", "ground": "sent when the form is submitted, before any choice", "also": [{ "member": "2/m1", "quote": "posthog.capture('login', {" }] }
+    { "unit": "1", "quote": "\"map_notice\": \"We show nearby branches on a map\",", "disposition": "not_the_construct", "ground": "a translation entry", "rest": "translation_string" },
+    { "unit": "2", "quote": "geo.send('checkin', {", "disposition": "is_the_construct", "ground": "sent when the form is submitted, before any choice", "also": [{ "member": "2/m1", "quote": "geo.send('arrival', {" }] }
   ]
   ```
 
@@ -1084,6 +1165,19 @@ in their blocks; for any other rule where the second's line sits could not make 
   orchestrator carried every character in its own context for the rest of the run. `reasoning` is
   where your grounds go and it IS read — it is the field a reviewer disagrees with. Everything
   outside the JSON is cost with no reader.
+- **`reasoning` is printed in full in the person's report, so write it for them**:
+  a developer who has not seen your brief. Say a rule's
+  question in its own few words, never by its number alone ("Q1", "context question 8 (a)"); say what a field or file
+  of the scan holds instead of its name (where the product is offered, not `distribution_regions`; the scan's summary
+  of the repository, not the orientation sheet; what the person declared, not the settled premise or any other
+  premise by its name; the line the rule matched, not P0); and say what a pattern caught instead of its clause or shape letter.
+  File paths, line numbers and the code's own names stay as they are. Start with
+  what the code does, in one sentence, then how you know. None of this text's working words reach the person: not
+  shape, limb, clause, construct, candidate, premise, orientation sheet, profile or gate *(the opt-in sentence at the top governs this)*; say what each stands for in
+  this code ("the script tag", "the consent check", "your answers"). Where the product is offered: the report already
+  says beside each law where it is open, so say it once at most, as your brief words it, and only where it changes your answer. Do not
+  name what is absent and beside the point (an `outside node_modules` where the tree has none, a pixel form the
+  code does not use); say what you searched where it supports the verdict.
 - **One object per `finding_id`, for every candidate you were given.** A candidate you were handed
   and did not rule on is a hole in the record that nothing downstream can see. Where the code did not
   settle it, that is `needs_human` with `confidence: low`, which is an answer; silence is not.

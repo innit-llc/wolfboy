@@ -1,10 +1,10 @@
 {
   "name": "wolfboy",
   "description": "WolfBoy checks what your code actually does against GDPR, the AI Act and CCPA, and against your own privacy policy; your own Claude Code judges each place it finds",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "FSL-1.1-ALv2",
   "author": {
-    "name": "INNIT Inc.",
+    "name": "INNIT LLC",
     "url": "https://github.com/innit-llc"
   },
   "homepage": "https://github.com/innit-llc/wolfboy",

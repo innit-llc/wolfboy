@@ -122,6 +122,14 @@ export const CREDENTIAL_CLAUSES: readonly { clause: number; redact: boolean; pri
     redact: true, printed: "region", lineForm: true,
     reason: "URI password whatever the host or position: the span is the password alone, between ':' and '@'",
   },
+  {
+    clause: 28,
+    redact: false, printed: "after", lineForm: true,
+    reason:
+      "environment-variable-shaped key whose first segment is the secret word (added beside clause 20 " +
+      "): as clause 20, the span ends at the " +
+      "assignment operator, so it holds the key name and never the value (the value outside every span is a residual)",
+  },
 ];
 
 /** A clause's global copy, for iteration. */
@@ -129,7 +137,7 @@ const redactionCopy = (re: RegExp): RegExp => new RegExp(re.source, re.flags.inc
 
 /**
  * A FOUND VALUE IS NEVER PRINTED IN PART. A
- * line-form clause (`lineForm` in the table above: 17-20, 26 and 27) reads a value from its place on a line, after a key
+ * line-form clause (`lineForm` in the table above: 17-20, 26, 27 and 28) reads a value from its place on a line, after a key
  * and its operator or inside a URI, and one line cannot say where that value ends: in a .env, YAML or .properties value a
  * space, `;`, `#` or `//` is text, and any white space (a no-break space, a form feed) can stand before a comment. Three
  * checker rounds each found one more such ending (` ;`, then ` #`, then a space and the rest of a value), and each was
@@ -460,7 +468,7 @@ export function redactedLabelsOf(
  *   look-behind so the match is the value alone), exactly as `redactCredentialText` treats it;
  * - `block`: the PEM header (clause 4) is an envelope, and the key is what follows it: the rest of the header's
  *   line and every later line of the text up to the END line;
- * - `after`: the environment-variable clause (20) ends at the assignment operator, so the value is the rest of
+ * - `after`: the environment-variable clauses (20, and 28 beside it) end at the assignment operator, so the value is the rest of
  *   the line after the match;
  * - `predicate`: the three clauses with an empty match (17 URI password, 18 secret-named key's value, 19 a
  *   secret-shaped value) recognise a line and locate nothing. The clause itself is asked where the value is:
@@ -470,7 +478,7 @@ export function redactedLabelsOf(
  *   stop every recognising clause, the whole line is the region, so the value cannot survive a text this rule
  *   recognised (layer 1's own fallback, `credentialTargets`);
  * - `none`: the keychain clauses (21-25) match API names, not secrets.
- * Whatever the mode, the region of a line-form clause (17-20, 26 and 27) then runs from its value's start to the end of
+ * Whatever the mode, the region of a line-form clause (17-20, 26, 27 and 28) then runs from its value's start to the end of
  * its line (`lineFormBounds`, above), so no part of a value it found is printed.
  * A value quoted with backticks is tested as if quoted with `'`, as the report prints it (`code()` in
  * assemble-report.ts), so the report and the log recognise the same values.

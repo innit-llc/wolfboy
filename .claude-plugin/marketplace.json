@@ -2,7 +2,7 @@
   "name": "wolfboy",
   "description": "WolfBoy's Claude Code plugin",
   "owner": {
-    "name": "INNIT Inc.",
+    "name": "INNIT LLC",
     "url": "https://github.com/innit-llc"
   },
   "plugins": [
@@ -12,7 +12,7 @@
       "source": {
         "source": "npm",
         "package": "wolfboy",
-        "version": "0.1.0"
+        "version": "0.1.1"
       },
       "license": "FSL-1.1-ALv2",
       "homepage": "https://github.com/innit-llc/wolfboy",

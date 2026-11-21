@@ -137,6 +137,7 @@ import {
   QUESTIONS_PER_ROUND,
   readDeclaration,
   scopeSettlementsOf,
+  staleOrderFields,
   addedAsked,
   askedBeforeReview,
   questionsRaisedOf,
@@ -845,6 +846,13 @@ function declarationBeforeScan(opts: { out?: string; profile?: string; declarati
   if (declared.status !== "none" && !verdict.ok) notes.push(`The declaration ${declared.profilePath} is not read this run: ${verdict.why}.`);
   else if (verdict.ok && team !== null && !team.confirmed) {
     notes.push(`The answers about the product saved in ${declared.profilePath} are not confirmed in this folder on this computer, so this scan read none of them: every region's rules ran.${team.unreadable !== null ? ` (The confirmation could not be read: ${team.unreadable}.)` : ""}`);
+  }
+  // What the scan leaves out of the saved answers it reads.
+  if (own !== undefined) {
+    for (const field of staleOrderFields(source, declared)) {
+      const header = source.fields.find((f) => f.field === field)?.x.header ?? field;
+      notes.push(`Your saved answer to ${JSON.stringify(header)} was given to an earlier version of that question and is not used. Where a finding turns on it, the finding waits for your answer and the report asks the question again.`);
+    }
   }
   let profilePath = own;
   if (given !== undefined && given !== own) {
@@ -1614,16 +1622,18 @@ program
     // program's declaration under its record (read again here: a take or the terminal has just written it); a
     // --profile of another file, or no declaration, settles nothing.
     const step = declaration === "ci" ? null : declaration;
-    const scopeSettlements =
-      step !== null && profilePath !== undefined && resolve(profilePath) === resolve(step.c.declared.profilePath)
-        ? scopeSettlementsOf(step.c.source, readDeclaration(step.c.dir))
-        : [];
+    const ownDeclaration = step !== null && profilePath !== undefined && resolve(profilePath) === resolve(step.c.declared.profilePath) ? readDeclaration(step.c.dir) : null;
+    const scopeSettlements = step !== null && ownDeclaration !== null ? scopeSettlementsOf(step.c.source, ownDeclaration) : [];
+    // An answer recorded at an earlier version of a
+    // question nothing asks before review is read as unanswered (the pre-launch step leaves out the same).
+    const profileLeftOut = step !== null && ownDeclaration !== null ? staleOrderFields(step.c.source, ownDeclaration) : [];
     const scanOptions = {
       bundle,
       targetRoot,
       read,
       profilePath,
       scopeSettlements,
+      profileLeftOut,
       // THE ONE PATH ON WHICH THE BUDGET IS ON BY DEFAULT. Every other
       // caller of `runScan` — the gate tools, the mutation harness, the fixtures runner — leaves it
       // absent and gets no budget, because a wall-clock ceiling inside a gate would make that gate's
@@ -3336,7 +3346,11 @@ program
     console.log(preLaunchLines(plan, comparing ? (previousOpt as string) : null).join("\n"));
     {
       const profilePath = opts.profile ? resolve(opts.profile as string) : undefined;
-      const loadedProfile = profilePath && existsSync(profilePath) ? loadScanProfile(profilePath).profile : null;
+      // The program's declaration is read as the scan
+      // read it: an answer recorded at an earlier version of a question nothing asks before review is left out.
+      const ownDeclaration = profilePath !== undefined ? readDeclaration(dirname(findingsPath)) : null;
+      const leftOut = ownDeclaration !== null && profilePath === ownDeclaration.profilePath ? staleOrderFields(loadDeclarationSource(), ownDeclaration) : [];
+      const loadedProfile = profilePath && existsSync(profilePath) ? loadScanProfile(profilePath, leftOut).profile : null;
       const launchDir = resolve((opts.launchDir as string | undefined) ?? join(dirname(outPath), "launch"));
       // Relay item 4: writing the run-shape question starts the scan run the launch gate acts on (hook-launch.ts). And by the project a recorded plugin session ran in, whatever the environment says.
       const refusedDir = launchDirRefusal(launchDir, findingsPath, process.env) ?? (recordedSessions === null ? null : recordedLaunchDirRefusal(launchDir, recordedSessions.projectDir));

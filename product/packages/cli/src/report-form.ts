@@ -19,7 +19,9 @@
  * program wrote. The program counts rows once, with `rowsAt`: where a block of the first screen has a row budget
  * (Fix first, To clarify) and an entry's own words decide how many rows it takes.
  */
-import { linkTarget, type Inert } from "./printed-output.js";
+import { PROGRAM_MARKER_RE, redactPrintedText, type PrintedRedaction } from "./credential-redaction.js";
+import { productPrintedRedaction } from "./product-redaction.js";
+import { valueText } from "./value-text.js";
 
 /** The width every report file is written for (design 3.1.1). */
 export const REPORT_WIDTH = 75;
@@ -282,19 +284,6 @@ export function encodePath(path: string): string {
 }
 
 /**
- * A code place's link target from a report file: `up` is the way from the report file's folder to the project's root
- * (`../../../` from `.legal/reports/scan-<stamp>/`), `file` the place's path relative to the root. Where the report
- * lies outside the project, `up` is null and the target is the place's absolute `file:` address (`root` absolute).
- */
-export function codeTarget(up: string | null, root: string, file: string, line: number | null): Inert {
-  const at = line !== null && line > 0 ? `#L${line}` : "";
-  if (up === null) return linkTarget(`file://${encodePath(`${root.replace(/\/+$/, "")}/${file}`)}${at}`);
-  // From a report in the project's root (`up` is ""), the target starts "./",
-  // so that a root file named `https:x` or `vscode:x` is a relative path and never a link with a scheme (FR5 item 5).
-  return linkTarget(`${up === "" ? "./" : up}${encodePath(file)}${at}`);
-}
-
-/**
  * Whether a link target in a report file names another report file, for readers that show a report file as terminal
  * text (explain.ts drops such links): the inverse of the link kinds this module and the assembly write, kept beside
  * `codeTarget` so that the two agree. A report file's link is relative, ends ".md" with no "#L<n>" anchor, and climbs at
@@ -495,4 +484,80 @@ export function plainFileName(name: string, taken: Set<string>): string {
   for (let n = 2; taken.has(name2); n += 1) name2 = `${base}-${n}`;
   taken.add(name2);
   return name2;
+}
+
+/*
+ * THE MARKDOWN ESCAPES OF A VALUE, here and not in
+ * printed-output.ts, which keeps `markdownText` and every other printer: report-budget.ts measures a text as the report
+ * prints it, and the capture (standing.ts) reads report-budget from the hooks, whose static import graph must not hold
+ * printed-output.js (the entry loads it only to print: a redaction that cannot load must never stop the module that
+ * decides). One copy: printed-output.ts imports these.
+ */
+/** The printed redaction from the CLI's own copy of `baseline-002`, compiled once (product-redaction.ts), the report's. */
+export function printedOutputRedaction(): PrintedRedaction {
+  return productPrintedRedaction();
+}
+
+/** ASCII punctuation that opens no construct of CommonMark, GFM's tables, markdown-it's strikethrough and linkify or VS Code's math, in any position. */
+const MARKDOWN_INERT = new Set([..."/,;'\"?%^{}"]);
+const isWordChar = (c: string | undefined): boolean => c !== undefined && /[\p{L}\p{N}]/u.test(c);
+const isSpaceOrEnd = (c: string | undefined): boolean => c === undefined || /\s/.test(c);
+
+/**
+ * `markdownText`'s escapes of a value `enteredValue` returned. The printed redaction runs on the value BEFORE its
+ * escapes: an escape splits a credential's shape
+ * (`API_TOKEN\=...`, `eyJ...\.eyJ...`), so step 13's net over the finished file and the log's net no longer recognise it
+ * and the value reached not-checked.md and the log in clear. It runs once more after `valueText`, for a shape that reads
+ * only on one line. The marker it leaves is kept as it is below, for its readers (an inert `[...]`: no `(`, `[` or
+ * definition follows).
+ */
+export function markdownEscaped(r: string): string {
+  return redactPrintedText(printedOutputRedaction(), valueText(r))
+    .split(PROGRAM_MARKER_SPLIT())
+    // A `:` right after the marker is escaped: at a block's start `[marker]: url` would define a link reference.
+    .map((part, i) => (i % 2 === 1 ? part : i > 0 && part.startsWith(":") ? `\\:${inertPart(part.slice(1))}` : inertPart(part)))
+    .join("");
+}
+/** `PROGRAM_MARKER_RE` as one capturing group, for `split`. */
+/* Made on first use, not at load (PROGRAM_MARKER_RE is set when credential-redaction.js has loaded). */
+let programMarkerSplit: RegExp | null = null;
+const PROGRAM_MARKER_SPLIT = (): RegExp => (programMarkerSplit ??= new RegExp(`(${PROGRAM_MARKER_RE.source.replace(/\((?!\?)/g, "(?:")})`));
+/**
+ * A digit run that is a whole word up to `i` and could mark an ordered list: one that reads as 1 (the one marker that
+ * can interrupt a paragraph), or any that starts the value, which may itself start a block (a list item's content, a
+ * paragraph).
+ */
+const listOneBefore = (t: readonly string[], i: number): boolean => {
+  let j = i;
+  while (j > 0 && /\d/.test(t[j - 1] as string)) j--;
+  return j < i && (j === 0 || (/\s/.test(t[j - 1] as string) && Number(t.slice(j, i).join("")) === 1));
+};
+function inertPart(text: string): string {
+  const t = [...text];
+  let out = "";
+  for (let i = 0; i < t.length; i++) {
+    const c = t[i] as string;
+    const prev = t[i - 1];
+    // A `/` after a `/` is escaped: linkify reads `//host:port/path` as a link with no dot in the host (`//localhost`).
+    if (!/[!-/:-@[-`{-~]/.test(c) || (MARKDOWN_INERT.has(c) && !(c === "/" && prev === "/"))) {
+      out += c;
+      continue;
+    }
+    const next = t[i + 1];
+    const kept =
+      (c === "-" && prev !== undefined && !/\s/.test(prev)) ||
+      (c === "_" && isWordChar(prev) && isWordChar(next)) ||
+      (c === "." && prev !== undefined && !listOneBefore(t, i) && isSpaceOrEnd(next)) ||
+      (c === ")" && prev !== undefined && !listOneBefore(t, i)) ||
+      (c === "(" && prev !== undefined) ||
+      (c === ":" && next !== "/");
+    out += kept ? c : `\\${c}`;
+  }
+  return out;
+}
+
+
+/** `markdownText`'s text as a string, for a measure of rows (report-budget.ts): the value redacted, then escaped. */
+export function markdownTextOf(s: string): string {
+  return markdownEscaped(redactPrintedText(printedOutputRedaction(), s));
 }

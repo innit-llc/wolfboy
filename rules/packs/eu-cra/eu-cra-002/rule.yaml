@@ -955,6 +955,7 @@ remediation_template: >
 
   cooperation with market surveillance, and none of the six requirements above.
 fingerprint_spec: project
+duty_about: release_supply_documentation
 reading_class:
   class: mixed
   limbs:

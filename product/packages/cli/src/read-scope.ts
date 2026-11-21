@@ -442,6 +442,77 @@ function plural(count: number, one: string, many: string): string {
   return `${n(count)} ${count === 1 ? one : many}`;
 }
 
+/**
+ * (and D4) WHAT THE SCANNER REFUSES BY RULE, ONE
+ * COMPUTATION over the walker's own rows, for this member's sentence (the scan's own section and not-checked.md) and for
+ * every screen's "Not read" (progress.ts `foldersNotReadOf`). Two tallies of it disagreed: the screens added the dependency
+ * lock files (and the test files refused by name) into the count they worded as "N files in the <named> folders", and
+ * this sentence counted WolfBoy's own working folder (`.legal`, the scan's own records, never the project's) among the
+ * directories the project was not read in. The folders are counted and named from their rows, `.legal` at the scanned
+ * folder's root apart; the files refused by name are counted apart, by kind.
+ */
+export const OWN_WORKING_FOLDER = ".legal";
+const REFUSED_DIR_REASONS: ReadonlySet<string> = new Set(["generated-directory", "hidden-directory", "non-production-directory"]);
+export interface RefusedByRule {
+  /** The folders refused by rule, `.legal` at the root left out, most files first: each with its files (null: not counted). */
+  folders: { dir: string; files: number | null }[];
+  /** The files counted in those folders. */
+  folderFiles: number;
+  /** How many of those folders the walker did not count the files of. */
+  uncounted: number;
+  /** Dependency lock files (`generated-file`), refused by their names wherever they stand. */
+  lockFiles: number;
+  /** Test and story files refused by their names (`non-production-file`). */
+  testFiles: number;
+  /** `.legal`'s files where the walker met it at the root (null: it did not, or did not count them). */
+  own: number | null;
+}
+/**
+ * WolfBoy's own working folder at the scanned
+ * folder's top (its records), which no count of what was not read includes; a `.legal` deeper down is another project's
+ * and is counted. One test for every count (`refusedByRuleOf`, scan.ts `walkerReasonParts`).
+ */
+export const isOwnWorkingFolder = (dir: string): boolean => dir === OWN_WORKING_FOLDER || dir.startsWith(`${OWN_WORKING_FOLDER}/`);
+export function refusedByRuleOf(rows: readonly { reason?: string; dir?: string; files?: number | null }[]): RefusedByRule {
+  const own = isOwnWorkingFolder;
+  const byDir = new Map<string, number | null>();
+  let ownFiles: number | null = null;
+  let lockFiles = 0;
+  let testFiles = 0;
+  for (const r of rows) {
+    const reason = String(r.reason ?? "");
+    if (reason === "generated-file") lockFiles += r.files ?? 0;
+    else if (reason === "non-production-file") testFiles += r.files ?? 0;
+    if (!REFUSED_DIR_REASONS.has(reason) || typeof r.dir !== "string" || r.dir === "") continue;
+    const files = typeof r.files === "number" ? r.files : null;
+    if (own(r.dir)) {
+      if (files !== null) ownFiles = (ownFiles ?? 0) + files;
+      continue;
+    }
+    const had = byDir.get(r.dir);
+    byDir.set(r.dir, had === undefined ? files : had === null || files === null ? (had ?? files) : had + files);
+  }
+  const folders = [...byDir].map(([dir, files]) => ({ dir, files })).sort((x, y) => (y.files ?? 0) - (x.files ?? 0) || (x.dir < y.dir ? -1 : 1));
+  return {
+    folders,
+    folderFiles: folders.reduce((sum, f) => sum + (f.files ?? 0), 0),
+    uncounted: folders.filter((f) => f.files === null).length,
+    lockFiles,
+    testFiles,
+    own: ownFiles,
+  };
+}
+/** The member's sentence, from `refusedByRuleOf`; `what` names the kinds of path refused (the scan names this run's folders). */
+export function refusedByRuleSentence(r: RefusedByRule, what: string): string {
+  const files = r.lockFiles + r.testFiles;
+  const ownWords = r.own === null ? "" : ` WolfBoy's own ${OWN_WORKING_FOLDER} folder (${plural(r.own, "file", "files")}, this scan's own records) is not counted here.`;
+  if (r.folders.length === 0 && files === 0) return `Paths the scanner refuses by rule: none in this tree. ${NOT_CONFIGURABLE}.${ownWords}`;
+  // A part that holds nothing is left out ("1 directory holding files not counted, and 0 files"). "1 directory holding 1 file", never "1 files".
+  const held = r.folderFiles === 0 && r.uncounted > 0 ? "files not counted" : `${n(r.folderFiles)}${r.uncounted > 0 ? "+" : ""} ${r.folderFiles === 1 && r.uncounted === 0 ? "file" : "files"}`;
+  const parts = [r.folders.length > 0 ? `${plural(r.folders.length, "directory", "directories")} holding ${held}` : "", files > 0 ? plural(files, "file", "files") : ""].filter(Boolean);
+  return `Paths the scanner refuses by rule: ${parts.join(", and ")} — ${what}. ${NOT_CONFIGURABLE}.${ownWords}`;
+}
+
 /** How many folders read despite their names a sentence names before it says "and N more". */
 const NAMED_FOLDERS_SHOWN = 10;
 
@@ -630,7 +701,7 @@ export function coverageLimits(input: {
   // walker deliberately did not enumerate (counting `node_modules` costs more than the number is
   // worth); it is reported as `+` rather than folded into the number, so "not counted" is never read
   // as "nothing there".
-  const dirReasons = new Set(["generated-directory", "hidden-directory", "non-production-directory"]);
+  const dirReasons = REFUSED_DIR_REASONS;
   const fileReasons = new Set(["generated-file", "non-production-file"]);
   let refusedDirs = 0;
   let refusedDirFiles = 0;
@@ -655,16 +726,16 @@ export function coverageLimits(input: {
       directories_not_enumerated: refusedDirFilesUncounted ? 1 : 0,
     },
     lift: null,
-    sentence:
-      refusedDirs === 0 && refusedFiles === 0
-        ? "Paths the scanner refuses by rule: none in this tree. " + NOT_CONFIGURABLE + "."
-        : `Paths the scanner refuses by rule: ${plural(refusedDirs, "directory", "directories")} holding ` +
-          `${n(refusedDirFiles)}${refusedDirFilesUncounted ? "+" : ""} files, and ${plural(refusedFiles, "file", "files")} — ` +
-          // Only the machine-written names no class
-          // of this run names: a class's own names are its to hold or read, and a sentence listing them here said `--read`
-          // could not open what it can.
-          `machine-written trees and files (${MACHINE_WRITTEN_FOLDERS.filter((f) => classNamingFolder(input.scope, f) === null).join(", ")}, ` +
-          `and dependency lock files) and dot-directories other than .well-known and .github. ${NOT_CONFIGURABLE}.`,
+    // The counts above stay the walker's (every path refused by rule); the sentence is
+    // `refusedByRuleOf`'s, which leaves WolfBoy's own `.legal` out and names it apart.
+    sentence: refusedByRuleSentence(
+      refusedByRuleOf(input.excluded.filter((e) => readScopeClassOfReason(e.reason) === null)),
+      // Only the machine-written names no class
+      // of this run names: a class's own names are its to hold or read, and a sentence listing them here said `--read`
+      // could not open what it can.
+      `machine-written trees and files (${MACHINE_WRITTEN_FOLDERS.filter((f) => classNamingFolder(input.scope, f) === null).join(", ")}, ` +
+        `and dependency lock files) and dot-directories other than .well-known and .github`,
+    ),
   });
 
   // ---- 3. What could not be read as code ------------------------------------------------------

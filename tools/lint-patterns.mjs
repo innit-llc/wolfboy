@@ -713,20 +713,6 @@ export const ABSENCE_CLAIM_EXCEPTIONS = [
       "'a hidden mode' is the rule's construct (title: 'with a mode that hides it from them'), a feature in the code, not a missing thing.",
   },
   {
-    rule: "safeguard-reach-002",
-    field: "problem_line.text",
-    phrase: "not",
-    reason:
-      "Every group's to-fix ground is a fact about the matched control in this repository: its predicate, the store its call is bound to, the guard on this path (C5 q4, A2 sections 13 and 14.1).",
-  },
-  {
-    rule: "safeguard-reach-002",
-    field: "short_name",
-    phrase: "cannot",
-    reason:
-      "As the problem line: the control and the reach are both the matched code in this repository.",
-  },
-  {
     rule: "eu-consent-016",
     field: "short_name",
     phrase: "consent",

@@ -19,15 +19,24 @@
  *   5 `check_answer`       the candidate carries a declared-inapplicable precondition on a `feature` question
  *   6 `question`           waits on a question not yet answered, or on a fact named in words; or `needs_human` settled
  *                          by a question not yet answered
- *   7 `for_operators`      waits on a question the person answered as the maker (`settles_as: maker`)
+ *   7 `for_operators`      waits on a question the person answered as the maker (`settles_as: maker`), of a rule that
+ *                          lists that question (`settling_questions`)
  *   8 `recorded`           `duty_met` or `exempt` with its part; or an `inventory` rule's finding the seat did not mark
- *                          `duty_unmet`; or waits on a question answered with `settles_as: met`
+ *                          `duty_unmet`; or waits on a question answered with `settles_as: met`, of a rule that lists it
  *   9 `counsel`            `needs_human` (the law unclear, the code not readable, or nothing that stood)
  *  10 `to_fix`             everything else
  *
- * Rows 4 and 8 never apply to a finding a second look overturned. Rows 1-5 rest on the program's facts (the person's
- * confirmed answer, the verdict word, the fold, the ships premise, the candidate's preconditions); rows 6-8 rest on the
- * seat's `standing` parts, each with its own quotation checked at capture.
+ * AN ANSWER SETTLES ONLY THE RULES THAT LIST ITS QUESTION. A question's option says what an answer does (`settles_as`, in the question source); which rules' tests the
+ * answer answers is the rule's own data (`settling_questions`, rule.schema.json; `settlingQuestionsOf` below). A review
+ * may tie a wait to any question of the program's list, so an answer whose option settles (`met`) or hands the finding
+ * to the operators (`maker`) moves a finding only of a rule that lists that question; for any other rule the answer
+ * settles nothing and the finding stays to fix (row 10, `missing` naming `settling_question`), as an answer whose
+ * option declares nothing. A wait on a question not yet answered stays row 6 whatever the rule lists.
+ *
+ * Rows 4 and 8 never apply to a finding a second look overturned. Row 4 never applies on the seat's own `ships` while a
+ * second look due on the finding is not answered: it then reads `shipsWithoutSeat` (`rowFourShipsOf`). Rows 1-5 rest on
+ * the program's facts (the person's confirmed answer, the verdict word, the fold, the ships premise, the candidate's
+ * preconditions); rows 6-8 rest on the seat's `standing` parts, each with its own quotation checked at capture.
  *
  * WHAT IS NOT ESTABLISHED STAYS IN SIGHT. A finding the
  * review could not settle is never placed where the report lists it as not counted as a problem: a `needs_human`
@@ -50,10 +59,11 @@
  * assembly, are the later packages' (design section 7: WP1 capture, WP3 the report, WP4 questions, WP6 the premise, WP7
  * the fold, WP9 the second look). Nothing calls it yet, so it changes no output.
  *
- * Pure: no file is read, no clock, no randomness. Not in the capture's closure (`VERDICT_RULES_SOURCES`): the
- * disposition decides what the report counts, never what a verdict may be.
+ * Pure: no file is read, no clock, no randomness. In the capture's closure (`VERDICT_RULES_SOURCES`): the second look
+ * the capture appends (second-look.ts) and its guard on a resend (finding-weight.ts) read it, so it decides which answer is refused too.
  */
 
+import { LINE_REFERENCE } from "./reading.js";
 import { HEAVIEST, NOT_SHIPPED, SHIPS_MAY_DECIDE, type DutyAbout, type FindingRole, type QuestionKind, type SettlesAs, type StandingRecord } from "./standing.js";
 
 /** The ten dispositions, in the order of the rows (row n is index n-1). */
@@ -74,6 +84,22 @@ export type Disposition = (typeof DISPOSITIONS)[number];
 /** The one disposition counted as a problem, at every level. */
 export const COUNTED_AS_PROBLEM: Disposition = "to_fix";
 export const countsAsProblem = (d: Disposition): boolean => d === COUNTED_AS_PROBLEM;
+
+/**
+ * How heavily each disposition counts. Read by the fold's guard 2 (fold-findings.ts: a finding is folded only under a head
+ * whose own placement is at least this heavy; a disposition with no weight is never a head) and by the capture's guard on
+ * a resend (finding-weight.ts: less weight is further from
+ * "to fix", and a disposition with none is lighter than every one with a weight). One copy for both.
+ */
+export const DISPOSITION_WEIGHT: Readonly<Record<string, number>> = {
+  to_fix: 6,
+  counsel: 5,
+  question: 4,
+  check_answer: 4,
+  for_operators: 3,
+  recorded: 2,
+  not_shipped: 1,
+};
 
 /** The verdict words a record may carry (verdict.schema.json `verdict`). */
 const VERDICTS: ReadonlySet<string> = new Set(["violation_candidate", "needs_human", "not_applicable"]);
@@ -112,6 +138,12 @@ export interface DispositionInput {
    */
   ships?: { decisive?: string; kept: readonly (string | undefined)[] };
   /**
+   * Row 4 while a second look due on the finding is not answered (`secondLook: "not_answered"`): the effective `ships` as it
+   * would be without the seat's own `ships` answer (`effectiveShipsOf` with no `seat`: the program's premises alone). Absent, row 4 is not taken
+   * on a look not answered.
+   */
+  shipsWithoutSeat?: { decisive?: string; kept: readonly (string | undefined)[] };
+  /**
    * Row 4: the rule's `duty_about` (rule.schema.json; standing.ts `dutyAboutOf`).
    * Only `product_runtime` may take row 4: the duty attaches only to
    * what the product does when it runs, so a file outside every shipped artifact cannot create it. Absent, or any other
@@ -122,17 +154,43 @@ export interface DispositionInput {
   declaredInapplicable?: readonly { field: string; kind?: QuestionKind | string }[];
   /** Rows 6-8, 10: the person's confirmed answers, by question id (`field` or `field:code`); absent id = not answered. */
   answers?: ReadonlyMap<string, GivenAnswer>;
+  /**
+   * Rows 7-8: the questions the finding's rule lists as ones whose answer may settle it (rule.schema.json
+   * `settling_questions`, read by `settlingQuestionsOf`); absent = none, so no answer moves the finding off row 10.
+   */
+  settlingQuestions?: readonly string[];
   /** Row 8: the rule's role (rule.schema.json `finding_role`); absent or unknown = `duty_check`. */
   role?: FindingRole | string;
   /**
    * Rows 4 and 8: the second look's outcome. `overturned` skips both rows; `needs_human` turns a placement in either row into
-   * `counsel` (WP3 reading (d)); `upheld` and `not_answered` move nothing.
+   * `counsel` (WP3 reading (d)); `upheld` moves nothing; `not_answered` moves nothing but row 4's input, which is then
+   * `shipsWithoutSeat` (`rowFourShipsOf`).
    */
   secondLook?: SecondLook;
 }
 
 /** A part whose absence placed the finding at its heaviest. */
-export type MissingPart = "verdict" | "status" | "question" | "element" | "exemption" | "settles_as";
+export type MissingPart = "verdict" | "status" | "question" | "element" | "exemption" | "settles_as" | "settling_question";
+
+/**
+ * The one reader of a rule's `settling_questions`
+ * (rule.schema.json): the program's question ids whose answer may settle a finding of the rule that waits on it. Absent
+ * or not a list = none; an entry that is not a non-empty string is dropped.
+ */
+export function settlingQuestionsOf(rule: unknown): string[] {
+  const v = typeof rule === "object" && rule !== null ? (rule as { settling_questions?: unknown }).settling_questions : undefined;
+  return Array.isArray(v) ? [...new Set(v.filter((q): q is string => typeof q === "string" && q.trim() !== ""))] : [];
+}
+/** Each rule's `settling_questions` by rule id (the rules that list one or more), for the assembly's disposition input. */
+export function ruleSettlersOf(rules: Iterable<unknown>): Map<string, string[]> {
+  const out = new Map<string, string[]>();
+  for (const r of rules) {
+    const id = typeof r === "object" && r !== null ? (r as { id?: unknown }).id : undefined;
+    const qs = settlingQuestionsOf(r);
+    if (typeof id === "string" && qs.length > 0) out.set(id, qs);
+  }
+  return out;
+}
 
 export interface DispositionResult {
   disposition: Disposition;
@@ -144,8 +202,24 @@ export interface DispositionResult {
 
 const result = (disposition: Disposition, missing: MissingPart[] = []): DispositionResult => ({ disposition, row: DISPOSITIONS.indexOf(disposition) + 1, missing });
 
-/** Row 4: the decisive place and every kept place (at least one) carry a value that does not ship. */
-function notShipped(ships: DispositionInput["ships"]): boolean {
+/**
+ * A SECOND LOOK NOT ANSWERED NEVER LETS ROW 4 TAKE A FINDING OUT ON THE SEAT'S WORD (the parent's decision on the non-author check's M1).
+ * The effective `ships` row 4 reads, and the order by weight with it
+ * (fix-order.ts `shipsKept`): the seat's (`ships`), except while a second look due on the finding is not answered, when it
+ * is the program's premises alone (`shipsWithoutSeat`; absent, none, so row 4 does not hold). The finding stays where it
+ * would be without the seat's `ships` answer until a look answers: a not-shipped claim the capture never sent to a look
+ * (its view of the kept places was wider than the assembly's) is counted, marked not answered, never left out on the
+ * first review's word alone.
+ */
+export function rowFourShipsOf(x: Pick<DispositionInput, "ships" | "shipsWithoutSeat" | "secondLook">): DispositionInput["ships"] {
+  return x.secondLook === "not_answered" ? x.shipsWithoutSeat : x.ships;
+}
+
+/**
+ * Row 4: the decisive place and every kept place (at least one) carry a value that does not ship. Exported: finding-weight.ts `decisivePlaceOf` weighs each place a
+ * finding with no usable `decisive` could stand on by it.
+ */
+export function notShipped(ships: DispositionInput["ships"]): boolean {
   if (!ships || typeof ships.decisive !== "string" || !NOT_SHIPPED.has(ships.decisive)) return false;
   return ships.kept.length > 0 && ships.kept.every((v) => typeof v === "string" && NOT_SHIPPED.has(v));
 }
@@ -210,7 +284,7 @@ export function dispositionOf(x: DispositionInput): DispositionResult {
   // left to a person (`needs_human`) never takes them, and one a second look could not settle goes to a person instead.
   const unsettled = x.verdict === "needs_human";
   const doubted = x.secondLook === "needs_human";
-  if (!overturned && !unsettled && x.dutyAbout === SHIPS_MAY_DECIDE && notShipped(x.ships)) return doubted ? result("counsel") : result("not_shipped");
+  if (!overturned && !unsettled && x.dutyAbout === SHIPS_MAY_DECIDE && notShipped(rowFourShipsOf(x))) return doubted ? result("counsel") : result("not_shipped");
   if ((x.declaredInapplicable ?? []).some((d) => d.kind === "feature")) return result("check_answer");
   const missing: MissingPart[] = [];
   const status = statusOf(x, missing);
@@ -220,9 +294,11 @@ export function dispositionOf(x: DispositionInput): DispositionResult {
     const given = "question" in wait ? x.answers?.get(wait.question) : undefined;
     if (!given) return result("question", missing);
     const settles = typeof given.settlesAs === "string" && SETTLES_AS_KNOWN.has(given.settlesAs) ? given.settlesAs : null;
-    if (settles === "maker") return result("for_operators", missing);
-    if (settles === "met") answeredMet = true;
-    else return result("to_fix", settles === null ? [...missing, "settles_as"] : missing);
+    // The answer answers this rule's test only where the rule lists the question (r16-l item 1).
+    const listed = "question" in wait && (x.settlingQuestions ?? []).includes(wait.question);
+    if (settles === "maker" && listed) return result("for_operators", missing);
+    if (settles === "met" && listed) answeredMet = true;
+    else return result("to_fix", settles === null ? [...missing, "settles_as"] : settles === "met" || settles === "maker" ? [...missing, "settling_question"] : missing);
   }
   if (!overturned && !unsettled) {
     const met = answeredMet || status === "duty_met" || status === "exempt" || (x.role === "inventory" && status !== "duty_unmet");
@@ -237,19 +313,99 @@ export function dispositionOf(x: DispositionInput): DispositionResult {
  * effective `ships` of the decisive place and of every kept place.
  *
  * - `seat`: the `ships` value the capture let stand (WP1 fills an omitted one from the premise of the decisive place).
+ * - `seatAtFile`: the file of the line that value quotes (its `at`), where the caller could resolve it.
+ * - `decisiveFile`, `decisiveLines`: the decisive place's file and the lines of its quotation (`lineSpansOf`: one span, or
+ *   the spans of a list such as "12, 30").
+ * - `keptFiles`, `keptLines`: each kept place's file and line, in one order.
  * - `premises`: the program's premise per file, as a `ships` value (`shipsLentByPremise`: only `test` and `development`
  *   lend a not-shipped one, section 13 of nv-fix-check-rules-2026-11-02.md); absent where the scan recorded no
- *   premise at all (a findings document written before the premise existed), and then the seat's value is the finding's,
- *   as H5a read it.
+ *   premise at all (a findings document written before the premise existed).
+ * - `documentationPages`: the files the program's own premise classes as `documentation` (plain prose, not rendered by
+ *   the product: ships-premise.ts; second-look.ts `documentationPagesOf`), which lends no value of its own.
  *
- * The decisive place takes the seat's value, else its file's premise. A kept place in the decisive place's file takes the
- * decisive place's value (the seat read that file and quoted its line); a kept place in another file takes that file's
+ * The decisive place takes the seat's value, else its file's premise. A kept place in another file takes that file's
  * premise, and a file the premise does not list is `depends_on_deployment` (it ships). So a finding is not shipped only
  * where every place it keeps is shown not to ship, by the seat's own line or by the build files.
+ *
+ * A `SHIPS` ANSWER IS GIVEN FOR THE PLACE IT NAMES, NEVER LIGHTER FOR THE REST. Every kept place in the decisive place's
+ * file used to take the decisive place's value, so on a file-fingerprinted rule that opts in (platform-store-001,
+ * eu-consent-022) one `ships: development` quoted at a development-only branch (the brief's rule 3) took out a production
+ * line beside that branch: row 4 checked every kept place only across files. A not-shipped value the seat gave now
+ * reaches, in the decisive place's file, only the kept places it was given for:
+ *   - the kept places inside the decisive quotation's lines (and, where none is, the one kept place of that file, whose
+ *     quotation may name the branch line above it: no other place of that file is made lighter);
+ *   - every kept place of that file where the value's own line is in ANOTHER file (a build file's list, a manifest, a CI
+ *     trigger, an import chain): such a line speaks of the file as a whole and cannot be a branch inside it. A file that
+ *     itself holds a kept place of the candidate is not another file in this sense: a line there is a line inside the
+ *     code the finding is about (a branch around that place), not a word about the decisive file;
+ *   - every kept place of that file where the value is `documentation` and the program's own premise for the file is
+ *     `documentation` too:
+ *     `documentation` is a statement about a text, not a branch, and the two readings agree that the whole file is a
+ *     prose page the product does not run. The premise alone still fills nothing (section 13 of
+ *     nv-fix-check-rules-2026-11-02.md); a `development` or `test` value on such a page keeps P1's reach.
+ * Every other kept place of that file keeps its own: its file's premise, or, where no premise was recorded, no value
+ * (it ships). A value that shows the file ships (`product`, `documented_example`, `maker_site`,
+ * `depends_on_deployment`) still reaches every place of its file, over a premise of not shipped, as before: never lighter.
  */
-export function effectiveShipsOf(x: { seat?: string; decisiveFile?: string; keptFiles: readonly string[]; premises?: ReadonlyMap<string, string> }): NonNullable<DispositionInput["ships"]> {
+export function effectiveShipsOf(x: {
+  seat?: string;
+  seatAtFile?: string;
+  decisiveFile?: string;
+  decisiveLines?: LineSpan | readonly LineSpan[];
+  keptFiles: readonly string[];
+  keptLines?: readonly (number | undefined)[];
+  premises?: ReadonlyMap<string, string>;
+  documentationPages?: ReadonlySet<string>;
+}): NonNullable<DispositionInput["ships"]> {
   const fromPremise = (f: string | undefined): string | undefined => (x.premises === undefined || f === undefined ? undefined : (x.premises.get(f) ?? "depends_on_deployment"));
   const decisive = x.seat ?? fromPremise(x.decisiveFile);
-  const kept = x.keptFiles.map((f) => (f === x.decisiveFile ? decisive : x.premises === undefined ? x.seat : fromPremise(f)));
+  const inFile = x.keptFiles.flatMap((f, i) => (f === x.decisiveFile ? [i] : []));
+  const otherFile = x.seatAtFile !== undefined && x.seatAtFile !== x.decisiveFile && !x.keptFiles.includes(x.seatAtFile);
+  const page = x.seat === "documentation" && x.decisiveFile !== undefined && x.documentationPages?.has(x.decisiveFile) === true;
+  const wholeFile = x.seat === undefined || !NOT_SHIPPED.has(x.seat) || otherFile || page;
+  const given = new Set<number>(wholeFile ? inFile : []);
+  if (!wholeFile) {
+    const spans: readonly LineSpan[] = x.decisiveLines === undefined ? [] : Array.isArray(x.decisiveLines) ? (x.decisiveLines as readonly LineSpan[]) : [x.decisiveLines as LineSpan];
+    const at = (i: number): number | undefined => x.keptLines?.[i];
+    for (const i of inFile) {
+      const n = at(i);
+      if (typeof n === "number" && spans.some((r) => n >= r.from && n <= r.to)) given.add(i);
+    }
+    if (given.size === 0 && inFile.length === 1) given.add(inFile[0]!);
+  }
+  const kept = x.keptFiles.map((f, i) => (given.has(i) ? decisive : fromPremise(f)));
   return { ...(decisive !== undefined ? { decisive } : {}), kept };
+}
+
+/** A run of lines of one file, `from` to `to` (both from 1, `to` not before `from`). */
+export interface LineSpan {
+  from: number;
+  to: number;
+}
+
+/**
+ * THE LINES A QUOTATION NAMES: the
+ * one reader of a `lines` value for the places a quotation covers, at capture (second-look.ts) and at assembly alike. It
+ * reads every form the quote check accepts (reading.ts `LINE_REFERENCE`, verdict-verify.ts `lineReferenceProblem`): a
+ * whole number from 1, "12", "12-15", "12\u201315", "12 to 15", "L12", "L12-L15", "lines 12-15", and lists of them joined
+ * by ",", ";", "&" or "and". A list names each of its lines or ranges and never the lines between them ("12, 15" is 12
+ * and 15, not 13 or 14). Empty where the value names no line, a number is 0, or a range runs backwards (the narrower
+ * reach: such a quotation covers no kept place). Before, only "N" and "N-M" were read here, so "12, 15" and "L12" covered
+ * nothing at capture while the assembly read "12, 15" as line 12.
+ */
+export function lineSpansOf(lines: unknown): LineSpan[] {
+  if (typeof lines === "number") return Number.isInteger(lines) && lines >= 1 ? [{ from: lines, to: lines }] : [];
+  if (typeof lines !== "string") return [];
+  const text = lines.trim();
+  if (!LINE_REFERENCE.test(text)) return [];
+  const out: LineSpan[] = [];
+  for (const item of text.split(/,|;|&|and/i)) {
+    const ns = (item.match(/\d+/g) ?? []).map((d) => Number.parseInt(d, 10));
+    if (ns.length === 0 || ns.length > 2 || ns.some((n) => !(n >= 1))) return [];
+    const from = ns[0]!;
+    const to = ns[1] ?? from;
+    if (to < from) return [];
+    out.push({ from, to });
+  }
+  return out;
 }

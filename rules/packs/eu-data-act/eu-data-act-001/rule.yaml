@@ -401,6 +401,8 @@ detector:
   path_without:
     - (^|/)(?:marketplace/plugins|packages/pieces|connectors)/
     - (^|/)lib/(?:google|google2-service|aws-sdk|guzzle)/
+settling_questions:
+  - scope.data_processing_service
 context_questions:
   - "Is the scanned party a PROVIDER OF DATA PROCESSING SERVICES that these duties reach at all, and
     is it the SOURCE provider? Three separate gates, and none of them is decidable from source code.
@@ -856,6 +858,7 @@ remediation_template: >
 
   from the note rather than re-deriving it.
 fingerprint_spec: project
+duty_about: release_supply_documentation
 reading_class:
   class: existence
   elements:

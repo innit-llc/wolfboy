@@ -78,6 +78,22 @@ export interface TierOfBasis {
   provision: string;
   /** Every provision the cite's heading names, as read, in the cite's order; [] where none was read. */
   provisions: string[];
+  /**
+   * The provisions of `provisions` that
+   * carry a duty or its fine as the table reads them, in the cite's order: every one but a recital, a definition or a line
+   * of no duty ("Art. 13(8), Art. 3(20) and Annex VII" is 13(8) and Annex VII). [] where none does, or none was read.
+   * Absent on an `unresolved` answer. The order reads it for the provisions whose duty does not turn on the data
+   * (fix-order.ts `DATA_FREE_PROVISIONS`). An annex keeps the Part the cite names right after it
+   * ("Annex I, Part II ..." is "Annex I Part II"), which `provisions` does not print; an annex named with no Part, with
+   * its Part before it ("Part II of Annex I") or with two Parts is the bare "Annex I".
+   */
+  dutyProvisions?: string[];
+  /**
+   * True where every provision the cite names
+   * that carries a duty is a penalty provision (a fine, AI Act Art. 99(3), CRA Art. 64(2)): it is read as part of the
+   * duty it fines, never as a duty of its own. Absent otherwise.
+   */
+  penalty?: true;
   /** True only where no line of the table resolves the cite; the tier is then `top` (round up). */
   unresolved?: true;
   /**
@@ -156,6 +172,8 @@ interface ClosedList {
 export interface PenaltyRegime {
   id: string;
   name: string;
+  /** The law's full name where its short `name` abbreviates it and no checklist names it (`lawFullNamesOf`). */
+  full_name?: string;
   match: string[];
   tiered: boolean | null;
   coverage?: "definitions_only";
@@ -267,7 +285,9 @@ export function penaltyTableShapeProblems(table: unknown): string[] {
 /** A provision as read from a cite or a table line. */
 type Provision =
   | { kind: "article"; art: string; path: string[] }
-  | { kind: "annex"; annex: string }
+  // `part`: the Part named right after the annex ("Annex I, Part
+  // II"); "" where the cite names more than one Part of it. Only `dutyLabel` and a spec naming a Part read it.
+  | { kind: "annex"; annex: string; part?: string }
   | { kind: "recital"; n: string };
 
 const ARTICLE_REF = String.raw`\bArt(?:icles?|s?\.)?\s*(\d+[a-z]?)((?:\s?\((?:\d+[a-z]?|[a-z]{1,3})\))*)`;
@@ -284,12 +304,21 @@ function provisionAt(m: RegExpExecArray): Provision {
   return { kind: "recital", n: m[4] };
 }
 
+/** "Part II" (", Part II") right after an annex reference. */
+const ANNEX_PART_NAME = /,?\s*Part\s+([IVXLC]+)\b/iy;
+/** An annex reference with the Part named right after it, if any (`ANNEX_PART_NAME`). */
+function withPart(p: Provision, cite: string, end: number): Provision {
+  if (p.kind !== "annex") return p;
+  const part = stickyAt(ANNEX_PART_NAME, cite, end);
+  return part ? { ...p, part: part[1].toUpperCase() } : p;
+}
+
 /** The first provision reference at or after `from`; failing that, the first anywhere in the cite. */
 export function readProvision(cite: string, from = 0): Provision | null {
   PROVISION_RE.lastIndex = 0;
   let first: Provision | null = null;
   for (let m = PROVISION_RE.exec(cite); m !== null; m = PROVISION_RE.exec(cite)) {
-    const p = provisionAt(m);
+    const p = withPart(provisionAt(m), cite, m.index + m[0].length);
     if (m.index >= from) return p;
     first ??= p;
   }
@@ -311,6 +340,8 @@ const ANNEX_PART = new RegExp(
   String.raw`(?:,?\s*(?:Part|Section|Chapter)\s+[IVXLC]+\b(?:${DESIGNATOR})*|,?\s*points?\s*(?:\(\d+[a-z]?\)|\d+[a-z]?\b)(?:${DESIGNATOR})*)`,
   "iy",
 );
+/** A further Part after a connector ("and Part I point (2)(b)"). */
+const ANNEX_PART_AGAIN = new RegExp(String.raw`Part\s+([IVXLC]+)\b(?:${DESIGNATOR})*(?:,?\s*points?\s*(?:\(\d+[a-z]?\)|\d+[a-z]?\b)(?:${DESIGNATOR})*)?`, "iy");
 /** A parenthesis that is prose, not a designator ("(definition of consent)"), skipped when it names no provision. */
 const PROSE_PAREN = /\s*\(([^()]{4,120})\)/y;
 /** "and", "or", ",", "&", "plus", "read with", ...; then an optional "the" ("Art. 2(1) and the Art. 3 defined terms"). */
@@ -471,8 +502,21 @@ function readProvisionsIn(cite: string, from: number, scope?: ReadScope): Provis
       continue;
     }
     if (p.kind === "annex" && (m = stickyAt(ANNEX_PART, cite, at)) && m[0].length > 0) {
+      // The Part is kept (a second, other Part makes it "").
+      const part = stickyAt(ANNEX_PART_NAME, cite, at);
+      if (part) out[out.length - 1] = { ...p, part: p.part === undefined || p.part === part[1].toUpperCase() ? part[1].toUpperCase() : "" };
       at += m[0].length;
       continue;
+    }
+    if (p.kind === "annex" && p.part) {
+      // "Annex I Part II and Part I": a further Part of the same annex after a connector; the annex then names no one Part.
+      const c = stickyAt(CONNECTOR, cite, at);
+      const again = stickyAt(ANNEX_PART_AGAIN, cite, at + (c ? c[0].length : 0));
+      if (c && c[0].length > 0 && again) {
+        if (again[1].toUpperCase() !== p.part) out[out.length - 1] = { ...p, part: "" };
+        at += c[0].length + again[0].length;
+        continue;
+      }
     }
     if (p.kind === "article" && p.path.length === 0 && (m = stickyAt(plural ? RANGE_END : SINGULAR_RANGE_END, cite, at))) {
       // "Arts. 12 to 22", "Art. 30 to 32", "12-22": every article of the range.
@@ -550,17 +594,26 @@ export function provisionLabel(p: Provision | null): string {
   return `${p.art}${p.path.map((x) => `(${x})`).join("")}`;
 }
 
-/** A table spec: "*", "5", "12-22", "25(2)", "30(1)-(4)", "5(1)(ba)", "Annex I". */
+/**
+ * A provision as `dutyProvisions` writes it: `provisionLabel`,
+ * with an annex's Part where the cite names one ("Annex I Part II"). The report prints `provisionLabel` only.
+ */
+export function dutyLabel(p: Provision | null): string {
+  if (p?.kind === "annex" && p.part) return `Annex ${p.annex} Part ${p.part}`;
+  return provisionLabel(p);
+}
+
+/** A table spec: "*", "5", "12-22", "25(2)", "30(1)-(4)", "5(1)(ba)", "Annex I", "Annex I Part II". */
 type Spec =
   | { kind: "any" }
-  | { kind: "annex"; annex: string }
+  | { kind: "annex"; annex: string; part?: string }
   | { kind: "article"; lo: string; hi: string; path: string[]; paraHi?: string };
 
 function parseSpec(s: string): Spec {
   const t = s.trim();
   if (t === "*") return { kind: "any" };
-  const annex = /^Annex\s+([IVXLC]+)$/i.exec(t);
-  if (annex) return { kind: "annex", annex: annex[1].toUpperCase() };
+  const annex = /^Annex\s+([IVXLC]+)(?:\s+Part\s+([IVXLC]+))?$/i.exec(t);
+  if (annex) return { kind: "annex", annex: annex[1].toUpperCase(), ...(annex[2] ? { part: annex[2].toUpperCase() } : {}) };
   const range = /^(\d+[a-z]?)-(\d+[a-z]?)$/.exec(t);
   if (range) return { kind: "article", lo: range[1], hi: range[2], path: [] };
   const paraRange = /^(\d+[a-z]?)\((\d+)\)-\((\d+)\)$/.exec(t);
@@ -587,7 +640,13 @@ function articleInRange(art: string, lo: string, hi: string): boolean {
  */
 function specMatch(spec: Spec, p: Provision): "full" | "partial" | "none" {
   if (spec.kind === "any") return p.kind === "recital" ? "none" : "full";
-  if (spec.kind === "annex") return p.kind === "annex" && p.annex === spec.annex ? "full" : "none";
+  if (spec.kind === "annex") {
+    if (p.kind !== "annex" || p.annex !== spec.annex) return "none";
+    // A spec naming a Part covers that Part only; an annex named
+    // with no one Part could be any of its Parts.
+    if (spec.part === undefined || p.part === spec.part) return "full";
+    return p.part ? "none" : "partial";
+  }
   if (p.kind !== "article" || !articleInRange(p.art, spec.lo, spec.hi)) return "none";
   if (spec.path.length === 0) return "full";
   if (spec.paraHi !== undefined) {
@@ -600,6 +659,19 @@ function specMatch(spec: Spec, p: Provision): "full" | "partial" | "none" {
     if (p.path[i] !== spec.path[i]) return "none";
   }
   return "full";
+}
+
+/**
+ * Whether a provision as `provisionLabel` writes
+ * it ("13(8)", "Annex I", "Recital 40") falls wholly under one of the specs, read as the table reads its own ("13" covers
+ * "13(8)"; "50(1)" does not cover "50", which could be any paragraph of Art. 50). A label that cannot be read is not covered. An annex label is read with its Part ("Annex I Part II", as
+ * `dutyLabel` writes it); points after the Part ("Annex I Part I(2)(e)") are read as that Part, which no spec divides.
+ */
+export function provisionCovered(specs: readonly string[], label: string): boolean {
+  const annex = /^Annex ([IVXLC]+)(?: Part ([IVXLC]+))?(?:\((?:\d+[a-z]?|[a-z]{1,3})\))*$/.exec(label);
+  if (annex) return bestMatch([...specs], { kind: "annex", annex: annex[1], ...(annex[2] ? { part: annex[2] } : {}) }) === "full";
+  const p = /^Recital\b/.test(label) ? readProvision(label) : /^\d/.test(label) ? readProvision(`Art. ${label}`) : null;
+  return p !== null && provisionLabel(p) === label && bestMatch([...specs], p) === "full";
 }
 
 function bestMatch(specs: string[] | undefined, p: Provision): "full" | "partial" | "none" {
@@ -634,11 +706,15 @@ function inRegime(table: PenaltyTierTable, regime: PenaltyRegime, p: Provision |
     const penaltyText = tier === "no_duty" ? undefined : penaltyTextOf(table, regime, line, p);
     // The fine provision's own date, by the regime's application lines.
     const penaltyAppliesFrom = tier === "no_duty" || penaltyCite === "" ? undefined : appliesFromOf(regime, readProvision(penaltyCite), table.reviewed_at);
+    // What the provision carries: a duty (or its fine), and whether a fine.
+    const carries = tier !== "no_duty" && label !== "";
     return {
       ...base,
       tier,
       line: `${regime.id}/${line}`,
       penaltyCite,
+      dutyProvisions: carries ? [dutyLabel(p)] : [],
+      ...(carries && p !== null && isPenaltyParagraph(regime, p) ? { penalty: true as const } : {}),
       ...(appliesFrom ? { appliesFrom } : {}),
       ...(penaltyAppliesFrom ? { penaltyAppliesFrom } : {}),
       ...(penaltyText ? { penaltyText } : {}),
@@ -753,7 +829,7 @@ function unresolved(cite: string, regime: PenaltyRegime | null, p: Provision | n
  * tier decides (top over not_top over no_duty), and `appliesFrom` is read across the duty provisions (see the field).
  * A provision nothing resolves makes the whole cite unresolved, so the build refuses it until the table says.
  */
-function combine(answers: TierOfBasis[], labels: string[], penalty: boolean[]): TierOfBasis {
+function combine(answers: TierOfBasis[], labels: string[], penalty: boolean[], dutyLabels: string[]): TierOfBasis {
   const open = answers.find((a) => a.unresolved);
   if (open) return { ...open, provisions: labels };
   let best = answers[0];
@@ -767,6 +843,12 @@ function combine(answers: TierOfBasis[], labels: string[], penalty: boolean[]): 
   const out: TierOfBasis = { ...best, provisions: labels };
   delete out.appliesFrom;
   delete out.appliesLater;
+  // The named provisions that carry a duty or its fine, and whether all of
+  // those are fines.
+  const carrying = answers.map((a, i) => a.tier !== "no_duty" && (labels[i] ?? "") !== "");
+  out.dutyProvisions = dutyLabels.filter((_, i) => carrying[i]);
+  delete out.penalty;
+  if (carrying.some(Boolean) && carrying.every((c, i) => !c || penalty[i])) out.penalty = true;
   if (later.length > 0 && later.length === duties.length) {
     out.appliesFrom = later.map((a) => a.appliesFrom as string).sort()[0];
   }
@@ -799,6 +881,7 @@ export function tierOfBasis(cite: string, jurisdiction: string | undefined, tabl
         line: `explicit/${explicit.id}`,
         provision: explicit.provision ?? "",
         provisions: explicit.provision ? [explicit.provision] : [],
+        dutyProvisions: explicit.tier !== "no_duty" && explicit.provision ? [explicit.provision] : [],
       };
     }
     if (regime && explicit.provision) {
@@ -815,6 +898,7 @@ export function tierOfBasis(cite: string, jurisdiction: string | undefined, tabl
     named.map((p) => inRegime(table, regime, p, c)),
     named.map((p) => provisionLabel(p)),
     named.map((p) => isPenaltyParagraph(regime, p)),
+    named.map((p) => dutyLabel(p)),
   );
 }
 
@@ -1114,4 +1198,61 @@ export function penaltyTableGuardProblems(table: PenaltyTierTable): string[] {
     }
   }
   return out;
+}
+
+/**
+ * A LAW'S FULL NAME, FROM ONE SOURCE EACH (the
+ * parent's decision on law names as applied in 17 Nov, after the third non-author re-check, d2 and d3). A law a bundle
+ * checklist names takes its full name from that checklist's `law` ("Regulation (EU) 2024/2847 (Cyber Resilience Act)"); any
+ * other takes this table's `full_name`, written once beside its short `name`. `lawNameProblems` (run by the bundle build)
+ * refuses a `full_name` on a regime a checklist already names, a name whose full name is given twice, and a short name
+ * holding an abbreviation (`LAW_ABBREVIATION`) that neither source spells out. Before, the report kept its own list of
+ * twelve full names, five of them the checklists' again, and eIDAS, the Illinois WOPR Act and the Tennessee ELVIS Act had
+ * none.
+ */
+export const lawShortName = (law: string): string => law.replace(/^(?:Regulation|Directive) \(EU\) \d+\/\d+ \((.+)\)$/, "$1");
+/** A short name that holds an abbreviation: capitals ("GDPR", "PSD2", "EU"), a bill's letters ("S.B."), "AI", or "eIDAS"'s form. */
+/* A run of capitals inside a word as well ("Swiss revFADP"), and a
+ * small letter run then a capital: the fourth non-author re-check found a mixed-case abbreviation passed the check. */
+export const LAW_ABBREVIATION = /[A-Z]{2,}\d*\b|\b[A-Z]\.[A-Z]\.|^e[A-Z]|\b[a-z]+[A-Z]/;
+function checklistFullNames(table: PenaltyTierTable, checklists: readonly unknown[]): Map<string, string> {
+  const out = new Map<string, string>();
+  for (const c of checklists) {
+    const law = typeof (c as { law?: unknown } | null)?.law === "string" ? ((c as { law: string }).law) : "";
+    const full = lawShortName(law);
+    if (!law || full === law) continue;
+    const regime = tierOfBasis(law, undefined, table).regime;
+    if (regime && regime !== full && !out.has(regime)) out.set(regime, full);
+  }
+  return out;
+}
+/** Each regime's full name by its short name (the report's `lawFullNames`): the checklists' first, then the table's. */
+export function lawFullNamesOf(table: PenaltyTierTable, checklists: readonly unknown[]): Record<string, string> {
+  const out: Record<string, string> = Object.fromEntries(checklistFullNames(table, checklists));
+  for (const g of table.regimes) if (typeof g.full_name === "string" && g.full_name !== "" && out[g.name] === undefined) out[g.name] = g.full_name;
+  return out;
+}
+/**
+ * What the build refuses about the full names (see `lawFullNamesOf`). `everyNamed`: that every regime whose name holds an
+ * abbreviation has a full name. It holds for the table
+ * with the checklists its names are completed by (this repository's: five regimes take theirs from a checklist's `law`,
+ * one source each); a build pointed at other checklists, as a harness's rules-only bundle is on purpose, cannot have
+ * them, and the build asks it only of this repository's checklists (build-bundle.mjs). The other refusals hold for every build.
+ */
+export function lawNameProblems(table: PenaltyTierTable, checklists: readonly unknown[], everyNamed = true): string[] {
+  const fromChecklists = checklistFullNames(table, checklists);
+  const out: string[] = [];
+  const given = new Map<string, string>();
+  for (const g of table.regimes) {
+    if (g.full_name === undefined) continue;
+    if (typeof g.full_name !== "string" || g.full_name.trim() === "") out.push(`regime ${g.id}: full_name is not a name`);
+    else if (fromChecklists.has(g.name)) out.push(`regime ${g.id}: full_name repeats the full name a checklist's law gives (${fromChecklists.get(g.name)}); keep that one`);
+    else if (given.has(g.name)) out.push(`regime ${g.id}: the full name of ${g.name} is given twice (also by ${given.get(g.name)}); give it once`);
+    else given.set(g.name, g.id);
+  }
+  const full = lawFullNamesOf(table, checklists);
+  for (const g of everyNamed ? table.regimes : []) {
+    if (LAW_ABBREVIATION.test(g.name) && full[g.name] === undefined) out.push(`regime ${g.id}: its name ${JSON.stringify(g.name)} holds an abbreviation and nothing gives its full name (add full_name)`);
+  }
+  return [...new Set(out)];
 }

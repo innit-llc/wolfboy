@@ -35,9 +35,11 @@
  *      the last in the head order to the first, so where two qualify for each other the one first in the head order is
  *      the head; a finding whose every qualifying head is already folded stays counted on its own.
  *
- * Pure: no file is read, no clock, no randomness. Not in the capture's closure (`VERDICT_RULES_SOURCES`): the fold
- * decides what the report counts, never what a verdict may be.
+ * Pure: no file is read, no clock, no randomness. In the capture's closure (`VERDICT_RULES_SOURCES`): the fold decides what the report counts, and the capture's guard on a
+ * resend reads key (a) (`onlyDocumentation`) to weigh whether an answer lets a finding be counted inside another.
  */
+
+import { DISPOSITION_WEIGHT } from "./disposition.js";
 
 /** Why a finding was folded: design section 6.1's key (a) or key (b). */
 export type FoldKey = "documentation" | "same_as";
@@ -86,17 +88,9 @@ const shipsForHead = (v: string | undefined): boolean => v === undefined || SHIP
 
 /**
  * How heavily each disposition counts (guard 2): a finding is folded only under a head whose own placement is at least
- * this heavy. A disposition with no weight is never a head (guard 1).
+ * this heavy. A disposition with no weight is never a head (guard 1). One copy, disposition.ts's.
  */
-const WEIGHT: Readonly<Record<string, number>> = {
-  to_fix: 6,
-  counsel: 5,
-  question: 4,
-  check_answer: 4,
-  for_operators: 3,
-  recorded: 2,
-  not_shipped: 1,
-};
+const WEIGHT = DISPOSITION_WEIGHT;
 /** The placements that wait on an answer: never folded under an equal placement (guard 2). */
 const WAITING: ReadonlySet<string> = new Set(["question", "check_answer", "for_operators"]);
 
@@ -112,8 +106,11 @@ function notLighter(f: FoldEntry, h: FoldEntry): boolean {
   return !WAITING.has(f.disposition) || (typeof f.waitsOn === "string" && f.waitsOn !== "" && f.waitsOn === h.waitsOn);
 }
 
-/** Key (a): every kept place of F is documentation. */
-function onlyDocumentation(f: FoldEntry): boolean {
+/**
+ * Key (a): every kept place of F is documentation. Exported for the capture's guard on a resend (finding-weight.ts `outcomeWeightOf`): a finding that may fold is weighed
+ * as one that may be counted inside another, by this one test.
+ */
+export function onlyDocumentation(f: Pick<FoldEntry, "ships">): boolean {
   const s = f.ships;
   if (!s || s.kept.length === 0) return false;
   if (s.decisive !== undefined && s.decisive !== "documentation") return false;

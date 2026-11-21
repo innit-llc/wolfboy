@@ -2,7 +2,7 @@ id: eu-consent-005
 pack: eu-consent
 short_name: Session recording tool may run before consent
 problem_line:
-  text: "Session recording: consent gate or full masking not found"
+  text: "Session recording: consent check or full masking not found"
 fix_line: Load the replay SDK only after recorded consent, and mask every input and every region
   that shows personal data.
 title: Session-replay SDK referenced, initialised or configured (Hotjar, FullStory, Clarity,

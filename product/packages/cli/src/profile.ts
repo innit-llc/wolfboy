@@ -337,13 +337,25 @@ function renderReport(profilePath: string, validation: ProfileValidation): strin
   return lines.join("\n");
 }
 
+/** `value` without the field at `path` (a copy along the path; the value as it is where the path does not lead to it). */
+function withoutField(value: unknown, path: readonly string[]): unknown {
+  if (path.length === 0 || value === null || typeof value !== "object" || Array.isArray(value) || !(path[0] in value)) return value;
+  const { [path[0]]: inner, ...rest } = value as Record<string, unknown>;
+  return path.length === 1 ? rest : { ...value, [path[0]]: withoutField(inner, path.slice(1)) };
+}
+
 /**
  * Read `--profile`, check it, and hand back what every consumer may read.
  *
  * Synchronous, because `runScan` is synchronous and two gate tools consume it that way. See
  * `schema-validate.ts` for why that costs the degrade path nothing.
+ *
+ * `leaveOut`: dotted fields read as unanswered,
+ * removed before anything else reads the profile (declaration.ts `staleOrderFields`: an answer recorded at an earlier
+ * version of a question nothing asks before review). The scan and the pre-launch step pass the same list, so the
+ * profile's digest they compare is the same.
  */
-export function loadScanProfile(profilePath: string): LoadedScanProfile {
+export function loadScanProfile(profilePath: string, leaveOut: readonly string[] = []): LoadedScanProfile {
   const record = (
     profile: ScanProfile | null,
     validation: ProfileValidation,
@@ -361,6 +373,7 @@ export function loadScanProfile(profilePath: string): LoadedScanProfile {
   let parsed: unknown;
   try {
     parsed = JSON.parse(readRegularFile(profilePath, "utf8"));
+    for (const field of leaveOut) parsed = withoutField(parsed, field.split("."));
   } catch (e) {
     return record(null, {
       ran: false,

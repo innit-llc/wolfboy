@@ -721,6 +721,17 @@ export function cardLine(c: DeepCheckView): Inert {
  */
 export function withCheckSection(text: Inert, c: DeepCheckView, section: readonly Inert[]): Inert {
   const lines = inertLines(text);
+  /* A finding's page leaves out
+   * an empty "Deeper checks" section (the readability review's P7): the first check adds the heading, before "About this
+   * finding" (the page's last section, where the heading stood when it was always there), or at the end of a page that
+   * has none. Before, a page without the heading took no check at all: the scan wrote none and `deepen` refused. */
+  if (!lines.includes(ours("## Deeper checks"))) {
+    const about = lines.findIndex((l) => l === "## About this finding");
+    const at = about < 0 ? lines.length : about;
+    const before = lines.slice(0, at);
+    while (before.length > 0 && before[before.length - 1] === "") before.pop();
+    lines.splice(0, lines.length, ...before, ours(""), ours("## Deeper checks"), ours(""), ...(about < 0 ? [] : [ours(""), ...lines.slice(at)]));
+  }
   const h2 = lines.findIndex((l) => l === "## Deeper checks");
   if (h2 < 0) return text;
   let end = lines.findIndex((l, i) => i > h2 && /^## /.test(l));
