@@ -8,10 +8,10 @@ clubs in the EU, and only there, and each club installs and runs it on its own s
 
 ## Scan it
 
-In `examples/book-club/app`:
-
 ```bash
-npx wolfboy@0.1.1 scan
+git clone https://github.com/innit-llc/wolfboy
+cd wolfboy/examples/book-club/app
+npx wolfboy@0.1.3 scan
 ```
 
 From a checkout of this repository, after the build steps in
@@ -52,9 +52,12 @@ what it finds, then compare with the list below.
 
 ## A sample report
 
-[sample-report/report.md](sample-report/report.md) is WolfBoy 0.1.1's own report on this app, made on 19 November
-2026 in Claude Code with the plugin: the ordinary review, without the second check, in about 2.9 million tokens and 4
-minutes of review. The record for your team is beside it,
+[sample-report/report.md](sample-report/report.md) is WolfBoy's report on this app. Its AI review ran on 19 November
+2026 in Claude Code with the plugin, on a build two days before 0.1.1 (the ordinary review, without the second check:
+2.9 million tokens and 4 minutes, USD 6.62 at list prices). WolfBoy 0.1.1 then put the report together again from that
+review's verdicts, with no new AI call, so it names that build's rules (bundle 0000.00.13924891), not 0.1.1's
+(2026.11.2); they differ in the wording of one rule. 0.1.3's step 1 finds the same 44 places and 22 findings. The
+record for your team is beside it,
 in [sample-report/record/](sample-report/record/record.md).
 The only changes to either are these: paths to WolfBoy's own files are shortened (`<wolfboy>/...`), and links into the
 app's code point at `app/` from this folder. Their rough edges are listed in [KNOWN-ISSUES.md](../../KNOWN-ISSUES.md).

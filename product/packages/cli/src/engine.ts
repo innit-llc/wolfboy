@@ -135,6 +135,14 @@ export interface RawMatch {
    */
   gateSubject?: true;
   /**
+   * Whether this candidate is in the WORD TIER: every `match` clause that fired on it is one
+   * `detector.word_clauses` names, and at least one fired. Set only for a rule that names word
+   * clauses, never written `false`, and decided where the line's own text still exists, from the
+   * clause set of the reading the candidate fired on (`kindFactsForCandidate`'s, the one the
+   * location's `clause` field reports). SERIALISED: `scan.ts` writes it as `tier: "word"`.
+   */
+  wordTier?: true;
+  /**
    * WHETHER THE DECLARED SCOPE CARRIES THIS RULE'S CORROBORATOR VOCABULARY ANYWHERE — one fact
    * about the whole scan, annotated on this location rather than used to delete it.
    *
@@ -455,6 +463,13 @@ interface CompiledRule {
    * schema's default, so a rule that names a subject and no mode annotates.
    */
   gateMode: GateMode;
+  /**
+   * WHICH of this rule's own `match` clauses match a word rather than a construct
+   * (`detector.word_clauses`), 1-BASED for the reason `gateAppliesTo` is — `firedClauseIndices`
+   * returns 1-based indices — and converted once, at compile. `null` for every rule that declares
+   * nothing, and then no candidate of the rule is ever asked which tier it is in.
+   */
+  wordClauses: Set<number> | null;
   /** Whether this rule's `match` clauses are ALSO tested against the alias-resolved line. */
   resolveImportAliases: boolean;
   /** Whether this rule's `match` clauses are ALSO tested against the local-value-resolved line. */
@@ -578,6 +593,13 @@ export function compileRules(rules: Rule[]): CompiledRule[] {
         // `?? "annotate"` mirrors the schema's own default, so a rule that names a subject and no
         // mode annotates, and a rule that names neither never reaches a site that reads this.
         gateMode: (r.detector.gate_mode ?? "annotate") as GateMode,
+        // The same 0-based-to-1-based conversion as `gateAppliesTo`, for the same reader. The build
+        // refuses a reference that is not `match[i]`, a duplicate, one past the `match` list and a list
+        // naming every clause (tools/build-bundle.mjs), so nothing here defends against them again.
+        wordClauses:
+          r.detector.word_clauses === undefined
+            ? null
+            : new Set(r.detector.word_clauses.map((ref) => Number(ref.slice("match[".length, -1)) + 1)),
         resolveImportAliases: r.detector.resolve_import_aliases === true,
         resolveLocalValues: r.detector.resolve_local_values === true,
         joinBracketedConstructs: r.detector.join_bracketed_constructs === true,
@@ -1551,11 +1573,15 @@ function kindFactsForCandidate(
    * credential material in the very text the label was cut from. The gate wrapper passes none, and
    * the facts returned are the same with or without it.
    */
-  out?: { text: string },
+  out?: { text: string; fired?: number[] },
 ): KindFacts {
   // Every return below goes through this, so `out` names the text of the facts it returns.
-  const from = (t: string, facts: KindFacts): KindFacts => {
-    if (out !== undefined) out.text = t;
+  // ...and, where a clause set was named, that set: the word tier is decided from it (`wordTierOf`).
+  const from = (t: string, facts: KindFacts, fired?: number[]): KindFacts => {
+    if (out !== undefined) {
+      out.text = t;
+      if (fired !== undefined) out.fired = fired;
+    }
     return facts;
   };
   const text = lines[i];
@@ -1566,7 +1592,7 @@ function kindFactsForCandidate(
     { reading: "raw", text, code },
   ];
   const fired = firedClauseIndices(c, text, code);
-  if (fired.length > 0) return from(text, firedKindFacts(c.match, fired, file, text, code));
+  if (fired.length > 0) return from(text, firedKindFacts(c.match, fired, file, text, code), fired);
 
   if (c.resolveImportAliases && table?.probe) {
     const substituted = resolveAliasesInLine(text, table);
@@ -1575,7 +1601,7 @@ function kindFactsForCandidate(
       const subCode = asSingleLineSubject("alias-resolved", c.rule.id, resolveAliasesInLine(code, table));
       tried.push({ reading: "alias-resolved", text: sub, code: subCode });
       const f = firedClauseIndices(c, sub, subCode);
-      if (f.length > 0) return from(sub, firedKindFacts(c.match, f, file, sub, subCode));
+      if (f.length > 0) return from(sub, firedKindFacts(c.match, f, file, sub, subCode), f);
     }
   }
   if (c.resolveLocalValues && valueTable?.probe) {
@@ -1589,7 +1615,7 @@ function kindFactsForCandidate(
       );
       tried.push({ reading: "local-value-resolved", text: res, code: resCode });
       const f = firedClauseIndices(c, res, resCode);
-      if (f.length > 0) return from(res, firedKindFacts(c.match, f, file, res, resCode));
+      if (f.length > 0) return from(res, firedKindFacts(c.match, f, file, res, resCode), f);
     }
   }
   if (c.joinBracketedConstructs && joinedView !== null) {
@@ -1599,7 +1625,7 @@ function kindFactsForCandidate(
       const jc = asSingleLineSubject("joined-construct", c.rule.id, joinedView.code[i] ?? folded);
       tried.push({ reading: "joined-construct", text: jt, code: jc });
       const f = firedClauseIndices(c, jt, jc);
-      if (f.length > 0) return from(jt, firedKindFacts(c.match, f, file, jt, jc));
+      if (f.length > 0) return from(jt, firedKindFacts(c.match, f, file, jt, jc), f);
     }
   }
   // THE SPLIT-CLAUSE CASE, and it is the engine's own reading rather than a gap in this derivation:
@@ -1698,6 +1724,15 @@ export function kindFactsForLineForTest(
  * `baseline-002` (`productCredentials`), whatever the bundle. The facts themselves are never altered
  * here: the label is rewritten once per run in `scan.ts`, where
  * every candidate with the same label is in view (`redactedLabelsOf`).
+ *
+ * THE WORD TIER RIDES ON THE SAME DERIVATION (0.1.3): for a rule that names `detector.word_clauses`
+ * the clause set `kindFactsForCandidate` names is the set the tier is decided from first. Where that
+ * set is word-only, the other readings the rule declared are asked too
+ * (`constructClauseFiresOnAnotherReading`), so a construct read only through an alias or a local value
+ * is the construct: the `clause` field then names the first reading's set and `tier` is absent. With the census
+ * off (`census` false) the facts are derived for that set alone and not returned, so such a document
+ * carries `tier` and nothing else it did not carry before; a rule that names no word clause is never
+ * called here with the census off.
  */
 function kindFactsAndRedactions(
   c: CompiledRule,
@@ -1710,12 +1745,98 @@ function kindFactsAndRedactions(
   joinedView: JoinedView | null,
   endLine: number | undefined,
   credentials: CredentialRedaction | null,
-): { kindFacts: KindFacts; kindRedactions?: CredentialTarget[] } {
-  const out = { text: "" };
+  census = true,
+  /** True at the structural site: a parse-tree reading found a construct, so it is never word-tier. */
+  structural = false,
+): { kindFacts?: KindFacts; kindRedactions?: CredentialTarget[]; wordTier?: true } {
+  const out: { text: string; fired?: number[] } = { text: "" };
   const kindFacts = kindFactsForCandidate(c, file, i, lines, codeLines, table, valueTable, joinedView, endLine, out);
-  if (credentials === null) return { kindFacts };
+  // The first reading that fires names the facts; the tier asks every reading (0.1.3 unit fixb). A construct
+  // clause that fires only once an alias or a local value is read is the construct, though a word clause fired raw
+  // and `kindFactsForCandidate` stopped there.
+  const wordOnly =
+    !structural &&
+    wordTierOf(c.wordClauses, out.fired) &&
+    !constructClauseFiresOnAnotherReading(c, i, lines, codeLines, table, valueTable, joinedView);
+  const tier = wordOnly ? { wordTier: true as const } : {};
+  if (!census) return tier;
+  if (credentials === null) return { kindFacts, ...tier };
   const kindRedactions = credentialTargets(credentials, c.match, kindFacts, out.text);
-  return kindRedactions.length > 0 ? { kindFacts, kindRedactions } : { kindFacts };
+  return kindRedactions.length > 0 ? { kindFacts, kindRedactions, ...tier } : { kindFacts, ...tier };
+}
+
+/**
+ * WHETHER A CANDIDATE IS IN THE WORD TIER: its rule names word clauses, at least one clause fired, and
+ * EVERY clause that fired is a word clause — so a place matched by a construct clause and a word clause
+ * carries the construct's tier. `fired` undefined is a candidate no clause set could be named for (the
+ * structural reading, the split-clause case), and such a candidate is never put in the word tier: the
+ * tier is a claim about the clauses that found a place, and there were none to make it about. Exported
+ * for the gate that holds the rule to it.
+ */
+export function wordTierOf(wordClauses: ReadonlySet<number> | null, fired: readonly number[] | undefined): boolean {
+  return wordClauses !== null && fired !== undefined && fired.length > 0 && fired.every((k) => wordClauses.has(k));
+}
+
+/**
+ * WHETHER A CLAUSE THE RULE DOES NOT MARK AS A WORD FIRES ON A READING OTHER THAN THE RAW LINE — the alias-resolved,
+ * the one-hop value-resolved or the joined reading — for a candidate whose raw clause set is word-only.
+ *
+ * `kindFactsForCandidate` returns the FIRST reading that fires, which is right for the facts (the census is counted
+ * in that order) and wrong for the tier: `import { loadModel as lm } ...` then `const emotionNet = await lm(faceUrl)`
+ * fires a word clause raw and the model-call clause only on the alias reading, and the place is a model load. So the
+ * tier is decided after every reading the rule declared. Each reading is admitted on the terms the line loop admits
+ * it on — the alias reading never on an import line, the value reading never on a definition line, and the reading
+ * must survive the rule's own `match_without` on its own text and on the raw line — so a reading the scan would not
+ * have raised a candidate on cannot vouch for a construct either. Called only for a word-tier candidate of a rule
+ * that names word clauses; it decides the tier and nothing else (no place, id or fact moves).
+ */
+function constructClauseFiresOnAnotherReading(
+  c: CompiledRule,
+  i: number,
+  lines: SingleLineSubject[],
+  codeLines: SingleLineSubject[],
+  table: AliasTable | null,
+  valueTable: ValueTable | null,
+  joinedView: JoinedView | null,
+): boolean {
+  const words = c.wordClauses;
+  if (words === null) return false;
+  const text = lines[i];
+  const rawCode = codeLines[i] ?? text;
+  const constructOn = (t: SingleLineSubject, code: SingleLineSubject, reading: MatchSubjectReading): boolean =>
+    matchFires(c.match, c.matchInComments, t, code) &&
+    !disqualifiedByMatchWithout(c.match, c.matchWithout, t, code, c.rule.id, reading) &&
+    !disqualifiedByMatchWithout(c.match, c.matchWithout, text, rawCode, c.rule.id, "raw") &&
+    firedClauseIndices(c, t, code).some((k) => !words.has(k));
+  if (c.resolveImportAliases && table?.probe && !table.importLines.has(i)) {
+    const substituted = resolveAliasesInLine(text, table);
+    if (substituted !== text) {
+      const t = asSingleLineSubject("alias-resolved", c.rule.id, substituted);
+      const code = asSingleLineSubject("alias-resolved", c.rule.id, resolveAliasesInLine(rawCode, table));
+      if (constructOn(t, code, "alias-resolved")) return true;
+    }
+  }
+  if (c.resolveLocalValues && valueTable?.probe && !valueTable.definitionLines.has(i)) {
+    const r = resolveLocalValuesInLine(text, valueTable, lines, i);
+    if (r.text !== text) {
+      const t = asSingleLineSubject("local-value-resolved", c.rule.id, r.text);
+      const code = asSingleLineSubject(
+        "local-value-resolved",
+        c.rule.id,
+        resolveLocalValuesInLine(rawCode, valueTable, lines, i).text,
+      );
+      if (constructOn(t, code, "local-value-resolved")) return true;
+    }
+  }
+  if (c.joinBracketedConstructs && joinedView !== null) {
+    const folded = joinedView.raw[i] ?? text;
+    if (folded !== text) {
+      const t = asSingleLineSubject("joined-construct", c.rule.id, folded);
+      const code = asSingleLineSubject("joined-construct", c.rule.id, joinedView.code[i] ?? folded);
+      if (constructOn(t, code, "joined-construct")) return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -2061,6 +2182,8 @@ interface WireMatch {
    * reason: phase 2 WRITES it, so it never has to cross.
    */
   gateSubject?: true;
+  /** `RawMatch.wordTier`, crossing because `scan.ts` writes it onto the location. */
+  wordTier?: true;
   /**
    * The kind facts, where the run computes them. They cross the boundary because `scan.ts` copies
    * them onto the location, and a worker that kept them to itself would write a document whose
@@ -2084,6 +2207,7 @@ function toWireMatch(m: RawMatch): WireMatch {
     ...(m.joinedFrom ? { joinedFrom: m.joinedFrom } : {}),
     ...(m.firedClauses ? { firedClauses: m.firedClauses } : {}),
     ...(m.gateSubject ? { gateSubject: true as const } : {}),
+    ...(m.wordTier ? { wordTier: true as const } : {}),
     ...(m.kindFacts ? { kindFacts: m.kindFacts } : {}),
     ...(m.kindRedactions ? { kindRedactions: m.kindRedactions } : {}),
   };
@@ -3473,7 +3597,10 @@ function scanFile(
             // readings below is re-asked and the object is the object this branch built before the
             // census existed. `undefined` is spread as nothing, so the candidate's own shape is
             // unchanged too.
-            ...(kindCensus
+            // ...and the word tier, for a rule that names word clauses, with the census on or off: it
+            // is decided from the same clause set (`kindFactsAndRedactions`). A rule that names none
+            // with the census off spreads nothing, as before.
+            ...(kindCensus || c.wordClauses !== null
               ? kindFactsAndRedactions(
                   c,
                   file,
@@ -3485,6 +3612,7 @@ function scanFile(
                   joinedView,
                   undefined,
                   credentials,
+                  kindCensus,
                 )
               : {}),
           };
@@ -3633,6 +3761,9 @@ function scanFile(
             // `endLine` is handed in because it is what the oracle reads to tell a spanning element
             // from a single-line one when no clause can be named, and here it is known rather than
             // recovered from the location.
+            // A structural candidate is a construct the parse tree found, so it is never in the word
+            // tier (`structural`), whatever clause its line also fires, and the census decides alone
+            // whether anything is spread here.
             ...(kindCensus
               ? kindFactsAndRedactions(
                   c,
@@ -3645,6 +3776,8 @@ function scanFile(
                   joinedView,
                   endLine,
                   credentials,
+                  true,
+                  true,
                 )
               : {}),
           };
@@ -3936,6 +4069,7 @@ export function mergeShards(
           ...(w.joinedFrom ? { joinedFrom: w.joinedFrom } : {}),
           ...(w.firedClauses ? { firedClauses: w.firedClauses } : {}),
           ...(w.gateSubject ? { gateSubject: true as const } : {}),
+          ...(w.wordTier ? { wordTier: true as const } : {}),
           ...(w.kindFacts ? { kindFacts: w.kindFacts } : {}),
           ...(w.kindRedactions ? { kindRedactions: w.kindRedactions } : {}),
         }),

@@ -389,7 +389,7 @@ export function silenceBrief(a: {
       : ["None: no `suppressed_by_corroboration` entry names one of your rules."]),
     "",
     "## The scan's coverage limits: the whole `coverage_limits` block",
-    "A construct found only in a tree the scan never read (tests, vendored, build) is a scope fact, not a detector gap; this block is what tells the two apart.",
+    "A construct found only in a tree the scan never read (tests, vendored, build, docs) is a scope fact, not a detector gap; this block is what tells the two apart.",
     ...(a.coverageLimits !== undefined ? jsonBlock(a.coverageLimits) : ["This scan's findings document carries no `coverage_limits` block."]),
     "",
     "## The ScanProfile",

@@ -87,8 +87,14 @@ detector:
       \t]*(?:->|\.)[
       \t]*(?:original_url|long_url|target_url|destination_url|redirect_url|[Dd]estination)\b|Location:[^\n]{0,40}\$?(?:[Ll]ink|[Ss]hort[Ll]ink|short_link|[Tt]racked[Ll]ink|tracked_link)[
       \t]*(?:->|\.)[ \t]*(?:[Uu]rl|URL|[Hh]ref)\b)
+    - (?<!data:image/(?:gif|png|x-icon|vnd\.microsoft\.icon)[^,\n]{0,40},)(?:(?<=(?:^|[(,])[
+      \t]*[bBuU]?["'`])(?:R0lGOD[dl]hAQABA|iVBORw0KGgoAAAANSUhEUgAAAAEAAAAB)|GIF8[79]a\\x01\\x00\\x01\\x00|GIF8[79]a\\001\\000\\001\\000|0x47,[
+      \t]*0x49,[ \t]*0x46,[ \t]*0x38[^\n]{0,40}?0x01,[ \t]*0x00,[ \t]*0x01,[
+      \t]*0x00|\\x47\\x49\\x46\\x38[^\n]{0,24}?\\x01\\x00\\x01\\x00)
   match_without:
     - ^\s*(?:\*|//|/\*|#|<!--|<%#|--)
+  word_clauses:
+    - match[6]
 context_questions:
   - "MANDATORY: IS THE IDENTIFIER IN THE URL PER-RECIPIENT, AND CAN IT BE SWITCHED OFF? Read the URL
     builder and say what the identifier is - a subscriber UUID, a database id, a hash, or a fixed

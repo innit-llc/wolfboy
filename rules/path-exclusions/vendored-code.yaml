@@ -45,3 +45,13 @@ sets:
         excludes: "`third-party/`, `third_party/` and `thirdparty/` as directory segments."
       - pattern: (^|/)vendored/
         excludes: "`vendored/` as a directory segment."
+  minified_and_bundled_files:
+    question: >
+      Is this file, by its own name, a minified or bundled copy of code - `jquery.min.js`,
+      `editor.bundle.js` - rather than source a person edits?
+    patterns:
+      - pattern: (^|/)[^/]+[.-]min\.(?:js|mjs|cjs|css)$
+        excludes: A file named `<name>.min.js`, `<name>-min.js`, `<name>.min.css` and the like, wherever it
+          stands.
+      - pattern: (^|/)[^/]+\.(?:bundle|umd|pack|packed)\.(?:js|mjs|cjs|css)$
+        excludes: A file named `<name>.bundle.js`, `<name>.umd.js`, `<name>.pack.js` and the like.

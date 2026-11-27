@@ -26,6 +26,7 @@ import {
   type ReadDespiteName,
   type ReadScope,
   type ReadScopeManifest,
+  type HeldAsSite,
 } from "./read-scope.js";
 import { walkTarget, type WalkExclusion } from "./walk.js";
 
@@ -37,6 +38,11 @@ export interface WalkedTree {
   excluded: WalkExclusion[];
   readDespiteName?: ReadDespiteName[];
   reScanReads?: string[];
+  /** walk.ts `WalkResult`'s, unchanged. */
+  heldByContent?: { file: string; evidence: string }[];
+  vendoredByContentRead?: string[];
+  /** walk.ts `WalkResult`'s, unchanged. */
+  heldAsSite?: HeldAsSite[];
 }
 
 /**

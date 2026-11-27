@@ -19,6 +19,11 @@ interface Expectation {
   line: number; // 1-based line the expectation applies to: the line following the annotation
   kind: "ruleid" | "ok";
   ruleId: string;
+  /**
+   * The tier the `ruleid:` line's place must carry, where the annotation states one (`tier: word` or
+   * `tier: construct` after the rule id). Absent: the tier is not asserted.
+   */
+  tier?: "word" | "construct";
 }
 
 interface RuleTestResult {
@@ -151,13 +156,28 @@ const PLUMBED_FIELDS: readonly PlumbedField[] = [
 ];
 
 const ANNOTATION = /(ruleid|ok):\s*([a-z0-9-]+)/;
+/**
+ * The word tier a place lands in
+ * (`detector.word_clauses`, findings.json `locations[].tier`), stated on the annotation line after the rule id:
+ * `ruleid: <id> tier: word` or `tier: construct`. Read here only: the other readers of the same annotation (the
+ * mutation harness and the fixture-copy check) read the id and nothing after it.
+ */
+const TIER_ANNOTATION = /ruleid:\s*[a-z0-9-]+\s+tier:\s*(word|construct)\b/;
 
 function parseExpectations(file: string, content: string): Expectation[] {
   const out: Expectation[] = [];
   const lines = content.split("\n");
   for (let i = 0; i < lines.length; i++) {
     const m = lines[i].match(ANNOTATION);
-    if (m) out.push({ file, line: i + 2, kind: m[1] as "ruleid" | "ok", ruleId: m[2] });
+    if (!m) continue;
+    const t = lines[i].match(TIER_ANNOTATION);
+    out.push({
+      file,
+      line: i + 2,
+      kind: m[1] as "ruleid" | "ok",
+      ruleId: m[2],
+      ...(t ? { tier: t[1] as "word" | "construct" } : {}),
+    });
   }
   return out;
 }
@@ -431,6 +451,16 @@ function checkOneScan(
   const hits = new Set(
     findings.candidates.flatMap((c) => c.locations.map((l) => `${onDisk(l.file)}:${l.start_line}`)),
   );
+  // The tier each hit carries, under the same key: "word" only where every location there carries it (a place
+  // matched by both tiers carries the construct's).
+  const tierAt = new Map<string, "word" | "construct">();
+  for (const c of findings.candidates) {
+    for (const l of c.locations) {
+      const key = `${onDisk(l.file)}:${l.start_line}`;
+      const t = l.tier === "word" ? "word" : "construct";
+      tierAt.set(key, tierAt.get(key) === "construct" ? "construct" : t);
+    }
+  }
   // ...and, for the joined-construct exemption in the over-matching check below, the span each hit
   // was folded from, under the SAME key. A location carries `joined_from` only where the rule
   // declared `detector.join_bracketed_constructs` AND the physical line raised nothing, so this map
@@ -467,6 +497,12 @@ function checkOneScan(
     if (exp.kind === "ok" && hits.has(key)) {
       res.passed = false;
       res.failures.push(`${where}: ${key} matched a line annotated ok: (false positive)`);
+    }
+    if (exp.kind === "ruleid" && exp.tier !== undefined && hits.has(key) && tierAt.get(key) !== exp.tier) {
+      res.passed = false;
+      res.failures.push(
+        `${where}: ${key} is annotated tier: ${exp.tier} and its place is in the ${tierAt.get(key)} tier`,
+      );
     }
   }
 

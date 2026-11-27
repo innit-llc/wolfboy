@@ -1,0 +1,14 @@
+sets:
+  prose_files:
+    question: >
+      Is this file prose written for people to read - a README, a changelog, a contributing guide, a
+      licence or a notice, a page of Markdown, reStructuredText or AsciiDoc - rather than code or
+      configuration the product runs?
+    patterns:
+      - pattern: \.(?:md|MD|mdx|markdown|rst|adoc|asciidoc|textile)$
+        excludes: A Markdown, MDX, reStructuredText, AsciiDoc or Textile file, wherever it stands.
+      - pattern: (^|/)(?:README|Readme|readme|CHANGELOG|Changelog|changelog|CHANGES|Changes|HISTORY|History|NEWS|CONTRIBUTING|Contributing|CONTRIBUTORS|AUTHORS|Authors|LICEN[CS]E|Licen[cs]e|licen[cs]e|COPYING|COPYRIGHT|NOTICE|CODE_OF_CONDUCT|SECURITY|SUPPORT|MAINTAINERS|GOVERNANCE|UPGRADING|INSTALL|CREDITS|THIRD[-_]?PARTY[-_A-Za-z]*)(?:[-_][A-Za-z0-9]+)*(?:\.(?:txt|TXT|text))?$
+        excludes: >
+          The files a repository keeps for people beside its code, by name, with no extension or a
+          plain-text one: `README`, `CHANGELOG.txt`, `CONTRIBUTING`, `LICENSE`, `LICENSE-MIT`,
+          `NOTICE`, `AUTHORS`, `SECURITY` and the like.

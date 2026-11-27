@@ -207,7 +207,36 @@ export const READ_SCOPE_CLASSES = {
   tests: "test-surfaces.yaml",
   vendored: "vendored-code.yaml",
   build: "generated-output.yaml",
+  //:
+  // documentation sites are not read by default, counted, and `--read docs` reads them.
+  docs: "documentation-sites.yaml",
 };
+
+/**
+ * THE PATH CLASSES, ONE TABLE: every place a
+ * scan reports carries the class of the path it sits in (`locations[].path_class`), and this is the one statement of
+ * which class is made of what, in the order a path is tested (the first that names it wins; a path none names is
+ * `code`). Four are read-scope classes above, named by their id there (a held-back class is a class here too, for a
+ * run that reads it); the rest are files or sets of `rules/path-exclusions/` that hold nothing back. The build writes
+ * it into `read-scope.json` as `path_classes`, the engine (product/packages/cli/src/path-class.ts) reads only that, and
+ * the findings schema's enum is pinned to it by a test.
+ */
+export const PATH_CLASS_SOURCES = [
+  { id: "vendored", read_scope: "vendored" },
+  { id: "build", read_scope: "build" },
+  { id: "test", read_scope: "tests" },
+  { id: "docs", read_scope: "docs" },
+  { id: "ci", file: "ci-files.yaml" },
+  // with the platforms' own catalogues.
+  { id: "translation", file: "documents.yaml", sets: ["localisation_catalogues", "localisation_directories", "platform_string_catalogues"] },
+  // README, CHANGELOG and other prose.
+  { id: "prose", file: "prose-files.yaml" },
+  { id: "example-data", file: "example-data.yaml" },
+  { id: "template", file: "shipped-templates.yaml" },
+  // word lists, vocabularies, images.
+  { id: "asset", file: "asset-files.yaml" },
+  { id: "config", file: "configuration-files.yaml" },
+];
 
 /**
  * The file whose sets are carried into the bundle to be COUNTED and never to be declined.

@@ -1,6 +1,6 @@
 {
   "name": "wolfboy",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "WolfBoy checks what your code actually does against GDPR, the AI Act and CCPA, and against your own privacy policy; your own Claude Code judges each place it finds",
   "license": "FSL-1.1-ALv2",
   "homepage": "https://github.com/innit-llc/wolfboy#readme",
@@ -28,8 +28,8 @@
   ],
   "scripts": {
     "build": "node scripts/schemas-module.mjs --check && node scripts/identity-module.mjs --check && tsc -p ../schemas/tsconfig.json && tsc -p tsconfig.json",
-    "prepack": "node scripts/schemas-module.mjs --check && node scripts/shrinkwrap.mjs --check && node scripts/copy-schemas.mjs && node scripts/pack-bundle.mjs copy && node scripts/pack-plugin.mjs copy && node scripts/install-files.mjs copy && node scripts/pack-public-only.mjs",
-    "postpack": "node scripts/install-files.mjs remove && node scripts/pack-plugin.mjs remove && node scripts/pack-bundle.mjs remove && node scripts/copy-schemas.mjs remove"
+    "prepack": "node scripts/schemas-module.mjs --check && node scripts/shrinkwrap.mjs --check && node scripts/copy-schemas.mjs && node scripts/pack-bundle.mjs copy && node scripts/pack-plugin.mjs copy && node scripts/pack-readme.mjs copy && node scripts/install-files.mjs copy && node scripts/pack-public-only.mjs",
+    "postpack": "node scripts/pack-readme.mjs remove && node scripts/install-files.mjs remove && node scripts/pack-plugin.mjs remove && node scripts/pack-bundle.mjs remove && node scripts/copy-schemas.mjs remove"
   },
   "dependencies": {
     "@ruby/prism": "1.9.0",

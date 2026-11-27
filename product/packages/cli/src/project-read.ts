@@ -522,12 +522,24 @@ export function readRegularFile(path: string, encoding?: BufferEncoding): string
 }
 
 /** The first `n` bytes of the regular file at `path`, or the kind that stood there instead; throws the open's own errors. */
-export function sniffRegular(path: string, n: number, work?: LinkWork): { regular: true; head: Buffer } | { regular: false; kind: NotRegularKind; throughLink: boolean } {
+export function sniffRegular(
+  path: string,
+  n: number,
+  work?: LinkWork,
+  /** Also the last `tailBytes` bytes, on the same open, where the file is longer than its head. */
+  tailBytes?: number,
+): { regular: true; head: Buffer; tail?: Buffer } | { regular: false; kind: NotRegularKind; throughLink: boolean } {
   const o = openRegular(path, work);
   if (!o.regular) return o;
   try {
     const buf = Buffer.alloc(n);
     const got = readSync(o.fd, buf, 0, n, 0);
+    if (tailBytes !== undefined && tailBytes > 0 && o.size > got) {
+      const from = Math.max(got, o.size - tailBytes);
+      const t = Buffer.alloc(o.size - from);
+      const tgot = readSync(o.fd, t, 0, t.length, from);
+      return { regular: true, head: buf.subarray(0, got), tail: t.subarray(0, tgot) };
+    }
     return { regular: true, head: buf.subarray(0, got) };
   } finally {
     closeSync(o.fd);

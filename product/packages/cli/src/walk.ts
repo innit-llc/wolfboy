@@ -6,18 +6,24 @@ import {
   MACHINE_WRITTEN_FOLDERS,
   NOT_REGULAR_WORDS,
   ORIGIN_TESTED_CLASSES,
+  SITE_TESTED_CLASSES,
   classNamingFolder,
   heldBackBy,
   nominatedByOwnName,
+  siteCandidateClass,
   readScopeClassOfReason,
   readScopeReason,
   wholeTreeHeldBackBy,
   ClearedFolders,
   FolderTrie,
+  type HeldAsSite,
   type ReadDespiteName,
   type ReadScope,
 } from "./read-scope.js";
 import { originTester, type OriginTest, type WalkerFolderKind } from "./vendored-origin.js";
+import { CONTENT_TAIL_BYTES, TAIL_READ, ownNamesOf, vendoredByContent, type OwnNames } from "./vendored-content.js";
+import { documentationSiteOf, type SiteEntry, type SiteView } from "./docs-site.js";
+import { DocsUsageIndex, usageReads } from "./docs-usage.js";
 
 // Layer 1 casts the net; the agent decides. A file this walker never opens can never reach the
 // agent, so anything a rule might legitimately want to see must be readable here.
@@ -160,6 +166,10 @@ const IGNORE_FILES = new Set([
 // are read-scope.ts `MACHINE_WRITTEN_FOLDERS`, the one list the coverage block's sentence also lists from.
 const GENERATED_DIRS = new Set(MACHINE_WRITTEN_FOLDERS);
 
+/** The bounds of the usage index (docs-usage.ts): files read, and bytes of their heads. */
+const USAGE_FILES = 50_000;
+const USAGE_BYTES = 512 * 1024 * 1024;
+
 /**
  * Trees excluded because the code in them is held not to ship.
  *
@@ -233,10 +243,17 @@ export const MAX_FILE_BYTES = 1_000_000;
  * for ever. A file the walker cannot open is a file the engine cannot read either, and the caller records it as an
  * exclusion like any other: `could-not-open`, never `binary-content`, which is a statement about bytes nobody read.
  */
-function looksTextual(path: string, links?: LinkWork): boolean | NotRegularKind | "could-not-open" | "git-lfs-pointer" {
+function looksTextual(path: string, links?: LinkWork, sniffed?: { head?: Buffer; tail?: Buffer }): boolean | NotRegularKind | "could-not-open" | "git-lfs-pointer" {
   try {
-    const got = sniffRegular(path, BINARY_SNIFF_BYTES, links);
+    // The head this test reads, and the last
+    // bytes of a JavaScript or CSS file on the same open, are handed back in `sniffed` for the content test of vendored
+    // code (vendored-content.ts), so that test opens nothing of its own.
+    const got = sniffRegular(path, BINARY_SNIFF_BYTES, links, sniffed !== undefined && TAIL_READ.test(path) ? CONTENT_TAIL_BYTES : undefined);
     if (!got.regular) return got.kind;
+    if (sniffed !== undefined) {
+      sniffed.head = got.head;
+      sniffed.tail = got.tail;
+    }
     if (isGitLfsPointer(got.head)) return "git-lfs-pointer";
     // A UTF-16 file (its byte-order mark) is asked the same NUL question of its decoded text, which holds a NUL only
     // where the file does; without the mark the byte test runs as before.
@@ -291,6 +308,8 @@ export type ExclusionReason =
   | "read-scope-tests"
   | "read-scope-vendored"
   | "read-scope-build"
+  // Documentation sites.
+  | "read-scope-docs"
   // WHAT STOOD AT THE PATH WAS NOT A REGULAR FILE, OR COULD NOT BE OPENED. One
   // reason per kind, so the kind is named wherever the reason is (`excluded_by_walker`, `coverage_limits`, the report),
   // and every such entry is named in full, never one of three examples (`NAMED_IN_FULL`). A named pipe was once opened
@@ -428,8 +447,18 @@ export interface WalkResult {
   readDespiteName: ReadDespiteName[];
   /** The folders the same test held back, each with the sign of third-party origin it found. For records and gates. */
   heldOnOrigin: { class: string; dir: string; evidence: string }[];
+  /** The folders named like documentation sites the site test held, and why. */
+  heldAsSite: HeldAsSite[];
   /** The steps that test counted in this walk and the milliseconds it took (vendored-origin.ts, the invariant of its cost). */
   originWork: { steps: number; ms: number };
+  /**
+   * The files held back as vendored code BY
+   * THEIR CONTENT (vendored-content.ts), each with the sign it found; each is also a `read-scope-vendored` row of
+   * `excluded`. Empty where the run read vendored code, or its scope has no `vendored` class.
+   */
+  heldByContent?: { file: string; evidence: string }[];
+  /** The files the same test found vendored in a run that READS vendored code: read, and classed `vendored` (path-class.ts). */
+  vendoredByContentRead?: string[];
   /**
    * The steps the walk's symbolic links were charged (THE WALKER'S BOUND), and whether they reached `LINK_WALK_WORK`, after
    * which every link met was refused as `link-not-followed`. For records and gates. Absent where no walk was made.
@@ -753,6 +782,14 @@ function walkIn(targetRoot: string, opts: WalkOptions, probe: Probe | null): Wal
   const cleared = probe?.cleared ?? new ClearedFolders();
   const readDespiteName: ReadDespiteName[] = [];
   const heldOnOrigin: { class: string; dir: string; evidence: string }[] = [];
+  const heldAsSite: HeldAsSite[] = [];
+  /** The vendored class of this walk's scope, which the content test serves; undefined where it has none. */
+  const vendoredClass = opts.readScope?.classes.find((c) => c.id === "vendored");
+  const heldByContent: { file: string; evidence: string }[] = [];
+  const vendoredByContentRead: string[] = [];
+  let own: OwnNames | null = null;
+  /** The project's own names (vendored-content.ts), read from the scan root on the first file that needs them. */
+  const ownNames = (): OwnNames => (own ??= ownNamesOf(targetRoot));
   /** Built on the first nominated folder: a tree with none opens no file it did not open before. One for a scan and its probes. */
   const origin: { test: OriginTest | null } = probe?.origin ?? { test: null };
   /** The count of the steps this walk's links are charged, shared with its probes (THE WALKER'S BOUND). */
@@ -892,6 +929,122 @@ function walkIn(targetRoot: string, opts: WalkOptions, probe: Probe | null): Wal
 
   /** The work count of the probes, where this walk is one (THE OFFER PROBES' INVARIANT). */
   const work = probe?.work ?? null;
+
+  /**
+   * What the documentation-site test
+   * (docs-site.ts) is shown of the candidate folder `full`: its listings, one file's first bytes, the names of the files
+   * in its tree (by `countTree`'s rule for which folders it enters). Nothing outside the folder but its parent's names;
+   * every listing and open charged to a probe's work count, as the walk's own are.
+   */
+  /**
+   * The product's references to folders named
+   * like documentation sites (docs-usage.ts), built once per walk, the first time a candidate holding program source is
+   * met: every file of the tree the index reads by name, outside every folder and file a read-scope class names WHATEVER
+   * THIS RUN READS (so the answer is the same in every run), outside every folder the walker never enters by its name
+   * (`folderKind`), following no symbolic link. Bounded by USAGE_FILES and USAGE_BYTES; past them the index is incomplete,
+   * a candidate it has not seen used is held, as an unused one is, and every listing and open is charged to a probe's
+   * work count, as the walk's own are.
+   */
+  let usage: DocsUsageIndex | null = null;
+  const usageIndex = (): DocsUsageIndex => {
+    if (usage !== null) return usage;
+    const scope = opts.readScope as ReadScope;
+    const unread: ReadScope = { classes: scope.classes.map((c) => ({ ...c, read: false })) };
+    const idx = new DocsUsageIndex((seg) => siteCandidateClass(unread, seg) !== null);
+    usage = idx;
+    let files = 0;
+    let bytes = 0;
+    const stack: string[] = [targetRoot];
+    while (stack.length > 0) {
+      const d = stack.pop() as string;
+      work?.charge(PROBE_CHARGES.listing);
+      let es: Listed[];
+      try {
+        es = listFolder(d);
+      } catch {
+        idx.complete = false;
+        continue;
+      }
+      for (const x of es) {
+        if (x.odd || x.isSymbolicLink()) continue;
+        const full = join(d, x.name);
+        const rel = relativePath(targetRoot, full).replace(/\\/g, "/");
+        if (x.isDirectory()) {
+          if (folderKind(x.name) !== null || wholeTreeHeldBackBy(unread, rel) !== null) continue;
+          stack.push(full);
+          continue;
+        }
+        if (!usageReads(x.name) || heldBackBy(unread, rel) !== null) continue;
+        if (files >= USAGE_FILES || bytes >= USAGE_BYTES) {
+          idx.complete = false;
+          continue;
+        }
+        work?.charge(PROBE_CHARGES.open);
+        try {
+          const got = sniffRegular(full, 64 * 1024, links.tally);
+          if (!got.regular) continue;
+          files++;
+          bytes += got.head.length;
+          idx.addFile(rel, got.head.toString("utf8"));
+        } catch {
+          continue;
+        }
+      }
+    }
+    return idx;
+  };
+  const siteView = (full: string, parentDir: string, relDir: string): SiteView => {
+    const listed = new Map<string, SiteEntry[] | null>();
+    const entriesOf = (at: string): SiteEntry[] | null => {
+      work?.charge(PROBE_CHARGES.listing);
+      try {
+        return listFolder(at)
+          .filter((x) => !x.odd)
+          .map((x) => ({ name: x.name, dir: x.isDirectory() }));
+      } catch {
+        return null;
+      }
+    };
+    return {
+      list: (sub) => {
+        if (!listed.has(sub)) listed.set(sub, entriesOf(sub === "" ? full : join(full, sub)));
+        return listed.get(sub) ?? null;
+      },
+      parent: () => entriesOf(parentDir),
+      read: (sub, name) => {
+        work?.charge(PROBE_CHARGES.open);
+        try {
+          const got = sniffRegular(sub === "" ? join(full, name) : join(full, sub, name), 64 * 1024, links.tally);
+          return got.regular ? got.head.toString("utf8") : null;
+        } catch {
+          return null;
+        }
+      },
+      usedBy: (ownName) => usageIndex().usedBy(relDir.replace(/\\/g, "/"), ownName),
+      treeFileNames: () => {
+        const names: string[] = [];
+        const recurse = (d: string, at: string): void => {
+          work?.charge(PROBE_CHARGES.listing);
+          let es: Listed[];
+          try {
+            es = listFolder(d);
+          } catch {
+            return;
+          }
+          for (const x of es) {
+            if (x.odd) continue;
+            if (x.isDirectory()) {
+              if (!GENERATED_DIRS.has(x.name) || namedByAClass(x.name)) recurse(join(d, x.name), `${at}${x.name}/`);
+              continue;
+            }
+            names.push(`${at}${x.name}`);
+          }
+        };
+        recurse(full, "");
+        return names;
+      },
+    };
+  };
   const visit = (dir: string, given?: readonly Listed[]) => {
     let entries: readonly Listed[];
     if (given !== undefined) entries = given;
@@ -1054,6 +1207,24 @@ function walkIn(targetRoot: string, opts: WalkOptions, probe: Probe | null): Wal
         // nothing beneath it, while every other class, and a nested folder named like vendored code, still applies.
         const relTree = relativePath(targetRoot, full);
         let treeClass = opts.readScope ? wholeTreeHeldBackBy(opts.readScope, relTree, cleared) : null;
+        //
+        // A FOLDER NAMED LIKE A DOCUMENTATION SITE: a candidate, held back only where it shows a site (docs-site.ts). Asked whether or not this run reads
+        // the class, so the class of what is read beneath it (path-class.ts, through `readDespiteName`) is the same in
+        // every run; a candidate read goes into `cleared`, so its own name holds back nothing beneath it, while a folder
+        // inside it named like a site is a candidate of its own.
+        const siteClass =
+          opts.readScope === undefined || (treeClass !== null && !SITE_TESTED_CLASSES.has(treeClass))
+            ? null
+            : siteCandidateClass(opts.readScope, relTree, cleared);
+        if (siteClass !== null && opts.readScope !== undefined) {
+          const decided = documentationSiteOf(siteView(full, dir, relTree));
+          if (decided.site) heldAsSite.push({ class: siteClass, dir: relTree, why: decided.why, evidence: decided.evidence });
+          else {
+            cleared.add(relTree);
+            readDespiteName.push({ class: siteClass, dir: relTree, files: 0, why: decided.why });
+            treeClass = wholeTreeHeldBackBy(opts.readScope, relTree, cleared);
+          }
+        }
         if (treeClass !== null && opts.readScope && ORIGIN_TESTED_CLASSES.has(treeClass)) {
           if (origin.test === null) {
             // `notOwnCode`: held back by another class's name alone, whatever this run reads (vendored-origin.ts).
@@ -1166,7 +1337,8 @@ function walkIn(targetRoot: string, opts: WalkOptions, probe: Probe | null): Wal
       // correctness requirement: a format nobody listed is read if its bytes are text and reported
       // if they are not. Costs one 4 KiB read per file that got this far.
       work?.charge(PROBE_CHARGES.open);
-      const textual = looksTextual(full, links.tally);
+      const sniffed: { head?: Buffer; tail?: Buffer } | undefined = vendoredClass !== undefined ? {} : undefined;
+      const textual = looksTextual(full, links.tally, sniffed);
       if (probe !== null && textual === "could-not-open") throw RE_SCAN_UNDECIDED;
       if (textual !== true) {
         const reason: ExclusionReason =
@@ -1176,9 +1348,26 @@ function walkIn(targetRoot: string, opts: WalkOptions, probe: Probe | null): Wal
         refuse(full, reason);
         continue;
       }
+      // VENDORED CODE BY ITS CONTENT, beside the
+      // path test above: another project's banner, a bundler's wrapper or a source-map trailer in the file's own bytes.
+      // Held back as `vendored` where the run does not read that class, counted with it, and offered by its `--read`.
+      const byContent = vendoredClass !== undefined && sniffed?.head !== undefined ? vendoredByContent(e.name, sniffed.head, sniffed.tail, ownNames(), relDir.replace(/\\/g, "/")) : null;
+      if (byContent !== null && vendoredClass !== undefined && !vendoredClass.read) {
+        if (probe !== null) {
+          holdsFurther(vendoredClass.id, e);
+          continue;
+        }
+        skipped++;
+        note(readScopeReason(vendoredClass.id) as ExclusionReason, shownDir, shownText(relFile), 1);
+        refuse(full, readScopeReason(vendoredClass.id) as ExclusionReason);
+        holds(vendoredClass.id, dir, e);
+        heldByContent.push({ file: relativePath(targetRoot, full), evidence: byContent });
+        continue;
+      }
       if (probe !== null) throw RE_SCAN_READS;
       files.push(relativePath(targetRoot, full));
       sizes.push(bytes);
+      if (byContent !== null) vendoredByContentRead.push(relativePath(targetRoot, full));
     }
     // In a probe, each further class's entries of this folder in one nested probe, handed the entries already listed.
     if (further !== null && opts.readScope)
@@ -1187,7 +1376,7 @@ function walkIn(targetRoot: string, opts: WalkOptions, probe: Probe | null): Wal
 
   if (probe !== null) {
     visit(probe.dir, probe.entries);
-    return { files, sizes, skipped, excluded: [], refused, readDespiteName, heldOnOrigin, originWork: { steps: 0, ms: 0 } };
+    return { files, sizes, skipped, excluded: [], refused, readDespiteName, heldOnOrigin, heldAsSite, originWork: { steps: 0, ms: 0 } };
   }
   visit(targetRoot);
   // THE OFFER: for each class that held a path back, the probes run until one finds a file the re-scan would read, or
@@ -1229,7 +1418,10 @@ function walkIn(targetRoot: string, opts: WalkOptions, probe: Probe | null): Wal
     refused,
     readDespiteName,
     heldOnOrigin,
+    heldAsSite,
     originWork: origin.test?.work() ?? { steps: 0, ms: 0 },
+    heldByContent,
+    vendoredByContentRead,
     linkWork: { steps: links.spent, limitReached: links.reached },
     reScanReads: reScan.sort(),
     probeWork: { units: probes.spent, limitReached: probes.spent > PROBE_WORK },

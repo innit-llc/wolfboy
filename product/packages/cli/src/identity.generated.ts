@@ -6,6 +6,6 @@
 /** The program's name: the one name package.json's "bin" gives it (the SARIF tool's name, which keys its alerts). */
 export const PROGRAM_NAME = "wolfboy";
 /** The program's version: package.json's "version". */
-export const PROGRAM_VERSION = "0.1.1";
+export const PROGRAM_VERSION = "0.1.3";
 /** The program's address: package.json's "homepage". */
 export const PROGRAM_HOMEPAGE = "https://github.com/innit-llc/wolfboy#readme";

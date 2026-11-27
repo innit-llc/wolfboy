@@ -1597,11 +1597,13 @@ export function writeDeclarationPlan(dir: string, scanId: string, plan: ReturnTy
  * how many of the questions put were answered, and that one left open switches nothing off. Until this change the line
  * read "The answers are written to ..." whatever happened, also over four skipped questions, which recorded no answer.
  */
-export function answersWrittenLine(rows: readonly RecordRow[], profilePath: string, recordPath: string): string {
+export function answersWrittenLine(rows: readonly RecordRow[], profilePath: string, recordPath: string, runsAgain = true): string {
   const n = rows.length;
   const answered = rows.filter((r) => r.outcome === "answered").length;
   const files = `${profilePath} with its record ${recordPath}`;
-  const again = "The scan runs again with the declaration:";
+  // Where nothing the scan reads changed, it
+  // does not run again, and the line says so.
+  const again = runsAgain ? "The scan runs again with the declaration:" : "Nothing the scan reads changed, so it does not run again: the screen above stands.";
   if (answered === 0) return `No question answered (${n === 1 ? "1 left open" : `${n} left open`}), so nothing is switched off; ${n === 1 ? "it is" : "they are"} recorded as left open in ${files}. ${again}`;
   if (answered < n) return `${answered} of ${n} questions answered and ${n - answered} left open (one left open switches nothing off); the answers are written to ${files}. ${again}`;
   return `The answers are written to ${files}. ${again}`;
@@ -1633,6 +1635,13 @@ export function questionScreenLines(asking: number, notAsked: number, later = 0,
   const total = overCap + later + notAsked;
   if (total > 0) {
     out.push(`Not asked before this scan: ${total === 1 ? "1 more question" : `${total} more questions`} (${notNow.join("; ")}). The report lists ${total === 1 ? "it" : "them"}; answer any time and the next scan uses your answer: ${reviewDeclarationCommand()}`);
+  }
+  // How many are left in all, and what stops
+  // them: a returning visitor was asked four new questions on every run with nothing saying how many would follow. No
+  // setting turns the questions off; a skipped one stays open and can be asked again.
+  if (asking > 0) {
+    const inAll = asking + total;
+    out.push(`In all, ${inAll === 1 ? "1 question" : `${inAll} questions`} about your product ${inAll === 1 ? "has" : "have"} no answer yet. No setting turns them off: a skipped one can be asked again by a later scan, an answered one is not. To skip them on this run, choose Skip for each.`);
   }
   return out;
 }

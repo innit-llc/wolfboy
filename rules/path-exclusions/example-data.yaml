@@ -1,0 +1,19 @@
+sets:
+  example_and_sample_data:
+    question: >
+      Is this file sample, demo or seed data shipped in the tree - an example task, a sample
+      dataset, a demo project - or an example written on top of the product, rather than the product
+      itself?
+    patterns:
+      - pattern: (^|/)(?:examples?|samples?|demos?)/
+        excludes: Any path under a folder named `example`, `examples`, `sample`, `samples`, `demo` or
+          `demos`.
+      - pattern: (^|/)(?:example|sample|demo|seed|dummy)[-_]?(?:data|datasets?|tasks?|projects?|apps?|dashboards?|files?|content)/
+        excludes: Folders such as `sample_data/`, `demo-projects/`, `example_dashboards/`, `seed-data/`.
+      - pattern: (^|/)(?:seeds|seed_data|sample_data|example_data|demo_data|fixtures_data)/
+        excludes: Database seed folders and sample-data folders.
+      - pattern: (^|/)seeds?\.(?:rb|py|js|ts|sql|json|ya?ml)$
+        excludes: A database seed file (`db/seeds.rb`, `seed.py`).
+      - pattern: (^|/)[^/]+[.-](?:example|sample)(?:\.[^/]+)?$
+        excludes: A file named as an example of another (`.env.example`, `config.sample.yml`,
+          `settings-example.py`).

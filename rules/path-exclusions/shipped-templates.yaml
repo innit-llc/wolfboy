@@ -1,0 +1,29 @@
+sets:
+  starter_templates:
+    question: >
+      Is this file a template the project ships for its users to start from - one of a gallery of
+      ready-made templates, a starter, a scaffold, a cookiecutter - rather than a page the product
+      itself renders?
+    patterns:
+      - pattern: (^|/)(?:project|projects|starter|sample|example|demo|dashboard|report|task|workflow|config|issue|pull_request)[-_]templates?/(?:[^/]+/)*[^/]+\.(?:ya?ml|json|jsonc|xml|toml|ini|cfg|conf|txt|csv|j2|jinja2?|tmpl|tpl|template|mustache|liquid|njk)$
+        excludes: >
+          A template file - data or a template engine's text - in a folder of templates the project
+          ships for its users to start from, named for what it templates and then `template` or
+          `templates`: `project-templates/`, `starter_templates/`, `sample_templates/` and the like.
+          Program source and markup in such a folder are not taken by this pattern: a product's own
+          screen for managing its templates (a page under `project-templates/`) is code.
+      - pattern: (^|/)(?:cookiecutter[^/]*|\{\{[^/]*cookiecutter[^/]*\}\}|scaffolds?|boilerplates?|starters?|skeletons?)/
+        excludes: Cookiecutter, scaffold, boilerplate, starter and skeleton trees.
+      - pattern: (^|/)templates/(?:projects?|starters?|examples?|samples?)/(?:[^/]+/)*[^/]+\.(?:ya?ml|json|jsonc|xml|toml|ini|cfg|conf|txt|csv|j2|jinja2?|tmpl|tpl|template|mustache|liquid|njk)$
+        excludes: >
+          A template file - data or a template engine's text - in a starter, example or sample
+          folder inside a `templates/` folder. Not a page: `projects/templates/projects/` is where a
+          web app named `projects` keeps the pages it renders, which are code.
+      - pattern: (^|/)(?:[A-Za-z0-9]+[-_])?templates?/(?:[^/]+/){2,3}(?:config|template|meta|manifest|example|sample)\.(?:ya?ml|json|xml|toml)$
+        excludes: >
+          A gallery of ready-made templates: a `templates` folder, or one named for what it
+          templates and then `template` or `templates`, holding a folder per template (grouped one
+          or two levels deep), each with its own configuration, manifest, metadata or example file
+          (`config.yml`, `template.json`, `meta.json`, `manifest.json`, `example.json`). Markup and
+          program source in such a folder are not taken by this pattern: a page the product renders
+          is code.

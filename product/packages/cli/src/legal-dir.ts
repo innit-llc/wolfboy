@@ -3,7 +3,7 @@
  * Moved here from hook-launch.ts so that any command can write them before it writes into `.legal`, without loading
  * the hook modules; hook-launch.ts re-exports every name.
  */
-import { existsSync, lstatSync, readdirSync } from "node:fs";
+import { accessSync, constants as fsConstants, existsSync, lstatSync, readdirSync, statSync } from "node:fs";
 import { makeFolder } from "./project-write.js";
 import { basename, dirname, join, resolve } from "node:path";
 import { relativePath } from "./project-path.js";
@@ -153,6 +153,35 @@ export function nothingWrittenWords(): string {
   if (ignoreFilesWritten.size === 0) return "Nothing was written";
   const folders = [...ignoreFilesWritten].map((d) => JSON.stringify(d)).join(", ");
   return `Nothing was written but the ignore files (.gitignore and .ignore) of ${folders}, which keep the working files of a .legal folder out of git`;
+}
+
+/**
+ * THE FOLDER THAT STOPS A WRITE INTO `dir` FOR
+ * WANT OF PERMISSION, asked before a byte of the tree is read: `dir` itself where it exists, else the nearest folder above
+ * it that exists (where `dir` would be made), when this process may not write and enter it (the permission bits, an ACL,
+ * a read-only mount: `access`). Null where it can be written, and where what stands there is not a folder or cannot be
+ * looked at (not a permission matter: the write's own refusal says what it is). Nothing is written.
+ */
+export function folderNotWritable(dir: string): string | null {
+  let at = resolve(dir);
+  for (;;) {
+    let isFolder: boolean;
+    try {
+      isFolder = statSync(at).isDirectory();
+    } catch (e) {
+      const up = dirname(at);
+      if ((e as NodeJS.ErrnoException).code !== "ENOENT" || up === at) return null;
+      at = up;
+      continue;
+    }
+    if (!isFolder) return null;
+    try {
+      accessSync(at, fsConstants.W_OK | fsConstants.X_OK);
+      return null;
+    } catch {
+      return at;
+    }
+  }
 }
 
 /**

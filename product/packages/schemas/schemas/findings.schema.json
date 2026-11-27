@@ -323,6 +323,7 @@
               "read-scope-tests",
               "read-scope-vendored",
               "read-scope-build",
+              "read-scope-docs",
               "named-pipe",
               "socket",
               "device",
@@ -426,6 +427,19 @@
                 "type": "string",
                 "minLength": 1,
                 "description": "Read-scope members only: the file those sets are declared in. A class is one file of rules/path-exclusions/, because each of those files declares exactly one question in its own header."
+              },
+              "held_by_content": {
+                "type": "array",
+                "description": " read-scope:vendored only, where the class was not read and the walker held files back by their OWN CONTENT (another project's banner, a bundler's wrapper, a source-map trailer; cli vendored-content.ts) rather than by a pattern: EVERY such file, each with the sign it found, in the walk's order. Its length is counts.files_by_content. excluded_by_walker keeps three examples per directory and gives these files the same reason as a file held by its path, so this list is the one place they are all named. Absent where no file was held back by its content.",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["file", "evidence"],
+                  "properties": {
+                    "file": { "type": "string", "minLength": 1, "description": "The file, relative to the scan root." },
+                    "evidence": { "type": "string", "minLength": 1, "description": "The sign its own text showed, in words." }
+                  }
+                }
               },
               "rules": {
                 "type": "array",
@@ -820,6 +834,23 @@
                   "minimum": 1,
                   "description": "1-indexed, and never before `start_line`. Set only where the reading that produced the candidate knows it - today, only the structural one."
                 },
+                "path_class": {
+                  "enum": [
+                    "code",
+                    "config",
+                    "example-data",
+                    "template",
+                    "translation",
+                    "ci",
+                    "prose",
+                    "asset",
+                    "docs",
+                    "vendored",
+                    "test",
+                    "build"
+                  ],
+                  "description": " WHERE THE PLACE SITS, from the one classifier (cli path-class.ts) over the bundle's path classes (tools/shared-path-exclusions.mjs PATH_CLASS_SOURCES, in their test order, first match wins): `vendored` (a vendored-code path, or a file whose own text shows another project's code), `build`, `test`, `docs` (a documentation site), `ci`, `translation` (a catalogue), `prose` (a README, a changelog, a page of Markdown), `example-data`, `template` (a template shipped for users to start from, never a page the product renders), `asset` (a plain-text word list or vocabulary, an image;), `config` (with ignore lists and lock files), and `code` for a path no class names. Documentation sites and vendored code are read only under --read docs / --read vendored, so those two classes appear only in such a run. A path class is where a file sits, never what it is for: it orders and labels, and removes nothing from what the AI review reads. Present on every location a scan writes from 0.1.3; absent on a document written before it."
+                },
                 "line_key": {
                   "type": "string",
                   "pattern": "^[0-9a-f]{16}$",
@@ -981,6 +1012,10 @@
                   "type": "string",
                   "pattern": "^[a-f0-9]{16}$",
                   "description": "THE LINE ITSELF, folded outside the matched spans, as a 16-hex digest - how alike two members of one kind really are. Everything outside the match is normalised (string interiors emptied, digit runs to `0`, case and inner separators folded, whitespace collapsed) and the match is kept byte for byte, so two locations with the same digest are the same line up to that normalisation. It is NOT part of the kind key: it is the second level a seat disposes at when one kind merges constructs that must be seen separately - 3 of one large tree's 20 largest kinds do. Present exactly where `clause` is."
+                },
+                "tier": {
+                  "const": "word",
+                  "description": "THE WORD TIER: every match clause that found this place is one its rule marks as matching a word or a string rather than a construct (detector.word_clauses), and at least one clause fired. ABSENT MEANS THE CONSTRUCT TIER, which is every place of every rule that marks no clause, every place a construct clause also fired on (a place matched by both carries the construct's tier), and every place the structural reading raised. Written whether or not the kind census is on, because it is a fact about the rule's own clauses and not about the census. It removes nothing and changes no finding id: the place is a candidate like any other and layer 2 reads it; an ordering may list it after the places a construct clause found."
                 }
               }
             }

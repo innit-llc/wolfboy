@@ -69,44 +69,75 @@ export interface ReadOptions {
  * `path` read as a file the program wrote. In order: `lstat` (a missing path or a missing directory is
  * `unreadable`); anything that is not a regular file is `refused`, naming what it is; a second name (hard link)
  * is `refused` unless `opts.anyLinks`; the file is opened read-only, without blocking and without following a
- * link, and what was opened must be the regular file that was looked at (same device and inode), else
- * `refused`; it is read and closed. Where `recorded` is given, the file is read back only while its sha256 is
- * the recorded one; a record with no sha256 is `refused` before anything is opened.
+ * link, and what was opened must be the regular file that was looked at (same device and inode), else the name is
+ * looked up again (`PROGRAM_FILE_PASSES`) and, replaced at every pass, `refused`; it is read and closed. Where
+ * `recorded` is given, the file is read back only while its sha256 is the recorded one; a record with no sha256 is
+ * `refused` before anything is opened.
  */
 export function readProgramFile(what: string, path: string, recorded?: Recorded, opts: ReadOptions = {}): ReadBack<Buffer> {
   if (recorded && (typeof recorded.sha256 !== "string" || recorded.sha256 === "")) {
     return { ok: false, exit: "refused", problem: `${what} ${path}: ${recorded.where} records no sha256 for it, so it cannot be read back as the file the program wrote` };
   }
+  let once = readOnce(what, path, opts);
+  for (let pass = 1; "problem" in once && once.replaced && pass < PROGRAM_FILE_PASSES; pass++) once = readOnce(what, path, opts);
+  if ("problem" in once) return once.problem;
+  const bytes = once.bytes;
+  const sha = sha256Of(bytes);
+  if (recorded && sha !== recorded.sha256) {
+    return { ok: false, exit: "refused", problem: `${what} ${path} is not the file the program wrote: its sha256 is ${sha.slice(0, 16)}..., and ${recorded.where} records ${String(recorded.sha256).slice(0, 16)}...` };
+  }
+  return { ok: true, value: bytes, sha256: sha };
+}
+
+/**
+ * A NAME REPLACED BETWEEN THE LOOKUP AND THE OPEN IS LOOKED UP AGAIN. The
+ * program replaces every file it reads back in one rename (project-write.ts `writeFileAt`), and another of its processes
+ * (a hook, a command) can do so between this reader's lookup and its open: the open then reaches the file that replaced
+ * the one looked at. That is a write that moved on, not a file changed outside the program, so the name is looked up
+ * again and every check runs on what stands there now; a file is read only where its open reached the file its own
+ * lookup saw. Before, the first such open was refused ("was replaced while it was being read"), and a reader of the
+ * active-run marker, its copy or the launch list refused the program's own pair now and then.
+ * Nothing waits: each pass is taken only because the name was replaced, and a name replaced at every pass is refused
+ * as before. Elsewhere than Linux, the open kept inside the project folder compares the real path's file with the one
+ * opened (project-read.ts `openInside`, `ECHANGED`): the same replacement, looked up again the same way.
+ */
+const PROGRAM_FILE_PASSES = 8;
+
+/** One lookup, open and read of `path`: its bytes, or the refusal, with whether the name was replaced between the two. */
+type ReadOnce = { bytes: Buffer } | { problem: ReadBack<Buffer>; replaced: boolean };
+const refusedOnce = (problem: ReadBack<Buffer>, replaced = false): ReadOnce => ({ problem, replaced });
+
+function readOnce(what: string, path: string, opts: ReadOptions): ReadOnce {
   let st: BigIntStats;
   try {
     st = lstatSync(path, { bigint: true });
   } catch (e) {
     const code = codeOf(e);
-    if (code === "ENOENT" || code === "ENOTDIR") return { ok: false, exit: "unreadable", problem: `${what} ${path} cannot be read: it does not exist`, code };
-    return { ok: false, exit: "unreadable", problem: `${what}: ${refusalFor(e, path)}`, code };
+    if (code === "ENOENT" || code === "ENOTDIR") return refusedOnce({ ok: false, exit: "unreadable", problem: `${what} ${path} cannot be read: it does not exist`, code });
+    return refusedOnce({ ok: false, exit: "unreadable", problem: `${what}: ${refusalFor(e, path)}`, code });
   }
   if (!st.isFile()) {
-    return {
+    return refusedOnce({
       ok: false,
       exit: "refused",
       kind: kindOf(st),
       problem: `${what} ${path} is ${kindOf(st)}, not a file the program wrote (it writes each one as a new regular file), so it is not read: remove it (${removeIt(path, st)}) and run the step that writes it again`,
-    };
+    });
   }
   if (!opts.anyLinks && st.nlink !== 1n) {
-    return {
+    return refusedOnce({
       ok: false,
       exit: "refused",
       kind: `a file with ${st.nlink} names`,
       problem: `${what} ${path} has ${st.nlink} names (hard links), and the program writes each file it reads back with one, so it is not read: remove it (${toldArgs(["rm", path])}) and run the step that writes it again`,
-    };
+    });
   }
   // The identity the open below must reach, taken at this lookup (project-read.ts `lookedId`).
   let looked: FileId;
   try {
     looked = lookedId(path, st);
   } catch (e) {
-    return { ok: false, exit: "unreadable", problem: `${what}: ${refusalFor(e, path)}`, code: codeOf(e) };
+    return refusedOnce({ ok: false, exit: "unreadable", problem: `${what}: ${refusalFor(e, path)}`, code: codeOf(e) });
   }
   let fd: number;
   let now: Stats;
@@ -115,32 +146,28 @@ export function readProgramFile(what: string, path: string, recorded?: Recorded,
     // a folder on the way that is a link out of it (`.legal` itself, a repository can commit one) is not read through.
     const o = openInside(path, { noFollow: true });
     if ("outside" in o) {
-      return { ok: false, exit: "refused", kind: kindWords("outside"), problem: `${what} ${path} is ${kindWords("outside")}, not a file the program wrote, so it is not read: remove the link and run the step that writes it again` };
+      return refusedOnce({ ok: false, exit: "refused", kind: kindWords("outside"), problem: `${what} ${path} is ${kindWords("outside")}, not a file the program wrote, so it is not read: remove the link and run the step that writes it again` });
     }
     fd = o.fd;
     now = o.st;
   } catch (e) {
     const code = codeOf(e);
-    if (code === "ENOENT") return { ok: false, exit: "unreadable", problem: `${what} ${path} cannot be read: it was removed while it was being read`, code };
-    if (code === "ELOOP") return { ok: false, exit: "refused", problem: `${what} ${path} became a symbolic link while it was being read, so it is not read: remove it (${toldArgs(["rm", path])}) and run the step that writes it again`, code };
-    return { ok: false, exit: "unreadable", problem: `${what}: ${refusalFor(e, path)}`, code };
+    if (code === "ENOENT") return refusedOnce({ ok: false, exit: "unreadable", problem: `${what} ${path} cannot be read: it was removed while it was being read`, code });
+    if (code === "ELOOP") return refusedOnce({ ok: false, exit: "refused", problem: `${what} ${path} became a symbolic link while it was being read, so it is not read: remove it (${toldArgs(["rm", path])}) and run the step that writes it again`, code });
+    return refusedOnce({ ok: false, exit: "unreadable", problem: `${what}: ${refusalFor(e, path)}`, code }, code === "ECHANGED");
   }
   let bytes: Buffer;
   try {
     if (!now.isFile() || !sameFile(looked, fd)) {
-      return { ok: false, exit: "refused", problem: `${what} ${path} was replaced while it was being read, so it is not read: run this command again` };
+      return refusedOnce({ ok: false, exit: "refused", problem: `${what} ${path} was replaced while it was being read, so it is not read: run this command again` }, true);
     }
     bytes = readFileSync(fd);
   } catch (e) {
-    return { ok: false, exit: "unreadable", problem: `${what}: ${refusalFor(e, path)}`, code: codeOf(e) };
+    return refusedOnce({ ok: false, exit: "unreadable", problem: `${what}: ${refusalFor(e, path)}`, code: codeOf(e) });
   } finally {
     closeSync(fd);
   }
-  const sha = sha256Of(bytes);
-  if (recorded && sha !== recorded.sha256) {
-    return { ok: false, exit: "refused", problem: `${what} ${path} is not the file the program wrote: its sha256 is ${sha.slice(0, 16)}..., and ${recorded.where} records ${String(recorded.sha256).slice(0, 16)}...` };
-  }
-  return { ok: true, value: bytes, sha256: sha };
+  return { bytes };
 }
 
 /**

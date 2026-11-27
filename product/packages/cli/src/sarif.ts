@@ -460,8 +460,8 @@ export function toSarif(f: Findings, rules: Rule[], opts: SarifOptions = {}): ob
                       },
                       fullDescription: {
                         text:
-                          "A scan reads less than the whole tree in five ways: three classes of path it is told " +
-                          "not to read by default (test surfaces, vendored code, build output), paths it refuses " +
+                          "A scan reads less than the whole tree in five ways: four classes of path it is told " +
+                          "not to read by default (test surfaces, vendored code, build output, documentation sites), paths it refuses " +
                           "by rule, files it cannot read as code, rules the run did not include, and rules that " +
                           "ran and produced nothing. Each is stated here with its count and with the option that " +
                           "lifts it where one exists. Nothing under a coverage limit is covered by any other " +

@@ -1,0 +1,23 @@
+sets:
+  configuration_files:
+    question: >
+      Is this file the project's configuration - application settings, environment, container and
+      deployment files, a build tool's settings - rather than the code that runs?
+    patterns:
+      - pattern: (^|/)(?:config|configs|conf|configuration|settings)/
+        excludes: Any path under a folder named `config`, `configs`, `conf`, `configuration` or `settings`.
+      - pattern: (^|/)(?:settings|config|configuration|local_settings)\.(?:py|rb|js|cjs|mjs|ts|json|php|ya?ml|toml|ini)$
+        excludes: A settings or config module (`settings.py`, `config.ts`).
+      - pattern: (^|/)[^/]+\.(?:ya?ml|toml|ini|cfg|conf|properties)$
+        excludes: A file in a configuration format.
+      - pattern: (^|/)\.env(?:\.[^/]+)?$|(^|/)(?:Dockerfile|Containerfile|docker-compose|compose)[^/]*$|(^|/)Procfile$
+        excludes: Environment files and container, compose and process files.
+      - pattern: (^|/)[^/]+\.config\.(?:js|cjs|mjs|ts|json)$|(^|/)(?:tsconfig|jsconfig|appsettings)[^/]*\.json$|(^|/)(?:package|composer|app|manifest)\.json$
+        excludes: A build tool's settings file and the manifests that carry settings.
+      - pattern: (^|/)\.[^/]+rc(?:\.(?:json|js|cjs|ya?ml))?$
+        excludes: A dot-rc settings file (`.eslintrc.json`, `.babelrc`).
+      - pattern: (^|/)\.[A-Za-z0-9_-]*ignore$|(^|/)\.(?:gitattributes|gitmodules|editorconfig|mailmap|nvmrc|node-version|python-version|ruby-version|tool-versions|htaccess)$
+        excludes: An ignore list (`.gitignore`, `.dockerignore`) and a tool's dot-file of settings
+          (`.gitattributes`, `.editorconfig`, `.nvmrc`).
+      - pattern: (^|/)[^/]+\.lock$|(^|/)(?:package-lock|npm-shrinkwrap)\.json$|(^|/)bun\.lockb$
+        excludes: A lock file (`Cargo.lock`, `yarn.lock`, `Chart.lock`, `package-lock.json`).

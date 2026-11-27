@@ -490,6 +490,16 @@ export interface Detector {
    * subtracts is the one a rule has to ask for in terms.
    */
   gate_mode?: GateMode;
+  /**
+   * WHICH OF THIS RULE'S OWN `match` CLAUSES MATCH A WORD OR A STRING RATHER THAN A CONSTRUCT —
+   * `match[i]` with the index 0-based, the grammar `gate_applies_to` uses. Absent means none.
+   *
+   * A place is in the word tier (`Location.tier`) only when EVERY clause it fired is named here and
+   * at least one fired. It removes nothing: the loose clause is kept beside the construct clause
+   * added for it, and its places still reach layer 2. Out-of-range and duplicate references are
+   * hard errors in tools/build-bundle.mjs.
+   */
+  word_clauses?: string[];
   resolve_import_aliases?: boolean; // match is ALSO tested against the alias-resolved line
   /**
    * When true, `match` is ALSO tested against a copy of each line in which a name defined in the
@@ -701,6 +711,11 @@ export interface FindingLocation {
    */
   line_key?: string;
   /**
+   * Where the place sits (cli path-class.ts):
+   * the schema's enum, which a test pins to `PATH_CLASS_IDS`. Absent on a document written before 0.1.3.
+   */
+  path_class?: "code" | "config" | "example-data" | "template" | "translation" | "ci" | "prose" | "asset" | "docs" | "vendored" | "test" | "build";
+  /**
    * The span of THIS FILE the text that matched was folded from.
    *
    * Written only by the joined-construct reading (`detector.join_bracketed_constructs`), and only
@@ -786,6 +801,13 @@ export interface FindingLocation {
    * is what says so before anyone reads them.
    */
   sub_shape?: string;
+  /**
+   * THE WORD TIER: every `match` clause that found this place is one its rule marks
+   * `detector.word_clauses`, and at least one fired. Absent means the construct tier — every place
+   * of a rule that marks nothing, every place a construct clause also fired on, every place the
+   * structural reading raised. Written with the kind census on or off; it changes no finding id.
+   */
+  tier?: "word";
 }
 
 /**
@@ -1320,6 +1342,11 @@ export interface CoverageLimit {
   patterns_source?: string;
   /** `rules-not-run` only, and only under `--rules`: the rules the run was narrowed to. */
   rules?: string[];
+  /**
+   * `read-scope:vendored` only, where the
+   * class was not read and the walker held files back by their own content: every such file, with the sign it found.
+   */
+  held_by_content?: { file: string; evidence: string }[];
 }
 
 /**
@@ -2312,6 +2339,7 @@ export interface WalkerExclusion {
     | "read-scope-tests"
     | "read-scope-vendored"
     | "read-scope-build"
+    | "read-scope-docs"
     // What stood at the path was not a regular file, or could not be opened: named in full, with
     // its kind, never one of three examples (cli walk.ts `NAMED_IN_FULL`).
     | "named-pipe"

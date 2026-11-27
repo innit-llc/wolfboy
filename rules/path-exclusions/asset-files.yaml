@@ -1,0 +1,15 @@
+sets:
+  data_and_asset_files:
+    question: >
+      Is this file data or an asset the product carries - a plain-text word list or vocabulary, an
+      image or an icon - rather than program source or configuration?
+    patterns:
+      - pattern: (^|/)(?<!(?:^|/)requirements/)(?!(?:requirements|constraints)(?:[-_.][^/]*)?\.txt$|CMakeLists\.txt$|(?:robots|ads|app-ads|security|humans|llms)\.txt$)[^/]+\.(?:txt|TXT)$
+        excludes: >
+          A plain-text file: a word list, a vocabulary, a data file. Not a pip requirements or
+          constraints file (a `requirements*.txt`, `constraints*.txt` or a file in a `requirements/`
+          folder), a `CMakeLists.txt`, or a web root's `robots.txt`, `ads.txt`, `app-ads.txt`,
+          `security.txt`, `humans.txt` or `llms.txt`, which say what the product does. A README,
+          licence or notice in `.txt` is prose (prose-files.yaml), tested before this set.
+      - pattern: (^|/)[^/]+\.(?:svg|SVG|png|PNG|jpe?g|JPE?G|gif|GIF|webp|ico|bmp|avif|tiff?)$
+        excludes: An image or an icon (`.svg`, `.png`, `.jpg`, `.gif`, `.webp`, `.ico`).

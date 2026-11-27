@@ -95,7 +95,17 @@ export interface ReadScopeManifest {
    * and nothing else.
    */
   informational_classes?: Record<string, InformationalPathClassSource>;
+  /**
+   * The path classes in their test order
+   * (tools/shared-path-exclusions.mjs `PATH_CLASS_SOURCES`, the one table): a read-scope class by its id, or the patterns
+   * of the files and sets that compose it. Absent on a bundle built before 0.1.3, where every place is `code` but those a
+   * read-scope class names.
+   */
+  path_classes?: PathClassSource[];
 }
+
+/** One path class as the bundle carries it (path-class.ts reads it). */
+export type PathClassSource = { id: string; read_scope: string } | { id: string; source: string; sets: string[]; patterns: string[] };
 
 /** One informational set, compiled. */
 export interface InformationalPathClass extends InformationalPathClassSource {
@@ -154,6 +164,12 @@ const CLASS_WORDING: Record<string, { noun: string; verb: string; consequence: s
     noun: "Build output",
     verb: "was",
     consequence: "a secret baked into a built file is not visible in this scan",
+  },
+  //.
+  docs: {
+    noun: "Documentation sites",
+    verb: "were",
+    consequence: "a tracking tag or a network call in a documentation site kept in this tree is not visible in this scan",
   },
 };
 
@@ -233,6 +249,16 @@ export function readScopeFor(manifest: ReadScopeManifest | null, read: Set<strin
 export const ORIGIN_TESTED_CLASSES: ReadonlySet<string> = new Set(["vendored"]);
 
 /**
+ * THE CLASS A FOLDER NAME ONLY NOMINATES AS A
+ * DOCUMENTATION SITE: a folder the `docs` class names is held back only where it shows a site (docs-site.ts), and one
+ * that does not is read and goes into `cleared`, exactly as a vendored candidate that fails its origin test does.
+ */
+export const SITE_TESTED_CLASSES: ReadonlySet<string> = new Set(["docs"]);
+
+/** Every class whose name only nominates a folder, and whose patterns are therefore tested with the cleared folders masked. */
+export const NAME_NOMINATED_CLASSES: ReadonlySet<string> = new Set([...ORIGIN_TESTED_CLASSES, ...SITE_TESTED_CLASSES]);
+
+/**
  * THE FOLDERS A TOOL WRITES, BY NAME: the one list, the walker's GENERATED_DIRS (walk.ts, which says what it does with
  * them) and the names the `refused-by-rule` sentence lists, so the two cannot disagree.
  */
@@ -252,9 +278,21 @@ export interface ReadDespiteName {
    * and as not read elsewhere; `coverageLimits` takes off the files the engine then could not read.
    */
   files: number;
-  why: "no-third-party-origin" | "imports-project-modules";
+  /**
+   * Vendored: no third-party origin, or files that import the project's own. Documentation sites: the product's code outside it imports it, depends on it or names it as its
+   * package's entry point (docs-usage.ts), or it holds neither prose nor program source.
+   */
+  why: "no-third-party-origin" | "imports-project-modules" | "no-site-sign" | "used-by-product";
   /** How many folders inside it, named like the class on their own, its test left out (they are decided on their own). */
   nested?: number;
+}
+
+/** A folder named like a documentation site that the site test held, and why (docs-site.ts). */
+export interface HeldAsSite {
+  class: string;
+  dir: string;
+  why: "site-generator" | "unused-source" | "prose" | "unlisted";
+  evidence: string;
 }
 
 /**
@@ -341,7 +379,21 @@ export class ClearedFolders implements ClearedMask {
 
 /** The path a class is tested on: masked for a class a folder name only nominates, as it is for every other class. */
 function testedPath(c: ReadScopeClass, relPath: string, cleared?: ClearedMask): string {
-  return cleared !== undefined && cleared.size > 0 && ORIGIN_TESTED_CLASSES.has(c.id) ? cleared.mask(relPath) : relPath;
+  return cleared !== undefined && cleared.size > 0 && NAME_NOMINATED_CLASSES.has(c.id) ? cleared.mask(relPath) : relPath;
+}
+
+/**
+ * Whether a class of SITE_TESTED_CLASSES, READ IN THIS RUN OR NOT, names the
+ * folder `relDir` with the cleared folders masked: the folder is then a candidate the documentation-site test decides, in
+ * every run alike, so the class its places carry does not depend on `--read`.
+ */
+export function siteCandidateClass(scope: ReadScope, relDir: string, cleared?: ClearedMask): string | null {
+  for (const c of scope.classes) {
+    if (!SITE_TESTED_CLASSES.has(c.id)) continue;
+    const probe = `${testedPath(c, relDir, cleared)}/\u0000`;
+    for (const re of c.compiled) if (re.test(probe)) return c.id;
+  }
+  return null;
 }
 
 /**
@@ -543,6 +595,10 @@ function readDespiteNameSentence(noun: string, named: ReadDespiteName[], filesRe
           ? (shown[0] as string)
           : `${shown.slice(0, -1).join(", ")} and ${shown[shown.length - 1] as string}`;
     if (why === "imports-project-modules") return `${list}, because ${single ? "its" : "their"} files import this project's own code`;
+    // DRAFT wording. DRAFT wording.
+    if (why === "used-by-product")
+      return `${list}, because code of this project outside ${single ? "it" : "them"} imports ${single ? "it" : "them"}, depends on ${single ? "it" : "them"} or names ${single ? "it" : "them"} as its package`;
+    if (why === "no-site-sign") return `${list}, because ${single ? "it holds" : "they hold"} neither prose nor program source`;
     if (!withNested) return `${list}, because nothing in ${single ? "it" : "them"} shows that the code came from another project`;
     const k = group.reduce((sum, r) => sum + (r.nested ?? 0), 0);
     return (
@@ -554,12 +610,30 @@ function readDespiteNameSentence(noun: string, named: ReadDespiteName[], filesRe
     clause("no-third-party-origin", false),
     clause("no-third-party-origin", true),
     clause("imports-project-modules", false),
+    clause("used-by-product", false),
+    clause("no-site-sign", false),
   ].filter((c): c is string => c !== null);
   const count =
     filesRead === 0
       ? `No file in ${one ? "it" : "them"} was read.`
       : `${plural(filesRead, "file", "files")} in ${one ? "it" : "them"} ${filesRead === 1 ? "was" : "were"} read.`;
   return `${plural(named.length, "directory", "directories")} named like ${noun.toLowerCase()} ${one ? "was" : "were"} read: ${clauses.join("; ")}. ${count}`;
+}
+
+/**
+ * Why a documentation site built as an application was held: it shows no site
+ * generator, so the sentence names each folder holding program source that nothing of the product uses. DRAFT wording.
+ */
+function unusedSourceSentence(held: readonly HeldAsSite[]): string {
+  const dirs = held.filter((h) => h.why === "unused-source").map((h) => h.dir.replace(/\\/g, "/")).sort();
+  if (dirs.length === 0) return "";
+  const single = dirs.length === 1;
+  const shown = dirs.slice(0, NAMED_FOLDERS_SHOWN).map((d) => `\`${d}\``);
+  const more = dirs.length - shown.length;
+  const list =
+    more > 0 ? `${shown.join(", ")} and ${n(more)} more` : single ? (shown[0] as string) : `${shown.slice(0, -1).join(", ")} and ${shown[shown.length - 1] as string}`;
+  const them = single ? "it" : "them";
+  return ` ${list} ${single ? "holds" : "hold"} program source that no code of this project outside ${them} imports, depends on or names as its package, so ${single ? "it was" : "they were"} held as ${single ? "a documentation site" : "documentation sites"}.`;
 }
 
 /** The files read under the folders read despite their name: the walker's count, less those the engine could not read. */
@@ -614,6 +688,8 @@ export function coverageLimits(input: {
    * them to be another project's (`WalkResult.readDespiteName`). Absent or empty, every member is what it was.
    */
   readDespiteName?: ReadDespiteName[];
+  /** The folders the documentation-site test held, and why (`WalkResult.heldAsSite`). */
+  heldAsSite?: HeldAsSite[];
   /**
    * The classes whose `--read` would read at least one file more (`WalkResult.reScanReads`, decided by the walker's own
    * code in the re-scan's setting), and those its probes could not decide within their limit (walk.ts, THE OFFER PROBES'
@@ -621,6 +697,11 @@ export function coverageLimits(input: {
    * back offers its `--read`.
    */
   reScanReads?: readonly string[];
+  /**
+   * The files the walker held back as vendored
+   * code by their content (`WalkResult.heldByContent`). Absent or empty, every member is what it was.
+   */
+  heldByContent?: readonly { file: string; evidence: string }[];
 }): CoverageLimits {
   const limits: CoverageLimit[] = [];
 
@@ -647,8 +728,22 @@ export function coverageLimits(input: {
     // H6, whether or not the offer stands.
     const offered = !cls.read && counted.files > 0 && (input.reScanReads === undefined || input.reScanReads.includes(cls.id));
     const namedFiles = filesReadDespiteName(named, input.filesNotRead ?? []);
+    // Of the files held back, those the walker recognised by their own content and
+    // not by any pattern: the sentence names them apart, so "matching the pattern sets" stays true of the rest.
+    const byContent = cls.read || cls.id !== "vendored" ? 0 : (input.heldByContent ?? []).length;
+    const byName = counted.files - byContent;
+    const matchedWords =
+      byContent === 0
+        ? `matching the ${cls.sets.length} pattern set(s) of rules/path-exclusions/${cls.source}`
+        : `${byName > 0 ? `${plural(byName, "file", "files")} matching the ${cls.sets.length} pattern set(s) of rules/path-exclusions/${cls.source} and ` : ""}` +
+          // Every one of them is named, with its
+          // sign, in this member's `held_by_content`; `excluded_by_walker` keeps three examples per directory.
+          `${plural(byContent, "file", "files")} whose own text shows another project's code (its banner, a bundler's wrapper or a source-map trailer; each named with its sign in held_by_content)`;
+    // A run that read every class (`--read all`,
+    // or each class named) is not told that one class's own flag was given: it may not have been.
+    const everyClassRead = input.scope.classes.length > 1 && input.scope.classes.every((c) => c.read);
     const sentence = cls.read
-      ? `${noun} ${verb} read: ${flag} was given, so the ${cls.sets.length} pattern set(s) of ` +
+      ? `${noun} ${verb} read: ${everyClassRead ? "every class was read in this scan (--read all, or each class named)" : `${flag} was given`}, so the ${cls.sets.length} pattern set(s) of ` +
         `rules/path-exclusions/${cls.source} held nothing back in this scan.`
       : counted.files === 0 && counted.directories === 0
         ? named.length === 0
@@ -658,12 +753,12 @@ export function coverageLimits(input: {
             `rules/path-exclusions/${cls.source} was held back as ${noun.toLowerCase()}. ` +
             readDespiteNameSentence(noun, named, namedFiles)
         : `${noun} ${verb} not read: ${plural(counted.files, "file", "files")} in ` +
-          `${plural(counted.directories, "directory", "directories")}, matching the ${cls.sets.length} ` +
-          `pattern set(s) of rules/path-exclusions/${cls.source}` +
+          `${plural(counted.directories, "directory", "directories")}, ${matchedWords}` +
           (wording ? ` — ${wording.consequence}` : "") +
           // [standing product decision, 2026-10-30] No instruction to read what was not held back: a directory that
           // matched with no file in it (an uninitialised submodule), or whose files no re-scan would read, carries none.
           (offered ? `. Add ${flag} to read them.` : ".") +
+          (cls.id === "docs" ? unusedSourceSentence(input.heldAsSite ?? []) : "") +
           (named.length === 0 ? "" : ` ${readDespiteNameSentence(noun, named, namedFiles)}`);
     limits.push({
       id: `read-scope:${cls.id}`,
@@ -671,10 +766,12 @@ export function coverageLimits(input: {
       counts: {
         directories: counted.directories,
         files: counted.files,
+        ...(byContent === 0 ? {} : { files_by_content: byContent }),
         ...(named.length === 0 ? {} : { directories_read_despite_name: named.length, files_in_directories_read_despite_name: namedFiles }),
       },
       patterns_set: cls.sets,
       patterns_source: `rules/path-exclusions/${cls.source}`,
+      ...(byContent === 0 ? {} : { held_by_content: (input.heldByContent ?? []).map((h) => ({ file: h.file.replace(/\\/g, "/"), evidence: h.evidence })) }),
       // [standing product decision, 2026-10-30] Where no re-scan with `--read` would read anything more (the class was
       // read, nothing matched it, what matched holds no file, or no file a re-scan would read), no renderer may offer
       // one: `lift` is null, as the sentence carries no instruction (`offered` above).

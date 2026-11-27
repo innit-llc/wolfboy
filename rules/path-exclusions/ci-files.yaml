@@ -1,0 +1,15 @@
+sets:
+  ci_configuration:
+    question: >
+      Is this file the project's continuous-integration configuration, or a script, action or
+      template that only its repository host or CI runs?
+    patterns:
+      - pattern: (^|/)\.github/
+        excludes: "Everything under `.github/`: workflows, actions, helper scripts, issue and pull-request
+          templates."
+      - pattern: (^|/)(?:\.gitlab|\.circleci|\.buildkite|\.woodpecker|\.azure-pipelines)/
+        excludes: The CI folders of GitLab, CircleCI, Buildkite, Woodpecker and Azure Pipelines.
+      - pattern: (^|/)(?:\.gitlab-ci|\.travis|\.drone|\.woodpecker|bitbucket-pipelines|appveyor|\.appveyor|azure-pipelines[^/]*|codecov|\.codecov|cloudbuild)\.ya?ml$
+        excludes: The single-file CI configurations of those hosts, and the coverage service a CI uploads to.
+      - pattern: (^|/)Jenkinsfile[^/]*$
+        excludes: A Jenkins pipeline.

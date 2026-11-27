@@ -1809,6 +1809,11 @@ export const CASE_PREFIX = "(?i)";
  *                     rule.schema.json and by four hard errors in tools/build-bundle.mjs, which
  *                     refuse a reference the grammar does not admit and an index past this rule's
  *                     own `match` list.
+ *   word_clauses      CLAUSE REFERENCES, not patterns, in the same `match[i]` grammar: which of this
+ *                     rule's own `match` clauses match a word rather than a construct, so that their
+ *                     places alone carry `tier: "word"` (0.1.3). Parsed at compile time
+ *                     (engine.ts `wordClauses`), never handed to `new RegExp`, and guarded by a
+ *                     `pattern` in rule.schema.json and by hard errors in tools/build-bundle.mjs.
  */
 export const NON_PATTERN_DETECTOR_LIST_FIELDS = [
   "file_globs",
@@ -1816,6 +1821,7 @@ export const NON_PATTERN_DETECTOR_LIST_FIELDS = [
   "gate_view",
   "shared_vocabulary",
   "gate_applies_to",
+  "word_clauses",
 ];
 
 /**

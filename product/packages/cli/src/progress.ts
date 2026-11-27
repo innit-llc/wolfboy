@@ -51,11 +51,13 @@
 import { basename } from "node:path";
 import { checksFoundNothing, group, plural } from "./count-words.js";
 import { placeCountOf } from "./launch-plan.js";
+import { EVIDENCE_RANKS, emptyTally, evidenceNote, evidenceNoteLines, rankedPlacesOf, tallyInto, type EvidenceTally } from "./evidence-rank.js";
 import { OWN_ERASE, writeOwnErase } from "./printed-output.js";
 import { CANDIDATE_LINE_TEXT_CHARS, confirmedInRecord, productPrintedRedaction, streamableRuleIds, type FileRecord } from "./engine.js";
 import { redactCutText, type PrintedRedaction } from "./credential-redaction.js";
 import type { Findings, Rule } from "wolfboy-schemas";
 import { OWN_WORKING_FOLDER, refusedByRuleOf } from "./read-scope.js";
+import { toldArgs } from "./scanner-command.js";
 
 /**
  * THE THREE FORMATTERS THE CONSOLE REPORT SHARES WITH THIS DISPLAY, exported for that reason alone (`group` and `plural` from count-words.ts).
@@ -231,11 +233,16 @@ export function topicTableLines(rows: readonly TopicRow[]): string[] {
  *
  * NO ROW OF THE HIGHEST CLASSES IS EVER FOLDED (the parent's ruling of 2026-10-13, reconciling two rulings: the owner's
  * of 2026-09-16, no cap on the topic table, because a cap hid a topic's row on a large tree; and the owner-approved
- * mock-up of 2026-10-12, five rows and "N more areas"). The rows are in order of severity; a row holding a high place
- * or a place of the prohibited-practice area is always shown, however many such rows there are; only rows below them
- * are folded, into one line that names how many and points at the report, where every row is. The report keeps the
- * full table, uncapped. The third class of the ruling, a not-checked item, has no instance here: this table is drawn
- * before step 2, when nothing has been checked by Claude yet, and no terminal screen after step 2 draws an area table.
+ * mock-up of 2026-10-12, five rows and "N more areas"). A row holding a high place or a place of the prohibited-practice
+ * area is always shown, however many such rows there are; the first five rows are shown too; only the other rows are
+ * folded, into one line that names how many and points at the report, where every row is. The report keeps the full
+ * table, uncapped. The third class of the ruling, a not-checked item, has no instance here: this table is drawn before
+ * step 2, when nothing has been checked by Claude yet, and no terminal screen after step 2 draws an area table.
+ * THE ROWS ARE IN ORDER OF WHAT THEIR
+ * BEST PLACES SHOW, THEN OF SEVERITY (evidence-rank.ts, the one rank every listing takes), and a row with no construct in
+ * code says on the line under it where its places are; a row holding one has no line under it (where its other places
+ * are is under each record of the full list). The prohibited-practice area is ordered like any
+ * other row (it was pinned first until 0.1.3), and is still never folded.
  */
 export interface AreaRow {
   pack: string;
@@ -244,6 +251,10 @@ export interface AreaRow {
   medium: number;
   low: number;
   places: number;
+  /** Places by evidence rank (evidence-rank.ts), what the line under the row says. */
+  evidence: EvidenceTally;
+  /** Places by evidence rank and severity: `bySeverity[rank]` is [high, medium, low]. */
+  bySeverity: number[][];
 }
 
 /** The area whose places are prohibited practices: its row is never folded. */
@@ -262,8 +273,11 @@ export function areaAlwaysShown(r: AreaRow): boolean {
 }
 
 /**
- * The document's areas, in the one order the table prints them: the rows never folded first, the prohibited-practice
- * area first among them, then by high places, medium places, low places, all places, and the label.
+ * The document's areas, in the one order the table prints them and the candidate list follows (report.ts
+ * `candidateTopics`): by the best evidence rank any of the row's places holds; among rows of one best rank, by their high,
+ * medium and low places OF THAT RANK; then by all their high, medium, low places, all places, and the label. So a row
+ * whose places are all example data or words never sits above a row holding a construct in code, whatever their
+ * severities, and two rows with code are told apart by the severity of what is in code.
  */
 export function areaRowsOf(
   findings: Findings,
@@ -275,7 +289,16 @@ export function areaRowsOf(
     if (pack === undefined) continue;
     let row = byPack.get(pack);
     if (row === undefined) {
-      row = { pack, label: topicLabel(pack), high: 0, medium: 0, low: 0, places: 0 };
+      row = {
+        pack,
+        label: topicLabel(pack),
+        high: 0,
+        medium: 0,
+        low: 0,
+        places: 0,
+        evidence: emptyTally(),
+        bySeverity: Array.from({ length: EVIDENCE_RANKS }, () => [0, 0, 0]),
+      };
       byPack.set(pack, row);
     }
     /* A place is one location (a file and a line), counted as
@@ -287,15 +310,17 @@ export function areaRowsOf(
     if (sev === "high") row.high += n;
     else if (sev === "medium") row.medium += n;
     else row.low += n;
+    tallyInto(row.evidence, c);
+    const s = sev === "high" ? 0 : sev === "medium" ? 1 : 2;
+    const ranked = rankedPlacesOf(c);
+    if (ranked.length === 0) (row.bySeverity[0] as number[])[s] = ((row.bySeverity[0] as number[])[s] as number) + 1;
+    for (const p of ranked) (row.bySeverity[p.rank] as number[])[s] = ((row.bySeverity[p.rank] as number[])[s] as number) + 1;
   }
-  const rank = (r: AreaRow): number[] => [
-    areaAlwaysShown(r) ? 0 : 1,
-    r.pack === PROHIBITED_PRACTICE_PACK ? 0 : 1,
-    -r.high,
-    -r.medium,
-    -r.low,
-    -r.places,
-  ];
+  const rank = (r: AreaRow): number[] => {
+    const best = r.evidence.places.findIndex((n) => n > 0);
+    const at = (r.bySeverity[best < 0 ? 0 : best] ?? [0, 0, 0]) as number[];
+    return [best < 0 ? 0 : best, -(at[0] as number), -(at[1] as number), -(at[2] as number), -r.high, -r.medium, -r.low, -r.places];
+  };
   return [...byPack.values()].sort((a, b) => {
     const ra = rank(a);
     const rb = rank(b);
@@ -321,12 +346,29 @@ export function areaBarOf(r: AreaRow, largest: number): string {
   return BAR_CELL.high.repeat(cells[0] as number) + BAR_CELL.medium.repeat(cells[1] as number) + BAR_CELL.low.repeat(cells[2] as number);
 }
 
-/** The rows shown, and the rows folded: at least five shown, and every row that is never folded. */
+/**
+ * The rows shown, and the rows folded: every row that is never folded, and the first other rows in the order until five
+ * are shown; the shown rows keep the order. Since 0.1.3 the order is by
+ * evidence first, so a row never folded can sit below one that may be: it is shown in its place, and the table still
+ * shows five rows, or every row never folded where there are more, as before.
+ */
 export function areaRowsShown(rows: readonly AreaRow[]): { shown: AreaRow[]; folded: AreaRow[] } {
   const always = rows.filter(areaAlwaysShown).length;
-  const n = Math.max(AREA_ROWS_SHOWN, always);
-  return { shown: rows.slice(0, n), folded: rows.slice(n) };
+  let room = Math.max(AREA_ROWS_SHOWN, always) - always;
+  const shown: AreaRow[] = [];
+  const folded: AreaRow[] = [];
+  for (const r of rows) {
+    if (areaAlwaysShown(r)) shown.push(r);
+    else if (room > 0) {
+      shown.push(r);
+      room--;
+    } else folded.push(r);
+  }
+  return { shown, folded };
 }
+
+/** The indent of the line under a row that says where its places are: under the row's label, two columns in. */
+export const AREA_NOTE_INDENT = "    ";
 
 /** The table as lines: the shown rows with their bars, then one line for the folded rows, if any. */
 export function areaTableLines(rows: readonly AreaRow[]): string[] {
@@ -335,7 +377,12 @@ export function areaTableLines(rows: readonly AreaRow[]): string[] {
   const foldedPlaces = folded.reduce((n, r) => n + r.places, 0);
   const widest = shown.reduce((w, r) => Math.max(w, r.label.length), 0);
   const countWidth = [...shown.map((r) => r.places), foldedPlaces].reduce((w, n) => Math.max(w, group(n).length), 0);
-  const out = shown.map((r) => `  ${r.label.padEnd(widest)}  ${areaBarOf(r, largest).padEnd(AREA_BAR_WIDTH)}  ${group(r.places).padStart(countWidth)}`);
+  // Each row, then, for a row with no construct in code, where its
+  // places are, wrapped to the screen's 80 columns.
+  const out = shown.flatMap((r) => [
+    `  ${r.label.padEnd(widest)}  ${areaBarOf(r, largest).padEnd(AREA_BAR_WIDTH)}  ${group(r.places).padStart(countWidth)}`,
+    ...evidenceNoteLines(evidenceNote(r.evidence), AREA_NOTE_INDENT),
+  ]);
   if (folded.length > 0) {
     const text = `  ${group(folded.length)} more ${plural(folded.length, "area", "areas")}, all in the full list`;
     out.push(`${text.padEnd(2 + widest + 2 + AREA_BAR_WIDTH + 2)}${group(foldedPlaces).padStart(countWidth)}`);
@@ -344,7 +391,7 @@ export function areaTableLines(rows: readonly AreaRow[]): string[] {
 }
 
 /** What a `read-scope:<class>` member holds back, as the noun the sentence wants. */
-const READ_SCOPE_NOUN: Readonly<Record<string, string>> = { tests: "test", vendored: "vendored", build: "built" };
+const READ_SCOPE_NOUN: Readonly<Record<string, string>> = { tests: "test", vendored: "vendored", build: "built", docs: "documentation-site" };
 
 /**
  * THE FOLDERS NO RULE READS, ONE
@@ -531,14 +578,38 @@ export function quickScanDoneLines(findings: Findings, rules: readonly Rule[]): 
   ];
   const head = `  ${group(places)} ${plural(places, "place", "places")} worth a look` + (rows.length === 0 ? "" : `, in ${group(rows.length)} ${plural(rows.length, "area", "areas")}`);
   lines.push(rows.length === 0 ? head : `${head}${" ".repeat(Math.max(2, 69 - head.length - AREA_LEGEND.length))}${AREA_LEGEND}`);
+  // A folder with no file to read says so in
+  // plain words, so that a wrong folder is not read as a clean project ("0 places worth a look" over an empty folder).
+  if (scanned === 0) lines.push(`  No file to read was found in ${findings.target}.`, "  If that is not your project's folder, run the scan in your project's folder.");
   if (rows.length > 0) {
     lines.push("");
     lines.push(...areaTableLines(rows));
   }
   lines.push("");
   if (places > 0) lines.push("  A place worth a look is not a problem yet. Step 2 reads each one.");
-  lines.push(notReadLine(findings), `  ${checksFoundNothing(notReadParts(findings).silent)}`);
+  lines.push(notReadLine(findings));
+  const toRead = readThemLine(findings);
+  if (toRead !== null) lines.push(toRead);
+  lines.push(`  ${checksFoundNothing(notReadParts(findings).silent)}`);
   return lines;
+}
+
+/**
+ * HOW TO READ WHAT WAS HELD BACK, under the
+ * "Not read" line: the classes whose `lift` stands (read-scope.ts, which offers a `--read` only where a re-scan would
+ * read a file more), as one option. Null where none stands. The screen says how many
+ * files were not read and how to read them.
+ */
+export function readThemLine(findings: Findings): string | null {
+  const ids = (findings.coverage_limits?.limits ?? [])
+    .filter((l) => l.id.startsWith("read-scope:") && l.read !== true && typeof l.lift === "string")
+    .map((l) => l.id.slice("read-scope:".length));
+  if (ids.length === 0) return null;
+  // A told option, so the one module that
+  // writes told words writes it (`toldArgs`): one class bare (`--read tests`), several as one quoted word
+  // (`--read 'tests,docs'`), which bash, dash and PowerShell each pass as one argument.
+  const flag = toldArgs(["--read", ids.join(",")]);
+  return `  To read ${ids.length === 1 ? "them" : "those"} too, scan again with ${flag}`;
 }
 
 /**

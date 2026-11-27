@@ -1,6 +1,6 @@
 # Known issues
 
-Known problems in WolfBoy 0.1.1.
+Known problems in WolfBoy 0.1.3.
 When one is fixed, it moves to the changelog.
 
 ## Whether a law applies
@@ -134,7 +134,7 @@ you answered it with 0.1.0, the scan uses none of your saved
 answers, so every region's rules run (more findings and more
 review cost, nothing hidden), until you answer that question
 again: say "review my answers" in Claude Code, or run
-`npx wolfboy@0.1.1 scan --review-declaration` in your
+`npx wolfboy@0.1.3 scan --review-declaration` in your
 project's folder.
 
 ## Running it in Claude Code
@@ -154,7 +154,7 @@ show you the refusal. Ask it to read you
 `.legal/scan-output.txt` or `.legal/prelaunch-output.txt`.
 
 **21. `.legal/quick-scan.txt` is not protected.** Unlike the
-AI review's files, the free scan's full list can be changed
+AI review's files, the free scan's summary can be changed
 by Claude's file tools. No later step reads it; if in doubt,
 run the free scan again.
 

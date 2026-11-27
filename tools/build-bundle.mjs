@@ -48,6 +48,7 @@ import {
 import {
   PATH_EXCLUSIONS_DIR,
   READ_SCOPE_CLASSES,
+  PATH_CLASS_SOURCES,
   INFORMATIONAL_PATH_CLASS_FILE,
   loadSharedPathExclusions,
   effectivePathExclusions,
@@ -765,6 +766,46 @@ for (const pack of readdirSync(RULES_DIR)) {
           `computed for the SUBJECT clauses, and no subject was declared, so the value would be read ` +
           `by nothing: either declare the clauses the mode is for, or remove gate_mode`,
       );
+    }
+    // `detector.word_clauses` — THE CLAUSES THAT MATCH A WORD, NOT A CONSTRUCT (0.1.3). Same grammar as
+    // `gate_applies_to` and refused on the same grounds, because a reference the engine cannot carry out is
+    // invisible: (1) not `match[i]`; (2) named twice; (3) past this rule's own `match` list, which would mark
+    // no clause and leave every place where it was; (4) EVERY clause named, which would leave the rule with
+    // no construct clause beside its loose ones - the repair this field exists for is a construct clause
+    // ADDED beside the loose one, never the loose one relabelled alone.
+    if (rule.detector?.word_clauses !== undefined) {
+      const named = Array.isArray(rule.detector.word_clauses) ? rule.detector.word_clauses : [];
+      const matchCount = Array.isArray(rule.detector.match) ? rule.detector.match.length : 0;
+      const seen = new Set();
+      for (const ref of named) {
+        const m = /^match\[([0-9]+)\]$/.exec(String(ref));
+        if (m === null) {
+          errors.push(
+            `${pack}/${ruleId}: detector.word_clauses entry ${JSON.stringify(ref)} is not a clause reference ` +
+              `this field admits. Write match[i] with the index 0-based`,
+          );
+          continue;
+        }
+        if (seen.has(String(ref))) {
+          errors.push(`${pack}/${ruleId}: detector.word_clauses names ${JSON.stringify(ref)} twice`);
+          continue;
+        }
+        seen.add(String(ref));
+        if (Number(m[1]) >= matchCount) {
+          errors.push(
+            `${pack}/${ruleId}: detector.word_clauses names ${JSON.stringify(ref)}, outside this rule's ` +
+              `0..${Math.max(0, matchCount - 1)} match clauses. The index is 0-based, as it is in ` +
+              `detector.gate_applies_to, so this reference names no clause of this rule`,
+          );
+        }
+      }
+      if (matchCount > 0 && seen.size >= matchCount) {
+        errors.push(
+          `${pack}/${ruleId}: detector.word_clauses names every one of this rule's ${matchCount} match ` +
+            `clauses. The word tier is for a loose clause kept BESIDE a construct clause that recognises ` +
+            `the thing in code; add that clause, or remove word_clauses`,
+        );
+      }
     }
 
     if (rule.detector?.gate_scope !== undefined && rule.detector.gate_scope !== "file") {
@@ -1916,8 +1957,32 @@ if (pathExclusionClauses !== null && sharedPathExclusionFiles.length > 0) {
       patterns,
     };
   }
+  // THE PATH CLASSES, in their test order:
+  // a read-scope class by its id, the others resolved through the same `pathExclusionClauses` from the files or sets
+  // `PATH_CLASS_SOURCES` names. Nothing here is a pattern of its own.
+  const pathClasses = [];
+  for (const pc of PATH_CLASS_SOURCES) {
+    if (pc.read_scope !== undefined) {
+      if (classes[pc.read_scope] === undefined) errors.push(`path class "${pc.id}" names read-scope class "${pc.read_scope}", which the build did not make`);
+      pathClasses.push({ id: pc.id, read_scope: pc.read_scope });
+      continue;
+    }
+    const setNames = (pc.sets ?? Object.keys(sharedPathExclusions).filter((name) => sharedPathExclusionSetFiles[name] === pc.file).sort());
+    const patterns = [];
+    for (const name of setNames) {
+      if (sharedPathExclusionSetFiles[name] !== pc.file) {
+        errors.push(`path class "${pc.id}" names the set "${name}" of rules/path-exclusions/${pc.file}, and no such set was loaded from that file`);
+        continue;
+      }
+      for (const clause of pathExclusionClauses(name, sharedPathExclusions, `path class ${pc.id}`)) {
+        if (!patterns.includes(clause)) patterns.push(clause);
+      }
+    }
+    if (patterns.length === 0) errors.push(`path class "${pc.id}" has no pattern: rules/path-exclusions/${pc.file} declared none of its sets`);
+    pathClasses.push({ id: pc.id, source: pc.file, sets: setNames, patterns });
+  }
   const readScopeJson = JSON.stringify(
-    { version: 1, classes, informational_classes: informationalClasses },
+    { version: 1, classes, informational_classes: informationalClasses, path_classes: pathClasses },
     null,
     2,
   );

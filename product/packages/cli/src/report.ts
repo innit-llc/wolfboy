@@ -33,9 +33,10 @@
  * Every number on the first screen is read from the written document or from the values the run had
  * already resolved. The file count, the topic table and the candidate count are each stated twice on
  * one screen — once here and once in the stderr closing block — and the rule that keeps the two
- * honest is that both read the same function: `topicsOfDocument`, `topicRowsOf` and
- * `topicTableLines` are exported from `progress.ts` and imported here, and `duration`, `group` and
- * `plural` with them. There is no second copy of any of them.
+ * honest is that both read the same function: `quickScanDoneLines` and the area table it prints
+ * (`areaRowsOf`, whose order the candidate list below the divider follows too) are exported from
+ * `progress.ts` and imported here, and `duration`, `group` and `plural` with them; the evidence
+ * rank both order by is `evidence-rank.ts`'s. There is no second copy of any of them.
  *
  * That rule is why the ONE number that disagreed with itself now cannot. The console said
  * `files 5720 scanned` while the closing block said `scanned app: 5,721 files`; the difference is
@@ -53,15 +54,15 @@
 import { basename } from "node:path";
 import type { Candidate, Findings, Rule, ScopeAssessmentRecord } from "wolfboy-schemas";
 import {
+  areaRowsOf,
   duration,
   elapsedMsOf,
   group,
   plural,
   quickScanDoneLines,
   topicLabel,
-  topicRowsOf,
-  topicsOfDocument,
 } from "./progress.js";
+import { bestRankOf, evidenceNote, evidencePartWords, evidencePartsOf, faceOf, tallyOf } from "./evidence-rank.js";
 
 /** `--report-detail` as typed. `full` is the default. */
 export type ReportDetail = "full" | "first-screen";
@@ -280,7 +281,13 @@ export const QUICK_SCAN_DETAIL_FILE = "quick-scan.txt";
  * the command in, where it lies inside it).
  */
 export const NEXT_STEP_WORDS = {
-  detailFile: (detail: string) => `  Every place and everything checked: ${detail}`,
+  // The detail file holds the list cut at
+  // CANDIDATES_PER_TOPIC records an area (the owner's display decision of 2026-09-16), so it is named as what it holds,
+  // and the findings document, which holds every record, is named on the line before it. Until 0.1.2 the line read
+  // "Every place and everything checked: <file>" over a list that stopped at ten an area. This
+  // line stays the last of the first screen: the skill shows the person the output up to it (SKILL.md step 2).
+  everyPlace: (document: string) => `  Every place worth a look: ${document}`,
+  detailFile: (detail: string) => `  What was checked, and the first ${CANDIDATES_PER_TOPIC} records of each area: ${detail}`,
   next: [
     `  Step 2, the AI review: open Claude Code in this project's folder and say`,
     `  "Scan this repository." A sample report:`,
@@ -288,9 +295,14 @@ export const NEXT_STEP_WORDS = {
   ],
 } as const;
 
-/** The lines after the first screen: the detail file's line where one was written, a blank, the next step. */
-export function nextStepLines(detail: string | null): string[] {
-  return [...(detail === null ? [] : [NEXT_STEP_WORDS.detailFile(detail)]), "", ...NEXT_STEP_WORDS.next];
+/** The two lines naming the files, where the detail file was written: the document with every record, then the detail file. */
+export function filesLines(detail: string | null, document: string): string[] {
+  return detail === null ? [] : [NEXT_STEP_WORDS.everyPlace(document), NEXT_STEP_WORDS.detailFile(detail)];
+}
+
+/** The lines after the first screen: the files' lines where the detail file was written, a blank, the next step. */
+export function nextStepLines(detail: string | null, document: string): string[] {
+  return [...filesLines(detail, document), "", ...NEXT_STEP_WORDS.next];
 }
 
 /**
@@ -412,17 +424,21 @@ export interface CandidateTopic {
 const SEVERITY_ORDER: Readonly<Record<string, number>> = { high: 0, medium: 1, low: 2 };
 
 /**
- * The candidate list, grouped by topic and capped, in the order the topic table prints.
+ * The candidate list, grouped by topic and capped, in the order the first screen's area table prints.
  *
  * NOTHING IS DROPPED FROM THE DOCUMENT and nothing is dropped from this list either — a record over
  * the cap is counted on the topic's own overflow line and is in `candidates`, uncapped. A candidate
  * whose rule this caller was not given keeps its own rule id as its topic rather than vanishing:
  * subtraction is the only operation that can create a miss, and a list that silently skipped a row
  * would be one.
+ * The topics follow the area table's
+ * order (progress.ts `areaRowsOf`), and inside a topic the records are ordered by the best evidence rank of their places
+ * (evidence-rank.ts), then by severity, then by the document's own order. Until 0.1.3 the topics followed a count of
+ * files and the records severity alone, so a topic's first ten could all be documentation-site and CI rows.
  */
 export function candidateTopics(f: Findings, rules: Rule[]): CandidateTopic[] {
   const packOf = new Map(rules.map((r) => [r.id, r.pack]));
-  const order = new Map(topicRowsOf(topicsOfDocument(f, packOf)).map((r, i) => [r.label, i]));
+  const order = new Map(areaRowsOf(f, packOf).map((r, i) => [r.label, i]));
   const byLabel = new Map<string, Candidate[]>();
   for (const c of f.candidates ?? []) {
     const pack = packOf.get(c.rule_id);
@@ -440,10 +456,12 @@ export function candidateTopics(f: Findings, rules: Rule[]): CandidateTopic[] {
       return ia - ib || (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0);
     })
     .map(([label, rows]) => {
-      // Ordered by severity inside a topic, and by the document's own order
-      // within one severity — `sort` is stable, so two runs of one tree print one order.
+      // Ordered by the best evidence rank of a record's places, then by
+      // severity inside a topic, and by the document's own order within both — `sort` is
+      // stable, so two runs of one tree print one order.
+      const best = new Map(rows.map((c) => [c, bestRankOf(c)]));
       const ordered = [...rows].sort(
-        (a, b) => (SEVERITY_ORDER[a.severity] ?? 3) - (SEVERITY_ORDER[b.severity] ?? 3),
+        (a, b) => (best.get(a) ?? 0) - (best.get(b) ?? 0) || (SEVERITY_ORDER[a.severity] ?? 3) - (SEVERITY_ORDER[b.severity] ?? 3),
       );
       return {
         label,
@@ -467,23 +485,92 @@ export function candidateLineCount(topics: readonly CandidateTopic[]): number {
  * stay unique to stderr — so indenting these rows under their topic heading by two spaces would put
  * that gate one byte from a false green. The heading carries the grouping instead.
  */
-export function candidateListLines(topics: readonly CandidateTopic[], titleOf: (ruleId: string) => string): string[] {
+/**
+ * `listedIn` is the file that holds every
+ * record (the findings document, as the person can open it), named on every line where a topic's list stops; null where
+ * this run wrote no document, which the line says. Until 0.1.2 the line said "+ N more in the document" and named none.
+ */
+export function candidateListLines(topics: readonly CandidateTopic[], titleOf: (ruleId: string) => string, listedIn: string | null): string[] {
+  // EVERY RECORD WITH A PLACE IN CODE, OF
+  // EVERY AREA, BEFORE ANY RECORD WITHOUT ONE. Each area's shown records are the ones `candidateTopics` chose (its first
+  // CANDIDATES_PER_TOPIC, code first), unchanged; they are printed in two passes, the areas in the table's order in
+  // each: first every area's records holding a construct in code, then every area's records holding none, under a line
+  // that says so. An area with both is headed in each pass. Until this unit the areas were printed one after another,
+  // so an area's example-data rows sat above a later area's rows in code, whatever their severity.
   const lines: string[] = [];
-  for (const t of topics) {
+  const more = (t: CandidateTopic): string =>
+    listedIn === null ? `+ ${group(t.hidden)} more, written nowhere: a scan with --out <file> writes every one` : `+ ${group(t.hidden)} more in ${listedIn}`;
+  const parts = topics.map((t) => ({ t, inCode: t.shown.filter(hasPlaceInCode), notInCode: t.shown.filter((c) => !hasPlaceInCode(c)) }));
+  for (const { t, inCode, notInCode } of parts) {
+    if (inCode.length === 0) continue;
     const total = t.shown.length + t.hidden;
     lines.push(
       `${t.label} — ${group(total)} ${plural(total, "record", "records")}` +
-        (t.hidden === 0 ? `:` : `, the first ${group(t.shown.length)} by severity:`),
+        (notInCode.length > 0
+          ? `, ${group(inCode.length)} with a place in code here, ${SPLIT_AREA_WORDS}:`
+          : t.hidden === 0
+            ? `:`
+            : `, the first ${group(t.shown.length)}, ${CODE_FIRST_WORDS}:`),
     );
-    for (const c of t.shown) lines.push(candidateRow(c, titleOf(c.rule_id)));
-    if (t.hidden > 0) lines.push(`+ ${group(t.hidden)} more in the document`);
+    for (const c of inCode) lines.push(candidateRow(c, titleOf(c.rule_id)), ...whereLines(c));
+    if (notInCode.length === 0 && t.hidden > 0) lines.push(more(t));
+  }
+  const rest = parts.filter((p) => p.notInCode.length > 0);
+  if (rest.length > 0 && lines.length > 0) lines.push(NO_CODE_PASS_WORDS);
+  for (const { t, inCode, notInCode } of rest) {
+    const total = t.shown.length + t.hidden;
+    lines.push(
+      inCode.length > 0
+        ? `${t.label}, continued — ${group(notInCode.length)} with no place in code` + (t.hidden === 0 ? `:` : `, of the first ${group(t.shown.length)}:`)
+        : `${t.label} — ${group(total)} ${plural(total, "record", "records")}` + (t.hidden === 0 ? `:` : `, the first ${group(t.shown.length)}, ${CODE_FIRST_WORDS}:`),
+    );
+    for (const c of notInCode) lines.push(candidateRow(c, titleOf(c.rule_id)), ...whereLines(c));
+    if (t.hidden > 0) lines.push(more(t));
   }
   return lines;
 }
 
-/** One candidate row, exactly as this command has printed it since before the first screen existed. */
+/** Whether a record holds a construct in code: its best place is of evidence rank 0 (evidence-rank.ts). */
+function hasPlaceInCode(c: Candidate): boolean {
+  return bestRankOf(c) === 0;
+}
+
+/** How an area with records in both passes says where the rest are (DRAFT). */
+export const SPLIT_AREA_WORDS = "the rest after every area's records in code";
+
+/** The line between the two passes of the list (DRAFT). */
+export const NO_CODE_PASS_WORDS = "Records with no place in code, every area in the same order:";
+
+/** How a capped topic's heading says its order (DRAFT). */
+export const CODE_FIRST_WORDS = "places in code first, then by severity";
+
+/** The indent of the lines under a candidate row: under its rule id. */
+export const CANDIDATE_NOTE_INDENT = " ".repeat(9);
+
+/**
+ * WHERE A RECORD'S PLACES ARE, on the lines under its row: one line
+ * where they are all of one evidence rank other than code ("all words only, in example data or templates"), and one
+ * line per rank otherwise, best first, each after the first naming its own first place, so a record that groups a whole
+ * tree shows its code part apart from the rest. A record whose places are all words says so under its severity mark. A record whose places are all in code has no line under it (the common case).
+ * A record split by rank keeps its count in code on its first line: its row counts locations ("(+N)"), not places, so
+ * the count in code is not otherwise on the list, and this list is where the first screen's rows send a reader for it.
+ * Display only: the record, its locations and what the AI review is given are the document's, unchanged.
+ */
+function whereLines(c: Candidate): string[] {
+  const parts = evidencePartsOf(c);
+  if (parts.length <= 1) {
+    const note = evidenceNote(tallyOf(c));
+    return note === "" ? [] : [`${CANDIDATE_NOTE_INDENT}${note}`];
+  }
+  return parts.map((p, i) => `${CANDIDATE_NOTE_INDENT}${evidencePartWords(p, i > 0)}`);
+}
+
+/**
+ * One candidate row, as this command has printed it since before the first screen existed, except its place: since
+ * 0.1.3 the face is the record's best place (evidence-rank.ts `faceOf`), not the first in path order.
+ */
 function candidateRow(c: Candidate, title: string): string {
-  const loc = c.locations[0];
+  const loc = faceOf(c);
   const extra = c.locations.length > 1 ? ` (+${c.locations.length - 1})` : "";
   // Two rows of one split group are one question, not two findings, and on this screen they are
   // otherwise indistinguishable from two: same marker, same rule id, same title, different path.

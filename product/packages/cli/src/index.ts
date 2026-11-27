@@ -88,7 +88,9 @@ import { noteScannedFolder, processStateDir, realOfNearest } from "./start-recor
 import { FINDINGS_DIGEST_WORDS, FindingsChanged, findingsDigestName, planDigestName, readFindingsText, recordLogDigest, stateFolderPlaceNote } from "./log-digest.js";
 import { PLAN_DIGEST_WORDS } from "./assemble-report.js";
 import { agentFileEffort, seatPins } from "./seat-effort.js";
-import { EVIDENCE_DIR_NAME, EVIDENCE_LOG_NAME, guardWorkingFolder, legalDirOf, legalFoldersNamed, legalFoldersOnlyRead, legalIgnoreLeaks, prepareOutputFolder, nothingWrittenWords, readOnlyInput } from "./legal-dir.js";
+import { EVIDENCE_DIR_NAME, EVIDENCE_LOG_NAME, guardWorkingFolder, legalDirOf, legalFoldersNamed, legalFoldersOnlyRead, legalIgnoreLeaks, prepareOutputFolder, nothingWrittenWords, readOnlyInput, folderNotWritable } from "./legal-dir.js";
+import { FOLDER_ARGUMENT, strayWordsRefusedFromDefinitions, targetFolderRefusal, targetFromOperands, targetPathProblem, targetRequirementsFromDefinitions, targetRule } from "./target-operand.js";
+import type { ScopeSettlement } from "./per-rule-applicability.js";
 import {
   LEGAL_DIR_NAME,
   SESSION_ENV,
@@ -258,7 +260,7 @@ import {
   bundleNamedLines,
   firstScreenLines,
   screenAgainLines,
-  NEXT_STEP_WORDS,
+  filesLines,
   nextStepLines,
   notShippedWords,
   QUICK_SCAN_DETAIL_FILE,
@@ -344,35 +346,6 @@ function jobsLineSuffix(jobs: ResolvedJobs): string {
 
 const DISCLAIMER =
   "This output is informational only and does not constitute legal advice. It identifies code that may not meet a cited standard and that requires human review; consult qualified counsel before acting on it.";
-
-/**
- * What the filesystem can say about `--target` before anything is read into it, as one sentence, or
- * `""` when the path is an ordinary directory.
- *
- * **This lives in one place because it belongs on every path, and until 2026-08-24 it was emitted
- * only inside the `--fail-on` branch.** A mistyped `--target` without `--fail-on` printed
- * "56 ran over this tree and matched nothing … so their silence is about the layout of this
- * repository", then "No detector matched anything in this tree", and exited 0 — about a repository
- * that does not exist. The exit code is a separate question and it is deliberately NOT changed here:
- * refusing a missing path outright would change the exit code of every run that passes no
- * `--fail-on`, which is a behaviour change beyond this repair. What was free to fix, and is fixed,
- * is the wording — a run that reached no filesystem at all now says so wherever it speaks.
- */
-function targetPathProblem(targetRoot: string): string {
-  if (!existsSync(targetRoot)) {
-    return (
-      `The target path ${targetRoot} does not exist, so this is not a statement about any ` +
-      `repository — check the --target argument.`
-    );
-  }
-  if (!statSync(targetRoot).isDirectory()) {
-    return (
-      `The target path ${targetRoot} is not a directory, so there was no tree to walk — ` +
-      `check the --target argument.`
-    );
-  }
-  return "";
-}
 
 /**
  * `--rules` applied, or the bundle unchanged when the option was not given.
@@ -540,6 +513,35 @@ interface ScanPassResult {
   profile: unknown;
   /** The files the walk offered the rules, relative to the target: what the rules check says it did not read (ci-check.ts). */
   readFiles?: string[];
+  /** What this pass read of the declaration (`declarationReadBy`'s key): the terminal's round runs the scan again only where it changed. */
+  declarationRead: string;
+}
+
+/**
+ * WHAT A SCAN PASS READS OF THE DECLARATION, in one place: the profile file the pass hands the engine (its path and its
+ * bytes as they stand), and, where that file is the program's declaration under its record, the rules its scope
+ * answers settle and the fields read as unanswered. The pass builds its options from it, and the terminal's round
+ * compares it before and after the person's answers (item 5): the whole scan ran again after the questions even when every question was skipped and nothing it reads had
+ * changed (on a large project, the whole scan's time spent twice for nothing).
+ */
+function declarationReadBy(step: DeclarationStep | null, profilePath: string | undefined): { scopeSettlements: ScopeSettlement[]; profileLeftOut: string[]; key: string } {
+  // A scope answer settles rules only where this pass reads the
+  // program's declaration under its record (read again here: a take or the terminal has just written it); a
+  // --profile of another file, or no declaration, settles nothing.
+  const ownDeclaration = step !== null && profilePath !== undefined && resolve(profilePath) === resolve(step.c.declared.profilePath) ? readDeclaration(step.c.dir) : null;
+  const scopeSettlements = step !== null && ownDeclaration !== null ? scopeSettlementsOf(step.c.source, ownDeclaration) : [];
+  // An answer recorded at an earlier version of a
+  // question nothing asks before review is read as unanswered (the pre-launch step leaves out the same).
+  const profileLeftOut = step !== null && ownDeclaration !== null ? staleOrderFields(step.c.source, ownDeclaration) : [];
+  let bytes: string | null = null;
+  if (profilePath !== undefined) {
+    try {
+      bytes = readRegularFile(profilePath, "utf8");
+    } catch (e) {
+      bytes = `(unreadable: ${(e as Error).message})`;
+    }
+  }
+  return { scopeSettlements, profileLeftOut, key: JSON.stringify([profilePath === undefined ? null : resolve(profilePath), bytes, scopeSettlements, profileLeftOut]) };
 }
 
 /** Where the questions are asked. Inside a session through the relay, whatever CI says. */
@@ -682,7 +684,7 @@ function rowsFromRound(t: TakenDeclaration, source: DeclarationSource): { rows: 
  * folder, where the scan cannot tell where the hook reads (the pre-launch step's `launchDirRefusal` and `markerSessionRefusal` refuse the same situations at their own step).
  * Null where the round has its one place.
  */
-function sessionRoundRefusal(dir: string, env: NodeJS.ProcessEnv): { reason: string; kind: "declaration-session-unbound" | "declaration-out-elsewhere" } | null {
+function sessionRoundRefusal(dir: string, env: NodeJS.ProcessEnv, outGiven = true): { reason: string; kind: "declaration-session-unbound" | "declaration-out-elsewhere" } | null {
   const valueOf = (k: string): string | null => {
     const v = env[k];
     return typeof v === "string" && v.trim() !== "" ? v : null;
@@ -715,10 +717,22 @@ function sessionRoundRefusal(dir: string, env: NodeJS.ProcessEnv): { reason: str
   if (resolve(dir) !== expected && realOfNearest(dir) !== realOfNearest(expected)) {
     return {
       kind: "declaration-out-elsewhere",
-      reason: `--out puts the findings in ${resolve(dir)}, and the scan writes its declaration questions beside them in ${join(resolve(dir), "launch")}; in this session the plugin's hook reads them only at ${join(expected, "launch")} (${PROJECT_ENV}), so they would never reach the person`,
+      // With no --out the round's folder is the scanned folder's `.legal`.
+      reason: `${outGiven ? `--out puts the findings in ${resolve(dir)}, and the scan writes its declaration questions beside them in` : "with no --out, the scan keeps its declaration questions in the scanned folder's .legal, at"} ${join(resolve(dir), "launch")}; in this session the plugin's hook reads them only at ${join(expected, "launch")} (${PROJECT_ENV}), so they would never reach the person`,
     };
   }
   return null;
+}
+
+/**
+ * THE FINDINGS' PLACE WHERE NO --out
+ * IS GIVEN: the scanned folder's `.legal/`. One function for the scan's files (the bare command, and a folder given in a
+ * person's terminal) and for the declaration the question round writes there and the scan reads back, so a
+ * project's answers are never read from, or written to, the folder the command was typed in when another was scanned.
+ * The bare command's value is `.legal/findings.json`, as before.
+ */
+function scanFilesDefault(target: string | undefined): string {
+  return join(target ?? ".", LEGAL_DIR_NAME, "findings.json");
 }
 
 /**
@@ -730,7 +744,7 @@ function sessionRoundRefusal(dir: string, env: NodeJS.ProcessEnv): { reason: str
  */
 function declarationBeforeScan(opts: { out?: string; profile?: string; declarationFromAnswer?: boolean; reviewDeclaration?: boolean; target?: string }, rules: Rule[]): DeclarationStep | "ci" | null {
   const path = declarationPathOf(process.env);
-  const out = resolve(opts.out ?? join(".legal", "findings.json"));
+  const out = resolve(opts.out ?? scanFilesDefault(opts.target));
   const dir = dirname(out);
   // Inside a session, the scan launch profile first (scan-profile.ts), before every other refusal.
   const profileStop = path === "session" ? profileRefusal(process.env, "The scan") : null;
@@ -760,7 +774,7 @@ function declarationBeforeScan(opts: { out?: string; profile?: string; declarati
   // Release 1 reads no answers about the product in CI, from anywhere: the
   // rules of every region run, the rules check's summary says so, and no question stops the run (no exit 5 in CI).
   if (path === "ci") return "ci";
-  const unbound = path === "session" && !pluginless ? sessionRoundRefusal(dir, process.env) : null;
+  const unbound = path === "session" && !pluginless ? sessionRoundRefusal(dir, process.env, opts.out !== undefined) : null;
   if (unbound !== null) return refuseScan(`${unbound.reason}.`, unbound.kind === "declaration-out-elsewhere" ? recoveryFor("declaration-out-elsewhere") : recoveryFor("declaration-session-unbound"));
   const source = loadDeclarationSource();
   const jurisdictions = jurisdictionsOf(rules);
@@ -1164,10 +1178,15 @@ async function declarationAfterScan(step: DeclarationStep, rules: Rule[], first:
       const profilePath = writeDeclaration(c.dir, mergeRows(rows, answered), c.source, c.jurisdictions, new Date());
       const kept = confirmWrittenHere(c.dir, c.target, new Date());
       if (kept.refused !== null) console.log(`\n${kept.refused}`);
+      // The scan runs again only where the answers
+      // changed something it reads: the declaration it would read now against the one the first pass read
+      // (`declarationReadBy`, the one function both use), or, where the first pass read none, a declaration that now
+      // holds an answer (one with every question left open settles and labels nothing, as none does).
+      const runsAgain = declarationReadBy(step, profilePath).key !== first.declarationRead && !(step.profilePath === undefined && !mergeRows(rows, answered).some((r) => r.outcome === "answered"));
       // What happened, in the person's words: how many questions were answered, and
       // that a question left open switches nothing off (a "written answers" line over four skips said otherwise).
-      console.log(`\n${answersWrittenLine(answered, profilePath, join(c.dir, DECLARATION_RECORD_FILE))}\n`);
-      return { last: await again(profilePath), exitCode: 0 };
+      console.log(`\n${answersWrittenLine(answered, profilePath, join(c.dir, DECLARATION_RECORD_FILE), runsAgain)}${runsAgain ? "\n" : ""}`);
+      return { last: runsAgain ? await again(profilePath) : first, exitCode: 0 };
     } finally {
       asker.close();
     }
@@ -1246,6 +1265,21 @@ function answersUsedNow(c: DeclarationContext, step: DeclarationStep, readByPass
   return { whose: "none", reason: c.verdict.ok && c.team !== null && c.team.confirmed !== true ? "not-confirmed-here" : "not-usable" };
 }
 
+/**
+ * The line after the first screen where the
+ * folder a scan with no --out keeps its files in cannot be written: `legal` that folder, `blocked` the folder above it that
+ * stops it being made (null where `legal` itself cannot be written), both as the screen names them.
+ */
+function folderNotWritableLine(legal: string, blocked: string | null): string {
+  return `✘ This scan saved none of its files and asked no question: it keeps them and your answers in ${legal}, and ${blocked === null ? "that folder cannot be written" : `${blocked} cannot be written, so that folder cannot be made`}. Run it again with --out <file> to keep them in a folder you can write.`;
+}
+
+/** A file this run wrote, as the person can open it: relative to the folder they ran the command in where it lies inside it. */
+function personPath(abs: string): string {
+  const rel = relativePath(process.cwd(), abs);
+  return valueText(rel !== "" && !rel.startsWith("..") && !isAbsolute(rel) ? rel : abs);
+}
+
 /** The line a command prints where `--findings` cannot be used: the digest's one sentence where the document changed after the scan (log-digest.ts `FindingsChanged`). */
 function findingsUnreadable(path: string, e: unknown): string {
   return e instanceof FindingsChanged ? e.message : `--findings ${path} could not be read as JSON: ${(e as Error).message}`;
@@ -1261,6 +1295,18 @@ const program = new Command();
  */
 program.name(PROGRAM_NAME).description("WolfBoy: checks what your code does against the law and your own privacy policy").version(PROGRAM_VERSION);
 
+/* (items 1, 2) FIRST OF EVERY HOOK: the folder the
+ * command reads, from its --target or from the one path given after its name (target-operand.ts), so that every hook below
+ * and the action read one value; a path given twice, or more than one path, is refused here, before anything is read or
+ * written. */
+program.hook("preAction", (_program, actionCommand) => {
+  const got = targetFromOperands(actionCommand);
+  if (got !== null) {
+    console.error(got.refused);
+    process.exit(1);
+  }
+});
+
 /* THE ANCHOR, ASKED BY EVERY COMMAND, before its
  * action and before the hook below writes anything: from every option and argument the command was given or defaulted, the
  * working folder and the session's project folder (plugin-sessions.ts `commandPaths`). In a project where a session of the
@@ -1275,6 +1321,16 @@ program.hook("preAction", (_program, actionCommand) => {
   noteCommandSessions(around);
   if (around.kind === "refused") {
     console.error(`refused: ${around.why}. ${nothingWrittenWords()}.`);
+    process.exit(1);
+  }
+});
+
+// A folder the command requires that is not there
+// (the scan's): refused after the anchor and before the hook below writes anything (target-operand.ts).
+program.hook("preAction", (_program, actionCommand) => {
+  const refused = targetFolderRefusal(actionCommand);
+  if (refused !== null) {
+    console.error(refused);
     process.exit(1);
   }
 });
@@ -1312,20 +1368,24 @@ program.hook("preAction", (_program, actionCommand) => {
   }
 });
 
-program
-  .command("scan")
+targetRule(program.command("scan"), { mustBeFolder: true })
   .description(
     `Scan a target with the rules in a bundle and write findings JSON / SARIF. After the first result the program asks the declaration questions this run's candidates turn on that have no saved answer (inside Claude Code through the plugin's hook, taken back with --declaration-from-answer; in a terminal at once; with no terminal they are listed as not asked) and runs the scan again with the answers. The saved answers this run used are stated, never asked again unless ${REVIEW_DECLARATION_FLAG} is given. Saved answers are read only once the person running the scan has confirmed them in that folder on that computer (answers the program writes there are confirmed by being written; any other saved pair is put to the person as one question, in place of the region questions). In CI (CI set, outside a Claude Code session) the scan is the rules check: no answers about the product are read, so the rules of every region run, nothing is asked, places that match rules are counted by rule name in a summary (GitHub's step summary and one check run where the token may write checks), and it exits 0 unless --fail-on-unreviewed stops it`,
   )
   .option("--bundle <dir>", `local rule bundle directory; default: ${BUNDLE_DIR_ENV}, else the bundle this package ships`)
-  .option("--target <dir>", "root directory to scan; default: the current folder, and then, with no --out, the files go under ./.legal/ (--out .legal/findings.json)")
+  // The same as --target (target-operand.ts).
+  .argument(`[${FOLDER_ARGUMENT}]`, "the folder to scan: the same as --target <folder>")
+  .option(
+    "--target <dir>",
+    "root directory to scan; default: the current folder. With no --out the files go under the scanned folder's .legal/ (<folder>/.legal/findings.json) where no folder is given, or where one is given in a terminal; a folder given without --out anywhere else (a pipe, CI) writes nothing",
+  )
   .option(
     "--rules <ids>",
     "comma-separated rule ids: run ONLY these rules and leave everything else about the run unchanged. An id the bundle does not carry is a hard error naming it, and nothing is scanned. The candidates written are exactly the named rules' candidates, byte for byte as a whole-bundle run writes them, except adjudication_group, which divides an entire run's candidates among the agents of layer 2 - by file, and since 2026-09-17 by packing them rule by rule into bins - across all rules at once, and is therefore about the run, not about a rule. Per-run counters (stats, the rules_without_candidates roster, applicability) are likewise about the run that was asked for",
   )
   .option(
     "--read <classes>",
-    "comma-separated classes of path this scan may read, or `all`. By DEFAULT a scan does not read test surfaces, vendored code or build output — what was held back is counted in every output of the run, under coverage_limits, with this flag named beside it. Classes: tests, vendored, build. A name this bundle does not declare is a hard error naming it, and nothing is scanned",
+    "comma-separated classes of path this scan may read, or `all`. By DEFAULT a scan does not read test surfaces, vendored code (by its folder, its file name, or what the file itself carries: another project's banner, a bundler's wrapper, a source-map trailer), build output or documentation sites — what was held back is counted in every output of the run, under coverage_limits, with this flag named beside it. Classes: tests, vendored, build, docs. A name this bundle does not declare is a hard error naming it, and nothing is scanned",
   )
   .option(
     "--profile <file>",
@@ -1372,7 +1432,7 @@ program
   )
   .option(
     "--report-detail <level>",
-    "full|first-screen. How much of the report this command prints to stdout. `full` prints the first screen — what was scanned, how many places worth a look in how many areas, what was not read, and what happens next — then a divider, then the whole report: every applicability limb, every coverage sentence, the silent rules, your declaration against what was found, and the candidate list. `first-screen` stops before the divider and, outside Claude Code and CI with an --out folder, writes the rest to quick-scan.txt beside the findings document and names it on the screen. The default is `first-screen` in a terminal (stdout a terminal, outside Claude Code and CI, with --out or no --target) and `full` everywhere else: a pipe, a file, CI, the plugin's run. Neither writes the findings document differently and neither changes what was scanned: the document is written before a byte of this report is composed, and it is the complete record either way",
+    "full|first-screen. How much of the report this command prints to stdout. `full` prints the first screen — what was scanned, how many places worth a look in how many areas, what was not read, and what happens next — then a divider, then the whole report: every applicability limb, every coverage sentence, the silent rules, your declaration against what was found, and the candidate list. `first-screen` stops before the divider and, outside Claude Code and CI with an --out folder, writes the rest to quick-scan.txt beside the findings document and names it on the screen. The default is `first-screen` in a terminal (stdout a terminal, outside Claude Code and CI) and `full` everywhere else: a pipe, a file, CI, the plugin's run. Neither writes the findings document differently and neither changes what was scanned: the document is written before a byte of this report is composed, and it is the complete record either way",
   )
   .option(
     "--pack-groups <mode>",
@@ -1394,7 +1454,8 @@ program
     "--orientation <mode>",
     "on|off. Write an orientation sheet beside --out: orientation.json and orientation.md, the repository's manifests, declared dependencies, path classes, language census, entry points and a fixed consent-vocabulary search, computed once with no model involved. It exists because every layer-2 child used to derive the same answers for itself — 140 orientation reads and 25 repeated consent greps over 82 measured adjudicators. `on` is the default; PRODUCT_CLI_ORIENTATION=0 in the environment turns it off for a harness that cannot edit an argument vector. It is a SEPARATE file: the findings document is byte-identical either way and a gate asserts that on two real repositories. Off also skips the pass over the tree it costs. Nothing is written without --out, because the sheet is written beside the document and there is nowhere else to put it",
   )
-  .action(async (opts) => {
+  // The folder given after `scan` is already --target here (the first hook, target-operand.ts), so it is not read again.
+  .action(async (_folder: string | undefined, opts) => {
     // A scan that runs in a session recorded in a folder
     // above the scanned one is recorded under the scanned folder (plugin-sessions.ts `recordSessionScan`), before it writes.
     try {
@@ -1434,12 +1495,26 @@ program
     });
     // THE BARE COMMAND: `scan` with no
     // --target scans the folder it is run in and, with no --out either, writes its files where the plugin's run writes
-    // them, ./.legal/ (the README's one line of the free try). A --target given without --out writes nothing, as before:
-    // the gate tools scan fixture trees that way and read stdout only.
-    if (opts.target === undefined) {
-      opts.target = ".";
-      if (opts.out === undefined) opts.out = join(LEGAL_DIR_NAME, "findings.json");
-    }
+    // them, ./.legal/ (the README's one line of the free try). A --target given without --out writes nothing, as before,
+    // everywhere but a person's terminal: the gate tools scan fixture trees that way and read stdout only, and CI keeps it. In a person's terminal
+    // (`personsScreen`), a folder given after `scan` or with --target, and no --out, writes the files in that folder's
+    // `.legal/`, as the bare command typed inside it does (a folder after `scan` is new in 0.1.2, and a person expects the
+    // result in the folder they named), and the screen names them by their full path.
+    const bare = opts.target === undefined;
+    if (bare) opts.target = ".";
+    const folderNamedHere = !bare && opts.out === undefined && personsScreen(process.env);
+    const outDefaulted = opts.out === undefined && (bare || folderNamedHere);
+    if (outDefaulted) opts.out = scanFilesDefault(opts.target);
+    /** A file of this scan as the screen names it: by its full path where the files went to a folder the person named. */
+    const shownPath = (abs: string): string => (folderNamedHere ? valueText(abs) : personPath(abs));
+    // In a person's terminal, where that default
+    // folder cannot be written (a checkout the person does not own, a read-only mount), the scan runs as one with no --out
+    // (it writes nothing), shows its first screen, asks no question (the answers are kept in the same folder), then says
+    // which folder it could not write and how to choose another, and exits 1. Until 0.1.2 the write ended in a stack trace.
+    // A pipe and CI are as before.
+    const legalUnwritable = outDefaulted && personsScreen(process.env) ? dirname(resolve(opts.out as string)) : null;
+    const blockedBy = legalUnwritable === null ? null : folderNotWritable(legalUnwritable);
+    if (blockedBy !== null) opts.out = undefined;
     // Commander gives `opts.prefilter === false` only when `--no-prefilter` was actually typed —
     // there is no positive `--prefilter` flag to distinguish "explicitly on" from "defaulted on" —
     // so this is the one and only way the CLI can know the user asked for it explicitly, and it
@@ -1492,7 +1567,7 @@ program
     // person's terminal where there is an --out folder for the rest (`QUICK_SCAN_DETAIL_FILE`), `full` everywhere else. And in a Claude Code session with an --out
     // folder: what the scan prints there reaches the person's screen through the skill, and the paid run of 2026-11-12
     // showed all 146 lines of it, the applicability limbs whole, before the person was asked anything.
-    const reportDetail = throughTheEngine(() => resolveReportDetail(opts.reportDetail, opts.out !== undefined && (personsScreen(process.env) || claudeCodeSigns(process.env).length > 0)));
+    const reportDetail = throughTheEngine(() => resolveReportDetail(opts.reportDetail, (opts.out !== undefined && (personsScreen(process.env) || claudeCodeSigns(process.env).length > 0)) || blockedBy !== null));
     // `--context-window`, resolved here for the reason every option above it is: a value this CLI
     // cannot act on is refused before a tree is read, not after. THE DEFAULT LIVES IN THE RESOLVER
     // (`DEFAULT_CONTEXT_WINDOW`, 40 lines each side), so this file carries no second copy of it,
@@ -1616,17 +1691,15 @@ program
     // What writing the files has to tell the person, printed after the first
     // screen rather than before it.
     const notesAfterScreen: string[] = [];
+    if (blockedBy !== null && legalUnwritable !== null) notesAfterScreen.push(folderNotWritableLine(shownPath(legalUnwritable), blockedBy === legalUnwritable ? null : shownPath(blockedBy)));
     // The runtime self-check (proposal §E.3) stops a scan rather than letting it finish and report
     // "no problems found" over a line the prefilter provably should not have skipped. `throughTheEngine`
     // is what turns that into the four-line report and exit 1, here and on `test-rules` alike. A scope answer settles rules only where this pass reads the
     // program's declaration under its record (read again here: a take or the terminal has just written it); a
-    // --profile of another file, or no declaration, settles nothing.
-    const step = declaration === "ci" ? null : declaration;
-    const ownDeclaration = step !== null && profilePath !== undefined && resolve(profilePath) === resolve(step.c.declared.profilePath) ? readDeclaration(step.c.dir) : null;
-    const scopeSettlements = step !== null && ownDeclaration !== null ? scopeSettlementsOf(step.c.source, ownDeclaration) : [];
-    // An answer recorded at an earlier version of a
-    // question nothing asks before review is read as unanswered (the pre-launch step leaves out the same).
-    const profileLeftOut = step !== null && ownDeclaration !== null ? staleOrderFields(step.c.source, ownDeclaration) : [];
+    // --profile of another file, or no declaration, settles nothing. What this pass reads of the declaration, from the one function the terminal's
+    // round asks too, before it runs the scan again (`declarationReadBy`).
+    const declarationRead = declarationReadBy(declaration === "ci" ? null : declaration, profilePath);
+    const { scopeSettlements, profileLeftOut } = declarationRead;
     const scanOptions = {
       bundle,
       targetRoot,
@@ -1825,8 +1898,8 @@ program
     progress?.finish({ outPath: opts.out ? resolve(opts.out) : null, findings });
 
     // Printed BEFORE the summary, on every run, with or without `--fail-on-unreviewed`: a reader whose only
-    // mistake was a typo must not be sent off to audit code the scanner never opened. The scan still
-    // runs, still writes its outputs and still exits as it did — only the sentence is new.
+    // mistake was a typo must not be sent off to audit code the scanner never opened. Since 0.1.2 such a folder is refused before the scan (target-operand.ts), so this speaks only where the
+    // folder went away while the scan read it.
     const pathProblem = targetPathProblem(targetRoot);
     if (pathProblem) console.log(`${pathProblem} Nothing below is about a repository.\n`);
     // THE FIRST SCREEN, AND WHY IT IS PRINTED HERE AND NOT INSIDE `summarize()`.
@@ -1887,7 +1960,8 @@ program
       // that is not the shipped one is named on the first screen itself (report.ts firstScreenLines).
       if (opened.shipped === true) full(bundleNamedLines(shown, { targetRoot, jobs: jobsForThisTree.jobs, fileBudgetMs, outPath: opts.out ? resolve(opts.out) : null, bundle: { dir: opened.dir, from: opened.from, shipped: opened.shipped } }).join("\n"));
       full("");
-      full(summarize(shown, bundle.rules));
+      // The list names the document that holds every record where it stops.
+      full(summarize(shown, bundle.rules, opts.out ? shownPath(resolve(opts.out)) : null));
     }
     // THE THREE PROVENANCE LINES BELONG TO THE FULL SECTION (proposal §A8), so `first-screen` does
     // not print them: they say how the scan was run, which is what a reader comparing two runs needs
@@ -2017,22 +2091,23 @@ program
     if (detailPath !== null) {
       try {
         writeFileAt(detailPath, `${[...firstScreen, "", ...detail, "", DISCLAIMER].join("\n")}\n`);
-        const rel = relativePath(process.cwd(), detailPath);
-        detailShown = valueText(rel !== "" && !rel.startsWith("..") && !isAbsolute(rel) ? rel : detailPath);
+        detailShown = shownPath(detailPath);
       } catch (e) {
         // Not written: the rest is printed here instead, below the divider, so nothing the file was to hold is lost.
         notesAfterScreen.push(`${valueText(detailPath)} could not be written (${valueText((e as Error).message)}), so everything else this scan has to say follows here.`);
         divider = ["", ...dividerLines(candidateLineCount(candidateTopics(shown, bundle.rules)))];
       }
     }
-    if (nextStepShown) console.log(nextStepLines(detailShown).join("\n"));
+    // The files' lines name the document with every record, then the detail file.
+    const documentShown = opts.out ? shownPath(resolve(opts.out)) : "";
+    if (nextStepShown) console.log(nextStepLines(detailShown, documentShown).join("\n"));
     // In a session the first screen ends with the line naming the file that holds the
     // rest, the last line the skill shows the person (SKILL.md step 2); what follows it is for the skill alone.
-    else if (detailShown !== null) console.log(NEXT_STEP_WORDS.detailFile(detailShown));
+    else if (detailShown !== null) console.log(filesLines(detailShown, documentShown).join("\n"));
     if (notesAfterScreen.length > 0) console.log(["", ...notesAfterScreen].join("\n"));
     if (report === "full" || (detailPath !== null && detailShown === null)) console.log([...divider, ...detail].join("\n"));
     console.log(`\n${DISCLAIMER}`);
-    return { findings, pathProblem, profile: prepared.profile, readFiles: prepared.walked.files };
+    return { findings, pathProblem, profile: prepared.profile, readFiles: prepared.walked.files, declarationRead: declarationRead.key };
     };
 
     // THE DECLARATION QUESTIONS, AFTER THE FIRST RESULT (decision 2: before the run-shape question). `--fail-on-unreviewed`
@@ -2040,7 +2115,9 @@ program
     const done =
       declaration === "ci"
         ? { last: await scanPass(undefined), exitCode: 0 }
-        : await declarationAfterScan(declaration, bundle.rules, await scanPass(declaration.profilePath), scanPass);
+        : blockedBy !== null
+          ? { last: await scanPass(declaration.profilePath), exitCode: 1 }
+          : await declarationAfterScan(declaration, bundle.rules, await scanPass(declaration.profilePath), scanPass);
     if (done.exitCode !== 0) {
       process.exitCode = done.exitCode;
       return;
@@ -2118,12 +2195,12 @@ program
         // repository printed the identical sentence, and that sentence was "nothing in this
         // repository was ever checked": it sent a reader whose only mistake was a typo off to
         // audit their code. The cause is stated first, because it is the thing to act on.
+        // Since 0.1.2 a folder that does not
+        // exist, or a file, is refused before the scan with exit 1 (target-operand.ts: a mistyped folder in CI used to
+        // pass green), so the cause here is an empty folder, or one that went away
+        // while the scan read it.
         //
-        // Stated here rather than as a hard failure before `runScan`, because refusing a missing
-        // path outright would change the exit code of runs that pass no `--fail-on` at all, which
-        // is a behaviour change beyond this repair.
-        //
-        // The sentence itself comes from `targetPathProblem` at the top of this file, which the
+        // The sentence itself comes from `targetPathProblem` (target-operand.ts), which the
         // console path above also prints. It was written out twice here until 2026-08-24 — once in
         // this branch and nowhere else — which is how a run without `--fail-on` came to say nothing
         // about a `--target` that does not exist.
@@ -4559,6 +4636,11 @@ registerExplain(program);
 registerDecide(program, { pathOf: () => declarationPathOf(process.env), sessionId: roundSessionId, rerender: rerenderLatestReport });
 registerDeepen(program, { pathOf: () => declarationPathOf(process.env), sessionId: roundSessionId });
 registerRecord(program);
+// A required --target may also be given as the one
+// path after the command's name: its requirement is checked after that path is taken (target-operand.ts).
+targetRequirementsFromDefinitions(program);
+// A word given to a command that takes none is refused (target-operand.ts).
+strayWordsRefusedFromDefinitions(program);
 
 // `parseAsync`, because two commands await work before they scan: `reconcile` fetches declarations,
 // and `scan` and `test-rules` start the structural parser runtime when the bundle asks for it.

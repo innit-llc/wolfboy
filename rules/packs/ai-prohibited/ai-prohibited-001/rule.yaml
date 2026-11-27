@@ -127,6 +127,34 @@ detector:
       - biometric
       - face_landmark
       - face_mesh
+    affect_state:
+      - emotion
+      - emotions
+      - emotional
+      - affect
+      - affective
+      - arousal
+      - valence
+      - mood
+      - moods
+      - stress
+      - anxiety
+      - frustration
+      - boredom
+      - attentiveness
+      - interest_level
+      - interest_score
+      - intention
+      - intentions
+      - sentiment
+    affect_core:
+      - emotion
+      - emotions
+      - emotional
+      - affect
+      - affective
+      - arousal
+      - valence
     affect_machinery:
       - hume
       - morphcast
@@ -225,6 +253,12 @@ detector:
     person_role_wide:
       case_insensitive: true
       separator_insensitive: true
+    affect_state:
+      case_insensitive: true
+      separator_insensitive: true
+    affect_core:
+      case_insensitive: true
+      separator_insensitive: true
   match:
     - api\.hume\.ai/v0/(?:batch|stream|evi)|[Ee]xpression[_]?[Mm]easurement|[Ee]mpathic[_]?[Vv]oice|\bstart[_]?[Ii]nference[_]?[Jj]ob\s*\(
     - (?:Attributes|FaceAttributes)["']?\s*(?:=>|[:=])\s*[\[(][^\])]*['"](?:ALL|EMOTIONS)['"]|\.Emotions\b|\[['"]Emotions['"]\]
@@ -273,6 +307,7 @@ detector:
     - ^(?=[^\n]*(?:(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&affect_dataset)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?:[Ff][Aa][Cc][Ii]?[Aa]?[Ll]?|[Ss][Pp][Ee][Ee][Cc][Hh]|[Vv][Oo][Ii][Cc][Ee]|[Aa][Uu][Dd][Ii][Oo]|[Vv][Ii][Dd][Ee][Oo]|[Mm][Uu][Ll][Tt][Ii][Mm][Oo][Dd][Aa][Ll])[_\-][Ee][Mm][Oo][Tt][Ii][Oo][Nn][Ss]?(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])))(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&affect_machinery)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))
     - ^(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&affect_dimension)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?:(?&affect_signal)|(?&affect_machinery))(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))
     - ^(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&person_role_wide)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?:[Ee][Mm][Oo][Tt][Ii][Oo][Nn]|[Aa][Ff][Ff][Ee][Cc][Tt]|[Aa][Rr][Oo][Uu][Ss][Aa][Ll]|[Vv][Aa][Ll][Ee][Nn][Cc][Ee]|[Ee][Nn][Gg][Aa][Gg][Ee][Mm][Ee][Nn][Tt]|[Aa][Tt][Tt][Ee][Nn][Tt][Ii][Vv][Ee][Nn][Ee][Ss][Ss]|[Aa][Tt][Tt][Ee][Nn][Tt][Ii][Oo][Nn]|[Ii][Nn][Tt][Ee][Nn][Tt][Ii][Oo][Nn][Ss]?)\w*(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])?)(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?:(?&affect_signal)|(?&affect_machinery))(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))
+    - ^(?:(?:(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&affect_state)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&affect_signal)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))|(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&affect_core)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&affect_machinery)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])))(?=[^\n]*(?:(?<![A-Za-z0-9_$\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?:[Dd]etect|[Aa]naly[sz]|[Ii]nfer|[Rr]ecogni|[Pp]redict|[Cc]lassif|[Ee]stimat|[Mm]easur|[Aa]ssess|[Ee]valuat|[Ee]xtract|[Ss]cor|[Ss]ense|[Tt]rack|[Mm]onitor|[Gg]auge|[Qq]uantif|[Cc]omput|[Mm]odel|[Pp]retrained|[Pp]ipeline|[Ss]ession|[Ss]ignal|[Rr]eport|(?&affect_machinery))[\w$.]*\()|(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&affect_signal)(?![_-]?(?:[Aa]ttention|ATTENTION|[Ee]ngagement|ENGAGEMENT))(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))(?=[^\n]*(?:(?<![A-Za-z0-9_$\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?:[Dd]etect|[Ii]nfer|[Rr]ecogni|[Pp]redict|[Cc]lassif|[Ee]stimat)[\w$]*?(?:[Aa]ttention|ATTENTION|[Ee]ngagement|ENGAGEMENT)[\w$]*\())
   match_without:
     - ^\s*(\*|//|#|<!--)
     - ^\s*(export\s+)?(type|interface|declare|enum)\s
@@ -281,6 +316,9 @@ detector:
     - (^|/)(test|tests|spec|specs|__tests__|__mocks__|mocks|e2e|cypress|playwright|stories|\.storybook)/
     - (^|/)(fixtures|__fixtures__|__snapshots__|testdata|test-data|sample-data)/
   resolve_import_aliases: true
+  word_clauses:
+    - match[12]
+    - match[15]
 context_questions:
   - "Does this code infer emotions or intentions of a natural person from biometric data — face,
     voice, gaze, keystroke dynamics, gait, body posture, heartbeat, EEG, ECG or another bodily

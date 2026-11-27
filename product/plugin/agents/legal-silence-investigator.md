@@ -165,11 +165,18 @@ Return exactly one per rule.
   valuable result you can return**: it turns an invisible layer-1 miss into a located fact. Give
   every location you found with a verbatim quote.
   - **FIRST CHECK WHETHER THE SCAN WAS EVER SHOWN THE FILE.** From 2026-09-10 a scan does not read
-    test surfaces, vendored code or build output unless it was told to, and your own Read, Grep and
-    Glob are not bound by that: a construct sitting in `tests/`, in `vendored/` or in `dist/` is a
-    file the scan never opened, not a pattern that failed. The block you were given — the scan's own
-    `coverage_limits`, one sentence per limit with the flag that lifts it — is how you tell the two
-    apart, and your brief carries the whole of it. **Where every location you found is
+    test surfaces, vendored code or build output unless it was told to, and from 0.1.3 documentation
+    sites (a folder named `docs/`, `doc/`, `documentation/`, `website/` or the like that shows a site
+    generator's configuration or is mostly prose, unless a folder on the way is named like product
+    source, such as `src/` or `app/`) and files whose own text shows another project's code; your own
+    Read, Grep and Glob are not bound by that. A construct in a folder or file the run held back is a
+    file the scan never opened, not a pattern that failed; a construct in a folder with one of those
+    names that the run read (its `coverage_limits` member names every such folder, and why it was
+    read) was opened like any other. The block you were given — the scan's own `coverage_limits`, one
+    sentence per limit with the flag that lifts it — is how you tell the two apart, and your brief
+    carries the whole of it: the held-back folders by class and count, every folder of such a name
+    read despite it, and, in the `read-scope:vendored` member's `held_by_content`, every file held
+    back by its own content with the sign it showed. **Where every location you found is
     under a class the run held back, the outcome is `construct_found` with `read_scope` set to the
     class**: the construct IS there and the report must say so, but it is the scan's scope and not a
     detector gap, and the remedy is the re-scan flag rather than rule work. Where at least one

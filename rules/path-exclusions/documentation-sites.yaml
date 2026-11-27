@@ -1,0 +1,13 @@
+sets:
+  documentation_site_directories:
+    question: >
+      Is this file part of a documentation site kept in the tree - its pages, its theme, its
+      scripts, its assets - rather than the product itself?
+    patterns:
+      - pattern: ^(?:(?!(?:src|app|apps|lib|components|pages|routes|views|server|client)/)[^/]+/)*(?:docs?|documentation|website|docs[-_]?site|doc[-_]?site|_docs)/
+        excludes: >
+          Any path under a folder named `docs`, `doc`, `documentation`, `website`, `docs-site`,
+          `docsite`, `doc-site` or `_docs`, at any depth, unless a folder on the way is named `src`,
+          `app`, `apps`, `lib`, `components`, `pages`, `routes`, `views`, `server` or `client`: a
+          `docs` folder inside the product's own source is more often a feature of the product (a
+          documents screen) than a documentation site, and is read.

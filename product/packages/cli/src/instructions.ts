@@ -315,8 +315,21 @@ import { JUDGING_MARKS, JUDGING_STATES, type InstructionsState, type JudgingMark
  * an amendment correcting it is used (`standing.ts` `STANDING_OPENS_VERDICT`, `STANDING_OPENS_QUOTATION`;
  * `verdict-capture.ts` `refusalNamed`); the agent text says so. A reply accepted under 35 can be refused under 36, so a
  * check on a reply changed its outcome and this version declares nothing: an earlier verdict goes back to a seat once.
+ * `verdict-rules-38` (0.1.3, over `verdict-rules-37`, which 0.1.2
+ * used): the walk the orientation sheet is built from holds documentation sites back as a fourth read-scope class and
+ * vendored code by its own content as well as by its path (`walk.ts`, `vendored-content.ts`, `read-scope.ts`,
+ * `project-read.ts`, `orientation-inputs.ts`), so the sheet a seat reads first can differ for the same tree; the compiled-in schemas carry `locations[].path_class`, the reason `read-scope-docs`, a
+ * rule's `detector.word_clauses` and a findings place's `tier` (`schemas.generated.ts`); the launch-later text names the
+ * fourth class. No check on a reply changed its outcome, but the premises a verdict was judged on did, so this version
+ * declares nothing: an earlier verdict goes back to a seat once. Re-pinned unreleased by: a folder named like a documentation site is held
+ * back only where it shows one (`docs-site.ts`, `walk.ts`, `read-scope.ts`), the content test reads a banner as another
+ * project's only where it names the file (`vendored-content.ts`), and the compiled-in schemas carry `prose` and the
+ * vendored member's `held_by_content` (`schemas.generated.ts`). Re-pinned unreleased again by: a folder named like a documentation site that
+ * holds program source is read only where code of the product uses it (`docs-site.ts`, `docs-usage.ts`, `walk.ts`,
+ * `read-scope.ts`, `orientation-inputs.ts`), and the compiled-in schemas carry the place class `asset`
+ * (`schemas.generated.ts`).
  */
-export const VERDICT_RULES_VERSION = "verdict-rules-36";
+export const VERDICT_RULES_VERSION = "verdict-rules-38";
 
 /**
  * One declared link: a version that judges as the version before it. Only the link is the program's: the justification
@@ -481,6 +494,12 @@ export const VERDICT_RULES_SOURCES: readonly string[] = [
   "product/packages/cli/src/declaration-files.ts",
   "product/packages/cli/src/declaration.ts",
   "product/packages/cli/src/disposition.ts",
+  // The walk asks it whether a folder named like a
+  // documentation site is one, which decides what the orientation sheet is built from.
+  "product/packages/cli/src/docs-site.ts",
+  // The walk asks it whether code of the
+  // product uses a folder named like a documentation site, which decides whether the folder is read.
+  "product/packages/cli/src/docs-usage.ts",
   "product/packages/cli/src/extract.ts",
   "product/packages/cli/src/file-identity.ts",
   // The capture's guard on a resend weighs the finding an answer
@@ -554,6 +573,7 @@ export const VERDICT_RULES_SOURCES: readonly string[] = [
   "product/packages/cli/src/strip-comments.ts",
   "product/packages/cli/src/value-text.ts",
   "product/packages/cli/src/verdict-capture.ts",
+  "product/packages/cli/src/vendored-content.ts",
   "product/packages/cli/src/vendored-origin.ts",
   "product/packages/cli/src/verdict-set.ts",
   "product/packages/cli/src/verdict-verify.ts",

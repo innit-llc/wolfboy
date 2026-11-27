@@ -86,6 +86,19 @@ sets:
           file inside `i18n/` is read) with other names and formats: it adds `messages/` and `.ini`,
           and has no `intl/`, `langs/`, `.mo`, `.xliff`, `.xlf`, `.arb`, `.strings`, `.resx`, `.ftl`
           or `.toml`. Neither a subset nor a superset.
+  platform_string_catalogues:
+    question: >
+      Is this file a mobile platform's string catalogue - an Android resource file of strings or an
+      Apple strings file - kept where the platform requires it rather than in a localisation
+      directory?
+    patterns:
+      - pattern: (^|/)res/values(?:-[^/]+)?/(?:strings|plurals|arrays)[^/]*\.xml$
+        excludes: >
+          An Android catalogue of strings under `res/values/` or a `res/values-<qualifier>/` folder:
+          `res/values/strings.xml`, `res/values-de/strings.xml`, `res/values-fr/plurals.xml`.
+      - pattern: (^|/)[^/]+\.lproj/[^/]+\.(?:strings|stringsdict)$|\.xcstrings$
+        excludes: An Apple strings file in a `.lproj` folder (`en.lproj/Localizable.strings`), and a string
+          catalogue (`Localizable.xcstrings`).
   localisation_directories:
     question: >
       Is this file a translation catalogue — the question `localisation_catalogues` asks, written

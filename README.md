@@ -14,19 +14,19 @@ you where they disagree. Lawyers don't read code. Engineers don't read law. Wolf
    [how it works](HOW-IT-WORKS.md#how-it-works).
 
 ```bash
-npx wolfboy@0.1.1 scan
+npx wolfboy@0.1.3 scan
 ```
 
-That is step 1. You need Node.js 20 or later. Run it in your project's folder: it shows what it found on one screen,
-writes the full list to `.legal/quick-scan.txt`, and asks up to four questions about your product (where it is
-offered, what it ships as). You can choose Skip on any; skipping switches nothing off. Nothing is sent anywhere.
+That is step 1. You need Node.js 20 or later; in Windows PowerShell, type `npx.cmd` for `npx`. Run it in your
+project's folder: it shows what it found on one screen, writes a summary to `.legal/quick-scan.txt`, and asks up to
+four questions about your product. You can choose Skip on any; skipping switches nothing off. Nothing is sent anywhere.
 
-Try it on [the sample app](examples/book-club/), which has nine planted problems. In `examples/book-club/app` the
-rules mark 44 places in about a second, grouped into 22 findings. The AI review read all 44 in about 4 minutes and 2.9
-million tokens. It ruled out 1 finding, kept 13 to fix, left 6 for you to check in your own documents, and listed 2
+Try it on [the sample app](examples/book-club/), which has nine planted problems:
+`git clone https://github.com/innit-llc/wolfboy`, then the same command in `wolfboy/examples/book-club/app`. The rules
+mark 44 places in about a second, grouped into 22 findings. The AI review read all 44 in about 4 minutes, for USD 6.62
+at list prices. It ruled out 1 finding, kept 13 to fix, left 6 for you to check in your own documents, and listed 2
 more without counting them. All nine planted problems are among the 13 to fix and the 6 to check, found without
-comparing the privacy policy: several rules, or one rule at several lines, can flag one planted problem, and one of
-the 6 (no age check at sign-up) was not planted. One item in its
+comparing the privacy policy; one of the 6 (no age check at sign-up) was not planted. One item in its
 [sample report](examples/book-club/sample-report/report.md):
 
 ```text
@@ -84,7 +84,7 @@ the plugin later, see [Update and remove](product/plugin/README.md#update-and-re
 Then say **"Scan this repository."** in Claude Code. From there, WolfBoy:
 
 1. prints the command that opens the review's own session. Run it in your terminal, in the same folder, and say "Scan
-   this repository." again in the session it opens. The first time it also offers `npm install -g wolfboy@0.1.1`, a
+   this repository." again in the session it opens. The first time it also offers `npm install -g wolfboy@0.1.3`, a
    one-time install that shortens the command to `wolfboy session`.
 2. asks up to four questions about your product that have no saved answer yet. Answers you gave in step 1, in the
    same folder, are reused; they are asked again only after an update changes a question, if the saved answers were
@@ -99,9 +99,11 @@ To have your privacy policy read against your code, say "compare my privacy poli
 
 ## Cost
 
-Step 1 is free. Step 2, the AI review, uses your own Claude plan or API key. Before it starts, the scan shows what it
-will review and the estimated cost (on an API key, in money too): 1.6 to 19 million tokens for an 86-file app, 55 to
-330 million for a 2,655-file one. The estimate leaves out the agents' searches where rules found nothing. A later scan
+Step 1 is free. Step 2, the AI review, counts against your Claude plan's usage limits, or is billed per token on an
+API key. Before it starts, the scan shows what it will review and the estimated cost: 1.6 to 19 million tokens for an
+86-file app (about USD 3 to 39 at Claude Sonnet's list price), 55 to 330 million for a 2,655-file one (USD 111 to 670).
+These tokens are weighted by price: output counts five times, a cache write 1.25 times, a cache read a tenth. The
+estimate leaves out the agents' searches where rules found nothing. A later scan
 on the same computer reviews again what changed since the last one, and everything when your answers changed or a
 package was added or removed: [the list](HOW-IT-WORKS.md#later-scans).
 
@@ -155,9 +157,27 @@ in order: [what it does not do](HOW-IT-WORKS.md#what-it-does-not-do).
 </details>
 <details><summary>Can it run in CI?</summary>
 
-The rules check can, on every pull request, with no AI and no key: `npx --yes wolfboy@0.1.1 scan --target .` It counts
-the places on the lines a pull request changes and posts one neutral check run: [more](HOW-IT-WORKS.md#in-ci).
+The rules check can, on every pull request, with no AI and no key: `npx --yes wolfboy@0.1.3 scan --target .` It counts
+the places on the lines a pull request changes and posts one neutral check run: [more](HOW-IT-WORKS.md#in-ci). A path
+that does not exist fails the step.
 The AI review does not run in CI in this release.
+</details>
+<details><summary>What does the AI review cost in money, and does it fit my Claude plan?</summary>
+
+On a Claude plan it counts against your usage limits, which Anthropic does not state in tokens: `/usage` shows where
+you stand, and a run a limit stops goes on when you type "continue" after the reset. On an API key it is billed per
+token; the scan gives its estimate in dollars before it starts, and the sample's review cost USD 6.62.
+</details>
+<details><summary>Can the AI review run with another agent or model, or without Claude Code?</summary>
+
+Not in this release: step 2 runs in Claude Code with WolfBoy's plugin, and its review agents use Claude Sonnet by
+default. Step 1 needs no AI, and the list it writes to `.legal/findings.json` is plain JSON any tool can read.
+</details>
+<details><summary>Does it cover the UK GDPR, HIPAA, LGPD, PIPEDA or Japan's APPI?</summary>
+
+No rule cites the UK GDPR, HIPAA, Brazil's LGPD or Canada's PIPEDA in this release. Japan's APPI is cited by 11 rules
+on keeping personal data secure, such as passwords in logs, and China's rules on labelling AI-generated content by
+one. To ask for a law, open an issue.
 </details>
 <details><summary>What does it miss or get wrong?</summary>
 
@@ -167,7 +187,7 @@ check: [the sample's](examples/book-club/sample-report/report.md#not-checked).
 
 ## Status and contributing
 
-Version 0.1.1 was released on 2026-11-21 (0.1.0 on 2026-11-16). INNIT LLC publishes WolfBoy, and it has one maintainer today, who reads
+Version 0.1.3 was released on 2026-11-27 (0.1.1 on 2026-11-21, 0.1.0 on 2026-11-16). INNIT LLC publishes WolfBoy, and it has one maintainer today, who reads
 every issue; there is no fixed reply time. Not in this release: the AI review in CI, a mode in which the CLI calls a
 model API with your own key, and a digital signature on the rule set the scanner loads
 ([Status](HOW-IT-WORKS.md#status)).

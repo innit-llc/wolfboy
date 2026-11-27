@@ -38,10 +38,30 @@ export const JUDGING_STATES: readonly InstructionsState[] = [
     "verdict_rules": "verdict-rules-36",
     "reading_spec": "44cebe3cbeaf8aafb7961a3301778c4752c21134b5c4110176468a7e19cb40df",
     "released": true
+  },
+  {
+    "agent": "5e6d8ab33c604e39237abcd06a64c66fd67d5241ee9f8a0d07bdbaa51984d91e",
+    "skill": "1bd01c5c89271626a960a033cdd1fe089ddda42b073b599a8fc088bf40b15272",
+    "verdict_rules": "verdict-rules-37",
+    "reading_spec": "f33df8d569765332667cf5bf9cbe2069b3d0c253c19e50da0f9c7d29e11d10fe",
+    "released": true
+  },
+  {
+    "agent": "5e6d8ab33c604e39237abcd06a64c66fd67d5241ee9f8a0d07bdbaa51984d91e",
+    "skill": "5c8f1d1a8da57f350d810c39baf2886a776b80b9f6e2ec41c76a50da8b8f84df",
+    "verdict_rules": "verdict-rules-38",
+    "reading_spec": "4cfc96761b279b6a4102d86388d552c3a6a9f26f82a77912406ae69cfb86c699",
+    "released": true
   }
 ];
 
 export const JUDGING_MARKS: readonly JudgingMark[] = [
+  {
+    "changed": "all"
+  },
+  {
+    "changed": "all"
+  },
   {
     "changed": "all"
   }

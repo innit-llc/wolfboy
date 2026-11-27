@@ -187,6 +187,35 @@ detector:
       - yes
       - on
       - "1"
+    telemetry_host_labels:
+      - tele
+      - telemetry
+      - analytics
+      - metrics
+      - metric
+      - stats
+      - stat
+      - statistics
+      - collect
+      - collector
+      - events
+      - ingest
+      - usage
+      - track
+      - tracking
+      - beacon
+      - ping
+      - insights
+      - heartbeat
+    host_key_words:
+      - host
+      - hostname
+      - host_name
+      - domain
+    default_keywords:
+      - default
+      - default_value
+      - fallback
   vocabulary_matching:
     telemetry_channel_words:
       case_insensitive: true
@@ -215,6 +244,15 @@ detector:
       case_insensitive: true
     truthy_literals:
       case_insensitive: true
+    telemetry_host_labels:
+      case_insensitive: true
+    host_key_words:
+      case_insensitive: true
+      separator_insensitive: true
+    default_keywords:
+      case_insensitive: true
+      separator_insensitive: true
+  resolve_local_values: true
   match:
     - (?<![A-Za-z0-9_$])(?&outbound_send_verbs)[ \t]*\([ \t]*(?:&[
       \t]*)?(?:[A-Za-z_$][A-Za-z0-9_$]*(?:[ \t]*\([ \t]*\))?[ \t]*(?:\.|::|->)[
@@ -229,6 +267,38 @@ detector:
       \t]*["']?(?&falsey_literals)(?![A-Za-z0-9_$])
     - (?<![A-Za-z0-9_$])(?&telemetry_enabling_verbs)[-_.]{0,1}[A-Za-z0-9_$]{0,20}(?&telemetry_channel_words)[A-Za-z0-9_$]{0,30}[^\n]{0,30}?(?:=>|[:=])[
       \t]*["']?(?&truthy_literals)(?![A-Za-z0-9_$])
+    - (?<![A-Za-z0-9_$])(?&outbound_send_verbs)[
+      \t]*\([^\n]{0,80}?["'`]https?://(?:(?&telemetry_host_labels)(?:-[A-Za-z0-9]+|[0-9]+)?\.[A-Za-z0-9-]+\.[A-Za-z]|[^\n"'`]{0,120}(?&telemetry_channel_words))
+    - (?<![A-Za-z0-9_$])(?:(?<=["'])[A-Za-z_$][A-Za-z0-9_$.\-]{0,60}(?<!(?:^|[^A-Za-z0-9_$])(?:src|href|action|srcset|poster))["']|[A-Za-z_$][A-Za-z0-9_$.]{0,60}(?<!(?:^|[^A-Za-z0-9_$])(?:src|href|action|srcset|poster)))[
+      \t]*(?::(?!//)[^\n=:]{1,30})?(?::=|=>|(?<![=!<>])=(?![=>])|:(?<!\([^(){}\[\]\n]{0,120}:))[
+      \t]*(?:(?:new[ \t]+)?[A-Za-z_$][A-Za-z0-9_$.:]{0,30}[ \t]*\([
+      \t]*)?[fFrRbBuU]{0,2}["'`]?https?://(?&telemetry_host_labels)(?:-[A-Za-z0-9]+|[0-9]+)?\.[A-Za-z0-9-]+\.[A-Za-z]
+    - (?<![A-Za-z0-9_$])(?:(?<=["'])[A-Za-z0-9_$.\-]{0,40}(?&host_key_words)[A-Za-z0-9_$\-]{0,12}["']|[A-Za-z0-9_$.]{0,40}(?&host_key_words)[A-Za-z0-9_$]{0,12})[
+      \t]*(?::(?!//)[^\n=:]{1,30})?(?::=|=>|(?<![=!<>])=(?![=>])|:(?<!\([^(){}\[\]\n]{0,120}:))[
+      \t]*[fFrRbBuU]{0,2}["'`]?(?&telemetry_host_labels)(?:-[A-Za-z0-9]+|[0-9]+)?(?:\.[A-Za-z0-9-]+)+\.[A-Za-z]{2,}(?![A-Za-z0-9.-])
+    - (?<![A-Za-z0-9_$])(?:[A-Za-z0-9$]{1,24}[-_.]){0,2}(?:(?&telemetry_enabling_verbs)[-_.]{0,1}[A-Za-z0-9_$]{0,20}(?&telemetry_channel_words)[A-Za-z0-9_$]{0,30}|(?&telemetry_channel_words)(?:[-_.]{0,1}[A-Za-z0-9$]{1,20})?[-_.]{0,1}(?&telemetry_enabling_verbs)(?![A-Za-z0-9_$]))(?:["'][
+      \t]*,[ \t]*(?:[A-Za-z_][A-Za-z0-9_]{0,20}[ \t]*=[ \t]*[A-Za-z0-9_.]{1,30}[ \t]*,[
+      \t]*)?(?:(?&default_keywords)[ \t]*(?:=>|[:=])[ \t]*)?["']?(?&truthy_literals)|["'\])]{0,3}[
+      \t]*(?:\?\?|\|\||(?<![A-Za-z0-9_$])or(?![A-Za-z0-9_$]))[ \t]*["']?(?&truthy_literals)|["'][
+      \t]*\)[ \t]*\{[ \t]*["']?(?&truthy_literals)|(?::-|:=)[
+      \t]*["']?(?&truthy_literals)|["'\])]{0,3}[ \t]*!==?[
+      \t]*["']?(?&falsey_literals)|[^\n]{0,30}?(?:=>|:|(?<![=!<>])=(?![=>]))[
+      \t]*["']?(?&truthy_literals))(?![A-Za-z0-9_$])
+    - (?<![A-Za-z0-9_$])(?:[A-Za-z0-9$]{1,24}[-_.]){0,2}(?:(?&telemetry_suppressing_verbs)[-_.]{0,1}[A-Za-z0-9_$]{0,20}(?&telemetry_channel_words)[A-Za-z0-9_$]{0,30}|(?&telemetry_channel_words)(?:[-_.]{0,1}[A-Za-z0-9$]{1,20})?[-_.]{0,1}(?&telemetry_suppressing_verbs)(?![A-Za-z0-9_$]))(?:["'][
+      \t]*,[ \t]*(?:[A-Za-z_][A-Za-z0-9_]{0,20}[ \t]*=[ \t]*[A-Za-z0-9_.]{1,30}[ \t]*,[
+      \t]*)?(?:(?&default_keywords)[ \t]*(?:=>|[:=])[ \t]*)?["']?(?&falsey_literals)|["'\])]{0,3}[
+      \t]*(?:\?\?|\|\||(?<![A-Za-z0-9_$])or(?![A-Za-z0-9_$]))[ \t]*["']?(?&falsey_literals)|["'][
+      \t]*\)[ \t]*\{[ \t]*["']?(?&falsey_literals)|(?::-|:=)[
+      \t]*["']?(?&falsey_literals)|["'\])]{0,3}[ \t]*!==?[
+      \t]*["']?(?&truthy_literals)|[^\n]{0,30}?(?:=>|:|(?<![=!<>])=(?![=>]))[
+      \t]*["']?(?&falsey_literals))(?![A-Za-z0-9_$])
+    - (?<![A-Za-z0-9_$])(?&outbound_send_verbs)[
+      \t]*\([^\n]{0,80}?(?<![A-Za-z0-9_$])[A-Za-z0-9_$]{0,40}(?&host_key_words)[A-Za-z0-9_$\-]{0,12}["']?[
+      \t]*(?::|=>|(?<![=!<>])=(?![=>]))[
+      \t]*[fFrRbBuU]{0,2}["'`]?(?&telemetry_host_labels)(?:-[A-Za-z0-9]+|[0-9]+)?(?:\.[A-Za-z0-9-]+)+\.[A-Za-z]{2,}(?![A-Za-z0-9.-])
+  word_clauses:
+    - match[8]
+    - match[9]
 context_questions:
   - "MANDATORY, AND IT IS THE QUESTION THE WHOLE FINDING EXISTS TO RAISE: WHO OPERATES THE ADDRESS
     THIS IS SENT TO? Follow the matched destination back to where it is built and say which of three

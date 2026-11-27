@@ -868,6 +868,14 @@ export const LOCATION_FIELDS: Readonly<Record<string, string>> = {
   matched_token: "census: a kind fact of the matched line",
   context_class: "census: a kind fact of the matched line",
   sub_shape: "census: a kind fact of the matched line",
+  // Where the place sits, read from its path
+  // by the bundle's path classes (and, under --read vendored, from the file's own head): a fact a verdict may lean on
+  // ("this is example data"), so a place whose class moved is judged again.
+  path_class: "facts: the place's path class (path-class.ts), from its path and the bundle's path classes",
+  // The word tier is decided by the clauses
+  // that fired (`clause`, compared as a kind fact) and the rule's `detector.word_clauses` (in the compiled rule's
+  // digest), so a place whose tier moved has a moved clause set or a moved rule, and is judged again on either.
+  tier: "census: decided by the clause set (`clause`) and the compiled rule's `detector.word_clauses`",
 };
 export const CANDIDATE_FIELDS: Readonly<Record<string, string>> = {
   finding_id: "candidate: a route to the earlier verdict; the content key is what is compared",

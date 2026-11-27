@@ -1482,6 +1482,20 @@ const assemblyDisposition = (job: { seat: VerdictSeat; holder: Record<string, un
   key === "disposition" && job.seat === "adjudicator" && typeof job.holder[key] === "string" && ASSEMBLY_DISPOSITIONS.has(job.holder[key] as string);
 
 /**
+ * (taken into 0.1.2 alone:) THE ASSEMBLY'S OTHER FIELD OF THE SAME KIND: a second look's `claim`,
+ * "written by the assembly, never by a seat" (verdict.schema.json, `second_look.claim`, the single original of its values),
+ * and kept on the log's copy and on a carried one. One of its values, `not_applicable` (the first review's ruling-out, which
+ * the look checked), is a class word, so the value test read it as a second label: a re-check over the program's own log
+ * called every such look MALFORMED and turned it into `needs_human`. Only that key, on a second look, with one of those
+ * exact values, is left out; any other value under it, and the same value under any other key, is still a second label.
+ */
+const ASSEMBLY_LOOK_CLAIMS: ReadonlySet<string> = new Set(
+  ((schemaDocument("verdict.schema.json") as { properties?: { second_look?: { properties?: { claim?: { enum?: unknown } } } } }).properties?.second_look?.properties?.claim?.enum as string[] | undefined) ?? [],
+);
+const assemblyLookClaim = (job: { seat: VerdictSeat; holder: Record<string, unknown>; kind?: VerdictSetKind }, key: string): boolean =>
+  key === "claim" && job.seat === "refuter" && job.kind === "second_look" && typeof job.holder[key] === "string" && ASSEMBLY_LOOK_CLAIMS.has(job.holder[key] as string);
+
+/**
  * A word as a label reader would take it: case, surrounding whitespace and the separator between its
  * parts (space, hyphen, underscore) do not change which label it is.
  */
@@ -1503,7 +1517,7 @@ const ANY_SEAT_CLASS_WORD = new Set(Object.values(SEAT_CLASS_WORDS).flatMap((wor
  * refutation carry an adjudicator's `verdict: "violation_candidate"` at exit 0 — a second label is
  * read by whoever looks there, whichever seat's vocabulary it comes from.
  */
-export function strayLabelFields(job: { seat: VerdictSeat; holder: Record<string, unknown> }): string[] {
+export function strayLabelFields(job: { seat: VerdictSeat; holder: Record<string, unknown>; kind?: VerdictSetKind }): string[] {
   const spec = CLASS_FIELD[job.seat];
   return Object.keys(job.holder).filter(
     (key) =>
@@ -1511,6 +1525,7 @@ export function strayLabelFields(job: { seat: VerdictSeat; holder: Record<string
       !key.endsWith("_before_quote_check") &&
       !OWN_ANNOTATIONS.has(key) &&
       !assemblyDisposition(job, key) &&
+      !assemblyLookClaim(job, key) &&
       typeof job.holder[key] === "string" &&
       ANY_SEAT_CLASS_WORD.has(labelKey(job.holder[key] as string)),
   );

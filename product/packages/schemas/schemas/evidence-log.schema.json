@@ -718,6 +718,19 @@
             "type": "string",
             "description": "Read-scope members only: the file those sets are declared in."
           },
+          "held_by_content": {
+            "type": "array",
+            "description": " read-scope:vendored only: every file the scan held back by its own content, with the sign it showed, as findings.schema.json describes it. Carried here so that the log keeps the limit as the scan wrote it.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["file", "evidence"],
+              "properties": {
+                "file": { "type": "string", "minLength": 1, "description": "The file, relative to the scan root." },
+                "evidence": { "type": "string", "minLength": 1, "description": "The sign its own text showed, in words." }
+              }
+            }
+          },
           "rules": {
             "type": "array",
             "items": {

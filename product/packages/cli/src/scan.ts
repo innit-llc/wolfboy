@@ -65,6 +65,7 @@ import {
   checklistsGovernedLine,
 } from "./report.js";
 import { shipsPremisesForCandidates } from "./ships-premise.js";
+import { pathClassifier } from "./path-class.js";
 
 import { reviewDeclarationCommand } from "./declaration.js";
 /** The CRA gate's product limb, for the line on what the code shows. */
@@ -1440,6 +1441,14 @@ export function runScan(opts: ScanOptions, prepared?: PreparedScan, precomputed?
   // reading plan, the payload catalogue and this document all hold the same label.
   const redactedLabel = redactedLabelsOf(matches);
   const printed = productPrintedRedaction();
+  // Every place's path class, from the one
+  // classifier (path-class.ts) over the bundle's path classes, this run's read scope and its walk.
+  const pathClassOf = pathClassifier({
+    pathClasses: opts.bundle.readScope?.path_classes,
+    scope: readScope,
+    readDespiteName: walked.readDespiteName,
+    vendoredByContent: walked.vendoredByContentRead,
+  });
   for (const m of matches) {
     const spec = m.rule.fingerprint_spec ?? "default";
     // `directory` collapses every hit in one directory into a single candidate carrying every
@@ -1547,6 +1556,11 @@ export function runScan(opts: ScanOptions, prepared?: PreparedScan, precomputed?
       // covers): how a later run tells the same place from a new one whatever line it moved to. Taken from the line as
       // the report and the log would print it, so it holds nothing of a credential.
       line_key: lineKeyOf(printed, m.lineText),
+      path_class: pathClassOf(m.file),
+      // The word tier: every clause that
+      // found this place matches a word, not a construct (`detector.word_clauses`). Written only where it holds, so a
+      // rule that marks no clause writes exactly the location it wrote before; it removes nothing and moves no id.
+      ...(m.wordTier ? { tier: "word" as const } : {}),
     };
     const existing = byFp.get(fp);
     if (existing) {
@@ -2290,7 +2304,9 @@ export function runScan(opts: ScanOptions, prepared?: PreparedScan, precomputed?
       profileGiven: profile !== null,
       rulesSilent: rulesWithoutCandidates.length,
       readDespiteName: walked.readDespiteName,
+      heldAsSite: walked.heldAsSite,
       reScanReads: walked.reScanReads,
+      heldByContent: walked.heldByContent,
     }),
     // Every dependency the tree's `package.json` manifests declare in `dependencies`,
     // `optionalDependencies`, `devDependencies` or `peerDependencies`, called or not, each
@@ -2576,7 +2592,7 @@ export function walkerReasonParts(excluded: readonly { reason: string; dir?: str
     .map(([reason, r]) => `${reason} ${r.files}${r.unknown ? "+" : ""} file(s) in ${r.dirs} place(s)`);
 }
 
-export function summarize(f: Findings, rules: Rule[]): string {
+export function summarize(f: Findings, rules: Rule[], listedIn: string | null): string {
   const ruleById = new Map(rules.map((r) => [r.id, r]));
   const lines: string[] = [];
   // The three severity markers moved to `report.ts` with the candidate row that carries them, and
@@ -3479,8 +3495,8 @@ export function summarize(f: Findings, rules: Rule[]): string {
   // now. THE DOCUMENT IS UNAFFECTED — `candidates` carries every record, uncapped, which is why a
   // cap here is a display decision and not a reporting one (the same convention
   // NOT_READ_DISPLAY_LIMIT already states above). The grouping, the order and the cap live in
-  // `report.ts`, with the rest of this feature's wording, so a change to any of them is one edit.
-  for (const line of candidateListLines(candidateTopics(f, rules), (id) => ruleById.get(id)?.title ?? "")) {
+  // `report.ts`, with the rest of this feature's wording, so a change to any of them is one edit. Each list that stops names the file that holds every record (`listedIn`).
+  for (const line of candidateListLines(candidateTopics(f, rules), (id) => ruleById.get(id)?.title ?? "", listedIn)) {
     lines.push(line);
   }
   lines.push("");

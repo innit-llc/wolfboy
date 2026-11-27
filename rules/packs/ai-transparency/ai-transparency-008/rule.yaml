@@ -292,7 +292,7 @@ detector:
       eepseek-|grok-[0-9]|o[0-9]-mini)"
     - ^\s*["']?(?:openai|anthropic|@anthropic-ai/sdk|@ai-sdk/[\w.\-]+|@google/generative-ai|@google/genai|cohere[-_.]?ai|mistralai|@mistralai/[\w.\-]+|litellm|langchain|langchain[-_.][\w.\-]+|llama[-_.]?index|ollama|groq[-_.]?sdk|python[-_.]?frontmatter)(?:\[[\w.,\s-]+\])?["']?\s*[:=><~^]|^\s*["'][\w@/.\-]+["']\s*:\s*["'](?:npm|jsr):(?:openai|anthropic|@anthropic-ai/[\w.\-]+|@ai-sdk/[\w.\-]+|@google/generative-ai|@google/genai|cohere-ai|@mistralai/[\w.\-]+|mistralai|litellm|langchain|langchain-[\w.\-]+|llama-index|llamaindex|ollama|groq-sdk)@
     - api\.contentful\.com|createEntry\s*\(|\.sanity\.io|createOrReplace\s*(?:\(|["'`]\s*\]\s*\()|strapi\.(?:entityService|documents)|(?<![A-Za-z0-9_$])entityService\s*\.\s*(?:create|update|publish)\s*\(|(?:from|require|import)\s*\(?\s*["'](?:npm:|jsr:)?(?:contentful-management|contentful|@contentful/app-sdk|@sanity/client|@strapi/client|@tryghost/(?:admin-api|content-api|admin-x-framework/api/(?:posts|pages))|@payloadcms/(?:next|graphql)|@directus/sdk|microcms-js-sdk)(?:/[^"']*)?["']
-    - /ghost/api/admin|payload\.(?:create|update)\s*\(|(?:(?<![A-Za-z0-9_$.])|(?<=[\w@][\w.\-]{0,60}[:/][\w.\-]{0,60}\.))createItems?\s*\(|[Mm]icro[Cc][Mm][Ss]|/wp-json/wp/v2/|wp_insert_post\s*\(|wp_update_post\s*\(
+    - /ghost/api/admin|[Mm]icro[Cc][Mm][Ss]|/wp-json/wp/v2/|wp_insert_post\s*\(|wp_update_post\s*\(
     - astro:content|defineCollection\s*\(|(?:(?<![A-Za-z0-9_$.])|(?<=[\w@][\w.\-]{0,60}[:/][\w.\-]{0,60}\.))getCollection\s*\(|gray-matter|matter\.stringify\s*\(|[Ff]ront[_\-]?matter
     - "[\"'`][^\"'`\\n]{0,80}(?:content|_posts|_drafts|_articles|posts|articles|blog|news)/[^\"'`\\\
       n]{0,80}\\.(?:mdx?|markdown)[\"'`]"
@@ -324,9 +324,14 @@ detector:
       \t]*(?:\r?$|\.[ \t]*\r?$)
     - (?:const|let|var)[ \t]*\{[^}\n]{0,80}\}[ \t]*=[
       \t]*[A-Za-z_$][\w$]{0,20}\.(?:responses|completions|messages|chat|images|audio)(?![A-Za-z0-9_$])
+    - payload\.(?:create|update)\s*\(|(?:(?<![A-Za-z0-9_$.])|(?<=[\w@][\w.\-]{0,60}[:/][\w.\-]{0,60}\.))createItems?\s*\(
+    - payload\.(?:create|update)\s*\(\s*\{[^\n]*(?<![\w"'`])collection\s*:|(?<![A-Za-z0-9_$])(?:await[
+      \t]+(?:req\.)?|req\.)payload\.(?:create|update)\s*\(|\.request\s*\(\s*createItems?\s*\(|@directus/sdk\.createItems?\s*\(
   match_without:
     - ^\s*(?:\*|//|<!--)
   resolve_import_aliases: true
+  word_clauses:
+    - match[34]
 settling_questions:
   - operator.ai_text_public_interest
 context_questions:

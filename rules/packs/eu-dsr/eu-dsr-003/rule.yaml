@@ -79,6 +79,8 @@ detector:
   engine: builtin-regex
   file_globs:
     - "**"
+  word_clauses:
+    - match[9]
   vocabulary:
     ownership_columns:
       - author_id
@@ -161,6 +163,30 @@ detector:
       - uuid_generate_v4
       - newuuid
       - uuid.new
+    person_owner_words:
+      - user
+      - users
+      - author
+      - authors
+      - owner
+      - owners
+      - member
+      - members
+      - account
+      - accounts
+      - creator
+      - customer
+      - customers
+      - profile
+      - reporter
+      - uploader
+      - subscriber
+    person_context_words:
+      - person
+      - persons
+      - people
+      - assignee
+      - assignees
   vocabulary_matching:
     ownership_columns:
       case_insensitive: true
@@ -172,6 +198,12 @@ detector:
       case_insensitive: true
       separator_insensitive: true
     placeholder_identity_values:
+      case_insensitive: true
+      separator_insensitive: true
+    person_owner_words:
+      case_insensitive: true
+      separator_insensitive: true
+    person_context_words:
       case_insensitive: true
       separator_insensitive: true
   match:
@@ -196,6 +228,9 @@ detector:
       \t]*\()[A-Za-z_$][A-Za-z0-9_$.:]{0,40}[ \t]*\(
     - (?<![A-Za-z0-9_])[Ss][Ee][Tt][_ ]?(?&identity_fields)[ \t]*\([ \t]*(?:new[ \t]+|await[
       \t]+)?[A-Za-z_$][A-Za-z0-9_$.:]{0,40}[ \t]*\(
+    - ^(?=[^\n]*(?<![A-Za-z0-9_])(?!(?:[Rr]eassign|[Rr]e_assign)_?(?:[Uu]sers?|USERS?|[Mm]embers?|MEMBERS?|[Aa]ssignees?|[Aa]gents?|[Pp]eople|[Pp]ersons?)_?(?:[Tt]o|TO)(?![a-z]))(?:remove_references_before_destroy|(?:[Rr]eassign|[Rr]e_assign|[Rr]eattribute|[Rr]e_attribute|[Rr]eassociate|[Rr]e_associate|[Rr]eparent|[Oo]rphan)[A-Za-z0-9_]{0,40})\()(?:(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?:(?&person_owner_words)|(?&shared_identity_names)|(?![Aa][Ss][Ss][Ii][Gg][Nn])(?&ownership_columns))(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))|(?=[^\n]*(?:[Dd]elet|DELET|[Dd]estroy|DESTROY|[Rr]emov|REMOV|[Ee]ras|ERAS|[Pp]urg|PURG|[Aa]nonymi[sz]|ANONYMI[SZ]|[Dd]eactivat|DEACTIVAT|[Dd]iscard|DISCARD))(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?&person_context_words)(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])))|(?:(?<![A-Za-z0-9_])def[
+      \t]+(?:self\.)?|(?<![A-Za-z0-9_])(?:before|after)_(?:destroy|delete|discard)[
+      \t]+:)(?:remove_references_before_destroy|(?=[^\n]*(?:(?<![A-Za-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF])|(?<=[a-z0-9])(?=[A-Z]))(?:(?&person_owner_words)|(?&shared_identity_names)|(?![Aa][Ss][Ss][Ii][Gg][Nn])(?&ownership_columns))(?![a-z0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u1E00-\u1EFF]))(?:reassign|re_assign|reattribute|re_attribute|reassociate|re_associate|reparent|orphan)[a-z0-9_]{0,40})
   match_without:
     - "[Oo][Nn][ _.]?[Dd][Ee][Ll][Ee][Tt][Ee][ _]?[Cc][Aa][Ss][Cc][Aa][Dd][Ee](?![^\\n]*(?:SET[
       _]?NULL|[Nn]ullify))"

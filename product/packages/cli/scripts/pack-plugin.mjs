@@ -12,8 +12,10 @@
  * are always the same version, and nothing is looked up on PATH.
  *
  * WHAT IS COPIED. Every top-level entry of the plugin's folder (product/plugin): .claude-plugin/, agents/, bin/,
- * hooks/, skills/ and its README.md, which becomes this package's README. They are copied, never linked; `remove`
- * deletes them so the workspace keeps one copy. File modes are kept (bin/legal-scan and bin/legal-hook stay executable).
+ * hooks/ and skills/. They are copied, never linked; `remove` deletes them so the workspace keeps one copy. File modes
+ * are kept (bin/legal-scan and bin/legal-hook stay executable). Not its README.md, which stays in the repository
+ * (product/plugin/README.md, linked from the root README): since 0.1.2 this package's README, its npm page, is the
+ * repository's root README, which scripts/pack-readme.mjs writes.
  *
  * WHAT IS REFUSED: ANY CLASH, COMPUTED.
  * An entry of the plugin's folder whose name this package's folder already holds - any entry, read from the folder at
@@ -92,7 +94,7 @@ if (!existsSync(join(SOURCE, ".claude-plugin", "plugin.json"))) {
   process.exit(1);
 }
 removeCopies();
-const entries = readdirSync(SOURCE).sort();
+const entries = readdirSync(SOURCE).filter((e) => e !== "README.md").sort();
 const holds = (p) => {
   try {
     lstatSync(p);
